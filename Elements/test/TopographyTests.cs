@@ -235,6 +235,26 @@ namespace Elements.Tests
             this.Model.AddElement(new MeshElement(result, material));
         }
 
+        [Fact]
+        public void Tunnel()
+        {
+            this.Name = "Topography_Tunnel";
+            var topo = CreateTopoFromMapboxElevations();
+            var csg = topo.Mesh.ToCsg();
+
+            var tunnel = new Sweep(new Circle(Vector3.Origin, 50).ToPolygon(20), new Line(new Vector3(-10000, 0, -200), new Vector3(10000, 0, -200)), 0, 0, 0, false);
+            csg = csg.Substract(tunnel._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
+
+            var shaft = new Sweep(new Circle(Vector3.Origin, 20).ToPolygon(20), new Line(new Vector3(0, 0, 200), new Vector3(0, 0, -200)), 0, 0, 0, false);
+            csg = csg.Substract(shaft._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
+
+            var result = new Mesh();
+            csg.Tessellate(ref result);
+            result.ComputeNormals();
+            var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
+            this.Model.AddElement(new MeshElement(result, material));
+        }
+
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations

@@ -176,6 +176,121 @@ namespace Elements
                 }
             }
 
+            // Track the last created "low"
+            // point so that we can merge
+            // vertices in the side meshes.
+            Vertex lastL = null;
+            Vertex lastR = null;
+            Vertex lastT = null;
+            Vertex lastB = null;
+
+            var depth = 500;
+            for (var u = 0; u < rowWidth - 1; u++)
+            {
+                // Left side
+                Vertex l1 = null;
+                var i1 = u * rowWidth;
+                var v1Existing = mesh.Vertices[i1];
+                var v1 = mesh.AddVertex(v1Existing.Position);
+                if (lastL != null)
+                {
+                    l1 = lastL;
+                }
+                else
+                {
+                    l1 = mesh.AddVertex(new Vector3(v1.Position.X, v1.Position.Y, minElevation - depth));
+                }
+
+                var i2 = i1 + rowWidth;
+                var v2Existing = mesh.Vertices[i2];
+                var v2 = mesh.AddVertex(v2Existing.Position);
+                var l2 = mesh.AddVertex(new Vector3(v2.Position.X, v2.Position.Y, minElevation - depth));
+                lastL = l2;
+
+                mesh.AddTriangle(l1, v1, v2);
+                mesh.AddTriangle(l2, l1, v2);
+
+                // Right side
+                Vertex l3 = null;
+                var i3 = u * (rowWidth) + (rowWidth - 1);
+                var v3Existing = mesh.Vertices[i3];
+                var v3 = mesh.AddVertex(v3Existing.Position);
+
+                if (lastR != null)
+                {
+                    l3 = lastR;
+                }
+                else
+                {
+                    l3 = mesh.AddVertex(new Vector3(v3.Position.X, v3.Position.Y, minElevation - depth));
+                }
+
+                var i4 = i3 + rowWidth;
+                var v4Existing = mesh.Vertices[i4];
+                var v4 = mesh.AddVertex(v4Existing.Position);
+                var l4 = mesh.AddVertex(new Vector3(v4.Position.X, v4.Position.Y, minElevation - depth));
+                lastR = l4;
+
+                mesh.AddTriangle(l3, v4, v3);
+                mesh.AddTriangle(l3, l4, v4);
+
+                // Top side
+                Vertex l5 = null;
+                var i5 = u;
+                var v5Existing = mesh.Vertices[i5];
+                var v5 = mesh.AddVertex(v5Existing.Position);
+                if (lastT != null)
+                {
+                    l5 = lastT;
+                }
+                else
+                {
+                    l5 = mesh.AddVertex(new Vector3(v5.Position.X, v5.Position.Y, minElevation - depth));
+                }
+
+                var i6 = i5 + 1;
+                var v6Existing = mesh.Vertices[i6];
+                var v6 = mesh.AddVertex(v6Existing.Position);
+                var l6 = mesh.AddVertex(new Vector3(v6.Position.X, v6.Position.Y, minElevation - depth));
+                lastT = l6;
+
+                mesh.AddTriangle(l5, v6, v5);
+                mesh.AddTriangle(l5, l6, v6);
+
+                // Bottom side
+                Vertex l7 = null;
+                var i7 = rowWidth * rowWidth - u - 1;
+                var v7Existing = mesh.Vertices[i7];
+                var v7 = mesh.AddVertex(v7Existing.Position);
+
+                if (lastB != null)
+                {
+                    l7 = lastB;
+                }
+                else
+                {
+                    l7 = mesh.AddVertex(new Vector3(v7.Position.X, v7.Position.Y, minElevation - depth));
+                }
+
+                var i8 = i7 - 1;
+                var v8Existing = mesh.Vertices[i8];
+                var v8 = mesh.AddVertex(v8Existing.Position);
+                var l8 = mesh.AddVertex(new Vector3(v8.Position.X, v8.Position.Y, minElevation - depth), new UV());
+                lastB = l8;
+
+                mesh.AddTriangle(l7, v8, v7);
+                mesh.AddTriangle(l7, l8, v8);
+            }
+
+            // Add the bottom
+            var bb1 = mesh.AddVertex(new Vector3(0, 0, minElevation - depth));
+            var bb2 = mesh.AddVertex(new Vector3(rowWidth * cellWidth, 0, minElevation - depth));
+            var bb3 = mesh.AddVertex(new Vector3(rowWidth * cellWidth, rowWidth * cellHeight, minElevation - depth));
+            var bb4 = mesh.AddVertex(new Vector3(0, rowWidth * cellHeight, minElevation - depth));
+
+            mesh.AddTriangle(bb1, bb3, bb2);
+            mesh.AddTriangle(bb1, bb4, bb3);
+
             mesh.ComputeNormals();
             return (mesh, maxElevation, minElevation);
         }
