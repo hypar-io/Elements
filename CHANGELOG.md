@@ -7,6 +7,8 @@
 - `Elements.PointLight`
 - `Elements.SpotLight`
 - `Polygon.PointInternal()`
+- `Topography.DepthMesh`
+- `Material.RepeatTexture`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
