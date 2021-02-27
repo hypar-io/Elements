@@ -324,9 +324,9 @@ namespace Elements
 
             // Add the bottom
             var bb1 = mesh.AddVertex(new Vector3(0, 0, minElevation - depth));
-            var bb2 = mesh.AddVertex(new Vector3(rowWidth * cellWidth, 0, minElevation - depth));
-            var bb3 = mesh.AddVertex(new Vector3(rowWidth * cellWidth, rowWidth * cellHeight, minElevation - depth));
-            var bb4 = mesh.AddVertex(new Vector3(0, rowWidth * cellHeight, minElevation - depth));
+            var bb2 = mesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, 0, minElevation - depth));
+            var bb3 = mesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, minElevation - depth));
+            var bb4 = mesh.AddVertex(new Vector3(0, (rowWidth - 1) * cellHeight, minElevation - depth));
 
             mesh.AddTriangle(bb1, bb3, bb2);
             mesh.AddTriangle(bb1, bb4, bb3);
