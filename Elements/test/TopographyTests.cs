@@ -44,13 +44,16 @@ namespace Elements.Tests
         [Fact]
         public void Simple()
         {
-            this.Name = "TopographySimple";
+            this.Name = "Topography_Simple";
             var elevations = new double[] { 0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05 };
             var colorizer = new Func<Triangle, Elements.Geometry.Color>((t) =>
             {
                 return Colors.Green;
             });
-            var topo = new Topography(Vector3.Origin, 3, elevations);
+            var topo = new Topography(Vector3.Origin, 3, elevations)
+            {
+                DepthBelowMinimumElevation = 3
+            };
             this.Model.AddElement(topo);
         }
 
@@ -74,7 +77,7 @@ namespace Elements.Tests
         [Fact]
         public void TopographyHasTextureApplied()
         {
-            this.Name = "TexturedTopography";
+            this.Name = "Topography_Textured";
             var m = new Material("texture", Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg");
             var topo = CreateTopoFromMapboxElevations(material: m);
             this.Model.AddElement(topo);
@@ -83,7 +86,7 @@ namespace Elements.Tests
         [Fact]
         public void TopographySerializesQuickly()
         {
-            this.Name = "TopographySerializationPerfomance";
+            this.Name = "Topography_Serialization_Perfomance";
             var sw = new Stopwatch();
             var topo = CreateTopoFromMapboxElevations();
             sw.Start();
@@ -118,7 +121,7 @@ namespace Elements.Tests
         [Fact]
         public void RaysIntersectTopography()
         {
-            this.Name = "RayTopographyIntersection";
+            this.Name = "Topography_Ray_Intersection";
             var topo = CreateTopoFromMapboxElevations(new Vector3(10000000, 10000000));
             var mp = new ModelPoints(new List<Vector3>(), new Material("xsect", Colors.Black));
             foreach (var t in topo.Mesh.Triangles)
@@ -141,7 +144,7 @@ namespace Elements.Tests
         [Fact]
         public void MapboxTopography()
         {
-            this.Name = "MapboxTopography";
+            this.Name = "Topography_Mapbox";
 
             // 0 1
             // 2 3
