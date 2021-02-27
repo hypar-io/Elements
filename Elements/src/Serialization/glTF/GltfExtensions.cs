@@ -233,8 +233,8 @@ namespace Elements.Serialization.glTF
                         var sampler = new Sampler();
                         sampler.MagFilter = Sampler.MagFilterEnum.LINEAR;
                         sampler.MinFilter = Sampler.MinFilterEnum.LINEAR;
-                        sampler.WrapS = Sampler.WrapSEnum.REPEAT;
-                        sampler.WrapT = Sampler.WrapTEnum.REPEAT;
+                        sampler.WrapS = material.RepeatTexture ? Sampler.WrapSEnum.REPEAT : Sampler.WrapSEnum.CLAMP_TO_EDGE;
+                        sampler.WrapT = material.RepeatTexture ? Sampler.WrapTEnum.REPEAT : Sampler.WrapTEnum.CLAMP_TO_EDGE;
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 

@@ -10,6 +10,12 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
+        /// Should the texture be repeated?
+        /// </summary>
+        /// <value></value>
+        public bool RepeatTexture { get; set; }
+
+        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>
@@ -47,7 +53,8 @@ namespace Elements
                  texture,
                  doubleSided,
                  id != default(Guid) ? id : Guid.NewGuid(),
-                 name){}
+                 name)
+        { }
 
         /// <summary>
         /// Is this material equal to the provided material?
