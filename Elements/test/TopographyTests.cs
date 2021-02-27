@@ -63,6 +63,15 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ConstructTopographyWithSmallThickness()
+        {
+            this.Name = "Topography_SmallDepth";
+            var topo = CreateTopoFromMapboxElevations();
+            topo.DepthBelowMinimumElevation = 0;
+            this.Model.AddElement(topo);
+        }
+
+        [Fact]
         public void TopographyHasTextureApplied()
         {
             this.Name = "TexturedTopography";

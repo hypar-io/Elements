@@ -70,7 +70,7 @@ namespace Elements
             get { return _depthBelowMinimumElevation; }
             set
             {
-                _depthBelowMinimumElevation = value < 0 ? 0.0 : value;
+                _depthBelowMinimumElevation = value < 1 ? 1.0 : value;
                 RaisePropertyChanged("DepthBelowMinimumElevation");
             }
         }
