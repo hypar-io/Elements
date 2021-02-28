@@ -46,10 +46,6 @@ namespace Elements.Tests
         {
             this.Name = "Topography_Simple";
             var elevations = new double[] { 0.2, 1.0, 0.5, 0.25, 0.1, 0.2, 2.0, 0.05, 0.05 };
-            var colorizer = new Func<Triangle, Elements.Geometry.Color>((t) =>
-            {
-                return Colors.Green;
-            });
             var topo = new Topography(Vector3.Origin, 3, elevations)
             {
                 DepthBelowMinimumElevation = 3
