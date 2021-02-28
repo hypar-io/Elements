@@ -16,6 +16,11 @@ namespace Elements
         public bool RepeatTexture { get; set; } = true;
 
         /// <summary>
+        /// A relative path to a jpg or png image file to be used as a normal texture.
+        /// </summary>
+        public string NormalTexture { get; set; }
+
+        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>

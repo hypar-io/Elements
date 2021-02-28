@@ -6,6 +6,7 @@
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
+- `Material.NormalTexture`
 - `Polygon.PointInternal()`
 - `Topography.DepthMesh`
 - `Material.RepeatTexture`
