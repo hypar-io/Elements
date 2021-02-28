@@ -771,6 +771,7 @@ namespace Elements.Geometry.Tests
             Model.AddElement(extremelyConcavePolygon);
             Curve.MinimumChordLength = 0.001;
             Model.AddElement(new Circle(pointInternal, 0.02));
+            Curve.MinimumChordLength = 0.1;
         }
 
         [Fact]
