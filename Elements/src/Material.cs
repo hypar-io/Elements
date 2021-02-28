@@ -12,7 +12,6 @@ namespace Elements
         /// <summary>
         /// A relative path to a jpg or png image file to be used as a normal texture.
         /// </summary>
-        /// <value></value>
         public string NormalTexture { get; set; }
 
         /// <summary>
