@@ -85,35 +85,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Vertex</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Vertex_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Vertex</code></pre>
+    <pre><code class="lang-csharp hljs">public class Vertex : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -123,8 +99,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vertex(Vector3 position, Vector3 normal, Color color, int index, UV uV)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vertex(Vector3 position, Vector3 normal, Color color, int index, UV uV)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -170,7 +145,7 @@ public Vertex(Vector3 position, Vector3 normal, Color color, int index, UV uV)</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex(Vector3 position, Vector3? normal = default(Vector3? ), Color color = default(Color))</code></pre>
+    <pre><code class="lang-csharp hljs">public Vertex(Vector3 position, Vector3? normal = null, Color color = default(Color))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -211,9 +186,7 @@ public Vertex(Vector3 position, Vector3 normal, Color color, int index, UV uV)</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
-[Required]
-public Color Color { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -237,8 +210,7 @@ public Color Color { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Index&quot;, Required = Required.Always)]
-public int Index { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public int Index { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -262,8 +234,7 @@ public int Index { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Normal&quot;, Required = Required.AllowNull)]
-public Vector3 Normal { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Normal { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -287,8 +258,7 @@ public Vector3 Normal { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Position&quot;, Required = Required.AllowNull)]
-public Vector3 Position { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Position { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -312,10 +282,7 @@ public Vector3 Position { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Triangles&quot;, Required = Required.Always)]
-[Required]
-[JsonIgnore]
-public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -327,7 +294,7 @@ public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -339,9 +306,7 @@ public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;UV&quot;, Required = Required.Always)]
-[Required]
-public UV UV { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public UV UV { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

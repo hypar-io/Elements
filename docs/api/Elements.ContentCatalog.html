@@ -86,10 +86,6 @@
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><span class="xref">ContentCatalog</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -104,45 +100,22 @@
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ContentCatalog_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class ContentCatalog : Element, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContentCatalog : Element</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ContentCatalog__ctor_" data-uid="Elements.ContentCatalog.#ctor*"></a>
-  <h4 id="Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Guid_System_String_" data-uid="Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)">ContentCatalog(IList&lt;ContentElement&gt;, Guid, String)</h4>
+  <h4 id="Elements_ContentCatalog__ctor_IList_Elements_ContentElement__System_Guid_System_String_" data-uid="Elements.ContentCatalog.#ctor(IList{Elements.ContentElement},System.Guid,System.String)">ContentCatalog(IList&lt;ContentElement&gt;, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -155,7 +128,7 @@ public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
         <td><span class="parametername">content</span></td>
         <td></td>
       </tr>
@@ -180,9 +153,7 @@ public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Content&quot;, Required = Required.Always)]
-[Required]
-public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -194,7 +165,7 @@ public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -266,10 +237,6 @@ public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
 </article>
           </div>
           

@@ -227,36 +227,11 @@ var modelCurves = grid.GetCells().Select(c =&gt; new ModelCurve(c.GetCellGeometr
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Grid2d</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Spatial_Grid2d_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class Grid2d</code></pre>
+    <pre><code class="lang-csharp hljs">public class Grid2d : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -384,6 +359,72 @@ used as the grid extents.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Geometry_Transform_Elements_Geometry_Transform_Elements_Domain1d_Elements_Domain1d_List_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_System_String_List_Elements_Spatial_Grid2d_IndexedCell__" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Transform,Elements.Geometry.Transform,Elements.Domain1d,Elements.Domain1d,List{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d,System.String,List{Elements.Spatial.Grid2d.IndexedCell})">Grid2d(Transform, Transform, Domain1d, Domain1d, List&lt;Polygon&gt;, Grid1d, Grid1d, String, List&lt;Grid2d.IndexedCell&gt;)</h4>
+  <div class="markdown level1 summary"><p>Do not use this constructor — it is only for serialization purposes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List&lt;Polygon&gt; boundariesInGridSpace, Grid1d u, Grid1d v, string type, List&lt;Grid2d.IndexedCell&gt; modifiedChildCells)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">fromGrid</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">toGrid</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td><span class="parametername">uDomainInternal</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td><span class="parametername">vDomainInternal</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">boundariesInGridSpace</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">u</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">v</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">type</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.IndexedCell.html">Grid2d.IndexedCell</a>&gt;</td>
+        <td><span class="parametername">modifiedChildCells</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
   <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(Grid1d, Grid1d)</h4>
   <div class="markdown level1 summary"><p>Construct a Grid2d from two Grid1ds in the U and V directions</p>
 </div>
@@ -480,7 +521,7 @@ used as the grid extents.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
-  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)">Grid2d(IList&lt;Polygon&gt;, Transform)</h4>
+  <h4 id="Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)">Grid2d(IList&lt;Polygon&gt;, Transform)</h4>
   <div class="markdown level1 summary"><p>Create a Grid2d from a list of boundary polygons and an optional transform.
 If the transform is null or not supplied, a transform will be generated automatically from the boundaries' normal.
 Currently only transforms parallel to the supplied polygons are supported.
@@ -503,7 +544,7 @@ used as the grid extents.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">boundaries</span></td>
         <td><p>The external boundaries of this grid system.</p>
 </td>
@@ -517,7 +558,7 @@ used as the grid extents.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
-  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Grid2d(IList&lt;Polygon&gt;, Vector3, Vector3, Vector3)</h4>
+  <h4 id="Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Grid2d(IList&lt;Polygon&gt;, Vector3, Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Create a grid from a list of boundaries, an origin, and its U and V directions</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -536,7 +577,7 @@ used as the grid extents.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">boundaries</span></td>
         <td></td>
       </tr>
@@ -558,7 +599,7 @@ used as the grid extents.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
-  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(IList&lt;Polygon&gt;, Grid1d, Grid1d)</h4>
+  <h4 id="Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(IList&lt;Polygon&gt;, Grid1d, Grid1d)</h4>
   <div class="markdown level1 summary"><p>Create a grid from a list of boundaries and custom U and V grids</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -577,7 +618,7 @@ used as the grid extents.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">boundaries</span></td>
         <td></td>
       </tr>
@@ -635,8 +676,7 @@ used as the grid extents.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public List&lt;List&lt;Grid2d&gt;&gt; Cells { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;List&lt;Grid2d&gt;&gt; Cells { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -648,7 +688,7 @@ public List&lt;List&lt;Grid2d&gt;&gt; Cells { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;&gt;</td>
+        <td><span class="xref">List</span>&lt;<span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -660,8 +700,7 @@ public List&lt;List&lt;Grid2d&gt;&gt; Cells { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public List&lt;Grid2d&gt; CellsFlat { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Grid2d&gt; CellsFlat { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -673,7 +712,7 @@ public List&lt;Grid2d&gt; CellsFlat { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -685,8 +724,7 @@ public List&lt;Grid2d&gt; CellsFlat { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public bool IsSingleCell { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsSingleCell { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -710,8 +748,7 @@ public bool IsSingleCell { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Grid2d this[int u, int v] { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Grid2d this[int u, int v] { get; }</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -969,7 +1006,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -993,7 +1030,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
         <td><p>A list of all bottom-level cells in the grid.</p>
 </td>
       </tr>
@@ -1042,7 +1079,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>&gt;</td>
         <td><p>The lines between cells, running parallel to the grid direction selected.</p>
 </td>
       </tr>
@@ -1085,7 +1122,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
         <td><p>A list of the column of all cells with this u index.</p>
 </td>
       </tr>
@@ -1128,7 +1165,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
         <td><p>A list of the row of all cells with this v index.</p>
 </td>
       </tr>
@@ -1213,7 +1250,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d_SplitAtPoints_" data-uid="Elements.Spatial.Grid2d.SplitAtPoints*"></a>
-  <h4 id="Elements_Spatial_Grid2d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">SplitAtPoints(IEnumerable&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPoints_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPoints(IEnumerable{Elements.Geometry.Vector3})">SplitAtPoints(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Split the grid at points in world space</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1232,7 +1269,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">points</span></td>
         <td><p>The points at which to split</p>
 </td>
@@ -1300,7 +1337,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid2d_SplitAtPositions_" data-uid="Elements.Spatial.Grid2d.SplitAtPositions*"></a>
-  <h4 id="Elements_Spatial_Grid2d_SplitAtPositions_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">SplitAtPositions(IEnumerable&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPositions_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPositions(IEnumerable{Elements.Geometry.Vector3})">SplitAtPositions(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Split the grid at positions in the grid's coordinate system</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1319,7 +1356,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">positions</span></td>
         <td><p>The positions at which to split, with X = U and Y = V.</p>
 </td>
