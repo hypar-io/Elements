@@ -141,7 +141,6 @@ namespace Elements.Serialization.glTF
 
             var matId = 0;
             var texId = 0;
-            var normalTexId = 0;
             var imageId = 0;
             var samplerId = 0;
 
@@ -221,7 +220,7 @@ namespace Elements.Serialization.glTF
                 {
                     var ti = new MaterialNormalTextureInfo();
                     m.NormalTexture = ti;
-                    ti.Index = normalTexId;
+                    ti.Index = texId;
                     ti.Scale = 1.0f;
                     // Use the same texture coordinate as the 
                     // base texture.
@@ -238,13 +237,13 @@ namespace Elements.Serialization.glTF
                         var image = CreateImage(material.NormalTexture, bufferViews, buffer, out _);
                         tex.Source = imageId;
                         images.Add(image);
-                        textureDict.Add(material.NormalTexture, normalTexId);
+                        textureDict.Add(material.NormalTexture, texId);
 
                         var sampler = CreateSampler(material.RepeatTexture);
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
-                        normalTexId++;
+                        texId++;
                         imageId++;
                         samplerId++;
                     }
