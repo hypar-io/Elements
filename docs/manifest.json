@@ -223,6 +223,17 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_PointLight.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_PointLight.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Space.glb",
       "output": {
         "resource": {
@@ -249,6 +260,17 @@
       "output": {
         "resource": {
           "relative_path": "models/Elements_Spatial_Grid2d.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_SpotLight.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_SpotLight.glb"
         }
       },
       "is_incremental": false,
@@ -306,7 +328,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "UPkqMzQjJOOrx1+u5p6Leg=="
+          "hash": "1TcUSlVKkiy1egzHAkhGFg=="
         }
       },
       "is_incremental": false,
@@ -528,7 +550,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.DirectionalLight.html",
-          "hash": "wMJvErd3Ab4mMrBueuZ+eQ=="
+          "hash": "nXz6++YWq6B1cOrrDYZuSw=="
         }
       },
       "is_incremental": false,
@@ -564,7 +586,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "L6FSNYzQb6ERPhY19Ql6bg=="
+          "hash": "8vSKvNp0XL0M3iPidfsPaA=="
         }
       },
       "is_incremental": false,
@@ -1032,7 +1054,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "07UAov0boNJq1KzvIV3jAQ=="
+          "hash": "JDBioOQfAMadIJtXTAHnCg=="
         }
       },
       "is_incremental": false,
@@ -1484,6 +1506,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Light.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Light.html",
+          "hash": "rtOvrg9x565XCjFOXpLpQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.LightType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.LightType.html",
+          "hash": "Q9H1SII14p7dj1otWE3KUg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Mass.yml",
       "output": {
         ".html": {
@@ -1500,7 +1546,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Material.html",
-          "hash": "ZvrvM+i2FYCzyVKZg5L6dA=="
+          "hash": "A+mmgqyjxl8grFZIZBeodw=="
         }
       },
       "is_incremental": false,
@@ -1585,6 +1631,18 @@
         ".html": {
           "relative_path": "api/Elements.Panel.html",
           "hash": "08ylszMMUO4fBEIgwFNofw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.PointLight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.PointLight.html",
+          "hash": "yJ1vrFCkg3wvs5KEuiRY3Q=="
         }
       },
       "is_incremental": false,
@@ -1789,6 +1847,18 @@
         ".html": {
           "relative_path": "api/Elements.Spatial.html",
           "hash": "2efkG4VK1HkgD9j5PyRcpQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.SpotLight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.SpotLight.html",
+          "hash": "M53ix5OkVSUtgK6tW0q9Lg=="
         }
       },
       "is_incremental": false,
@@ -2136,7 +2206,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.html",
-          "hash": "JVMsgBRuiuRLgirG1bUyYQ=="
+          "hash": "AVnHgvHvW4ugWrz1fOVuEA=="
         }
       },
       "is_incremental": false,
@@ -4079,7 +4149,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 144,
+          "total_file_count": 148,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
