@@ -22,9 +22,9 @@ namespace Elements
 
         private double _maxElevation = double.NegativeInfinity;
 
-        private double _depthBelowMinimumElevation = 500;
+        private double _depthBelowMinimumElevation = 200;
 
-        private double? _absoluteMinimumElevation = -500;
+        private double? _absoluteMinimumElevation;
 
         /// <summary>
         /// An element containing the depth representation of the topography.
@@ -132,7 +132,8 @@ namespace Elements
                                                            this.RowWidth,
                                                            depth,
                                                            this.CellHeight,
-                                                           this.CellWidth);
+                                                           this.CellWidth,
+                                                           this.Origin);
 
             this.PropertyChanged += (sender, args) =>
             {
@@ -143,7 +144,8 @@ namespace Elements
                                                                    this.RowWidth,
                                                                    depth,
                                                                    this.CellHeight,
-                                                                   this.CellWidth);
+                                                                   this.CellWidth,
+                                                                   this.Origin);
                 }
             };
         }
@@ -175,7 +177,8 @@ namespace Elements
                                                            this.RowWidth,
                                                            depth,
                                                            this.CellHeight,
-                                                           this.CellWidth);
+                                                           this.CellWidth,
+                                                           this.Origin);
 
             this.PropertyChanged += (sender, args) =>
             {
@@ -186,7 +189,8 @@ namespace Elements
                                                                    this.RowWidth,
                                                                    depth,
                                                                    this.CellHeight,
-                                                                   this.CellWidth);
+                                                                   this.CellWidth,
+                                                                   this.Origin);
                 }
             };
         }
@@ -268,7 +272,8 @@ namespace Elements
                                               int rowWidth,
                                               double depth,
                                               double cellHeight,
-                                              double cellWidth)
+                                              double cellWidth,
+                                              Vector3 origin)
         {
             var depthMesh = new Mesh();
 
@@ -401,10 +406,10 @@ namespace Elements
             }
 
             // Add the bottom
-            var bb1 = depthMesh.AddVertex(new Vector3(0, 0, depth));
-            var bb2 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, 0, depth));
-            var bb3 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, depth));
-            var bb4 = depthMesh.AddVertex(new Vector3(0, (rowWidth - 1) * cellHeight, depth));
+            var bb1 = depthMesh.AddVertex(origin + new Vector3(0, 0, depth));
+            var bb2 = depthMesh.AddVertex(origin + new Vector3((rowWidth - 1) * cellWidth, 0, depth));
+            var bb3 = depthMesh.AddVertex(origin + new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, depth));
+            var bb4 = depthMesh.AddVertex(origin + new Vector3(0, (rowWidth - 1) * cellHeight, depth));
 
             depthMesh.AddTriangle(bb1, bb3, bb2);
             depthMesh.AddTriangle(bb1, bb4, bb3);

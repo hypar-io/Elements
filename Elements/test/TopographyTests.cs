@@ -218,10 +218,10 @@ namespace Elements.Tests
                 }
             }
 
-            // foreach (var topo in topographies)
-            // {
-            //     topo.AbsoluteMinimumDepth = minElevation - 200;
-            // }
+            foreach (var topo in topographies)
+            {
+                topo.AbsoluteMinimumElevationn = -200;
+            }
 
             this.Model.AddElements(topographies);
 
