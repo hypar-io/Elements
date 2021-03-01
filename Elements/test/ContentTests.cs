@@ -92,8 +92,12 @@ namespace Elements.Tests
             var twoDuck = duckType.CreateInstance(new Transform(new Vector3(15, 0, 0)), "A Duck");
             model.AddElement(twoDuck);
             // </example>
-            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             model.ToGlTF("./models/ContentInstancing.glb");
+            var firstRun = sw.Elapsed.TotalSeconds;
+            sw.Restart();
+            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            var secondRun = sw.Elapsed.TotalSeconds;
         }
     }
 }
