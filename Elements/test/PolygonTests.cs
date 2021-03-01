@@ -721,6 +721,60 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PointInternal()
+        {
+            Name = "PointInternal";
+            var extremelyConcavePolygon = new Polygon(new[] {
+                new Vector3(
+                        5.894565217391305,
+                        0.0,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.894565217391305,
+                        0.69347826086956488,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.19082958701549974,
+                        0.13222235119778919,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        2.3964022904166224,
+                        0.0
+                        ),
+                        new Vector3(
+                        6.2310064053894925,
+                        3.9731847432442322,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.9682093299182242,
+                        4.5513383092810225,
+                        0.0
+                        ),
+                        new Vector3(
+                        -0.085624933213594254,
+                        2.4045397339325851,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        0.0,
+                        0.0
+                        )
+            });
+            var pointInternal = extremelyConcavePolygon.PointInternal();
+            Assert.True(extremelyConcavePolygon.Contains(pointInternal));
+            Model.AddElement(extremelyConcavePolygon);
+            Curve.MinimumChordLength = 0.001;
+            Model.AddElement(new Circle(pointInternal, 0.02));
+            Curve.MinimumChordLength = 0.1;
+        }
+
+        [Fact]
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving

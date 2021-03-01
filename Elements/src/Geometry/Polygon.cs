@@ -795,6 +795,39 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find a point that is guaranteed to be internal to the polygon.
+        /// </summary>
+        public Vector3 PointInternal()
+        {
+            var centroid = Centroid();
+            if (Contains(centroid))
+            {
+                return centroid;
+            }
+            int currentIndex = 0;
+            while (true)
+            {
+                if (currentIndex == Vertices.Count)
+                {
+                    return centroid;
+                }
+                // find midpoint of the diagonal between two non-adjacent vertices.
+                // At any convex corner, this will be inside the boundary 
+                // (unless it passes all the way through to the other side — but
+                // this can't be true for all corners). Inspired by 
+                // http://apodeline.free.fr/FAQ/CGAFAQ/CGAFAQ-3.html 3.6
+                var a = Vertices[currentIndex];
+                var b = Vertices[(currentIndex + 2) % Vertices.Count];
+                var candidate = (a + b) * 0.5;
+                if (Contains(candidate))
+                {
+                    return candidate;
+                }
+                currentIndex++;
+            }
+        }
+
+        /// <summary>
         /// Get the hash code for the polygon.
         /// </summary>
         /// <returns></returns>
