@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Elements.Analysis;
 using Elements.Geometry;
 using Xunit;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -78,6 +79,22 @@ namespace Elements.Tests
         public void ThrowsOnDuplicatedValues()
         {
             Assert.Throws<ArgumentException>(() => new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple }, new List<double>() { 0, 1, 1 }));
+        }
+
+        [Fact]
+        public void DeserializesCorrectly()
+        {
+            var bandedColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange }, 10);
+            var bandedSerialized = JsonConvert.SerializeObject(bandedColorScale);
+            var bandedDeserialized = JsonConvert.DeserializeObject<ColorScale>(bandedSerialized);
+            Assert.Equal(bandedColorScale.GetColorForValue(0.12345), bandedDeserialized.GetColorForValue(0.12345));
+
+            var linearColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange });
+            var linearSerialized = JsonConvert.SerializeObject(linearColorScale);
+            var linearDeserialized = JsonConvert.DeserializeObject<ColorScale>(linearSerialized);
+            Assert.Equal(linearColorScale.GetColorForValue(0.12345), linearDeserialized.GetColorForValue(0.12345));
+
+            Assert.NotEqual(linearColorScale.GetColorForValue(0.12345), bandedColorScale.GetColorForValue(0.12345));
         }
     }
 }

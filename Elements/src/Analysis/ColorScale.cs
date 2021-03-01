@@ -19,12 +19,21 @@ namespace Elements.Analysis
         /// <summary>
         /// The colors of the scale.
         /// </summary>
+        [JsonProperty]
         public List<Color> Colors { get; } = new List<Color>();
 
         /// <summary>
         /// The domain of the scale
         /// </summary>
+        [JsonProperty]
         private List<Domain1d> Domains { get; } = null;
+
+        /// <summary>
+        /// Whether this scale is chunked into discrete bands.
+        /// If false, values will be returned in a smooth gradient.
+        /// </summary>
+        [JsonProperty]
+        private Boolean IsDiscrete { get; } = false;
 
         public ColorScale(List<Color> colors)
         {
@@ -34,14 +43,16 @@ namespace Elements.Analysis
         }
 
         /// <summary>
-        /// Construct a color scale.
+        /// Do not use this constructor: it is for serialization and deserialization only.
         /// </summary>
         /// <param name="colors">The colors which define the color scale.</param>
+        /// <param name="isDiscrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        public ColorScale(List<Color> colors, List<Domain1d> domains)
+        public ColorScale(List<Color> colors, Boolean isDiscrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
+            this.IsDiscrete = isDiscrete;
             this.Domains = domains;
         }
 
@@ -57,6 +68,8 @@ namespace Elements.Analysis
             {
                 throw new ArgumentException("The color scale could not be created. The number of supplied colors is greater than the final color count.");
             }
+
+            this.IsDiscrete = true;
 
             var numDomains = (double)(colorCount);
             var colorDomains = new Domain1d(0, 1).DivideByCount(colors.Count - 1).ToList();
@@ -112,9 +125,8 @@ namespace Elements.Analysis
         /// <returns>A color.</returns>
         public Color GetColorForValue(double t)
         {
-            if (this.Domains == null)
+            if (this.IsDiscrete)
             {
-                // This is a discrete value scale from 0 to 1
                 if (t < 0.0 || t > 1.0)
                 {
                     throw new ArgumentException("The value of t must be between 0.0 and 1.0");
