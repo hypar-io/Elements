@@ -12170,6 +12170,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.GlossinessFactor
   nameWithType: Material.GlossinessFactor
+- uid: Elements.Material.NormalTexture
+  name: NormalTexture
+  href: api/Elements.Material.html#Elements_Material_NormalTexture
+  commentId: P:Elements.Material.NormalTexture
+  fullName: Elements.Material.NormalTexture
+  nameWithType: Material.NormalTexture
+- uid: Elements.Material.NormalTexture*
+  name: NormalTexture
+  href: api/Elements.Material.html#Elements_Material_NormalTexture_
+  commentId: Overload:Elements.Material.NormalTexture
+  isSpec: "True"
+  fullName: Elements.Material.NormalTexture
+  nameWithType: Material.NormalTexture
 - uid: Elements.Material.SpecularFactor
   name: SpecularFactor
   href: api/Elements.Material.html#Elements_Material_SpecularFactor
