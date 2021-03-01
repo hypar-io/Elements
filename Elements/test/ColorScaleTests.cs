@@ -67,5 +67,17 @@ namespace Elements.Tests
         {
             Assert.Throws<ArgumentException>(() => new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple }, new List<double>() { 0, 1, 2 }));
         }
+
+        [Fact]
+        public void ThrowsOnUnsortedValues()
+        {
+            Assert.Throws<ArgumentException>(() => new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple }, new List<double>() { 0, 2, 1 }));
+        }
+
+        [Fact]
+        public void ThrowsOnDuplicatedValues()
+        {
+            Assert.Throws<ArgumentException>(() => new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple }, new List<double>() { 0, 1, 1 }));
+        }
     }
 }

@@ -95,6 +95,10 @@ namespace Elements.Analysis
 
             for (var i = 0; i < values.Count - 1; i++)
             {
+                if (i > 0 && values[i] <= values[i - 1])
+                {
+                    throw new ArgumentException("Your list of custom values must be sorted numerically and contain no duplicate values");
+                }
                 this.Domains.Add(new Domain1d(values[i], values[i + 1]));
             }
         }
