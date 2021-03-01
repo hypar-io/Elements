@@ -213,7 +213,7 @@ var l = new Line(a, b);
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -225,6 +225,24 @@ var l = new Line(a, b);
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
@@ -250,7 +268,8 @@ var l = new Line(a, b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Line(Vector3 start, Vector3 end)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Line(Vector3 start, Vector3 end)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -319,7 +338,8 @@ var l = new Line(a, b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;End&quot;, Required = Required.AllowNull)]
+public Vector3 End { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -343,7 +363,8 @@ var l = new Line(a, b);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Start&quot;, Required = Required.AllowNull)]
+public Vector3 Start { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -456,7 +477,7 @@ var l = new Line(a, b);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -499,7 +520,7 @@ Divisions will be centered along the line.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -541,7 +562,7 @@ Divisions will be centered along the line.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -795,7 +816,7 @@ Divisions will be centered along the line.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_ExtendTo_" data-uid="Elements.Geometry.Line.ExtendTo*"></a>
-  <h4 id="Elements_Geometry_Line_ExtendTo_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)">ExtendTo(IEnumerable&lt;Line&gt;, Boolean, Boolean)</h4>
+  <h4 id="Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)">ExtendTo(IEnumerable&lt;Line&gt;, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Extend this line to its (nearest, by default) intersection with any other line.
 If optional <code>extendToFurthest</code> is true, extends to furthest intersection with any other line.</p>
 </div>
@@ -815,7 +836,7 @@ If optional <code>extendToFurthest</code> is true, extends to furthest intersect
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td><span class="parametername">otherLines</span></td>
         <td><p>The other lines to intersect with</p>
 </td>
@@ -922,6 +943,8 @@ If optional <code>extendToFurthest</code> is true, extends to furthest intersect
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
   <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_Line_Elements_Geometry_Vector3__System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@,System.Boolean,System.Boolean)">Intersects(Line, out Vector3, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Does this line intersect the provided line in 3D?</p>
@@ -1445,7 +1468,7 @@ positive Z axis points along the curve.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_Trim_" data-uid="Elements.Geometry.Line.Trim*"></a>
-  <h4 id="Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_List_Elements_Geometry_Line___" data-uid="Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,List{Elements.Geometry.Line}@)">Trim(Polygon, out List&lt;Line&gt;)</h4>
+  <h4 id="Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Line___" data-uid="Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)">Trim(Polygon, out List&lt;Line&gt;)</h4>
   <div class="markdown level1 summary"><p>Trim a line with a polygon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -1470,7 +1493,7 @@ positive Z axis points along the curve.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td><span class="parametername">outsideSegments</span></td>
         <td><p>A list of the segment(s) of the line outside of the supplied polygon.</p>
 </td>
@@ -1487,7 +1510,7 @@ positive Z axis points along the curve.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td><p>A list of the segment(s) of the line within the supplied polygon.</p>
 </td>
       </tr>
@@ -1550,7 +1573,7 @@ positive Z axis points along the curve.</p>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>

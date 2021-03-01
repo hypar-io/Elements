@@ -90,7 +90,8 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</div>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -106,12 +107,33 @@
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profile_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Profile : Element, IEquatable&lt;Profile&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Profile : Element, INotifyPropertyChanged, IEquatable&lt;Profile&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -176,12 +198,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
-  <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__System_Guid_System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Guid,System.String)">Profile(Polygon, IList&lt;Polygon&gt;, Guid, String)</h4>
+  <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Guid_System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Guid,System.String)">Profile(Polygon, IList&lt;Polygon&gt;, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -199,7 +222,7 @@
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">voids</span></td>
         <td></td>
       </tr>
@@ -216,7 +239,7 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
-  <h4 id="Elements_Geometry_Profile__ctor_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Profile.#ctor(IList{Elements.Geometry.Polygon})">Profile(IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Profile__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})">Profile(IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a profile from a collection of polygons.
 If the collection contains more than one polygon, the first polygon
 will be used as the perimeter and any remaining polygons will
@@ -238,7 +261,7 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The polygons bounding this profile.</p>
 </td>
@@ -280,7 +303,8 @@ be used as voids.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.AllowNull)]
+public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,7 +328,8 @@ be used as voids.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Voids&quot;, Required = Required.AllowNull)]
+public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -316,7 +341,7 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -438,13 +463,13 @@ be used as voids.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_Difference_" data-uid="Elements.Geometry.Profile.Difference*"></a>
-  <h4 id="Elements_Geometry_Profile_Difference_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Difference(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)">Difference(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Profile_Difference_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)">Difference(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Perform a difference operation on two sets of profiles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Difference(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Difference(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -457,13 +482,13 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>The profiles to subtract from.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>The profiles to subtract with.</p>
 </td>
@@ -486,7 +511,7 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><p>A new list of profiles comprising the first set minus the second set.</p>
 </td>
       </tr>
@@ -535,13 +560,13 @@ be used as voids.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_Intersection_" data-uid="Elements.Geometry.Profile.Intersection*"></a>
-  <h4 id="Elements_Geometry_Profile_Intersection_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Intersection(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)">Intersection(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Profile_Intersection_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)">Intersection(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Profile&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the intersections between two sets of profiles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Intersection(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Intersection(IEnumerable&lt;Profile&gt; firstSet, IEnumerable&lt;Profile&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -554,13 +579,13 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>The first set of profiles to intersect with.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>The second set of profiles to intersect with.</p>
 </td>
@@ -583,7 +608,7 @@ be used as voids.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><p>A new list of profiles comprising the overlap between the first set and the second set.</p>
 </td>
       </tr>
@@ -683,19 +708,19 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_Split_" data-uid="Elements.Geometry.Profile.Split*"></a>
-  <h4 id="Elements_Geometry_Profile_Split_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_" data-uid="Elements.Geometry.Profile.Split(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)">Split(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Polyline&gt;, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_" data-uid="Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)">Split(IEnumerable&lt;Profile&gt;, IEnumerable&lt;Polyline&gt;, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Split a set of profiles with a collection of open polylines, with an optional gap between results.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Split(IEnumerable&lt;Profile&gt; profiles, IEnumerable&lt;Polyline&gt; splitLines, double gapSize = null, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Split(IEnumerable&lt;Profile&gt; profiles, IEnumerable&lt;Polyline&gt; splitLines, double gapSize = 0, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -708,13 +733,13 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">profiles</span></td>
         <td><p>The profiles to split</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
         <td><span class="parametername">splitLines</span></td>
         <td><p>The polylines defining the splits.</p>
 </td>
@@ -743,7 +768,7 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -784,7 +809,7 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile Union(Profile profile, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Union(Profile profile, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -824,13 +849,13 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Profile_UnionAll_" data-uid="Elements.Geometry.Profile.UnionAll*"></a>
-  <h4 id="Elements_Geometry_Profile_UnionAll_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.UnionAll(IEnumerable{Elements.Geometry.Profile},System.Double)">UnionAll(IEnumerable&lt;Profile&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Profile_UnionAll_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_" data-uid="Elements.Geometry.Profile.UnionAll(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)">UnionAll(IEnumerable&lt;Profile&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Perform a union operation on a set of multiple profiles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; UnionAll(IEnumerable&lt;Profile&gt; profiles, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; UnionAll(IEnumerable&lt;Profile&gt; profiles, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -843,7 +868,7 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><span class="parametername">profiles</span></td>
         <td><p>The profiles with which to create a union.</p>
 </td>
@@ -866,7 +891,7 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
         <td><p>A new list of profiles comprising the union of all input profiles.</p>
 </td>
       </tr>
@@ -874,7 +899,10 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
