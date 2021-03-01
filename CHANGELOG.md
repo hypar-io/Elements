@@ -9,6 +9,8 @@
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
 - `Topography.DepthMesh`
+- `Topography.DepthBelowMinimumElevation`
+- `Topography.AbsoluteMinimumElevation`
 - `Material.RepeatTexture`
 
 ### Changed

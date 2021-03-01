@@ -185,6 +185,7 @@ namespace Elements.Tests
             var sampleSize = 4;
 
             var topographies = new Topography[maps.Length];
+            var minElevation = double.MaxValue;
 
             for (var i = 0; i < maps.Length; i++)
             {
@@ -212,10 +213,17 @@ namespace Elements.Tests
                     var origin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
                     var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
                     var topography = new Topography(origin, tileSize, elevationData, material);
-                    this.Model.AddElement(topography);
                     topographies[i] = topography;
+                    minElevation = Math.Min(minElevation, topography.MinElevation);
                 }
             }
+
+            // foreach (var topo in topographies)
+            // {
+            //     topo.AbsoluteMinimumDepth = minElevation - 200;
+            // }
+
+            this.Model.AddElements(topographies);
 
             // 1 2
             // 2 3

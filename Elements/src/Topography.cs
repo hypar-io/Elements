@@ -24,6 +24,8 @@ namespace Elements
 
         private double _depthBelowMinimumElevation = 500;
 
+        private double? _absoluteMinimumElevation = -500;
+
         /// <summary>
         /// An element containing the depth representation of the topography.
         /// </summary>
@@ -81,6 +83,20 @@ namespace Elements
         }
 
         /// <summary>
+        /// The absolute minimum elevation of the topography's mass.
+        /// </summary>
+        /// <value>If this value is not null, DepthBelowMinimumElevation will be ignored.</value>
+        public double? AbsoluteMinimumElevationn
+        {
+            get { return _absoluteMinimumElevation; }
+            set
+            {
+                _absoluteMinimumElevation = value;
+                RaisePropertyChanged("AbsoluteMinimumElevation");
+            }
+        }
+
+        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
@@ -111,12 +127,23 @@ namespace Elements
             this.CellHeight = this.CellWidth;
 
             GenerateMeshAndSetInternals();
+            double depth = this.AbsoluteMinimumElevationn.HasValue ? this.AbsoluteMinimumElevationn.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            this.DepthMesh.Mesh = CreateSidesAndBottomMesh(this._mesh,
+                                                           this.RowWidth,
+                                                           depth,
+                                                           this.CellHeight,
+                                                           this.CellWidth);
 
             this.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == "DepthBelowMinimumElevation")
+                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
                 {
-                    GenerateMeshAndSetInternals();
+                    depth = this.AbsoluteMinimumElevationn.HasValue ? this.AbsoluteMinimumElevationn.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+                    this.DepthMesh.Mesh = CreateSidesAndBottomMesh(this._mesh,
+                                                                   this.RowWidth,
+                                                                   depth,
+                                                                   this.CellHeight,
+                                                                   this.CellWidth);
                 }
             };
         }
@@ -143,12 +170,23 @@ namespace Elements
             this.CellHeight = cellHeight;
 
             GenerateMeshAndSetInternals();
+            double depth = this.AbsoluteMinimumElevationn.HasValue ? this.AbsoluteMinimumElevationn.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            this.DepthMesh.Mesh = CreateSidesAndBottomMesh(this._mesh,
+                                                           this.RowWidth,
+                                                           depth,
+                                                           this.CellHeight,
+                                                           this.CellWidth);
 
             this.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == "DepthBelowMinimumElevation")
+                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
                 {
-                    GenerateMeshAndSetInternals();
+                    depth = this.AbsoluteMinimumElevationn.HasValue ? this.AbsoluteMinimumElevationn.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+                    this.DepthMesh.Mesh = CreateSidesAndBottomMesh(this._mesh,
+                                                                   this.RowWidth,
+                                                                   depth,
+                                                                   this.CellHeight,
+                                                                   this.CellWidth);
                 }
             };
         }
@@ -164,7 +202,6 @@ namespace Elements
             this._mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
-            this.DepthMesh.Mesh = CreateSidesAndBottomMesh(this._mesh, this.RowWidth, this.MinElevation, this.DepthBelowMinimumElevation, this.CellHeight, this.CellWidth);
         }
 
         private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(
@@ -227,9 +264,8 @@ namespace Elements
             return (mesh, maxElevation, minElevation);
         }
 
-        private Mesh CreateSidesAndBottomMesh(Mesh mesh,
+        private static Mesh CreateSidesAndBottomMesh(Mesh mesh,
                                               int rowWidth,
-                                              double minElevation,
                                               double depth,
                                               double cellHeight,
                                               double cellWidth)
@@ -270,7 +306,7 @@ namespace Elements
                 }
                 else
                 {
-                    var p = new Vector3(v1.Position.X, v1.Position.Y, minElevation - depth);
+                    var p = new Vector3(v1.Position.X, v1.Position.Y, depth);
                     l1 = depthMesh.AddVertex(p, ComputUVForBasisAndPosition(basisLeft, p));
                 }
 
@@ -278,7 +314,7 @@ namespace Elements
                 var v2Existing = mesh.Vertices[i2];
                 var v2 = depthMesh.AddVertex(v2Existing.Position, ComputUVForBasisAndPosition(basisLeft, v2Existing.Position));
 
-                var pl2 = new Vector3(v2.Position.X, v2.Position.Y, minElevation - depth);
+                var pl2 = new Vector3(v2.Position.X, v2.Position.Y, depth);
                 var l2 = depthMesh.AddVertex(pl2, ComputUVForBasisAndPosition(basisLeft, pl2));
                 lastL = l2;
 
@@ -298,14 +334,14 @@ namespace Elements
                 }
                 else
                 {
-                    var p = new Vector3(v3.Position.X, v3.Position.Y, minElevation - depth);
+                    var p = new Vector3(v3.Position.X, v3.Position.Y, depth);
                     l3 = depthMesh.AddVertex(p, ComputUVForBasisAndPosition(basisRight, p));
                 }
 
                 var i4 = i3 + rowWidth;
                 var v4Existing = mesh.Vertices[i4];
                 var v4 = depthMesh.AddVertex(v4Existing.Position, ComputUVForBasisAndPosition(basisRight, v4Existing.Position));
-                var pl4 = new Vector3(v4.Position.X, v4.Position.Y, minElevation - depth);
+                var pl4 = new Vector3(v4.Position.X, v4.Position.Y, depth);
                 var l4 = depthMesh.AddVertex(pl4, ComputUVForBasisAndPosition(basisRight, pl4));
                 lastR = l4;
 
@@ -323,14 +359,14 @@ namespace Elements
                 }
                 else
                 {
-                    var p = new Vector3(v5.Position.X, v5.Position.Y, minElevation - depth);
+                    var p = new Vector3(v5.Position.X, v5.Position.Y, depth);
                     l5 = depthMesh.AddVertex(p, ComputUVForBasisAndPosition(basisTop, p));
                 }
 
                 var i6 = i5 + 1;
                 var v6Existing = mesh.Vertices[i6];
                 var v6 = depthMesh.AddVertex(v6Existing.Position, ComputUVForBasisAndPosition(basisTop, v6Existing.Position));
-                var pl6 = new Vector3(v6.Position.X, v6.Position.Y, minElevation - depth);
+                var pl6 = new Vector3(v6.Position.X, v6.Position.Y, depth);
                 var l6 = depthMesh.AddVertex(pl6, ComputUVForBasisAndPosition(basisTop, pl6));
                 lastT = l6;
 
@@ -349,14 +385,14 @@ namespace Elements
                 }
                 else
                 {
-                    var p = new Vector3(v7.Position.X, v7.Position.Y, minElevation - depth);
+                    var p = new Vector3(v7.Position.X, v7.Position.Y, depth);
                     l7 = depthMesh.AddVertex(p, ComputUVForBasisAndPosition(basisBottom, p));
                 }
 
                 var i8 = i7 - 1;
                 var v8Existing = mesh.Vertices[i8];
                 var v8 = depthMesh.AddVertex(v8Existing.Position, ComputUVForBasisAndPosition(basisBottom, v8Existing.Position));
-                var pl8 = new Vector3(v8.Position.X, v8.Position.Y, minElevation - depth);
+                var pl8 = new Vector3(v8.Position.X, v8.Position.Y, depth);
                 var l8 = depthMesh.AddVertex(pl8, ComputUVForBasisAndPosition(basisBottom, pl8));
                 lastB = l8;
 
@@ -365,10 +401,10 @@ namespace Elements
             }
 
             // Add the bottom
-            var bb1 = depthMesh.AddVertex(new Vector3(0, 0, minElevation - depth));
-            var bb2 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, 0, minElevation - depth));
-            var bb3 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, minElevation - depth));
-            var bb4 = depthMesh.AddVertex(new Vector3(0, (rowWidth - 1) * cellHeight, minElevation - depth));
+            var bb1 = depthMesh.AddVertex(new Vector3(0, 0, depth));
+            var bb2 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, 0, depth));
+            var bb3 = depthMesh.AddVertex(new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, depth));
+            var bb4 = depthMesh.AddVertex(new Vector3(0, (rowWidth - 1) * cellHeight, depth));
 
             depthMesh.AddTriangle(bb1, bb3, bb2);
             depthMesh.AddTriangle(bb1, bb4, bb3);
