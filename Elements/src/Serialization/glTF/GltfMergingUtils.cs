@@ -25,6 +25,7 @@ namespace Elements.Serialization.glTF
                                         )
         {
             var loadingStream = new MemoryStream();
+            glbStream.Position = 0;
             glbStream.CopyTo(loadingStream);
             loadingStream.Position = 0;
             var loaded = Interface.LoadModel(loadingStream);
