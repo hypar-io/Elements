@@ -24,7 +24,7 @@ namespace Elements.Analysis
         /// <summary>
         /// The domain of the scale
         /// </summary>
-        public List<Domain1d> Domains { get; } = null;
+        private List<Domain1d> Domains { get; } = null;
 
         /// <summary>
         /// Construct a color scale.
@@ -39,15 +39,39 @@ namespace Elements.Analysis
         }
 
         /// <summary>
-        /// Construct a color scale
+        /// Construct a color scale with a discrete number of color bands
         /// </summary>
         /// <param name="colors">The color scale's key values.</param>
         /// <param name="colorCount">The number of colors in the final color scale
         /// These values will be interpolated between the provided colors.</param>
-        [Obsolete("colorCount is no longer required, and this constructor will simply create an evenly interpolated scale between 0 and 1.")]
-        public ColorScale(List<Color> colors, int colorCount) : this(colors)
+        public ColorScale(List<Color> colors, int colorCount)
         {
+            if (colors.Count > colorCount)
+            {
+                throw new ArgumentException("The color scale could not be created. The number of supplied colors is greater than the final color count.");
+            }
 
+            this.Domains = new List<Domain1d>();
+
+            var numDomains = (double)(colorCount);
+            var colorDomains = new Domain1d(0, 1).DivideByCount(colors.Count - 1).ToList();
+
+            for (int i = 0; i < numDomains; i += 1)
+            {
+                var domain = new Domain1d((i / numDomains), (i + 1) / numDomains);
+                var value = i < numDomains / 2 ? domain.Min : domain.Max;
+                var colorDomainIdx = GetDomainIndex(colorDomains, value);
+                if (colorDomainIdx == null)
+                {
+                    throw new Exception("The color scale could not be created. An internal calculation error has occurred.");
+                }
+                var foundColorDomainIdx = (int)colorDomainIdx;
+                var foundColorDomain = colorDomains[foundColorDomainIdx];
+                var tween = (value - foundColorDomain.Min) / foundColorDomain.Length;
+                var color = colors[foundColorDomainIdx].Lerp(colors[foundColorDomainIdx + 1], tween);
+                this.Colors.Add(color);
+                this.Domains.Add(domain);
+            }
         }
 
         /// <summary>
@@ -83,7 +107,8 @@ namespace Elements.Analysis
         /// Get the color from the color scale most closely
         /// approximating the provided value.
         /// </summary>
-        /// <param name="t">A number between 0.0 and 1.0</param>
+        /// <param name="t">A number within the numerical parameters from when you constructed your color scale.</param>
+        /// <param name="discrete">If true, returns exactly one of the colors initially created, rather than a smoothly interpolated value.</param>
         /// <returns>A color.</returns>
         public Color GetColorForValue(double t)
         {
@@ -98,8 +123,17 @@ namespace Elements.Analysis
                 throw new ArgumentException($"Value {t} was not found in color scale");
             }
 
+            // Discrete color scales end up with matching length lists,
+            // non-discrete color scales expect there to be one more color than the number of domains
+            var isDiscrete = this.Colors.Count != this.Domains.Count + 1;
+
             var foundDomainIdx = (int)domainIdx;
             var domain = this.Domains[foundDomainIdx];
+            if (isDiscrete)
+            {
+                var color = t == domain.Max && foundDomainIdx < this.Colors.Count - 1 ? this.Colors[foundDomainIdx + 1] : this.Colors[foundDomainIdx];
+                return color;
+            }
             var colorMin = this.Colors[foundDomainIdx];
             var colorMax = this.Colors[foundDomainIdx + 1];
             var unitizedDistance = (t - domain.Min) / (domain.Max - domain.Min);
@@ -113,14 +147,25 @@ namespace Elements.Analysis
         /// <returns></returns>
         private int? GetDomainIndex(double t)
         {
-            if (t < this.Domains.First().Min || t > this.Domains.Last().Max)
+            return GetDomainIndex(this.Domains, t);
+        }
+
+        /// <summary>
+        /// Returns the index of the first domain that contains the value.
+        /// </summary>
+        /// <param name="domains">Sorted list of domains</param>
+        /// <param name="t">Value to search for</param>
+        /// <returns></returns>
+        private static int? GetDomainIndex(List<Domain1d> domains, double t)
+        {
+            if (t < domains.First().Min || t > domains.Last().Max)
             {
-                throw new ArgumentException($"Your value {t} is outside of the the expected bounds of {this.Domains.First().Min} - {this.Domains.Last().Max}");
+                throw new ArgumentException($"Your value {t} is outside of the the expected bounds of {domains.First().Min} - {domains.Last().Max}");
             }
 
-            for (var i = 0; i < this.Domains.Count; i++)
+            for (var i = 0; i < domains.Count; i++)
             {
-                if (this.Domains[i].Min <= t && this.Domains[i].Max >= t)
+                if (domains[i].Min <= t && domains[i].Max >= t)
                 {
                     return i;
                 }
