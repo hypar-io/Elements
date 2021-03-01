@@ -102,7 +102,7 @@ namespace Elements.Analysis
 
             if (colors.Count != values.Count)
             {
-                throw new ArgumentException("If you provide a list of custom values, it must match your list of colors in its count of items");
+                throw new ArgumentException($"{colors.Count} colors were provided with {values.Count} values. Your lists of colors and values must be the same length.");
             }
             this.Domains = new List<Domain1d>();
 
@@ -110,7 +110,7 @@ namespace Elements.Analysis
             {
                 if (i > 0 && values[i] <= values[i - 1])
                 {
-                    throw new ArgumentException("Your list of custom values must be sorted numerically and contain no duplicate values");
+                    throw new ArgumentException($"Your list of custom values must be sorted numerically and contain no duplicate values. {values[i]} cannot come after {values[i-1]}.");
                 }
                 this.Domains.Add(new Domain1d(values[i], values[i + 1]));
             }
