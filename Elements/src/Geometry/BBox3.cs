@@ -147,5 +147,30 @@ namespace Elements.Geometry
         {
             return !a.Equals(b);
         }
+
+        /// <summary>
+        /// Does this bounding box have a valid set value? 
+        /// </summary>
+        public bool IsValid()
+        {
+            return
+                Min.X != double.MaxValue &&
+                Min.Y != double.MaxValue &&
+                Min.Z != double.MaxValue &&
+                Max.X != double.MinValue &&
+                Max.Y != double.MinValue &&
+                Max.Z != double.MinValue;
+        }
+
+        /// <summary>
+        /// Does this bounding box have a dimension of 0 along any axis? 
+        /// </summary>
+        public bool IsDegenerate()
+        {
+            return
+                !Min.X.ApproximatelyEquals(Max.X) &&
+                !Min.Y.ApproximatelyEquals(Max.Y) &&
+                !Min.Z.ApproximatelyEquals(Max.Z);
+        }
     }
 }
