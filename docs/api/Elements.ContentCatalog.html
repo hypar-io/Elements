@@ -136,13 +136,13 @@ public class ContentCatalog : Element, INotifyPropertyChanged</code></pre>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ContentCatalog__ctor_" data-uid="Elements.ContentCatalog.#ctor*"></a>
-  <h4 id="Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Guid_System_String_" data-uid="Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)">ContentCatalog(IList&lt;ContentElement&gt;, Guid, String)</h4>
+  <h4 id="Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Collections_Generic_IList_Elements_Element__System_Guid_System_String_" data-uid="Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Collections.Generic.IList{Elements.Element},System.Guid,System.String)">ContentCatalog(IList&lt;ContentElement&gt;, IList&lt;Element&gt;, Guid, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)</code></pre>
+public ContentCatalog(IList&lt;ContentElement&gt; content, IList&lt;Element&gt; referenceConfiguration, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -157,6 +157,11 @@ public ContentCatalog(IList&lt;ContentElement&gt; content, Guid id, string name)
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
         <td><span class="parametername">content</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="parametername">referenceConfiguration</span></td>
         <td></td>
       </tr>
       <tr>
@@ -195,6 +200,31 @@ public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.ContentElement.html">ContentElement</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_ContentCatalog_ReferenceConfiguration_" data-uid="Elements.ContentCatalog.ReferenceConfiguration*"></a>
+  <h4 id="Elements_ContentCatalog_ReferenceConfiguration" data-uid="Elements.ContentCatalog.ReferenceConfiguration">ReferenceConfiguration</h4>
+  <div class="markdown level1 summary"><p>An example arrangement of the elements contained in this catalog.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;ReferenceConfiguration&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public IList&lt;Element&gt; ReferenceConfiguration { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
