@@ -8,9 +8,12 @@
 - `Elements.SpotLight`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 
 ## 0.8.3
 
