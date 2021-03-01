@@ -33,16 +33,16 @@ namespace Elements.Tests
         public void GetInterpolatedColor()
         {
             var defaultColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange });
-            Assert.Equal(defaultColorScale.Colors[1], defaultColorScale.GetColorForValue(0.5));
-            Assert.Equal(defaultColorScale.Colors[0], defaultColorScale.GetColorForValue(0.0));
-            Assert.Equal(defaultColorScale.Colors[2], defaultColorScale.GetColorForValue(1.0));
+            Assert.Equal(defaultColorScale.Colors[1], defaultColorScale.GetColor(0.5));
+            Assert.Equal(defaultColorScale.Colors[0], defaultColorScale.GetColor(0.0));
+            Assert.Equal(defaultColorScale.Colors[2], defaultColorScale.GetColor(1.0));
 
             var unevenColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange }, new List<double>() { 0, 10, 15 });
-            Assert.Equal(unevenColorScale.Colors[0], unevenColorScale.GetColorForValue(0.0));
-            Assert.Equal(unevenColorScale.Colors[1], unevenColorScale.GetColorForValue(10.0));
-            Assert.Equal(unevenColorScale.Colors[2], unevenColorScale.GetColorForValue(15.0));
+            Assert.Equal(unevenColorScale.Colors[0], unevenColorScale.GetColor(0.0));
+            Assert.Equal(unevenColorScale.Colors[1], unevenColorScale.GetColor(10.0));
+            Assert.Equal(unevenColorScale.Colors[2], unevenColorScale.GetColor(15.0));
 
-            Assert.Throws<ArgumentException>(() => unevenColorScale.GetColorForValue(15.1));
+            Assert.Throws<ArgumentException>(() => unevenColorScale.GetColor(15.1));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Elements.Tests
             Assert.Equal(10, colorScale.Colors.Count);
             for (var i = 0; i < numColors; i++)
             {
-                Assert.Equal(colorScale.Colors[i], colorScale.GetColorForValue((double)i / (numColors - 1)));
+                Assert.Equal(colorScale.Colors[i], colorScale.GetColor((double)i / (numColors - 1)));
             }
         }
 
@@ -87,14 +87,14 @@ namespace Elements.Tests
             var bandedColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange }, 10);
             var bandedSerialized = JsonConvert.SerializeObject(bandedColorScale);
             var bandedDeserialized = JsonConvert.DeserializeObject<ColorScale>(bandedSerialized);
-            Assert.Equal(bandedColorScale.GetColorForValue(0.12345), bandedDeserialized.GetColorForValue(0.12345));
+            Assert.Equal(bandedColorScale.GetColor(0.12345), bandedDeserialized.GetColor(0.12345));
 
             var linearColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange });
             var linearSerialized = JsonConvert.SerializeObject(linearColorScale);
             var linearDeserialized = JsonConvert.DeserializeObject<ColorScale>(linearSerialized);
-            Assert.Equal(linearColorScale.GetColorForValue(0.12345), linearDeserialized.GetColorForValue(0.12345));
+            Assert.Equal(linearColorScale.GetColor(0.12345), linearDeserialized.GetColor(0.12345));
 
-            Assert.NotEqual(linearColorScale.GetColorForValue(0.12345), bandedColorScale.GetColorForValue(0.12345));
+            Assert.NotEqual(linearColorScale.GetColor(0.12345), bandedColorScale.GetColor(0.12345));
         }
     }
 }

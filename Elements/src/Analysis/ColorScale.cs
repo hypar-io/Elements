@@ -117,13 +117,24 @@ namespace Elements.Analysis
         }
 
         /// <summary>
+        /// Get the color calculated for a value.
+        /// </summary>
+        /// <param name="t">Value to return color for.</param>
+        /// <returns></returns>
+        [Obsolete("Use GetColor instead.")]
+        public Color GetColorForValue(double t)
+        {
+            return this.GetColor(t);
+        }
+
+        /// <summary>
         /// Get the color from the color scale most closely
         /// approximating the provided value.
         /// </summary>
         /// <param name="t">A number within the numerical parameters from when you constructed your color scale. If this was initiated with colorCount, must be between 0 and 1.</param>
         /// <param name="discrete">If true, returns exactly one of the colors initially created, rather than a smoothly interpolated value.</param>
         /// <returns>A color.</returns>
-        public Color GetColorForValue(double t)
+        public Color GetColor(double t)
         {
             if (this.IsDiscrete)
             {
