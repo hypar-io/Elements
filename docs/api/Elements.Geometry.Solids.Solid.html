@@ -89,32 +89,11 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Solids.html">Elements.Geometry.Solids</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Solids_Solid_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Solid : ITessellate</code></pre>
+    <pre><code class="lang-csharp hljs">public class Solid : object, ITessellate</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -148,7 +127,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Edge.html">Edge</a>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Edge.html">Edge</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -172,7 +151,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Face.html">Face</a>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Face.html">Face</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -196,7 +175,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
+        <td><span class="xref">Dictionary</span>&lt;<span class="xref">System.Int64</span>, <a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -294,7 +273,7 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_AddFace_" data-uid="Elements.Geometry.Solids.Solid.AddFace*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})">AddFace(Polygon, IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon})">AddFace(Polygon, IList&lt;Polygon&gt;)</h4>
   <div class="markdown level1 summary"><p>Add a Face to the Solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -319,7 +298,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">inner</span></td>
         <td><p>An array of polygons representing the holes in the face.</p>
 </td>
@@ -469,7 +448,7 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_CreateLamina_" data-uid="Elements.Geometry.Solids.Solid.CreateLamina*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_CreateLamina_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})">CreateLamina(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_CreateLamina_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Solids.Solid.CreateLamina(IList{Elements.Geometry.Vector3})">CreateLamina(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a lamina solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -488,7 +467,7 @@ Additional edge arrays are treated as holes.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">perimeter</span></td>
         <td><p>The perimeter of the lamina's faces.</p>
 </td>
@@ -551,7 +530,7 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_SweepFace_" data-uid="Elements.Geometry.Solids.Solid.SweepFace*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_System_Double_System_Boolean_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)">SweepFace(Polygon, IList&lt;Polygon&gt;, Vector3, Double, Boolean, Double)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_System_Double_System_Boolean_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)">SweepFace(Polygon, IList&lt;Polygon&gt;, Vector3, Double, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Construct a solid by sweeping a face in a direction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -576,7 +555,7 @@ Additional edge arrays are treated as holes.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">holes</span></td>
         <td><p>The holes of the face to sweep.</p>
 </td>
@@ -624,7 +603,7 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_SweepFace_" data-uid="Elements.Geometry.Solids.Solid.SweepFace*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_System_Boolean_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)">SweepFace(Polygon, IList&lt;Polygon&gt;, Double, Boolean, Double)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__System_Double_System_Boolean_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)">SweepFace(Polygon, IList&lt;Polygon&gt;, Double, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Construct a solid by sweeping a face.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -649,7 +628,7 @@ Additional edge arrays are treated as holes.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">holes</span></td>
         <td><p>The holes of the face to sweep.</p>
 </td>
@@ -691,13 +670,13 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)">SweepFaceAlongCurve(Polygon, IList&lt;Polygon&gt;, ICurve, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)">SweepFaceAlongCurve(Polygon, IList&lt;Polygon&gt;, ICurve, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Construct a solid by sweeping a face along a curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Solid SweepFaceAlongCurve(Polygon perimeter, IList&lt;Polygon&gt; holes, ICurve curve, double startSetback = 0, double endSetback = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Solid SweepFaceAlongCurve(Polygon perimeter, IList&lt;Polygon&gt; holes, ICurve curve, double startSetback = null, double endSetback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -716,7 +695,7 @@ Additional edge arrays are treated as holes.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">holes</span></td>
         <td><p>The holes of the face to sweep.</p>
 </td>
@@ -917,8 +896,6 @@ appropriate for use with gltf.</p>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a>
