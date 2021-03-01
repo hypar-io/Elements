@@ -33,7 +33,7 @@ namespace Elements.Analysis
         /// If false, values will be returned in a smooth gradient.
         /// </summary>
         [JsonProperty]
-        private Boolean IsDiscrete { get; } = false;
+        private Boolean Discrete { get; } = false;
 
         public ColorScale(List<Color> colors)
         {
@@ -46,13 +46,13 @@ namespace Elements.Analysis
         /// Do not use this constructor: it is for serialization and deserialization only.
         /// </summary>
         /// <param name="colors">The colors which define the color scale.</param>
-        /// <param name="isDiscrete">Whether this color scale uses discrete values.</param>
+        /// <param name="discrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        public ColorScale(List<Color> colors, Boolean isDiscrete, List<Domain1d> domains = null)
+        public ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
-            this.IsDiscrete = isDiscrete;
+            this.Discrete = discrete;
             this.Domains = domains;
         }
 
@@ -69,7 +69,7 @@ namespace Elements.Analysis
                 throw new ArgumentException("The color scale could not be created. The number of supplied colors is greater than the final color count.");
             }
 
-            this.IsDiscrete = true;
+            this.Discrete = true;
 
             var numDomains = (double)(colorCount);
             var colorDomains = new Domain1d(0, 1).DivideByCount(colors.Count - 1).ToList();
@@ -136,7 +136,7 @@ namespace Elements.Analysis
         /// <returns>A color.</returns>
         public Color GetColor(double t)
         {
-            if (this.IsDiscrete)
+            if (this.Discrete)
             {
                 if (t < 0.0 || t > 1.0)
                 {
