@@ -846,6 +846,19 @@ references:
   isSpec: "True"
   fullName: Elements.Element.Element
   nameWithType: Element.Element
+- uid: Elements.Element.AdditionalProperties
+  name: AdditionalProperties
+  href: api/Elements.Element.html#Elements_Element_AdditionalProperties
+  commentId: P:Elements.Element.AdditionalProperties
+  fullName: Elements.Element.AdditionalProperties
+  nameWithType: Element.AdditionalProperties
+- uid: Elements.Element.AdditionalProperties*
+  name: AdditionalProperties
+  href: api/Elements.Element.html#Elements_Element_AdditionalProperties_
+  commentId: Overload:Elements.Element.AdditionalProperties
+  isSpec: "True"
+  fullName: Elements.Element.AdditionalProperties
+  nameWithType: Element.AdditionalProperties
 - uid: Elements.Element.Id
   name: Id
   href: api/Elements.Element.html#Elements_Element_Id
@@ -11787,6 +11800,25 @@ references:
   commentId: F:Elements.Geometry.VoidTreatment.PreserveInternalVoids
   fullName: Elements.Geometry.VoidTreatment.PreserveInternalVoids
   nameWithType: VoidTreatment.PreserveInternalVoids
+- uid: Elements.Identity
+  name: Identity
+  href: api/Elements.Identity.html
+  commentId: T:Elements.Identity
+  fullName: Elements.Identity
+  nameWithType: Identity
+- uid: Elements.Identity.AddOverrideIdentity(Elements.Element,System.String,System.String,System.Object)
+  name: AddOverrideIdentity(Element, String, String, Object)
+  href: api/Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_
+  commentId: M:Elements.Identity.AddOverrideIdentity(Elements.Element,System.String,System.String,System.Object)
+  fullName: Elements.Identity.AddOverrideIdentity(Elements.Element, System.String, System.String, System.Object)
+  nameWithType: Identity.AddOverrideIdentity(Element, String, String, Object)
+- uid: Elements.Identity.AddOverrideIdentity*
+  name: AddOverrideIdentity
+  href: api/Elements.Identity.html#Elements_Identity_AddOverrideIdentity_
+  commentId: Overload:Elements.Identity.AddOverrideIdentity
+  isSpec: "True"
+  fullName: Elements.Identity.AddOverrideIdentity
+  nameWithType: Identity.AddOverrideIdentity
 - uid: Elements.ImportMeshElement
   name: ImportMeshElement
   href: api/Elements.ImportMeshElement.html

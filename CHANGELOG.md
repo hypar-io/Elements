@@ -6,6 +6,7 @@
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
+- `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
 
