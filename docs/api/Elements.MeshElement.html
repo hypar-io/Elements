@@ -240,6 +240,7 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a></div>
   </div>
   <div class="inheritedMembers">
@@ -274,23 +275,45 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_MeshElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class MeshElement : GeometricElement, ITessellate</code></pre>
+    <pre><code class="lang-csharp hljs">public class MeshElement : GeometricElement, INotifyPropertyChanged, ITessellate</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_MeshElement__ctor_" data-uid="Elements.MeshElement.#ctor*"></a>
-  <h4 id="Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_Guid_System_String_" data-uid="Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)">MeshElement(Mesh, Material, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">MeshElement(Mesh, Material, Transform, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct an import mesh element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public MeshElement(Mesh mesh, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public MeshElement(Mesh mesh, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -327,7 +350,7 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The element's id.</p>
 </td>
@@ -430,6 +453,9 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
     </tbody>
   </table>
   <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a>
   </div>

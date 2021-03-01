@@ -213,7 +213,7 @@ var star = Polygon.Star(5, 3, 5);
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -245,7 +245,7 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane">Polyline.Plane()</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__">Polyline.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__">Polyline.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CreateMiterTransform_System_Int32_Elements_Geometry_Vector3_Elements_Geometry_Vector3_">Polyline.CreateMiterTransform(Int32, Vector3, Vector3)</a>
@@ -262,6 +262,18 @@ var star = Polygon.Star(5, 3, 5);
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -272,12 +284,13 @@ var star = Polygon.Star(5, 3, 5);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polygon__ctor_" data-uid="Elements.Geometry.Polygon.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polygon__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.#ctor(IList{Elements.Geometry.Vector3})">Polygon(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polygon__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polygon(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -290,7 +303,7 @@ var star = Polygon.Star(5, 3, 5);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
@@ -353,7 +366,8 @@ var star = Polygon.Star(5, 3, 5);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Please use Elements.Geometry.Circle.ToPolygon() instead.&quot;)]
+public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -623,7 +637,7 @@ var star = Polygon.Star(5, 3, 5);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Difference(Polygon polygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Difference(Polygon polygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -659,7 +673,7 @@ var star = Polygon.Star(5, 3, 5);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the subtraction of the supplied Polygon from this Polygon.
 Returns null if the area of this Polygon is entirely subtracted.
 Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.</p>
@@ -668,13 +682,13 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Difference_" data-uid="Elements.Geometry.Polygon.Difference*"></a>
-  <h4 id="Elements_Geometry_Polygon_Difference_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)">Difference(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">Difference(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric difference between two sets of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; Difference(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; Difference(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -687,13 +701,13 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>First set of polygons</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>Second set of polygons</p>
 </td>
@@ -716,20 +730,20 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the subtraction of the second set of polygons from the first set.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Difference_" data-uid="Elements.Geometry.Polygon.Difference*"></a>
-  <h4 id="Elements_Geometry_Polygon_Difference_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},System.Double)">Difference(IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">Difference(IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric difference between this Polygon and the supplied Polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Difference(IList&lt;Polygon&gt; difPolys, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Difference(IList&lt;Polygon&gt; difPolys, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -742,7 +756,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">difPolys</span></td>
         <td><p>The list of intersecting Polygons.</p>
 </td>
@@ -765,7 +779,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
 Returns null if the area of this Polygon is entirely subtracted.
 Returns a list containing a representation of the perimeter of this Polygon if the two Polygons do not intersect.</p>
@@ -900,6 +914,8 @@ Returns a list containing a representation of the perimeter of this Polygon if t
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Polygon_Fillet_" data-uid="Elements.Geometry.Polygon.Fillet*"></a>
   <h4 id="Elements_Geometry_Polygon_Fillet_System_Double_" data-uid="Elements.Geometry.Polygon.Fillet(System.Double)">Fillet(Double)</h4>
   <div class="markdown level1 summary"><p>Fillet all corners on this polygon.</p>
@@ -992,7 +1008,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_">Polyline.Frames(Double, Double)</a></div>
   <a id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d*"></a>
-  <h4 id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d(IEnumerable{Elements.Geometry.Vector3})">FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Find the minimum-area rotated rectangle containing a set of points,
 calculated without regard for Z coordinate.</p>
 </div>
@@ -1012,7 +1028,7 @@ calculated without regard for Z coordinate.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">points</span></td>
         <td><p>The points to contain within the rectangle</p>
 </td>
@@ -1059,6 +1075,8 @@ calculated without regard for Z coordinate.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Polygon_Intersection_" data-uid="Elements.Geometry.Polygon.Intersection*"></a>
   <h4 id="Elements_Geometry_Polygon_Intersection_Elements_Geometry_Polygon_System_Double_" data-uid="Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon,System.Double)">Intersection(Polygon, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the Polygon intersections between this Polygon and the supplied Polygon.</p>
@@ -1066,7 +1084,7 @@ calculated without regard for Z coordinate.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Intersection(Polygon polygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Intersection(Polygon polygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1102,7 +1120,7 @@ calculated without regard for Z coordinate.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the intersection of this Polygon with the supplied Polygon.
 Returns null if the two Polygons do not intersect.</p>
 </td>
@@ -1110,13 +1128,13 @@ Returns null if the two Polygons do not intersect.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Intersection_" data-uid="Elements.Geometry.Polygon.Intersection*"></a>
-  <h4 id="Elements_Geometry_Polygon_Intersection_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Intersection(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)">Intersection(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Intersection_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">Intersection(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the Polygon intersections between two sets of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; Intersection(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; Intersection(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1129,13 +1147,13 @@ Returns null if the two Polygons do not intersect.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>First set of polygons</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>Second set of polygons</p>
 </td>
@@ -1158,7 +1176,7 @@ Returns null if the two Polygons do not intersect.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the intersection of the first set of Polygons with the second set.
 Returns null if the Polygons do not intersect.</p>
 </td>
@@ -1215,7 +1233,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(Polygon other, double tolerance = null, bool ignoreWinding = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(Polygon other, double tolerance = 1E-05, bool ignoreWinding = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1478,7 +1496,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Polygon[] Offset(double offset, EndType endType = EndType.ClosedPolygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1931,7 +1949,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Touches(Polygon polygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Touches(Polygon polygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1980,7 +1998,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Touches(Vector3 vector, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Touches(Vector3 vector, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2175,7 +2193,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon Union(Polygon polygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon Union(Polygon polygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2219,13 +2237,14 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Union_" data-uid="Elements.Geometry.Polygon.Union*"></a>
-  <h4 id="Elements_Geometry_Polygon_Union_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)">Union(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">Union(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric union of two sets of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; Union(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Please use UnionAll, which takes a single list of polygons.&quot;)]
+public static IList&lt;Polygon&gt; Union(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2238,13 +2257,13 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>First set of polygons</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>Second set of polygons</p>
 </td>
@@ -2267,20 +2286,20 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the union of both sets of polygons.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Union_" data-uid="Elements.Geometry.Polygon.Union*"></a>
-  <h4 id="Elements_Geometry_Polygon_Union_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},System.Double)">Union(IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">Union(IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric union between this Polygon and the supplied list of Polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon Union(IList&lt;Polygon&gt; polygons, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon Union(IList&lt;Polygon&gt; polygons, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2293,7 +2312,7 @@ Returns null if a union cannot be performed on the two Polygons.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The list of Polygons to be combined with this Polygon.</p>
 </td>
@@ -2324,13 +2343,13 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_UnionAll_" data-uid="Elements.Geometry.Polygon.UnionAll*"></a>
-  <h4 id="Elements_Geometry_Polygon_UnionAll_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.UnionAll(IList{Elements.Geometry.Polygon},System.Double)">UnionAll(IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_UnionAll_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">UnionAll(IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Constructs the geometric union of a set of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; UnionAll(IList&lt;Polygon&gt; polygons, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; UnionAll(IList&lt;Polygon&gt; polygons, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2343,7 +2362,7 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td><p>The polygons to union</p>
 </td>
@@ -2366,7 +2385,7 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the union of all polygons.</p>
 </td>
       </tr>
@@ -2379,7 +2398,7 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; XOR(Polygon polygon, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; XOR(Polygon polygon, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2415,7 +2434,7 @@ Returns null if a union cannot be performed on the complete list of Polygons.</p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the symmetric difference of this Polygon and the supplied Polygon.
 Returns a representation of this Polygon and the supplied Polygon if the Polygons do not intersect.</p>
 </td>
@@ -2423,13 +2442,13 @@ Returns a representation of this Polygon and the supplied Polygon if the Polygon
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_XOR_" data-uid="Elements.Geometry.Polygon.XOR*"></a>
-  <h4 id="Elements_Geometry_Polygon_XOR_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.XOR(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)">XOR(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_XOR_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)">XOR(IList&lt;Polygon&gt;, IList&lt;Polygon&gt;, Double)</h4>
   <div class="markdown level1 summary"><p>Returns Polygons representing the symmetric difference between two sets of polygons.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; XOR(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IList&lt;Polygon&gt; XOR(IList&lt;Polygon&gt; firstSet, IList&lt;Polygon&gt; secondSet, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2442,13 +2461,13 @@ Returns a representation of this Polygon and the supplied Polygon if the Polygon
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">firstSet</span></td>
         <td><p>First set of polygons</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">secondSet</span></td>
         <td><p>Second set of polygons</p>
 </td>
@@ -2471,7 +2490,7 @@ Returns a representation of this Polygon and the supplied Polygon if the Polygon
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>Returns a list of Polygons representing the symmetric difference of these two sets of polygons.
 Returns a representation of all polygons if they do not intersect.</p>
 </td>
@@ -2572,7 +2591,7 @@ Returns a representation of all polygons if they do not intersect.</p>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>

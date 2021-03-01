@@ -82,8 +82,20 @@
   <div class="markdown level0 conceptual"></div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><span class="xref">IComparable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
+    <div><span class="xref">System.IComparable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -159,7 +171,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -196,7 +209,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public const double EPSILON = null</code></pre>
+    <pre><code class="lang-csharp hljs">public const double EPSILON = 1E-05</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -246,7 +259,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
+public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -294,7 +308,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
+public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -342,7 +357,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
+public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -479,7 +495,7 @@ you should use Vector3.PlaneAngleTo.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -1134,6 +1150,8 @@ polyline, and output the location of the closest point on that polyline.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
   <a id="Elements_Geometry_Vector3_GetHashCode_" data-uid="Elements.Geometry.Vector3.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Vector3_GetHashCode" data-uid="Elements.Geometry.Vector3.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the vector.</p>
@@ -1158,6 +1176,8 @@ polyline, and output the location of the closest point on that polyline.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.GetHashCode()</span></div>
   <a id="Elements_Geometry_Vector3_IsAlmostEqualTo_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo*"></a>
   <h4 id="Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3,System.Double)">IsAlmostEqualTo(Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Determine whether this vector's components are equal to those of v, within tolerance.</p>
@@ -1165,7 +1185,7 @@ polyline, and output the location of the closest point on that polyline.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(Vector3 v, double tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(Vector3 v, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1214,7 +1234,7 @@ polyline, and output the location of the closest point on that polyline.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(double x, double y, double z = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsAlmostEqualTo(double x, double y, double z = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1680,6 +1700,8 @@ polyline, and output the location of the closest point on that polyline.</p>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.ValueType.ToString()</span></div>
   <a id="Elements_Geometry_Vector3_TripleProduct_" data-uid="Elements.Geometry.Vector3.TripleProduct*"></a>
   <h4 id="Elements_Geometry_Vector3_TripleProduct_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.TripleProduct(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">TripleProduct(Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Check if two vectors are coplanar.</p>
@@ -2192,10 +2214,10 @@ polyline, and output the location of the closest point on that polyline.</p>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <span class="xref">IComparable&lt;&gt;</span>
+      <span class="xref">System.IComparable&lt;T&gt;</span>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>
