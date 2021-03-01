@@ -98,6 +98,7 @@ namespace Elements.Tests
             sw.Restart();
             model.ToGlTF("./models/ContentInstancing.gltf", false);
             var secondRun = sw.Elapsed.TotalSeconds;
+            Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }
     }
 }
