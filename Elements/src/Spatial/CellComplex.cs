@@ -282,6 +282,18 @@ namespace Elements.Spatial
         [JsonIgnore]
         private Dictionary<string, long> facesLookup = new Dictionary<string, long>();
 
+        [JsonIgnore]
+        private Dictionary<long, HashSet<long>> segmentIdsByVertexId = new Dictionary<long, HashSet<long>>();
+
+        [JsonIgnore]
+        private Dictionary<long, HashSet<long>> directedSegmentIdsBySegmentId = new Dictionary<long, HashSet<long>>();
+
+        [JsonIgnore]
+        private Dictionary<long, HashSet<long>> faceIdsByDirectedSegmentId = new Dictionary<long, HashSet<long>>();
+
+        [JsonIgnore]
+        private Dictionary<long, HashSet<long>> cellIdsByFaceId = new Dictionary<long, HashSet<long>>();
+
         public CellComplex(Guid id, string name) : base(id, name)
         {
 
@@ -335,10 +347,14 @@ namespace Elements.Spatial
                 var cellFaces = cell.FaceIds.Select(fId => this.GetFace(fId)).ToList();
                 var bottomFace = this.GetFace(cell.BottomFaceId);
                 var topFace = this.GetFace(cell.TopFaceId);
-                this.AddCell(cell.Id, cellFaces, bottomFace, topFace);
+                if (!this.AddCell(cell.Id, cellFaces, bottomFace, topFace, out var addedCell))
+                {
+                    throw new Exception("Duplicate cell found");
+                }
             }
         }
 
+        #region add content
         public Cell AddCell(Polygon polygon, double height, double elevation, Grid1d uGrid = null, Grid1d vGrid = null)
         {
             var elevationVector = new Vector3(0, 0, elevation);
@@ -369,21 +385,14 @@ namespace Elements.Spatial
             foreach (var faceEdge in transformedPolygonBottom.Segments())
             {
                 var vertices = new List<Vector3>() { faceEdge.Start, faceEdge.End };
-                var verticalU = this.AddUV((faceEdge.End - faceEdge.Start).Unitized());
+                var horizontalU = this.AddUV((faceEdge.End - faceEdge.Start).Unitized());
                 vertices.Add(faceEdge.End + heightVector);
                 vertices.Add(faceEdge.Start + heightVector);
                 var facePoly = new Polygon(vertices);
-                faces.Add(this.AddFace(facePoly, verticalU, up));
+                faces.Add(this.AddFace(facePoly, horizontalU, up));
             }
 
-            return this.AddCell(this._cellId, faces, bottomFace, topFace);
-        }
-
-        private Cell AddCell(long cellId, List<Face> faces, Face bottomFace, Face topFace)
-        {
-            var cell = new Cell(cellId, faces, bottomFace, topFace);
-            this.Cells.Add(cell.Id, cell);
-            this._cellId = Math.Max(cellId + 1, this._cellId + 1);
+            this.AddCell(this._cellId, faces, bottomFace, topFace, out var cell);
             return cell;
         }
 
@@ -391,37 +400,6 @@ namespace Elements.Spatial
         {
             this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
-
-        }
-
-        private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
-        {
-            var lines = polygon.Segments();
-            var directedSegments = new List<DirectedSegment>();
-            foreach (var line in lines)
-            {
-                directedSegments.Add(this.AddDirectedSegment(line));
-            }
-
-            // Face lookup hash is segment ids in ascending order
-            var sortedIds = directedSegments.Select(segment => segment.Id).ToList();
-            sortedIds.Sort();
-            var hash = String.Join(",", sortedIds);
-
-            if (!this.facesLookup.TryGetValue(hash, out var faceId))
-            {
-                face = new Face(idIfNew, directedSegments, u, v);
-                faceId = face.Id;
-                this.facesLookup.Add(hash, faceId);
-                this.Faces.Add(faceId, face);
-                this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
-                return true;
-            }
-            else
-            {
-                this.Faces.TryGetValue(faceId, out face);
-                return false;
-            }
         }
 
         public DirectedSegment AddDirectedSegment(Line line)
@@ -443,6 +421,62 @@ namespace Elements.Spatial
             return directedSegment;
         }
 
+        private Boolean AddCell(long cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
+        {
+            if (this.Cells.ContainsKey(cellId))
+            {
+                cell = null;
+                return false;
+            }
+
+            cell = new Cell(cellId, faces, bottomFace, topFace);
+            this.Cells.Add(cell.Id, cell);
+
+            foreach (var face in faces)
+            {
+                AddValue(this.cellIdsByFaceId, face.Id, cell.Id);
+            }
+
+            this._cellId = Math.Max(cellId + 1, this._cellId + 1);
+            return true;
+        }
+
+        private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
+        {
+            var lines = polygon.Segments();
+            var directedSegments = new List<DirectedSegment>();
+            foreach (var line in lines)
+            {
+                directedSegments.Add(this.AddDirectedSegment(line));
+            }
+
+            // Face lookup hash is segment ids in ascending order
+            var sortedIds = directedSegments.Select(ds => ds.SegmentId).ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+
+            if (!this.facesLookup.TryGetValue(hash, out var faceId))
+            {
+                face = new Face(idIfNew, directedSegments, u, v);
+                faceId = face.Id;
+                this.facesLookup.Add(hash, faceId);
+                this.Faces.Add(faceId, face);
+
+                foreach (var directedSegment in directedSegments)
+                {
+                    AddValue(this.faceIdsByDirectedSegmentId, directedSegment.Id, face.Id);
+                }
+
+                this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
+                return true;
+            }
+            else
+            {
+                this.Faces.TryGetValue(faceId, out face);
+                return false;
+            }
+        }
+
         private Boolean AddDirectedSegment(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out DirectedSegment directedSegment)
         {
             var segmentTuple = (segment.Vertex1Id, segment.Vertex2Id);
@@ -460,6 +494,8 @@ namespace Elements.Spatial
 
                 directedSegmentDict.Add(segmentTupleIsInOrder, directedSegmentId);
                 this.DirectedSegments.Add(directedSegmentId, directedSegment);
+
+                AddValue(this.directedSegmentIdsBySegmentId, segment.Id, directedSegment.Id);
 
                 this._directedSegmentId = Math.Max(directedSegmentId + 1, this._directedSegmentId + 1);
 
@@ -481,7 +517,11 @@ namespace Elements.Spatial
                 segmentId = segment.Id;
 
                 this.segmentsLookup[segmentTuple] = segmentId;
-                this.Segments[segmentId] = segment;
+                this.Segments.Add(segmentId, segment);
+
+                AddValue(this.segmentIdsByVertexId, segment.Vertex1Id, segment.Id);
+                AddValue(this.segmentIdsByVertexId, segment.Vertex2Id, segment.Id);
+
                 this._segmentId = Math.Max(segmentId + 1, this._segmentId + 1);
 
                 return true;
@@ -593,7 +633,195 @@ namespace Elements.Spatial
             return true;
         }
 
-        #endregion
+        #endregion add uv
+        #endregion add content
+
+        public Vertex GetVertex(long vertexId)
+        {
+            this.Vertices.TryGetValue(vertexId, out var vertex);
+            return vertex;
+        }
+
+        public UV GetUV(long? uvId)
+        {
+            if (uvId == null)
+            {
+                return null;
+            }
+            this.UVs.TryGetValue((long)uvId, out var uv);
+            return uv;
+        }
+
+        public Segment GetSegment(long segmentId)
+        {
+            this.Segments.TryGetValue(segmentId, out var segment);
+            return segment;
+        }
+
+        public DirectedSegment GetDirectedSegment(long directedSegmentId)
+        {
+            this.DirectedSegments.TryGetValue(directedSegmentId, out var directedSegment);
+            return directedSegment;
+        }
+
+        public Face GetFace(long? faceId)
+        {
+            if (faceId == null)
+            {
+                return null;
+            }
+
+            this.Faces.TryGetValue((long)faceId, out var face);
+            return face;
+        }
+
+        public Cell GetCell(long cellId)
+        {
+            this.Cells.TryGetValue(cellId, out var cell);
+            return cell;
+        }
+
+        public Line GetSegmentGeometry(Segment segment)
+        {
+            return new Line(
+                this.GetVertex(segment.Vertex1Id).Value,
+                this.GetVertex(segment.Vertex2Id).Value
+            );
+        }
+
+        public Line GetDirectedSegmentGeometry(DirectedSegment directedSegment)
+        {
+            return new Line(
+                this.GetVertex(directedSegment.StartVertexId).Value,
+                this.GetVertex(directedSegment.EndVertexId).Value
+            );
+        }
+
+        public Polygon GetFaceGeometry(Face face)
+        {
+            var vertices = face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegmentGeometry(this.GetDirectedSegment(dsId)).Start).ToList();
+            return new Polygon(vertices);
+        }
+
+        public List<Vertex> GetVerticesMatchingXY(double x, double y)
+        {
+            var vertices = new List<Vertex>();
+
+            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
+            {
+                return vertices;
+            }
+
+            if (!yzDict.TryGetValue(y, out var zDict))
+            {
+                return vertices;
+            }
+
+            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
+        }
+
+        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        {
+            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
+        }
+
+        public List<Segment> GetSegments(Vertex vertex)
+        {
+            if (this.segmentIdsByVertexId.TryGetValue(vertex.Id, out var segmentIdSet))
+            {
+                return segmentIdSet.Select(segmentId => this.GetSegment(segmentId)).ToList();
+            }
+            return new List<Segment>();
+        }
+
+        public List<Segment> GetSegments(Face face)
+        {
+            return face.DirectedSegmentIds.Select(dsId => this.GetSegment(this.GetDirectedSegment(dsId).SegmentId)).ToList();
+        }
+
+        public List<Segment> GetSegments(Cell cell)
+        {
+            return this.GetFaces(cell).Select(face => this.GetSegments(face)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<DirectedSegment> GetDirectedSegments(Segment segment)
+        {
+            if (this.directedSegmentIdsBySegmentId.TryGetValue(segment.Id, out var directedSegmentIdSet))
+            {
+                return directedSegmentIdSet.Select(dsId => this.GetDirectedSegment(dsId)).ToList();
+            }
+            return new List<DirectedSegment>();
+        }
+
+        public List<DirectedSegment> GetDirectedSegments(Vertex vertex)
+        {
+            return this.GetSegments(vertex).Select(segment => this.GetDirectedSegments(segment)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<DirectedSegment> GetDirectedSegments(Face face)
+        {
+            return face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegment(dsId)).ToList();
+        }
+
+        public List<Face> GetFaces(DirectedSegment directedSegment)
+        {
+            if (this.faceIdsByDirectedSegmentId.TryGetValue(directedSegment.Id, out var faceIdSet))
+            {
+                return faceIdSet.Select(faceId => this.GetFace(faceId)).ToList();
+            }
+            return new List<Face>();
+        }
+
+        public List<Face> GetFaces(Segment segment)
+        {
+            return this.GetDirectedSegments(segment).Select(directedSegment => this.GetFaces(directedSegment)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<Face> GetFaces(Vertex vertex)
+        {
+            return this.GetDirectedSegments(vertex).Select(directedSegment => this.GetFaces(directedSegment)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<Face> GetFaces(Cell cell)
+        {
+            return cell.FaceIds.Select(fid => this.GetFace(fid)).ToList();
+        }
+
+        public List<Cell> GetCells(Face face)
+        {
+            if (this.cellIdsByFaceId.TryGetValue(face.Id, out var cellIdSet))
+            {
+                return cellIdSet.Select(cellId => this.GetCell(cellId)).ToList();
+            }
+            return new List<Cell>();
+        }
+
+        public List<Cell> GetCells(DirectedSegment directedSegment)
+        {
+            return this.GetFaces(directedSegment).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<Cell> GetCells(Segment segment)
+        {
+            return this.GetFaces(segment).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        public List<Cell> GetCells(Vertex vertex)
+        {
+            return this.GetFaces(vertex).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
+        }
+
+        private static HashSet<long> AddValue(Dictionary<long, HashSet<long>> dict, long key, long value)
+        {
+            if (!dict.ContainsKey(key))
+            {
+                dict.Add(key, new HashSet<long>());
+            }
+
+            dict.TryGetValue(key, out var set);
+            set.Add(value);
+            return set;
+        }
 
         private static Dictionary<double, long> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
         {
@@ -657,97 +885,6 @@ namespace Elements.Spatial
                 }
             }
             return false;
-        }
-
-        public Vertex GetVertex(long vertexId)
-        {
-            this.Vertices.TryGetValue(vertexId, out var vertex);
-            return vertex;
-        }
-
-
-        public UV GetUV(long? uvId)
-        {
-            if (uvId == null)
-            {
-                return null;
-            }
-            this.UVs.TryGetValue((long)uvId, out var uv);
-            return uv;
-        }
-
-        public Segment GetSegment(long segmentId)
-        {
-            this.Segments.TryGetValue(segmentId, out var segment);
-            return segment;
-        }
-
-        public DirectedSegment GetDirectedSegment(long directedSegmentId)
-        {
-            this.DirectedSegments.TryGetValue(directedSegmentId, out var directedSegment);
-            return directedSegment;
-        }
-
-        public Face GetFace(long? faceId)
-        {
-            if (faceId == null)
-            {
-                return null;
-            }
-
-            this.Faces.TryGetValue((long)faceId, out var face);
-            return face;
-        }
-
-        public Cell GetCell(long cellId)
-        {
-            this.Cells.TryGetValue(cellId, out var cell);
-            return cell;
-        }
-
-        public Line GetSegmentGeometry(Segment segment)
-        {
-            return new Line(
-                this.GetVertex(segment.Vertex1Id).Value,
-                this.GetVertex(segment.Vertex2Id).Value
-            );
-        }
-
-        public Line GetDirectedSegmentGeometry(long directedSegmentId)
-        {
-            var directedSegment = this.GetDirectedSegment(directedSegmentId);
-            return new Line(
-                this.GetVertex(directedSegment.StartVertexId).Value,
-                this.GetVertex(directedSegment.EndVertexId).Value
-            );
-        }
-
-        public Polygon GetFaceGeometry(Face face)
-        {
-            var vertices = face.DirectedSegmentIds.Select(dsId => GetDirectedSegmentGeometry(dsId).Start).ToList();
-            return new Polygon(vertices);
-        }
-
-        public List<Vertex> GetVerticesMatchingXY(double x, double y)
-        {
-            var vertices = new List<Vertex>();
-
-            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
-            {
-                return vertices;
-            }
-
-            if (!yzDict.TryGetValue(y, out var zDict))
-            {
-                return vertices;
-            }
-
-            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
-        }
-
-        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
-        {
-            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
         }
     }
 }
