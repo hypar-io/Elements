@@ -1,11 +1,26 @@
 # Changelog
 
+## 0.8.4
+
+### Added
+- `Elements.Light`
+- `Elements.PointLight`
+- `Elements.SpotLight`
+- `Identity.AddOverrideIdentity`
+- `Material.NormalTexture`
+- `Polygon.PointInternal()`
+
+### Changed
+- `Elements.DirectionalLight` now inherits from `Elements.Light`.
+
 ## 0.8.3
 
 ### Added
+
 - `Profile.ToModelCurves()`
 - `Profile.Difference()`
 - `Profile.Intersection()`
+- `Profile.Split()`
 - `Profile.Segments()`
 - `Bbox3.ToModelCurves()`
 - `Line.ExtendTo(IEnumerable<Line>)`
@@ -24,17 +39,23 @@
 - `Random.NextColor()` and `Random.NextMaterial()`
 - `Validator.DisableValidationOnConstruction`
 - `Vector3.ComputeDefaultBasisVectors()`
+
 ### Changed
+
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.
 - Make `Grid1d` and `Grid2d` serializable
 - `new Transform(Vector3 origin, Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)` did not unitize its axes, this is fixed.
 - All solids and csgs will now have planar texture coordinates.
+- Triangles are now validated to check for 3 distinct vertex positions.
 
 ### Fixed
+
 - Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
 - Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
 - Fixed a bug where Grid2d subcells would not split correctly with `SplitAtPoint`
+- Fixed [#528](https://github.com/hypar-io/Elements/issues/528)
+
 ## 0.8.2
 
 ### Changed

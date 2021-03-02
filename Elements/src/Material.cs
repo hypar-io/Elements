@@ -10,6 +10,11 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
+        /// A relative path to a jpg or png image file to be used as a normal texture.
+        /// </summary>
+        public string NormalTexture { get; set; }
+
+        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>
@@ -47,7 +52,8 @@ namespace Elements
                  texture,
                  doubleSided,
                  id != default(Guid) ? id : Guid.NewGuid(),
-                 name){}
+                 name)
+        { }
 
         /// <summary>
         /// Is this material equal to the provided material?

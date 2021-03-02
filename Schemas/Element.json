@@ -28,5 +28,5 @@
             "type": "string"
         }
     },
-    "additionalProperties": false
+    "additionalProperties": true
 }

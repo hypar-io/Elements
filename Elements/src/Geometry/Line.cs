@@ -515,8 +515,8 @@ namespace Elements.Geometry
                 .Reverse().Cast<Vector3?>();
 
             (Vector3? Start, Vector3? End) startEndCandidates = extendToFurthest ?
-                (startCandidates.Count() > 0 ? startCandidates.Last() : null, endCandidates.Count() > 0 ? endCandidates.Last() : null) :
-                (startCandidates.Count() > 0 ? startCandidates.First() : null, endCandidates.Count() > 0 ? endCandidates.First(): null);
+                (startCandidates.LastOrDefault(), endCandidates.LastOrDefault()) :
+                (startCandidates.FirstOrDefault(), endCandidates.FirstOrDefault());
 
             if (bothSides && startEndCandidates.Start != null)
             {

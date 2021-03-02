@@ -659,45 +659,6 @@ references:
   isSpec: "True"
   fullName: Elements.DirectionalLight.DirectionalLight
   nameWithType: DirectionalLight.DirectionalLight
-- uid: Elements.DirectionalLight.Color
-  name: Color
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Color
-  commentId: P:Elements.DirectionalLight.Color
-  fullName: Elements.DirectionalLight.Color
-  nameWithType: DirectionalLight.Color
-- uid: Elements.DirectionalLight.Color*
-  name: Color
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Color_
-  commentId: Overload:Elements.DirectionalLight.Color
-  isSpec: "True"
-  fullName: Elements.DirectionalLight.Color
-  nameWithType: DirectionalLight.Color
-- uid: Elements.DirectionalLight.Intensity
-  name: Intensity
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Intensity
-  commentId: P:Elements.DirectionalLight.Intensity
-  fullName: Elements.DirectionalLight.Intensity
-  nameWithType: DirectionalLight.Intensity
-- uid: Elements.DirectionalLight.Intensity*
-  name: Intensity
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Intensity_
-  commentId: Overload:Elements.DirectionalLight.Intensity
-  isSpec: "True"
-  fullName: Elements.DirectionalLight.Intensity
-  nameWithType: DirectionalLight.Intensity
-- uid: Elements.DirectionalLight.Transform
-  name: Transform
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Transform
-  commentId: P:Elements.DirectionalLight.Transform
-  fullName: Elements.DirectionalLight.Transform
-  nameWithType: DirectionalLight.Transform
-- uid: Elements.DirectionalLight.Transform*
-  name: Transform
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight_Transform_
-  commentId: Overload:Elements.DirectionalLight.Transform
-  isSpec: "True"
-  fullName: Elements.DirectionalLight.Transform
-  nameWithType: DirectionalLight.Transform
 - uid: Elements.Domain1d
   name: Domain1d
   href: api/Elements.Domain1d.html
@@ -885,6 +846,19 @@ references:
   isSpec: "True"
   fullName: Elements.Element.Element
   nameWithType: Element.Element
+- uid: Elements.Element.AdditionalProperties
+  name: AdditionalProperties
+  href: api/Elements.Element.html#Elements_Element_AdditionalProperties
+  commentId: P:Elements.Element.AdditionalProperties
+  fullName: Elements.Element.AdditionalProperties
+  nameWithType: Element.AdditionalProperties
+- uid: Elements.Element.AdditionalProperties*
+  name: AdditionalProperties
+  href: api/Elements.Element.html#Elements_Element_AdditionalProperties_
+  commentId: Overload:Elements.Element.AdditionalProperties
+  isSpec: "True"
+  fullName: Elements.Element.AdditionalProperties
+  nameWithType: Element.AdditionalProperties
 - uid: Elements.Element.Id
   name: Id
   href: api/Elements.Element.html#Elements_Element_Id
@@ -4990,6 +4964,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.PointAtInternal
   nameWithType: Polygon.PointAtInternal
+- uid: Elements.Geometry.Polygon.PointInternal
+  name: PointInternal()
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointInternal
+  commentId: M:Elements.Geometry.Polygon.PointInternal
+  fullName: Elements.Geometry.Polygon.PointInternal()
+  nameWithType: Polygon.PointInternal()
+- uid: Elements.Geometry.Polygon.PointInternal*
+  name: PointInternal
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_PointInternal_
+  commentId: Overload:Elements.Geometry.Polygon.PointInternal
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.PointInternal
+  nameWithType: Polygon.PointInternal
 - uid: Elements.Geometry.Polygon.Project(Elements.Geometry.Plane)
   name: Project(Plane)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Project_Elements_Geometry_Plane_
@@ -5735,6 +5722,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Segments
   nameWithType: Profile.Segments
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
+  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
+  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double, System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+- uid: Elements.Geometry.Profile.Split*
+  name: Split
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_
+  commentId: Overload:Elements.Geometry.Profile.Split
+  isSpec: "True"
+  fullName: Elements.Geometry.Profile.Split
+  nameWithType: Profile.Split
 - uid: Elements.Geometry.Profile.Transform(Elements.Geometry.Transform)
   name: Transform(Transform)
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Transform_Elements_Geometry_Transform_
@@ -11176,12 +11179,12 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3.GetHashCode
   nameWithType: Vector3.GetHashCode
-- uid: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  name: IsAlmostEqualTo(Vector3)
-  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_
-  commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3)
-  nameWithType: Vector3.IsAlmostEqualTo(Vector3)
+- uid: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3,System.Double)
+  name: IsAlmostEqualTo(Vector3, Double)
+  href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_Elements_Geometry_Vector3_System_Double_
+  commentId: M:Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3,System.Double)
+  fullName: Elements.Geometry.Vector3.IsAlmostEqualTo(Elements.Geometry.Vector3, System.Double)
+  nameWithType: Vector3.IsAlmostEqualTo(Vector3, Double)
 - uid: Elements.Geometry.Vector3.IsAlmostEqualTo(System.Double,System.Double,System.Double)
   name: IsAlmostEqualTo(Double, Double, Double)
   href: api/Elements.Geometry.Vector3.html#Elements_Geometry_Vector3_IsAlmostEqualTo_System_Double_System_Double_System_Double_
@@ -11797,6 +11800,25 @@ references:
   commentId: F:Elements.Geometry.VoidTreatment.PreserveInternalVoids
   fullName: Elements.Geometry.VoidTreatment.PreserveInternalVoids
   nameWithType: VoidTreatment.PreserveInternalVoids
+- uid: Elements.Identity
+  name: Identity
+  href: api/Elements.Identity.html
+  commentId: T:Elements.Identity
+  fullName: Elements.Identity
+  nameWithType: Identity
+- uid: Elements.Identity.AddOverrideIdentity(Elements.Element,System.String,System.String,System.Object)
+  name: AddOverrideIdentity(Element, String, String, Object)
+  href: api/Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_
+  commentId: M:Elements.Identity.AddOverrideIdentity(Elements.Element,System.String,System.String,System.Object)
+  fullName: Elements.Identity.AddOverrideIdentity(Elements.Element, System.String, System.String, System.Object)
+  nameWithType: Identity.AddOverrideIdentity(Element, String, String, Object)
+- uid: Elements.Identity.AddOverrideIdentity*
+  name: AddOverrideIdentity
+  href: api/Elements.Identity.html#Elements_Identity_AddOverrideIdentity_
+  commentId: Overload:Elements.Identity.AddOverrideIdentity
+  isSpec: "True"
+  fullName: Elements.Identity.AddOverrideIdentity
+  nameWithType: Identity.AddOverrideIdentity
 - uid: Elements.ImportMeshElement
   name: ImportMeshElement
   href: api/Elements.ImportMeshElement.html
@@ -11854,6 +11876,107 @@ references:
   isSpec: "True"
   fullName: Elements.Interfaces.IHasOpenings.Openings
   nameWithType: IHasOpenings.Openings
+- uid: Elements.Light
+  name: Light
+  href: api/Elements.Light.html
+  commentId: T:Elements.Light
+  fullName: Elements.Light
+  nameWithType: Light
+- uid: Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,System.Guid,System.String)
+  name: Light(Double, Color, Transform, Guid, String)
+  href: api/Elements.Light.html#Elements_Light__ctor_System_Double_Elements_Geometry_Color_Elements_Geometry_Transform_System_Guid_System_String_
+  commentId: M:Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,System.Guid,System.String)
+  fullName: Elements.Light.Light(System.Double, Elements.Geometry.Color, Elements.Geometry.Transform, System.Guid, System.String)
+  nameWithType: Light.Light(Double, Color, Transform, Guid, String)
+- uid: Elements.Light.#ctor*
+  name: Light
+  href: api/Elements.Light.html#Elements_Light__ctor_
+  commentId: Overload:Elements.Light.#ctor
+  isSpec: "True"
+  fullName: Elements.Light.Light
+  nameWithType: Light.Light
+- uid: Elements.Light.Color
+  name: Color
+  href: api/Elements.Light.html#Elements_Light_Color
+  commentId: P:Elements.Light.Color
+  fullName: Elements.Light.Color
+  nameWithType: Light.Color
+- uid: Elements.Light.Color*
+  name: Color
+  href: api/Elements.Light.html#Elements_Light_Color_
+  commentId: Overload:Elements.Light.Color
+  isSpec: "True"
+  fullName: Elements.Light.Color
+  nameWithType: Light.Color
+- uid: Elements.Light.Intensity
+  name: Intensity
+  href: api/Elements.Light.html#Elements_Light_Intensity
+  commentId: P:Elements.Light.Intensity
+  fullName: Elements.Light.Intensity
+  nameWithType: Light.Intensity
+- uid: Elements.Light.Intensity*
+  name: Intensity
+  href: api/Elements.Light.html#Elements_Light_Intensity_
+  commentId: Overload:Elements.Light.Intensity
+  isSpec: "True"
+  fullName: Elements.Light.Intensity
+  nameWithType: Light.Intensity
+- uid: Elements.Light.LightType
+  name: LightType
+  href: api/Elements.Light.html#Elements_Light_LightType
+  commentId: P:Elements.Light.LightType
+  fullName: Elements.Light.LightType
+  nameWithType: Light.LightType
+- uid: Elements.Light.LightType*
+  name: LightType
+  href: api/Elements.Light.html#Elements_Light_LightType_
+  commentId: Overload:Elements.Light.LightType
+  isSpec: "True"
+  fullName: Elements.Light.LightType
+  nameWithType: Light.LightType
+- uid: Elements.Light.Transform
+  name: Transform
+  href: api/Elements.Light.html#Elements_Light_Transform
+  commentId: P:Elements.Light.Transform
+  fullName: Elements.Light.Transform
+  nameWithType: Light.Transform
+- uid: Elements.Light.Transform*
+  name: Transform
+  href: api/Elements.Light.html#Elements_Light_Transform_
+  commentId: Overload:Elements.Light.Transform
+  isSpec: "True"
+  fullName: Elements.Light.Transform
+  nameWithType: Light.Transform
+- uid: Elements.LightType
+  name: LightType
+  href: api/Elements.LightType.html
+  commentId: T:Elements.LightType
+  fullName: Elements.LightType
+  nameWithType: LightType
+- uid: Elements.LightType.Directional
+  name: Directional
+  href: api/Elements.LightType.html#Elements_LightType_Directional
+  commentId: F:Elements.LightType.Directional
+  fullName: Elements.LightType.Directional
+  nameWithType: LightType.Directional
+- uid: Elements.LightType.Point
+  name: Point
+  href: api/Elements.LightType.html#Elements_LightType_Point
+  commentId: F:Elements.LightType.Point
+  fullName: Elements.LightType.Point
+  nameWithType: LightType.Point
+- uid: Elements.LightType.Spot
+  name: Spot
+  href: api/Elements.LightType.html#Elements_LightType_Spot
+  commentId: F:Elements.LightType.Spot
+  fullName: Elements.LightType.Spot
+  nameWithType: LightType.Spot
+- uid: Elements.LightType.Undefined
+  name: Undefined
+  href: api/Elements.LightType.html#Elements_LightType_Undefined
+  commentId: F:Elements.LightType.Undefined
+  fullName: Elements.LightType.Undefined
+  nameWithType: LightType.Undefined
 - uid: Elements.Mass
   name: Mass
   href: api/Elements.Mass.html
@@ -12047,6 +12170,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.GlossinessFactor
   nameWithType: Material.GlossinessFactor
+- uid: Elements.Material.NormalTexture
+  name: NormalTexture
+  href: api/Elements.Material.html#Elements_Material_NormalTexture
+  commentId: P:Elements.Material.NormalTexture
+  fullName: Elements.Material.NormalTexture
+  nameWithType: Material.NormalTexture
+- uid: Elements.Material.NormalTexture*
+  name: NormalTexture
+  href: api/Elements.Material.html#Elements_Material_NormalTexture_
+  commentId: Overload:Elements.Material.NormalTexture
+  isSpec: "True"
+  fullName: Elements.Material.NormalTexture
+  nameWithType: Material.NormalTexture
 - uid: Elements.Material.SpecularFactor
   name: SpecularFactor
   href: api/Elements.Material.html#Elements_Material_SpecularFactor
@@ -12590,6 +12726,25 @@ references:
   isSpec: "True"
   fullName: Elements.Panel.UpdateRepresentations
   nameWithType: Panel.UpdateRepresentations
+- uid: Elements.PointLight
+  name: PointLight
+  href: api/Elements.PointLight.html
+  commentId: T:Elements.PointLight
+  fullName: Elements.PointLight
+  nameWithType: PointLight
+- uid: Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  name: PointLight(Color, Transform, Double, Guid, String)
+  href: api/Elements.PointLight.html#Elements_PointLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Guid_System_String_
+  commentId: M:Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  fullName: Elements.PointLight.PointLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Guid, System.String)
+  nameWithType: PointLight.PointLight(Color, Transform, Double, Guid, String)
+- uid: Elements.PointLight.#ctor*
+  name: PointLight
+  href: api/Elements.PointLight.html#Elements_PointLight__ctor_
+  commentId: Overload:Elements.PointLight.#ctor
+  isSpec: "True"
+  fullName: Elements.PointLight.PointLight
+  nameWithType: PointLight.PointLight
 - uid: Elements.RandomExtensions
   name: RandomExtensions
   href: api/Elements.RandomExtensions.html
@@ -13925,6 +14080,51 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.WebMercatorProjection.TileIdToCenterWebMercator
   nameWithType: WebMercatorProjection.TileIdToCenterWebMercator
+- uid: Elements.SpotLight
+  name: SpotLight
+  href: api/Elements.SpotLight.html
+  commentId: T:Elements.SpotLight
+  fullName: Elements.SpotLight
+  nameWithType: SpotLight
+- uid: Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
+  name: SpotLight(Color, Transform, Double, Double, Double, Guid, String)
+  href: api/Elements.SpotLight.html#Elements_SpotLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Guid_System_String_
+  commentId: M:Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
+  fullName: Elements.SpotLight.SpotLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Guid, System.String)
+  nameWithType: SpotLight.SpotLight(Color, Transform, Double, Double, Double, Guid, String)
+- uid: Elements.SpotLight.#ctor*
+  name: SpotLight
+  href: api/Elements.SpotLight.html#Elements_SpotLight__ctor_
+  commentId: Overload:Elements.SpotLight.#ctor
+  isSpec: "True"
+  fullName: Elements.SpotLight.SpotLight
+  nameWithType: SpotLight.SpotLight
+- uid: Elements.SpotLight.InnerConeAngle
+  name: InnerConeAngle
+  href: api/Elements.SpotLight.html#Elements_SpotLight_InnerConeAngle
+  commentId: P:Elements.SpotLight.InnerConeAngle
+  fullName: Elements.SpotLight.InnerConeAngle
+  nameWithType: SpotLight.InnerConeAngle
+- uid: Elements.SpotLight.InnerConeAngle*
+  name: InnerConeAngle
+  href: api/Elements.SpotLight.html#Elements_SpotLight_InnerConeAngle_
+  commentId: Overload:Elements.SpotLight.InnerConeAngle
+  isSpec: "True"
+  fullName: Elements.SpotLight.InnerConeAngle
+  nameWithType: SpotLight.InnerConeAngle
+- uid: Elements.SpotLight.OuterConeAngle
+  name: OuterConeAngle
+  href: api/Elements.SpotLight.html#Elements_SpotLight_OuterConeAngle
+  commentId: P:Elements.SpotLight.OuterConeAngle
+  fullName: Elements.SpotLight.OuterConeAngle
+  nameWithType: SpotLight.OuterConeAngle
+- uid: Elements.SpotLight.OuterConeAngle*
+  name: OuterConeAngle
+  href: api/Elements.SpotLight.html#Elements_SpotLight_OuterConeAngle_
+  commentId: Overload:Elements.SpotLight.OuterConeAngle
+  isSpec: "True"
+  fullName: Elements.SpotLight.OuterConeAngle
+  nameWithType: SpotLight.OuterConeAngle
 - uid: Elements.StandardWall
   name: StandardWall
   href: api/Elements.StandardWall.html
