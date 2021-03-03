@@ -44,6 +44,7 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uri">The location of the catalog json file.</param>
         /// <param name="saveDirectory">The folder of where to save the resulting generated code.</param>
+        /// <param name="useReferenceOrientation">Wether to apply the orientations of Reference elements found in the catalog to orient the content.</param>
         public static void FromUri(string uri, string saveDirectory, bool useReferenceOrientation = true)
         {
             Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content", "ReferenceConfiguration" });

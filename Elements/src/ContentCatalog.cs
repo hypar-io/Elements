@@ -41,15 +41,23 @@ namespace Elements
 
         /// <summary>
         /// Modifies the transforms of the content internal to this catalog to use
-        //  the orientation of the reference instances that exist.
+        ///  the orientation of the reference instances that exist.
         /// </summary>
         public void UseReferenceOrientation()
         {
+            if (ReferenceConfiguration == null)
+            {
+                return;
+            }
+
             foreach (var content in Content)
             {
-                var refInstance = ReferenceConfiguration.First(r => ((ElementInstance)r).BaseDefinition == content) as ElementInstance;
+                var refInstance = ReferenceConfiguration.FirstOrDefault(r => ((ElementInstance)r).BaseDefinition.Id == content.Id) as ElementInstance;
+                if (refInstance == null)
+                {
+                    continue;
+                }
                 var referenceOrientation = refInstance.Transform.Concatenated(new Geometry.Transform(refInstance.Transform.Origin.Negate()));
-                referenceOrientation.Invert();
                 content.Transform = referenceOrientation;
             }
         }
