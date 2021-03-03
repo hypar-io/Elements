@@ -23,8 +23,8 @@ jobs:
       - name: Bump if alpha.
         id: bump-with-alpha
         uses: actions/github-script@v3
-        result-encoding: string
         with:
+          result-encoding: string
           script: |
                 const incoming = "${{steps.version.outputs.tag}}"
                 console.log("Incoming Tag: " + incoming)
