@@ -1105,7 +1105,6 @@ namespace Elements.Serialization.glTF
 
             if (gltfCache.TryGetValue(gltfLocation, out var foundStream))
             {
-                Console.WriteLine("cache hit: " + gltfLocation);
                 foundStream.Position = 0;
                 foundStream.CopyTo(responseStream);
                 responseStream.Position = 0;
