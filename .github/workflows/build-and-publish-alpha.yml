@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-bump-publish:
+  build-bump-alpha-publish:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo.
@@ -21,24 +21,25 @@ jobs:
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
       - name: Bump if alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
-        id: bump-alpha
+        id: bump-with-alpha
         uses: actions/github-script@v3
         result-encoding: string
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          current-version: ${{steps.version.outputs.tag}}
           script: |
                 const incoming = "${{steps.version.outputs.tag}}"
                 console.log("Incoming Tag: " + incoming)
-                const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
-                const newNum = parseInt(oldNum)+1
-                const newTag =incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
-                console.log("New Tag: " + newTag)
-                return newTag
+                if(incoming.includes('alpha')) {
+                  const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
+                  const newNum = parseInt(oldNum)+1
+                  const newTag =incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
+                  console.log("New Tag: " + newTag)
+                  return newTag
+                }
+                else {
+                  return incoming+'-alpha.0'
+                }
       - name: Set NuGet version from alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
-        run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.result}}" >> $GITHUB_ENV
+        run: echo "NUGET_VERSION=${{steps.bump-with-alpha.outputs.result}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
@@ -50,4 +51,4 @@ jobs:
         uses: tvdias/github-tagger@v0.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.bump-alpha.outputs.result }}
+          tag: ${{ steps.bump-with-alpha.outputs.result }}
