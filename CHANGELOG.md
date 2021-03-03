@@ -12,6 +12,7 @@
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
 
 ## 0.8.3
 
