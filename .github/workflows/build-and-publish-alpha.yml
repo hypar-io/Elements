@@ -39,16 +39,6 @@ jobs:
       - name: Set NuGet version from alpha.
         if: ${{contains(steps.version.outputs.tag, 'alpha')}}
         run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.result}}" >> $GITHUB_ENV
-      - name: Bump if beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
-        id: bump-beta
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{steps.version.outputs.tag}}
-          version-fragment: "beta"
-      - name: Set NuGet version from beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
-        run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
