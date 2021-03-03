@@ -31,8 +31,9 @@ namespace Elements.Tests
             // <example>
             // Read topo elevations from a file.
             var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
+            var latitude = 45;
             var elevations = data["points"];
-            var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
+            var tileSize = WebMercatorProjection.GetTileSizeMeters(latitude, 15);
 
             // Create a topography.
             var topo = new Topography(Vector3.Origin, tileSize, elevations);
@@ -200,7 +201,7 @@ namespace Elements.Tests
                         }
                     }
 
-                    var tileSize = WebMercatorProjection.GetTileSizeMeters(zoom);
+                    var tileSize = WebMercatorProjection.GetTileSizeMeters(0, zoom);
                     var origin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
                     var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
                     var topography = new Topography(origin, tileSize, elevationData, material);
@@ -241,8 +242,8 @@ namespace Elements.Tests
             var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
 
-            // Compute the mapbox tile side lenth.
-            var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
+            // Compute the mapbox tile side length.
+            var tileSize = WebMercatorProjection.GetTileSizeMeters(0, 15);
 
             return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, tileSize, elevations, material);
         }
