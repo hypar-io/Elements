@@ -200,7 +200,7 @@
     animate();
   </script><h5 id="Elements_Beam"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Create a framing type.
-var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+var profile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
 // Create a straight beam.
 var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));

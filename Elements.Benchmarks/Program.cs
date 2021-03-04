@@ -10,13 +10,15 @@ namespace Elements.Benchmarks
     [SimpleJob(launchCount: 1, warmupCount: 10, targetCount: 30)]
     public class Csg
     {
+        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
+
         [Params(1, 10, 20)]
         public int Samples { get; set; }
 
         [Benchmark(Description = "Compute csg of beam.")]
         public void CSG()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
             var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 5));
             var beam = new Beam(line, profile, BuiltInMaterials.Steel);
