@@ -201,8 +201,9 @@
   </script><h5 id="Elements_Topography"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Read topo elevations from a file.
 var data = JsonConvert.DeserializeObject&lt;Dictionary&lt;string, double[]&gt;&gt;(File.ReadAllText(&quot;./elevations.json&quot;));
+var latitude = 45;
 var elevations = data[&quot;points&quot;];
-var tileSize = WebMercatorProjection.GetTileSizeMeters(15);
+var tileSize = WebMercatorProjection.GetTileSizeMeters(latitude, 15);
 
 // Create a topography.
 var topo = new Topography(Vector3.Origin, tileSize, elevations);
