@@ -16,6 +16,7 @@
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
 - Adding glb elements to a model uses a cache rather than fetching the stream every time.
 - `ProfileServer` is now `ProfileFactory`
 - `WideFlangeProfileServer` is now `WideFlangeProfileFactory`

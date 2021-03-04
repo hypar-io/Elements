@@ -14054,12 +14054,12 @@ references:
   commentId: T:Elements.Spatial.WebMercatorProjection
   fullName: Elements.Spatial.WebMercatorProjection
   nameWithType: WebMercatorProjection
-- uid: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
-  name: GetTileSizeMeters(Int32)
-  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_GetTileSizeMeters_System_Int32_
-  commentId: M:Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
-  fullName: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Int32)
-  nameWithType: WebMercatorProjection.GetTileSizeMeters(Int32)
+- uid: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Double,System.Int32)
+  name: GetTileSizeMeters(Double, Int32)
+  href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_GetTileSizeMeters_System_Double_System_Int32_
+  commentId: M:Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Double,System.Int32)
+  fullName: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters(System.Double, System.Int32)
+  nameWithType: WebMercatorProjection.GetTileSizeMeters(Double, Int32)
 - uid: Elements.Spatial.WebMercatorProjection.GetTileSizeMeters*
   name: GetTileSizeMeters
   href: api/Elements.Spatial.WebMercatorProjection.html#Elements_Spatial_WebMercatorProjection_GetTileSizeMeters_
