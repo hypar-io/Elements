@@ -265,6 +265,8 @@ namespace Elements.Spatial
 
         public Dictionary<long, Cell> Cells = new Dictionary<long, Cell>();
 
+        public double Tolerance = Vector3.EPSILON;
+
         [JsonIgnore]
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
 
@@ -564,7 +566,7 @@ namespace Elements.Spatial
         /// <returns>True if vertex was added, false if it already added.</returns>
         private Boolean AddVertex(Vector3 point, long idIfNew, out long id)
         {
-            if (ValueExists(this.verticesLookup, point, out id))
+            if (ValueExists(this.verticesLookup, point, out id, Tolerance))
             {
                 return false;
             }
@@ -616,7 +618,7 @@ namespace Elements.Spatial
         /// <returns>True if vertex was added, false if it already added.</returns>
         private Boolean AddUV(Vector3 point, long idIfNew, out long id)
         {
-            if (ValueExists(this.uvsLookup, point, out id))
+            if (ValueExists(this.uvsLookup, point, out id, Tolerance))
             {
                 return false;
             }
