@@ -9,10 +9,17 @@
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `SHSProfile`
+- `SHSProfileFactory`
+- `RHSProfile`
+- `RHSProfileFactory`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
 - Adding glb elements to a model uses a cache rather than fetching the stream every time.
+- `ProfileServer` is now `ProfileFactory`
+- `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
 
 ## 0.8.3
 
