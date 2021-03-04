@@ -1163,7 +1163,7 @@ namespace Elements.Geometry
             {
                 return new Polygon(converted);
             }
-            catch (ArgumentException e)
+            catch
             {
                 // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back. 
                 // here we make a last-ditch attempt to fix this and construct a new polygon. 
@@ -1172,7 +1172,7 @@ namespace Elements.Geometry
                 {
                     return new Polygon(cleanedVertices);
                 }
-                catch (Exception e2)
+                catch
                 {
                     throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
                 }
