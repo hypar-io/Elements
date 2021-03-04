@@ -117,6 +117,19 @@ namespace Elements.Geometry.Profiles
         [JsonIgnore]
         public double Qw { get; internal set; }
 
+        /// <summary>
+        /// Construct a wide flange section.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="id"></param>
+        /// <param name="bf"></param>
+        /// <param name="d"></param>
+        /// <param name="tf"></param>
+        /// <param name="tw"></param>
+        /// <param name="verticalAlignment"></param>
+        /// <param name="horizontalAlignment"></param>
+        /// <param name="verticalOffset"></param>
+        /// <param name="horizontalOffset"></param>
         [JsonConstructor]
         public WideFlangeProfile(string name,
                                  Guid id,

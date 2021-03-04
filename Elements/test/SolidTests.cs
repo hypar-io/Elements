@@ -16,6 +16,8 @@ namespace Elements.Tests
     {
         private readonly ITestOutputHelper output;
 
+        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
+
         public SolidTests(ITestOutputHelper output)
         {
             this.output = output;
@@ -112,7 +114,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidCollinearPolyline()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1), new Vector3(0, 5, 1) });
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -127,7 +129,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidPolyline()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Polyline(new[] { new Vector3(-2, 2, 0), new Vector3(0, 2, 0), new Vector3(0, 3, 1), new Vector3(0, 5, 1), new Vector3(-2, 6, 0) });
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -142,7 +144,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidArc()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Arc(Vector3.Origin, 5, 0, 90);
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -157,7 +159,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidPolygon()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = Polygon.Ngon(12, 5);
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
