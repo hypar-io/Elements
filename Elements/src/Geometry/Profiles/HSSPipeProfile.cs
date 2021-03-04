@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
 {
+    /// <summary>
+    /// A hollow structural steel profile.
+    /// </summary>
     public class HSSPipeProfile : Profile
     {
         public double OuterDiam { get; internal set; }

@@ -44,6 +44,9 @@ namespace Elements.Geometry.Profiles
         Right
     }
 
+    /// <summary>
+    /// A wide flange profile.
+    /// </summary>
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
