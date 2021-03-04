@@ -46,8 +46,8 @@ namespace Elements.Geometry.Profiles
                               double outerDiam,
                               double innerDiam,
                               double t) :
-            base(new Circle(outerDiam).ToPolygon(20),
-                 new Polygon[] { new Circle(innerDiam).ToPolygon(20).Reversed() },
+            base(new Circle(outerDiam).ToPolygon(10),
+                 new Polygon[] { new Circle(innerDiam).ToPolygon(10).Reversed() },
                  id,
                  name)
         {
