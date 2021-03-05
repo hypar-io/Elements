@@ -400,12 +400,13 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="profiles">The profiles to split</param>
         /// <param name="splitLines">The polylines defining the splits.</param>
-        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines)
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double tolerance = Vector3.EPSILON)
         {
             List<Profile> resultProfiles = new List<Profile>(profiles);
             foreach (var pl in splitLines)
             {
-                resultProfiles = Profile.Split(resultProfiles, pl);
+                resultProfiles = Profile.Split(resultProfiles, pl, tolerance);
             }
             return resultProfiles;
         }
@@ -416,7 +417,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="profiles">The profiles to split</param>
         /// <param name="splitLine">The polyline defining the splits.</param>
-        public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine)
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine, double tolerance = Vector3.EPSILON)
         {
             List<Profile> resultProfiles = new List<Profile>();
             foreach (var inputProfile in profiles)
@@ -427,7 +429,7 @@ namespace Elements.Geometry
                 {
                     var perimeterProfiles = new[] { new Profile(perimeterPoly) };
                     var voidProfiles = inputProfile.Voids.Select(v => new Profile(v.Reversed()));
-                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles));
+                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles, tolerance));
                 }
             };
             return resultProfiles;

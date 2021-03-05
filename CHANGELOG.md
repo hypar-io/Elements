@@ -9,10 +9,13 @@
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `Polygon.Split(Polyline)`
+- `Profile.Split(IEnumerable<Profile>, Polyline p)`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
 - Adding glb elements to a model uses a cache rather than fetching the stream every time.
+- `Profile.Split()` uses an improved algorithm, and the gap options are removed as they are no longer necessary.
 
 ## 0.8.3
 
