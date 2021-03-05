@@ -11,11 +11,19 @@
 - `Polygon.PointInternal()`
 - `Polygon.Split(Polyline)`
 - `Profile.Split(IEnumerable<Profile>, Polyline p)`
+- `SHSProfile`
+- `SHSProfileFactory`
+- `RHSProfile`
+- `RHSProfileFactory`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
 - Adding glb elements to a model uses a cache rather than fetching the stream every time.
 - `Profile.Split()` uses an improved algorithm, and the gap options are removed as they are no longer necessary.
+- `ProfileServer` is now `ProfileFactory`
+- `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
 
 ## 0.8.3
 

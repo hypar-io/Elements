@@ -14,7 +14,17 @@ namespace Elements.Tests
             Line, Polyline, Polygon, Arc, Circle
         }
 
-        private Profile _testProfile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+        private WideFlangeProfileFactory _wideFlangeFactory = new WideFlangeProfileFactory();
+        private HSSPipeProfileFactory _hssFactory = new HSSPipeProfileFactory();
+        private RHSProfileFactory _rhsFactory = new RHSProfileFactory();
+        private SHSProfileFactory _shsFactory = new SHSProfileFactory();
+
+        private WideFlangeProfile _testProfile;
+
+        public StructuralFramingTests()
+        {
+            _testProfile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100);
+        }
 
         [Fact, Trait("Category", "Examples")]
         public void BeamExample()
@@ -23,7 +33,7 @@ namespace Elements.Tests
 
             // <example>
             // Create a framing type.
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
             // Create a straight beam.
             var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
@@ -104,7 +114,7 @@ namespace Elements.Tests
 
             var x = 0.0;
             var z = 0.0;
-            var profiles = WideFlangeProfileServer.Instance.AllProfiles().ToList();
+            var profiles = _wideFlangeFactory.AllProfiles().ToList();
             foreach (var profile in profiles)
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
@@ -130,7 +140,7 @@ namespace Elements.Tests
             this.Name = "HSS";
             var x = 0.0;
             var z = 0.0;
-            var profiles = HSSPipeProfileServer.Instance.AllProfiles().ToList();
+            var profiles = _hssFactory.AllProfiles().ToList();
             foreach (var profile in profiles)
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
@@ -144,6 +154,56 @@ namespace Elements.Tests
                     x = 0.0;
                 }
             }
+        }
+
+        [Fact]
+        public void RHS()
+        {
+            this.Name = "RHS";
+            var x = 0.0;
+            var z = 0.0;
+            var profiles = _rhsFactory.AllProfiles().ToList();
+            foreach (var profile in profiles)
+            {
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                this.Model.AddElement(beam);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+        }
+
+        [Fact]
+        public void SHS()
+        {
+            this.Name = "SHS";
+            var x = 0.0;
+            var z = 0.0;
+            var profiles = _shsFactory.AllProfiles().ToList();
+            foreach (var profile in profiles)
+            {
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                this.Model.AddElement(beam);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+        }
+
+        [Fact]
+        public void GettingProfileTypeThatDoesntExistThrowsException()
+        {
+            Assert.Throws<ArgumentException>(() => _rhsFactory.GetProfileByName("foo"));
         }
 
         [Fact]
@@ -198,7 +258,7 @@ namespace Elements.Tests
 
             var x = 0.0;
             var z = 0.0;
-            var profile = WideFlangeProfileServer.Instance.AllProfiles().First();
+            var profile = _wideFlangeFactory.AllProfiles().First();
             var n = 100000;
             var mesh = new Mesh();
             for (var i = 0; i < n; i++)
@@ -225,7 +285,7 @@ namespace Elements.Tests
         {
             this.Name = "SweptBeam";
             var circle = new Circle(5.0);
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W12x106);
+            var profile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W12x106);
             var beam = new Beam(circle, profile);
             this.Model.AddElement(beam);
 
