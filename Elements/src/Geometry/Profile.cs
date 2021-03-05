@@ -396,52 +396,41 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Split a set of profiles with a collection of open polylines, with an optional gap between results.
+        /// Split a set of profiles with a collection of open polylines.
         /// </summary>
         /// <param name="profiles">The profiles to split</param>
         /// <param name="splitLines">The polylines defining the splits.</param>
-        /// <param name="gapSize">An optional gap size between split pieces. If splits are failing, it can be helpful to increase this.</param>
-        /// <param name="tolerance">An optional tolerance.</param>
-        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double gapSize = 0, double tolerance = Vector3.EPSILON)
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines)
         {
-            // We're doing something a little bit questionable here — we're offsetting the split curves by a hair's width
-            // so that clipper can handle them as a subtraction, since it doesn't have a built-in split mechanism.
-            // We increase the tolerance so that the result is well within the specified tolerance of the expected result.
-            // This is imperfect, but no more imperfect than all of the other clipper-based operations we currently employ.  
-          
-            var internalTolerance = tolerance / 10; // to keep splits within tolerance, we execute clipper at a 10x smaller tolerance.
-            Clipper clipper = new Clipper();
-            foreach (var profile in profiles)
+            List<Profile> resultProfiles = new List<Profile>(profiles);
+            foreach (var pl in splitLines)
             {
-                var clipperPaths = profile.ToClipperPaths(internalTolerance);
-                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+                resultProfiles = Profile.Split(resultProfiles, pl);
             }
+            return resultProfiles;
+        }
 
-            foreach (var line in splitLines)
+
+        /// <summary>
+        /// Split a set of profiles with a collection of open polylines.
+        /// </summary>
+        /// <param name="profiles">The profiles to split</param>
+        /// <param name="splitLine">The polyline defining the splits.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine)
+        {
+            List<Profile> resultProfiles = new List<Profile>();
+            foreach (var inputProfile in profiles)
             {
-                var unionClipper = new Clipper();
-
-                // This is basically the same as 
-                // line.Offset(offsetDist, EndType.Butt, internalTolerance), 
-                // but without the unneccessary conversion back to Elements geometry.
-                var co = new ClipperOffset();
-                var offsetSolution = new List<List<IntPoint>>();
-                var offsetPath = line.ToClipperPath(internalTolerance);
-                var offsetDist = (internalTolerance) + gapSize;
-                var clipperScale = 1.0 / internalTolerance;
-                co.AddPath(offsetPath, JoinType.jtMiter, ClipperLib.EndType.etOpenButt);
-                co.Execute(ref offsetSolution, offsetDist * clipperScale);
-
-                List<List<IntPoint>> unionSolution = new List<List<IntPoint>>();
-                unionClipper.AddPaths(offsetSolution, PolyType.ptSubject, true);
-                unionClipper.Execute(ClipType.ctUnion, unionSolution, PolyFillType.pftNonZero);
-
-                clipper.AddPaths(unionSolution, PolyType.ptClip, true);
-            }
-            PolyTree solution = new PolyTree();
-            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
-            var joinedProfiles = solution.ToProfiles(internalTolerance);
-            return joinedProfiles;
+                var perimeter = inputProfile.Perimeter;
+                var perimSplits = perimeter.Split(splitLine);
+                foreach (var perimeterPoly in perimSplits)
+                {
+                    var perimeterProfiles = new[] { new Profile(perimeterPoly) };
+                    var voidProfiles = inputProfile.Voids.Select(v => new Profile(v.Reversed()));
+                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles));
+                }
+            };
+            return resultProfiles;
         }
 
         /// <summary>
