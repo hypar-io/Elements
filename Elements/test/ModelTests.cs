@@ -223,6 +223,23 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DeserializeModelWithOverrides()
+        {
+            var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
+            var transform = new Transform();
+            Identity.AddOverrideIdentity(column, "test", "id", new Dictionary<string, object> { { "key1", 23 } });
+            var model = new Model();
+            model.AddElement(column);
+
+            var newModel = Model.FromJson(model.ToJson());
+
+            var finalModel = new Model();
+            finalModel.AddElements(newModel.Elements.Values);
+
+        }
+
+
+        [Fact]
         public void DeserializationSkipsNullProperties()
         {
             var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));

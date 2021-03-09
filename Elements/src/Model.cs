@@ -236,6 +236,7 @@ namespace Elements
             // Ignore value types and strings
             // as they won't have properties that
             // could be elements.
+            // if (!t.IsClass || t == typeof(string) || t == typeof(Newtonsoft.Json.Linq.JObject))
             if (!t.IsClass || t == typeof(string))
             {
                 return elements;
