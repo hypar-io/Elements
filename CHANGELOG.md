@@ -9,6 +9,12 @@
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
+
+### Changed
+- `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 - `Polygon.Split(Polyline)`
 - `Profile.Split(IEnumerable<Profile>, Polyline p)`
 - `SHSProfile`
