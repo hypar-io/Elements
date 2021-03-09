@@ -226,7 +226,6 @@ namespace Elements.Tests
         public void DeserializeModelWithOverrides()
         {
             var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
-            var transform = new Transform();
             Identity.AddOverrideIdentity(column, "test", "id", new Dictionary<string, object> { { "key1", 23 } });
             var model = new Model();
             model.AddElement(column);
@@ -236,6 +235,8 @@ namespace Elements.Tests
             var finalModel = new Model();
             finalModel.AddElements(newModel.Elements.Values);
 
+            var finalColumn = finalModel.AllElementsOfType<Column>().First();
+            Assert.Equal(finalColumn.AdditionalProperties, column.AdditionalProperties);
         }
 
 
