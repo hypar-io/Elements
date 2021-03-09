@@ -29,6 +29,13 @@ namespace Elements.Spatial
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Represents a unique Vertex within a CellComplex.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="point">Location of the vertex</param>
+        /// <param name="name">Optional name</param>
         public Vertex(long id, Vector3 point, string name = null)
         {
             this.Id = id;
@@ -42,6 +49,14 @@ namespace Elements.Spatial
     /// </summary>
     public class UV : Vertex
     {
+        /// <summary>
+        /// Represents a unique U or V direction within a CellComplex.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="point">The U or V direction</param>
+        /// <param name="name">Optional name</param>
+        /// <returns></returns>
         public UV(long id, Vector3 point, string name = null) : base(id, point, name) { }
     }
 
@@ -65,6 +80,13 @@ namespace Elements.Spatial
         /// </summary>
         public long Vertex2Id;
 
+        /// <summary>
+        /// Represents a unique Segment within a CellComplex.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="index1">The lower-index-id number for this segment</param>
+        /// <param name="index2">The higher-index-id number for this segment</param>
         public Segment(long id, long index1, long index2)
         {
             this.Id = id;
@@ -98,6 +120,15 @@ namespace Elements.Spatial
         /// </summary>
         public long EndVertexId;
 
+        /// <summary>
+        /// Represents a unique DirectedSegment within a CellComplex.
+        /// This is added in addition to Segment because the same line may be required to move in a different direction
+        /// as we traverse the edges of a face in their correctly-wound order.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="segment">The undirected Segment that matches this DirectedSegment</param>
+        /// <param name="segmentOrderMatchesDirection">If true, start point is same as segment.vertex1Id. Otherwise, is flipped.</param>
         public DirectedSegment(long id, Segment segment, Boolean segmentOrderMatchesDirection)
         {
             this.Id = id;
@@ -154,6 +185,14 @@ namespace Elements.Spatial
         /// </summary>
         public List<long> DirectedSegmentIds;
 
+        /// <summary>
+        /// Represents a unique Face within a CellComplex.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="directedSegments">List of the DirectedSegments that make up this Face</param>
+        /// <param name="u">Optional but highly recommended intended U direction for the Face</param>
+        /// <param name="v">Optional but highly recommended intended V direction for the Face</param>
         public Face(long id, List<DirectedSegment> directedSegments, UV u = null, UV v = null)
         {
             this.Id = id;
@@ -207,6 +246,14 @@ namespace Elements.Spatial
         /// </summary>
         public List<long> FaceIds;
 
+        /// <summary>
+        /// Represents a unique Cell wtihin a CellComplex.
+        /// Is not intended to be created or modified outside of the CellComplex class code.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="faces">List of faces which make up this CellComplex</param>
+        /// <param name="bottomFace">The bottom face for this cell (should also be included in the list of all faces)</param>
+        /// <param name="topFace">The top face for this cell (should also be included in the list of all faces</param>
         public Cell(long id, List<Face> faces, Face bottomFace, Face topFace)
         {
             this.Id = id;
@@ -236,6 +283,9 @@ namespace Elements.Spatial
 
     #endregion
 
+    /// <summary>
+    /// A geometric voxel representation for structures and potential other
+    /// </summary>
     public class CellComplex : Elements.Element
     {
         [JsonIgnore]
@@ -306,6 +356,7 @@ namespace Elements.Spatial
         [JsonIgnore]
         private Dictionary<(long, long), Dictionary<Boolean, long>> directedSegmentsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
 
+        // See GetFaceHash for how faces are identified as unique.
         [JsonIgnore]
         private Dictionary<string, long> facesLookup = new Dictionary<string, long>();
 
@@ -321,11 +372,29 @@ namespace Elements.Spatial
         [JsonIgnore]
         private Dictionary<long, HashSet<long>> cellIdsByFaceId = new Dictionary<long, HashSet<long>>();
 
+        /// <summary>
+        /// Create a CellComplex
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public CellComplex(Guid id, string name) : base(id, name)
         {
 
         }
 
+        /// <summary>
+        /// This constructor is intended for serialization and deserialization only.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="vertices"></param>
+        /// <param name="uvs"></param>
+        /// <param name="segments"></param>
+        /// <param name="directedSegments"></param>
+        /// <param name="faces"></param>
+        /// <param name="cells"></param>
+        /// <returns></returns>
         [JsonConstructor]
         public CellComplex(Guid id, string name, Dictionary<long, Vertex> vertices, Dictionary<long, Vertex> uvs, Dictionary<long, Segment> segments, Dictionary<long, DirectedSegment> directedSegments, Dictionary<long, Face> faces, Dictionary<long, Cell> cells) : base(id, name)
         {
@@ -382,6 +451,16 @@ namespace Elements.Spatial
         }
 
         #region add content
+
+        /// <summary>
+        /// Add a cell to the CellComplex.
+        /// </summary>
+        /// <param name="polygon">The polygon that forms the base of this cell</param>
+        /// <param name="height">The height of the cell</param>
+        /// <param name="elevation">The elevation of the bottom of this cell</param>
+        /// <param name="uGrid">An optional but highly recommended U grid that allows the cell's top and bottom faces to store intended directionality</param>
+        /// <param name="vGrid">An optional but highly recommended V grid that allows the cell's top and bottom faces to store intended directionality</param>
+        /// <returns>Created Cell</returns>
         public Cell AddCell(Polygon polygon, double height, double elevation, Grid1d uGrid = null, Grid1d vGrid = null)
         {
             var elevationVector = new Vector3(0, 0, elevation);
@@ -423,13 +502,25 @@ namespace Elements.Spatial
             return cell;
         }
 
-        public Face AddFace(Polygon polygon, UV u = null, UV v = null)
+        /// <summary>
+        /// Add a Face to the CellComplex
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns>Created Face</returns>
+        protected Face AddFace(Polygon polygon, UV u = null, UV v = null)
         {
             this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
         }
 
-        public DirectedSegment AddDirectedSegment(Line line)
+        /// <summary>
+        /// Add a DirectedSegment to the CellComplex
+        /// </summary>
+        /// <param name="line">Line with Start and End in the expected direction</param>
+        /// <returns>Created DirectedSegment</returns>
+        protected DirectedSegment AddDirectedSegment(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertex(vertex)).ToList();
@@ -448,6 +539,15 @@ namespace Elements.Spatial
             return directedSegment;
         }
 
+        /// <summary>
+        /// Internal method to add a Cell
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <param name="faces"></param>
+        /// <param name="bottomFace"></param>
+        /// <param name="topFace"></param>
+        /// <param name="cell"></param>
+        /// <returns>Whether the cell was successfully added. Will be false if cellId already exists</returns>
         private Boolean AddCell(long cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
         {
             if (this.Cells.ContainsKey(cellId))
@@ -468,6 +568,15 @@ namespace Elements.Spatial
             return true;
         }
 
+        /// <summary>
+        /// Internal method to add a Face
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <param name="idIfNew"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="face"></param>
+        /// <returns>Whether the face was successfully added. Will be false if idIfNew already exists</returns>
         private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
         {
             var lines = polygon.Segments();
@@ -477,10 +586,7 @@ namespace Elements.Spatial
                 directedSegments.Add(this.AddDirectedSegment(line));
             }
 
-            // Face lookup hash is segment ids in ascending order
-            var sortedIds = directedSegments.Select(ds => ds.SegmentId).ToList();
-            sortedIds.Sort();
-            var hash = String.Join(",", sortedIds);
+            var hash = GetFaceHash(directedSegments);
 
             if (!this.facesLookup.TryGetValue(hash, out var faceId))
             {
@@ -504,6 +610,14 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Internal method to add a DirectedSegment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <param name="segmentTupleIsInOrder"></param>
+        /// <param name="idIfNew"></param>
+        /// <param name="directedSegment"></param>
+        /// <returns>Whether the directedSegment was successfully added. Will be false if idIfNew already exists</returns>
         private Boolean AddDirectedSegment(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out DirectedSegment directedSegment)
         {
             var segmentTuple = (segment.Vertex1Id, segment.Vertex2Id);
@@ -536,6 +650,13 @@ namespace Elements.Spatial
             }
         }
 
+        /// <summary>
+        /// Internal method to add a Segment
+        /// </summary>
+        /// <param name="segmentTuple"></param>
+        /// <param name="idIfNew"></param>
+        /// <param name="segment"></param>
+        /// <returns>Whether the segment was successfully added. Will be false if idIfNew already exists</returns>
         private Boolean AddSegment((long, long) segmentTuple, long idIfNew, out Segment segment)
         {
             if (!this.segmentsLookup.TryGetValue(segmentTuple, out var segmentId))
@@ -562,14 +683,25 @@ namespace Elements.Spatial
 
         #region add vertex
 
-        public Vertex AddVertex(Vector3 point)
+        /// <summary>
+        /// Add or ensures the existence of a vertex
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        protected Vertex AddVertex(Vector3 point)
         {
             this.AddVertex(point, this._vertexId, out var vertexId);
             this.Vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
         }
 
-        private Vertex AddVertex(Vector3 point, long id, string name = null)
+        /// <summary>
+        /// Attempts to add a vertex at an ID. Throws an exception if the ID already exists
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="id"></param>
+        /// <returns>Added vertex</returns>
+        private Vertex AddVertex(Vector3 point, long id)
         {
             this.AddVertex(point, id, out var vertexId);
 
@@ -583,11 +715,11 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        ///
+        /// Gets an existing vertex if it exists at this point, or adds it with the provided id if it is new
         /// </summary>
         /// <param name="point"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="id"></param>
+        /// <param name="id">ID of existing or added vertex</param>
         /// <returns>True if vertex was added, false if it already added.</returns>
         private Boolean AddVertex(Vector3 point, long idIfNew, out long id)
         {
@@ -614,13 +746,24 @@ namespace Elements.Spatial
 
         // TODO: this is exactly the same as addvertex except referencing different members/dicts, how can I consolidate this?
 
-        public UV AddUV(Vector3 point)
+        /// <summary>
+        /// Add or ensures the existence of a u or v direction
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        protected UV AddUV(Vector3 point)
         {
             this.AddUV(point, this._uvId, out var uvId);
             this.UVs.TryGetValue(uvId, out var uv);
             return uv;
         }
 
+        /// <summary>
+        /// Attempts to add a u or v direction at an ID. Throws an exception if the ID already exists
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="id"></param>
+        /// <returns>Added vertex</returns>
         private UV AddUV(Vector3 point, long id)
         {
             this.AddUV(point, id, out var uvId);
@@ -635,11 +778,11 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        ///
+        /// Gets an existing u or v value if it exists at this direction, or adds it with the provided id if it is new
         /// </summary>
         /// <param name="point"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="id"></param>
+        /// <param name="id">ID of existing or added U or V direction</param>
         /// <returns>True if vertex was added, false if it already added.</returns>
         private Boolean AddUV(Vector3 point, long idIfNew, out long id)
         {
@@ -663,12 +806,22 @@ namespace Elements.Spatial
         #endregion add uv
         #endregion add content
 
+        /// <summary>
+        /// Get a Vertex by its ID
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
         public Vertex GetVertex(long vertexId)
         {
             this.Vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
         }
 
+        /// <summary>
+        /// Get a U or V direction by its ID
+        /// </summary>
+        /// <param name="uvId"></param>
+        /// <returns></returns>
         public UV GetUV(long? uvId)
         {
             if (uvId == null)
@@ -679,18 +832,33 @@ namespace Elements.Spatial
             return uv;
         }
 
+        /// <summary>
+        /// Get a Segment by its ID
+        /// </summary>
+        /// <param name="segmentId"></param>
+        /// <returns></returns>
         public Segment GetSegment(long segmentId)
         {
             this.Segments.TryGetValue(segmentId, out var segment);
             return segment;
         }
 
+        /// <summary>
+        /// Get a DirectedSegment by its ID
+        /// </summary>
+        /// <param name="directedSegmentId"></param>
+        /// <returns></returns>
         public DirectedSegment GetDirectedSegment(long directedSegmentId)
         {
             this.DirectedSegments.TryGetValue(directedSegmentId, out var directedSegment);
             return directedSegment;
         }
 
+        /// <summary>
+        /// Get a Face by its ID
+        /// </summary>
+        /// <param name="faceId"></param>
+        /// <returns></returns>
         public Face GetFace(long? faceId)
         {
             if (faceId == null)
@@ -702,12 +870,22 @@ namespace Elements.Spatial
             return face;
         }
 
+        /// <summary>
+        /// Get a Cell by its ID
+        /// </summary>
+        /// <param name="cellId"></param>
+        /// <returns></returns>
         public Cell GetCell(long cellId)
         {
             this.Cells.TryGetValue(cellId, out var cell);
             return cell;
         }
 
+        /// <summary>
+        /// Get the list of applicable Segments from a Vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
         public List<Segment> GetSegments(Vertex vertex)
         {
             if (this.segmentIdsByVertexId.TryGetValue(vertex.Id, out var segmentIdSet))
@@ -717,16 +895,31 @@ namespace Elements.Spatial
             return new List<Segment>();
         }
 
+        /// <summary>
+        /// Get the list of applicable Segments from a Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
         public List<Segment> GetSegments(Face face)
         {
             return face.DirectedSegmentIds.Select(dsId => this.GetSegment(this.GetDirectedSegment(dsId).SegmentId)).ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Segments from a Cell
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         public List<Segment> GetSegments(Cell cell)
         {
             return this.GetFaces(cell).Select(face => this.GetSegments(face)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable DirectedSegments from a Segment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public List<DirectedSegment> GetDirectedSegments(Segment segment)
         {
             if (this.directedSegmentIdsBySegmentId.TryGetValue(segment.Id, out var directedSegmentIdSet))
@@ -736,16 +929,31 @@ namespace Elements.Spatial
             return new List<DirectedSegment>();
         }
 
+        /// <summary>
+        /// Get the list of applicable DirectedSegments from a Vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
         public List<DirectedSegment> GetDirectedSegments(Vertex vertex)
         {
             return this.GetSegments(vertex).Select(segment => this.GetDirectedSegments(segment)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable DirectedSegments from a Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
         public List<DirectedSegment> GetDirectedSegments(Face face)
         {
             return face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegment(dsId)).ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Faces from a DirectedSegment
+        /// </summary>
+        /// <param name="directedSegment"></param>
+        /// <returns></returns>
         public List<Face> GetFaces(DirectedSegment directedSegment)
         {
             if (this.faceIdsByDirectedSegmentId.TryGetValue(directedSegment.Id, out var faceIdSet))
@@ -755,21 +963,41 @@ namespace Elements.Spatial
             return new List<Face>();
         }
 
+        /// <summary>
+        /// Get the list of applicable Faces from a Segment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public List<Face> GetFaces(Segment segment)
         {
             return this.GetDirectedSegments(segment).Select(directedSegment => this.GetFaces(directedSegment)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Faces from a Vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
         public List<Face> GetFaces(Vertex vertex)
         {
             return this.GetDirectedSegments(vertex).Select(directedSegment => this.GetFaces(directedSegment)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Faces from a Cell
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         public List<Face> GetFaces(Cell cell)
         {
             return cell.FaceIds.Select(fid => this.GetFace(fid)).ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Cells from a Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
         public List<Cell> GetCells(Face face)
         {
             if (this.cellIdsByFaceId.TryGetValue(face.Id, out var cellIdSet))
@@ -779,16 +1007,31 @@ namespace Elements.Spatial
             return new List<Cell>();
         }
 
+        /// <summary>
+        /// Get the list of applicable Cells from a DirectedSegment
+        /// </summary>
+        /// <param name="directedSegment"></param>
+        /// <returns></returns>
         public List<Cell> GetCells(DirectedSegment directedSegment)
         {
             return this.GetFaces(directedSegment).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Cells from a Segment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public List<Cell> GetCells(Segment segment)
         {
             return this.GetFaces(segment).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Get the list of applicable Cells from a Vertex
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
         public List<Cell> GetCells(Vertex vertex)
         {
             return this.GetFaces(vertex).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
@@ -846,6 +1089,11 @@ namespace Elements.Spatial
             return (from f in cellsIntersecting where f.Id != cell.Id select f).ToList();
         }
 
+        /// <summary>
+        /// Get the geometry for a Segment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <returns></returns>
         public Line GetSegmentGeometry(Segment segment)
         {
             return new Line(
@@ -854,6 +1102,11 @@ namespace Elements.Spatial
             );
         }
 
+        /// <summary>
+        /// Get the geometry for a DirectedSegment
+        /// </summary>
+        /// <param name="directedSegment"></param>
+        /// <returns></returns>
         public Line GetDirectedSegmentGeometry(DirectedSegment directedSegment)
         {
             return new Line(
@@ -862,35 +1115,56 @@ namespace Elements.Spatial
             );
         }
 
+        /// <summary>
+        /// Get the geometry for a Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
         public Polygon GetFaceGeometry(Face face)
         {
             var vertices = face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegmentGeometry(this.GetDirectedSegment(dsId)).Start).ToList();
             return new Polygon(vertices);
         }
 
-        public List<Vertex> GetVerticesMatchingXY(double x, double y)
+        /// <summary>
+        /// Get all vertices matching an X/Y coordinate, regardless of Z
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <returns></returns>
+        public List<Vertex> GetVerticesMatchingXY(double x, double y, Nullable<double> fuzzyFactor = null)
         {
             var vertices = new List<Vertex>();
-
-            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
+            var zDict = GetAddressParent(this.verticesLookup, new Vector3(x, y), fuzzyFactor: fuzzyFactor);
+            if (zDict == null)
             {
                 return vertices;
             }
-
-            if (!yzDict.TryGetValue(y, out var zDict))
-            {
-                return vertices;
-            }
-
-            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
+            return zDict.Values.Select(id => this.GetVertex(id)).ToList();
         }
 
+        /// <summary>
+        /// Whether a vertex location already exists in the CellComplex
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="id"></param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <returns></returns>
         public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
         {
             return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
         }
 
         #region private statics
+
+        /// <summary>
+        /// Add a value to a Dictionary of HashSets of longs. Used as a utility for internal lookups.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private static HashSet<long> AddValue(Dictionary<long, HashSet<long>> dict, long key, long value)
         {
             if (!dict.ContainsKey(key))
@@ -903,6 +1177,14 @@ namespace Elements.Spatial
             return set;
         }
 
+        /// <summary>
+        /// In a dictionary of x, y, and z coordinates, gets last level dictionary of z values.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="point"></param>
+        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <returns>Can be null if the dictionary address didn't exist previously, and we chose not to add it</returns>
         private static Dictionary<double, long> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
         {
             if (!TryGetValue<Dictionary<double, Dictionary<double, long>>>(dict, point.X, out var yzDict, fuzzyFactor))
@@ -935,6 +1217,14 @@ namespace Elements.Spatial
 
         }
 
+        /// <summary>
+        /// In a dictionary of x, y, and z coordinates, whether a point value is represented
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="point"></param>
+        /// <param name="id"></param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <returns></returns>
         private static Boolean ValueExists(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
         {
             var zDict = GetAddressParent(dict, point, fuzzyFactor: fuzzyFactor);
@@ -946,6 +1236,15 @@ namespace Elements.Spatial
             return TryGetValue<long>(zDict, point.Z, out id, fuzzyFactor);
         }
 
+        /// <summary>
+        /// A version of TryGetValue on a dictionary that optionally takes in a tolerance when running the comparison
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="fuzzyFactor"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Amount of tolerance in the search against each component of the coordinate</returns>
         private static Boolean TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, Nullable<double> fuzzyFactor = null)
         {
             if (dict.TryGetValue(key, out value))
@@ -966,6 +1265,21 @@ namespace Elements.Spatial
             }
             return false;
         }
+
+        /// <summary>
+        /// Face lookup hash is segmentIds in ascending order.
+        /// We do not directly use the `directedSegmentIds` because they could wind differently on a shared face.
+        /// </summary>
+        /// <param name="directedSegments"></param>
+        /// <returns></returns>
+        private static string GetFaceHash(List<DirectedSegment> directedSegments)
+        {
+            var sortedIds = directedSegments.Select(ds => ds.SegmentId).ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+            return hash;
+        }
+
         #endregion private statics
     }
 }

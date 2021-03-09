@@ -12,7 +12,7 @@ namespace Elements.Tests
     public class CellComplexTests : ModelTest
     {
         [Fact]
-        public void CellComplexSerializes()
+        public void CellComplexSerializesAndDeserializes()
         {
             // Create Grid2d
             var squareSize = 10;
@@ -55,7 +55,6 @@ namespace Elements.Tests
             var modelFromDeserialization = Model.FromJson(json);
             var cellComplexDeserialized = modelFromDeserialization.GetElementOfType<CellComplex>(cellComplex.Id);
             var vertexExists = cellComplexDeserialized.VertexExists(new Vector3(0, Vector3.EPSILON / 2, 0), out var vertexId, Vector3.EPSILON);
-
         }
     }
 }
