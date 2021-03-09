@@ -37,6 +37,9 @@ namespace Elements.Spatial
         }
     }
 
+    /// <summary>
+    /// A unique U or V direction in a cell complex
+    /// </summary>
     public class UV : Vertex
     {
         public UV(long id, Vector3 point, string name = null) : base(id, point, name) { }
@@ -253,18 +256,40 @@ namespace Elements.Spatial
         [JsonIgnore]
         private long _uvId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        public Dictionary<long, Vertex> Vertices = new Dictionary<long, Vertex>();
+        /// <summary>
+        /// Vertices by ID
+        /// </summary>
+        public Dictionary<long, Vertex> Vertices { get; private set; } = new Dictionary<long, Vertex>();
 
-        public Dictionary<long, UV> UVs = new Dictionary<long, UV>();
+        /// <summary>
+        /// U or V directions by ID
+        /// </summary>
+        public Dictionary<long, UV> UVs { get; private set; } = new Dictionary<long, UV>();
 
-        public Dictionary<long, Segment> Segments = new Dictionary<long, Segment>();
+        /// <summary>
+        /// Segments by ID
+        /// </summary>
+        public Dictionary<long, Segment> Segments { get; private set; } = new Dictionary<long, Segment>();
 
-        public Dictionary<long, DirectedSegment> DirectedSegments = new Dictionary<long, DirectedSegment>();
+        /// <summary>
+        /// DirectedSegments by ID
+        /// </summary>
+        public Dictionary<long, DirectedSegment> DirectedSegments { get; private set; } = new Dictionary<long, DirectedSegment>();
 
-        public Dictionary<long, Face> Faces = new Dictionary<long, Face>();
+        /// <summary>
+        /// Faces by ID
+        /// </summary>
+        public Dictionary<long, Face> Faces { get; private set; } = new Dictionary<long, Face>();
 
-        public Dictionary<long, Cell> Cells = new Dictionary<long, Cell>();
+        /// <summary>
+        /// Cells by ID
+        /// </summary>
+        public Dictionary<long, Cell> Cells { get; private set; } = new Dictionary<long, Cell>();
 
+        /// <summary>
+        /// Tolerance for points being considered the same.
+        /// Applies individually to X, Y, and Z coordinates, not the cumulative difference!
+        /// </summary>
         public double Tolerance = Vector3.EPSILON;
 
         [JsonIgnore]
@@ -683,50 +708,6 @@ namespace Elements.Spatial
             return cell;
         }
 
-        public Line GetSegmentGeometry(Segment segment)
-        {
-            return new Line(
-                this.GetVertex(segment.Vertex1Id).Value,
-                this.GetVertex(segment.Vertex2Id).Value
-            );
-        }
-
-        public Line GetDirectedSegmentGeometry(DirectedSegment directedSegment)
-        {
-            return new Line(
-                this.GetVertex(directedSegment.StartVertexId).Value,
-                this.GetVertex(directedSegment.EndVertexId).Value
-            );
-        }
-
-        public Polygon GetFaceGeometry(Face face)
-        {
-            var vertices = face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegmentGeometry(this.GetDirectedSegment(dsId)).Start).ToList();
-            return new Polygon(vertices);
-        }
-
-        public List<Vertex> GetVerticesMatchingXY(double x, double y)
-        {
-            var vertices = new List<Vertex>();
-
-            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
-            {
-                return vertices;
-            }
-
-            if (!yzDict.TryGetValue(y, out var zDict))
-            {
-                return vertices;
-            }
-
-            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
-        }
-
-        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
-        {
-            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
-        }
-
         public List<Segment> GetSegments(Vertex vertex)
         {
             if (this.segmentIdsByVertexId.TryGetValue(vertex.Id, out var segmentIdSet))
@@ -813,6 +794,103 @@ namespace Elements.Spatial
             return this.GetFaces(vertex).Select(face => this.GetCells(face)).SelectMany(x => x).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Gets the neighboring Faces which share a Segment.
+        /// Does not capture partially overlapping neighbor match.
+        /// </summary>
+        /// <param name="face">Face to get the neighbors for</param>
+        /// <param name="direction">If set, casts a ray from the centroid of this Face and only returns neighbors for the Segment which intersects this ray.</param>
+        /// <param name="matchDirectionToUOrV">If true, further filters results to only those where the resulting face's U or V direction matches the given direction.</param>
+        /// <returns></returns>
+        public List<Face> GetNeighbors(Face face, Nullable<Vector3> direction = null, Boolean matchDirectionToUOrV = false)
+        {
+            var segments = this.GetSegments(face);
+            List<Face> faces;
+            if (direction == null)
+            {
+                faces = segments.Select(s => this.GetFaces(s)).SelectMany(x => x).Distinct().ToList();
+                return (from f in faces where f.Id != face.Id select f).ToList();
+            }
+            var segsWithGeos = segments.Select(segment => (segment: segment, geo: this.GetSegmentGeometry(segment))).ToList();
+            var ray = new Ray(this.GetFaceGeometry(face).Centroid(), (Vector3)direction);
+            var intersectingSegments = (from seg in segsWithGeos where ray.Intersects(seg.geo, out var intersection) select seg.segment).ToList();
+            var facesIntersectingDs = intersectingSegments.Select(s => this.GetFaces(s)).SelectMany(x => x).Distinct().ToList();
+            faces = (from f in facesIntersectingDs where f.Id != face.Id select f).ToList();
+            if (matchDirectionToUOrV && ValueExists(this.uvsLookup, (Vector3)direction, out var uvId, Tolerance))
+            {
+                faces = (from f in faces where (f.VId == uvId || f.UId == uvId) select f).ToList();
+            }
+            return faces;
+        }
+
+        /// <summary>
+        /// Gets the neighboring Cells which share a Face.
+        /// Does not capture partially overlapping neighbor match.
+        /// </summary>
+        /// <param name="cell">Cell to get the neighbors for</param>
+        /// <param name="direction">If set, casts a ray from the centroid of this Cell and only returns neighbors for the Face which intersects this ray.</param>
+        /// <returns></returns>
+        public List<Cell> GetNeighbors(Cell cell, Nullable<Vector3> direction = null)
+        {
+            var faces = this.GetFaces(cell);
+            if (direction == null)
+            {
+                var cells = faces.Select(f => this.GetCells(f)).SelectMany(x => x).Distinct().ToList();
+                return (from c in cells where c.Id != cell.Id select c).ToList();
+            }
+            var facesWithGeos = faces.Select(face => (face: face, geo: this.GetFaceGeometry(face))).ToList();
+            var centroid = faces.Select(face => this.GetFaceGeometry(face).Centroid()).ToList().Average();
+            var ray = new Ray(centroid, (Vector3)direction);
+            var intersectingFaces = (from f in facesWithGeos where ray.Intersects(f.geo, out var intersection) select f.face).ToList();
+            var cellsIntersecting = intersectingFaces.Select(f => this.GetCells(f)).SelectMany(x => x).Distinct().ToList();
+            return (from f in cellsIntersecting where f.Id != cell.Id select f).ToList();
+        }
+
+        public Line GetSegmentGeometry(Segment segment)
+        {
+            return new Line(
+                this.GetVertex(segment.Vertex1Id).Value,
+                this.GetVertex(segment.Vertex2Id).Value
+            );
+        }
+
+        public Line GetDirectedSegmentGeometry(DirectedSegment directedSegment)
+        {
+            return new Line(
+                this.GetVertex(directedSegment.StartVertexId).Value,
+                this.GetVertex(directedSegment.EndVertexId).Value
+            );
+        }
+
+        public Polygon GetFaceGeometry(Face face)
+        {
+            var vertices = face.DirectedSegmentIds.Select(dsId => this.GetDirectedSegmentGeometry(this.GetDirectedSegment(dsId)).Start).ToList();
+            return new Polygon(vertices);
+        }
+
+        public List<Vertex> GetVerticesMatchingXY(double x, double y)
+        {
+            var vertices = new List<Vertex>();
+
+            if (!this.verticesLookup.TryGetValue(x, out var yzDict))
+            {
+                return vertices;
+            }
+
+            if (!yzDict.TryGetValue(y, out var zDict))
+            {
+                return vertices;
+            }
+
+            return zDict.Values.Select(vertexId => this.GetVertex(vertexId)).ToList();
+        }
+
+        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        {
+            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
+        }
+
+        #region private statics
         private static HashSet<long> AddValue(Dictionary<long, HashSet<long>> dict, long key, long value)
         {
             if (!dict.ContainsKey(key))
@@ -888,5 +966,6 @@ namespace Elements.Spatial
             }
             return false;
         }
+        #endregion private statics
     }
 }
