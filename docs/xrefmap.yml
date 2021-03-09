@@ -5048,6 +5048,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Segments
   nameWithType: Polygon.Segments
+- uid: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  name: Split(Polyline)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  nameWithType: Polygon.Split(Polyline)
+- uid: Elements.Geometry.Polygon.Split*
+  name: Split
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_
+  commentId: Overload:Elements.Geometry.Polygon.Split
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.Split
+  nameWithType: Polygon.Split
 - uid: Elements.Geometry.Polygon.Star(System.Double,System.Double,System.Int32)
   name: Star(Double, Double, Int32)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Star_System_Double_System_Double_System_Int32_
@@ -5722,15 +5735,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Segments
   nameWithType: Profile.Segments
-- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
-  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
-  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
-  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double, System.Double)
-  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
-  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+  name: Split(IEnumerable<Profile>, Polyline, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__Elements_Geometry_Polyline_System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+  name.vb: Split(IEnumerable(Of Profile), Polyline, Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, Elements.Geometry.Polyline, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), Elements.Geometry.Polyline, System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, Polyline, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), Polyline, Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
+  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
+  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
 - uid: Elements.Geometry.Profile.Split*
   name: Split
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_
