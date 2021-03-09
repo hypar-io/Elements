@@ -775,6 +775,95 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolygonSplitWithPolyline()
+        {
+            Name = "PolygonSplitWithPolyline";
+            var random = new Random(23);
+
+            // Simple Split
+            var polygon = Polygon.Rectangle(5, 5);
+            var polyline = new Polyline(new[] { new Vector3(-3, 0), new Vector3(0, 1), new Vector3(3, 0) });
+            var splitResults = polygon.Split(polyline);
+            Assert.Equal(2, splitResults.Count);
+
+            // Convex shape split
+            var convexPolygon = new Polygon(new[] {
+                new Vector3(-2.5,-2.5),
+                new Vector3(2.5,-2.5),
+                new Vector3(2.5,-1),
+                new Vector3(1,-1),
+                new Vector3(1,1),
+                new Vector3(2.5,1),
+                new Vector3(2.5,2.5),
+                new Vector3(-2.5,2.5)
+            });
+            var convexSplitPolyline = new Polyline(new[] {
+                new Vector3(1.5, -3),
+                new Vector3(1.5,3)
+            });
+
+            var splitResults2 = convexPolygon.Split(convexSplitPolyline);
+            Model.AddElements(splitResults2.Select(s => new Panel(s, random.NextMaterial())));
+            Assert.Equal(3, splitResults2.Count);
+
+            // doesn't intersect, no change
+            var shiftedPolygon = convexPolygon.TransformedPolygon(new Transform(6, 0, 0));
+            var splitResults3 = shiftedPolygon.Split(convexSplitPolyline);
+            Assert.Equal(1, splitResults3.Count);
+            Model.AddElements(splitResults3.Select(s => new Panel(s, random.NextMaterial())));
+
+            // totally contained, no change
+            var internalPl = new Polyline(new[] { new Vector3(6 - 2.5 + 0.5, -2), new Vector3(6 - 2.5 + 0.5, 2) });
+            Model.AddElement(internalPl);
+            var splitResults4 = shiftedPolygon.Split(internalPl);
+            Assert.Equal(1, splitResults4.Count);
+
+            // split with pass through vertex
+            var cornerPg = new Polygon(new[] { new Vector3(0, 10), new Vector3(3, 10), new Vector3(3, 13), new Vector3(0, 13) });
+            var cornerPl = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(3, 13)
+            });
+            Model.AddElements(cornerPg, cornerPl);
+            var splitResults5 = cornerPg.Split(cornerPl);
+            Assert.Equal(2, splitResults5.Count);
+            Model.AddElements(splitResults5.Select(s => new Panel(s, random.NextMaterial())));
+
+            // pass through incompletely, no change
+            var cornerPl2 = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(2, 11)
+            });
+
+            var splitResults6 = cornerPg.Split(cornerPl2);
+            Assert.Equal(1, splitResults6.Count);
+
+            // overlap at edge, no change.ioU
+            var rect2 = Polygon.Ngon(5, 5).TransformedPolygon(new Transform(-6, -8, 0));
+            var splitCrv = rect2.Segments()[3];
+            var splitResults7 = rect2.Split(splitCrv.ToPolyline(1));
+            Assert.Equal(1, splitResults7.Count);
+            Model.AddElements(splitResults7.Select(s => new Panel(s, random.NextMaterial())));
+
+
+            // fuzz test
+            var shifted = convexPolygon.TransformedPolygon(new Transform(12, 0, 0));
+            var collection = new List<Polygon> { shifted };
+            var bbox = new BBox3(shifted);
+            var rect = Polygon.Rectangle(bbox.Min, bbox.Max);
+            for (int i = 0; i < 20; i++)
+            {
+                var randomLine = new Polyline(new[] {
+                    rect.PointAt(random.NextDouble()),
+                    bbox.Min + new Vector3((bbox.Max.X - bbox.Min.X) * random.NextDouble(), (bbox.Max.Y - bbox.Min.Y) * random.NextDouble()),
+                    rect.PointAt(random.NextDouble()) });
+                collection = collection.SelectMany(c => c.Split(randomLine)).ToList();
+            }
+            Model.AddElements(collection.Select(c => new Panel(c, random.NextMaterial())));
+
+        }
+
+        [Fact]
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
