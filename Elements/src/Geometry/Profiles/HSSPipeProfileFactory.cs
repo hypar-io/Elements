@@ -1,6 +1,5 @@
 #pragma warning disable CS1591
 using System;
-using System.IO;
 
 namespace Elements.Geometry.Profiles
 {
@@ -152,7 +151,7 @@ namespace Elements.Geometry.Profiles
     /// <summary>
     /// A singleton class which serves every HSS pipe section as defined by AISC.
     /// </summary>
-    public sealed class HSSPipeProfileServer : ProfileServer<HSSPipeProfileType>
+    public sealed class HSSPipeProfileFactory : ProfileFactory<HSSPipeProfileType, HSSPipeProfile>
     {
         private static string _data = @"O.D.,I.D.,t,wt./ft.,A,I,S,r,J
 20,19.07,0.465,104,28.5,1360,136,6.91,2720
@@ -297,69 +296,54 @@ namespace Elements.Geometry.Profiles
 1.9,1.63,0.135,2.72,0.749,0.293,0.309,0.626,0.586
 1.66,1.4,0.13,2.27,0.625,0.184,0.222,0.543,0.368";
 
-        private static HSSPipeProfileServer instance = null;
+        /// <summary>
+        /// Construct a hollow structural steel profile factory.
+        /// </summary>
+        /// <returns></returns>
+        public HSSPipeProfileFactory() : base(_data) { }
 
-        private HSSPipeProfileServer()
+        /// <summary>
+        /// Get a profile by name.
+        /// </summary>
+        /// <param name="name">The name of the profile.</param>
+        /// <returns>A hollow structural steel profile.</returns>
+        public override HSSPipeProfile GetProfileByName(string name)
         {
-            // Read the data.
-            using (var reader = new StringReader(_data))
-            {
-                var lineCount = -1;
-                while (true)
-                {
-                    lineCount++;
-                    var line = reader.ReadLine();
-
-                    if (lineCount == 0)
-                    {
-                        continue;
-                    }
-
-                    if (line != null)
-                    {
-                        var values = line.Split(',');
-                        try
-                        {
-                            var profileType = (HSSPipeProfileType)(lineCount - 1);
-                            var profile = new HSSPipeProfile(profileType.ToString(), Guid.NewGuid(), double.Parse(values[0]) * InchesToMeters,
-                                                            double.Parse(values[1]) * InchesToMeters,
-                                                            double.Parse(values[2]) * InchesToMeters)
-                            {
-                                wt = double.Parse(values[4]),
-                                A = double.Parse(values[4]),
-                                I = double.Parse(values[5]),
-                                S = double.Parse(values[6]),
-                                r = double.Parse(values[7]),
-                                J = double.Parse(values[8])
-                            };
-                            _profiles.Add(profileType, profile);
-                        }
-                        catch
-                        {
-                            Console.WriteLine($"The section, {values[0]}, could not be loaded.");
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
+            var profileType = (HSSPipeProfileType)Enum.Parse(typeof(HSSPipeProfileType), name, true);
+            return CreateProfile((int)profileType);
         }
 
         /// <summary>
-        /// The HSSPipeProfileServer singleton.
+        /// Get a profile by type.
         /// </summary>
-        public static HSSPipeProfileServer Instance
+        /// <param name="type">The type of the profile.</param>
+        /// <returns>A hollow structural steel profile.</returns>
+        public override HSSPipeProfile GetProfileByType(HSSPipeProfileType type)
         {
-            get
+            return CreateProfile((int)type);
+        }
+
+        protected override HSSPipeProfile CreateProfile(int typeIndex)
+        {
+            var profileType = (HSSPipeProfileType)Enum.ToObject(typeof(HSSPipeProfileType), typeIndex);
+
+            var values = _profileData[typeIndex];
+
+            var profile = new HSSPipeProfile(profileType.ToString(),
+                                             Guid.NewGuid(),
+                                             Units.InchesToMeters(double.Parse(values[0])),
+                                             Units.InchesToMeters(double.Parse(values[1])),
+                                             Units.InchesToMeters(double.Parse(values[2])))
             {
-                if (instance == null)
-                {
-                    instance = new HSSPipeProfileServer();
-                }
-                return instance;
-            }
+                wt = double.Parse(values[4]),
+                A = double.Parse(values[4]),
+                I = double.Parse(values[5]),
+                S = double.Parse(values[6]),
+                r = double.Parse(values[7]),
+                J = double.Parse(values[8])
+            };
+
+            return profile;
         }
     }
 }

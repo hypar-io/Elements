@@ -223,7 +223,7 @@ namespace Elements.Serialization.glTF
                     m.NormalTexture = ti;
                     ti.Index = normalTexId;
                     ti.Scale = 1.0f;
-                    // Use the same texture coordinate as the 
+                    // Use the same texture coordinate as the
                     // base texture.
                     ti.TexCoord = 0;
 
@@ -974,7 +974,7 @@ namespace Elements.Serialization.glTF
                 var transform = new Transform();
                 if (i.BaseDefinition is ContentElement contentBase)
                 {
-                    // If there is a transform stored for the content base definition we 
+                    // If there is a transform stored for the content base definition we
                     // should apply it when creating instances.
                     if (meshTransformMap.TryGetValue(i.BaseDefinition.Id, out var baseTransform))
                     {
@@ -1097,9 +1097,20 @@ namespace Elements.Serialization.glTF
             }
         }
 
+        private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
+
         internal static Stream GetGlbStreamFromPath(string gltfLocation)
         {
             var responseStream = new MemoryStream();
+
+            if (gltfCache.TryGetValue(gltfLocation, out var foundStream))
+            {
+                foundStream.Position = 0;
+                foundStream.CopyTo(responseStream);
+                responseStream.Position = 0;
+                return responseStream;
+            }
+
             if (File.Exists(gltfLocation))
             {
                 File.OpenRead(gltfLocation).CopyTo(responseStream);
@@ -1115,6 +1126,12 @@ namespace Elements.Serialization.glTF
                 return Stream.Null;
             }
             responseStream.Position = 0;
+            if (!gltfCache.ContainsKey(gltfLocation))
+            {
+                var cacheStream = new MemoryStream();
+                responseStream.CopyTo(cacheStream);
+                gltfCache.Add(gltfLocation, cacheStream);
+            }
             return responseStream;
         }
 
@@ -1139,8 +1156,8 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
-            // The only reason we don't fully exclude openings from processing 
-            // is to ensure that openings have some geometry that will be used 
+            // The only reason we don't fully exclude openings from processing
+            // is to ensure that openings have some geometry that will be used
             // to compute csgs for their hosts.
             if (e.GetType() == typeof(Opening))
             {
@@ -1192,8 +1209,8 @@ namespace Elements.Serialization.glTF
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
             // can be computed and the final csg can have the inverse of the
-            // geometric element's transform applied to "reset" it. 
-            // The transforms applied to each node in the glTF will then 
+            // geometric element's transform applied to "reset" it.
+            // The transforms applied to each node in the glTF will then
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
