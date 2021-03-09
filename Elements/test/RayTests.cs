@@ -275,6 +275,17 @@ namespace Elements.Tests
             Assert.True(doesIntersect);
         }
 
+        [Fact]
+        private static void RayIntersectsPolygon()
+        {
+            var min = new Vector3();
+            var max = new Vector3(5, 5);
+            var polygon = Polygon.Rectangle(min, max);
+            Assert.True(new Ray(new Vector3(0, 0, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
+            Assert.True(new Ray(new Vector3(2.5, 2.5, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
+            Assert.False(new Ray(new Vector3(-1, -1, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
+        }
+
         private static Vector3 Center(Triangle t)
         {
             return new Vector3[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();

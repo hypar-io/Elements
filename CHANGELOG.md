@@ -3,12 +3,14 @@
 ## 0.8.4
 
 ### Added
+- `Elements.Spatial.CellComplex`
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `Ray.Intersects(Polygon)`
 - `SHSProfile`
 - `SHSProfileFactory`
 - `RHSProfile`
