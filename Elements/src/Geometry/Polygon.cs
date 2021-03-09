@@ -426,7 +426,9 @@ namespace Elements.Geometry
 
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
-            // and stop when you run out of edges.
+            // and stop when you run out of edges. 
+            // Guranteed to terminate because every loop step removes at least 1 edge, and
+            // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
                 var currentEdgeList = new List<(int from, int to)>();
@@ -435,7 +437,11 @@ namespace Elements.Geometry
                 var currentSegment = startingSet[0];
                 startingSet.RemoveAt(0);
                 var initialFrom = currentSegment.from;
-                // loop until we reach the point at which we started for this polygon loop
+
+                // loop until we reach the point at which we started for this polygon loop.
+                // Since we have a finite set of edges, and we consume / remove every edge we traverse,
+                // we must eventually either find an edge that points back to our start, or hit
+                // a dead end where no more edges are available (in which case we throw an exception) 
                 while (currentSegment.to != initialFrom)
                 {
                     currentEdgeList.Add(currentSegment);
@@ -445,6 +451,11 @@ namespace Elements.Geometry
                     var vectorToTest = fromVertex - toVertex;
                     // get all segments pointing outwards from our "to" vertex
                     var possibleNextSegments = edgesPerVertex[currentSegment.to];
+                    if (possibleNextSegments.Count == 0)
+                    {
+                        // this should never happen.
+                        throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
+                    }
                     // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
                     var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from])).Last();
                     possibleNextSegments.Remove(nextSegment);
