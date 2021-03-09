@@ -43,7 +43,7 @@ namespace Elements.Tests
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
 
 
-            var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
+            var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, new List<Element>(), Guid.NewGuid(), "test");
 
             var savePath = "../../../models/ContentCatalog.json";
             var json = testCatalog.ToJson();

@@ -26,16 +26,17 @@ namespace Elements
     public partial class ContentCatalog : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public ContentCatalog(IList<ContentElement> @content, System.Guid @id, string @name)
+        public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @content, @id, @name});
+                validator.PreConstruct(new object[]{ @content, @referenceConfiguration, @id, @name});
             }
         
             this.Content = @content;
+            this.ReferenceConfiguration = @referenceConfiguration;
             
             if(validator != null)
             {
@@ -47,6 +48,10 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
+    
+        /// <summary>An example arrangement of the elements contained in this catalog.</summary>
+        [Newtonsoft.Json.JsonProperty("ReferenceConfiguration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Element> ReferenceConfiguration { get; set; }
     
     
     }

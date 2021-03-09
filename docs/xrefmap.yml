@@ -482,15 +482,15 @@ references:
   commentId: T:Elements.ContentCatalog
   fullName: Elements.ContentCatalog
   nameWithType: ContentCatalog
-- uid: Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)
-  name: ContentCatalog(IList<ContentElement>, Guid, String)
-  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Guid_System_String_
-  commentId: M:Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Guid,System.String)
-  name.vb: ContentCatalog(IList(Of ContentElement), Guid, String)
-  fullName: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList<Elements.ContentElement>, System.Guid, System.String)
-  fullName.vb: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList(Of Elements.ContentElement), System.Guid, System.String)
-  nameWithType: ContentCatalog.ContentCatalog(IList<ContentElement>, Guid, String)
-  nameWithType.vb: ContentCatalog.ContentCatalog(IList(Of ContentElement), Guid, String)
+- uid: Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Collections.Generic.IList{Elements.Element},System.Guid,System.String)
+  name: ContentCatalog(IList<ContentElement>, IList<Element>, Guid, String)
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Collections_Generic_IList_Elements_Element__System_Guid_System_String_
+  commentId: M:Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Collections.Generic.IList{Elements.Element},System.Guid,System.String)
+  name.vb: ContentCatalog(IList(Of ContentElement), IList(Of Element), Guid, String)
+  fullName: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList<Elements.ContentElement>, System.Collections.Generic.IList<Elements.Element>, System.Guid, System.String)
+  fullName.vb: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList(Of Elements.ContentElement), System.Collections.Generic.IList(Of Elements.Element), System.Guid, System.String)
+  nameWithType: ContentCatalog.ContentCatalog(IList<ContentElement>, IList<Element>, Guid, String)
+  nameWithType.vb: ContentCatalog.ContentCatalog(IList(Of ContentElement), IList(Of Element), Guid, String)
 - uid: Elements.ContentCatalog.#ctor*
   name: ContentCatalog
   href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_
@@ -524,6 +524,19 @@ references:
   isSpec: "True"
   fullName: Elements.ContentCatalog.FromJson
   nameWithType: ContentCatalog.FromJson
+- uid: Elements.ContentCatalog.ReferenceConfiguration
+  name: ReferenceConfiguration
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_ReferenceConfiguration
+  commentId: P:Elements.ContentCatalog.ReferenceConfiguration
+  fullName: Elements.ContentCatalog.ReferenceConfiguration
+  nameWithType: ContentCatalog.ReferenceConfiguration
+- uid: Elements.ContentCatalog.ReferenceConfiguration*
+  name: ReferenceConfiguration
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_ReferenceConfiguration_
+  commentId: Overload:Elements.ContentCatalog.ReferenceConfiguration
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.ReferenceConfiguration
+  nameWithType: ContentCatalog.ReferenceConfiguration
 - uid: Elements.ContentCatalog.ToJson
   name: ToJson()
   href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_ToJson
@@ -2062,6 +2075,32 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.BBox3.GetHashCode
   nameWithType: BBox3.GetHashCode
+- uid: Elements.Geometry.BBox3.IsDegenerate
+  name: IsDegenerate()
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_IsDegenerate
+  commentId: M:Elements.Geometry.BBox3.IsDegenerate
+  fullName: Elements.Geometry.BBox3.IsDegenerate()
+  nameWithType: BBox3.IsDegenerate()
+- uid: Elements.Geometry.BBox3.IsDegenerate*
+  name: IsDegenerate
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_IsDegenerate_
+  commentId: Overload:Elements.Geometry.BBox3.IsDegenerate
+  isSpec: "True"
+  fullName: Elements.Geometry.BBox3.IsDegenerate
+  nameWithType: BBox3.IsDegenerate
+- uid: Elements.Geometry.BBox3.IsValid
+  name: IsValid()
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_IsValid
+  commentId: M:Elements.Geometry.BBox3.IsValid
+  fullName: Elements.Geometry.BBox3.IsValid()
+  nameWithType: BBox3.IsValid()
+- uid: Elements.Geometry.BBox3.IsValid*
+  name: IsValid
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_IsValid_
+  commentId: Overload:Elements.Geometry.BBox3.IsValid
+  isSpec: "True"
+  fullName: Elements.Geometry.BBox3.IsValid
+  nameWithType: BBox3.IsValid
 - uid: Elements.Geometry.BBox3.Max
   name: Max
   href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3_Max
@@ -5048,6 +5087,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Segments
   nameWithType: Polygon.Segments
+- uid: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  name: Split(Polyline)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_Elements_Geometry_Polyline_
+  commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
+  nameWithType: Polygon.Split(Polyline)
+- uid: Elements.Geometry.Polygon.Split*
+  name: Split
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_
+  commentId: Overload:Elements.Geometry.Polygon.Split
+  isSpec: "True"
+  fullName: Elements.Geometry.Polygon.Split
+  nameWithType: Polygon.Split
 - uid: Elements.Geometry.Polygon.Star(System.Double,System.Double,System.Int32)
   name: Star(Double, Double, Int32)
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Star_System_Double_System_Double_System_Int32_
@@ -5722,15 +5774,24 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Segments
   nameWithType: Profile.Segments
-- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
-  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double,System.Double)
-  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
-  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double, System.Double)
-  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double, Double)
-  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double, Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+  name: Split(IEnumerable<Profile>, Polyline, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__Elements_Geometry_Polyline_System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+  name.vb: Split(IEnumerable(Of Profile), Polyline, Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, Elements.Geometry.Polyline, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), Elements.Geometry.Polyline, System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, Polyline, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), Polyline, Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
+  name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
+  name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double)
+  nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
+  nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
 - uid: Elements.Geometry.Profile.Split*
   name: Split
   href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_
