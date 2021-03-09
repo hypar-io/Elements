@@ -12288,6 +12288,15 @@ references:
   fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane, ByRef Elements.Geometry.Vector3, ByRef System.Double)
   nameWithType: Ray.Intersects(Plane, out Vector3, out Double)
   nameWithType.vb: Ray.Intersects(Plane, ByRef Vector3, ByRef Double)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Polygon,Elements.Geometry.Vector3@)
+  name: Intersects(Polygon, out Vector3)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Polygon_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Polygon,Elements.Geometry.Vector3@)
+  name.vb: Intersects(Polygon, ByRef Vector3)
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Polygon, out Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Polygon, ByRef Elements.Geometry.Vector3)
+  nameWithType: Ray.Intersects(Polygon, out Vector3)
+  nameWithType.vb: Ray.Intersects(Polygon, ByRef Vector3)
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,System.Boolean)
   name: Intersects(Ray, out Vector3, Boolean)
   href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__System_Boolean_
@@ -16103,6 +16112,579 @@ references:
   commentId: N:Elements.Spatial
   fullName: Elements.Spatial
   nameWithType: Elements.Spatial
+- uid: Elements.Spatial.Cell
+  name: Cell
+  href: api/Elements.Spatial.Cell.html
+  commentId: T:Elements.Spatial.Cell
+  fullName: Elements.Spatial.Cell
+  nameWithType: Cell
+- uid: Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.Face},Elements.Spatial.Face,Elements.Spatial.Face)
+  name: Cell(Int64, List<Face>, Face, Face)
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell__ctor_System_Int64_System_Collections_Generic_List_Elements_Spatial_Face__Elements_Spatial_Face_Elements_Spatial_Face_
+  commentId: M:Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.Face},Elements.Spatial.Face,Elements.Spatial.Face)
+  name.vb: Cell(Int64, List(Of Face), Face, Face)
+  fullName: Elements.Spatial.Cell.Cell(System.Int64, System.Collections.Generic.List<Elements.Spatial.Face>, Elements.Spatial.Face, Elements.Spatial.Face)
+  fullName.vb: Elements.Spatial.Cell.Cell(System.Int64, System.Collections.Generic.List(Of Elements.Spatial.Face), Elements.Spatial.Face, Elements.Spatial.Face)
+  nameWithType: Cell.Cell(Int64, List<Face>, Face, Face)
+  nameWithType.vb: Cell.Cell(Int64, List(Of Face), Face, Face)
+- uid: Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})
+  name: Cell(Int64, List<Int64>, Nullable<Int64>, Nullable<Int64>)
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell__ctor_System_Int64_System_Collections_Generic_List_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__
+  commentId: M:Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})
+  name.vb: Cell(Int64, List(Of Int64), Nullable(Of Int64), Nullable(Of Int64))
+  fullName: Elements.Spatial.Cell.Cell(System.Int64, System.Collections.Generic.List<System.Int64>, System.Nullable<System.Int64>, System.Nullable<System.Int64>)
+  fullName.vb: Elements.Spatial.Cell.Cell(System.Int64, System.Collections.Generic.List(Of System.Int64), System.Nullable(Of System.Int64), System.Nullable(Of System.Int64))
+  nameWithType: Cell.Cell(Int64, List<Int64>, Nullable<Int64>, Nullable<Int64>)
+  nameWithType.vb: Cell.Cell(Int64, List(Of Int64), Nullable(Of Int64), Nullable(Of Int64))
+- uid: Elements.Spatial.Cell.#ctor*
+  name: Cell
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell__ctor_
+  commentId: Overload:Elements.Spatial.Cell.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Cell.Cell
+  nameWithType: Cell.Cell
+- uid: Elements.Spatial.Cell.BottomFaceId
+  name: BottomFaceId
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell_BottomFaceId
+  commentId: F:Elements.Spatial.Cell.BottomFaceId
+  fullName: Elements.Spatial.Cell.BottomFaceId
+  nameWithType: Cell.BottomFaceId
+- uid: Elements.Spatial.Cell.FaceIds
+  name: FaceIds
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell_FaceIds
+  commentId: F:Elements.Spatial.Cell.FaceIds
+  fullName: Elements.Spatial.Cell.FaceIds
+  nameWithType: Cell.FaceIds
+- uid: Elements.Spatial.Cell.Id
+  name: Id
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell_Id
+  commentId: F:Elements.Spatial.Cell.Id
+  fullName: Elements.Spatial.Cell.Id
+  nameWithType: Cell.Id
+- uid: Elements.Spatial.Cell.TopFaceId
+  name: TopFaceId
+  href: api/Elements.Spatial.Cell.html#Elements_Spatial_Cell_TopFaceId
+  commentId: F:Elements.Spatial.Cell.TopFaceId
+  fullName: Elements.Spatial.Cell.TopFaceId
+  nameWithType: Cell.TopFaceId
+- uid: Elements.Spatial.CellComplex
+  name: CellComplex
+  href: api/Elements.Spatial.CellComplex.html
+  commentId: T:Elements.Spatial.CellComplex
+  fullName: Elements.Spatial.CellComplex
+  nameWithType: CellComplex
+- uid: Elements.Spatial.CellComplex.#ctor(System.Guid,System.String)
+  name: CellComplex(Guid, String)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex__ctor_System_Guid_System_String_
+  commentId: M:Elements.Spatial.CellComplex.#ctor(System.Guid,System.String)
+  fullName: Elements.Spatial.CellComplex.CellComplex(System.Guid, System.String)
+  nameWithType: CellComplex.CellComplex(Guid, String)
+- uid: Elements.Spatial.CellComplex.#ctor(System.Guid,System.String,System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Vertex},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Vertex},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Segment},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.DirectedSegment},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Face},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Cell})
+  name: CellComplex(Guid, String, Dictionary<Int64, Vertex>, Dictionary<Int64, Vertex>, Dictionary<Int64, Segment>, Dictionary<Int64, DirectedSegment>, Dictionary<Int64, Face>, Dictionary<Int64, Cell>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex__ctor_System_Guid_System_String_System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_Vertex__System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_Vertex__System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_Segment__System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_DirectedSegment__System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_Face__System_Collections_Generic_Dictionary_System_Int64_Elements_Spatial_Cell__
+  commentId: M:Elements.Spatial.CellComplex.#ctor(System.Guid,System.String,System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Vertex},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Vertex},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Segment},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.DirectedSegment},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Face},System.Collections.Generic.Dictionary{System.Int64,Elements.Spatial.Cell})
+  name.vb: CellComplex(Guid, String, Dictionary(Of Int64, Vertex), Dictionary(Of Int64, Vertex), Dictionary(Of Int64, Segment), Dictionary(Of Int64, DirectedSegment), Dictionary(Of Int64, Face), Dictionary(Of Int64, Cell))
+  fullName: Elements.Spatial.CellComplex.CellComplex(System.Guid, System.String, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.Vertex>, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.Vertex>, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.Segment>, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.DirectedSegment>, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.Face>, System.Collections.Generic.Dictionary<System.Int64, Elements.Spatial.Cell>)
+  fullName.vb: Elements.Spatial.CellComplex.CellComplex(System.Guid, System.String, System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.Vertex), System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.Vertex), System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.Segment), System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.DirectedSegment), System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.Face), System.Collections.Generic.Dictionary(Of System.Int64, Elements.Spatial.Cell))
+  nameWithType: CellComplex.CellComplex(Guid, String, Dictionary<Int64, Vertex>, Dictionary<Int64, Vertex>, Dictionary<Int64, Segment>, Dictionary<Int64, DirectedSegment>, Dictionary<Int64, Face>, Dictionary<Int64, Cell>)
+  nameWithType.vb: CellComplex.CellComplex(Guid, String, Dictionary(Of Int64, Vertex), Dictionary(Of Int64, Vertex), Dictionary(Of Int64, Segment), Dictionary(Of Int64, DirectedSegment), Dictionary(Of Int64, Face), Dictionary(Of Int64, Cell))
+- uid: Elements.Spatial.CellComplex.#ctor*
+  name: CellComplex
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex__ctor_
+  commentId: Overload:Elements.Spatial.CellComplex.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.CellComplex
+  nameWithType: CellComplex.CellComplex
+- uid: Elements.Spatial.CellComplex.AddCell(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  name: AddCell(Polygon, Double, Double, Grid1d, Grid1d)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddCell_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.CellComplex.AddCell(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.CellComplex.AddCell(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  nameWithType: CellComplex.AddCell(Polygon, Double, Double, Grid1d, Grid1d)
+- uid: Elements.Spatial.CellComplex.AddCell*
+  name: AddCell
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddCell_
+  commentId: Overload:Elements.Spatial.CellComplex.AddCell
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.AddCell
+  nameWithType: CellComplex.AddCell
+- uid: Elements.Spatial.CellComplex.AddDirectedSegment(Elements.Geometry.Line)
+  name: AddDirectedSegment(Line)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddDirectedSegment_Elements_Geometry_Line_
+  commentId: M:Elements.Spatial.CellComplex.AddDirectedSegment(Elements.Geometry.Line)
+  fullName: Elements.Spatial.CellComplex.AddDirectedSegment(Elements.Geometry.Line)
+  nameWithType: CellComplex.AddDirectedSegment(Line)
+- uid: Elements.Spatial.CellComplex.AddDirectedSegment*
+  name: AddDirectedSegment
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddDirectedSegment_
+  commentId: Overload:Elements.Spatial.CellComplex.AddDirectedSegment
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.AddDirectedSegment
+  nameWithType: CellComplex.AddDirectedSegment
+- uid: Elements.Spatial.CellComplex.AddFace(Elements.Geometry.Polygon,Elements.Spatial.UV,Elements.Spatial.UV)
+  name: AddFace(Polygon, UV, UV)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddFace_Elements_Geometry_Polygon_Elements_Spatial_UV_Elements_Spatial_UV_
+  commentId: M:Elements.Spatial.CellComplex.AddFace(Elements.Geometry.Polygon,Elements.Spatial.UV,Elements.Spatial.UV)
+  fullName: Elements.Spatial.CellComplex.AddFace(Elements.Geometry.Polygon, Elements.Spatial.UV, Elements.Spatial.UV)
+  nameWithType: CellComplex.AddFace(Polygon, UV, UV)
+- uid: Elements.Spatial.CellComplex.AddFace*
+  name: AddFace
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddFace_
+  commentId: Overload:Elements.Spatial.CellComplex.AddFace
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.AddFace
+  nameWithType: CellComplex.AddFace
+- uid: Elements.Spatial.CellComplex.AddUV(Elements.Geometry.Vector3)
+  name: AddUV(Vector3)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddUV_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.CellComplex.AddUV(Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.CellComplex.AddUV(Elements.Geometry.Vector3)
+  nameWithType: CellComplex.AddUV(Vector3)
+- uid: Elements.Spatial.CellComplex.AddUV*
+  name: AddUV
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddUV_
+  commentId: Overload:Elements.Spatial.CellComplex.AddUV
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.AddUV
+  nameWithType: CellComplex.AddUV
+- uid: Elements.Spatial.CellComplex.AddVertex(Elements.Geometry.Vector3)
+  name: AddVertex(Vector3)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddVertex_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.CellComplex.AddVertex(Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.CellComplex.AddVertex(Elements.Geometry.Vector3)
+  nameWithType: CellComplex.AddVertex(Vector3)
+- uid: Elements.Spatial.CellComplex.AddVertex*
+  name: AddVertex
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_AddVertex_
+  commentId: Overload:Elements.Spatial.CellComplex.AddVertex
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.AddVertex
+  nameWithType: CellComplex.AddVertex
+- uid: Elements.Spatial.CellComplex.Cells
+  name: Cells
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Cells
+  commentId: P:Elements.Spatial.CellComplex.Cells
+  fullName: Elements.Spatial.CellComplex.Cells
+  nameWithType: CellComplex.Cells
+- uid: Elements.Spatial.CellComplex.Cells*
+  name: Cells
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Cells_
+  commentId: Overload:Elements.Spatial.CellComplex.Cells
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.Cells
+  nameWithType: CellComplex.Cells
+- uid: Elements.Spatial.CellComplex.DirectedSegments
+  name: DirectedSegments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_DirectedSegments
+  commentId: P:Elements.Spatial.CellComplex.DirectedSegments
+  fullName: Elements.Spatial.CellComplex.DirectedSegments
+  nameWithType: CellComplex.DirectedSegments
+- uid: Elements.Spatial.CellComplex.DirectedSegments*
+  name: DirectedSegments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_DirectedSegments_
+  commentId: Overload:Elements.Spatial.CellComplex.DirectedSegments
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.DirectedSegments
+  nameWithType: CellComplex.DirectedSegments
+- uid: Elements.Spatial.CellComplex.Faces
+  name: Faces
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Faces
+  commentId: P:Elements.Spatial.CellComplex.Faces
+  fullName: Elements.Spatial.CellComplex.Faces
+  nameWithType: CellComplex.Faces
+- uid: Elements.Spatial.CellComplex.Faces*
+  name: Faces
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Faces_
+  commentId: Overload:Elements.Spatial.CellComplex.Faces
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.Faces
+  nameWithType: CellComplex.Faces
+- uid: Elements.Spatial.CellComplex.GetCell(System.Int64)
+  name: GetCell(Int64)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCell_System_Int64_
+  commentId: M:Elements.Spatial.CellComplex.GetCell(System.Int64)
+  fullName: Elements.Spatial.CellComplex.GetCell(System.Int64)
+  nameWithType: CellComplex.GetCell(Int64)
+- uid: Elements.Spatial.CellComplex.GetCell*
+  name: GetCell
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCell_
+  commentId: Overload:Elements.Spatial.CellComplex.GetCell
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetCell
+  nameWithType: CellComplex.GetCell
+- uid: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.DirectedSegment)
+  name: GetCells(DirectedSegment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCells_Elements_Spatial_DirectedSegment_
+  commentId: M:Elements.Spatial.CellComplex.GetCells(Elements.Spatial.DirectedSegment)
+  fullName: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.DirectedSegment)
+  nameWithType: CellComplex.GetCells(DirectedSegment)
+- uid: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Face)
+  name: GetCells(Face)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCells_Elements_Spatial_Face_
+  commentId: M:Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Face)
+  fullName: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Face)
+  nameWithType: CellComplex.GetCells(Face)
+- uid: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Segment)
+  name: GetCells(Segment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCells_Elements_Spatial_Segment_
+  commentId: M:Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Segment)
+  fullName: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Segment)
+  nameWithType: CellComplex.GetCells(Segment)
+- uid: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Vertex)
+  name: GetCells(Vertex)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCells_Elements_Spatial_Vertex_
+  commentId: M:Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Vertex)
+  fullName: Elements.Spatial.CellComplex.GetCells(Elements.Spatial.Vertex)
+  nameWithType: CellComplex.GetCells(Vertex)
+- uid: Elements.Spatial.CellComplex.GetCells*
+  name: GetCells
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetCells_
+  commentId: Overload:Elements.Spatial.CellComplex.GetCells
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetCells
+  nameWithType: CellComplex.GetCells
+- uid: Elements.Spatial.CellComplex.GetDirectedSegment(System.Int64)
+  name: GetDirectedSegment(Int64)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegment_System_Int64_
+  commentId: M:Elements.Spatial.CellComplex.GetDirectedSegment(System.Int64)
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegment(System.Int64)
+  nameWithType: CellComplex.GetDirectedSegment(Int64)
+- uid: Elements.Spatial.CellComplex.GetDirectedSegment*
+  name: GetDirectedSegment
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegment_
+  commentId: Overload:Elements.Spatial.CellComplex.GetDirectedSegment
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegment
+  nameWithType: CellComplex.GetDirectedSegment
+- uid: Elements.Spatial.CellComplex.GetDirectedSegmentGeometry(Elements.Spatial.DirectedSegment)
+  name: GetDirectedSegmentGeometry(DirectedSegment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegmentGeometry_Elements_Spatial_DirectedSegment_
+  commentId: M:Elements.Spatial.CellComplex.GetDirectedSegmentGeometry(Elements.Spatial.DirectedSegment)
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegmentGeometry(Elements.Spatial.DirectedSegment)
+  nameWithType: CellComplex.GetDirectedSegmentGeometry(DirectedSegment)
+- uid: Elements.Spatial.CellComplex.GetDirectedSegmentGeometry*
+  name: GetDirectedSegmentGeometry
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegmentGeometry_
+  commentId: Overload:Elements.Spatial.CellComplex.GetDirectedSegmentGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegmentGeometry
+  nameWithType: CellComplex.GetDirectedSegmentGeometry
+- uid: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Face)
+  name: GetDirectedSegments(Face)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegments_Elements_Spatial_Face_
+  commentId: M:Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Face)
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Face)
+  nameWithType: CellComplex.GetDirectedSegments(Face)
+- uid: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Segment)
+  name: GetDirectedSegments(Segment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegments_Elements_Spatial_Segment_
+  commentId: M:Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Segment)
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Segment)
+  nameWithType: CellComplex.GetDirectedSegments(Segment)
+- uid: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Vertex)
+  name: GetDirectedSegments(Vertex)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegments_Elements_Spatial_Vertex_
+  commentId: M:Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Vertex)
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegments(Elements.Spatial.Vertex)
+  nameWithType: CellComplex.GetDirectedSegments(Vertex)
+- uid: Elements.Spatial.CellComplex.GetDirectedSegments*
+  name: GetDirectedSegments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetDirectedSegments_
+  commentId: Overload:Elements.Spatial.CellComplex.GetDirectedSegments
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetDirectedSegments
+  nameWithType: CellComplex.GetDirectedSegments
+- uid: Elements.Spatial.CellComplex.GetFace(System.Nullable{System.Int64})
+  name: GetFace(Nullable<Int64>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFace_System_Nullable_System_Int64__
+  commentId: M:Elements.Spatial.CellComplex.GetFace(System.Nullable{System.Int64})
+  name.vb: GetFace(Nullable(Of Int64))
+  fullName: Elements.Spatial.CellComplex.GetFace(System.Nullable<System.Int64>)
+  fullName.vb: Elements.Spatial.CellComplex.GetFace(System.Nullable(Of System.Int64))
+  nameWithType: CellComplex.GetFace(Nullable<Int64>)
+  nameWithType.vb: CellComplex.GetFace(Nullable(Of Int64))
+- uid: Elements.Spatial.CellComplex.GetFace*
+  name: GetFace
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFace_
+  commentId: Overload:Elements.Spatial.CellComplex.GetFace
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetFace
+  nameWithType: CellComplex.GetFace
+- uid: Elements.Spatial.CellComplex.GetFaceGeometry(Elements.Spatial.Face)
+  name: GetFaceGeometry(Face)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaceGeometry_Elements_Spatial_Face_
+  commentId: M:Elements.Spatial.CellComplex.GetFaceGeometry(Elements.Spatial.Face)
+  fullName: Elements.Spatial.CellComplex.GetFaceGeometry(Elements.Spatial.Face)
+  nameWithType: CellComplex.GetFaceGeometry(Face)
+- uid: Elements.Spatial.CellComplex.GetFaceGeometry*
+  name: GetFaceGeometry
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaceGeometry_
+  commentId: Overload:Elements.Spatial.CellComplex.GetFaceGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetFaceGeometry
+  nameWithType: CellComplex.GetFaceGeometry
+- uid: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Cell)
+  name: GetFaces(Cell)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaces_Elements_Spatial_Cell_
+  commentId: M:Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Cell)
+  fullName: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Cell)
+  nameWithType: CellComplex.GetFaces(Cell)
+- uid: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.DirectedSegment)
+  name: GetFaces(DirectedSegment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaces_Elements_Spatial_DirectedSegment_
+  commentId: M:Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.DirectedSegment)
+  fullName: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.DirectedSegment)
+  nameWithType: CellComplex.GetFaces(DirectedSegment)
+- uid: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Segment)
+  name: GetFaces(Segment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaces_Elements_Spatial_Segment_
+  commentId: M:Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Segment)
+  fullName: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Segment)
+  nameWithType: CellComplex.GetFaces(Segment)
+- uid: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Vertex)
+  name: GetFaces(Vertex)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaces_Elements_Spatial_Vertex_
+  commentId: M:Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Vertex)
+  fullName: Elements.Spatial.CellComplex.GetFaces(Elements.Spatial.Vertex)
+  nameWithType: CellComplex.GetFaces(Vertex)
+- uid: Elements.Spatial.CellComplex.GetFaces*
+  name: GetFaces
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetFaces_
+  commentId: Overload:Elements.Spatial.CellComplex.GetFaces
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetFaces
+  nameWithType: CellComplex.GetFaces
+- uid: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Cell,System.Nullable{Elements.Geometry.Vector3})
+  name: GetNeighbors(Cell, Nullable<Vector3>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetNeighbors_Elements_Spatial_Cell_System_Nullable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Cell,System.Nullable{Elements.Geometry.Vector3})
+  name.vb: GetNeighbors(Cell, Nullable(Of Vector3))
+  fullName: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Cell, System.Nullable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Cell, System.Nullable(Of Elements.Geometry.Vector3))
+  nameWithType: CellComplex.GetNeighbors(Cell, Nullable<Vector3>)
+  nameWithType.vb: CellComplex.GetNeighbors(Cell, Nullable(Of Vector3))
+- uid: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Face,System.Nullable{Elements.Geometry.Vector3},System.Boolean)
+  name: GetNeighbors(Face, Nullable<Vector3>, Boolean)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetNeighbors_Elements_Spatial_Face_System_Nullable_Elements_Geometry_Vector3__System_Boolean_
+  commentId: M:Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Face,System.Nullable{Elements.Geometry.Vector3},System.Boolean)
+  name.vb: GetNeighbors(Face, Nullable(Of Vector3), Boolean)
+  fullName: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Face, System.Nullable<Elements.Geometry.Vector3>, System.Boolean)
+  fullName.vb: Elements.Spatial.CellComplex.GetNeighbors(Elements.Spatial.Face, System.Nullable(Of Elements.Geometry.Vector3), System.Boolean)
+  nameWithType: CellComplex.GetNeighbors(Face, Nullable<Vector3>, Boolean)
+  nameWithType.vb: CellComplex.GetNeighbors(Face, Nullable(Of Vector3), Boolean)
+- uid: Elements.Spatial.CellComplex.GetNeighbors*
+  name: GetNeighbors
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetNeighbors_
+  commentId: Overload:Elements.Spatial.CellComplex.GetNeighbors
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetNeighbors
+  nameWithType: CellComplex.GetNeighbors
+- uid: Elements.Spatial.CellComplex.GetSegment(System.Int64)
+  name: GetSegment(Int64)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegment_System_Int64_
+  commentId: M:Elements.Spatial.CellComplex.GetSegment(System.Int64)
+  fullName: Elements.Spatial.CellComplex.GetSegment(System.Int64)
+  nameWithType: CellComplex.GetSegment(Int64)
+- uid: Elements.Spatial.CellComplex.GetSegment*
+  name: GetSegment
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegment_
+  commentId: Overload:Elements.Spatial.CellComplex.GetSegment
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetSegment
+  nameWithType: CellComplex.GetSegment
+- uid: Elements.Spatial.CellComplex.GetSegmentGeometry(Elements.Spatial.Segment)
+  name: GetSegmentGeometry(Segment)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegmentGeometry_Elements_Spatial_Segment_
+  commentId: M:Elements.Spatial.CellComplex.GetSegmentGeometry(Elements.Spatial.Segment)
+  fullName: Elements.Spatial.CellComplex.GetSegmentGeometry(Elements.Spatial.Segment)
+  nameWithType: CellComplex.GetSegmentGeometry(Segment)
+- uid: Elements.Spatial.CellComplex.GetSegmentGeometry*
+  name: GetSegmentGeometry
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegmentGeometry_
+  commentId: Overload:Elements.Spatial.CellComplex.GetSegmentGeometry
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetSegmentGeometry
+  nameWithType: CellComplex.GetSegmentGeometry
+- uid: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Cell)
+  name: GetSegments(Cell)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegments_Elements_Spatial_Cell_
+  commentId: M:Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Cell)
+  fullName: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Cell)
+  nameWithType: CellComplex.GetSegments(Cell)
+- uid: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Face)
+  name: GetSegments(Face)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegments_Elements_Spatial_Face_
+  commentId: M:Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Face)
+  fullName: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Face)
+  nameWithType: CellComplex.GetSegments(Face)
+- uid: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Vertex)
+  name: GetSegments(Vertex)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegments_Elements_Spatial_Vertex_
+  commentId: M:Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Vertex)
+  fullName: Elements.Spatial.CellComplex.GetSegments(Elements.Spatial.Vertex)
+  nameWithType: CellComplex.GetSegments(Vertex)
+- uid: Elements.Spatial.CellComplex.GetSegments*
+  name: GetSegments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetSegments_
+  commentId: Overload:Elements.Spatial.CellComplex.GetSegments
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetSegments
+  nameWithType: CellComplex.GetSegments
+- uid: Elements.Spatial.CellComplex.GetUV(System.Nullable{System.Int64})
+  name: GetUV(Nullable<Int64>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetUV_System_Nullable_System_Int64__
+  commentId: M:Elements.Spatial.CellComplex.GetUV(System.Nullable{System.Int64})
+  name.vb: GetUV(Nullable(Of Int64))
+  fullName: Elements.Spatial.CellComplex.GetUV(System.Nullable<System.Int64>)
+  fullName.vb: Elements.Spatial.CellComplex.GetUV(System.Nullable(Of System.Int64))
+  nameWithType: CellComplex.GetUV(Nullable<Int64>)
+  nameWithType.vb: CellComplex.GetUV(Nullable(Of Int64))
+- uid: Elements.Spatial.CellComplex.GetUV*
+  name: GetUV
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetUV_
+  commentId: Overload:Elements.Spatial.CellComplex.GetUV
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetUV
+  nameWithType: CellComplex.GetUV
+- uid: Elements.Spatial.CellComplex.GetVertex(System.Int64)
+  name: GetVertex(Int64)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetVertex_System_Int64_
+  commentId: M:Elements.Spatial.CellComplex.GetVertex(System.Int64)
+  fullName: Elements.Spatial.CellComplex.GetVertex(System.Int64)
+  nameWithType: CellComplex.GetVertex(Int64)
+- uid: Elements.Spatial.CellComplex.GetVertex*
+  name: GetVertex
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetVertex_
+  commentId: Overload:Elements.Spatial.CellComplex.GetVertex
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetVertex
+  nameWithType: CellComplex.GetVertex
+- uid: Elements.Spatial.CellComplex.GetVerticesMatchingXY(System.Double,System.Double,System.Nullable{System.Double})
+  name: GetVerticesMatchingXY(Double, Double, Nullable<Double>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetVerticesMatchingXY_System_Double_System_Double_System_Nullable_System_Double__
+  commentId: M:Elements.Spatial.CellComplex.GetVerticesMatchingXY(System.Double,System.Double,System.Nullable{System.Double})
+  name.vb: GetVerticesMatchingXY(Double, Double, Nullable(Of Double))
+  fullName: Elements.Spatial.CellComplex.GetVerticesMatchingXY(System.Double, System.Double, System.Nullable<System.Double>)
+  fullName.vb: Elements.Spatial.CellComplex.GetVerticesMatchingXY(System.Double, System.Double, System.Nullable(Of System.Double))
+  nameWithType: CellComplex.GetVerticesMatchingXY(Double, Double, Nullable<Double>)
+  nameWithType.vb: CellComplex.GetVerticesMatchingXY(Double, Double, Nullable(Of Double))
+- uid: Elements.Spatial.CellComplex.GetVerticesMatchingXY*
+  name: GetVerticesMatchingXY
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_GetVerticesMatchingXY_
+  commentId: Overload:Elements.Spatial.CellComplex.GetVerticesMatchingXY
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.GetVerticesMatchingXY
+  nameWithType: CellComplex.GetVerticesMatchingXY
+- uid: Elements.Spatial.CellComplex.Segments
+  name: Segments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Segments
+  commentId: P:Elements.Spatial.CellComplex.Segments
+  fullName: Elements.Spatial.CellComplex.Segments
+  nameWithType: CellComplex.Segments
+- uid: Elements.Spatial.CellComplex.Segments*
+  name: Segments
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Segments_
+  commentId: Overload:Elements.Spatial.CellComplex.Segments
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.Segments
+  nameWithType: CellComplex.Segments
+- uid: Elements.Spatial.CellComplex.Tolerance
+  name: Tolerance
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Tolerance
+  commentId: F:Elements.Spatial.CellComplex.Tolerance
+  fullName: Elements.Spatial.CellComplex.Tolerance
+  nameWithType: CellComplex.Tolerance
+- uid: Elements.Spatial.CellComplex.UVs
+  name: UVs
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_UVs
+  commentId: P:Elements.Spatial.CellComplex.UVs
+  fullName: Elements.Spatial.CellComplex.UVs
+  nameWithType: CellComplex.UVs
+- uid: Elements.Spatial.CellComplex.UVs*
+  name: UVs
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_UVs_
+  commentId: Overload:Elements.Spatial.CellComplex.UVs
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.UVs
+  nameWithType: CellComplex.UVs
+- uid: Elements.Spatial.CellComplex.VertexExists(Elements.Geometry.Vector3,System.Int64@,System.Nullable{System.Double})
+  name: VertexExists(Vector3, out Int64, Nullable<Double>)
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_VertexExists_Elements_Geometry_Vector3_System_Int64__System_Nullable_System_Double__
+  commentId: M:Elements.Spatial.CellComplex.VertexExists(Elements.Geometry.Vector3,System.Int64@,System.Nullable{System.Double})
+  name.vb: VertexExists(Vector3, ByRef Int64, Nullable(Of Double))
+  fullName: Elements.Spatial.CellComplex.VertexExists(Elements.Geometry.Vector3, out System.Int64, System.Nullable<System.Double>)
+  fullName.vb: Elements.Spatial.CellComplex.VertexExists(Elements.Geometry.Vector3, ByRef System.Int64, System.Nullable(Of System.Double))
+  nameWithType: CellComplex.VertexExists(Vector3, out Int64, Nullable<Double>)
+  nameWithType.vb: CellComplex.VertexExists(Vector3, ByRef Int64, Nullable(Of Double))
+- uid: Elements.Spatial.CellComplex.VertexExists*
+  name: VertexExists
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_VertexExists_
+  commentId: Overload:Elements.Spatial.CellComplex.VertexExists
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.VertexExists
+  nameWithType: CellComplex.VertexExists
+- uid: Elements.Spatial.CellComplex.Vertices
+  name: Vertices
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Vertices
+  commentId: P:Elements.Spatial.CellComplex.Vertices
+  fullName: Elements.Spatial.CellComplex.Vertices
+  nameWithType: CellComplex.Vertices
+- uid: Elements.Spatial.CellComplex.Vertices*
+  name: Vertices
+  href: api/Elements.Spatial.CellComplex.html#Elements_Spatial_CellComplex_Vertices_
+  commentId: Overload:Elements.Spatial.CellComplex.Vertices
+  isSpec: "True"
+  fullName: Elements.Spatial.CellComplex.Vertices
+  nameWithType: CellComplex.Vertices
+- uid: Elements.Spatial.DirectedSegment
+  name: DirectedSegment
+  href: api/Elements.Spatial.DirectedSegment.html
+  commentId: T:Elements.Spatial.DirectedSegment
+  fullName: Elements.Spatial.DirectedSegment
+  nameWithType: DirectedSegment
+- uid: Elements.Spatial.DirectedSegment.#ctor(System.Int64,Elements.Spatial.Segment,System.Boolean)
+  name: DirectedSegment(Int64, Segment, Boolean)
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment__ctor_System_Int64_Elements_Spatial_Segment_System_Boolean_
+  commentId: M:Elements.Spatial.DirectedSegment.#ctor(System.Int64,Elements.Spatial.Segment,System.Boolean)
+  fullName: Elements.Spatial.DirectedSegment.DirectedSegment(System.Int64, Elements.Spatial.Segment, System.Boolean)
+  nameWithType: DirectedSegment.DirectedSegment(Int64, Segment, Boolean)
+- uid: Elements.Spatial.DirectedSegment.#ctor(System.Int64,System.Int64,System.Int64,System.Int64)
+  name: DirectedSegment(Int64, Int64, Int64, Int64)
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment__ctor_System_Int64_System_Int64_System_Int64_System_Int64_
+  commentId: M:Elements.Spatial.DirectedSegment.#ctor(System.Int64,System.Int64,System.Int64,System.Int64)
+  fullName: Elements.Spatial.DirectedSegment.DirectedSegment(System.Int64, System.Int64, System.Int64, System.Int64)
+  nameWithType: DirectedSegment.DirectedSegment(Int64, Int64, Int64, Int64)
+- uid: Elements.Spatial.DirectedSegment.#ctor*
+  name: DirectedSegment
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment__ctor_
+  commentId: Overload:Elements.Spatial.DirectedSegment.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.DirectedSegment.DirectedSegment
+  nameWithType: DirectedSegment.DirectedSegment
+- uid: Elements.Spatial.DirectedSegment.EndVertexId
+  name: EndVertexId
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment_EndVertexId
+  commentId: F:Elements.Spatial.DirectedSegment.EndVertexId
+  fullName: Elements.Spatial.DirectedSegment.EndVertexId
+  nameWithType: DirectedSegment.EndVertexId
+- uid: Elements.Spatial.DirectedSegment.Id
+  name: Id
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment_Id
+  commentId: F:Elements.Spatial.DirectedSegment.Id
+  fullName: Elements.Spatial.DirectedSegment.Id
+  nameWithType: DirectedSegment.Id
+- uid: Elements.Spatial.DirectedSegment.SegmentId
+  name: SegmentId
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment_SegmentId
+  commentId: F:Elements.Spatial.DirectedSegment.SegmentId
+  fullName: Elements.Spatial.DirectedSegment.SegmentId
+  nameWithType: DirectedSegment.SegmentId
+- uid: Elements.Spatial.DirectedSegment.StartVertexId
+  name: StartVertexId
+  href: api/Elements.Spatial.DirectedSegment.html#Elements_Spatial_DirectedSegment_StartVertexId
+  commentId: F:Elements.Spatial.DirectedSegment.StartVertexId
+  fullName: Elements.Spatial.DirectedSegment.StartVertexId
+  nameWithType: DirectedSegment.StartVertexId
 - uid: Elements.Spatial.EvenDivisionMode
   name: EvenDivisionMode
   href: api/Elements.Spatial.EvenDivisionMode.html
@@ -16127,6 +16709,61 @@ references:
   commentId: F:Elements.Spatial.EvenDivisionMode.RoundUp
   fullName: Elements.Spatial.EvenDivisionMode.RoundUp
   nameWithType: EvenDivisionMode.RoundUp
+- uid: Elements.Spatial.Face
+  name: Face
+  href: api/Elements.Spatial.Face.html
+  commentId: T:Elements.Spatial.Face
+  fullName: Elements.Spatial.Face
+  nameWithType: Face
+- uid: Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.DirectedSegment},Elements.Spatial.UV,Elements.Spatial.UV)
+  name: Face(Int64, List<DirectedSegment>, UV, UV)
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face__ctor_System_Int64_System_Collections_Generic_List_Elements_Spatial_DirectedSegment__Elements_Spatial_UV_Elements_Spatial_UV_
+  commentId: M:Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.DirectedSegment},Elements.Spatial.UV,Elements.Spatial.UV)
+  name.vb: Face(Int64, List(Of DirectedSegment), UV, UV)
+  fullName: Elements.Spatial.Face.Face(System.Int64, System.Collections.Generic.List<Elements.Spatial.DirectedSegment>, Elements.Spatial.UV, Elements.Spatial.UV)
+  fullName.vb: Elements.Spatial.Face.Face(System.Int64, System.Collections.Generic.List(Of Elements.Spatial.DirectedSegment), Elements.Spatial.UV, Elements.Spatial.UV)
+  nameWithType: Face.Face(Int64, List<DirectedSegment>, UV, UV)
+  nameWithType.vb: Face.Face(Int64, List(Of DirectedSegment), UV, UV)
+- uid: Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})
+  name: Face(Int64, List<Int64>, Nullable<Int64>, Nullable<Int64>)
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face__ctor_System_Int64_System_Collections_Generic_List_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__
+  commentId: M:Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})
+  name.vb: Face(Int64, List(Of Int64), Nullable(Of Int64), Nullable(Of Int64))
+  fullName: Elements.Spatial.Face.Face(System.Int64, System.Collections.Generic.List<System.Int64>, System.Nullable<System.Int64>, System.Nullable<System.Int64>)
+  fullName.vb: Elements.Spatial.Face.Face(System.Int64, System.Collections.Generic.List(Of System.Int64), System.Nullable(Of System.Int64), System.Nullable(Of System.Int64))
+  nameWithType: Face.Face(Int64, List<Int64>, Nullable<Int64>, Nullable<Int64>)
+  nameWithType.vb: Face.Face(Int64, List(Of Int64), Nullable(Of Int64), Nullable(Of Int64))
+- uid: Elements.Spatial.Face.#ctor*
+  name: Face
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face__ctor_
+  commentId: Overload:Elements.Spatial.Face.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Face.Face
+  nameWithType: Face.Face
+- uid: Elements.Spatial.Face.DirectedSegmentIds
+  name: DirectedSegmentIds
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face_DirectedSegmentIds
+  commentId: F:Elements.Spatial.Face.DirectedSegmentIds
+  fullName: Elements.Spatial.Face.DirectedSegmentIds
+  nameWithType: Face.DirectedSegmentIds
+- uid: Elements.Spatial.Face.Id
+  name: Id
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face_Id
+  commentId: F:Elements.Spatial.Face.Id
+  fullName: Elements.Spatial.Face.Id
+  nameWithType: Face.Id
+- uid: Elements.Spatial.Face.UId
+  name: UId
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face_UId
+  commentId: F:Elements.Spatial.Face.UId
+  fullName: Elements.Spatial.Face.UId
+  nameWithType: Face.UId
+- uid: Elements.Spatial.Face.VId
+  name: VId
+  href: api/Elements.Spatial.Face.html#Elements_Spatial_Face_VId
+  commentId: F:Elements.Spatial.Face.VId
+  fullName: Elements.Spatial.Face.VId
+  nameWithType: Face.VId
 - uid: Elements.Spatial.FixedDivisionMode
   name: FixedDivisionMode
   href: api/Elements.Spatial.FixedDivisionMode.html
@@ -17048,6 +17685,106 @@ references:
   commentId: F:Elements.Spatial.PatternMode.None
   fullName: Elements.Spatial.PatternMode.None
   nameWithType: PatternMode.None
+- uid: Elements.Spatial.Segment
+  name: Segment
+  href: api/Elements.Spatial.Segment.html
+  commentId: T:Elements.Spatial.Segment
+  fullName: Elements.Spatial.Segment
+  nameWithType: Segment
+- uid: Elements.Spatial.Segment.#ctor(System.Int64,System.Int64,System.Int64)
+  name: Segment(Int64, Int64, Int64)
+  href: api/Elements.Spatial.Segment.html#Elements_Spatial_Segment__ctor_System_Int64_System_Int64_System_Int64_
+  commentId: M:Elements.Spatial.Segment.#ctor(System.Int64,System.Int64,System.Int64)
+  fullName: Elements.Spatial.Segment.Segment(System.Int64, System.Int64, System.Int64)
+  nameWithType: Segment.Segment(Int64, Int64, Int64)
+- uid: Elements.Spatial.Segment.#ctor*
+  name: Segment
+  href: api/Elements.Spatial.Segment.html#Elements_Spatial_Segment__ctor_
+  commentId: Overload:Elements.Spatial.Segment.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Segment.Segment
+  nameWithType: Segment.Segment
+- uid: Elements.Spatial.Segment.Id
+  name: Id
+  href: api/Elements.Spatial.Segment.html#Elements_Spatial_Segment_Id
+  commentId: F:Elements.Spatial.Segment.Id
+  fullName: Elements.Spatial.Segment.Id
+  nameWithType: Segment.Id
+- uid: Elements.Spatial.Segment.Vertex1Id
+  name: Vertex1Id
+  href: api/Elements.Spatial.Segment.html#Elements_Spatial_Segment_Vertex1Id
+  commentId: F:Elements.Spatial.Segment.Vertex1Id
+  fullName: Elements.Spatial.Segment.Vertex1Id
+  nameWithType: Segment.Vertex1Id
+- uid: Elements.Spatial.Segment.Vertex2Id
+  name: Vertex2Id
+  href: api/Elements.Spatial.Segment.html#Elements_Spatial_Segment_Vertex2Id
+  commentId: F:Elements.Spatial.Segment.Vertex2Id
+  fullName: Elements.Spatial.Segment.Vertex2Id
+  nameWithType: Segment.Vertex2Id
+- uid: Elements.Spatial.UV
+  name: UV
+  href: api/Elements.Spatial.UV.html
+  commentId: T:Elements.Spatial.UV
+  fullName: Elements.Spatial.UV
+  nameWithType: UV
+- uid: Elements.Spatial.UV.#ctor(System.Int64,Elements.Geometry.Vector3,System.String)
+  name: UV(Int64, Vector3, String)
+  href: api/Elements.Spatial.UV.html#Elements_Spatial_UV__ctor_System_Int64_Elements_Geometry_Vector3_System_String_
+  commentId: M:Elements.Spatial.UV.#ctor(System.Int64,Elements.Geometry.Vector3,System.String)
+  fullName: Elements.Spatial.UV.UV(System.Int64, Elements.Geometry.Vector3, System.String)
+  nameWithType: UV.UV(Int64, Vector3, String)
+- uid: Elements.Spatial.UV.#ctor*
+  name: UV
+  href: api/Elements.Spatial.UV.html#Elements_Spatial_UV__ctor_
+  commentId: Overload:Elements.Spatial.UV.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.UV.UV
+  nameWithType: UV.UV
+- uid: Elements.Spatial.Vertex
+  name: Vertex
+  href: api/Elements.Spatial.Vertex.html
+  commentId: T:Elements.Spatial.Vertex
+  fullName: Elements.Spatial.Vertex
+  nameWithType: Vertex
+- uid: Elements.Spatial.Vertex.#ctor(System.Int64,Elements.Geometry.Vector3,System.String)
+  name: Vertex(Int64, Vector3, String)
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex__ctor_System_Int64_Elements_Geometry_Vector3_System_String_
+  commentId: M:Elements.Spatial.Vertex.#ctor(System.Int64,Elements.Geometry.Vector3,System.String)
+  fullName: Elements.Spatial.Vertex.Vertex(System.Int64, Elements.Geometry.Vector3, System.String)
+  nameWithType: Vertex.Vertex(Int64, Vector3, String)
+- uid: Elements.Spatial.Vertex.#ctor*
+  name: Vertex
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex__ctor_
+  commentId: Overload:Elements.Spatial.Vertex.#ctor
+  isSpec: "True"
+  fullName: Elements.Spatial.Vertex.Vertex
+  nameWithType: Vertex.Vertex
+- uid: Elements.Spatial.Vertex.Id
+  name: Id
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex_Id
+  commentId: F:Elements.Spatial.Vertex.Id
+  fullName: Elements.Spatial.Vertex.Id
+  nameWithType: Vertex.Id
+- uid: Elements.Spatial.Vertex.Name
+  name: Name
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex_Name
+  commentId: P:Elements.Spatial.Vertex.Name
+  fullName: Elements.Spatial.Vertex.Name
+  nameWithType: Vertex.Name
+- uid: Elements.Spatial.Vertex.Name*
+  name: Name
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex_Name_
+  commentId: Overload:Elements.Spatial.Vertex.Name
+  isSpec: "True"
+  fullName: Elements.Spatial.Vertex.Name
+  nameWithType: Vertex.Name
+- uid: Elements.Spatial.Vertex.Value
+  name: Value
+  href: api/Elements.Spatial.Vertex.html#Elements_Spatial_Vertex_Value
+  commentId: F:Elements.Spatial.Vertex.Value
+  fullName: Elements.Spatial.Vertex.Value
+  nameWithType: Vertex.Value
 - uid: Elements.Spatial.WebMercatorProjection
   name: WebMercatorProjection
   href: api/Elements.Spatial.WebMercatorProjection.html
