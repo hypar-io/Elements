@@ -226,6 +226,7 @@ namespace Elements.Tests
         public void SplitProfiles()
         {
             Name = "Profile_Split";
+            var random = new Random(4);
             var profile = new Profile(
                 Polygon.Rectangle(20, 20),
                 new[] {
@@ -245,7 +246,7 @@ namespace Elements.Tests
                 new Vector3(0, -8),
             });
             //this one is totally internal and should also be ignored by the split
-            var polyline3 = new Polyline(new [] {
+            var polyline3 = new Polyline(new[] {
                 new Vector3(2, -4),
                 new Vector3(-2, -7)
             });
@@ -254,11 +255,55 @@ namespace Elements.Tests
             Model.AddElement(polyline3);
             Model.AddElements(profile.ToModelCurves());
             var split = Elements.Geometry.Profile.Split(new[] { profile }, new[] { polyline1, polyline2, polyline3 });
-            var random = new Random(4);
             Model.AddElements(split.SelectMany(s => s.ToModelCurves()));
             Model.AddElements(split.Select(s => new Floor(s, 0.1, new Transform(), random.NextMaterial())));
             Assert.Equal(2, split.Count);
             Assert.Equal(20 * 20 - 5 * 5 - 17, split.Sum(s => s.Area()), 4);
+
+            // these splitters only cross into a void, but not all the way across.
+            var donutProfile = new Profile(Polygon.Rectangle(5, 5), new[] { Polygon.Rectangle(2.5, 2.5), Polygon.Rectangle(0.5, 0.5).TransformedPolygon(new Transform(1.875, 1.875, 0)) }, Guid.NewGuid(), null);
+            var splitters = new[] {
+                new Line(new Vector3(-3, 0), new Vector3(-1,0)),
+                new Line(new Vector3(0, 3), new Vector3(0, 1)),
+                new Line(new Vector3(3, 0), new Vector3(1,0)),
+                new Line(new Vector3(0, -3), new Vector3(0,-1))
+                };
+            Model.AddElements(splitters.Select(s => new ModelCurve(s)));
+            var donutSplitResults = Elements.Geometry.Profile.Split(new[] { donutProfile }, splitters.Select(s => s.ToPolyline(1)));
+            Model.AddElements(donutSplitResults.Select(s => new Floor(s, 0.1, new Transform(0, 0, 1), random.NextMaterial())));
+            Assert.Equal(4, donutSplitResults.Count);
+            Assert.Equal(donutProfile.Area(), donutSplitResults.Sum(s => s.Area()), 5);
+
+
+            // two splitters cross in partially and intersect.
+            var pos = new Transform(0, 30, 0);
+            var partialIntersectProfile = new Profile(Polygon.Rectangle(8, 8).TransformedPolygon(pos), Polygon.Rectangle(3, 3).TransformedPolygon(pos));
+            var lines = new[] {
+                    new Line(new Vector3(-2,-1), new Vector3(-5, 4)),
+                    new Line(new Vector3(-2,1), new Vector3(-5, -4)),
+                };
+            var partialIntersectSplitResults = Elements.Geometry.Profile.Split(new[] { partialIntersectProfile }, lines.Select(s => s.TransformedLine(pos).ToPolyline(1)));
+            Model.AddElements(partialIntersectSplitResults.Select(s => new Floor(s, 0.1, new Transform(0, 0, 1), random.NextMaterial())));
+            Assert.Equal(2, partialIntersectSplitResults.Count);
+            Assert.Equal(partialIntersectProfile.Area(), partialIntersectSplitResults.Sum(s => s.Area()), 5);
+
+            // splitters cross between two voids
+            var pos2 = new Transform(10, 30, 0);
+            var doubleVoidProfile = new Profile(
+                Polygon.Rectangle(8, 8).TransformedPolygon(pos2),
+                new[] {
+                    Polygon.Rectangle(new Vector3(-3, -3), new Vector3(-1, -1)).TransformedPolygon(pos2),
+                    Polygon.Rectangle(new Vector3(1, 1), new Vector3(3, 3)).TransformedPolygon(pos2),
+                },
+                 Guid.NewGuid(), null);
+            var doubleVoidSplitters = new[] {
+                    new Line(new Vector3(-3,-2), new Vector3(2, 3)),
+                    new Line(new Vector3(-2,-3), new Vector3(3, 2)),
+                };
+            var doubleVoidSplitResults = Elements.Geometry.Profile.Split(new[] { doubleVoidProfile }, doubleVoidSplitters.Select(s => s.TransformedLine(pos2).ToPolyline(1)));
+            Model.AddElements(doubleVoidSplitResults.Select(s => new Floor(s, 0.1, new Transform(0, 0, 1), random.NextMaterial())));
+            Assert.Equal(2, doubleVoidSplitResults.Count);
+            Assert.Equal(doubleVoidProfile.Area(), doubleVoidSplitResults.Sum(s => s.Area()), 5);
         }
     }
 }

@@ -345,85 +345,31 @@ namespace Elements.Geometry
         /// <param name="pl">The polyline with which to split.</param>
         public List<Polygon> Split(Polyline pl)
         {
+            // Construct a half-ede graph from the polygon and the polyline
+            Polygon.ConstructHalfEdgeGraph(this, pl, out var vertices, out var edgesPerVertex);
+            // Find closed regions in that graph
+            List<Polygon> newPolygons = Polygonize(vertices, edgesPerVertex);
+
+            return newPolygons;
+        }
+
+        /// <summary>
+        /// Split this polygon with a collection of open polylines.
+        /// </summary>
+        /// <param name="polylines">The polylines with which to split.</param>
+        public List<Polygon> Split(IEnumerable<Polyline> polylines)
+        {
+            // Construct a half-ede graph from the polygon and the polylines
+            Polygon.ConstructHalfEdgeGraph(new[] { this }, polylines, out var vertices, out var edgesPerVertex);
+            // Find closed regions in that graph
+            List<Polygon> newPolygons = Polygonize(vertices, edgesPerVertex);
+
+            return newPolygons;
+        }
+
+        internal static List<Polygon> Polygonize(List<Vector3> vertices, List<List<(int from, int to)>> edgesPerVertex)
+        {
             var newPolygons = new List<Polygon>();
-
-            var plSegments = pl.Segments();
-            var pgSegments = Segments();
-            var vertices = new List<Vector3>();
-            var edgesPerVertex = new List<List<(int from, int to)>>();
-
-            // Check each polygon segment against each polyline segment for intersections. 
-            // Build up a half-edge structure.
-
-            // for each segment, store a list of vertices. If an intersection is found, additional vertices will be added to the list for that segment.
-            var polylineSplitPoints = pl.Segments().Select(p => new List<Vector3> { p.Start, p.End }).ToArray();
-            for (int i = 0; i < pgSegments.Length; i++)
-            {
-                var polygonSegment = pgSegments[i];
-                // collect the vertices of each segment — if an intersection is found, additional vertices will be added to this list.
-                var polygonSegmentSplitPoints = new List<Vector3> { polygonSegment.Start, polygonSegment.End };
-                for (int j = 0; j < plSegments.Length; j++)
-                {
-                    var polylineSegment = plSegments[j];
-                    if (polygonSegment.Intersects(polylineSegment, out var intersectionPt, false, true))
-                    {
-                        polylineSplitPoints[j].Add(intersectionPt);
-                        polygonSegmentSplitPoints.Add(intersectionPt);
-                    }
-                }
-                // sort the unique polygon edge vertices along the segment's length, and start the halfEdge graph.
-                var pgIntersectionsOrdered = polygonSegmentSplitPoints.Distinct().OrderBy(sp => sp.DistanceTo(polygonSegment.Start)).ToArray();
-                for (int k = 0; k < pgIntersectionsOrdered.Length - 1; k++)
-                {
-                    var from = pgIntersectionsOrdered[k];
-                    var to = pgIntersectionsOrdered[k + 1];
-                    var fromIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(from));
-                    if (fromIndex == -1)
-                    {
-                        fromIndex = vertices.Count;
-                        vertices.Add(from);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
-                    }
-                    var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
-                    if (toIndex == -1)
-                    {
-                        toIndex = vertices.Count;
-                        vertices.Add(to);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
-                    }
-                    // only add one set of polygon halfEdges, so we don't wind up with an outer loop.
-                    edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
-                }
-            }
-            // do the same with the polyline's vertices — sort and add to the halfEdge graph.
-            foreach (var splitSet in polylineSplitPoints)
-            {
-                var splitSetOrdered = splitSet.Distinct().OrderBy(v => v.DistanceTo(splitSet[0])).ToArray();
-                for (int i = 0; i < splitSetOrdered.Length - 1; i++)
-                {
-                    var from = splitSetOrdered[i];
-                    var to = splitSetOrdered[i + 1];
-
-                    var fromIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(from));
-                    if (fromIndex == -1)
-                    {
-                        fromIndex = vertices.Count;
-                        vertices.Add(from);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
-                    }
-                    var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
-                    if (toIndex == -1)
-                    {
-                        toIndex = vertices.Count;
-                        vertices.Add(to);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
-                    }
-                    // add both half edges for polyline segments
-                    edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
-                    edgesPerVertex[toIndex].Add((toIndex, fromIndex));
-                }
-            }
-
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
             // and stop when you run out of edges. 
@@ -463,9 +409,38 @@ namespace Elements.Geometry
                 }
                 currentEdgeList.Add(currentSegment);
                 var currentVertexList = new List<Vector3>();
+
                 // remove duplicate edges in the same new polygon, 
                 // which will occur if we have a polyline that doesn't cross all the way through.
-                var validEdges = currentEdgeList.Where(e => !currentEdgeList.Contains((e.to, e.from)));
+                var validEdges = new List<(int from, int to)>(currentEdgeList);
+                int i = 0;
+                // guaranteed to terminate, since at every step we either increment i by one, or make validEdges.Count smaller by 2 (and decrement i by 1).
+                // validEdges.Count-i always gets smaller, every step, until 0. 
+                while (validEdges.Count > 0 && i < validEdges.Count)
+                {
+                    var index = (i + validEdges.Count) % validEdges.Count;
+                    var nextIndex = (i + 1 + validEdges.Count) % validEdges.Count;
+                    var thisEdge = validEdges[index];
+                    var nextEdge = validEdges[nextIndex];
+                    if (thisEdge.from == nextEdge.to)
+                    {
+                        // we found a degenerate section — two duplicate edges, joined at a vertex. 
+                        // we remove the two duplicate edges. nextindex goes first, because otherwise its index would change
+                        // when we removed at index (we could also do "validEdges.RemoveAt(index)" twice.)
+                        validEdges.RemoveAt(nextIndex);
+                        validEdges.RemoveAt(index % validEdges.Count); // mod is necessary because if we're straddling the end of the list (eg 5 and 0), we might remove 0 and then be unable to remove 5.
+                        // it's conceivable that the two other edges on either side of these removed edges are ALSO identical.
+                        // in this case, we actually step backwards — to compare "the one before the first one we just removed" and
+                        // "the one after the second one we just removed", which will now be adjacent in the list. 
+                        i--;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+
+                }
+
                 foreach (var edge in validEdges)
                 {
                     currentVertexList.Add(vertices[edge.to]);
@@ -479,6 +454,130 @@ namespace Elements.Geometry
             }
 
             return newPolygons;
+        }
+
+        internal static void ConstructHalfEdgeGraph(Polygon pg, Polyline pl, out List<Vector3> vertices, out List<List<(int from, int to)>> edgesPerVertex)
+        {
+            ConstructHalfEdgeGraph(new[] { pg }, new[] { pl }, out vertices, out edgesPerVertex);
+        }
+        internal static void ConstructHalfEdgeGraph(IEnumerable<Polygon> pg, IEnumerable<Polyline> pl, out List<Vector3> vertexList, out List<List<(int from, int to)>> edgesPerVertex)
+        {
+            var plArray = pl.ToArray();
+            var plSegments = pl.SelectMany(p => p.Segments()).ToArray();
+            var vertices = new List<Vector3>();
+            edgesPerVertex = new List<List<(int from, int to)>>();
+
+            // Check each polygon segment against each polyline segment for intersections. 
+            // Build up a half-edge structure.
+
+            // for each segment, store a list of vertices. If an intersection is found, additional vertices will be added to the list for that segment.
+
+            var polylineSplitPoints = plSegments.Select(p => new List<Vector3> { p.Start, p.End }).ToArray();
+            // first we check polyline-polyline intersections, and add those to split points
+            var plCount = plArray.Length;
+            if (plCount > 1)
+            {
+                var flatListPosition = 0;
+                for (int i = 0; i < plCount - 1; i++)
+                {
+                    // check each segment in this polyline with all segments starting after this polyline
+                    // to avoid checking for intersections between a polyline and its own segments.
+                    // flatListPosition keeps track of how far along the flat list of segments we should start.
+                    var segmentsA = plArray[i].Segments();
+                    for (int j = flatListPosition; j < plSegments.Count(); j++)
+                    {
+                        var otherSegment = plSegments[j];
+                        for (int segAIndex = 0; segAIndex < segmentsA.Length; segAIndex++)
+                        {
+                            Line segA = (Line)segmentsA[segAIndex];
+                            if (segA.Intersects(otherSegment, out var intersectionPt, false, true))
+                            {
+                                polylineSplitPoints[flatListPosition + segAIndex].Add(intersectionPt);
+                                polylineSplitPoints[j].Add(intersectionPt);
+                            }
+                        }
+                    }
+                    flatListPosition += segmentsA.Count();
+                }
+            }
+            // next we check each polygon against all polyline segments
+            foreach (var polygon in pg)
+            {
+                var pgSegments = polygon.Segments();
+                for (int i = 0; i < pgSegments.Length; i++)
+                {
+                    var polygonSegment = pgSegments[i];
+                    // collect the vertices of each segment — if an intersection is found, additional vertices will be added to this list.
+                    var polygonSegmentSplitPoints = new List<Vector3> { polygonSegment.Start, polygonSegment.End };
+                    for (int j = 0; j < plSegments.Length; j++)
+                    {
+                        var polylineSegment = plSegments[j];
+                        if (polygonSegment.Intersects(polylineSegment, out var intersectionPt, false, true))
+                        {
+                            polylineSplitPoints[j].Add(intersectionPt);
+                            polygonSegmentSplitPoints.Add(intersectionPt);
+                        }
+                    }
+                    // sort the unique polygon edge vertices along the segment's length, and start the halfEdge graph.
+                    var pgIntersectionsOrdered = polygonSegmentSplitPoints.Distinct().OrderBy(sp => sp.DistanceTo(polygonSegment.Start)).ToArray();
+                    for (int k = 0; k < pgIntersectionsOrdered.Length - 1; k++)
+                    {
+                        var from = pgIntersectionsOrdered[k];
+                        var to = pgIntersectionsOrdered[k + 1];
+                        var fromIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(from));
+                        if (fromIndex == -1)
+                        {
+                            fromIndex = vertices.Count;
+                            vertices.Add(from);
+                            edgesPerVertex.Add(new List<(int from, int to)>());
+                        }
+                        var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
+                        if (toIndex == -1)
+                        {
+                            toIndex = vertices.Count;
+                            vertices.Add(to);
+                            edgesPerVertex.Add(new List<(int from, int to)>());
+                        }
+                        // only add one set of polygon halfEdges, so we don't wind up with an outer loop.
+                        if (fromIndex != toIndex)
+                        {
+                            edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
+                        }
+                    }
+                }
+            }
+            // do the same with the polyline's vertices — sort and add to the halfEdge graph.
+            foreach (var splitSet in polylineSplitPoints)
+            {
+                var splitSetOrdered = splitSet.Distinct().OrderBy(v => v.DistanceTo(splitSet[0])).ToArray();
+                for (int i = 0; i < splitSetOrdered.Length - 1; i++)
+                {
+                    var from = splitSetOrdered[i];
+                    var to = splitSetOrdered[i + 1];
+
+                    var fromIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(from));
+                    if (fromIndex == -1)
+                    {
+                        fromIndex = vertices.Count;
+                        vertices.Add(from);
+                        edgesPerVertex.Add(new List<(int from, int to)>());
+                    }
+                    var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
+                    if (toIndex == -1)
+                    {
+                        toIndex = vertices.Count;
+                        vertices.Add(to);
+                        edgesPerVertex.Add(new List<(int from, int to)>());
+                    }
+                    // add both half edges for polyline segments
+                    if (fromIndex != toIndex)
+                    {
+                        edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
+                        edgesPerVertex[toIndex].Add((toIndex, fromIndex));
+                    }
+                }
+            }
+            vertexList = vertices;
         }
 
         /// <summary>

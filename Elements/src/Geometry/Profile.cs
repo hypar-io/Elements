@@ -403,11 +403,41 @@ namespace Elements.Geometry
         /// <param name="tolerance">An optional tolerance.</param>
         public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double tolerance = Vector3.EPSILON)
         {
-            List<Profile> resultProfiles = new List<Profile>(profiles);
-            foreach (var pl in splitLines)
+            List<Profile> resultProfiles = new List<Profile>();
+            foreach (var inputProfile in profiles)
             {
-                resultProfiles = Profile.Split(resultProfiles, pl, tolerance);
-            }
+                inputProfile.OrientVoids();
+                var polygons = new List<Polygon>() {
+                    inputProfile.Perimeter
+                };
+                if (inputProfile.Voids != null)
+                {
+                    polygons.AddRange(inputProfile.Voids);
+                }
+                Polygon.ConstructHalfEdgeGraph(polygons, splitLines, out var vertices, out var edgesPerVertex);
+                // make sure all polygons are consistently wound - we reverse them if we need to treat them as voids.
+                var perimSplits = Polygon.Polygonize(vertices, edgesPerVertex).Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
+                // check if any of the resulting polygons contain any of the other resulting polygons. If so, treat contained polygon
+                // as a void.
+                for (int i = 0; i < perimSplits.Count; i++)
+                {
+                    Polygon perimeterPoly = perimSplits[i];
+                    var voidProfiles = inputProfile.Voids.Select(v => new Profile(v.Reversed())).ToList();
+                    for (int j = 0; j < perimSplits.Count; j++)
+                    {
+                        if (i == j)
+                        {
+                            continue;
+                        }
+                        if (perimeterPoly.Covers(perimSplits[j]))
+                        {
+                            voidProfiles.Add(new Profile(perimSplits[j].Reversed()));
+                        }
+                    }
+                    var perimeterProfiles = new[] { new Profile(perimeterPoly) };
+                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles, tolerance));
+                }
+            };
             return resultProfiles;
         }
 
@@ -420,19 +450,7 @@ namespace Elements.Geometry
         /// <param name="tolerance">An optional tolerance.</param>
         public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine, double tolerance = Vector3.EPSILON)
         {
-            List<Profile> resultProfiles = new List<Profile>();
-            foreach (var inputProfile in profiles)
-            {
-                var perimeter = inputProfile.Perimeter;
-                var perimSplits = perimeter.Split(splitLine);
-                foreach (var perimeterPoly in perimSplits)
-                {
-                    var perimeterProfiles = new[] { new Profile(perimeterPoly) };
-                    var voidProfiles = inputProfile.Voids.Select(v => new Profile(v.Reversed()));
-                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles, tolerance));
-                }
-            };
-            return resultProfiles;
+            return Profile.Split(profiles, new[] { splitLine }, tolerance);
         }
 
         /// <summary>
