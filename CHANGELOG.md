@@ -11,12 +11,11 @@
 - `Polygon.PointInternal()`
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
-
-### Changed
-- `Elements.DirectionalLight` now inherits from `Elements.Light`.
 - `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 - `Polygon.Split(Polyline)`
+- `Polygon.Split(IEnumerable<Polyline> polylines)`
 - `Profile.Split(IEnumerable<Profile>, Polyline p)`
+- `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
 - `SHSProfile`
 - `SHSProfileFactory`
 - `RHSProfile`
