@@ -459,7 +459,6 @@ namespace Elements.Geometry
         {
             ConstructHalfEdgeGraph(new[] { pg }, new[] { pl }, out vertices, out edgesPerVertex);
         }
-
         internal static void ConstructHalfEdgeGraph(IEnumerable<Polygon> pg, IEnumerable<Polyline> pl, out List<Vector3> vertexList, out List<List<(int from, int to)>> edgesPerVertex)
         {
             var plArray = pl.ToArray();
