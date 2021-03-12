@@ -538,7 +538,7 @@ namespace Elements.Geometry
                             edgesPerVertex.Add(new List<(int from, int to)>());
                         }
                         // only add one set of polygon halfEdges, so we don't wind up with an outer loop.
-                        if (fromIndex != toIndex)
+                        if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)))
                         {
                             edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
                         }
@@ -568,8 +568,9 @@ namespace Elements.Geometry
                         vertices.Add(to);
                         edgesPerVertex.Add(new List<(int from, int to)>());
                     }
-                    // add both half edges for polyline segments
-                    if (fromIndex != toIndex)
+                    // add both half edges for polyline segments. If we have a splitter 
+                    // lying exactly on a polygon edge, don't add it. 
+                    if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)) && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex)))
                     {
                         edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
                         edgesPerVertex[toIndex].Add((toIndex, fromIndex));

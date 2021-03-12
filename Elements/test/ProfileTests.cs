@@ -305,5 +305,23 @@ namespace Elements.Tests
             Assert.Equal(2, doubleVoidSplitResults.Count);
             Assert.Equal(doubleVoidProfile.Area(), doubleVoidSplitResults.Sum(s => s.Area()), 5);
         }
+
+        [Fact]
+        public void SplitDonutProfileFromFunction()
+        {
+            Name = "SplitDonutProfileFromFunction";
+
+            var perim = Newtonsoft.Json.JsonConvert.DeserializeObject<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":76.30921,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.30921,\"Y\":-30.00397,\"Z\":0.0}]}");
+            var voids = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Polygon>>("[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.42933,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":-24.00397,\"Z\":0.0}]}]");
+            var profileToSplit = new Profile(perim, voids, Guid.NewGuid(), null);
+            var splitters = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Polyline>>("[{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.40920999999999,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.52932999999997,\"Y\":46.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.42933,\"Y\":46.83686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.20397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.52932999999999,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.40920999999997,\"Y\":-30.00397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.30921,\"Y\":-30.20397,\"Z\":0.0},{\"X\":76.30921,\"Y\":46.83686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-30.103969999999997,\"Z\":0.0},{\"X\":-69.42933,\"Y\":46.73686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.52932999999999,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.40920999999997,\"Y\":40.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.30921,\"Y\":46.73686000000001,\"Z\":0.0},{\"X\":70.30921,\"Y\":-30.103969999999997,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.40920999999999,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.52932999999997,\"Y\":-24.00397,\"Z\":0.0}]}]");
+            Model.AddElement(perim);
+            voids.ForEach((v) => Model.AddElement(v));
+            Model.AddElements(splitters.Select(s => new ModelCurve(s, BuiltInMaterials.XAxis)));
+            var splitResults = Elements.Geometry.Profile.Split(new[] { profileToSplit }, splitters);
+            var random = new Random();
+            Model.AddElements(splitResults.Select(s => new Floor(s, 0.1, new Transform(0, 0, random.NextDouble()), random.NextMaterial())));
+            Assert.Equal(4, splitResults.Count);
+        }
     }
 }
