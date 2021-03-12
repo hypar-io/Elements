@@ -32,7 +32,7 @@ namespace Elements
             }
             else if (catalogObject.ContainsKey("Elements") && catalogObject.ContainsKey("Transform")) // catalog is stored in a model
             {
-                var model = catalogObject.ToObject<Model>();
+                var model = Model.FromJson(json);
                 return model.AllElementsOfType<ContentCatalog>().First();
             }
 
@@ -41,7 +41,7 @@ namespace Elements
 
         /// <summary>
         /// Modifies the transforms of the content internal to this catalog to use
-        ///  the orientation of the reference instances that exist.
+        /// the orientation of the reference instances that exist.
         /// </summary>
         public void UseReferenceOrientation()
         {
@@ -57,6 +57,7 @@ namespace Elements
                 {
                     continue;
                 }
+                // The use reference instance to set the rotation, but not the position of the original elements.
                 var referenceOrientation = refInstance.Transform.Concatenated(new Geometry.Transform(refInstance.Transform.Origin.Negate()));
                 content.Transform = referenceOrientation;
             }
