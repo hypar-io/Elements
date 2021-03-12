@@ -57,7 +57,7 @@ namespace Elements
                 {
                     continue;
                 }
-                // The use reference instance to set the rotation, but not the position of the original elements.
+                // Use reference instance to set the rotation, but not the position of the original elements.
                 var referenceOrientation = refInstance.Transform.Concatenated(new Geometry.Transform(refInstance.Transform.Origin.Negate()));
                 content.Transform = referenceOrientation;
             }
