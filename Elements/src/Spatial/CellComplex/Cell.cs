@@ -61,6 +61,24 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
+        /// Get top face, if defined
+        /// </summary>
+        /// <returns></returns>
+        public Face GetTopFace()
+        {
+            return this.TopFaceId == null ? null : this.CellComplex.GetFace(this.TopFaceId);
+        }
+
+        /// <summary>
+        /// Get bottom face, if defined
+        /// </summary>
+        /// <returns></returns>
+        public Face GetBottomFace()
+        {
+            return this.BottomFaceId == null ? null : this.CellComplex.GetFace(this.BottomFaceId);
+        }
+
+        /// <summary>
         /// Get associated Faces
         /// </summary>
         /// <returns></returns>
