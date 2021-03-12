@@ -11,6 +11,7 @@
 - `Polygon.PointInternal()`
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
+- Release helper github action
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
@@ -31,6 +32,7 @@
 - `Profile.Split()` uses an improved algorithm, and the gap options are removed as they are no longer necessary.
 - `ProfileServer` is now `ProfileFactory`
 - `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- First alpha after minor release logic was fixed
 - `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
 - TypeGeneratorTests weren't actually running.
 
