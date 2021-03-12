@@ -268,6 +268,52 @@ namespace Elements.Tests
             newModel.ToGlTF(modelPath, true);
         }
 
+        [Fact]
+        public void SubElementIsAddedToModel()
+        {
+            var model = new Model();
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
+            model.AddElement(ue);
+            Assert.Single(model.AllElementsOfType<Profile>());
+        }
+
+        [Fact]
+        public void SubListElementIsAddedToModel()
+        {
+            var model = new Model();
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
+            ue.SubElements.AddRange(new[]{
+                new Profile(new Circle(1).ToPolygon()),
+                new Profile(Polygon.Rectangle(1,1))});
+            model.AddElement(ue);
+            Assert.Equal(3, model.AllElementsOfType<Profile>().Count());
+        }
+
+        [Fact]
+        public void SubDictionaryOfElementIsAddedToModel()
+        {
+            var model = new Model();
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
+            ue.DictionaryElements["foo"] = BuiltInMaterials.XAxis;
+            ue.DictionaryElements["bar"] = BuiltInMaterials.YAxis;
+            model.AddElement(ue);
+            Assert.Equal(3, model.AllElementsOfType<Material>().Count());
+        }
+
+        [Fact]
+        public void ProfilesInRepresentationsAreAddedToModel()
+        {
+            var model = new Model();
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
+            ue.UpdateRepresentations();
+            model.AddElement(ue);
+            Assert.Equal(2, model.AllElementsOfType<Profile>().Count());
+        }
+
         private Model QuadPanelModel()
         {
             var model = new Model();

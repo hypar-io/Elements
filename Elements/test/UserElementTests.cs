@@ -11,9 +11,14 @@ namespace Elements.Tests
     {
         public Line CenterLine { get; set; }
 
+        // Used to test serialization of top level elements.
         public Profile Profile { get; set; }
 
+        // Used to test serialization of lists of sub elements.
         public List<Element> SubElements { get; set; }
+
+        // Used to test dictionaries of sub elements.
+        public Dictionary<string, Element> DictionaryElements { get; set; }
 
         internal TestUserElement() : base(null,
                                             BuiltInMaterials.Default,
@@ -38,6 +43,7 @@ namespace Elements.Tests
             this.CenterLine = centerLine;
             this.Profile = profile;
             this.SubElements = new List<Element>();
+            this.DictionaryElements = new Dictionary<string, Element>();
         }
 
         public override void UpdateRepresentations()

@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Validators;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -153,28 +154,35 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson(bool indent = false)
+        public string ToJson(bool indent = false, bool updateBeforeSerialize = true)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
             // may have been null when originally added, and we need to ensure
             // that they have a value if they've been set since.
-            var exportModel = new Model();
-            foreach (var kvp in this.Elements)
+            if (updateBeforeSerialize)
             {
-                // Some elements compute profiles and transforms
-                // during UpdateRepresentation. Call UpdateRepresentation
-                // here to ensure these values are correct in the JSON.
-                if (kvp.Value is GeometricElement)
+                var exportModel = new Model();
+                foreach (var kvp in this.Elements)
                 {
-                    ((GeometricElement)kvp.Value).UpdateRepresentations();
+                    // Some elements compute profiles and transforms
+                    // during UpdateRepresentation. Call UpdateRepresentation
+                    // here to ensure these values are correct in the JSON.
+                    if (kvp.Value is GeometricElement)
+                    {
+                        ((GeometricElement)kvp.Value).UpdateRepresentations();
+                    }
+                    exportModel.AddElement(kvp.Value);
                 }
-                exportModel.AddElement(kvp.Value);
-            }
-            exportModel.Transform = this.Transform;
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
+                exportModel.Transform = this.Transform;
+                return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
                                                                indent ? Formatting.Indented : Formatting.None);
+            }
+            else
+            {
+                return Newtonsoft.Json.JsonConvert.SerializeObject(this,
+                                                               indent ? Formatting.Indented : Formatting.None);
+            }
         }
 
         /// <summary>
@@ -241,9 +249,18 @@ namespace Elements
                 return elements;
             }
 
+            // We provide special inclusions here for representations
+            // as these are not yet elements.
+            // TODO: When representations become elements, we should
+            // remove the inclusion for Representation, but keep that
+            // for SolidOperation.
             t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null && !p.GetIndexParameters().Any());
+                            .Where(p => typeof(Element).IsAssignableFrom(p.PropertyType)
+                            || typeof(IList<Element>).IsAssignableFrom(p.PropertyType)
+                            || typeof(IDictionary<object, Element>).IsAssignableFrom(p.PropertyType)
+                            || typeof(Representation).IsAssignableFrom(p.PropertyType)
+                            || typeof(IList<SolidOperation>).IsAssignableFrom(p.PropertyType));
             foreach (var p in props)
             {
                 var pValue = p.GetValue(obj, null);
