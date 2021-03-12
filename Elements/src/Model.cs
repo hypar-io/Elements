@@ -243,10 +243,7 @@ namespace Elements
 
             t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
             var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null
-                                     && p.Name != "AdditionalProperties"
-                                     && !p.GetIndexParameters().Any()
-                                     );
+                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null && !p.GetIndexParameters().Any());
             foreach (var p in props)
             {
                 var pValue = p.GetValue(obj, null);
