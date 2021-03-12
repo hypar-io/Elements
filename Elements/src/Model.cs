@@ -154,35 +154,27 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson(bool indent = false, bool updateBeforeSerialize = true)
+        public string ToJson(bool indent = false)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
             // may have been null when originally added, and we need to ensure
             // that they have a value if they've been set since.
-            if (updateBeforeSerialize)
+            var exportModel = new Model();
+            foreach (var kvp in this.Elements)
             {
-                var exportModel = new Model();
-                foreach (var kvp in this.Elements)
+                // Some elements compute profiles and transforms
+                // during UpdateRepresentation. Call UpdateRepresentation
+                // here to ensure these values are correct in the JSON.
+                if (kvp.Value is GeometricElement)
                 {
-                    // Some elements compute profiles and transforms
-                    // during UpdateRepresentation. Call UpdateRepresentation
-                    // here to ensure these values are correct in the JSON.
-                    if (kvp.Value is GeometricElement)
-                    {
-                        ((GeometricElement)kvp.Value).UpdateRepresentations();
-                    }
-                    exportModel.AddElement(kvp.Value);
+                    ((GeometricElement)kvp.Value).UpdateRepresentations();
                 }
-                exportModel.Transform = this.Transform;
-                return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
-                                                               indent ? Formatting.Indented : Formatting.None);
+                exportModel.AddElement(kvp.Value);
             }
-            else
-            {
-                return Newtonsoft.Json.JsonConvert.SerializeObject(this,
-                                                               indent ? Formatting.Indented : Formatting.None);
-            }
+            exportModel.Transform = this.Transform;
+            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
+                                                           indent ? Formatting.Indented : Formatting.None);
         }
 
         /// <summary>
