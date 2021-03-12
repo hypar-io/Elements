@@ -5093,6 +5093,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   nameWithType: Polygon.Split(Polyline)
+- uid: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: Split(IEnumerable<Polyline>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: Split(IEnumerable(Of Polyline))
+  fullName: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: Polygon.Split(IEnumerable<Polyline>)
+  nameWithType.vb: Polygon.Split(IEnumerable(Of Polyline))
 - uid: Elements.Geometry.Polygon.Split*
   name: Split
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_
