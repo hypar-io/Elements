@@ -31,7 +31,7 @@ jobs:
                 if(incoming.includes('alpha')) {
                   const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
                   const newNum = parseInt(oldNum)+1
-                  const newTag =incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
+                  const newTag = incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
                   console.log("New Tag: " + newTag)
                   return newTag
                 }
