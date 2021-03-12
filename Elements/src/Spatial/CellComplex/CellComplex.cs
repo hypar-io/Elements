@@ -127,13 +127,13 @@ namespace Elements.Spatial.CellComplex
         {
             foreach (var vertex in _vertices.Values)
             {
-                var added = this.AddVertex(vertex.Value, vertex.Id);
+                var added = this.AddVertexOrUV<Vertex>(vertex.Value, vertex.Id);
                 added.Name = vertex.Name;
             }
 
             foreach (var uv in _uvs.Values)
             {
-                this.AddUV(uv.Value, uv.Id);
+                this.AddVertexOrUV<UV>(uv.Value, uv.Id);
             }
 
             foreach (var segment in _segments.Values)
@@ -202,11 +202,11 @@ namespace Elements.Spatial.CellComplex
 
             if (uGrid != null)
             {
-                u = this.AddUV(uGrid.Direction().Unitized());
+                u = this.AddVertexOrUV<UV>(uGrid.Direction().Unitized());
             }
             if (vGrid != null)
             {
-                v = this.AddUV(vGrid.Direction().Unitized());
+                v = this.AddVertexOrUV<UV>(vGrid.Direction().Unitized());
             }
 
             var bottomFace = this.AddFace(transformedPolygonBottom, u, v);
@@ -214,12 +214,12 @@ namespace Elements.Spatial.CellComplex
 
             var faces = new List<Face>() { bottomFace, topFace };
 
-            var up = this.AddUV(new Vector3(0, 0, 1));
+            var up = this.AddVertexOrUV<UV>(new Vector3(0, 0, 1));
 
             foreach (var faceEdge in transformedPolygonBottom.Segments())
             {
                 var vertices = new List<Vector3>() { faceEdge.Start, faceEdge.End };
-                var horizontalU = this.AddUV((faceEdge.End - faceEdge.Start).Unitized());
+                var horizontalU = this.AddVertexOrUV<UV>((faceEdge.End - faceEdge.Start).Unitized());
                 vertices.Add(faceEdge.End + heightVector);
                 vertices.Add(faceEdge.Start + heightVector);
                 var facePoly = new Polygon(vertices);
@@ -251,7 +251,7 @@ namespace Elements.Spatial.CellComplex
         internal DirectedSegment AddDirectedSegment(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
-            var vertices = points.Select(vertex => this.AddVertex(vertex)).ToList();
+            var vertices = points.Select(vertex => this.AddVertexOrUV<Vertex>(vertex)).ToList();
             var segmentTuple = (vertices[0].Id, vertices[1].Id);
             var segmentTupleIsInOrder = true;
 
@@ -409,129 +409,71 @@ namespace Elements.Spatial.CellComplex
             }
         }
 
-        #region add vertex
-
-        /// <summary>
-        /// Add or ensures the existence of a vertex
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        internal Vertex AddVertex(Vector3 point)
+        private Dictionary<long, T> GetVertexOrUVDictionary<T>() where T : Vertex
         {
-            this.AddVertex(point, this._vertexId, out var vertexId);
-            this._vertices.TryGetValue(vertexId, out var vertex);
-            return vertex;
+            if (typeof(T) != typeof(UV) && typeof(T) != typeof(Vertex))
+            {
+                throw new Exception("Unsupported type provided, expected Vertex or UV");
+            }
+            return typeof(T) == typeof(UV) ? this._uvs as Dictionary<long, T> : this._vertices as Dictionary<long, T>;
         }
 
-        /// <summary>
-        /// Attempts to add a vertex at an ID. Throws an exception if the ID already exists
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="id"></param>
-        /// <returns>Added vertex</returns>
-        private Vertex AddVertex(Vector3 point, long id)
+        private Dictionary<double, Dictionary<double, Dictionary<double, long>>> GetVertexOrUVLookup<T>() where T : Vertex
         {
-            this.AddVertex(point, id, out var vertexId);
+            if (typeof(T) != typeof(UV) && typeof(T) != typeof(Vertex))
+            {
+                throw new Exception("Unsupported type provided, expected Vertex or UV");
+            }
+            return typeof(T) == typeof(UV) ? this.uvsLookup : this.verticesLookup;
+        }
 
-            if (vertexId != id)
+        private T AddVertexOrUV<T>(Vector3 point) where T : Vertex
+        {
+            var newId = typeof(T) == typeof(UV) ? this._uvId : this._vertexId;
+            var dict = GetVertexOrUVDictionary<T>();
+            this.AddVertexOrUV<T>(point, newId, out var addedId);
+            dict.TryGetValue(addedId, out var vertexOrUV);
+            return vertexOrUV as T;
+        }
+
+        private T AddVertexOrUV<T>(Vector3 point, long id) where T : Vertex
+        {
+            var dict = GetVertexOrUVDictionary<T>();
+
+            this.AddVertexOrUV<T>(point, id, out var addedId);
+            if (addedId != id)
             {
                 throw new Exception("This ID already exists");
             }
-
-            this._vertices.TryGetValue(vertexId, out var vertex);
-            return vertex;
+            dict.TryGetValue(addedId, out var vertexOrUV);
+            return vertexOrUV as T;
         }
 
-        /// <summary>
-        /// Gets an existing vertex if it exists at this point, or adds it with the provided id if it is new
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="idIfNew"></param>
-        /// <param name="id">ID of existing or added vertex</param>
-        /// <returns>True if vertex was added, false if it already added.</returns>
-        private Boolean AddVertex(Vector3 point, long idIfNew, out long id)
+        private Boolean AddVertexOrUV<T>(Vector3 point, long idIfNew, out long id) where T : Vertex
         {
-            if (ValueExists(this.verticesLookup, point, out id, Tolerance))
+            var lookups = this.GetVertexOrUVLookup<T>();
+            var dict = this.GetVertexOrUVDictionary<T>();
+            var isUV = typeof(T) == typeof(UV);
+            if (ValueExists(lookups, point, out id, Tolerance))
             {
                 return false;
             }
-
-            var zDict = GetAddressParent(this.verticesLookup, point, true);
-
-            var vertex = new Vertex(this, idIfNew, point);
-            id = vertex.Id;
-
+            var zDict = GetAddressParent(lookups, point, true);
+            var vertexOrUV = isUV ? new UV(this, idIfNew, point) as T : new Vertex(this, idIfNew, point) as T;
+            id = vertexOrUV.Id;
             zDict.Add(point.Z, id);
-            this._vertices.Add(id, vertex);
-
-            this._vertexId = Math.Max(id + 1, this._vertexId + 1);
+            dict.Add(id, vertexOrUV);
+            if (isUV)
+            {
+                this._uvId = Math.Max(id + 1, this._uvId + 1);
+            }
+            else
+            {
+                this._vertexId = Math.Max(id + 1, this._vertexId + 1);
+            }
             return true;
         }
 
-        #endregion
-
-        #region add uv
-
-        // TODO: this is exactly the same as addvertex except referencing different members/dicts, how can I consolidate this?
-
-        /// <summary>
-        /// Add or ensures the existence of a u or v direction
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        internal UV AddUV(Vector3 point)
-        {
-            this.AddUV(point, this._uvId, out var uvId);
-            this._uvs.TryGetValue(uvId, out var uv);
-            return uv;
-        }
-
-        /// <summary>
-        /// Attempts to add a u or v direction at an ID. Throws an exception if the ID already exists
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="id"></param>
-        /// <returns>Added vertex</returns>
-        private UV AddUV(Vector3 point, long id)
-        {
-            this.AddUV(point, id, out var uvId);
-
-            if (uvId != id)
-            {
-                throw new Exception("This ID already exists");
-            }
-
-            this._uvs.TryGetValue(uvId, out var uv);
-            return uv;
-        }
-
-        /// <summary>
-        /// Gets an existing u or v value if it exists at this direction, or adds it with the provided id if it is new
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="idIfNew"></param>
-        /// <param name="id">ID of existing or added U or V direction</param>
-        /// <returns>True if vertex was added, false if it already added.</returns>
-        private Boolean AddUV(Vector3 point, long idIfNew, out long id)
-        {
-            if (ValueExists(this.uvsLookup, point, out id, Tolerance))
-            {
-                return false;
-            }
-
-            var zDict = GetAddressParent(this.uvsLookup, point, true);
-
-            var uv = new UV(this, idIfNew, point);
-            id = uv.Id;
-
-            zDict.Add(point.Z, id);
-            this._uvs.Add(id, uv);
-
-            this._uvId = Math.Max(id + 1, this._uvId + 1);
-            return true;
-        }
-
-        #endregion add uv
         #endregion add content
 
         /// <summary>
