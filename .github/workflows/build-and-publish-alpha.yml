@@ -36,7 +36,10 @@ jobs:
                   return newTag
                 }
                 else {
-                  return incoming+'-alpha.0'
+                  const splitLast = incoming.match(/(.*\.)(\d*)/)
+                  const newTag =splitLast[1] + (parseInt(splitLast[2])+1)+'-alpha.0'
+                  console.log("New Tag: " + newTag)
+                  return newTag
                 }
       - name: Set NuGet version from alpha.
         run: echo "NUGET_VERSION=${{steps.bump-with-alpha.outputs.result}}" >> $GITHUB_ENV
