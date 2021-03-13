@@ -183,6 +183,12 @@ namespace Elements.Spatial.CellComplex
             }
         }
 
+        public Face GetClosestAssociatedFace(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
+        {
+            var faces = this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
+            return faces.Count == 0 ? null : faces.First();
+        }
+
         // /// <summary>
         // /// Gets the neighboring Faces which share a Segment.
         // /// Does not capture partially overlapping neighbor match.

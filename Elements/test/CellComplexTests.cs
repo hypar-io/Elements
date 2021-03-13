@@ -166,49 +166,48 @@ namespace Elements.Tests
                 }
             }
 
-            // Assert.True(numNeighbors == 9);
+            Assert.True(numNeighbors == 9);
 
-            // // Traverse faces from top cell
-            // var baseFace = cellComplex.GetFace(lastNeighbor.TopFaceId);
-            // this.Model.AddElement(new Panel(baseFace.GetGeometry(), BaseMaterial));
+            // Traverse faces from top cell
+            var baseFace = cellComplex.GetFace(lastNeighbor.TopFaceId);
+            this.Model.AddElement(new Panel(baseFace.GetGeometry(), BaseMaterial));
 
-            // var curFaceNeighbor = baseFace;
-            // var lastFaceNeighbor = curFaceNeighbor;
-            // var numUNeighbors = 0;
+            var curFaceNeighbor = baseFace;
+            var lastFaceNeighbor = curFaceNeighbor;
+            var numUNeighbors = 0;
 
-            // while (curFaceNeighbor != null)
-            // {
-            //     var topSegment = curFaceNeighbor.GetSegments(curFaceNeighbor.GetGeometry().Centroid() + new Vector3(0, 0, 1000)).First();
-            //     var neighbors = curFaceNeighbor.GetNeighbors(topSegment, true);
-            //     curFaceNeighbor = neighbors.Count == 0 ? null : neighbors[0];
+            while (curFaceNeighbor != null && numUNeighbors < 30)
+            {
+                var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetUV(curFaceNeighbor.UId).GetGeometry() * 10000;
+                curFaceNeighbor = curFaceNeighbor.GetClosestAssociatedFace(pointFarU, true, false);
 
-            //     if (curFaceNeighbor != null)
-            //     {
-            //         this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), UMaterial));
-            //         lastFaceNeighbor = curFaceNeighbor;
-            //         numUNeighbors += 1;
-            //     }
-            // }
+                if (curFaceNeighbor != null)
+                {
+                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), UMaterial));
+                    lastFaceNeighbor = curFaceNeighbor;
+                    numUNeighbors += 1;
+                }
+            }
 
-            // Assert.True(numUNeighbors == 4);
+            Assert.True(numUNeighbors == 4);
 
-            // var numVNeighbors = 0;
-            // curFaceNeighbor = lastFaceNeighbor;
+            var numVNeighbors = 0;
+            curFaceNeighbor = lastFaceNeighbor;
 
-            // while (curFaceNeighbor != null)
-            // {
-            //     var matchingNeighbors = cellComplex.GetNeighbors(curFaceNeighbor, cellComplex.GetUV(curFaceNeighbor.VId).Value, true);
-            //     curFaceNeighbor = matchingNeighbors.Count == 0 ? null : matchingNeighbors[0];
+            while (curFaceNeighbor != null)
+            {
+                var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetUV(curFaceNeighbor.VId).GetGeometry() * 10000;
+                curFaceNeighbor = curFaceNeighbor.GetClosestAssociatedFace(pointFarV, true, false);
 
-            //     if (curFaceNeighbor != null)
-            //     {
-            //         this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), VMaterial));
-            //         lastFaceNeighbor = curFaceNeighbor;
-            //         numVNeighbors += 1;
-            //     }
-            // }
+                if (curFaceNeighbor != null)
+                {
+                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), VMaterial));
+                    lastFaceNeighbor = curFaceNeighbor;
+                    numVNeighbors += 1;
+                }
+            }
 
-            // Assert.True(numVNeighbors == 4);
+            Assert.True(numVNeighbors == 4);
 
         }
     }
