@@ -8,7 +8,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A directed segment: a representation of a segment that has direction to it so that it can be used to traverse faces
     /// </summary>
-    public class DirectedSegment:CellChild
+    public class DirectedSegment : CellChild<Line>
     {
         /// <summary>
         /// ID of segment
@@ -74,7 +74,7 @@ namespace Elements.Spatial.CellComplex
         /// Get the geometry for this DirectedSegment
         /// </summary>
         /// <returns></returns>
-        public Line GetGeometry()
+        public override Line GetGeometry()
         {
             return new Line(
                 this.CellComplex.GetVertex(this.StartVertexId).Value,

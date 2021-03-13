@@ -9,7 +9,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A face of a cell. Multiple cells can share the same face.
     /// </summary>
-    public class Face : CellChild
+    public class Face : CellChild<Polygon>
     {
         /// <summary>
         /// ID of U direction
@@ -70,10 +70,9 @@ namespace Elements.Spatial.CellComplex
         /// Get the geometry for this Face
         /// </summary>
         /// <returns></returns>
-        public Polygon GetGeometry()
+        public override Polygon GetGeometry()
         {
-            var vertices = this.GetDirectedSegments().Select(ds => ds.GetGeometry().Start).ToList();
-            return new Polygon(vertices);
+            return new Polygon(this.GetVertices().Select(v => v.Value).ToList());
         }
 
         /// <summary>
@@ -92,6 +91,15 @@ namespace Elements.Spatial.CellComplex
         public List<DirectedSegment> GetDirectedSegments()
         {
             return this.DirectedSegmentIds.Select(dsId => CellComplex.GetDirectedSegment(dsId)).ToList();
+        }
+
+        /// <summary>
+        /// Get associated Vertices
+        /// </summary>
+        /// <returns></returns>
+        public List<Vertex> GetVertices()
+        {
+            return this.GetDirectedSegments().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
         }
 
         /// <summary>
@@ -116,5 +124,93 @@ namespace Elements.Spatial.CellComplex
             var hash = String.Join(",", sortedIds);
             return hash;
         }
+
+        /// <summary>
+        /// Get the normal vector for this Face
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetNormal()
+        {
+            return this.GetGeometry().Normal();
+        }
+
+        /// <summary>
+        /// Whether this Face is parallel to another Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
+        public bool IsParallel(Face face)
+        {
+            return face.GetNormal().Equals(this.GetNormal());
+        }
+
+        /// <summary>
+        /// Get a list of all neighbors of this face.
+        /// A neighbor is defined as a Face which shares any segment.
+        /// </summary>
+        /// <param name="parallel">If true, only returns faces that are oriented the same way as this face</param>
+        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a segment</param>
+        /// <returns></returns>
+        public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
+        {
+            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetSegments().Select(s => s.GetFaces()).ToList();
+            var faces = groupedFaces.SelectMany(x => x).Distinct().Where(f => f.Id != this.Id).ToList();
+            if (parallel)
+            {
+                return faces.Where(f => this.IsParallel(f)).ToList();
+            }
+            else
+            {
+                return faces;
+            }
+        }
+
+        /// <summary>
+        /// Get a list of neighbor faces that share a specific segment
+        /// </summary>
+        /// <param name="segment"></param>
+        /// <param name="parallel">Whether to only return faces that are parallel to this face.</param>
+        /// <returns></returns>
+        public List<Face> GetNeighbors(Segment segment, bool parallel = false)
+        {
+            if (!parallel)
+            {
+                return segment.GetFaces().Where(face => face.Id != this.Id).ToList();
+            }
+            else
+            {
+                return segment.GetFaces().Where(face => face.Id != this.Id && this.IsParallel(face)).ToList();
+            }
+        }
+
+        // /// <summary>
+        // /// Gets the neighboring Faces which share a Segment.
+        // /// Does not capture partially overlapping neighbor match.
+        // /// </summary>
+        // /// <param name="face">Face to get the neighbors for</param>
+        // /// <param name="direction">If set, casts a ray from the centroid of this Face and only returns neighbors for the Segment which intersects this ray.</param>
+        // /// <param name="matchDirectionToUOrV">If true, further filters results to only those where the resulting face's U or V direction matches the given direction.</param>
+        // /// <returns></returns>
+        // public List<Face> GetNeighbors(Face face, Nullable<Vector3> direction = null, Boolean matchDirectionToUOrV = false)
+        // {
+        //     var segments = face.GetSegments();
+        //     List<Face> faces;
+        //     if (direction == null)
+        //     {
+        //         faces = segments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
+        //         return (from f in faces where f.Id != face.Id select f).ToList();
+        //     }
+        //     var segsWithGeos = segments.Select(segment => (segment: segment, geo: segment.GetGeometry())).ToList();
+        //     var ray = new Ray(face.GetGeometry().Centroid(), (Vector3)direction);
+        //     var intersectingSegments = (from seg in segsWithGeos where ray.Intersects(seg.geo, out var intersection) select seg.segment).ToList();
+        //     var facesIntersectingDs = intersectingSegments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
+        //     faces = (from f in facesIntersectingDs where f.Id != face.Id select f).ToList();
+        //     if (matchDirectionToUOrV && ValueExists(this.uvsLookup, (Vector3)direction, out var uvId, Tolerance))
+        //     {
+        //         faces = (from f in faces where (f.VId == uvId || f.UId == uvId) select f).ToList();
+        //     }
+        //     return faces;
+        // }
+
     }
 }

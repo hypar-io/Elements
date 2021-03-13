@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique segment in a cell complex.
     /// </summary>
-    public class Segment : CellChild
+    public class Segment : CellChild<Line>
     {
         /// <summary>
         /// ID of first vertex
@@ -53,7 +53,7 @@ namespace Elements.Spatial.CellComplex
         /// Get the geometry for this Segment
         /// </summary>
         /// <returns></returns>
-        public Line GetGeometry()
+        public override Line GetGeometry()
         {
             return new Line(
                 this.CellComplex.GetVertex(this.Vertex1Id).Value,

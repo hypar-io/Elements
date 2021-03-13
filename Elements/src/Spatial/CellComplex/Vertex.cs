@@ -8,7 +8,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique vertex in a cell complex
     /// </summary>
-    public class Vertex : CellChild
+    public class Vertex : CellChild<Vector3>
     {
         /// <summary>
         /// Location in space
@@ -81,6 +81,15 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get the Vector3 that represents this Vertex
+        /// </summary>
+        /// <returns></returns>
+        public override Vector3 GetGeometry()
+        {
+            return this.Value;
         }
     }
 }

@@ -606,58 +606,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Gets the neighboring Faces which share a Segment.
-        /// Does not capture partially overlapping neighbor match.
-        /// </summary>
-        /// <param name="face">Face to get the neighbors for</param>
-        /// <param name="direction">If set, casts a ray from the centroid of this Face and only returns neighbors for the Segment which intersects this ray.</param>
-        /// <param name="matchDirectionToUOrV">If true, further filters results to only those where the resulting face's U or V direction matches the given direction.</param>
-        /// <returns></returns>
-        public List<Face> GetNeighbors(Face face, Nullable<Vector3> direction = null, Boolean matchDirectionToUOrV = false)
-        {
-            var segments = face.GetSegments();
-            List<Face> faces;
-            if (direction == null)
-            {
-                faces = segments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
-                return (from f in faces where f.Id != face.Id select f).ToList();
-            }
-            var segsWithGeos = segments.Select(segment => (segment: segment, geo: segment.GetGeometry())).ToList();
-            var ray = new Ray(face.GetGeometry().Centroid(), (Vector3)direction);
-            var intersectingSegments = (from seg in segsWithGeos where ray.Intersects(seg.geo, out var intersection) select seg.segment).ToList();
-            var facesIntersectingDs = intersectingSegments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
-            faces = (from f in facesIntersectingDs where f.Id != face.Id select f).ToList();
-            if (matchDirectionToUOrV && ValueExists(this.uvsLookup, (Vector3)direction, out var uvId, Tolerance))
-            {
-                faces = (from f in faces where (f.VId == uvId || f.UId == uvId) select f).ToList();
-            }
-            return faces;
-        }
-
-        /// <summary>
-        /// Gets the neighboring Cells which share a Face.
-        /// Does not capture partially overlapping neighbor match.
-        /// </summary>
-        /// <param name="cell">Cell to get the neighbors for</param>
-        /// <param name="direction">If set, casts a ray from the centroid of this Cell and only returns neighbors for the Face which intersects this ray.</param>
-        /// <returns></returns>
-        public List<Cell> GetNeighbors(Cell cell, Nullable<Vector3> direction = null)
-        {
-            var faces = cell.GetFaces();
-            if (direction == null)
-            {
-                var cells = faces.Select(f => f.GetCells()).SelectMany(x => x).Distinct().ToList();
-                return (from c in cells where c.Id != cell.Id select c).ToList();
-            }
-            var facesWithGeos = faces.Select(face => (face: face, geo: face.GetGeometry())).ToList();
-            var centroid = facesWithGeos.Select(f => f.geo.Centroid()).ToList().Average();
-            var ray = new Ray(centroid, (Vector3)direction);
-            var intersectingFaces = (from f in facesWithGeos where ray.Intersects(f.geo, out var intersection) select f.face).ToList();
-            var cellsIntersecting = intersectingFaces.Select(f => f.GetCells()).SelectMany(x => x).Distinct().ToList();
-            return (from f in cellsIntersecting where f.Id != cell.Id select f).ToList();
-        }
-
-        /// <summary>
         /// Get all vertices matching an X/Y coordinate, regardless of Z
         /// </summary>
         /// <param name="x"></param>

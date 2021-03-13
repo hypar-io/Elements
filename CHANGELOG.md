@@ -13,6 +13,7 @@
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
 - `Ray.Intersects(Polygon)`
+- `Vector3.DistanceTo(Polygon)`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.

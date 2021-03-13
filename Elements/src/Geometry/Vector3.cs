@@ -337,6 +337,37 @@ namespace Elements.Geometry
         {
             return this.DistanceTo(polyline, out _);
         }
+
+        /// <summary>
+        /// Find the shortest distance from this point to any point within the
+        /// polygon, and output the location of the closest point on that polygon.
+        /// </summary>
+        /// <param name="polygon">The polygon for computing the distance</param>
+        /// <param name="closestPoint">Point within the polygon that is closest to this point</param>
+        /// <returns></returns>
+        public double DistanceTo(Polygon polygon, out Vector3 closestPoint)
+        {
+            var pointOnPolygonPlane = this.Project(polygon.Plane());
+            if (polygon.Contains(pointOnPolygonPlane))
+            {
+                closestPoint = pointOnPolygonPlane;
+                return this.DistanceTo(closestPoint);
+            }
+            else
+            {
+                return this.DistanceTo(new Polyline(polygon.Vertices), out closestPoint);
+            }
+        }
+
+        /// <summary>
+        /// Find the shortest distance from this point to any point within the polygon
+        /// </summary>
+        /// <param name="polygon">The polygon for computing the distance</param>
+        /// <returns></returns>
+        public double DistanceTo(Polygon polygon)
+        {
+            return this.DistanceTo(polygon, out _);
+        }
         #endregion
 
         /// <summary>
@@ -667,7 +698,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Remove sequential duplicates from a list of points. 
+        /// Remove sequential duplicates from a list of points.
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
