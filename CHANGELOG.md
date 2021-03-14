@@ -20,6 +20,7 @@
 - `SHSProfileFactory`
 - `RHSProfile`
 - `RHSProfileFactory`
+- `Elements.Spatial.HalfEdgeGraph2d`
 
 ### Changed
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
