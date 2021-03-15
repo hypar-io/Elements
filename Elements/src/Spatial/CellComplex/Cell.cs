@@ -116,22 +116,22 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Segments
+        /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<Segment> GetSegments()
+        public List<Edge> GetEdges()
         {
-            return this.GetFaces().Select(face => face.GetSegments()).SelectMany(x => x).Distinct().ToList();
+            return this.GetFaces().Select(face => face.GetEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
-        /// Get the closest associated segment to the supplied position
+        /// Get the closest associated edge to the supplied position
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public Segment GetClosestSegment(Vector3 position)
+        public Edge GetClosestEdge(Vector3 position)
         {
-            return this.GetSegments().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
+            return this.GetEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
         }
 
 

@@ -6,45 +6,45 @@ using Elements.Geometry;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A directed segment: a representation of a segment that has direction to it so that it can be used to traverse faces
+    /// A directed edge: a representation of a edge that has direction to it so that it can be used to traverse faces
     /// </summary>
-    public class SegmentDirected : SegmentBase
+    public class HalfEdge : EdgeBase
     {
         /// <summary>
-        /// ID of segment
+        /// ID of edge
         /// </summary>
-        public long SegmentId;
+        public long EdgeId;
 
         /// <summary>
-        /// Segment
+        /// Edge
         /// </summary>
         /// <value></value>
         [JsonIgnore]
         public HashSet<Face> Faces = new HashSet<Face>();
 
         /// <summary>
-        /// Represents a unique SegmentDirected within a CellComplex.
-        /// This is added in addition to Segment because the same line may be required to move in a different direction
+        /// Represents a unique HalfEdge within a CellComplex.
+        /// This is added in addition to Edge because the same line may be required to move in a different direction
         /// as we traverse the edges of a face in their correctly-wound order.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="segment">The undirected Segment that matches this SegmentDirected</param>
-        /// <param name="segmentOrderMatchesDirection">If true, start point is same as segment.vertex1Id. Otherwise, is flipped.</param>
-        internal SegmentDirected(CellComplex cellComplex, long id, Segment segment, bool segmentOrderMatchesDirection) : base(id, cellComplex)
+        /// <param name="edge">The undirected Edge that matches this HalfEdge</param>
+        /// <param name="edgeOrderMatchesDirection">If true, start point is same as edge.vertex1Id. Otherwise, is flipped.</param>
+        internal HalfEdge(CellComplex cellComplex, long id, Edge edge, bool edgeOrderMatchesDirection) : base(id, cellComplex)
         {
-            this.SegmentId = segment.Id;
+            this.EdgeId = edge.Id;
 
-            if (segmentOrderMatchesDirection)
+            if (edgeOrderMatchesDirection)
             {
-                this.StartVertexId = segment.StartVertexId;
-                this.EndVertexId = segment.EndVertexId;
+                this.StartVertexId = edge.StartVertexId;
+                this.EndVertexId = edge.EndVertexId;
             }
             else
             {
-                this.StartVertexId = segment.EndVertexId;
-                this.EndVertexId = segment.StartVertexId;
+                this.StartVertexId = edge.EndVertexId;
+                this.EndVertexId = edge.StartVertexId;
             }
         }
 
@@ -52,21 +52,21 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal SegmentDirected(long id, long segmentId, long startVertexId, long endVertexId) : base(id, null)
+        internal HalfEdge(long id, long edgeId, long startVertexId, long endVertexId) : base(id, null)
         {
             this.Id = id;
-            this.SegmentId = segmentId;
+            this.EdgeId = edgeId;
             this.StartVertexId = startVertexId;
             this.EndVertexId = endVertexId;
         }
 
         /// <summary>
-        /// Gets associated Segment
+        /// Gets associated Edge
         /// </summary>
         /// <returns></returns>
-        public Segment GetSegment()
+        public Edge GetEdge()
         {
-            return this.CellComplex.GetSegment(this.SegmentId);
+            return this.CellComplex.GetEdge(this.EdgeId);
         }
 
         /// <summary>

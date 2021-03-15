@@ -93,10 +93,10 @@ namespace Elements.Tests
 
             var copyTransform = new Transform(new Vector3((bounds.Max.X - bounds.Min.X) * 1.5, 0));
 
-            foreach (var segment in cellComplex.GetSegments())
+            foreach (var segment in cellComplex.GetEdges())
             {
                 var line1 = segment.GetGeometry();
-                var line2 = cellComplexDeserialized.GetSegment(segment.Id).GetGeometry();
+                var line2 = cellComplexDeserialized.GetEdge(segment.Id).GetGeometry();
                 Assert.True(line1.Start.Equals(line2.Start));
                 Assert.True(line1.End.Equals(line2.End));
             }
@@ -134,7 +134,7 @@ namespace Elements.Tests
 
             var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 5);
 
-            foreach (var segment in cellComplex.GetSegments())
+            foreach (var segment in cellComplex.GetEdges())
             {
                 this.Model.AddElement(new ModelCurve(segment.GetGeometry(), DefaultPanelMaterial));
             }

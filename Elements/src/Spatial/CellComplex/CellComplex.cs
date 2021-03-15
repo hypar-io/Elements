@@ -19,10 +19,10 @@ namespace Elements.Spatial.CellComplex
         public double Tolerance = Vector3.EPSILON;
 
         [JsonIgnore]
-        private long _segmentId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private long _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _segmentDirectedId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private long _halfEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
         private long _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
@@ -49,16 +49,16 @@ namespace Elements.Spatial.CellComplex
         private Dictionary<long, UV> _uvs = new Dictionary<long, UV>();
 
         /// <summary>
-        /// Segments by ID
+        /// Edges by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, Segment> _segments = new Dictionary<long, Segment>();
+        private Dictionary<long, Edge> _edges = new Dictionary<long, Edge>();
 
         /// <summary>
-        /// SegmentsDirected by ID
+        /// HalfEdges by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, SegmentDirected> _segmentDirecteds = new Dictionary<long, SegmentDirected>();
+        private Dictionary<long, HalfEdge> _halfEdges = new Dictionary<long, HalfEdge>();
 
         /// <summary>
         /// Faces by ID
@@ -78,13 +78,13 @@ namespace Elements.Spatial.CellComplex
         [JsonIgnore]
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
 
-        // See Segment.GetHash for how faces are identified as unique.
+        // See Edge.GetHash for how faces are identified as unique.
         [JsonIgnore]
-        private Dictionary<string, long> segmentsLookup = new Dictionary<string, long>();
+        private Dictionary<string, long> edgesLookup = new Dictionary<string, long>();
 
-        // Same as segmentsLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
+        // Same as edgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
         [JsonIgnore]
-        private Dictionary<(long, long), Dictionary<Boolean, long>> segmentDirectedsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
+        private Dictionary<(long, long), Dictionary<Boolean, long>> halfEdgesLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
 
         // See Face.GetHash for how faces are identified as unique.
         [JsonIgnore]
@@ -108,8 +108,8 @@ namespace Elements.Spatial.CellComplex
         /// <param name="name"></param>
         /// <param name="_vertices"></param>
         /// <param name="_uvs"></param>
-        /// <param name="_segments"></param>
-        /// <param name="_segmentDirecteds"></param>
+        /// <param name="_edges"></param>
+        /// <param name="_halfEdges"></param>
         /// <param name="_faces"></param>
         /// <param name="_cells"></param>
         /// <returns></returns>
@@ -119,8 +119,8 @@ namespace Elements.Spatial.CellComplex
             string name,
             Dictionary<long, Vertex> _vertices,
             Dictionary<long, Vertex> _uvs,
-            Dictionary<long, Segment> _segments,
-            Dictionary<long, SegmentDirected> _segmentDirecteds,
+            Dictionary<long, Edge> _edges,
+            Dictionary<long, HalfEdge> _halfEdges,
             Dictionary<long, Face> _faces,
             Dictionary<long, Cell> _cells
         ) : base(id, name)
@@ -136,20 +136,20 @@ namespace Elements.Spatial.CellComplex
                 this.AddVertexOrUV<UV>(uv.Value, uv.Id);
             }
 
-            foreach (var segment in _segments.Values)
+            foreach (var edge in _edges.Values)
             {
-                if (!this.AddSegment(new List<long>() { segment.StartVertexId, segment.EndVertexId }, segment.Id, out var addedSegment))
+                if (!this.AddEdge(new List<long>() { edge.StartVertexId, edge.EndVertexId }, edge.Id, out var addedEdge))
                 {
-                    throw new Exception("Duplicate segment ID found");
+                    throw new Exception("Duplicate edge ID found");
                 }
             }
 
-            foreach (var segmentDirected in _segmentDirecteds.Values)
+            foreach (var halfEdge in _halfEdges.Values)
             {
-                var segment = this.GetSegment(segmentDirected.SegmentId);
-                if (!this.AddSegmentDirected(segment, segment.StartVertexId == segmentDirected.StartVertexId, segmentDirected.Id, out var addedSegmentDirected))
+                var edge = this.GetEdge(halfEdge.EdgeId);
+                if (!this.AddHalfEdge(edge, edge.StartVertexId == halfEdge.StartVertexId, halfEdge.Id, out var addedHalfEdge))
                 {
-                    throw new Exception("Duplicate directed segment ID found");
+                    throw new Exception("Duplicate directed edge ID found");
                 }
             }
 
@@ -244,18 +244,18 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Add a SegmentDirected to the CellComplex
+        /// Add a HalfEdge to the CellComplex
         /// </summary>
         /// <param name="line">Line with Start and End in the expected direction</param>
-        /// <returns>Created SegmentDirected</returns>
-        internal SegmentDirected AddSegmentDirected(Line line)
+        /// <returns>Created HalfEdge</returns>
+        internal HalfEdge AddHalfEdge(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrUV<Vertex>(vertex)).ToList();
-            this.AddSegment(vertices.Select(v => v.Id).ToList(), this._segmentId, out var segment);
-            var dirMatchesSegment = vertices[0].Id == segment.StartVertexId;
-            this.AddSegmentDirected(segment, dirMatchesSegment, this._segmentDirectedId, out var segmentDirected);
-            return segmentDirected;
+            this.AddEdge(vertices.Select(v => v.Id).ToList(), this._edgeId, out var edge);
+            var dirMatchesEdge = vertices[0].Id == edge.StartVertexId;
+            this.AddHalfEdge(edge, dirMatchesEdge, this._halfEdgeId, out var halfEdge);
+            return halfEdge;
         }
 
         /// <summary>
@@ -299,24 +299,24 @@ namespace Elements.Spatial.CellComplex
         private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
         {
             var lines = polygon.Segments();
-            var segmentDirecteds = new List<SegmentDirected>();
+            var halfEdges = new List<HalfEdge>();
             foreach (var line in lines)
             {
-                segmentDirecteds.Add(this.AddSegmentDirected(line));
+                halfEdges.Add(this.AddHalfEdge(line));
             }
 
-            var hash = Face.GetHash(segmentDirecteds);
+            var hash = Face.GetHash(halfEdges);
 
             if (!this.facesLookup.TryGetValue(hash, out var faceId))
             {
-                face = new Face(this, idIfNew, segmentDirecteds, u, v);
+                face = new Face(this, idIfNew, halfEdges, u, v);
                 faceId = face.Id;
                 this.facesLookup.Add(hash, faceId);
                 this._faces.Add(faceId, face);
 
-                foreach (var segmentDirected in segmentDirecteds)
+                foreach (var halfEdge in halfEdges)
                 {
-                    segmentDirected.Faces.Add(face);
+                    halfEdge.Faces.Add(face);
                 }
 
                 this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
@@ -330,74 +330,74 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a SegmentDirected
+        /// Internal method to add a HalfEdge
         /// </summary>
-        /// <param name="segment"></param>
-        /// <param name="segmentTupleIsInOrder"></param>
+        /// <param name="edge"></param>
+        /// <param name="edgeTupleIsInOrder"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="segmentDirected"></param>
-        /// <returns>Whether the segmentDirected was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddSegmentDirected(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out SegmentDirected segmentDirected)
+        /// <param name="halfEdge"></param>
+        /// <returns>Whether the halfEdge was successfully added. Will be false if idIfNew already exists</returns>
+        private Boolean AddHalfEdge(Edge edge, Boolean edgeTupleIsInOrder, long idIfNew, out HalfEdge halfEdge)
         {
-            var segmentTuple = (segment.StartVertexId, segment.EndVertexId);
+            var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
 
-            if (!this.segmentDirectedsLookup.TryGetValue(segmentTuple, out var segmentDirectedDict))
+            if (!this.halfEdgesLookup.TryGetValue(edgeTuple, out var halfEdgeDict))
             {
-                segmentDirectedDict = new Dictionary<bool, long>();
-                this.segmentDirectedsLookup.Add(segmentTuple, segmentDirectedDict);
+                halfEdgeDict = new Dictionary<bool, long>();
+                this.halfEdgesLookup.Add(edgeTuple, halfEdgeDict);
             }
 
-            if (!segmentDirectedDict.TryGetValue(segmentTupleIsInOrder, out var segmentDirectedId))
+            if (!halfEdgeDict.TryGetValue(edgeTupleIsInOrder, out var halfEdgeId))
             {
-                segmentDirected = new SegmentDirected(this, idIfNew, segment, segmentTupleIsInOrder);
-                segmentDirectedId = segmentDirected.Id;
+                halfEdge = new HalfEdge(this, idIfNew, edge, edgeTupleIsInOrder);
+                halfEdgeId = halfEdge.Id;
 
-                segmentDirectedDict.Add(segmentTupleIsInOrder, segmentDirectedId);
-                this._segmentDirecteds.Add(segmentDirectedId, segmentDirected);
+                halfEdgeDict.Add(edgeTupleIsInOrder, halfEdgeId);
+                this._halfEdges.Add(halfEdgeId, halfEdge);
 
-                segment.SegmentsDirected.Add(segmentDirected);
+                edge.HalfEdges.Add(halfEdge);
 
-                this._segmentDirectedId = Math.Max(segmentDirectedId + 1, this._segmentDirectedId + 1);
+                this._halfEdgeId = Math.Max(halfEdgeId + 1, this._halfEdgeId + 1);
 
                 return true;
             }
             else
             {
-                this._segmentDirecteds.TryGetValue(segmentDirectedId, out segmentDirected);
+                this._halfEdges.TryGetValue(halfEdgeId, out halfEdge);
 
                 return false;
             }
         }
 
         /// <summary>
-        /// Internal method to add a Segment
+        /// Internal method to add a Edge
         /// </summary>
-        /// <param name="segmentTuple"></param>
+        /// <param name="edgeTuple"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="segment"></param>
-        /// <returns>Whether the segment was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddSegment(List<long> vertexIds, long idIfNew, out Segment segment)
+        /// <param name="edge"></param>
+        /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists</returns>
+        private Boolean AddEdge(List<long> vertexIds, long idIfNew, out Edge edge)
         {
-            var hash = Segment.GetHash(vertexIds);
+            var hash = Edge.GetHash(vertexIds);
 
-            if (!this.segmentsLookup.TryGetValue(hash, out var segmentId))
+            if (!this.edgesLookup.TryGetValue(hash, out var edgeId))
             {
-                segment = new Segment(this, idIfNew, vertexIds[0], vertexIds[1]);
-                segmentId = segment.Id;
+                edge = new Edge(this, idIfNew, vertexIds[0], vertexIds[1]);
+                edgeId = edge.Id;
 
-                this.segmentsLookup[hash] = segmentId;
-                this._segments.Add(segmentId, segment);
+                this.edgesLookup[hash] = edgeId;
+                this._edges.Add(edgeId, edge);
 
-                this.GetVertex(segment.StartVertexId).Segments.Add(segment);
-                this.GetVertex(segment.EndVertexId).Segments.Add(segment);
+                this.GetVertex(edge.StartVertexId).Edges.Add(edge);
+                this.GetVertex(edge.EndVertexId).Edges.Add(edge);
 
-                this._segmentId = Math.Max(segmentId + 1, this._segmentId + 1);
+                this._edgeId = Math.Max(edgeId + 1, this._edgeId + 1);
 
                 return true;
             }
             else
             {
-                this._segments.TryGetValue(segmentId, out segment);
+                this._edges.TryGetValue(edgeId, out edge);
                 return false;
             }
         }
@@ -514,43 +514,43 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a Segment by its ID
+        /// Get a Edge by its ID
         /// </summary>
-        /// <param name="segmentId"></param>
+        /// <param name="edgeId"></param>
         /// <returns></returns>
-        public Segment GetSegment(long segmentId)
+        public Edge GetEdge(long edgeId)
         {
-            this._segments.TryGetValue(segmentId, out var segment);
-            return segment;
+            this._edges.TryGetValue(edgeId, out var edge);
+            return edge;
         }
 
         /// <summary>
-        /// Get all Segments
+        /// Get all Edges
         /// </summary>
         /// <returns></returns>
-        public List<Segment> GetSegments()
+        public List<Edge> GetEdges()
         {
-            return this._segments.Values.ToList();
+            return this._edges.Values.ToList();
         }
 
         /// <summary>
-        /// Get a SegmentDirected by its ID
+        /// Get a HalfEdge by its ID
         /// </summary>
-        /// <param name="segmentDirectedId"></param>
+        /// <param name="halfEdgeId"></param>
         /// <returns></returns>
-        public SegmentDirected GetSegmentDirected(long segmentDirectedId)
+        public HalfEdge GetHalfEdge(long halfEdgeId)
         {
-            this._segmentDirecteds.TryGetValue(segmentDirectedId, out var segmentDirected);
-            return segmentDirected;
+            this._halfEdges.TryGetValue(halfEdgeId, out var halfEdge);
+            return halfEdge;
         }
 
         /// <summary>
-        /// Get all SegmentsDirected
+        /// Get all HalfEdges
         /// </summary>
         /// <returns></returns>
-        public List<SegmentDirected> GetSegmentsDirected()
+        public List<HalfEdge> GetHalfEdges()
         {
-            return this._segmentDirecteds.Values.ToList();
+            return this._halfEdges.Values.ToList();
         }
 
         /// <summary>

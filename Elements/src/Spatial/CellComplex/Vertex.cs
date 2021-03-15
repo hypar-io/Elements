@@ -21,10 +21,10 @@ namespace Elements.Spatial.CellComplex
         public string Name { get; set; }
 
         /// <summary>
-        /// All segments connected to this Vertex
+        /// All edges connected to this Vertex
         /// </summary>
         [JsonIgnore]
-        public HashSet<Segment> Segments { get; internal set; } = new HashSet<Segment>();
+        public HashSet<Edge> Edges { get; internal set; } = new HashSet<Edge>();
 
         /// <summary>
         /// Represents a unique Vertex within a CellComplex.
@@ -48,21 +48,21 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Segments
+        /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<Segment> GetSegments()
+        public List<Edge> GetEdges()
         {
-            return this.Segments.ToList();
+            return this.Edges.ToList();
         }
 
         /// <summary>
-        /// Get associated SegmentsDirected
+        /// Get associated HalfEdges
         /// </summary>
         /// <returns></returns>
-        public List<SegmentDirected> GetSegmentsDirected()
+        public List<HalfEdge> GetHalfEdges()
         {
-            return this.GetSegments().Select(segment => segment.GetSegmentsDirected()).SelectMany(x => x).Distinct().ToList();
+            return this.GetEdges().Select(edge => edge.GetHalfEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetSegmentsDirected().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.GetHalfEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>

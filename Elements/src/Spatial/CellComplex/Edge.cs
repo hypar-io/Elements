@@ -8,31 +8,31 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique segment in a cell complex.
+    /// A unique edge in a cell complex.
     /// </summary>
-    public class Segment : SegmentBase
+    public class Edge : EdgeBase
     {
         /// <summary>
-        /// SegmentsDirected that reference this Segment
+        /// HalfEdges that reference this Edge
         /// </summary>
         [JsonIgnore]
-        public HashSet<SegmentDirected> SegmentsDirected = new HashSet<SegmentDirected>();
+        public HashSet<HalfEdge> HalfEdges = new HashSet<HalfEdge>();
 
         /// <summary>
-        /// Represents a unique Segment within a CellComplex.
+        /// Represents a unique Edge within a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="vertexId1">One of the vertex IDs for this segment</param>
-        /// <param name="vertexId2">The other vertex ID for this segment</param>
-        internal Segment(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
+        /// <param name="vertexId1">One of the vertex IDs for this edge</param>
+        /// <param name="vertexId2">The other vertex ID for this edge</param>
+        internal Edge(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
         {
             this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
         [JsonConstructor]
-        internal Segment(long id, long startVertexId, long endVertexId) : base(id, null)
+        internal Edge(long id, long startVertexId, long endVertexId) : base(id, null)
         {
             this.SetVerticesFromIds(startVertexId, endVertexId);
         }
@@ -56,6 +56,11 @@ namespace Elements.Spatial.CellComplex
             }
         }
 
+        /// <summary>
+        /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs
+        /// </summary>
+        /// <param name="vertexIds"></param>
+        /// <returns></returns>
         public static string GetHash(List<long> vertexIds)
         {
             var sortedIds = vertexIds.ToList();
@@ -65,12 +70,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated SegmentsDirected
+        /// Get associated HalfEdges
         /// </summary>
         /// <returns></returns>
-        public List<SegmentDirected> GetSegmentsDirected()
+        public List<HalfEdge> GetHalfEdges()
         {
-            return this.SegmentsDirected.ToList();
+            return this.HalfEdges.ToList();
         }
 
         /// <summary>
@@ -79,7 +84,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetSegmentsDirected().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.GetHalfEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>

@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique segment in a cell complex.
+    /// A unique edge in a cell complex.
     /// </summary>
-    public abstract class SegmentBase : CellChild<Line>
+    public abstract class EdgeBase : CellChild<Line>
     {
         /// <summary>
         /// ID of first vertex
@@ -22,7 +22,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         public long EndVertexId;
 
-        protected SegmentBase(long id, CellComplex cellComplex) : base(id, cellComplex) { }
+        protected EdgeBase(long id, CellComplex cellComplex) : base(id, cellComplex) { }
 
         /// <summary>
         /// Get the geometry for this Edge
