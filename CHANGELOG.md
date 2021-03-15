@@ -15,6 +15,8 @@
 - `Polygon.Split(IEnumerable<Polyline> polylines)`
 - `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
 - `Elements.Spatial.HalfEdgeGraph2d`
+  - `.Construct()`
+  - `.Polygonize()` 
 - Release helper github action
 
 ### Changed
