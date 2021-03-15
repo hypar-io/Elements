@@ -13,8 +13,8 @@
 - `BBox3.IsDegenerate()`
 - `Polygon.Split(Polyline)`
 - `Polygon.Split(IEnumerable<Polyline> polylines)`
-- `Profile.Split(IEnumerable<Profile>, Polyline p)`
 - `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
+- `Elements.Spatial.HalfEdgeGraph2d`
 - Release helper github action
 
 ### Changed
@@ -31,6 +31,7 @@
 - First alpha after minor release logic was fixed
 - `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
 - TypeGeneratorTests weren't actually running.
+- `Profile.Split(IEnumerable<Profile>, Polyline p)` now uses improved logic
 
 ## 0.8.3
 
