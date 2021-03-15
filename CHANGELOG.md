@@ -11,25 +11,26 @@
 - `Polygon.PointInternal()`
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
-- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 - `Polygon.Split(Polyline)`
 - `Polygon.Split(IEnumerable<Polyline> polylines)`
 - `Profile.Split(IEnumerable<Profile>, Polyline p)`
 - `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
+- Release helper github action
+
+### Changed
+- `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 - `SHSProfile`
 - `SHSProfileFactory`
 - `RHSProfile`
 - `RHSProfileFactory`
-- `Elements.Spatial.HalfEdgeGraph2d`
-
-### Changed
-- `Elements.DirectionalLight` now inherits from `Elements.Light`.
 - `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
 - Adding glb elements to a model uses a cache rather than fetching the stream every time.
-- `Profile.Split()` uses an improved algorithm, and the gap options are removed as they are no longer necessary.
 - `ProfileServer` is now `ProfileFactory`
 - `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- First alpha after minor release logic was fixed
 - `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
+- TypeGeneratorTests weren't actually running.
 
 ## 0.8.3
 

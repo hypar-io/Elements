@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Elements.Generate;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Properties;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -67,9 +66,9 @@ namespace Elements.Tests
 }";
 
         /// <summary>
-        /// The embeddedSchemaTest demonstrates a schema that has another 
+        /// The embeddedSchemaTest demonstrates a schema that has another
         /// schema that will be read at the same time specified for one of
-        /// its properties 
+        /// its properties
         /// </summary>
         const string embeddedSchemaTest = @"{
     ""$id"": ""https://hypar.io/Schemas/Truss.json"",
@@ -91,7 +90,7 @@ namespace Elements.Tests
     ""additionalProperties"": false
 }";
         /// <summary>
-        /// The embeddedSchemaTest2 demonstrates a schema that references the same  
+        /// The embeddedSchemaTest2 demonstrates a schema that references the same
         /// schema that will be referenced in embeddedSchemaTest above at the same time.
         /// </summary>
         const string embeddedSchemaTest2 = @"{
@@ -127,7 +126,7 @@ namespace Elements.Tests
             var schemaPath = Path.Combine(tmpPath, "beam.json");
             File.WriteAllText(schemaPath, beamSchema);
             var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
-            await TypeGenerator.GenerateUserElementTypeFromUriAsync(relPath, tmpPath, true);
+            await TypeGenerator.GenerateUserElementTypeFromUriAsync(relPath, tmpPath);
             var code = File.ReadAllText(Path.Combine(tmpPath, "beam.g.cs"));
         }
 
@@ -152,7 +151,7 @@ namespace Elements.Tests
             // Profile @profile, Line @centerLine, NumericProperty @length, Transform @transform, Material @material, Representation @representation, System.Guid @id, string @name
             var t = new Transform();
             var m = BuiltInMaterials.Steel;
-            var mullion = Activator.CreateInstance(mullionType, new object[] { profile, centerLine, new NumericProperty(0, NumericPropertyUnitType.Length), t, m, new Representation(new List<SolidOperation>()), false, Guid.NewGuid(), "Test Mullion" });
+            var mullion = Activator.CreateInstance(mullionType, new object[] { profile, centerLine, null, t, m, new Representation(new List<SolidOperation>()), false, Guid.NewGuid(), "Test Mullion" });
         }
 
         [IgnoreOnTravisFact]
@@ -173,7 +172,7 @@ namespace Elements.Tests
             string relEmbeddedSchemaTestPath2 = RelativeSavedSchemaPath(embeddedSchemaTest2, tmpPath, "embeddedSchemaTest2.json");
 
             // Generate the truss type which contains the beam type.
-            await TypeGenerator.GenerateUserElementTypesFromUrisAsync(new[] { relEmbeddedSchemaTestPath, relEmbeddedSchemaTestPath2, "https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json" }, tmpPath, true);
+            await TypeGenerator.GenerateUserElementTypesFromUrisAsync(new[] { relEmbeddedSchemaTestPath, relEmbeddedSchemaTestPath2, "https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json" }, tmpPath);
             // Ensure that there is only one beam.g.cs in the output.
             Assert.Equal(3, Directory.GetFiles(tmpPath, "*.g.cs").Length);
 

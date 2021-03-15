@@ -550,6 +550,19 @@ references:
   isSpec: "True"
   fullName: Elements.ContentCatalog.ToJson
   nameWithType: ContentCatalog.ToJson
+- uid: Elements.ContentCatalog.UseReferenceOrientation
+  name: UseReferenceOrientation()
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_UseReferenceOrientation
+  commentId: M:Elements.ContentCatalog.UseReferenceOrientation
+  fullName: Elements.ContentCatalog.UseReferenceOrientation()
+  nameWithType: ContentCatalog.UseReferenceOrientation()
+- uid: Elements.ContentCatalog.UseReferenceOrientation*
+  name: UseReferenceOrientation
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_UseReferenceOrientation_
+  commentId: Overload:Elements.ContentCatalog.UseReferenceOrientation
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.UseReferenceOrientation
+  nameWithType: ContentCatalog.UseReferenceOrientation
 - uid: Elements.ContentElement
   name: ContentElement
   href: api/Elements.ContentElement.html
