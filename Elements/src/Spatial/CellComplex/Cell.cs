@@ -199,5 +199,29 @@ namespace Elements.Spatial.CellComplex
         {
             return this.GetNeighbors().OrderBy(cell => cell.DistanceTo(position)).ToList().First();
         }
+
+        /// <summary>
+        /// Shortest distance to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            var extrude = this.GetGeometry() as Extrude;
+            var bottom = extrude.Profile.Perimeter;
+            var bottomZ = bottom.Centroid().Z;
+            var topZ = (bottom.Centroid() + extrude.Direction * extrude.Height).Z;
+            var isInside = point.Z >= bottomZ && point.Z <= topZ && bottom.Contains(new Vector3(point.X, point.Y, bottomZ));
+            if (isInside)
+            {
+                return 0;
+            }
+            var minDistance = double.PositiveInfinity;
+            foreach (var face in extrude.Solid.Faces.Values)
+            {
+                minDistance = Math.Min(minDistance, point.DistanceTo(face.Outer.ToPolygon()));
+            }
+            return minDistance;
+        }
     }
 }

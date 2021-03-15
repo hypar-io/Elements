@@ -76,6 +76,16 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
+        /// Shortest distance to point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            return point.DistanceTo(this.GetGeometry());
+        }
+
+        /// <summary>
         /// Get associated Cells
         /// </summary>
         /// <returns></returns>
@@ -188,35 +198,5 @@ namespace Elements.Spatial.CellComplex
             var faces = this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
             return faces.Count == 0 ? null : faces.First();
         }
-
-        // /// <summary>
-        // /// Gets the neighboring Faces which share a Segment.
-        // /// Does not capture partially overlapping neighbor match.
-        // /// </summary>
-        // /// <param name="face">Face to get the neighbors for</param>
-        // /// <param name="direction">If set, casts a ray from the centroid of this Face and only returns neighbors for the Segment which intersects this ray.</param>
-        // /// <param name="matchDirectionToUOrV">If true, further filters results to only those where the resulting face's U or V direction matches the given direction.</param>
-        // /// <returns></returns>
-        // public List<Face> GetNeighbors(Face face, Nullable<Vector3> direction = null, Boolean matchDirectionToUOrV = false)
-        // {
-        //     var segments = face.GetSegments();
-        //     List<Face> faces;
-        //     if (direction == null)
-        //     {
-        //         faces = segments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
-        //         return (from f in faces where f.Id != face.Id select f).ToList();
-        //     }
-        //     var segsWithGeos = segments.Select(segment => (segment: segment, geo: segment.GetGeometry())).ToList();
-        //     var ray = new Ray(face.GetGeometry().Centroid(), (Vector3)direction);
-        //     var intersectingSegments = (from seg in segsWithGeos where ray.Intersects(seg.geo, out var intersection) select seg.segment).ToList();
-        //     var facesIntersectingDs = intersectingSegments.Select(s => s.GetFaces()).SelectMany(x => x).Distinct().ToList();
-        //     faces = (from f in facesIntersectingDs where f.Id != face.Id select f).ToList();
-        //     if (matchDirectionToUOrV && ValueExists(this.uvsLookup, (Vector3)direction, out var uvId, Tolerance))
-        //     {
-        //         faces = (from f in faces where (f.VId == uvId || f.UId == uvId) select f).ToList();
-        //     }
-        //     return faces;
-        // }
-
     }
 }

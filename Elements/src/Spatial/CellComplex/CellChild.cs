@@ -63,42 +63,6 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public double DistanceTo(Vector3 point)
-        {
-            if (typeof(GeometryType) == typeof(Vector3))
-            {
-                return point.DistanceTo((Vector3)(this.GetGeometry() as Vector3?));
-            }
-            else if (typeof(GeometryType) == typeof(Line))
-            {
-                return point.DistanceTo(this.GetGeometry() as Line);
-            }
-            else if (typeof(GeometryType) == typeof(Polygon))
-            {
-                return point.DistanceTo(this.GetGeometry() as Polygon);
-            }
-            else if (typeof(GeometryType) == typeof(Extrude))
-            {
-                var extrude = this.GetGeometry() as Extrude;
-                var bottom = extrude.Profile.Perimeter;
-                var bottomZ = bottom.Centroid().Z;
-                var topZ = (bottom.Centroid() + extrude.Direction * extrude.Height).Z;
-                var isInside = point.Z >= bottomZ && point.Z <= topZ && bottom.Contains(new Vector3(point.X, point.Y, bottomZ));
-                if (isInside)
-                {
-                    return 0;
-                }
-                var minDistance = double.PositiveInfinity;
-                foreach (var face in extrude.Solid.Faces.Values)
-                {
-                    minDistance = Math.Min(minDistance, point.DistanceTo(face.Outer.ToPolygon()));
-                }
-                return minDistance;
-            }
-            else
-            {
-                throw new Exception("Unsupported geometry type provided.");
-            }
-        }
+        public abstract double DistanceTo(Vector3 point);
     }
 }

@@ -78,15 +78,15 @@ namespace Elements.Spatial.CellComplex
         [JsonIgnore]
         private Dictionary<double, Dictionary<double, Dictionary<double, long>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
 
-        // Indexed by tuple of (lesserVertexId, greaterVertexId)
+        // See Segment.GetHash for how faces are identified as unique.
         [JsonIgnore]
-        private Dictionary<(long, long), long> segmentsLookup = new Dictionary<(long, long), long>();
+        private Dictionary<string, long> segmentsLookup = new Dictionary<string, long>();
 
         // Same as segmentsLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
         [JsonIgnore]
         private Dictionary<(long, long), Dictionary<Boolean, long>> directedSegmentsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
 
-        // See GetFaceHash for how faces are identified as unique.
+        // See Face.GetHash for how faces are identified as unique.
         [JsonIgnore]
         private Dictionary<string, long> facesLookup = new Dictionary<string, long>();
 
@@ -138,7 +138,7 @@ namespace Elements.Spatial.CellComplex
 
             foreach (var segment in _segments.Values)
             {
-                if (!this.AddSegment((segment.Vertex1Id, segment.Vertex2Id), segment.Id, out var addedSegment))
+                if (!this.AddSegment(new List<long>() { segment.StartVertexId, segment.EndVertexId }, segment.Id, out var addedSegment))
                 {
                     throw new Exception("Duplicate segment ID found");
                 }
@@ -147,7 +147,7 @@ namespace Elements.Spatial.CellComplex
             foreach (var directedSegment in _directedSegments.Values)
             {
                 var segment = this.GetSegment(directedSegment.SegmentId);
-                if (!this.AddDirectedSegment(segment, segment.Vertex1Id == directedSegment.StartVertexId, directedSegment.Id, out var addedDirectedSegment))
+                if (!this.AddDirectedSegment(segment, segment.StartVertexId == directedSegment.StartVertexId, directedSegment.Id, out var addedDirectedSegment))
                 {
                     throw new Exception("Duplicate directed segment ID found");
                 }
@@ -252,18 +252,9 @@ namespace Elements.Spatial.CellComplex
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrUV<Vertex>(vertex)).ToList();
-            var segmentTuple = (vertices[0].Id, vertices[1].Id);
-            var segmentTupleIsInOrder = true;
-
-            // Always index using smallest id to largest id
-            if (vertices[1].Id < vertices[0].Id)
-            {
-                segmentTuple = (vertices[1].Id, vertices[0].Id);
-                segmentTupleIsInOrder = false;
-            }
-
-            this.AddSegment(segmentTuple, this._segmentId, out var segment);
-            this.AddDirectedSegment(segment, segmentTupleIsInOrder, this._directedSegmentId, out var directedSegment);
+            this.AddSegment(vertices.Select(v => v.Id).ToList(), this._segmentId, out var segment);
+            var dirMatchesSegment = vertices[0].Id == segment.StartVertexId;
+            this.AddDirectedSegment(segment, dirMatchesSegment, this._directedSegmentId, out var directedSegment);
             return directedSegment;
         }
 
@@ -348,7 +339,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns>Whether the directedSegment was successfully added. Will be false if idIfNew already exists</returns>
         private Boolean AddDirectedSegment(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out DirectedSegment directedSegment)
         {
-            var segmentTuple = (segment.Vertex1Id, segment.Vertex2Id);
+            var segmentTuple = (segment.StartVertexId, segment.EndVertexId);
 
             if (!this.directedSegmentsLookup.TryGetValue(segmentTuple, out var directedSegmentDict))
             {
@@ -385,18 +376,20 @@ namespace Elements.Spatial.CellComplex
         /// <param name="idIfNew"></param>
         /// <param name="segment"></param>
         /// <returns>Whether the segment was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddSegment((long, long) segmentTuple, long idIfNew, out Segment segment)
+        private Boolean AddSegment(List<long> vertexIds, long idIfNew, out Segment segment)
         {
-            if (!this.segmentsLookup.TryGetValue(segmentTuple, out var segmentId))
+            var hash = Segment.GetHash(vertexIds);
+
+            if (!this.segmentsLookup.TryGetValue(hash, out var segmentId))
             {
-                segment = new Segment(this, idIfNew, segmentTuple.Item1, segmentTuple.Item2);
+                segment = new Segment(this, idIfNew, vertexIds[0], vertexIds[1]);
                 segmentId = segment.Id;
 
-                this.segmentsLookup[segmentTuple] = segmentId;
+                this.segmentsLookup[hash] = segmentId;
                 this._segments.Add(segmentId, segment);
 
-                this.GetVertex(segment.Vertex1Id).Segments.Add(segment);
-                this.GetVertex(segment.Vertex2Id).Segments.Add(segment);
+                this.GetVertex(segment.StartVertexId).Segments.Add(segment);
+                this.GetVertex(segment.EndVertexId).Segments.Add(segment);
 
                 this._segmentId = Math.Max(segmentId + 1, this._segmentId + 1);
 
@@ -635,8 +628,6 @@ namespace Elements.Spatial.CellComplex
             return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
         }
 
-        #region private statics
-
         /// <summary>
         /// Add a value to a Dictionary of HashSets of longs. Used as a utility for internal lookups.
         /// </summary>
@@ -745,6 +736,5 @@ namespace Elements.Spatial.CellComplex
             return false;
         }
 
-        #endregion private statics
     }
 }

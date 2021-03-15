@@ -91,5 +91,15 @@ namespace Elements.Spatial.CellComplex
         {
             return this.Value;
         }
+
+        /// <summary>
+        /// Get the shortest distance to a given point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            return point.DistanceTo(this.GetGeometry());
+        }
     }
 }

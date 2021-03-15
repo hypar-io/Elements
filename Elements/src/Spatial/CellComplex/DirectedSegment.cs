@@ -48,13 +48,13 @@ namespace Elements.Spatial.CellComplex
 
             if (segmentOrderMatchesDirection)
             {
-                this.StartVertexId = segment.Vertex1Id;
-                this.EndVertexId = segment.Vertex2Id;
+                this.StartVertexId = segment.StartVertexId;
+                this.EndVertexId = segment.EndVertexId;
             }
             else
             {
-                this.StartVertexId = segment.Vertex2Id;
-                this.EndVertexId = segment.Vertex1Id;
+                this.StartVertexId = segment.EndVertexId;
+                this.EndVertexId = segment.StartVertexId;
             }
         }
 
@@ -107,6 +107,16 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Shortest distance to a given point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            return point.DistanceTo(this.GetGeometry());
         }
     }
 }

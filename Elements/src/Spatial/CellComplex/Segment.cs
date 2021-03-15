@@ -15,12 +15,12 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID of first vertex
         /// </summary>
-        public long Vertex1Id;
+        public long StartVertexId;
 
         /// <summary>
         /// ID of second vertex
         /// </summary>
-        public long Vertex2Id;
+        public long EndVertexId;
 
         /// <summary>
         /// DirectedSegments that reference this Segment
@@ -34,19 +34,44 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="index1">The lower-index-id number for this segment</param>
-        /// <param name="index2">The higher-index-id number for this segment</param>
-        internal Segment(CellComplex cellComplex, long id, long index1, long index2) : base(id, cellComplex)
+        /// <param name="vertexId1">One of the vertex IDs for this segment</param>
+        /// <param name="vertexId2">The other vertex ID for this segment</param>
+        internal Segment(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
         {
-            this.Vertex1Id = index1;
-            this.Vertex2Id = index2;
+            this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
         [JsonConstructor]
-        internal Segment(long id, long index1, long index2) : base(id, null)
+        internal Segment(long id, long startVertexId, long endVertexId) : base(id, null)
         {
-            this.Vertex1Id = index1;
-            this.Vertex2Id = index2;
+            this.SetVerticesFromIds(startVertexId, endVertexId);
+        }
+
+        /// <summary>
+        /// Ensures start vertex always has a smaller ID than end vertex
+        /// </summary>
+        /// <param name="id1"></param>
+        /// <param name="id2"></param>
+        private void SetVerticesFromIds(long id1, long id2)
+        {
+            if (id1 < id2)
+            {
+                this.StartVertexId = id1;
+                this.EndVertexId = id2;
+            }
+            else
+            {
+                this.EndVertexId = id1;
+                this.StartVertexId = id2;
+            }
+        }
+
+        public static string GetHash(List<long> vertexIds)
+        {
+            var sortedIds = vertexIds.ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+            return hash;
         }
 
         /// <summary>
@@ -56,8 +81,8 @@ namespace Elements.Spatial.CellComplex
         public override Line GetGeometry()
         {
             return new Line(
-                this.CellComplex.GetVertex(this.Vertex1Id).Value,
-                this.CellComplex.GetVertex(this.Vertex2Id).Value
+                this.CellComplex.GetVertex(this.StartVertexId).Value,
+                this.CellComplex.GetVertex(this.EndVertexId).Value
             );
         }
 
@@ -86,6 +111,16 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Shortest distance to a given point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            return point.DistanceTo(this.GetGeometry());
         }
     }
 }
