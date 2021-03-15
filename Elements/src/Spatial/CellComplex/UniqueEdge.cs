@@ -8,15 +8,15 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique edge in a cell complex.
+    /// A unique uniqueEdge in a cell complex.
     /// </summary>
-    public class Edge : EdgeBase
+    public class UniqueEdge : EdgeBase
     {
         /// <summary>
-        /// HalfEdges that reference this Edge
+        /// DirectedEdges that reference this Edge
         /// </summary>
         [JsonIgnore]
-        public HashSet<HalfEdge> HalfEdges = new HashSet<HalfEdge>();
+        public HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
 
         /// <summary>
         /// Represents a unique Edge within a CellComplex.
@@ -24,15 +24,15 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="vertexId1">One of the vertex IDs for this edge</param>
-        /// <param name="vertexId2">The other vertex ID for this edge</param>
-        internal Edge(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
+        /// <param name="vertexId1">One of the vertex IDs for this uniqueEdge</param>
+        /// <param name="vertexId2">The other vertex ID for this uniqueEdge</param>
+        internal UniqueEdge(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
         {
             this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
         [JsonConstructor]
-        internal Edge(long id, long startVertexId, long endVertexId) : base(id, null)
+        internal UniqueEdge(long id, long startVertexId, long endVertexId) : base(id, null)
         {
             this.SetVerticesFromIds(startVertexId, endVertexId);
         }
@@ -70,12 +70,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated HalfEdges
+        /// Get associated DirectedEdges
         /// </summary>
         /// <returns></returns>
-        public List<HalfEdge> GetHalfEdges()
+        public List<DirectedEdge> GetDirectedEdges()
         {
-            return this.HalfEdges.ToList();
+            return this.DirectedEdges.ToList();
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetHalfEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.GetDirectedEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>

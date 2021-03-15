@@ -119,17 +119,17 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<Edge> GetEdges()
+        public List<UniqueEdge> GetEdges()
         {
             return this.GetFaces().Select(face => face.GetEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
-        /// Get the closest associated edge to the supplied position
+        /// Get the closest associated uniqueEdge to the supplied position
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public Edge GetClosestEdge(Vector3 position)
+        public UniqueEdge GetClosestEdge(Vector3 position)
         {
             return this.GetEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
         }

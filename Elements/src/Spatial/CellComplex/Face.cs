@@ -22,9 +22,9 @@ namespace Elements.Spatial.CellComplex
         public long? VId;
 
         /// <summary>
-        /// Directed edge IDs
+        /// Directed uniqueEdge IDs
         /// </summary>
-        public List<long> HalfEdgeIds;
+        public List<long> DirectedEdgeIds;
 
         /// <summary>
         /// Cells that reference this Face
@@ -38,12 +38,12 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this Face belongs to</param>
         /// <param name="id"></param>
-        /// <param name="halfEdges">List of the HalfEdges that make up this Face</param>
+        /// <param name="directedEdges">List of the DirectedEdges that make up this Face</param>
         /// <param name="u">Optional but highly recommended intended U direction for the Face</param>
         /// <param name="v">Optional but highly recommended intended V direction for the Face</param>
-        internal Face(CellComplex cellComplex, long id, List<HalfEdge> halfEdges, UV u = null, UV v = null) : base(id, cellComplex)
+        internal Face(CellComplex cellComplex, long id, List<DirectedEdge> directedEdges, UV u = null, UV v = null) : base(id, cellComplex)
         {
-            this.HalfEdgeIds = halfEdges.Select(ds => ds.Id).ToList();
+            this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
             if (u != null)
             {
                 this.UId = u.Id;
@@ -58,10 +58,10 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(long id, List<long> halfEdgeIds, long? uId = null, long? vId = null) : base(id, null)
+        internal Face(long id, List<long> directedEdgeIds, long? uId = null, long? vId = null) : base(id, null)
         {
             this.Id = id;
-            this.HalfEdgeIds = halfEdgeIds;
+            this.DirectedEdgeIds = directedEdgeIds;
             this.UId = uId;
             this.VId = vId;
         }
@@ -95,12 +95,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated HalfEdges
+        /// Get associated DirectedEdges
         /// </summary>
         /// <returns></returns>
-        public List<HalfEdge> GetHalfEdges()
+        public List<DirectedEdge> GetDirectedEdges()
         {
-            return this.HalfEdgeIds.Select(dsId => CellComplex.GetHalfEdge(dsId)).ToList();
+            return this.DirectedEdgeIds.Select(dsId => CellComplex.GetDirectedEdge(dsId)).ToList();
         }
 
         /// <summary>
@@ -109,27 +109,27 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return this.GetHalfEdges().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
+            return this.GetDirectedEdges().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
         }
 
         /// <summary>
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<Edge> GetEdges()
+        public List<UniqueEdge> GetEdges()
         {
-            return this.GetHalfEdges().Select(ds => ds.GetEdge()).ToList();
+            return this.GetDirectedEdges().Select(ds => ds.GetEdge()).ToList();
         }
 
         /// <summary>
-        /// Face lookup hash is edgeIds in ascending order.
-        /// We do not directly use the `halfEdgeIds` because they could wind differently on a shared face.
+        /// Face lookup hash is uniqueEdgeIds in ascending order.
+        /// We do not directly use the `directedEdgeIds` because they could wind differently on a shared face.
         /// </summary>
-        /// <param name="halfEdges"></param>
+        /// <param name="directedEdges"></param>
         /// <returns></returns>
-        public static string GetHash(List<HalfEdge> halfEdges)
+        public static string GetHash(List<DirectedEdge> directedEdges)
         {
-            var sortedIds = halfEdges.Select(ds => ds.EdgeId).ToList();
+            var sortedIds = directedEdges.Select(ds => ds.EdgeId).ToList();
             sortedIds.Sort();
             var hash = String.Join(",", sortedIds);
             return hash;
@@ -156,10 +156,10 @@ namespace Elements.Spatial.CellComplex
 
         /// <summary>
         /// Get a list of all neighbors of this face.
-        /// A neighbor is defined as a Face which shares any edge.
+        /// A neighbor is defined as a Face which shares any uniqueEdge.
         /// </summary>
         /// <param name="parallel">If true, only returns faces that are oriented the same way as this face</param>
-        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a edge</param>
+        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a uniqueEdge</param>
         /// <returns></returns>
         public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
         {
@@ -176,23 +176,30 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a list of neighbor faces that share a specific edge
+        /// Get a list of neighbor faces that share a specific uniqueEdge
         /// </summary>
-        /// <param name="edge"></param>
+        /// <param name="uniqueEdge"></param>
         /// <param name="parallel">Whether to only return faces that are parallel to this face.</param>
         /// <returns></returns>
-        public List<Face> GetNeighbors(Edge edge, bool parallel = false)
+        public List<Face> GetNeighbors(UniqueEdge uniqueEdge, bool parallel = false)
         {
             if (!parallel)
             {
-                return edge.GetFaces().Where(face => face.Id != this.Id).ToList();
+                return uniqueEdge.GetFaces().Where(face => face.Id != this.Id).ToList();
             }
             else
             {
-                return edge.GetFaces().Where(face => face.Id != this.Id && this.IsParallel(face)).ToList();
+                return uniqueEdge.GetFaces().Where(face => face.Id != this.Id && this.IsParallel(face)).ToList();
             }
         }
 
+        /// <summary>
+        /// Get the closest associated Face
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="parallel"></param>
+        /// <param name="includeSharedVertices"></param>
+        /// <returns></returns>
         public Face GetClosestAssociatedFace(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
         {
             var faces = this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
