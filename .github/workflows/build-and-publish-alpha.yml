@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build-bump-publish:
+  build-bump-alpha-publish:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout repo.
@@ -21,25 +21,28 @@ jobs:
         id: version
         uses: "WyriHaximus/github-action-get-previous-tag@master"
       - name: Bump if alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
-        id: bump-alpha
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        id: bump-with-alpha
+        uses: actions/github-script@v3
         with:
-          current-version: ${{steps.version.outputs.tag}}
-          version-fragment: "alpha"
+          result-encoding: string
+          script: |
+                const incoming = "${{steps.version.outputs.tag}}"
+                console.log("Incoming Tag: " + incoming)
+                if(incoming.includes('alpha')) {
+                  const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
+                  const newNum = parseInt(oldNum)+1
+                  const newTag = incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
+                  console.log("New Tag: " + newTag)
+                  return newTag
+                }
+                else {
+                  const splitLast = incoming.match(/(.*\.)(\d*)/)
+                  const newTag =splitLast[1] + (parseInt(splitLast[2])+1)+'-alpha.0'
+                  console.log("New Tag: " + newTag)
+                  return newTag
+                }
       - name: Set NuGet version from alpha.
-        if: ${{contains(steps.version.outputs.tag, 'alpha')}}
-        run: echo "NUGET_VERSION=${{steps.bump-alpha.outputs.next-version}}" >> $GITHUB_ENV
-      - name: Bump if beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
-        id: bump-beta
-        uses: christian-draeger/increment-semantic-version@1.0.2
-        with:
-          current-version: ${{steps.version.outputs.tag}}
-          version-fragment: "beta"
-      - name: Set NuGet version from beta.
-        if: ${{contains(steps.version.outputs.tag, 'beta')}}
-        run: echo "NUGET_VERSION=${{steps.bump-beta.outputs.next-version}}" >> $GITHUB_ENV
+        run: echo "NUGET_VERSION=${{steps.bump-with-alpha.outputs.result}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
       - name: Publish NuGet package.
@@ -51,4 +54,4 @@ jobs:
         uses: tvdias/github-tagger@v0.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.bump-alpha.outputs.next-version }}
+          tag: ${{ steps.bump-with-alpha.outputs.result }}

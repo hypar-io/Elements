@@ -9,6 +9,8 @@ namespace Elements.Tests
 {
     public class CsgTests : ModelTest
     {
+        private HSSPipeProfileFactory _profileFactory = new HSSPipeProfileFactory();
+
         [Fact]
         public void Csg()
         {
@@ -50,8 +52,7 @@ namespace Elements.Tests
         public void Difference()
         {
             this.Name = "CSG_Difference";
-            // var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
-            var profile = HSSPipeProfileServer.Instance.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
+            var profile = _profileFactory.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
 
             var path = new Arc(Vector3.Origin, 5, 0, 270);
             var s1 = new Sweep(profile, path, 0, 0, 0, true);
