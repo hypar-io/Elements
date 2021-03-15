@@ -85,35 +85,11 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Model</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Model_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Model</code></pre>
+    <pre><code class="lang-csharp hljs">public class Model : object</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -127,13 +103,12 @@
     <pre><code class="lang-csharp hljs">public Model()</code></pre>
   </div>
   <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
-  <h4 id="Elements_Model__ctor_Elements_GeoJSON_Position_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})">Model(Position, Transform, IDictionary&lt;Guid, Element&gt;)</h4>
+  <h4 id="Elements_Model__ctor_Elements_GeoJSON_Position_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})">Model(Position, Transform, Collections.Generic.IDictionary&lt;Guid, Element&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public Model(Position origin, Transform transform, Collections.Generic.IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,20 +131,20 @@ public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
-  <h4 id="Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})">Model(Transform, IDictionary&lt;Guid, Element&gt;)</h4>
+  <h4 id="Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_Guid_Elements_Element__" data-uid="Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})">Model(Transform, Collections.Generic.IDictionary&lt;Guid, Element&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Model(Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public Model(Transform transform, Collections.Generic.IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -188,7 +163,7 @@ public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td><p>The model's elements.</p>
 </td>
@@ -204,9 +179,7 @@ public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
-[Required]
-public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Collections.Generic.IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -218,7 +191,7 @@ public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">Guid</span>, <a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -230,9 +203,7 @@ public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-[Obsolete(&quot;Use Transform instead.&quot;)]
-public Position Origin { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Position Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -256,8 +227,7 @@ public Position Origin { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
-public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -341,7 +311,7 @@ added to the model's elements collection?</p>
     </tbody>
   </table>
   <a id="Elements_Model_AddElements_" data-uid="Elements.Model.AddElements*"></a>
-  <h4 id="Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__System_Boolean_" data-uid="Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)">AddElements(IEnumerable&lt;Element&gt;, Boolean)</h4>
+  <h4 id="Elements_Model_AddElements_IEnumerable_Elements_Element__System_Boolean_" data-uid="Elements.Model.AddElements(IEnumerable{Elements.Element},System.Boolean)">AddElements(IEnumerable&lt;Element&gt;, Boolean)</h4>
   <div class="markdown level1 summary"><p>Add a collection of elements to the model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -360,7 +330,7 @@ added to the model's elements collection?</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
         <td><span class="parametername">elements</span></td>
         <td><p>The elements to add to the model.</p>
 </td>
@@ -393,7 +363,7 @@ added to the model's elements collection?</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;T&gt;</td>
         <td><p>A collection of elements of the specified type.</p>
 </td>
       </tr>
@@ -412,6 +382,60 @@ added to the model's elements collection?</p>
         <td><span class="parametername">T</span></td>
         <td><p>The Type of element to return.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_FromJson_" data-uid="Elements.Model.FromJson*"></a>
+  <h4 id="Elements_Model_FromJson_System_String_List_System_String___System_Boolean_" data-uid="Elements.Model.FromJson(System.String,List{System.String}@,System.Boolean)">FromJson(String, out List&lt;String&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Deserialize a model from JSON.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Model FromJson(string json, out List&lt;string&gt; errors, bool forceTypeReload = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">json</span></td>
+        <td><p>The JSON representing the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">errors</span></td>
+        <td><p>A collection of deserialization errors.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">forceTypeReload</span></td>
+        <td><p>Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Model.html">Model</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -442,60 +466,6 @@ added to the model's elements collection?</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">forceTypeReload</span></td>
         <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Model.html">Model</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Model_FromJson_" data-uid="Elements.Model.FromJson*"></a>
-  <h4 id="Elements_Model_FromJson_System_String_System_Collections_Generic_List_System_String___System_Boolean_" data-uid="Elements.Model.FromJson(System.String,System.Collections.Generic.List{System.String}@,System.Boolean)">FromJson(String, out List&lt;String&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Deserialize a model from JSON.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Model FromJson(string json, out List&lt;string&gt; errors, bool forceTypeReload = false)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">json</span></td>
-        <td><p>The JSON representing the model.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
-        <td><span class="parametername">errors</span></td>
-        <td><p>A collection of deserialization errors.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">forceTypeReload</span></td>
-        <td><p>Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</p>
-</td>
       </tr>
     </tbody>
   </table>
@@ -574,7 +544,7 @@ with the provided name.</p>
     </tbody>
   </table>
   <a id="Elements_Model_GetElementOfType_" data-uid="Elements.Model.GetElementOfType*"></a>
-  <h4 id="Elements_Model_GetElementOfType__1_System_Guid_" data-uid="Elements.Model.GetElementOfType``1(System.Guid)">GetElementOfType&lt;T&gt;(Guid)</h4>
+  <h4 id="Elements_Model_GetElementOfType__1_Guid_" data-uid="Elements.Model.GetElementOfType``1(Guid)">GetElementOfType&lt;T&gt;(Guid)</h4>
   <div class="markdown level1 summary"><p>Get an entity by id from the Model.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -594,7 +564,7 @@ with the provided name.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The identifier of the element.</p>
 </td>

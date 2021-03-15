@@ -89,10 +89,6 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">Opening</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -125,45 +121,23 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Opening_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Opening : GeometricElement, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class Opening : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Opening__ctor_" data-uid="Elements.Opening.#ctor*"></a>
-  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_" data-uid="Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)">Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create an opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Opening(Polygon perimeter, double depthFront = 1, double depthBack = 1, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Opening(Polygon perimeter, double depthFront = 1, double depthBack = 1, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -206,7 +180,7 @@ public Opening(Polygon perimeter, double depthFront = 1, double depthBack = 1, T
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td></td>
       </tr>
@@ -298,8 +272,7 @@ public Opening(Polygon perimeter, double depthFront = 1, double depthBack = 1, T
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use perimeter instead.&quot;)]
-public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -329,10 +302,6 @@ public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
 </article>
           </div>
           
