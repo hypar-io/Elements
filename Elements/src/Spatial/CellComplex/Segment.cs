@@ -10,23 +10,13 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique segment in a cell complex.
     /// </summary>
-    public class Segment : CellChild<Line>
+    public class Segment : SegmentBase
     {
         /// <summary>
-        /// ID of first vertex
-        /// </summary>
-        public long StartVertexId;
-
-        /// <summary>
-        /// ID of second vertex
-        /// </summary>
-        public long EndVertexId;
-
-        /// <summary>
-        /// DirectedSegments that reference this Segment
+        /// SegmentsDirected that reference this Segment
         /// </summary>
         [JsonIgnore]
-        public HashSet<DirectedSegment> DirectedSegments = new HashSet<DirectedSegment>();
+        public HashSet<SegmentDirected> SegmentsDirected = new HashSet<SegmentDirected>();
 
         /// <summary>
         /// Represents a unique Segment within a CellComplex.
@@ -75,24 +65,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the geometry for this Segment
+        /// Get associated SegmentsDirected
         /// </summary>
         /// <returns></returns>
-        public override Line GetGeometry()
+        public List<SegmentDirected> GetSegmentsDirected()
         {
-            return new Line(
-                this.CellComplex.GetVertex(this.StartVertexId).Value,
-                this.CellComplex.GetVertex(this.EndVertexId).Value
-            );
-        }
-
-        /// <summary>
-        /// Get associated DirectedSegments
-        /// </summary>
-        /// <returns></returns>
-        public List<DirectedSegment> GetDirectedSegments()
-        {
-            return this.DirectedSegments.ToList();
+            return this.SegmentsDirected.ToList();
         }
 
         /// <summary>
@@ -101,7 +79,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetDirectedSegments().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.GetSegmentsDirected().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -111,16 +89,6 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
-        }
-
-        /// <summary>
-        /// Shortest distance to a given point
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public override double DistanceTo(Vector3 point)
-        {
-            return point.DistanceTo(this.GetGeometry());
         }
     }
 }

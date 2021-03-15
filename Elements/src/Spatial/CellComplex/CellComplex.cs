@@ -22,7 +22,7 @@ namespace Elements.Spatial.CellComplex
         private long _segmentId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _directedSegmentId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private long _segmentDirectedId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
         private long _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
@@ -55,10 +55,10 @@ namespace Elements.Spatial.CellComplex
         private Dictionary<long, Segment> _segments = new Dictionary<long, Segment>();
 
         /// <summary>
-        /// DirectedSegments by ID
+        /// SegmentsDirected by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, DirectedSegment> _directedSegments = new Dictionary<long, DirectedSegment>();
+        private Dictionary<long, SegmentDirected> _segmentDirecteds = new Dictionary<long, SegmentDirected>();
 
         /// <summary>
         /// Faces by ID
@@ -84,7 +84,7 @@ namespace Elements.Spatial.CellComplex
 
         // Same as segmentsLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
         [JsonIgnore]
-        private Dictionary<(long, long), Dictionary<Boolean, long>> directedSegmentsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
+        private Dictionary<(long, long), Dictionary<Boolean, long>> segmentDirectedsLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
 
         // See Face.GetHash for how faces are identified as unique.
         [JsonIgnore]
@@ -109,7 +109,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="_vertices"></param>
         /// <param name="_uvs"></param>
         /// <param name="_segments"></param>
-        /// <param name="_directedSegments"></param>
+        /// <param name="_segmentDirecteds"></param>
         /// <param name="_faces"></param>
         /// <param name="_cells"></param>
         /// <returns></returns>
@@ -120,7 +120,7 @@ namespace Elements.Spatial.CellComplex
             Dictionary<long, Vertex> _vertices,
             Dictionary<long, Vertex> _uvs,
             Dictionary<long, Segment> _segments,
-            Dictionary<long, DirectedSegment> _directedSegments,
+            Dictionary<long, SegmentDirected> _segmentDirecteds,
             Dictionary<long, Face> _faces,
             Dictionary<long, Cell> _cells
         ) : base(id, name)
@@ -144,10 +144,10 @@ namespace Elements.Spatial.CellComplex
                 }
             }
 
-            foreach (var directedSegment in _directedSegments.Values)
+            foreach (var segmentDirected in _segmentDirecteds.Values)
             {
-                var segment = this.GetSegment(directedSegment.SegmentId);
-                if (!this.AddDirectedSegment(segment, segment.StartVertexId == directedSegment.StartVertexId, directedSegment.Id, out var addedDirectedSegment))
+                var segment = this.GetSegment(segmentDirected.SegmentId);
+                if (!this.AddSegmentDirected(segment, segment.StartVertexId == segmentDirected.StartVertexId, segmentDirected.Id, out var addedSegmentDirected))
                 {
                     throw new Exception("Duplicate directed segment ID found");
                 }
@@ -244,18 +244,18 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Add a DirectedSegment to the CellComplex
+        /// Add a SegmentDirected to the CellComplex
         /// </summary>
         /// <param name="line">Line with Start and End in the expected direction</param>
-        /// <returns>Created DirectedSegment</returns>
-        internal DirectedSegment AddDirectedSegment(Line line)
+        /// <returns>Created SegmentDirected</returns>
+        internal SegmentDirected AddSegmentDirected(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrUV<Vertex>(vertex)).ToList();
             this.AddSegment(vertices.Select(v => v.Id).ToList(), this._segmentId, out var segment);
             var dirMatchesSegment = vertices[0].Id == segment.StartVertexId;
-            this.AddDirectedSegment(segment, dirMatchesSegment, this._directedSegmentId, out var directedSegment);
-            return directedSegment;
+            this.AddSegmentDirected(segment, dirMatchesSegment, this._segmentDirectedId, out var segmentDirected);
+            return segmentDirected;
         }
 
         /// <summary>
@@ -299,24 +299,24 @@ namespace Elements.Spatial.CellComplex
         private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
         {
             var lines = polygon.Segments();
-            var directedSegments = new List<DirectedSegment>();
+            var segmentDirecteds = new List<SegmentDirected>();
             foreach (var line in lines)
             {
-                directedSegments.Add(this.AddDirectedSegment(line));
+                segmentDirecteds.Add(this.AddSegmentDirected(line));
             }
 
-            var hash = Face.GetHash(directedSegments);
+            var hash = Face.GetHash(segmentDirecteds);
 
             if (!this.facesLookup.TryGetValue(hash, out var faceId))
             {
-                face = new Face(this, idIfNew, directedSegments, u, v);
+                face = new Face(this, idIfNew, segmentDirecteds, u, v);
                 faceId = face.Id;
                 this.facesLookup.Add(hash, faceId);
                 this._faces.Add(faceId, face);
 
-                foreach (var directedSegment in directedSegments)
+                foreach (var segmentDirected in segmentDirecteds)
                 {
-                    directedSegment.Faces.Add(face);
+                    segmentDirected.Faces.Add(face);
                 }
 
                 this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
@@ -330,40 +330,40 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a DirectedSegment
+        /// Internal method to add a SegmentDirected
         /// </summary>
         /// <param name="segment"></param>
         /// <param name="segmentTupleIsInOrder"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="directedSegment"></param>
-        /// <returns>Whether the directedSegment was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddDirectedSegment(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out DirectedSegment directedSegment)
+        /// <param name="segmentDirected"></param>
+        /// <returns>Whether the segmentDirected was successfully added. Will be false if idIfNew already exists</returns>
+        private Boolean AddSegmentDirected(Segment segment, Boolean segmentTupleIsInOrder, long idIfNew, out SegmentDirected segmentDirected)
         {
             var segmentTuple = (segment.StartVertexId, segment.EndVertexId);
 
-            if (!this.directedSegmentsLookup.TryGetValue(segmentTuple, out var directedSegmentDict))
+            if (!this.segmentDirectedsLookup.TryGetValue(segmentTuple, out var segmentDirectedDict))
             {
-                directedSegmentDict = new Dictionary<bool, long>();
-                this.directedSegmentsLookup.Add(segmentTuple, directedSegmentDict);
+                segmentDirectedDict = new Dictionary<bool, long>();
+                this.segmentDirectedsLookup.Add(segmentTuple, segmentDirectedDict);
             }
 
-            if (!directedSegmentDict.TryGetValue(segmentTupleIsInOrder, out var directedSegmentId))
+            if (!segmentDirectedDict.TryGetValue(segmentTupleIsInOrder, out var segmentDirectedId))
             {
-                directedSegment = new DirectedSegment(this, idIfNew, segment, segmentTupleIsInOrder);
-                directedSegmentId = directedSegment.Id;
+                segmentDirected = new SegmentDirected(this, idIfNew, segment, segmentTupleIsInOrder);
+                segmentDirectedId = segmentDirected.Id;
 
-                directedSegmentDict.Add(segmentTupleIsInOrder, directedSegmentId);
-                this._directedSegments.Add(directedSegmentId, directedSegment);
+                segmentDirectedDict.Add(segmentTupleIsInOrder, segmentDirectedId);
+                this._segmentDirecteds.Add(segmentDirectedId, segmentDirected);
 
-                segment.DirectedSegments.Add(directedSegment);
+                segment.SegmentsDirected.Add(segmentDirected);
 
-                this._directedSegmentId = Math.Max(directedSegmentId + 1, this._directedSegmentId + 1);
+                this._segmentDirectedId = Math.Max(segmentDirectedId + 1, this._segmentDirectedId + 1);
 
                 return true;
             }
             else
             {
-                this._directedSegments.TryGetValue(directedSegmentId, out directedSegment);
+                this._segmentDirecteds.TryGetValue(segmentDirectedId, out segmentDirected);
 
                 return false;
             }
@@ -534,23 +534,23 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a DirectedSegment by its ID
+        /// Get a SegmentDirected by its ID
         /// </summary>
-        /// <param name="directedSegmentId"></param>
+        /// <param name="segmentDirectedId"></param>
         /// <returns></returns>
-        public DirectedSegment GetDirectedSegment(long directedSegmentId)
+        public SegmentDirected GetSegmentDirected(long segmentDirectedId)
         {
-            this._directedSegments.TryGetValue(directedSegmentId, out var directedSegment);
-            return directedSegment;
+            this._segmentDirecteds.TryGetValue(segmentDirectedId, out var segmentDirected);
+            return segmentDirected;
         }
 
         /// <summary>
-        /// Get all DirectedSegments
+        /// Get all SegmentsDirected
         /// </summary>
         /// <returns></returns>
-        public List<DirectedSegment> GetDirectedSegments()
+        public List<SegmentDirected> GetSegmentsDirected()
         {
-            return this._directedSegments.Values.ToList();
+            return this._segmentDirecteds.Values.ToList();
         }
 
         /// <summary>

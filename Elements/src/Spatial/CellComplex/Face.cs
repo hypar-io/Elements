@@ -24,7 +24,7 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Directed segment IDs
         /// </summary>
-        public List<long> DirectedSegmentIds;
+        public List<long> SegmentDirectedIds;
 
         /// <summary>
         /// Cells that reference this Face
@@ -38,12 +38,12 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this Face belongs to</param>
         /// <param name="id"></param>
-        /// <param name="directedSegments">List of the DirectedSegments that make up this Face</param>
+        /// <param name="segmentDirecteds">List of the SegmentsDirected that make up this Face</param>
         /// <param name="u">Optional but highly recommended intended U direction for the Face</param>
         /// <param name="v">Optional but highly recommended intended V direction for the Face</param>
-        internal Face(CellComplex cellComplex, long id, List<DirectedSegment> directedSegments, UV u = null, UV v = null) : base(id, cellComplex)
+        internal Face(CellComplex cellComplex, long id, List<SegmentDirected> segmentDirecteds, UV u = null, UV v = null) : base(id, cellComplex)
         {
-            this.DirectedSegmentIds = directedSegments.Select(ds => ds.Id).ToList();
+            this.SegmentDirectedIds = segmentDirecteds.Select(ds => ds.Id).ToList();
             if (u != null)
             {
                 this.UId = u.Id;
@@ -58,10 +58,10 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(long id, List<long> directedSegmentIds, long? uId = null, long? vId = null) : base(id, null)
+        internal Face(long id, List<long> segmentDirectedIds, long? uId = null, long? vId = null) : base(id, null)
         {
             this.Id = id;
-            this.DirectedSegmentIds = directedSegmentIds;
+            this.SegmentDirectedIds = segmentDirectedIds;
             this.UId = uId;
             this.VId = vId;
         }
@@ -95,12 +95,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedSegments
+        /// Get associated SegmentsDirected
         /// </summary>
         /// <returns></returns>
-        public List<DirectedSegment> GetDirectedSegments()
+        public List<SegmentDirected> GetSegmentsDirected()
         {
-            return this.DirectedSegmentIds.Select(dsId => CellComplex.GetDirectedSegment(dsId)).ToList();
+            return this.SegmentDirectedIds.Select(dsId => CellComplex.GetSegmentDirected(dsId)).ToList();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return this.GetDirectedSegments().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
+            return this.GetSegmentsDirected().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
         }
 
         /// <summary>
@@ -118,18 +118,18 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Segment> GetSegments()
         {
-            return this.GetDirectedSegments().Select(ds => ds.GetSegment()).ToList();
+            return this.GetSegmentsDirected().Select(ds => ds.GetSegment()).ToList();
         }
 
         /// <summary>
         /// Face lookup hash is segmentIds in ascending order.
-        /// We do not directly use the `directedSegmentIds` because they could wind differently on a shared face.
+        /// We do not directly use the `segmentDirectedIds` because they could wind differently on a shared face.
         /// </summary>
-        /// <param name="directedSegments"></param>
+        /// <param name="segmentDirecteds"></param>
         /// <returns></returns>
-        public static string GetHash(List<DirectedSegment> directedSegments)
+        public static string GetHash(List<SegmentDirected> segmentDirecteds)
         {
-            var sortedIds = directedSegments.Select(ds => ds.SegmentId).ToList();
+            var sortedIds = segmentDirecteds.Select(ds => ds.SegmentId).ToList();
             sortedIds.Sort();
             var hash = String.Join(",", sortedIds);
             return hash;

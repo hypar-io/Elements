@@ -8,22 +8,12 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A directed segment: a representation of a segment that has direction to it so that it can be used to traverse faces
     /// </summary>
-    public class DirectedSegment : CellChild<Line>
+    public class SegmentDirected : SegmentBase
     {
         /// <summary>
         /// ID of segment
         /// </summary>
         public long SegmentId;
-
-        /// <summary>
-        /// ID of start vertex
-        /// </summary>
-        public long StartVertexId;
-
-        /// <summary>
-        /// ID of end vertex
-        /// </summary>
-        public long EndVertexId;
 
         /// <summary>
         /// Segment
@@ -33,16 +23,16 @@ namespace Elements.Spatial.CellComplex
         public HashSet<Face> Faces = new HashSet<Face>();
 
         /// <summary>
-        /// Represents a unique DirectedSegment within a CellComplex.
+        /// Represents a unique SegmentDirected within a CellComplex.
         /// This is added in addition to Segment because the same line may be required to move in a different direction
         /// as we traverse the edges of a face in their correctly-wound order.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="segment">The undirected Segment that matches this DirectedSegment</param>
+        /// <param name="segment">The undirected Segment that matches this SegmentDirected</param>
         /// <param name="segmentOrderMatchesDirection">If true, start point is same as segment.vertex1Id. Otherwise, is flipped.</param>
-        internal DirectedSegment(CellComplex cellComplex, long id, Segment segment, bool segmentOrderMatchesDirection) : base(id, cellComplex)
+        internal SegmentDirected(CellComplex cellComplex, long id, Segment segment, bool segmentOrderMatchesDirection) : base(id, cellComplex)
         {
             this.SegmentId = segment.Id;
 
@@ -62,24 +52,12 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal DirectedSegment(long id, long segmentId, long startVertexId, long endVertexId) : base(id, null)
+        internal SegmentDirected(long id, long segmentId, long startVertexId, long endVertexId) : base(id, null)
         {
             this.Id = id;
             this.SegmentId = segmentId;
             this.StartVertexId = startVertexId;
             this.EndVertexId = endVertexId;
-        }
-
-        /// <summary>
-        /// Get the geometry for this DirectedSegment
-        /// </summary>
-        /// <returns></returns>
-        public override Line GetGeometry()
-        {
-            return new Line(
-                this.CellComplex.GetVertex(this.StartVertexId).Value,
-                this.CellComplex.GetVertex(this.EndVertexId).Value
-            );
         }
 
         /// <summary>
@@ -107,16 +85,6 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
-        }
-
-        /// <summary>
-        /// Shortest distance to a given point
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public override double DistanceTo(Vector3 point)
-        {
-            return point.DistanceTo(this.GetGeometry());
         }
     }
 }

@@ -57,12 +57,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedSegments
+        /// Get associated SegmentsDirected
         /// </summary>
         /// <returns></returns>
-        public List<DirectedSegment> GetDirectedSegments()
+        public List<SegmentDirected> GetSegmentsDirected()
         {
-            return this.GetSegments().Select(segment => segment.GetDirectedSegments()).SelectMany(x => x).Distinct().ToList();
+            return this.GetSegments().Select(segment => segment.GetSegmentsDirected()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetDirectedSegments().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.GetSegmentsDirected().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
