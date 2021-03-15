@@ -146,7 +146,7 @@ namespace Elements.Spatial.CellComplex
 
             foreach (var directedEdge in _directedEdges.Values)
             {
-                var uniqueEdge = this.GetEdge(directedEdge.EdgeId);
+                var uniqueEdge = this.GetUniqueEdge(directedEdge.EdgeId);
                 if (!this.AddDirectedEdge(uniqueEdge, uniqueEdge.StartVertexId == directedEdge.StartVertexId, directedEdge.Id, out var addedDirectedEdge))
                 {
                     throw new Exception("Duplicate directed uniqueEdge ID found");
@@ -518,7 +518,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="uniqueEdgeId"></param>
         /// <returns></returns>
-        public UniqueEdge GetEdge(long uniqueEdgeId)
+        public UniqueEdge GetUniqueEdge(long uniqueEdgeId)
         {
             this._uniqueEdges.TryGetValue(uniqueEdgeId, out var uniqueEdge);
             return uniqueEdge;
@@ -528,7 +528,7 @@ namespace Elements.Spatial.CellComplex
         /// Get all Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetEdges()
+        public List<UniqueEdge> GetUniqueEdges()
         {
             return this._uniqueEdges.Values.ToList();
         }

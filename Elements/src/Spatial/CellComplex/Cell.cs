@@ -119,9 +119,9 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetEdges()
+        public List<UniqueEdge> GetUniqueEdges()
         {
-            return this.GetFaces().Select(face => face.GetEdges()).SelectMany(x => x).Distinct().ToList();
+            return this.GetFaces().Select(face => face.GetUniqueEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public UniqueEdge GetClosestEdge(Vector3 position)
         {
-            return this.GetEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
+            return this.GetUniqueEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
         }
 
 

@@ -116,9 +116,9 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetEdges()
+        public List<UniqueEdge> GetUniqueEdges()
         {
-            return this.GetDirectedEdges().Select(ds => ds.GetEdge()).ToList();
+            return this.GetDirectedEdges().Select(ds => ds.GetUniqueEdge()).ToList();
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
         {
-            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetEdges().Select(s => s.GetFaces()).ToList();
+            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetUniqueEdges().Select(s => s.GetFaces()).ToList();
             var faces = groupedFaces.SelectMany(x => x).Distinct().Where(f => f.Id != this.Id).ToList();
             if (parallel)
             {

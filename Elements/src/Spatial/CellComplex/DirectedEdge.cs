@@ -54,7 +54,6 @@ namespace Elements.Spatial.CellComplex
         [JsonConstructor]
         internal DirectedEdge(long id, long uniqueEdgeId, long startVertexId, long endVertexId) : base(id, null)
         {
-            this.Id = id;
             this.EdgeId = uniqueEdgeId;
             this.StartVertexId = startVertexId;
             this.EndVertexId = endVertexId;
@@ -64,9 +63,9 @@ namespace Elements.Spatial.CellComplex
         /// Gets associated Edge
         /// </summary>
         /// <returns></returns>
-        public UniqueEdge GetEdge()
+        public UniqueEdge GetUniqueEdge()
         {
-            return this.CellComplex.GetEdge(this.EdgeId);
+            return this.CellComplex.GetUniqueEdge(this.EdgeId);
         }
 
         /// <summary>

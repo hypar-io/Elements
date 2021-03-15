@@ -51,7 +51,7 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetEdges()
+        public List<UniqueEdge> GetUniqueEdges()
         {
             return this.Edges.ToList();
         }
@@ -62,7 +62,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<DirectedEdge> GetDirectedEdges()
         {
-            return this.GetEdges().Select(uniqueEdge => uniqueEdge.GetDirectedEdges()).SelectMany(x => x).Distinct().ToList();
+            return this.GetUniqueEdges().Select(uniqueEdge => uniqueEdge.GetDirectedEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
