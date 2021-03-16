@@ -91,36 +91,11 @@ represents a comma-delimited set of profile properties.</p>
       <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.SHSProfileFactory.html">SHSProfileFactory</a></div>
       <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfileFactory.html">WideFlangeProfileFactory</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Profiles.html">Elements.Geometry.Profiles</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profiles_ProfileFactory_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class ProfileFactory&lt;T, TProfile&gt;
-    where T : Enum</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class ProfileFactory&lt;T, TProfile&gt; : object where T : Enum</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -190,7 +165,7 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
+        <td><span class="xref">List</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -216,7 +191,7 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TProfile&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;TProfile&gt;</td>
         <td><p>A collection of all profiles available from the factory.</p>
 </td>
       </tr>
