@@ -16,7 +16,7 @@ namespace Elements.Spatial.CellComplex
         public Vector3 Value;
 
         /// <summary>
-        /// Some optional name, if we want it
+        /// An optional user-supplied name
         /// </summary>
         public string Name { get; set; }
 
