@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.4
+## 0.8.5
 
 ### Added
 - Alpha release of `Hypar.Elements.Components`
