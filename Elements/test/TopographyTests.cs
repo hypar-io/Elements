@@ -92,12 +92,14 @@ namespace Elements.Tests
             _output.WriteLine($"Serialization of topography: {sw.ElapsedMilliseconds.ToString()}ms");
             this.Model.Elements.Clear();
             sw.Reset();
-            sw.Start();
-            this.Model.AddElement(BuiltInMaterials.Topography);
-            topo.Material = BuiltInMaterials.Topography;
-            this.Model.AddElement(topo, false);
-            sw.Stop();
-            _output.WriteLine($"Serialization of topography w/out recursive gather: {sw.ElapsedMilliseconds.ToString()}ms");
+        }
+
+        [Fact]
+        public void SettingAbsoluteMinimumBelowMinimumGetsMinimumMinus1()
+        {
+            var topo = CreateTopoFromMapboxElevations();
+            topo.AbsoluteMinimumElevation = topo.MinElevation + 1;
+            Assert.Equal(topo.MinElevation - 1, topo.AbsoluteMinimumElevation);
         }
 
         [Fact]
@@ -221,7 +223,7 @@ namespace Elements.Tests
 
             foreach (var topo in topographies)
             {
-                topo.AbsoluteMinimumElevationn = -200;
+                topo.AbsoluteMinimumElevation = -200;
             }
 
             this.Model.AddElements(topographies);
@@ -257,19 +259,17 @@ namespace Elements.Tests
         {
             this.Name = "Topography_Tunnel";
             var topo = CreateTopoFromMapboxElevations();
-            var csg = topo.Mesh.ToCsg();
+            var csg = topo.DepthMesh.Mesh.ToCsg();
 
             var tunnel = new Sweep(new Circle(Vector3.Origin, 50).ToPolygon(20), new Line(new Vector3(-10000, 0, -200), new Vector3(10000, 0, -200)), 0, 0, 0, false);
             csg = csg.Substract(tunnel._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
 
-            var shaft = new Sweep(new Circle(Vector3.Origin, 20).ToPolygon(20), new Line(new Vector3(0, 0, 200), new Vector3(0, 0, -200)), 0, 0, 0, false);
-            csg = csg.Substract(shaft._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
-
             var result = new Mesh();
             csg.Tessellate(ref result);
             result.ComputeNormals();
-            var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
-            this.Model.AddElement(new MeshElement(result, material));
+
+            topo.DepthMesh.Mesh = result;
+            this.Model.AddElement(topo);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
