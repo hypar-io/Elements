@@ -335,6 +335,9 @@ namespace Elements.Tests
             // Representations should be valid.
             Assert.True(Model.IsValidForRecursiveAddition(typeof(Representation)));
 
+            // Nullable<T> should work without exploding.
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(Guid?)));
+
             // Stuff that shouldn't work
             Assert.False(Model.IsValidForRecursiveAddition(typeof(List<double>)));
             Assert.False(Model.IsValidForRecursiveAddition(typeof(Dictionary<Guid, double>)));

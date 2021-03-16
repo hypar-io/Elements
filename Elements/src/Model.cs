@@ -299,23 +299,29 @@ namespace Elements
             if (t.IsGenericType)
             {
                 var genT = t.GetGenericArguments();
-                if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t)
-                    || typeof(IEnumerable<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
+                if (genT.Length == 1)
                 {
-                    if (!IsValidListType(genT[0]))
+                    if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
+                    //|| typeof(IEnumerable<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
                     {
-                        return false;
-                    }
+                        if (!IsValidListType(genT[0]))
+                        {
+                            return false;
+                        }
 
-                    return true;
-                }
-                else if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
-                {
-                    if (typeof(Element).IsAssignableFrom(genT[1]))
-                    {
                         return true;
                     }
-                    return false;
+                }
+                else if (genT.Length == 2)
+                {
+                    if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
+                    {
+                        if (typeof(Element).IsAssignableFrom(genT[1]))
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
                 }
             }
 
