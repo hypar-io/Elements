@@ -297,13 +297,28 @@ namespace Elements
         {
             if (t.IsGenericType)
             {
-                if (typeof(IList<>).MakeGenericType(t.GetGenericArguments()[0]).IsAssignableFrom(t))
+                var genT = t.GetGenericArguments();
+                if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
                 {
+                    if (!IsValidListType(genT[0]))
+                    {
+                        return false;
+                    }
+
                     return true;
                 }
-                else if (typeof(IDictionary<,>).MakeGenericType(t.GetGenericArguments()).IsAssignableFrom(t))
+                else if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
                 {
-                    return true;
+                    if (!IsValidListType(genT[1]))
+                    {
+                        return false;
+                    }
+
+                    if (typeof(Element).IsAssignableFrom(genT[1]))
+                    {
+                        return true;
+                    }
+                    return false;
                 }
             }
 
@@ -314,6 +329,12 @@ namespace Elements
 
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(Representation).IsAssignableFrom(t)
+                   || typeof(SolidOperation).IsAssignableFrom(t);
+        }
+
+        private static bool IsValidListType(Type t)
+        {
+            return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
         }
     }

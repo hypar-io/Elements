@@ -334,6 +334,13 @@ namespace Elements.Tests
 
             // Representations should be valid.
             Assert.True(Model.IsValidForRecursiveAddition(typeof(Representation)));
+
+            // Stuff that shouldn't work
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(List<double>)));
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(Dictionary<Guid, double>)));
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(double)));
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(string)));
+            Assert.False(Model.IsValidForRecursiveAddition(typeof(object)));
         }
 
         private Model QuadPanelModel()
