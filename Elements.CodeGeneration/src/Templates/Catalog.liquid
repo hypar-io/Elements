@@ -10,5 +10,12 @@ public static class {{ catalog.name }} {
 
     public static List<ContentElement> All = new List<ContentElement> { {% for content in catalog.content%}
                                                         {{content.name|safeidentifierupper}}, {%endfor%} };
+    public static List<ElementInstance> Reference = new List<ElementInstance> { {% for inst in catalog.reference_configuration %}
+                                                            {{catalog.name}}.{{inst.baseName | safeidentifierupper}}.CreateInstance(
+                                                                                  {{inst.transform}},
+                                                                                  "{{inst.name}}"),
+                                                        {%endfor%}
+
+    };
   }
 }
