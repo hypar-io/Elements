@@ -13,7 +13,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="point">The orientation direction</param>
+        /// <param name="orientation">The orientation direction</param>
         /// <param name="name">Optional name</param>
         /// <returns></returns>
         internal Orientation(CellComplex cellComplex, ulong id, Vector3 orientation, string name = null) : base(cellComplex, id, orientation, name) { }
