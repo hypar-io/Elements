@@ -157,10 +157,8 @@ namespace Elements.Spatial.CellComplex
             {
                 face.CellComplex = this; // CellComplex not included on deserialization, add it back for processing even though we will discard this and create a new one
                 var polygon = face.GetGeometry();
-                var u = this.GetOrientation(face.OrientationUId);
-                var v = this.GetOrientation(face.OrientationVId);
-
-                if (!this.AddFace(polygon, face.Id, u, v, out var addedFace))
+                var orientation = face.GetOrientation();
+                if (!this.AddFace(polygon, face.Id, orientation.U, orientation.V, out var addedFace))
                 {
                     throw new Exception("Duplicate face ID found");
                 }

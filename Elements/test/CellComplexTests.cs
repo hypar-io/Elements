@@ -70,7 +70,8 @@ namespace Elements.Tests
         {
             this.Name = "Elements_CellComplex_Serialization";
 
-            var cellComplex = MakeASimpleCellComplex();
+            var uDirection = new Vector3(1, 1, 0).Unitized();
+            var cellComplex = MakeASimpleCellComplex(uDirection: uDirection);
             var vertices = cellComplex.GetVertices();
             var bounds = new BBox3(vertices.Select(v => v.Value).ToList());
 
@@ -89,6 +90,12 @@ namespace Elements.Tests
 
             var copyTransform = new Transform(new Vector3((bounds.Max.X - bounds.Min.X) * 1.5, 0));
 
+            foreach (var cell in cellComplex.GetCells())
+            {
+                var dir = cell.GetBottomFace().GetOrientation().U.Value;
+                Assert.True(dir.Equals(uDirection));
+            }
+
             foreach (var edge in cellComplex.GetEdges())
             {
                 var line1 = edge.GetGeometry();
@@ -101,9 +108,9 @@ namespace Elements.Tests
             {
                 var faceGeo1 = face.GetGeometry();
                 var faceGeo2 = cellComplexDeserialized.GetFace(face.Id).GetGeometry();
-                Assert.True(faceGeo1.Area() == faceGeo2.Area());
                 this.Model.AddElement(new Panel(faceGeo1, DefaultPanelMaterial));
                 this.Model.AddElement(new Panel(faceGeo2, UMaterial, copyTransform));
+                Assert.True(faceGeo1.Area() == faceGeo2.Area());
             }
 
             foreach (var vertex in vertices)
@@ -174,7 +181,7 @@ namespace Elements.Tests
 
             while (curFaceNeighbor != null && numUNeighbors < 30)
             {
-                var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetOrientation(curFaceNeighbor.OrientationUId).GetGeometry() * 10000;
+                var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * 10000;
                 curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarU, true, false);
 
                 if (curFaceNeighbor != null)
@@ -192,7 +199,7 @@ namespace Elements.Tests
 
             while (curFaceNeighbor != null)
             {
-                var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetOrientation(curFaceNeighbor.OrientationVId).GetGeometry() * 10000;
+                var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * 10000;
                 curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarV, true, false);
 
                 if (curFaceNeighbor != null)

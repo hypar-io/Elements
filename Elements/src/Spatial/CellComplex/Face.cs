@@ -12,19 +12,21 @@ namespace Elements.Spatial.CellComplex
     public class Face : CellChild<Polygon>
     {
         /// <summary>
-        /// ID of U direction
-        /// </summary>
-        public ulong? OrientationUId;
-
-        /// <summary>
-        /// ID of V direction
-        /// </summary>
-        public ulong? OrientationVId;
-
-        /// <summary>
         /// Directed edge IDs
         /// </summary>
         public List<ulong> DirectedEdgeIds;
+
+        /// <summary>
+        /// ID of U orientation
+        /// </summary>
+        [JsonProperty]
+        private ulong? _orientationUId;
+
+        /// <summary>
+        /// ID of V orientation
+        /// </summary>
+        [JsonProperty]
+        private ulong? _orientationVId;
 
         /// <summary>
         /// Cells that reference this Face
@@ -46,11 +48,11 @@ namespace Elements.Spatial.CellComplex
             this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
             if (u != null)
             {
-                this.OrientationUId = u.Id;
+                this._orientationUId = u.Id;
             }
             if (v != null)
             {
-                this.OrientationVId = v.Id;
+                this._orientationVId = v.Id;
             }
         }
 
@@ -58,12 +60,12 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(ulong id, List<ulong> directedEdgeIds, ulong? uId = null, ulong? vId = null) : base(id, null)
+        internal Face(ulong id, List<ulong> directedEdgeIds, ulong? _orientationUId = null, ulong? _orientationVId = null) : base(id, null)
         {
             this.Id = id;
             this.DirectedEdgeIds = directedEdgeIds;
-            this.OrientationUId = uId;
-            this.OrientationVId = vId;
+            this._orientationUId = _orientationUId;
+            this._orientationVId = _orientationVId;
         }
 
         /// <summary>
@@ -152,6 +154,15 @@ namespace Elements.Spatial.CellComplex
         public List<Edge> GetEdges()
         {
             return this.GetDirectedEdges().Select(ds => ds.GetEdge()).ToList();
+        }
+
+        /// <summary>
+        /// Get the user-set orientation of this face
+        /// </summary>
+        /// <returns></returns>
+        public (Orientation U, Orientation V) GetOrientation()
+        {
+            return (U: this.CellComplex.GetOrientation(this._orientationUId), V: this.CellComplex.GetOrientation(this._orientationVId));
         }
 
         /// <summary>
