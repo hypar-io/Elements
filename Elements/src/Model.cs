@@ -61,6 +61,14 @@ namespace Elements
                 return;
             }
 
+            // Some elements compute profiles and transforms
+            // during UpdateRepresentation. Call UpdateRepresentation
+            // here to ensure these values are correct in the JSON.
+            if (element is GeometricElement)
+            {
+                ((GeometricElement)element).UpdateRepresentations();
+            }
+
             if (gatherSubElements)
             {
                 // Look at all public properties of the element.
@@ -165,13 +173,6 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                // Some elements compute profiles and transforms
-                // during UpdateRepresentation. Call UpdateRepresentation
-                // here to ensure these values are correct in the JSON.
-                if (kvp.Value is GeometricElement)
-                {
-                    ((GeometricElement)kvp.Value).UpdateRepresentations();
-                }
                 exportModel.AddElement(kvp.Value);
             }
             exportModel.Transform = this.Transform;
@@ -298,7 +299,8 @@ namespace Elements
             if (t.IsGenericType)
             {
                 var genT = t.GetGenericArguments();
-                if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
+                if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t)
+                    || typeof(IEnumerable<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
                 {
                     if (!IsValidListType(genT[0]))
                     {
