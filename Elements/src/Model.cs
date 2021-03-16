@@ -286,7 +286,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// All types that are valid for introspection including
+        /// Check whether a type is valid for introspection.
         /// TODO: When representations become elements, we should
         /// remove the inclusion for Representation, but keep that
         /// for SolidOperation.
