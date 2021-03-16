@@ -6,14 +6,15 @@ using Elements.Geometry;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A directed uniqueEdge: a representation of a uniqueEdge that has direction to it so that it can be used to traverse faces
+    /// A directed edge: a representation of a edge that has direction to it so that it can be used to traverse faces.
+    /// This is essentially equivalent to the concept of a half edge, except it can be related to more than just a single Face.
     /// </summary>
     public class DirectedEdge : EdgeBase
     {
         /// <summary>
-        /// ID of uniqueEdge
+        /// ID of edge
         /// </summary>
-        public long EdgeId;
+        public ulong EdgeId;
 
         /// <summary>
         /// Edge
@@ -25,26 +26,26 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Represents a unique DirectedEdge within a CellComplex.
         /// This is added in addition to Edge because the same line may be required to move in a different direction
-        /// as we traverse the uniqueEdges of a face in their correctly-wound order.
+        /// as we traverse the edges of a face in their correctly-wound order.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="uniqueEdge">The undirected Edge that matches this DirectedEdge</param>
-        /// <param name="uniqueEdgeOrderMatchesDirection">If true, start point is same as uniqueEdge.vertex1Id. Otherwise, is flipped.</param>
-        internal DirectedEdge(CellComplex cellComplex, long id, UniqueEdge uniqueEdge, bool uniqueEdgeOrderMatchesDirection) : base(id, cellComplex)
+        /// <param name="edge">The undirected Edge that matches this DirectedEdge</param>
+        /// <param name="edgeOrderMatchesDirection">If true, start point is same as edge.vertex1Id. Otherwise, is flipped.</param>
+        internal DirectedEdge(CellComplex cellComplex, ulong id, Edge edge, bool edgeOrderMatchesDirection) : base(id, cellComplex)
         {
-            this.EdgeId = uniqueEdge.Id;
+            this.EdgeId = edge.Id;
 
-            if (uniqueEdgeOrderMatchesDirection)
+            if (edgeOrderMatchesDirection)
             {
-                this.StartVertexId = uniqueEdge.StartVertexId;
-                this.EndVertexId = uniqueEdge.EndVertexId;
+                this.StartVertexId = edge.StartVertexId;
+                this.EndVertexId = edge.EndVertexId;
             }
             else
             {
-                this.StartVertexId = uniqueEdge.EndVertexId;
-                this.EndVertexId = uniqueEdge.StartVertexId;
+                this.StartVertexId = edge.EndVertexId;
+                this.EndVertexId = edge.StartVertexId;
             }
         }
 
@@ -52,9 +53,9 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal DirectedEdge(long id, long uniqueEdgeId, long startVertexId, long endVertexId) : base(id, null)
+        internal DirectedEdge(ulong id, ulong edgeId, ulong startVertexId, ulong endVertexId) : base(id, null)
         {
-            this.EdgeId = uniqueEdgeId;
+            this.EdgeId = edgeId;
             this.StartVertexId = startVertexId;
             this.EndVertexId = endVertexId;
         }
@@ -63,9 +64,9 @@ namespace Elements.Spatial.CellComplex
         /// Gets associated Edge
         /// </summary>
         /// <returns></returns>
-        public UniqueEdge GetUniqueEdge()
+        public Edge GetEdge()
         {
-            return this.CellComplex.GetUniqueEdge(this.EdgeId);
+            return this.CellComplex.GetEdge(this.EdgeId);
         }
 
         /// <summary>

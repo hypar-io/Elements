@@ -14,17 +14,17 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID of U direction
         /// </summary>
-        public long? UId;
+        public ulong? UId;
 
         /// <summary>
         /// ID of V direction
         /// </summary>
-        public long? VId;
+        public ulong? VId;
 
         /// <summary>
-        /// Directed uniqueEdge IDs
+        /// Directed edge IDs
         /// </summary>
-        public List<long> DirectedEdgeIds;
+        public List<ulong> DirectedEdgeIds;
 
         /// <summary>
         /// Cells that reference this Face
@@ -41,7 +41,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="directedEdges">List of the DirectedEdges that make up this Face</param>
         /// <param name="u">Optional but highly recommended intended U direction for the Face</param>
         /// <param name="v">Optional but highly recommended intended V direction for the Face</param>
-        internal Face(CellComplex cellComplex, long id, List<DirectedEdge> directedEdges, UV u = null, UV v = null) : base(id, cellComplex)
+        internal Face(CellComplex cellComplex, ulong id, List<DirectedEdge> directedEdges, UV u = null, UV v = null) : base(id, cellComplex)
         {
             this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
             if (u != null)
@@ -58,7 +58,7 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(long id, List<long> directedEdgeIds, long? uId = null, long? vId = null) : base(id, null)
+        internal Face(ulong id, List<ulong> directedEdgeIds, ulong? uId = null, ulong? vId = null) : base(id, null)
         {
             this.Id = id;
             this.DirectedEdgeIds = directedEdgeIds;
@@ -83,6 +83,39 @@ namespace Elements.Spatial.CellComplex
         public override double DistanceTo(Vector3 point)
         {
             return point.DistanceTo(this.GetGeometry());
+        }
+
+        /// <summary>
+        /// Face lookup hash is edgeIds in ascending order.
+        /// We do not directly use the `directedEdgeIds` because they could wind differently on a shared face.
+        /// </summary>
+        /// <param name="directedEdges"></param>
+        /// <returns></returns>
+        internal static string GetHash(List<DirectedEdge> directedEdges)
+        {
+            var sortedIds = directedEdges.Select(ds => ds.EdgeId).ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+            return hash;
+        }
+
+        /// <summary>
+        /// Get the normal vector for this Face
+        /// </summary>
+        /// <returns></returns>
+        private Vector3 GetNormal()
+        {
+            return this.GetGeometry().Normal();
+        }
+
+        /// <summary>
+        /// Whether this Face is parallel to another Face
+        /// </summary>
+        /// <param name="face"></param>
+        /// <returns></returns>
+        private bool IsParallel(Face face)
+        {
+            return face.GetNormal().Equals(this.GetNormal());
         }
 
         /// <summary>
@@ -116,54 +149,21 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetUniqueEdges()
+        public List<Edge> GetEdges()
         {
-            return this.GetDirectedEdges().Select(ds => ds.GetUniqueEdge()).ToList();
-        }
-
-        /// <summary>
-        /// Face lookup hash is uniqueEdgeIds in ascending order.
-        /// We do not directly use the `directedEdgeIds` because they could wind differently on a shared face.
-        /// </summary>
-        /// <param name="directedEdges"></param>
-        /// <returns></returns>
-        public static string GetHash(List<DirectedEdge> directedEdges)
-        {
-            var sortedIds = directedEdges.Select(ds => ds.EdgeId).ToList();
-            sortedIds.Sort();
-            var hash = String.Join(",", sortedIds);
-            return hash;
-        }
-
-        /// <summary>
-        /// Get the normal vector for this Face
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 GetNormal()
-        {
-            return this.GetGeometry().Normal();
-        }
-
-        /// <summary>
-        /// Whether this Face is parallel to another Face
-        /// </summary>
-        /// <param name="face"></param>
-        /// <returns></returns>
-        public bool IsParallel(Face face)
-        {
-            return face.GetNormal().Equals(this.GetNormal());
+            return this.GetDirectedEdges().Select(ds => ds.GetEdge()).ToList();
         }
 
         /// <summary>
         /// Get a list of all neighbors of this face.
-        /// A neighbor is defined as a Face which shares any uniqueEdge.
+        /// A neighbor is defined as a Face which shares any edge.
         /// </summary>
         /// <param name="parallel">If true, only returns faces that are oriented the same way as this face</param>
-        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a uniqueEdge</param>
+        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a edge</param>
         /// <returns></returns>
-        public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
+        public List<Face> GetNeighboringFaces(bool parallel = false, bool includeSharedVertices = false)
         {
-            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetUniqueEdges().Select(s => s.GetFaces()).ToList();
+            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetEdges().Select(s => s.GetFaces()).ToList();
             var faces = groupedFaces.SelectMany(x => x).Distinct().Where(f => f.Id != this.Id).ToList();
             if (parallel)
             {
@@ -176,20 +176,20 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a list of neighbor faces that share a specific uniqueEdge
+        /// Get a list of neighbor faces that share a specific edge
         /// </summary>
-        /// <param name="uniqueEdge"></param>
+        /// <param name="edge"></param>
         /// <param name="parallel">Whether to only return faces that are parallel to this face.</param>
         /// <returns></returns>
-        public List<Face> GetNeighbors(UniqueEdge uniqueEdge, bool parallel = false)
+        public List<Face> GetNeighboringFaces(Edge edge, bool parallel = false)
         {
             if (!parallel)
             {
-                return uniqueEdge.GetFaces().Where(face => face.Id != this.Id).ToList();
+                return edge.GetFaces().Where(face => face.Id != this.Id).ToList();
             }
             else
             {
-                return uniqueEdge.GetFaces().Where(face => face.Id != this.Id && this.IsParallel(face)).ToList();
+                return edge.GetFaces().Where(face => face.Id != this.Id && this.IsParallel(face)).ToList();
             }
         }
 
@@ -200,9 +200,9 @@ namespace Elements.Spatial.CellComplex
         /// <param name="parallel"></param>
         /// <param name="includeSharedVertices"></param>
         /// <returns></returns>
-        public Face GetClosestAssociatedFace(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
+        public Face GetClosestNeighboringFace(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
         {
-            var faces = this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
+            var faces = this.GetNeighboringFaces(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
             return faces.Count == 0 ? null : faces.First();
         }
     }

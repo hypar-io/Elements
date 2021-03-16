@@ -8,19 +8,19 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique uniqueEdge in a cell complex.
+    /// A unique edge in a cell complex.
     /// </summary>
     public abstract class EdgeBase : CellChild<Line>
     {
         /// <summary>
         /// ID of first vertex
         /// </summary>
-        public long StartVertexId;
+        public ulong StartVertexId;
 
         /// <summary>
         /// ID of second vertex
         /// </summary>
-        public long EndVertexId;
+        public ulong EndVertexId;
 
         /// <summary>
         /// Create an EdgeBase (just calls CellChild constructor)
@@ -28,7 +28,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="cellComplex"></param>
         /// <returns></returns>
-        protected EdgeBase(long id, CellComplex cellComplex) : base(id, cellComplex) { }
+        protected EdgeBase(ulong id, CellComplex cellComplex) : base(id, cellComplex) { }
 
         /// <summary>
         /// Get the geometry for this Edge

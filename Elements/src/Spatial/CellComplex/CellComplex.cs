@@ -19,76 +19,76 @@ namespace Elements.Spatial.CellComplex
         public double Tolerance = Vector3.EPSILON;
 
         [JsonIgnore]
-        private long _uniqueEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _faceId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _faceId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _cellId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _cellId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private long _uvId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _uvId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         /// <summary>
         /// Vertices by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, Vertex> _vertices = new Dictionary<long, Vertex>();
+        private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// U or V directions by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, UV> _uvs = new Dictionary<long, UV>();
+        private Dictionary<ulong, UV> _uvs = new Dictionary<ulong, UV>();
 
         /// <summary>
         /// Edges by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, UniqueEdge> _uniqueEdges = new Dictionary<long, UniqueEdge>();
+        private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
         /// DirectedEdges by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, DirectedEdge> _directedEdges = new Dictionary<long, DirectedEdge>();
+        private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
 
         /// <summary>
         /// Faces by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, Face> _faces = new Dictionary<long, Face>();
+        private Dictionary<ulong, Face> _faces = new Dictionary<ulong, Face>();
 
         /// <summary>
         /// Cells by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<long, Cell> _cells = new Dictionary<long, Cell>();
+        private Dictionary<ulong, Cell> _cells = new Dictionary<ulong, Cell>();
 
         [JsonIgnore]
-        private Dictionary<double, Dictionary<double, Dictionary<double, long>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         [JsonIgnore]
-        private Dictionary<double, Dictionary<double, Dictionary<double, long>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, long>>>();
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         // See Edge.GetHash for how faces are identified as unique.
         [JsonIgnore]
-        private Dictionary<string, long> uniqueEdgesLookup = new Dictionary<string, long>();
+        private Dictionary<string, ulong> edgesLookup = new Dictionary<string, ulong>();
 
-        // Same as uniqueEdgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
+        // Same as edgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
         [JsonIgnore]
-        private Dictionary<(long, long), Dictionary<Boolean, long>> directedEdgesLookup = new Dictionary<(long, long), Dictionary<Boolean, long>>();
+        private Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>> directedEdgesLookup = new Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>>();
 
         // See Face.GetHash for how faces are identified as unique.
         [JsonIgnore]
-        private Dictionary<string, long> facesLookup = new Dictionary<string, long>();
+        private Dictionary<string, ulong> facesLookup = new Dictionary<string, ulong>();
 
         /// <summary>
         /// Create a CellComplex
@@ -108,7 +108,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="name"></param>
         /// <param name="_vertices"></param>
         /// <param name="_uvs"></param>
-        /// <param name="_uniqueEdges"></param>
+        /// <param name="_edges"></param>
         /// <param name="_directedEdges"></param>
         /// <param name="_faces"></param>
         /// <param name="_cells"></param>
@@ -117,12 +117,12 @@ namespace Elements.Spatial.CellComplex
         internal CellComplex(
             Guid id,
             string name,
-            Dictionary<long, Vertex> _vertices,
-            Dictionary<long, Vertex> _uvs,
-            Dictionary<long, UniqueEdge> _uniqueEdges,
-            Dictionary<long, DirectedEdge> _directedEdges,
-            Dictionary<long, Face> _faces,
-            Dictionary<long, Cell> _cells
+            Dictionary<ulong, Vertex> _vertices,
+            Dictionary<ulong, Vertex> _uvs,
+            Dictionary<ulong, Edge> _edges,
+            Dictionary<ulong, DirectedEdge> _directedEdges,
+            Dictionary<ulong, Face> _faces,
+            Dictionary<ulong, Cell> _cells
         ) : base(id, name)
         {
             foreach (var vertex in _vertices.Values)
@@ -136,20 +136,20 @@ namespace Elements.Spatial.CellComplex
                 this.AddVertexOrUV<UV>(uv.Value, uv.Id);
             }
 
-            foreach (var uniqueEdge in _uniqueEdges.Values)
+            foreach (var edge in _edges.Values)
             {
-                if (!this.AddEdge(new List<long>() { uniqueEdge.StartVertexId, uniqueEdge.EndVertexId }, uniqueEdge.Id, out var addedEdge))
+                if (!this.AddEdge(new List<ulong>() { edge.StartVertexId, edge.EndVertexId }, edge.Id, out var addedEdge))
                 {
-                    throw new Exception("Duplicate uniqueEdge ID found");
+                    throw new Exception("Duplicate edge ID found");
                 }
             }
 
             foreach (var directedEdge in _directedEdges.Values)
             {
-                var uniqueEdge = this.GetUniqueEdge(directedEdge.EdgeId);
-                if (!this.AddDirectedEdge(uniqueEdge, uniqueEdge.StartVertexId == directedEdge.StartVertexId, directedEdge.Id, out var addedDirectedEdge))
+                var edge = this.GetEdge(directedEdge.EdgeId);
+                if (!this.AddDirectedEdge(edge, edge.StartVertexId == directedEdge.StartVertexId, directedEdge.Id, out var addedDirectedEdge))
                 {
-                    throw new Exception("Duplicate directed uniqueEdge ID found");
+                    throw new Exception("Duplicate directed edge ID found");
                 }
             }
 
@@ -252,9 +252,9 @@ namespace Elements.Spatial.CellComplex
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrUV<Vertex>(vertex)).ToList();
-            this.AddEdge(vertices.Select(v => v.Id).ToList(), this._uniqueEdgeId, out var uniqueEdge);
-            var dirMatchesEdge = vertices[0].Id == uniqueEdge.StartVertexId;
-            this.AddDirectedEdge(uniqueEdge, dirMatchesEdge, this._directedEdgeId, out var directedEdge);
+            this.AddEdge(vertices.Select(v => v.Id).ToList(), this._edgeId, out var edge);
+            var dirMatchesEdge = vertices[0].Id == edge.StartVertexId;
+            this.AddDirectedEdge(edge, dirMatchesEdge, this._directedEdgeId, out var directedEdge);
             return directedEdge;
         }
 
@@ -267,7 +267,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="topFace"></param>
         /// <param name="cell"></param>
         /// <returns>Whether the cell was successfully added. Will be false if cellId already exists</returns>
-        private Boolean AddCell(long cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
+        private Boolean AddCell(ulong cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
         {
             if (this._cells.ContainsKey(cellId))
             {
@@ -296,7 +296,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="v"></param>
         /// <param name="face"></param>
         /// <returns>Whether the face was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddFace(Polygon polygon, long idIfNew, UV u, UV v, out Face face)
+        private Boolean AddFace(Polygon polygon, ulong idIfNew, UV u, UV v, out Face face)
         {
             var lines = polygon.Segments();
             var directedEdges = new List<DirectedEdge>();
@@ -332,30 +332,30 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Internal method to add a DirectedEdge
         /// </summary>
-        /// <param name="uniqueEdge"></param>
-        /// <param name="uniqueEdgeTupleIsInOrder"></param>
+        /// <param name="edge"></param>
+        /// <param name="edgeTupleIsInOrder"></param>
         /// <param name="idIfNew"></param>
         /// <param name="directedEdge"></param>
         /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddDirectedEdge(UniqueEdge uniqueEdge, Boolean uniqueEdgeTupleIsInOrder, long idIfNew, out DirectedEdge directedEdge)
+        private Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
         {
-            var uniqueEdgeTuple = (uniqueEdge.StartVertexId, uniqueEdge.EndVertexId);
+            var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
 
-            if (!this.directedEdgesLookup.TryGetValue(uniqueEdgeTuple, out var directedEdgeDict))
+            if (!this.directedEdgesLookup.TryGetValue(edgeTuple, out var directedEdgeDict))
             {
-                directedEdgeDict = new Dictionary<bool, long>();
-                this.directedEdgesLookup.Add(uniqueEdgeTuple, directedEdgeDict);
+                directedEdgeDict = new Dictionary<bool, ulong>();
+                this.directedEdgesLookup.Add(edgeTuple, directedEdgeDict);
             }
 
-            if (!directedEdgeDict.TryGetValue(uniqueEdgeTupleIsInOrder, out var directedEdgeId))
+            if (!directedEdgeDict.TryGetValue(edgeTupleIsInOrder, out var directedEdgeId))
             {
-                directedEdge = new DirectedEdge(this, idIfNew, uniqueEdge, uniqueEdgeTupleIsInOrder);
+                directedEdge = new DirectedEdge(this, idIfNew, edge, edgeTupleIsInOrder);
                 directedEdgeId = directedEdge.Id;
 
-                directedEdgeDict.Add(uniqueEdgeTupleIsInOrder, directedEdgeId);
+                directedEdgeDict.Add(edgeTupleIsInOrder, directedEdgeId);
                 this._directedEdges.Add(directedEdgeId, directedEdge);
 
-                uniqueEdge.DirectedEdges.Add(directedEdge);
+                edge.DirectedEdges.Add(directedEdge);
 
                 this._directedEdgeId = Math.Max(directedEdgeId + 1, this._directedEdgeId + 1);
 
@@ -374,44 +374,44 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <param name="idIfNew"></param>
-        /// <param name="uniqueEdge"></param>
-        /// <returns>Whether the uniqueEdge was successfully added. Will be false if idIfNew already exists</returns>
-        private Boolean AddEdge(List<long> vertexIds, long idIfNew, out UniqueEdge uniqueEdge)
+        /// <param name="edge"></param>
+        /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists</returns>
+        private Boolean AddEdge(List<ulong> vertexIds, ulong idIfNew, out Edge edge)
         {
-            var hash = UniqueEdge.GetHash(vertexIds);
+            var hash = Edge.GetHash(vertexIds);
 
-            if (!this.uniqueEdgesLookup.TryGetValue(hash, out var uniqueEdgeId))
+            if (!this.edgesLookup.TryGetValue(hash, out var edgeId))
             {
-                uniqueEdge = new UniqueEdge(this, idIfNew, vertexIds[0], vertexIds[1]);
-                uniqueEdgeId = uniqueEdge.Id;
+                edge = new Edge(this, idIfNew, vertexIds[0], vertexIds[1]);
+                edgeId = edge.Id;
 
-                this.uniqueEdgesLookup[hash] = uniqueEdgeId;
-                this._uniqueEdges.Add(uniqueEdgeId, uniqueEdge);
+                this.edgesLookup[hash] = edgeId;
+                this._edges.Add(edgeId, edge);
 
-                this.GetVertex(uniqueEdge.StartVertexId).Edges.Add(uniqueEdge);
-                this.GetVertex(uniqueEdge.EndVertexId).Edges.Add(uniqueEdge);
+                this.GetVertex(edge.StartVertexId).Edges.Add(edge);
+                this.GetVertex(edge.EndVertexId).Edges.Add(edge);
 
-                this._uniqueEdgeId = Math.Max(uniqueEdgeId + 1, this._uniqueEdgeId + 1);
+                this._edgeId = Math.Max(edgeId + 1, this._edgeId + 1);
 
                 return true;
             }
             else
             {
-                this._uniqueEdges.TryGetValue(uniqueEdgeId, out uniqueEdge);
+                this._edges.TryGetValue(edgeId, out edge);
                 return false;
             }
         }
 
-        private Dictionary<long, T> GetVertexOrUVDictionary<T>() where T : Vertex
+        private Dictionary<ulong, T> GetVertexOrUVDictionary<T>() where T : Vertex
         {
             if (typeof(T) != typeof(UV) && typeof(T) != typeof(Vertex))
             {
                 throw new Exception("Unsupported type provided, expected Vertex or UV");
             }
-            return typeof(T) == typeof(UV) ? this._uvs as Dictionary<long, T> : this._vertices as Dictionary<long, T>;
+            return typeof(T) == typeof(UV) ? this._uvs as Dictionary<ulong, T> : this._vertices as Dictionary<ulong, T>;
         }
 
-        private Dictionary<double, Dictionary<double, Dictionary<double, long>>> GetVertexOrUVLookup<T>() where T : Vertex
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrUVLookup<T>() where T : Vertex
         {
             if (typeof(T) != typeof(UV) && typeof(T) != typeof(Vertex))
             {
@@ -429,7 +429,7 @@ namespace Elements.Spatial.CellComplex
             return vertexOrUV as T;
         }
 
-        private T AddVertexOrUV<T>(Vector3 point, long id) where T : Vertex
+        private T AddVertexOrUV<T>(Vector3 point, ulong id) where T : Vertex
         {
             var dict = GetVertexOrUVDictionary<T>();
 
@@ -442,7 +442,7 @@ namespace Elements.Spatial.CellComplex
             return vertexOrUV as T;
         }
 
-        private Boolean AddVertexOrUV<T>(Vector3 point, long idIfNew, out long id) where T : Vertex
+        private Boolean AddVertexOrUV<T>(Vector3 point, ulong idIfNew, out ulong id) where T : Vertex
         {
             var lookups = this.GetVertexOrUVLookup<T>();
             var dict = this.GetVertexOrUVDictionary<T>();
@@ -474,7 +474,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public Vertex GetVertex(long vertexId)
+        public Vertex GetVertex(ulong vertexId)
         {
             this._vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
@@ -494,13 +494,13 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="uvId"></param>
         /// <returns></returns>
-        public UV GetUV(long? uvId)
+        public UV GetUV(ulong? uvId)
         {
             if (uvId == null)
             {
                 return null;
             }
-            this._uvs.TryGetValue((long)uvId, out var uv);
+            this._uvs.TryGetValue((ulong)uvId, out var uv);
             return uv;
         }
 
@@ -516,21 +516,21 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get a Edge by its ID
         /// </summary>
-        /// <param name="uniqueEdgeId"></param>
+        /// <param name="edgeId"></param>
         /// <returns></returns>
-        public UniqueEdge GetUniqueEdge(long uniqueEdgeId)
+        public Edge GetEdge(ulong edgeId)
         {
-            this._uniqueEdges.TryGetValue(uniqueEdgeId, out var uniqueEdge);
-            return uniqueEdge;
+            this._edges.TryGetValue(edgeId, out var edge);
+            return edge;
         }
 
         /// <summary>
         /// Get all Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetUniqueEdges()
+        public List<Edge> GetEdges()
         {
-            return this._uniqueEdges.Values.ToList();
+            return this._edges.Values.ToList();
         }
 
         /// <summary>
@@ -538,7 +538,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="directedEdgeId"></param>
         /// <returns></returns>
-        public DirectedEdge GetDirectedEdge(long directedEdgeId)
+        public DirectedEdge GetDirectedEdge(ulong directedEdgeId)
         {
             this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
             return directedEdge;
@@ -558,14 +558,14 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="faceId"></param>
         /// <returns></returns>
-        public Face GetFace(long? faceId)
+        public Face GetFace(ulong? faceId)
         {
             if (faceId == null)
             {
                 return null;
             }
 
-            this._faces.TryGetValue((long)faceId, out var face);
+            this._faces.TryGetValue((ulong)faceId, out var face);
             return face;
         }
 
@@ -583,7 +583,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellId"></param>
         /// <returns></returns>
-        public Cell GetCell(long cellId)
+        public Cell GetCell(ulong cellId)
         {
             this._cells.TryGetValue(cellId, out var cell);
             return cell;
@@ -623,7 +623,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
         /// <returns></returns>
-        public Boolean VertexExists(Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        public Boolean VertexExists(Vector3 point, out ulong id, Nullable<double> fuzzyFactor = null)
         {
             return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
         }
@@ -635,11 +635,11 @@ namespace Elements.Spatial.CellComplex
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static HashSet<long> AddValue(Dictionary<long, HashSet<long>> dict, long key, long value)
+        private static HashSet<ulong> AddValue(Dictionary<ulong, HashSet<ulong>> dict, ulong key, ulong value)
         {
             if (!dict.ContainsKey(key))
             {
-                dict.Add(key, new HashSet<long>());
+                dict.Add(key, new HashSet<ulong>());
             }
 
             dict.TryGetValue(key, out var set);
@@ -655,11 +655,11 @@ namespace Elements.Spatial.CellComplex
         /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist</param>
         /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
         /// <returns>Can be null if the dictionary address didn't exist previously, and we chose not to add it</returns>
-        private static Dictionary<double, long> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
+        private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
         {
-            if (!TryGetValue<Dictionary<double, Dictionary<double, long>>>(dict, point.X, out var yzDict, fuzzyFactor))
+            if (!TryGetValue<Dictionary<double, Dictionary<double, ulong>>>(dict, point.X, out var yzDict, fuzzyFactor))
             {
-                yzDict = new Dictionary<double, Dictionary<double, long>>();
+                yzDict = new Dictionary<double, Dictionary<double, ulong>>();
                 if (addAddressIfNonExistent)
                 {
                     dict.Add(point.X, yzDict);
@@ -670,9 +670,9 @@ namespace Elements.Spatial.CellComplex
                 }
             }
 
-            if (!TryGetValue<Dictionary<double, long>>(yzDict, point.Y, out var zDict, fuzzyFactor))
+            if (!TryGetValue<Dictionary<double, ulong>>(yzDict, point.Y, out var zDict, fuzzyFactor))
             {
-                zDict = new Dictionary<double, long>();
+                zDict = new Dictionary<double, ulong>();
                 if (addAddressIfNonExistent)
                 {
                     yzDict.Add(point.Y, zDict);
@@ -695,7 +695,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
         /// <returns></returns>
-        private static Boolean ValueExists(Dictionary<double, Dictionary<double, Dictionary<double, long>>> dict, Vector3 point, out long id, Nullable<double> fuzzyFactor = null)
+        private static Boolean ValueExists(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, out ulong id, Nullable<double> fuzzyFactor = null)
         {
             var zDict = GetAddressParent(dict, point, fuzzyFactor: fuzzyFactor);
             if (zDict == null)
@@ -703,7 +703,7 @@ namespace Elements.Spatial.CellComplex
                 id = 0;
                 return false;
             }
-            return TryGetValue<long>(zDict, point.Z, out id, fuzzyFactor);
+            return TryGetValue<ulong>(zDict, point.Z, out id, fuzzyFactor);
         }
 
         /// <summary>

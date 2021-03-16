@@ -15,17 +15,17 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Bottom face. Can be null. Expected to be duplicated in list of faces.
         /// </summary>
-        public long? BottomFaceId = null;
+        public ulong? BottomFaceId = null;
 
         /// <summary>
         /// Top face. Can be null. Expected to be duplicated in list of faces.
         /// </summary>
-        public long? TopFaceId = null;
+        public ulong? TopFaceId = null;
 
         /// <summary>
         /// All faces
         /// </summary>
-        public List<long> FaceIds;
+        public List<ulong> FaceIds;
 
         [JsonIgnore]
         private Extrude _geometry;
@@ -39,7 +39,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="faces">List of faces which make up this CellComplex</param>
         /// <param name="bottomFace">The bottom face for this cell (should also be included in the list of all faces)</param>
         /// <param name="topFace">The top face for this cell (should also be included in the list of all faces</param>
-        internal Cell(CellComplex cellComplex, long id, List<Face> faces, Face bottomFace, Face topFace) : base(id, cellComplex)
+        internal Cell(CellComplex cellComplex, ulong id, List<Face> faces, Face bottomFace, Face topFace) : base(id, cellComplex)
         {
             if (bottomFace != null)
             {
@@ -62,7 +62,7 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Cell(long id, List<long> faceIds, long? bottomFaceId, long? topFaceId) : base(id, null)
+        internal Cell(ulong id, List<ulong> faceIds, ulong? bottomFaceId, ulong? topFaceId) : base(id, null)
         {
             this.FaceIds = faceIds;
             this.BottomFaceId = bottomFaceId;
@@ -76,6 +76,30 @@ namespace Elements.Spatial.CellComplex
         public override Extrude GetGeometry()
         {
             return this._geometry;
+        }
+
+        /// <summary>
+        /// Shortest distance to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            var extrude = this.GetGeometry() as Extrude;
+            var bottom = extrude.Profile.Perimeter;
+            var bottomZ = bottom.Centroid().Z;
+            var topZ = (bottom.Centroid() + extrude.Direction * extrude.Height).Z;
+            var isInside = point.Z >= bottomZ && point.Z <= topZ && bottom.Contains(new Vector3(point.X, point.Y, bottomZ));
+            if (isInside)
+            {
+                return 0;
+            }
+            var minDistance = double.PositiveInfinity;
+            foreach (var face in extrude.Solid.Faces.Values)
+            {
+                minDistance = Math.Min(minDistance, point.DistanceTo(face.Outer.ToPolygon()));
+            }
+            return minDistance;
         }
 
         /// <summary>
@@ -119,19 +143,19 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Edges
         /// </summary>
         /// <returns></returns>
-        public List<UniqueEdge> GetUniqueEdges()
+        public List<Edge> GetEdges()
         {
-            return this.GetFaces().Select(face => face.GetUniqueEdges()).SelectMany(x => x).Distinct().ToList();
+            return this.GetFaces().Select(face => face.GetEdges()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
-        /// Get the closest associated uniqueEdge to the supplied position
+        /// Get the closest associated edge to the supplied position
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public UniqueEdge GetClosestEdge(Vector3 position)
+        public Edge GetClosestEdge(Vector3 position)
         {
-            return this.GetUniqueEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
+            return this.GetEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
         }
 
 
@@ -158,7 +182,7 @@ namespace Elements.Spatial.CellComplex
         /// Get list of Cells that are neighbors
         /// </summary>
         /// <returns></returns>
-        public List<Cell> GetNeighbors()
+        public List<Cell> GetNeighboringCells()
         {
             return this.GetFaces().Select(f => f.GetCells()).SelectMany(x => x).Distinct().Where(c => c.Id != this.Id).ToList();
         }
@@ -169,7 +193,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="face">Shared face</param>
         /// <returns></returns>
-        public Cell GetNeighbor(Face face)
+        public Cell GetNeighboringCell(Face face)
         {
             if (face == null)
             {
@@ -195,33 +219,9 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="position"></param>
         /// <returns></returns>
-        public Cell GetClosestCell(Vector3 position)
+        public Cell GetClosestNeighboringCell(Vector3 position)
         {
-            return this.GetNeighbors().OrderBy(cell => cell.DistanceTo(position)).ToList().First();
-        }
-
-        /// <summary>
-        /// Shortest distance to a point
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns></returns>
-        public override double DistanceTo(Vector3 point)
-        {
-            var extrude = this.GetGeometry() as Extrude;
-            var bottom = extrude.Profile.Perimeter;
-            var bottomZ = bottom.Centroid().Z;
-            var topZ = (bottom.Centroid() + extrude.Direction * extrude.Height).Z;
-            var isInside = point.Z >= bottomZ && point.Z <= topZ && bottom.Contains(new Vector3(point.X, point.Y, bottomZ));
-            if (isInside)
-            {
-                return 0;
-            }
-            var minDistance = double.PositiveInfinity;
-            foreach (var face in extrude.Solid.Faces.Values)
-            {
-                minDistance = Math.Min(minDistance, point.DistanceTo(face.Outer.ToPolygon()));
-            }
-            return minDistance;
+            return this.GetNeighboringCells().OrderBy(cell => cell.DistanceTo(position)).ToList().First();
         }
     }
 }

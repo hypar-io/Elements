@@ -15,7 +15,7 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID
         /// </summary>
-        public long Id;
+        public ulong Id;
 
         /// <summary>
         /// The CellComplex that this child belongs to
@@ -46,7 +46,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cellComplex"></param>
-        internal CellChild(long id, CellComplex cellComplex = null)
+        internal CellChild(ulong id, CellComplex cellComplex = null)
         {
             this.Id = id;
             this.CellComplex = cellComplex;

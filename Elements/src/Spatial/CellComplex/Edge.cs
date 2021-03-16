@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements;
-using Elements.Geometry;
 using Newtonsoft.Json;
 
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique uniqueEdge in a cell complex.
+    /// A unique edge in a cell complex.
     /// </summary>
-    public class UniqueEdge : EdgeBase
+    public class Edge : EdgeBase
     {
         /// <summary>
         /// DirectedEdges that reference this Edge
@@ -24,15 +22,15 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="vertexId1">One of the vertex IDs for this uniqueEdge</param>
-        /// <param name="vertexId2">The other vertex ID for this uniqueEdge</param>
-        internal UniqueEdge(CellComplex cellComplex, long id, long vertexId1, long vertexId2) : base(id, cellComplex)
+        /// <param name="vertexId1">One of the vertex IDs for this edge</param>
+        /// <param name="vertexId2">The other vertex ID for this edge</param>
+        internal Edge(CellComplex cellComplex, ulong id, ulong vertexId1, ulong vertexId2) : base(id, cellComplex)
         {
             this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
         [JsonConstructor]
-        internal UniqueEdge(long id, long startVertexId, long endVertexId) : base(id, null)
+        internal Edge(ulong id, ulong startVertexId, ulong endVertexId) : base(id, null)
         {
             this.SetVerticesFromIds(startVertexId, endVertexId);
         }
@@ -42,7 +40,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="id1"></param>
         /// <param name="id2"></param>
-        private void SetVerticesFromIds(long id1, long id2)
+        private void SetVerticesFromIds(ulong id1, ulong id2)
         {
             if (id1 < id2)
             {
@@ -61,7 +59,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <returns></returns>
-        public static string GetHash(List<long> vertexIds)
+        internal static string GetHash(List<ulong> vertexIds)
         {
             var sortedIds = vertexIds.ToList();
             sortedIds.Sort();

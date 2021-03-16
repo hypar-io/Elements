@@ -16,6 +16,6 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">The U or V direction</param>
         /// <param name="name">Optional name</param>
         /// <returns></returns>
-        internal UV(CellComplex cellComplex, long id, Vector3 point, string name = null) : base(cellComplex, id, point, name) { }
+        internal UV(CellComplex cellComplex, ulong id, Vector3 point, string name = null) : base(cellComplex, id, point, name) { }
     }
 }
