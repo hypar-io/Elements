@@ -3,6 +3,13 @@
 ## 0.8.4
 
 ### Added
+- Alpha release of `Hypar.Elements.Components`
+### Changed
+
+### Fixed
+## 0.8.4
+
+### Added
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
