@@ -1,9 +1,11 @@
 using System;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Spatial;
 using Elements.Spatial.CellComplex;
 using Xunit;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Elements.Tests
 {
@@ -14,6 +16,7 @@ namespace Elements.Tests
         private static Material UMaterial = new Material("U", new Color(1, 0, 0, 0.5));
         private static Material VMaterial = new Material("V", new Color(0, 1, 0, 0.5));
         private static Material BaseMaterial = new Material("Base", new Color(0, 0, 0, 1));
+        private static Material LineMaterial = new Material("Line", new Color(1, 0, 1, 1));
 
         // Utility
         private static CellComplex MakeASimpleCellComplex(
@@ -156,14 +159,12 @@ namespace Elements.Tests
 
             while (curNeighbor != null)
             {
-                curNeighbor = curNeighbor.GetNeighboringCell(curNeighbor.GetTopFace());
+                curNeighbor = curNeighbor.GetNeighbors(curNeighbor.GetTopFace());
 
                 if (curNeighbor != null)
                 {
-                    foreach (var face in curNeighbor.GetFaces())
-                    {
-                        this.Model.AddElement(new Panel(face.GetGeometry(), ZMaterial));
-                    }
+                    var rep = new Representation(new[] { curNeighbor.GetGeometry() });
+                    this.Model.AddElement(new GeometricElement(new Transform(), ZMaterial, rep, false, Guid.NewGuid(), "Test"));
                     lastNeighbor = curNeighbor;
                     numNeighbors += 1;
                 }
@@ -182,7 +183,7 @@ namespace Elements.Tests
             while (curFaceNeighbor != null && numUNeighbors < 30)
             {
                 var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * 10000;
-                curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarU, true, false);
+                curFaceNeighbor = curFaceNeighbor.GetClosestNeighbor(pointFarU, true, false);
 
                 if (curFaceNeighbor != null)
                 {
@@ -200,7 +201,7 @@ namespace Elements.Tests
             while (curFaceNeighbor != null)
             {
                 var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * 10000;
-                curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarV, true, false);
+                curFaceNeighbor = curFaceNeighbor.GetClosestNeighbor(pointFarV, true, false);
 
                 if (curFaceNeighbor != null)
                 {
@@ -211,6 +212,21 @@ namespace Elements.Tests
             }
 
             Assert.True(numVNeighbors == 9);
+
+            var origin = new Vector3(50, 50);
+
+            var curEdge = lastFaceNeighbor.GetClosestEdge(origin);
+
+            var count = 0;
+
+            while (count < 1000 && curEdge != null)
+            {
+                this.Model.AddElement(new ModelCurve(curEdge.GetGeometry(), LineMaterial));
+                curEdge = curEdge.GetClosestNeighbor(origin);
+                count += 1;
+            }
+
+            Assert.False(count != 1000); // If it got this big, we are likely in an infinite traversal
 
         }
     }

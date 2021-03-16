@@ -8,21 +8,23 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A directed edge: a representation of a edge that has direction to it so that it can be used to traverse faces.
     /// This is essentially equivalent to the concept of a half edge, except it can be related to more than just a single Face.
-    /// There is a maximum of two DirectedEdges per Edge
+    /// There is a maximum of two DirectedEdges per Edge.
+    /// This class is completely internal and only used for utilities inside of CellComplex
     /// </summary>
-    public class DirectedEdge : EdgeBase
+    internal class DirectedEdge : EdgeBase
     {
         /// <summary>
         /// ID of edge
         /// </summary>
-        public ulong EdgeId;
+        [JsonProperty]
+        internal ulong EdgeId;
 
         /// <summary>
         /// Edge
         /// </summary>
         /// <value></value>
         [JsonIgnore]
-        public HashSet<Face> Faces = new HashSet<Face>();
+        internal HashSet<Face> Faces = new HashSet<Face>();
 
         /// <summary>
         /// Represents a unique DirectedEdge within a CellComplex.
@@ -65,7 +67,7 @@ namespace Elements.Spatial.CellComplex
         /// Gets associated Edge
         /// </summary>
         /// <returns></returns>
-        public Edge GetEdge()
+        internal Edge GetEdge()
         {
             return this.CellComplex.GetEdge(this.EdgeId);
         }
@@ -74,18 +76,9 @@ namespace Elements.Spatial.CellComplex
         /// Get associated Faces
         /// </summary>
         /// <returns></returns>
-        public List<Face> GetFaces()
+        internal List<Face> GetFaces()
         {
             return this.Faces.ToList();
-        }
-
-        /// <summary>
-        /// Get associated Cells
-        /// </summary>
-        /// <returns></returns>
-        public List<Cell> GetCells()
-        {
-            return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
         }
     }
 }

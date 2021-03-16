@@ -34,7 +34,7 @@ namespace Elements.Spatial.CellComplex
         private ulong _cellId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         [JsonIgnore]
-        private ulong _uvId = 1; // we start at 1 because 0 is returned as default value from dicts
+        private ulong _orientationId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         /// <summary>
         /// Vertices by ID
@@ -46,7 +46,7 @@ namespace Elements.Spatial.CellComplex
         /// U or V directions by ID
         /// </summary>
         [JsonProperty]
-        private Dictionary<ulong, Orientation> _uvs = new Dictionary<ulong, Orientation>();
+        private Dictionary<ulong, Orientation> _orientations = new Dictionary<ulong, Orientation>();
 
         /// <summary>
         /// Edges by ID
@@ -76,7 +76,7 @@ namespace Elements.Spatial.CellComplex
         private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         [JsonIgnore]
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> uvsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> orientationsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         // See Edge.GetHash for how faces are identified as unique.
         [JsonIgnore]
@@ -107,7 +107,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="_vertices"></param>
-        /// <param name="_uvs"></param>
+        /// <param name="_orientations"></param>
         /// <param name="_edges"></param>
         /// <param name="_directedEdges"></param>
         /// <param name="_faces"></param>
@@ -118,7 +118,7 @@ namespace Elements.Spatial.CellComplex
             Guid id,
             string name,
             Dictionary<ulong, Vertex> _vertices,
-            Dictionary<ulong, Vertex> _uvs,
+            Dictionary<ulong, Vertex> _orientations,
             Dictionary<ulong, Edge> _edges,
             Dictionary<ulong, DirectedEdge> _directedEdges,
             Dictionary<ulong, Face> _faces,
@@ -131,9 +131,9 @@ namespace Elements.Spatial.CellComplex
                 added.Name = vertex.Name;
             }
 
-            foreach (var uv in _uvs.Values)
+            foreach (var orientation in _orientations.Values)
             {
-                this.AddVertexOrOrientation<Orientation>(uv.Value, uv.Id);
+                this.AddVertexOrOrientation<Orientation>(orientation.Value, orientation.Id);
             }
 
             foreach (var edge in _edges.Values)
@@ -400,34 +400,34 @@ namespace Elements.Spatial.CellComplex
             }
         }
 
-        private Dictionary<ulong, T> GetVertexOrOrientationDictionary<T>() where T : Vertex
+        private Dictionary<ulong, T> GetVertexOrOrientationDictionary<T>() where T : VertexBase
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
             {
                 throw new Exception("Unsupported type provided, expected Vertex or Orientation");
             }
-            return typeof(T) == typeof(Orientation) ? this._uvs as Dictionary<ulong, T> : this._vertices as Dictionary<ulong, T>;
+            return typeof(T) == typeof(Orientation) ? this._orientations as Dictionary<ulong, T> : this._vertices as Dictionary<ulong, T>;
         }
 
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrOrientationLookup<T>() where T : Vertex
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrOrientationLookup<T>() where T : VertexBase
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
             {
                 throw new Exception("Unsupported type provided, expected Vertex or Orientation");
             }
-            return typeof(T) == typeof(Orientation) ? this.uvsLookup : this.verticesLookup;
+            return typeof(T) == typeof(Orientation) ? this.orientationsLookup : this.verticesLookup;
         }
 
-        private T AddVertexOrOrientation<T>(Vector3 point) where T : Vertex
+        private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase
         {
-            var newId = typeof(T) == typeof(Orientation) ? this._uvId : this._vertexId;
+            var newId = typeof(T) == typeof(Orientation) ? this._orientationId : this._vertexId;
             var dict = GetVertexOrOrientationDictionary<T>();
             this.AddVertexOrOrientation<T>(point, newId, out var addedId);
             dict.TryGetValue(addedId, out var vertexOrOrientation);
             return vertexOrOrientation as T;
         }
 
-        private T AddVertexOrOrientation<T>(Vector3 point, ulong id) where T : Vertex
+        private T AddVertexOrOrientation<T>(Vector3 point, ulong id) where T : VertexBase
         {
             var dict = GetVertexOrOrientationDictionary<T>();
 
@@ -440,7 +440,7 @@ namespace Elements.Spatial.CellComplex
             return vertexOrOrientation as T;
         }
 
-        private Boolean AddVertexOrOrientation<T>(Vector3 point, ulong idIfNew, out ulong id) where T : Vertex
+        private Boolean AddVertexOrOrientation<T>(Vector3 point, ulong idIfNew, out ulong id) where T : VertexBase
         {
             var lookups = this.GetVertexOrOrientationLookup<T>();
             var dict = this.GetVertexOrOrientationDictionary<T>();
@@ -456,7 +456,7 @@ namespace Elements.Spatial.CellComplex
             dict.Add(id, vertexOrOrientation);
             if (isOrientation)
             {
-                this._uvId = Math.Max(id + 1, this._uvId + 1);
+                this._orientationId = Math.Max(id + 1, this._orientationId + 1);
             }
             else
             {
@@ -490,25 +490,25 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get a U or V direction by its ID
         /// </summary>
-        /// <param name="uvId"></param>
+        /// <param name="orientationId"></param>
         /// <returns></returns>
-        public Orientation GetOrientation(ulong? uvId)
+        public Orientation GetOrientation(ulong? orientationId)
         {
-            if (uvId == null)
+            if (orientationId == null)
             {
                 return null;
             }
-            this._uvs.TryGetValue((ulong)uvId, out var uv);
-            return uv;
+            this._orientations.TryGetValue((ulong)orientationId, out var orientation);
+            return orientation;
         }
 
         /// <summary>
         /// Get all Orientations
         /// </summary>
         /// <returns></returns>
-        public List<Orientation> GetOrientations()
+        internal List<Orientation> GetOrientations()
         {
-            return this._uvs.Values.ToList();
+            return this._orientations.Values.ToList();
         }
 
         /// <summary>
@@ -532,26 +532,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a DirectedEdge by its ID
-        /// </summary>
-        /// <param name="directedEdgeId"></param>
-        /// <returns></returns>
-        public DirectedEdge GetDirectedEdge(ulong directedEdgeId)
-        {
-            this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
-            return directedEdge;
-        }
-
-        /// <summary>
-        /// Get all DirectedEdges
-        /// </summary>
-        /// <returns></returns>
-        public List<DirectedEdge> GetDirectedEdges()
-        {
-            return this._directedEdges.Values.ToList();
-        }
-
-        /// <summary>
         /// Get a Face by its ID
         /// </summary>
         /// <param name="faceId"></param>
@@ -562,7 +542,6 @@ namespace Elements.Spatial.CellComplex
             {
                 return null;
             }
-
             this._faces.TryGetValue((ulong)faceId, out var face);
             return face;
         }
@@ -594,6 +573,66 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this._cells.Values.ToList();
+        }
+
+        /// <summary>
+        /// Get the associated vertex that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Vertex GetClosestVertex(Vector3 point)
+        {
+            return Vertex.GetClosest<Vertex>(this.GetVertices(), point);
+        }
+
+        /// <summary>
+        /// Get the associated edge that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Edge GetClosestEdge(Vector3 point)
+        {
+            return Edge.GetClosest<Edge>(this.GetEdges(), point);
+        }
+
+        /// <summary>
+        /// Get the associated face that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Face GetClosestFace(Vector3 point)
+        {
+            return Face.GetClosest<Face>(this.GetFaces(), point);
+        }
+
+        /// <summary>
+        /// Get the associated cell that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Cell GetClosestCell(Vector3 point)
+        {
+            return Cell.GetClosest<Cell>(this.GetCells(), point);
+        }
+
+        /// <summary>
+        /// Get a DirectedEdge by its ID
+        /// </summary>
+        /// <param name="directedEdgeId"></param>
+        /// <returns></returns>
+        internal DirectedEdge GetDirectedEdge(ulong directedEdgeId)
+        {
+            this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
+            return directedEdge;
+        }
+
+        /// <summary>
+        /// Get all DirectedEdges
+        /// </summary>
+        /// <returns></returns>
+        internal List<DirectedEdge> GetDirectedEdges()
+        {
+            return this._directedEdges.Values.ToList();
         }
 
         /// <summary>

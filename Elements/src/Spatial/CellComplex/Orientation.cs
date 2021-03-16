@@ -3,9 +3,9 @@ using Elements.Geometry;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A uniqueorientation direction in a cell complex
+    /// A unique orientation direction in a cell complex
     /// </summary>
-    public class Orientation : Vertex
+    public class Orientation : VertexBase
     {
         /// <summary>
         /// Represents a uniqueorientation direction within a CellComplex.
@@ -17,5 +17,16 @@ namespace Elements.Spatial.CellComplex
         /// <param name="name">Optional name</param>
         /// <returns></returns>
         internal Orientation(CellComplex cellComplex, ulong id, Vector3 orientation, string name = null) : base(cellComplex, id, orientation, name) { }
+
+        /// <summary>
+        /// Do not use this method: it just throws an exception:
+        /// Orientations are relative directions and do not exist at any point in absolute space. A distance cannot be calculated for orientations.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double DistanceTo(Vector3 point)
+        {
+            throw new System.Exception("Orientations are relative directions and do not exist at any point in absolute space. A distance cannot be calculated for orientations.");
+        }
     }
 }

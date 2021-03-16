@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A cell: a 3-dimensional closed cell within a complex
     /// </summary>
-    public class Cell : CellChild<Extrude>
+    public class Cell : ChildBase<Extrude>
     {
         /// <summary>
         /// Bottom face. Can be null. Expected to be duplicated in list of faces.
@@ -132,11 +132,11 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest associated face to the supplied position
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
-        public Face GetClosestFace(Vector3 position)
+        public Face GetClosestFace(Vector3 point)
         {
-            return this.GetFaces().OrderBy(f => position.DistanceTo(f.GetGeometry())).ToList().First();
+            return Face.GetClosest<Face>(this.GetFaces(), point);
         }
 
         /// <summary>
@@ -149,15 +149,14 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated edge to the supplied position
+        /// Get the associated edge that is closest to a point
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
-        public Edge GetClosestEdge(Vector3 position)
+        public Edge GetClosestEdge(Vector3 point)
         {
-            return this.GetEdges().OrderBy(s => position.DistanceTo(s.GetGeometry())).ToList().First();
+            return Edge.GetClosest<Edge>(this.GetEdges(), point);
         }
-
 
         /// <summary>
         /// Get associated Vertices
@@ -169,31 +168,31 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated vertex to the supplied position
+        /// Get the associated vertex that is closest to a point
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
-        public Vertex GetClosestVertex(Vector3 position)
+        public Vertex GetClosestVertex(Vector3 point)
         {
-            return this.GetVertices().OrderBy(v => position.DistanceTo(v.Value)).ToList().First();
+            return Vertex.GetClosest<Vertex>(this.GetVertices(), point);
         }
 
         /// <summary>
         /// Get list of Cells that are neighbors
         /// </summary>
         /// <returns></returns>
-        public List<Cell> GetNeighboringCells()
+        public List<Cell> GetNeighbors()
         {
             return this.GetFaces().Select(f => f.GetCells()).SelectMany(x => x).Distinct().Where(c => c.Id != this.Id).ToList();
         }
 
         /// <summary>
-        /// Get a list of the neighbor that shares a specific Face with this cell.
+        /// Get the neighbor that shares a specific Face with this cell.
         /// Can be null if the face is not shared.
         /// </summary>
         /// <param name="face">Shared face</param>
         /// <returns></returns>
-        public Cell GetNeighboringCell(Face face)
+        public Cell GetNeighbors(Face face)
         {
             if (face == null)
             {
@@ -215,13 +214,13 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated cell to the supplied position, calculating to the approximate center of the cell
+        /// Get the closest associated cell to the supplied point, calculating to the approximate center of the cell
         /// </summary>
-        /// <param name="position"></param>
+        /// <param name="point"></param>
         /// <returns></returns>
-        public Cell GetClosestNeighboringCell(Vector3 position)
+        public Cell GetClosestNeighbor(Vector3 point)
         {
-            return this.GetNeighboringCells().OrderBy(cell => cell.DistanceTo(position)).ToList().First();
+            return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
         }
     }
 }

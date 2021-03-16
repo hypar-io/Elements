@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Elements.Geometry;
 
 namespace Elements.Spatial.CellComplex
 {
@@ -16,7 +17,7 @@ namespace Elements.Spatial.CellComplex
         /// DirectedEdges that reference this Edge
         /// </summary>
         [JsonIgnore]
-        public HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
+        internal HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
 
         /// <summary>
         /// Represents a unique Edge within a CellComplex.
@@ -70,12 +71,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges
+        /// Get associated Vertices
         /// </summary>
         /// <returns></returns>
-        public List<DirectedEdge> GetDirectedEdges()
+        public List<Vertex> GetVertices()
         {
-            return this.DirectedEdges.ToList();
+            return new List<Vertex>() { this.CellComplex.GetVertex(this.StartVertexId), this.CellComplex.GetVertex(this.EndVertexId) };
         }
 
         /// <summary>
@@ -94,6 +95,64 @@ namespace Elements.Spatial.CellComplex
         public List<Cell> GetCells()
         {
             return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get the associated vertex that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Vertex GetClosestVertex(Vector3 point)
+        {
+            return Vertex.GetClosest<Vertex>(this.GetVertices(), point);
+        }
+
+        /// <summary>
+        /// Get the associated face that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Face GetClosestFace(Vector3 point)
+        {
+            return Face.GetClosest<Face>(this.GetFaces(), point);
+        }
+
+        /// <summary>
+        /// Get the associated cell that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Cell GetClosestCell(Vector3 point)
+        {
+            return Cell.GetClosest<Cell>(this.GetCells(), point);
+        }
+
+        /// <summary>
+        /// Get a list of all neighboring edges that share a vertex
+        /// </summary>
+        /// <returns></returns>
+        public List<Edge> GetNeighbors()
+        {
+            return this.GetVertices().Select(vertex => vertex.GetEdges()).SelectMany(x => x).Where(e => e.Id != this.Id).Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get the closest neighboring edge to a vertex
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Edge GetClosestNeighbor(Vector3 point)
+        {
+            return Edge.GetClosest<Edge>(this.GetNeighbors().Where(e => e.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+        }
+
+        /// <summary>
+        /// Get associated DirectedEdges
+        /// </summary>
+        /// <returns></returns>
+        internal List<DirectedEdge> GetDirectedEdges()
+        {
+            return this.DirectedEdges.ToList();
         }
     }
 }

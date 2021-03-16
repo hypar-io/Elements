@@ -9,7 +9,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A face of a cell. Multiple cells can share the same face.
     /// </summary>
-    public class Face : CellChild<Polygon>
+    public class Face : ChildBase<Polygon>
     {
         /// <summary>
         /// Directed edge IDs
@@ -32,7 +32,7 @@ namespace Elements.Spatial.CellComplex
         /// Cells that reference this Face
         /// </summary>
         [JsonIgnore]
-        public HashSet<Cell> Cells { get; internal set; } = new HashSet<Cell>();
+        internal HashSet<Cell> Cells = new HashSet<Cell>();
 
         /// <summary>
         /// Represents a unique Face within a CellComplex.
@@ -102,6 +102,15 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
+        /// Get associated DirectedEdges
+        /// </summary>
+        /// <returns></returns>
+        private List<DirectedEdge> GetDirectedEdges()
+        {
+            return this.DirectedEdgeIds.Select(dsId => CellComplex.GetDirectedEdge(dsId)).ToList();
+        }
+
+        /// <summary>
         /// Get the normal vector for this Face
         /// </summary>
         /// <returns></returns>
@@ -130,15 +139,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges
-        /// </summary>
-        /// <returns></returns>
-        public List<DirectedEdge> GetDirectedEdges()
-        {
-            return this.DirectedEdgeIds.Select(dsId => CellComplex.GetDirectedEdge(dsId)).ToList();
-        }
-
-        /// <summary>
         /// Get associated Vertices
         /// </summary>
         /// <returns></returns>
@@ -157,6 +157,36 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
+        /// Get the associated vertex that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Vertex GetClosestVertex(Vector3 point)
+        {
+            return Vertex.GetClosest<Vertex>(this.GetVertices(), point);
+        }
+
+        /// <summary>
+        /// Get the associated edge that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Edge GetClosestEdge(Vector3 point)
+        {
+            return Edge.GetClosest<Edge>(this.GetEdges(), point);
+        }
+
+        /// <summary>
+        /// Get the associated cell that is closest to a point
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Cell GetClosestCell(Vector3 point)
+        {
+            return Cell.GetClosest<Cell>(this.GetCells(), point);
+        }
+
+        /// <summary>
         /// Get the user-set orientation of this face
         /// </summary>
         /// <returns></returns>
@@ -172,7 +202,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="parallel">If true, only returns faces that are oriented the same way as this face</param>
         /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a edge</param>
         /// <returns></returns>
-        public List<Face> GetNeighboringFaces(bool parallel = false, bool includeSharedVertices = false)
+        public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
         {
             var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetEdges().Select(s => s.GetFaces()).ToList();
             var faces = groupedFaces.SelectMany(x => x).Distinct().Where(f => f.Id != this.Id).ToList();
@@ -192,7 +222,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="edge"></param>
         /// <param name="parallel">Whether to only return faces that are parallel to this face.</param>
         /// <returns></returns>
-        public List<Face> GetNeighboringFaces(Edge edge, bool parallel = false)
+        public List<Face> GetNeighbors(Edge edge, bool parallel = false)
         {
             if (!parallel)
             {
@@ -211,10 +241,9 @@ namespace Elements.Spatial.CellComplex
         /// <param name="parallel"></param>
         /// <param name="includeSharedVertices"></param>
         /// <returns></returns>
-        public Face GetClosestNeighboringFace(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
+        public Face GetClosestNeighbor(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
         {
-            var faces = this.GetNeighboringFaces(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).OrderBy(f => f.DistanceTo(point)).ToList();
-            return faces.Count == 0 ? null : faces.First();
+            return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
         }
     }
 }

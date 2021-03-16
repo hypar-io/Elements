@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// Base class for all children of Cell
     /// </summary>
-    public abstract class CellChild<GeometryType>
+    public abstract class ChildBase< GeometryType>
     {
         /// <summary>
         /// ID
@@ -36,7 +36,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         public override bool Equals(object obj)
         {
-            CellChild<GeometryType> other = obj as CellChild<GeometryType>;
+            ChildBase<GeometryType> other = obj as ChildBase<GeometryType>;
             if (other == null) return false;
             return this.Id == other.Id;
         }
@@ -46,7 +46,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cellComplex"></param>
-        internal CellChild(ulong id, CellComplex cellComplex = null)
+        internal ChildBase(ulong id, CellComplex cellComplex = null)
         {
             this.Id = id;
             this.CellComplex = cellComplex;
@@ -64,5 +64,21 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point"></param>
         /// <returns></returns>
         public abstract double DistanceTo(Vector3 point);
+
+        /// <summary>
+        /// Get the closest candidate from a list of candidates
+        /// </summary>
+        /// <param name="candidates">List of available candidates</param>
+        /// <param name="point">Point to get the closest to</param>
+        /// <typeparam name="T">Return object type</typeparam>
+        /// <returns></returns>
+        internal static T GetClosest<T>(List<T> candidates, Vector3 point) where T: ChildBase<GeometryType>
+        {
+            if (candidates.Count == 0)
+            {
+                return null;
+            }
+            return candidates.OrderBy(c => c.DistanceTo(point)).ToList()[0];
+        }
     }
 }
