@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A geometric voxel representation for structures and potential other
+    /// A geometric cell representation for structures and potential other systems requiring traversal
     /// </summary>
     public class CellComplex : Elements.Element
     {
