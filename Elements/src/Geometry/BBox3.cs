@@ -42,8 +42,8 @@ namespace Elements.Geometry
         /// <param name="profile">The Profile.</param>
         public BBox3(Profile profile)
         {
-            this.Min = new Vector3(double.PositiveInfinity, double.PositiveInfinity, double.PositiveInfinity);
-            this.Max = new Vector3(double.NegativeInfinity, double.NegativeInfinity, double.NegativeInfinity);
+            this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
+            this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
             for (var i = 0; i < profile.Perimeter.Vertices.Count; i++)
             {
                 this.Extend(profile.Perimeter.Vertices[i]);
@@ -146,6 +146,31 @@ namespace Elements.Geometry
         public static bool operator !=(BBox3 a, BBox3 b)
         {
             return !a.Equals(b);
+        }
+
+        /// <summary>
+        /// Does this bounding box have a valid set value? 
+        /// </summary>
+        public bool IsValid()
+        {
+            return
+                Min.X != double.MaxValue &&
+                Min.Y != double.MaxValue &&
+                Min.Z != double.MaxValue &&
+                Max.X != double.MinValue &&
+                Max.Y != double.MinValue &&
+                Max.Z != double.MinValue;
+        }
+
+        /// <summary>
+        /// Does this bounding box have a dimension of 0 along any axis? 
+        /// </summary>
+        public bool IsDegenerate()
+        {
+            return
+                !Min.X.ApproximatelyEquals(Max.X) &&
+                !Min.Y.ApproximatelyEquals(Max.Y) &&
+                !Min.Z.ApproximatelyEquals(Max.Z);
         }
     }
 }

@@ -13,6 +13,9 @@ using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
 using Elements.Interfaces;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp;
+using Image = glTFLoader.Schema.Image;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -122,7 +125,10 @@ namespace Elements.Serialization.glTF
             return b64;
         }
 
-        internal static Dictionary<string, int> AddMaterials(this Gltf gltf, IList<Material> materials, List<byte> buffer, List<BufferView> bufferViews)
+        internal static Dictionary<string, int> AddMaterials(this Gltf gltf,
+                                                             IList<Material> materials,
+                                                             List<byte> buffer,
+                                                             List<BufferView> bufferViews)
         {
             var materialDict = new Dictionary<string, int>();
             var newMaterials = new List<glTFLoader.Schema.Material>();
@@ -135,6 +141,7 @@ namespace Elements.Serialization.glTF
 
             var matId = 0;
             var texId = 0;
+            var normalTexId = 0;
             var imageId = 0;
             var samplerId = 0;
 
@@ -152,12 +159,13 @@ namespace Elements.Serialization.glTF
                 m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
                 m.PbrMetallicRoughness.MetallicFactor = 1.0f;
                 m.DoubleSided = material.DoubleSided;
+
                 m.Name = material.Name;
 
                 if (material.Unlit)
                 {
                     m.Extensions = new Dictionary<string, object>{
-                        {"KHR_materials_unlit", new Dictionary<string, object>{}}
+                        {"KHR_materials_unlit", new Dictionary<string, object>{}},
                     };
                 }
                 else
@@ -171,6 +179,8 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
+                var textureHasTransparency = false;
+
                 if (material.Texture != null && File.Exists(material.Texture))
                 {
                     // Add the texture
@@ -178,7 +188,10 @@ namespace Elements.Serialization.glTF
                     m.PbrMetallicRoughness.BaseColorTexture = ti;
                     ti.Index = texId;
                     ti.TexCoord = 0;
-                    ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    if (!material.Unlit)
+                    {
+                        ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                    }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {
@@ -188,40 +201,11 @@ namespace Elements.Serialization.glTF
                     {
                         var tex = new Texture();
                         textures.Add(tex);
-
-                        var image = new glTFLoader.Schema.Image();
-
-                        using (var ms = new MemoryStream())
-                        {
-                            // Flip the texture image vertically
-                            // to align with OpenGL convention.
-                            // 0,1  1,1
-                            // 0,0  1,0
-                            using (var texImage = SixLabors.ImageSharp.Image.Load(material.Texture))
-                            {
-                                texImage.Mutate(x => x.Flip(FlipMode.Vertical));
-                                texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
-                            }
-                            var imageData = ms.ToArray();
-                            image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null);
-                            buffer.AddRange(imageData);
-                        }
-
-                        while (buffer.Count % 4 != 0)
-                        {
-                            // Console.WriteLine("Padding...");
-                            buffer.Add(0);
-                        }
-
-                        image.MimeType = glTFLoader.Schema.Image.MimeTypeEnum.image_png;
+                        var image = CreateImage(material.Texture, bufferViews, buffer, out textureHasTransparency);
                         tex.Source = imageId;
                         images.Add(image);
 
-                        var sampler = new Sampler();
-                        sampler.MagFilter = Sampler.MagFilterEnum.LINEAR;
-                        sampler.MinFilter = Sampler.MinFilterEnum.LINEAR;
-                        sampler.WrapS = Sampler.WrapSEnum.REPEAT;
-                        sampler.WrapT = Sampler.WrapTEnum.REPEAT;
+                        var sampler = CreateSampler();
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
@@ -233,7 +217,40 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if (material.Color.Alpha < 1.0)
+                if (material.NormalTexture != null && File.Exists(material.NormalTexture))
+                {
+                    var ti = new MaterialNormalTextureInfo();
+                    m.NormalTexture = ti;
+                    ti.Index = normalTexId;
+                    ti.Scale = 1.0f;
+                    // Use the same texture coordinate as the
+                    // base texture.
+                    ti.TexCoord = 0;
+
+                    if (textureDict.ContainsKey(material.NormalTexture))
+                    {
+                        ti.Index = textureDict[material.NormalTexture];
+                    }
+                    else
+                    {
+                        var tex = new Texture();
+                        textures.Add(tex);
+                        var image = CreateImage(material.NormalTexture, bufferViews, buffer, out _);
+                        tex.Source = imageId;
+                        images.Add(image);
+                        textureDict.Add(material.NormalTexture, normalTexId);
+
+                        var sampler = CreateSampler();
+                        tex.Sampler = samplerId;
+                        samplers.Add(sampler);
+
+                        normalTexId++;
+                        imageId++;
+                        samplerId++;
+                    }
+                }
+
+                if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {
                     m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }
@@ -266,7 +283,48 @@ namespace Elements.Serialization.glTF
             return materialDict;
         }
 
-        internal static void AddLights(this Gltf gltf, List<DirectionalLight> lights, List<Node> nodes)
+        private static glTFLoader.Schema.Image CreateImage(string path, List<BufferView> bufferViews, List<byte> buffer, out bool textureHasTransparency)
+        {
+            var image = new glTFLoader.Schema.Image();
+
+            using (var ms = new MemoryStream())
+            {
+                // Flip the texture image vertically
+                // to align with OpenGL convention.
+                // 0,1  1,1
+                // 0,0  1,0
+                using (var texImage = SixLabors.ImageSharp.Image.Load(path))
+                {
+                    PngMetadata meta = texImage.Metadata.GetPngMetadata();
+                    textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
+                    texImage.Mutate(x => x.Flip(FlipMode.Vertical));
+                    texImage.Save(ms, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+                }
+                var imageData = ms.ToArray();
+                image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null);
+                buffer.AddRange(imageData);
+            }
+
+            while (buffer.Count % 4 != 0)
+            {
+                buffer.Add(0);
+            }
+
+            image.MimeType = glTFLoader.Schema.Image.MimeTypeEnum.image_png;
+            return image;
+        }
+
+        private static glTFLoader.Schema.Sampler CreateSampler()
+        {
+            var sampler = new Sampler();
+            sampler.MagFilter = Sampler.MagFilterEnum.LINEAR;
+            sampler.MinFilter = Sampler.MinFilterEnum.LINEAR;
+            sampler.WrapS = Sampler.WrapSEnum.REPEAT;
+            sampler.WrapT = Sampler.WrapTEnum.REPEAT;
+            return sampler;
+        }
+
+        internal static void AddLights(this Gltf gltf, List<Light> lights, List<Node> nodes)
         {
             gltf.Extensions = new Dictionary<string, object>();
             var lightCount = 0;
@@ -276,10 +334,17 @@ namespace Elements.Serialization.glTF
                 // Create the top level collection of lights.
                 var gltfLight = new Dictionary<string, object>(){
                     {"color", new[]{light.Color.Red, light.Color.Green, light.Color.Blue}},
-                    {"type", "directional"},
+                    {"type", Enum.GetName(typeof(LightType), light.LightType).ToLower()},
                     {"intensity", light.Intensity},
                     {"name", light.Name != null ? light.Name : string.Empty}
                 };
+                if (light.LightType == LightType.Spot)
+                {
+                    gltfLight["spot"] = new Dictionary<string, double>(){
+                        {"innerConeAngle", ((SpotLight)light).InnerConeAngle},
+                        {"outerConeAngle", ((SpotLight)light).OuterConeAngle}
+                    };
+                }
                 lightsArr.Add(gltfLight);
 
                 // Create the light nodes
@@ -661,7 +726,7 @@ namespace Elements.Serialization.glTF
             scene.Nodes = new[] { 0 };
             gltf.Scenes = new[] { scene };
 
-            var lights = model.AllElementsOfType<DirectionalLight>().ToList();
+            var lights = model.AllElementsOfType<Light>().ToList();
             gltf.ExtensionsUsed = lights.Any() ? new[] {
                 "KHR_materials_pbrSpecularGlossiness",
                 "KHR_materials_unlit",
@@ -756,8 +821,15 @@ namespace Elements.Serialization.glTF
                 schemaBuffers[0].ByteLength = buffers.Count;
             }
             gltf.Buffers = schemaBuffers.ToArray(schemaBuffers.Count);
-            gltf.BufferViews = bufferViews.ToArray(bufferViews.Count);
-            gltf.Accessors = accessors.ToArray(accessors.Count);
+            if (bufferViews.Count > 0)
+            {
+                gltf.BufferViews = bufferViews.ToArray(bufferViews.Count);
+            }
+            if (accessors.Count > 0)
+            {
+                gltf.Accessors = accessors.ToArray(accessors.Count);
+            }
+
             gltf.Materials = materials.ToArray(materials.Count);
             if (textures.Count > 0)
             {
@@ -902,7 +974,7 @@ namespace Elements.Serialization.glTF
                 var transform = new Transform();
                 if (i.BaseDefinition is ContentElement contentBase)
                 {
-                    // If there is a transform stored for the content base definition we 
+                    // If there is a transform stored for the content base definition we
                     // should apply it when creating instances.
                     if (meshTransformMap.TryGetValue(i.BaseDefinition.Id, out var baseTransform))
                     {
@@ -983,8 +1055,8 @@ namespace Elements.Serialization.glTF
                                 out cmax,
                                 out imin,
                                 out imax,
-                                out uvmax,
-                                out uvmin);
+                                out uvmin,
+                                out uvmax);
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
@@ -1003,8 +1075,8 @@ namespace Elements.Serialization.glTF
                                      nmax,
                                      imin,
                                      imax,
-                                     uvmax,
                                      uvmin,
+                                     uvmax,
                                      materialIndexMap[materialName],
                                      cmin,
                                      cmax,
@@ -1025,9 +1097,20 @@ namespace Elements.Serialization.glTF
             }
         }
 
+        private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
+
         internal static Stream GetGlbStreamFromPath(string gltfLocation)
         {
             var responseStream = new MemoryStream();
+
+            if (gltfCache.TryGetValue(gltfLocation, out var foundStream))
+            {
+                foundStream.Position = 0;
+                foundStream.CopyTo(responseStream);
+                responseStream.Position = 0;
+                return responseStream;
+            }
+
             if (File.Exists(gltfLocation))
             {
                 File.OpenRead(gltfLocation).CopyTo(responseStream);
@@ -1043,6 +1126,12 @@ namespace Elements.Serialization.glTF
                 return Stream.Null;
             }
             responseStream.Position = 0;
+            if (!gltfCache.ContainsKey(gltfLocation))
+            {
+                var cacheStream = new MemoryStream();
+                responseStream.CopyTo(cacheStream);
+                gltfCache.Add(gltfLocation, cacheStream);
+            }
             return responseStream;
         }
 
@@ -1067,8 +1156,8 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
-            // The only reason we don't fully exclude openings from processing 
-            // is to ensure that openings have some geometry that will be used 
+            // The only reason we don't fully exclude openings from processing
+            // is to ensure that openings have some geometry that will be used
             // to compute csgs for their hosts.
             if (e.GetType() == typeof(Opening))
             {
@@ -1120,8 +1209,8 @@ namespace Elements.Serialization.glTF
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
             // can be computed and the final csg can have the inverse of the
-            // geometric element's transform applied to "reset" it. 
-            // The transforms applied to each node in the glTF will then 
+            // geometric element's transform applied to "reset" it.
+            // The transforms applied to each node in the glTF will then
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
@@ -1165,7 +1254,7 @@ namespace Elements.Serialization.glTF
 
             csg.Tessellate(out vertexBuffer, out indexBuffer, out normalBuffer, out colorBuffer, out uvBuffer,
                             out vmax, out vmin, out nmin, out nmax, out cmin,
-                            out cmax, out imin, out imax, out uvmax, out uvmin);
+                            out cmax, out imin, out imax, out uvmin, out uvmax);
 
             if (vertexBuffer.Length == 0)
             {

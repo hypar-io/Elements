@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SpotLight
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SpotLight
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.56.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.SpotLight">
+  
+  <h1 id="Elements_SpotLight" data-uid="Elements.SpotLight" class="text-break">Class SpotLight
+  </h1>
+  <div class="markdown level0 summary"><p>A spot light.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  <script type="text/javascript" src="../js/three.js"></script>
+  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
+  <script type="text/javascript" src="../js/OrbitControls.js"></script>
+  <script>
+    var scene = new THREE.Scene();
+    var div = document.getElementById("model")
+    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+    div.appendChild( renderer.domElement );
+  
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+  
+    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    var axesHelper = new THREE.AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    var size = 100;
+    var divisions = 100;
+    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
+    // var colorGrid = new THREE.Color( 0xdbdbdb );
+    // var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
+    // scene.add( gridHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    
+  
+    // Instantiate a loader
+    var loader = new THREE.GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_SpotLight.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+  
+        scene.add( gltf.scene );
+  
+        gltf.animations; // Array<THREE.AnimationClip>
+        gltf.scene; // THREE.Scene
+        gltf.scenes; // Array<THREE.Scene>
+        gltf.cameras; // Array<THREE.Camera>
+        gltf.asset; // Object
+  
+        fitCameraToObject(gltf.scene, 2.0, controls)
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+  
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+  
+      },
+      // called when loading has errors
+      function ( error ) {
+  
+        console.log( 'An error happened' );
+  
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      const boundingBox = new THREE.Box3();
+      boundingBox.setFromObject( object );
+  
+      const center = boundingBox.getCenter();
+      const size = boundingBox.getSize();
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = this.camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      this.camera.far = cameraToFarEdge * 3;
+      this.camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_SpotLight"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">// Visualize the light with a small, constant-colored &quot;light bulb&quot;.
+var lightMaterial = new Material(&quot;Light&quot;, Colors.White, unlit: true);
+var t = new Transform(0, 0, 5);
+var lightBulb = new Mass(Polygon.Rectangle(0.1, 0.1), 0.1, lightMaterial, transform: t);
+
+var floor = new Floor(Polygon.Rectangle(20, 20), 0.1);
+var spotLight = new SpotLight(Colors.White, t, 20, 0, 1.0);
+</code></pre>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level2"><a class="xref" href="Elements.Light.html">Light</a></div>
+    <div class="level3"><span class="xref">SpotLight</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_LightType">Light.LightType</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Intensity">Light.Intensity</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Color">Light.Color</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Transform">Light.Transform</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_SpotLight_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SpotLight : Light, INotifyPropertyChanged</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_SpotLight__ctor_" data-uid="Elements.SpotLight.#ctor*"></a>
+  <h4 id="Elements_SpotLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Guid_System_String_" data-uid="Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)">SpotLight(Color, Transform, Double, Double, Double, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a spot light.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpotLight(Color color, Transform transform, double intensity = 1, double innerConeAngle = 0, double outerConeAngle = 0.78539816339744828, Guid id = default(Guid), string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The light's color.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The light's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">intensity</span></td>
+        <td><p>The light's intensity measured in candela.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">innerConeAngle</span></td>
+        <td><p>The light's inner cone angle.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">outerConeAngle</span></td>
+        <td><p>The light's outer cone angle.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The light's unique identifier.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The light's name.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_SpotLight_InnerConeAngle_" data-uid="Elements.SpotLight.InnerConeAngle*"></a>
+  <h4 id="Elements_SpotLight_InnerConeAngle" data-uid="Elements.SpotLight.InnerConeAngle">InnerConeAngle</h4>
+  <div class="markdown level1 summary"><p>The inner cone angle in radians.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double InnerConeAngle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_SpotLight_OuterConeAngle_" data-uid="Elements.SpotLight.OuterConeAngle*"></a>
+  <h4 id="Elements_SpotLight_OuterConeAngle" data-uid="Elements.SpotLight.OuterConeAngle">OuterConeAngle</h4>
+  <div class="markdown level1 summary"><p>The outer cone angle in radians.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double OuterConeAngle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

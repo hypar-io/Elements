@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class StructuralFraming
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,6 +90,10 @@
       <div class="level4"><a class="xref" href="Elements.Brace.html">Brace</a></div>
       <div class="level4"><a class="xref" href="Elements.Column.html">Column</a></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -112,6 +116,15 @@
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -139,7 +152,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_StructuralFraming_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class StructuralFraming : GeometricElement</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class StructuralFraming : GeometricElement, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -413,6 +426,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
 </article>
           </div>
           

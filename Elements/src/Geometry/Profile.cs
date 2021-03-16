@@ -17,6 +17,7 @@ namespace Elements.Geometry
         public Profile(Polygon perimeter) : base(Guid.NewGuid(), null)
         {
             this.Perimeter = perimeter;
+            this.Voids = new List<Polygon>();
         }
 
         /// <summary>
@@ -336,27 +337,189 @@ namespace Elements.Geometry
             }
             PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftPositive);
-            if (solution.ChildCount == 0)
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Perform a difference operation on two sets of profiles.
+        /// </summary>
+        /// <param name="firstSet">The profiles to subtract from.</param>
+        /// <param name="secondSet">The profiles to subtract with.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A new list of profiles comprising the first set minus the second set.</returns>
+        public static List<Profile> Difference(IEnumerable<Profile> firstSet, IEnumerable<Profile> secondSet, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in firstSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var profile in secondSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctDifference, solution, PolyFillType.pftNonZero);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Constructs the intersections between two sets of profiles.
+        /// </summary>
+        /// <param name="firstSet">The first set of profiles to intersect with.</param>
+        /// <param name="secondSet">The second set of profiles to intersect with.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A new list of profiles comprising the overlap between the first set and the second set.</returns>
+        public static List<Profile> Intersection(IEnumerable<Profile> firstSet, IEnumerable<Profile> secondSet, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var profile in firstSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptSubject, true);
+            }
+
+            foreach (var profile in secondSet)
+            {
+                var clipperPaths = profile.ToClipperPaths(tolerance);
+                clipper.AddPaths(clipperPaths, PolyType.ptClip, true);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctIntersection, solution, PolyFillType.pftNonZero);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
+        /// Split a set of profiles with a collection of open polylines.
+        /// </summary>
+        /// <param name="profiles">The profiles to split</param>
+        /// <param name="splitLines">The polylines defining the splits.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, IEnumerable<Polyline> splitLines, double tolerance = Vector3.EPSILON)
+        {
+            List<Profile> resultProfiles = new List<Profile>();
+            foreach (var inputProfile in profiles)
+            {
+                inputProfile.OrientVoids();
+                var polygons = new List<Polygon>() {
+                    inputProfile.Perimeter
+                };
+                if (inputProfile.Voids != null)
+                {
+                    polygons.AddRange(inputProfile.Voids);
+                }
+                // construct a half-edge graph from all polygons and splitter polylines.
+                var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(polygons, splitLines);
+                // make sure all polygons are consistently wound - we reverse them if we need to treat them as voids.
+                var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
+                // for every resultant polygon, we can't be sure if it's a void, or should have a void,
+                // so we check if it includes any of the others, and subtract the original profile's voids
+                // as well. 
+                for (int i = 0; i < perimSplits.Count; i++)
+                {
+                    Polygon perimeterPoly = perimSplits[i];
+                    var voidProfiles = inputProfile.Voids.Select(v => new Profile(v.Reversed())).ToList();
+                    for (int j = 0; j < perimSplits.Count; j++)
+                    {
+                        //don't compare a polygon with itself
+                        if (i == j)
+                        {
+                            continue;
+                        }
+                        if (perimeterPoly.Covers(perimSplits[j]))
+                        {
+                            voidProfiles.Add(new Profile(perimSplits[j].Reversed()));
+                        }
+                    }
+                    var perimeterProfiles = new[] { new Profile(perimeterPoly) };
+                    resultProfiles.AddRange(Profile.Difference(perimeterProfiles, voidProfiles, tolerance));
+                }
+            };
+            return resultProfiles;
+        }
+
+
+        /// <summary>
+        /// Split a set of profiles with a collection of open polylines.
+        /// </summary>
+        /// <param name="profiles">The profiles to split</param>
+        /// <param name="splitLine">The polyline defining the splits.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine, double tolerance = Vector3.EPSILON)
+        {
+            return Profile.Split(profiles, new[] { splitLine }, tolerance);
+        }
+
+        /// <summary>
+        /// Get all segments from a profile's perimeter and internal voids.
+        /// </summary>
+        public List<Line> Segments()
+        {
+            return Perimeter.Segments().Union(Voids?.SelectMany(v => v.Segments()) ?? new Line[0]).ToList();
+        }
+    }
+
+    /// <summary>
+    /// Profile extension methods.
+    /// </summary>
+    public static class ProfileExtensions
+    {
+        internal static List<List<IntPoint>> ToClipperPaths(this Profile profile, double tolerance = Vector3.EPSILON)
+        {
+            var subjectPolygons = new List<Polygon> { profile.Perimeter.IsClockWise() ? profile.Perimeter.Reversed() : profile.Perimeter };
+            if (profile.Voids != null && profile.Voids.Count > 0)
+            {
+                subjectPolygons.AddRange(profile.Voids);
+            }
+            var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+            return clipperPaths;
+        }
+
+        internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
+        {
+            var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (perimeter == null)
             {
                 return null;
             }
-            var joinedProfiles = new List<Profile>();
-            foreach (var result in solution.Childs)
+            List<Polygon> voidCrvs = new List<Polygon>();
+            if (node.ChildCount > 0)
             {
-                var perimeter = PolygonExtensions.ToPolygon(result.Contour, tolerance);
-                List<Polygon> voidCrvs = new List<Polygon>();
-                if (result.ChildCount > 0)
+                foreach (var child in node.Childs)
                 {
-                    foreach (var child in result.Childs)
+                    var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
+                    if (voidCrv != null)
                     {
-                        var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
                         voidCrvs.Add(voidCrv);
                     }
-
                 }
-                joinedProfiles.Add(new Profile(perimeter, voidCrvs, Guid.NewGuid(), null));
+            }
+            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+            return profile;
+        }
+
+        internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
+        {
+            var joinedProfiles = new List<Profile>();
+
+            if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
+            {
+                var profile = node.ToProfile(tolerance);
+                joinedProfiles.Add(profile);
+            }
+            foreach (var result in node.Childs)
+            {
+                var profiles = result.ToProfiles(tolerance);
+                joinedProfiles.AddRange(profiles.Where(p => p != null));
             }
             return joinedProfiles;
         }
+
     }
 }

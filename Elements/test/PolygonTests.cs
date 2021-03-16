@@ -6,6 +6,7 @@ using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
 using Elements.Serialization.glTF;
+using System.IO;
 
 namespace Elements.Geometry.Tests
 {
@@ -628,10 +629,62 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void SameVertices_ThrowsException()
+        public void SameVertices_RemovesDuplicates()
         {
             var a = new Vector3();
-            Assert.Throws<ArgumentException>(() => new Polygon(new[] { a, a, a }));
+            var b = new Vector3(10, 0, 0);
+            var c = new Vector3(10, 3, 0);
+            var polygon = new Polygon(new[] { a, a, a, b, c });
+            Assert.Equal(3, polygon.Segments().Count());
+        }
+
+        [Fact]
+        public void UnionAllSequential()
+        {
+            Name = "UnionAllSequential";
+            // sample data contributed by Marco Juliani
+            var polygonsA = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll.json"));
+            var polygonsB = JsonConvert.DeserializeObject<List<Polygon>>(File.ReadAllText("../../../models/Geometry/testUnionAll_2.json"));
+            var unionA = Polygon.UnionAll(polygonsA);
+            var unionB = Polygon.UnionAll(polygonsB);
+            Model.AddElements(unionA.Select(u => new ModelCurve(u)));
+            Model.AddElements(unionB.Select(u => new ModelCurve(u)));
+        }
+
+        [Fact]
+        public void ConvexHullAndBoundingRect()
+        {
+            Name = "Convex Hull";
+            var rand = new Random();
+            // fuzz test
+            for (int test = 0; test < 50; test++)
+            {
+                var basePt = new Vector3((test % 5) * 12, (test - (test % 5)) / 5 * 12);
+                var pts = new List<Vector3>();
+                for (int i = 0; i < 20; i++)
+                {
+                    pts.Add(basePt + new Vector3(rand.NextDouble() * 10, rand.NextDouble() * 10));
+                }
+                var modelPts = pts.Select(p => new ModelCurve(new Circle(p, 0.2)));
+                var hull = ConvexHull.FromPoints(pts);
+                var boundingRect = Polygon.FromAlignedBoundingBox2d(pts);
+                Model.AddElements(modelPts);
+                Model.AddElements(boundingRect);
+                Model.AddElement(hull);
+            }
+
+            // handle collinear pts test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0),
+                new Vector3(10,5),
+                new Vector3(10,10)
+            };
+            var coHull = ConvexHull.FromPoints(coPts);
+            Assert.Equal(50, coHull.Area());
         }
 
         [Fact]
@@ -665,6 +718,149 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(5, 0, 0);
             var c = new Vector3(5, 0, 5);
             var p = new Polygon(new[] { a, b, c });
+        }
+
+        [Fact]
+        public void PointInternal()
+        {
+            Name = "PointInternal";
+            var extremelyConcavePolygon = new Polygon(new[] {
+                new Vector3(
+                        5.894565217391305,
+                        0.0,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.894565217391305,
+                        0.69347826086956488,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.19082958701549974,
+                        0.13222235119778919,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        2.3964022904166224,
+                        0.0
+                        ),
+                        new Vector3(
+                        6.2310064053894925,
+                        3.9731847432442322,
+                        0.0
+                        ),
+                        new Vector3(
+                        5.9682093299182242,
+                        4.5513383092810225,
+                        0.0
+                        ),
+                        new Vector3(
+                        -0.085624933213594254,
+                        2.4045397339325851,
+                        0.0
+                        ),
+                        new Vector3(
+                        0.0,
+                        0.0,
+                        0.0
+                        )
+            });
+            var pointInternal = extremelyConcavePolygon.PointInternal();
+            Assert.True(extremelyConcavePolygon.Contains(pointInternal));
+            Model.AddElement(extremelyConcavePolygon);
+            Curve.MinimumChordLength = 0.001;
+            Model.AddElement(new Circle(pointInternal, 0.02));
+            Curve.MinimumChordLength = 0.1;
+        }
+
+        [Fact]
+        public void PolygonSplitWithPolyline()
+        {
+            Name = "PolygonSplitWithPolyline";
+            var random = new Random(23);
+
+            // Simple Split
+            var polygon = Polygon.Rectangle(5, 5);
+            var polyline = new Polyline(new[] { new Vector3(-3, 0), new Vector3(0, 1), new Vector3(3, 0) });
+            var splitResults = polygon.Split(polyline);
+            Assert.Equal(2, splitResults.Count);
+
+            // Convex shape split
+            var convexPolygon = new Polygon(new[] {
+                new Vector3(-2.5,-2.5),
+                new Vector3(2.5,-2.5),
+                new Vector3(2.5,-1),
+                new Vector3(1,-1),
+                new Vector3(1,1),
+                new Vector3(2.5,1),
+                new Vector3(2.5,2.5),
+                new Vector3(-2.5,2.5)
+            });
+            var convexSplitPolyline = new Polyline(new[] {
+                new Vector3(1.5, -3),
+                new Vector3(1.5,3)
+            });
+
+            var splitResults2 = convexPolygon.Split(convexSplitPolyline);
+            Model.AddElements(splitResults2.Select(s => new Panel(s, random.NextMaterial())));
+            Assert.Equal(3, splitResults2.Count);
+
+            // doesn't intersect, no change
+            var shiftedPolygon = convexPolygon.TransformedPolygon(new Transform(6, 0, 0));
+            var splitResults3 = shiftedPolygon.Split(convexSplitPolyline);
+            Assert.Equal(1, splitResults3.Count);
+            Model.AddElements(splitResults3.Select(s => new Panel(s, random.NextMaterial())));
+
+            // totally contained, no change
+            var internalPl = new Polyline(new[] { new Vector3(6 - 2.5 + 0.5, -2), new Vector3(6 - 2.5 + 0.5, 2) });
+            Model.AddElement(internalPl);
+            var splitResults4 = shiftedPolygon.Split(internalPl);
+            Assert.Equal(1, splitResults4.Count);
+
+            // split with pass through vertex
+            var cornerPg = new Polygon(new[] { new Vector3(0, 10), new Vector3(3, 10), new Vector3(3, 13), new Vector3(0, 13) });
+            var cornerPl = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(3, 13)
+            });
+            Model.AddElements(cornerPg, cornerPl);
+            var splitResults5 = cornerPg.Split(cornerPl);
+            Assert.Equal(2, splitResults5.Count);
+            Model.AddElements(splitResults5.Select(s => new Panel(s, random.NextMaterial())));
+
+            // pass through incompletely, no change
+            var cornerPl2 = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(2, 11)
+            });
+
+            var splitResults6 = cornerPg.Split(cornerPl2);
+            Assert.Equal(1, splitResults6.Count);
+
+            // overlap at edge, no change.ioU
+            var rect2 = Polygon.Ngon(5, 5).TransformedPolygon(new Transform(-6, -8, 0));
+            var splitCrv = rect2.Segments()[3];
+            var splitResults7 = rect2.Split(splitCrv.ToPolyline(1));
+            Assert.Equal(1, splitResults7.Count);
+            Model.AddElements(splitResults7.Select(s => new Panel(s, random.NextMaterial())));
+
+
+            // fuzz test
+            var shifted = convexPolygon.TransformedPolygon(new Transform(12, 0, 0));
+            var collection = new List<Polygon> { shifted };
+            var bbox = new BBox3(shifted);
+            var rect = Polygon.Rectangle(bbox.Min, bbox.Max);
+            for (int i = 0; i < 20; i++)
+            {
+                var randomLine = new Polyline(new[] {
+                    rect.PointAt(random.NextDouble()),
+                    bbox.Min + new Vector3((bbox.Max.X - bbox.Min.X) * random.NextDouble(), (bbox.Max.Y - bbox.Min.Y) * random.NextDouble()),
+                    rect.PointAt(random.NextDouble()) });
+                collection = collection.SelectMany(c => c.Split(randomLine)).ToList();
+            }
+            Model.AddElements(collection.Select(c => new Panel(c, random.NextMaterial())));
+
         }
 
         [Fact]

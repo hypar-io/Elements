@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Elements.Tests
 {
-    public class MaterialTests: ModelTest
+    public class MaterialTests : ModelTest
     {
         [Fact]
         public void Construct()
@@ -23,8 +23,8 @@ namespace Elements.Tests
         [Fact]
         public void InvalidValues_Construct_ThrowsException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(-1.0f, 1,0f, 1.0f), 1.0f, 1.0f));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(3.0f, 1,0f, 1.0f), 1.0f, 1.0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(-1.0f, 1, 0f, 1.0f), 1.0f, 1.0f));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Material("test", new Color(3.0f, 1, 0f, 1.0f), 1.0f, 1.0f));
         }
 
         [Fact]
@@ -38,9 +38,20 @@ namespace Elements.Tests
         public void TextureTest()
         {
             this.Name = "TextureTest";
-            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg");
-            var mass = new Mass(Polygon.Rectangle(10,10), 10, m);
+            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "./Textures/Concrete.jpg", true);
+            var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
+            this.Model.AddElement(mass);
+        }
 
+        [Fact]
+        public void NormalTextureTest()
+        {
+            this.Name = "NormalTextureTest";
+            var m = new Material("test", Colors.Sand, 0.5f, 0.5f)
+            {
+                NormalTexture = "./Textures/Wood_Normals.jpg"
+            };
+            var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
             this.Model.AddElement(mass);
         }
 

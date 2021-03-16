@@ -340,6 +340,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Split this polygon with an open polyline.
+        /// </summary>
+        /// <param name="pl">The polyline with which to split.</param>
+        public List<Polygon> Split(Polyline pl)
+        {
+            // Construct a half-edge graph from the polygon and the polyline
+            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(this, pl);
+            // Find closed regions in that graph
+            return graph.Polygonize();
+        }
+
+        /// <summary>
+        /// Split this polygon with a collection of open polylines.
+        /// </summary>
+        /// <param name="polylines">The polylines with which to split.</param>
+        public List<Polygon> Split(IEnumerable<Polyline> polylines)
+        {
+            // Construct a half-edge graph from the polygon and the polylines
+            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { this }, polylines);
+            // Find closed regions in that graph
+            return graph.Polygonize();
+        }
+
+        /// <summary>
         /// Constructs the geometric difference between two sets of polygons.
         /// </summary>
         /// <param name="firstSet">First set of polygons</param>
@@ -426,7 +450,7 @@ namespace Elements.Geometry
             var polyFillType = PolyFillType.pftEvenOdd;
             if (voidTreatment == VoidTreatment.IgnoreInternalVoids)
             {
-                polyFillType = PolyFillType.pftPositive;
+                polyFillType = PolyFillType.pftNonZero;
             }
             switch (booleanMode)
             {
@@ -762,6 +786,72 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the minimum-area rotated rectangle containing a set of points, 
+        /// calculated without regard for Z coordinate. 
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle</param>
+        /// <returns>A rectangular polygon that contains all input points</returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points)
+        {
+            var hull = ConvexHull.FromPoints(points);
+            var minBoxArea = double.MaxValue;
+            BBox3 minBox = new BBox3();
+            Transform minBoxXform = new Transform();
+            foreach (var edge in hull.Segments())
+            {
+                var edgeVector = edge.End - edge.Start;
+                var xform = new Transform(Vector3.Origin, edgeVector, Vector3.ZAxis, 0);
+                var invertedXform = new Transform(xform);
+                invertedXform.Invert();
+                var transformedPolygon = hull.TransformedPolygon(invertedXform);
+                var bbox = new BBox3(transformedPolygon.Vertices);
+                var bboxArea = (bbox.Max.X - bbox.Min.X) * (bbox.Max.Y - bbox.Min.Y);
+                if (bboxArea < minBoxArea)
+                {
+                    minBoxArea = bboxArea;
+                    minBox = bbox;
+                    minBoxXform = xform;
+                }
+            }
+            var xy = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var boxRect = Polygon.Rectangle(minBox.Min.Project(xy), minBox.Max.Project(xy));
+            return boxRect.TransformedPolygon(minBoxXform);
+        }
+
+        /// <summary>
+        /// Find a point that is guaranteed to be internal to the polygon.
+        /// </summary>
+        public Vector3 PointInternal()
+        {
+            var centroid = Centroid();
+            if (Contains(centroid))
+            {
+                return centroid;
+            }
+            int currentIndex = 0;
+            while (true)
+            {
+                if (currentIndex == Vertices.Count)
+                {
+                    return centroid;
+                }
+                // find midpoint of the diagonal between two non-adjacent vertices.
+                // At any convex corner, this will be inside the boundary 
+                // (unless it passes all the way through to the other side — but
+                // this can't be true for all corners). Inspired by 
+                // http://apodeline.free.fr/FAQ/CGAFAQ/CGAFAQ-3.html 3.6
+                var a = Vertices[currentIndex];
+                var b = Vertices[(currentIndex + 2) % Vertices.Count];
+                var candidate = (a + b) * 0.5;
+                if (Contains(candidate))
+                {
+                    return candidate;
+                }
+                currentIndex++;
+            }
+        }
+
+        /// <summary>
         /// Get the hash code for the polygon.
         /// </summary>
         /// <returns></returns>
@@ -1093,7 +1183,24 @@ namespace Elements.Geometry
                 var v = p[i];
                 converted[i] = new Vector3(v.X / scale, v.Y / scale);
             }
-            return new Polygon(converted);
+            try
+            {
+                return new Polygon(converted);
+            }
+            catch
+            {
+                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back. 
+                // here we make a last-ditch attempt to fix this and construct a new polygon. 
+                var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
+                try
+                {
+                    return new Polygon(cleanedVertices);
+                }
+                catch
+                {
+                    throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
+                }
+            }
         }
 
         public static IList<Polygon> Reversed(this IList<Polygon> polygons)

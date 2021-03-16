@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ModelCurve
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -200,7 +200,7 @@
     animate();
   </script><h5 id="Elements_ModelCurve"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// A line
-var line = new Line(Vector3.Origin, new Vector3(5,5,5));
+var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
 
 // An arc
 var arc = new Arc(Vector3.Origin, 2.0, 45.0, 135.0);
@@ -215,7 +215,7 @@ var c = new Vector3(5, 5, 2);
 var d = new Vector3(0, 5, 3);
 var e = new Vector3(0, 0, 4);
 var f = new Vector3(5, 0, 5);
-var ctrlPts = new List&lt;Vector3&gt;{a,b,c,d,e,f};
+var ctrlPts = new List&lt;Vector3&gt; { a, b, c, d, e, f };
 var bezier = new Bezier(ctrlPts);
 
 var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red));
@@ -229,6 +229,10 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">ModelCurve</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -257,6 +261,15 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -282,7 +295,7 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ModelCurve_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ModelCurve : GeometricElement</code></pre>
+    <pre><code class="lang-csharp hljs">public class ModelCurve : GeometricElement, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -375,6 +388,10 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
 </article>
           </div>
           

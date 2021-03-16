@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class DirectionalLight
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -215,15 +215,41 @@ var mass = new Mass(Polygon.Rectangle(1, 1), 1.0, sunMaterial, new Transform(lig
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><span class="xref">DirectionalLight</span></div>
+    <div class="level2"><a class="xref" href="Elements.Light.html">Light</a></div>
+    <div class="level3"><span class="xref">DirectionalLight</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_LightType">Light.LightType</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Intensity">Light.Intensity</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Color">Light.Color</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Light.html#Elements_Light_Transform">Light.Transform</a>
+    </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -251,7 +277,7 @@ var mass = new Mass(Polygon.Rectangle(1, 1), 1.0, sunMaterial, new Transform(lig
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_DirectionalLight_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class DirectionalLight : Element</code></pre>
+    <pre><code class="lang-csharp hljs">public class DirectionalLight : Light, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -306,82 +332,10 @@ var mass = new Mass(Polygon.Rectangle(1, 1), 1.0, sunMaterial, new Transform(lig
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_DirectionalLight_Color_" data-uid="Elements.DirectionalLight.Color*"></a>
-  <h4 id="Elements_DirectionalLight_Color" data-uid="Elements.DirectionalLight.Color">Color</h4>
-  <div class="markdown level1 summary"><p>The color of the light.
-The color's alpha value will be ignored.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_DirectionalLight_Intensity_" data-uid="Elements.DirectionalLight.Intensity*"></a>
-  <h4 id="Elements_DirectionalLight_Intensity" data-uid="Elements.DirectionalLight.Intensity">Intensity</h4>
-  <div class="markdown level1 summary"><p>The intensity of the light measured in lux.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Intensity { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_DirectionalLight_Transform_" data-uid="Elements.DirectionalLight.Transform*"></a>
-  <h4 id="Elements_DirectionalLight_Transform" data-uid="Elements.DirectionalLight.Transform">Transform</h4>
-  <div class="markdown level1 summary"><p>The light's transform.
-The light will be aimed along the transform's -Z axis.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
 </article>
           </div>
           

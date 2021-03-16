@@ -395,6 +395,8 @@ namespace Elements.Geometry.Solids
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
 
                 var faceMesh = new Mesh();
+                (Vector3 U, Vector3 V) basis = (default(Vector3), default(Vector3));
+
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
                     var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
@@ -408,9 +410,21 @@ namespace Elements.Geometry.Solids
                         c = transform.OfPoint(c);
                     }
 
-                    var v1 = faceMesh.AddVertex(a, new UV(), color: color);
-                    var v2 = faceMesh.AddVertex(b, new UV(), color: color);
-                    var v3 = faceMesh.AddVertex(c, new UV(), color: color);
+                    if (i == 0)
+                    {
+                        // Calculate the texture space basis vectors
+                        // from the first triangle. This is acceptable
+                        // for planar faces.
+                        // TODO: Update this when we support non-planar faces.
+                        // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                        var n = f.Plane().Normal;
+                        basis = n.ComputeDefaultBasisVectors();
+                    }
+
+                    var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(basis.U.Dot(b), basis.V.Dot(b)), color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(basis.U.Dot(c), basis.V.Dot(c)), color: color);
+
                     faceMesh.AddTriangle(v1, v2, v3);
                 }
                 mesh.AddMesh(faceMesh);

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polygon
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -236,6 +236,9 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformedPolyline_Elements_Geometry_Transform_">Polyline.TransformedPolyline(Transform)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformSegment_Elements_Geometry_Transform_System_Int32_System_Boolean_System_Boolean_">Polyline.TransformSegment(Transform, Int32, Boolean, Boolean)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Bounds">Polyline.Bounds()</a>
     </div>
     <div>
@@ -245,7 +248,13 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__">Polyline.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CreateMiterTransform_System_Int32_Elements_Geometry_Vector3_Elements_Geometry_Vector3_">Polyline.CreateMiterTransform(Int32, Vector3, Vector3)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Equals_Elements_Geometry_Polyline_">Polyline.Equals(Polyline)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_SharedSegments_Elements_Geometry_Polyline_Elements_Geometry_Polyline_System_Boolean_">Polyline.SharedSegments(Polyline, Polyline, Boolean)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
@@ -280,7 +289,8 @@ var star = Polygon.Star(5, 3, 5);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -997,6 +1007,50 @@ Returns a list containing a representation of the perimeter of this Polygon if t
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_">Polyline.Frames(Double, Double)</a></div>
+  <a id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d*"></a>
+  <h4 id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Find the minimum-area rotated rectangle containing a set of points,
+calculated without regard for Z coordinate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Polygon FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to contain within the rectangle</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><p>A rectangular polygon that contains all input points</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_GetHashCode_" data-uid="Elements.Geometry.Polygon.GetHashCode*"></a>
   <h4 id="Elements_Geometry_Polygon_GetHashCode" data-uid="Elements.Geometry.Polygon.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the polygon.</p>
@@ -1387,7 +1441,7 @@ Returns null if the Polygons do not intersect.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Vector3 Normal()</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Normal()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1405,8 +1459,36 @@ Returns null if the Polygons do not intersect.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polygon_NormalsAtVertices_" data-uid="Elements.Geometry.Polygon.NormalsAtVertices*"></a>
+  <h4 id="Elements_Geometry_Polygon_NormalsAtVertices" data-uid="Elements.Geometry.Polygon.NormalsAtVertices">NormalsAtVertices()</h4>
+  <div class="markdown level1 summary"><p>Get the normal of each vertex on the polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override Vector3[] NormalsAtVertices()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><p>A collection of unit vectors, each corresponding to a single vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Normal">Polyline.Normal()</a></div>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_NormalsAtVertices">Polyline.NormalsAtVertices()</a></div>
+  <h5 id="Elements_Geometry_Polygon_NormalsAtVertices_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>All normals will be the same since polygons are coplanar by definition.</p>
+</div>
   <a id="Elements_Geometry_Polygon_Offset_" data-uid="Elements.Geometry.Polygon.Offset*"></a>
   <h4 id="Elements_Geometry_Polygon_Offset_System_Double_Elements_Geometry_EndType_System_Double_" data-uid="Elements.Geometry.Polygon.Offset(System.Double,Elements.Geometry.EndType,System.Double)">Offset(Double, EndType, Double)</h4>
   <div class="markdown level1 summary"><p>Offset this polygon by the specified amount.</p>
@@ -1515,6 +1597,30 @@ Returns null if the Polygons do not intersect.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAtInternal_System_Double_System_Int32__">Polyline.PointAtInternal(Double, out Int32)</a></div>
+  <a id="Elements_Geometry_Polygon_PointInternal_" data-uid="Elements.Geometry.Polygon.PointInternal*"></a>
+  <h4 id="Elements_Geometry_Polygon_PointInternal" data-uid="Elements.Geometry.Polygon.PointInternal">PointInternal()</h4>
+  <div class="markdown level1 summary"><p>Find a point that is guaranteed to be internal to the polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 PointInternal()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_Project_" data-uid="Elements.Geometry.Polygon.Project*"></a>
   <h4 id="Elements_Geometry_Polygon_Project_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Polygon.Project(Elements.Geometry.Plane)">Project(Plane)</h4>
   <div class="markdown level1 summary"><p>Project the specified vector onto the plane.</p>
@@ -1755,6 +1861,90 @@ Returns null if the Polygons do not intersect.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Segments">Polyline.Segments()</a></div>
+  <a id="Elements_Geometry_Polygon_Split_" data-uid="Elements.Geometry.Polygon.Split*"></a>
+  <h4 id="Elements_Geometry_Polygon_Split_Elements_Geometry_Polyline_" data-uid="Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)">Split(Polyline)</h4>
+  <div class="markdown level1 summary"><p>Split this polygon with an open polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Polygon&gt; Split(Polyline pl)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><span class="parametername">pl</span></td>
+        <td><p>The polyline with which to split.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polygon_Split_" data-uid="Elements.Geometry.Polygon.Split*"></a>
+  <h4 id="Elements_Geometry_Polygon_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__" data-uid="Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})">Split(IEnumerable&lt;Polyline&gt;)</h4>
+  <div class="markdown level1 summary"><p>Split this polygon with a collection of open polylines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Polygon&gt; Split(IEnumerable&lt;Polyline&gt; polylines)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td><span class="parametername">polylines</span></td>
+        <td><p>The polylines with which to split.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_Star_" data-uid="Elements.Geometry.Polygon.Star*"></a>
   <h4 id="Elements_Geometry_Polygon_Star_System_Double_System_Double_System_Int32_" data-uid="Elements.Geometry.Polygon.Star(System.Double,System.Double,System.Int32)">Star(Double, Double, Int32)</h4>
   <div class="markdown level1 summary"><p>Create a star.</p>
@@ -2044,6 +2234,39 @@ Returns null if the Polygons do not intersect.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polygon_TransformSegment_" data-uid="Elements.Geometry.Polygon.TransformSegment*"></a>
+  <h4 id="Elements_Geometry_Polygon_TransformSegment_Elements_Geometry_Transform_System_Int32_" data-uid="Elements.Geometry.Polygon.TransformSegment(Elements.Geometry.Transform,System.Int32)">TransformSegment(Transform, Int32)</h4>
+  <div class="markdown level1 summary"><p>Transform a specified segment of this polygon in place.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TransformSegment(Transform t, int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>The transform. If it is not within the polygon plane, then an exception will be thrown.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>The segment to transform. If it does not exist, then no work will be done.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -2360,6 +2583,48 @@ Returns a representation of all polygons if they do not intersect.</p>
   </table>
   <h3 id="operators">Operators
   </h3>
+  <a id="Elements_Geometry_Polygon_op_Implicit_" data-uid="Elements.Geometry.Polygon.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Polygon_op_Implicit_Elements_Geometry_Polygon__Elements_Element" data-uid="Elements.Geometry.Polygon.op_Implicit(Elements.Geometry.Polygon)~Elements.Element">Implicit(Polygon to Element)</h4>
+  <div class="markdown level1 summary"><p>Implicitly convert a Polygon to a ModelCurve Element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Element(Polygon c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The curve to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polygon_op_Implicit_" data-uid="Elements.Geometry.Polygon.op_Implicit*"></a>
   <h4 id="Elements_Geometry_Polygon_op_Implicit_Elements_Geometry_Polygon__Elements_Geometry_Profile" data-uid="Elements.Geometry.Polygon.op_Implicit(Elements.Geometry.Polygon)~Elements.Geometry.Profile">Implicit(Polygon to Profile)</h4>
   <div class="markdown level1 summary"><p>Implicitly convert a polygon to a profile.</p>

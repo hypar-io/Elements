@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Mesh
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,14 +83,10 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Geometry.Geometry.html">Geometry</a></div>
-    <div class="level2"><span class="xref">Mesh</span></div>
+    <div class="level1"><span class="xref">Mesh</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.Geometry.Geometry.html#Elements_Geometry_Geometry_Material">Geometry.Material</a>
-    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -114,7 +110,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Mesh_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Mesh : Geometry</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(MeshConverter))]
+public class Mesh</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -128,12 +125,13 @@
     <pre><code class="lang-csharp hljs">public Mesh()</code></pre>
   </div>
   <a id="Elements_Geometry_Mesh__ctor_" data-uid="Elements.Geometry.Mesh.#ctor*"></a>
-  <h4 id="Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__Elements_Material_" data-uid="Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle},Elements.Material)">Mesh(IList&lt;Vertex&gt;, IList&lt;Triangle&gt;, Material)</h4>
+  <h4 id="Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__" data-uid="Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle})">Mesh(IList&lt;Vertex&gt;, IList&lt;Triangle&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Mesh(IList&lt;Vertex&gt; vertices, IList&lt;Triangle&gt; triangles, Material material)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Mesh(IList&lt;Vertex&gt; vertices, IList&lt;Triangle&gt; triangles)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -146,7 +144,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
@@ -155,23 +153,19 @@
         <td><span class="parametername">triangles</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
-        <td><span class="parametername">material</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Geometry_Mesh_Triangles_" data-uid="Elements.Geometry.Mesh.Triangles*"></a>
   <h4 id="Elements_Geometry_Mesh_Triangles" data-uid="Elements.Geometry.Mesh.Triangles">Triangles</h4>
-  <div class="markdown level1 summary"><p>The triangles of the mesh</p>
+  <div class="markdown level1 summary"><p>The mesh' triangles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Triangles&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -190,12 +184,13 @@
   </table>
   <a id="Elements_Geometry_Mesh_Vertices_" data-uid="Elements.Geometry.Mesh.Vertices*"></a>
   <h4 id="Elements_Geometry_Mesh_Vertices" data-uid="Elements.Geometry.Mesh.Vertices">Vertices</h4>
-  <div class="markdown level1 summary"><p>The vertices of the mesh.</p>
+  <div class="markdown level1 summary"><p>The mesh' vertices.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Vertex&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public IList&lt;Vertex&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -207,67 +202,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_Geometry_Mesh_AddTriangle_" data-uid="Elements.Geometry.Mesh.AddTriangle*"></a>
-  <h4 id="Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_Elements_Geometry_Solids_Vertex_" data-uid="Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex,Elements.Geometry.Solids.Vertex)">AddTriangle(Vertex, Vertex, Vertex)</h4>
-  <div class="markdown level1 summary"><p>Add a triangle to the mesh.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
-        <td><span class="parametername">a</span></td>
-        <td><p>The first vertex.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
-        <td><span class="parametername">b</span></td>
-        <td><p>The second vertex.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
-        <td><span class="parametername">c</span></td>
-        <td><p>The third vertex.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_Mesh_AddTriangle_" data-uid="Elements.Geometry.Mesh.AddTriangle*"></a>
   <h4 id="Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Triangle_" data-uid="Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Triangle)">AddTriangle(Triangle)</h4>
   <div class="markdown level1 summary"><p>Add a triangle to the mesh.</p>
@@ -310,14 +251,14 @@
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Mesh_AddVertex_" data-uid="Elements.Geometry.Mesh.AddVertex*"></a>
-  <h4 id="Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Solids_Vertex_" data-uid="Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Solids.Vertex)">AddVertex(Vertex)</h4>
-  <div class="markdown level1 summary"><p>Add a vertex to the mesh.</p>
+  <a id="Elements_Geometry_Mesh_AddTriangle_" data-uid="Elements.Geometry.Mesh.AddTriangle*"></a>
+  <h4 id="Elements_Geometry_Mesh_AddTriangle_Elements_Geometry_Vertex_Elements_Geometry_Vertex_Elements_Geometry_Vertex_" data-uid="Elements.Geometry.Mesh.AddTriangle(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)">AddTriangle(Vertex, Vertex, Vertex)</h4>
+  <div class="markdown level1 summary"><p>Add a triangle to the mesh.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vertex v)</code></pre>
+    <pre><code class="lang-csharp hljs">public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -330,9 +271,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
-        <td><span class="parametername">v</span></td>
-        <td><p>The vertex to add.</p>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third vertex.</p>
 </td>
       </tr>
     </tbody>
@@ -347,7 +300,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -407,9 +360,51 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Solids.Vertex.html">Vertex</a></td>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
         <td><p>The newly created vertex.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_AddVertex_" data-uid="Elements.Geometry.Mesh.AddVertex*"></a>
+  <h4 id="Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vertex_" data-uid="Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vertex)">AddVertex(Vertex)</h4>
+  <div class="markdown level1 summary"><p>Add a vertex to the mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vertex v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The vertex to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

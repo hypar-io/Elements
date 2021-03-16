@@ -5,12 +5,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum NumericPropertyUnitType
+    <title>Enum VoidTreatment
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum NumericPropertyUnitType
+    <meta name="title" content="Enum VoidTreatment
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.5.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,18 +73,19 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Properties.NumericPropertyUnitType">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.VoidTreatment">
   
   
-  <h1 id="Elements_Properties_NumericPropertyUnitType" data-uid="Elements.Properties.NumericPropertyUnitType" class="text-break">Enum NumericPropertyUnitType
+  <h1 id="Elements_Geometry_VoidTreatment" data-uid="Elements.Geometry.VoidTreatment" class="text-break">Enum VoidTreatment
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Controls the handling of internal regions in a polygon boolean operation.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Properties.html">Elements.Properties</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Properties_NumericPropertyUnitType_syntax">Syntax</h5>
+  <h5 id="Elements_Geometry_VoidTreatment_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum NumericPropertyUnitType</code></pre>
+    <pre><code class="lang-csharp hljs">public enum VoidTreatment</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -97,40 +98,16 @@
     <thead>
     <tbody>
       <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Area">Area</td>
-        <td></td>
+        <td id="Elements_Geometry_VoidTreatment_IgnoreInternalVoids">IgnoreInternalVoids</td>
+        <td><p>Treat all contained or overlapping polygons as solid.
+This corresponds to Clipper's &quot;Positive&quot; PolyFillType.</p>
+</td>
       </tr>
       <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Currency">Currency</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Force">Force</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Length">Length</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Mass">Mass</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Number">Number</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Pressure">Pressure</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Time">Time</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="Elements_Properties_NumericPropertyUnitType_Volume">Volume</td>
-        <td></td>
+        <td id="Elements_Geometry_VoidTreatment_PreserveInternalVoids">PreserveInternalVoids</td>
+        <td><p>Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
+This corresponds to Clipper's &quot;EvenOdd&quot; PolyFillType.</p>
+</td>
       </tr>
     </tbody>
   </thead></thead></table>
