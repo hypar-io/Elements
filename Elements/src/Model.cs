@@ -48,6 +48,8 @@ namespace Elements
         /// This operation recursively searches the element's properties
         /// for element sub-properties and adds those elements to the elements
         /// dictionary before adding the element itself.
+        /// Properties of the following types are be supported for introspection:
+        /// Element, IList<Element>, IDictionary<Element>, Representation, IList<SolidOperation>
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
         /// <param name="gatherSubElements">Should sub-elements in properties be
@@ -241,19 +243,9 @@ namespace Elements
                 return elements;
             }
 
-            // We provide special inclusions here for representations
-            // as these are not yet elements.
-            // TODO: When representations become elements, we should
-            // remove the inclusion for Representation, but keep that
-            // for SolidOperation.
-            t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                            .Where(p => typeof(Element).IsAssignableFrom(p.PropertyType)
-                            || typeof(IList<Element>).IsAssignableFrom(p.PropertyType)
-                            || typeof(IDictionary<object, Element>).IsAssignableFrom(p.PropertyType)
-                            || typeof(Representation).IsAssignableFrom(p.PropertyType)
-                            || typeof(IList<SolidOperation>).IsAssignableFrom(p.PropertyType));
-            foreach (var p in props)
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
+            foreach (var p in constrainedProps)
             {
                 var pValue = p.GetValue(obj, null);
                 if (pValue == null)
@@ -291,6 +283,38 @@ namespace Elements
             }
 
             return elements;
+        }
+
+        /// <summary>
+        /// All types that are valid for introspection including
+        /// TODO: When representations become elements, we should
+        /// remove the inclusion for Representation, but keep that
+        /// for SolidOperation.
+        /// </summary>
+        /// <param name="t">The type to check.</param>
+        /// <returns>Return true if a type is valid for introspection, otherwise false.</returns>
+        internal static bool IsValidForRecursiveAddition(Type t)
+        {
+            if (t.IsGenericType)
+            {
+                if (typeof(IList<>).MakeGenericType(t.GetGenericArguments()[0]).IsAssignableFrom(t))
+                {
+                    return true;
+                }
+                else if (typeof(IDictionary<,>).MakeGenericType(t.GetGenericArguments()).IsAssignableFrom(t))
+                {
+                    return true;
+                }
+            }
+
+            if (t.IsArray)
+            {
+                return typeof(Element).IsAssignableFrom(t.GetElementType());
+            }
+
+            return typeof(Element).IsAssignableFrom(t)
+                   || typeof(Representation).IsAssignableFrom(t)
+                   || typeof(SolidOperation).IsAssignableFrom(t);
         }
     }
 }

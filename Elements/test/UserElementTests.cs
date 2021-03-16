@@ -15,7 +15,7 @@ namespace Elements.Tests
         public Profile Profile { get; set; }
 
         // Used to test serialization of lists of sub elements.
-        public List<Element> SubElements { get; set; }
+        public List<Mass> SubElements { get; set; }
 
         // Used to test dictionaries of sub elements.
         public Dictionary<string, Element> DictionaryElements { get; set; }
@@ -42,7 +42,7 @@ namespace Elements.Tests
         {
             this.CenterLine = centerLine;
             this.Profile = profile;
-            this.SubElements = new List<Element>();
+            this.SubElements = new List<Mass>();
             this.DictionaryElements = new Dictionary<string, Element>();
         }
 

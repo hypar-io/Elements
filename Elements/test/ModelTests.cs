@@ -285,8 +285,8 @@ namespace Elements.Tests
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
             ue.SubElements.AddRange(new[]{
-                new Profile(new Circle(1).ToPolygon()),
-                new Profile(Polygon.Rectangle(1,1))});
+                new Mass(Polygon.Rectangle(1,1)),
+                new Mass(Polygon.L(2,2,1))});
             model.AddElement(ue);
             Assert.Equal(3, model.AllElementsOfType<Profile>().Count());
         }
@@ -312,6 +312,28 @@ namespace Elements.Tests
             ue.UpdateRepresentations();
             model.AddElement(ue);
             Assert.Equal(2, model.AllElementsOfType<Profile>().Count());
+        }
+
+        [Fact]
+        public void HandlesAllDocumentedSubElements()
+        {
+            // List types should be valid.
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(Element[])));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(Floor[])));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(IList<Floor>)));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(List<Floor>)));
+
+            // Dictionary types should be valid.
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(IDictionary<string, Floor>)));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(Dictionary<Guid, Floor>)));
+
+            // List types of solid operations should be valid.
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(IList<SolidOperation>)));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(List<SolidOperation>)));
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(Element)));
+
+            // Representations should be valid.
+            Assert.True(Model.IsValidForRecursiveAddition(typeof(Representation)));
         }
 
         private Model QuadPanelModel()
