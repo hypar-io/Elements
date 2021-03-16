@@ -5119,6 +5119,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   nameWithType: Polygon.Split(Polyline)
+- uid: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: Split(IEnumerable<Polyline>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: Split(IEnumerable(Of Polyline))
+  fullName: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: Polygon.Split(IEnumerable<Polyline>)
+  nameWithType.vb: Polygon.Split(IEnumerable(Of Polyline))
 - uid: Elements.Geometry.Polygon.Split*
   name: Split
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_
@@ -16979,6 +16988,73 @@ references:
   commentId: F:Elements.Spatial.GridDirection.V
   fullName: Elements.Spatial.GridDirection.V
   nameWithType: GridDirection.V
+- uid: Elements.Spatial.HalfEdgeGraph2d
+  name: HalfEdgeGraph2d
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html
+  commentId: T:Elements.Spatial.HalfEdgeGraph2d
+  fullName: Elements.Spatial.HalfEdgeGraph2d
+  nameWithType: HalfEdgeGraph2d
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon,Elements.Geometry.Polyline)
+  name: Construct(Polygon, Polyline)
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_Elements_Geometry_Polygon_Elements_Geometry_Polyline_
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon,Elements.Geometry.Polyline)
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon, Elements.Geometry.Polyline)
+  nameWithType: HalfEdgeGraph2d.Construct(Polygon, Polyline)
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable<Elements.Geometry.Polygon>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polygon), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: HalfEdgeGraph2d.Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
+  nameWithType.vb: HalfEdgeGraph2d.Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct*
+  name: Construct
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Construct
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct
+  nameWithType: HalfEdgeGraph2d.Construct
+- uid: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  name: EdgesPerVertex
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_EdgesPerVertex
+  commentId: P:Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  fullName: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  nameWithType: HalfEdgeGraph2d.EdgesPerVertex
+- uid: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex*
+  name: EdgesPerVertex
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_EdgesPerVertex_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  nameWithType: HalfEdgeGraph2d.EdgesPerVertex
+- uid: Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  name: Polygonize()
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Polygonize
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Polygonize()
+  nameWithType: HalfEdgeGraph2d.Polygonize()
+- uid: Elements.Spatial.HalfEdgeGraph2d.Polygonize*
+  name: Polygonize
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Polygonize_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  nameWithType: HalfEdgeGraph2d.Polygonize
+- uid: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  name: Vertices
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Vertices
+  commentId: P:Elements.Spatial.HalfEdgeGraph2d.Vertices
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  nameWithType: HalfEdgeGraph2d.Vertices
+- uid: Elements.Spatial.HalfEdgeGraph2d.Vertices*
+  name: Vertices
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Vertices_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Vertices
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  nameWithType: HalfEdgeGraph2d.Vertices
 - uid: Elements.Spatial.MercatorProjection
   name: MercatorProjection
   href: api/Elements.Spatial.MercatorProjection.html

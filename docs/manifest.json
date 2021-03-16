@@ -328,7 +328,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "hLmtIfbh23i3zedOv8RkeQ=="
+          "hash": "HxFwt7KXZXFBNs5YNcEAxA=="
         }
       },
       "is_incremental": false,
@@ -1054,7 +1054,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "UtI9GGpu56HEH+Hd2ZRQbA=="
+          "hash": "VRDG04bUJAIFKuI4RUBzGQ=="
         }
       },
       "is_incremental": false,
@@ -1890,6 +1890,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.HalfEdgeGraph2d.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.HalfEdgeGraph2d.html",
+          "hash": "iHpllV8YWH42Cvoixhtfrw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Spatial.MercatorProjection.yml",
       "output": {
         ".html": {
@@ -1930,7 +1942,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.html",
-          "hash": "r12hTm1FqFgJXb+vzEL9cQ=="
+          "hash": "9dJZnkzF7daD+tk949zeYA=="
         }
       },
       "is_incremental": false,
@@ -4233,7 +4245,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 155,
+          "total_file_count": 156,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
