@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using System;
 using Elements.Geometry;
-using Elements.Geometry.Profiles;
-using Elements.Geometry.Solids;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using Elements.Spatial.CellComplex;
 using Xunit;
 using System.Linq;
 
@@ -74,10 +71,11 @@ namespace Elements.Tests
             this.Name = "Elements_CellComplex_Serialization";
 
             var cellComplex = MakeASimpleCellComplex();
-            var bounds = new BBox3(cellComplex.Vertices.Values.Select(v => v.Value).ToList());
+            var vertices = cellComplex.GetVertices();
+            var bounds = new BBox3(vertices.Select(v => v.Value).ToList());
 
             var i = 0;
-            foreach (var vertex in cellComplex.Vertices.Values)
+            foreach (var vertex in vertices)
             {
                 vertex.Name = $"Vertex-{i}";
                 i++;
@@ -91,24 +89,24 @@ namespace Elements.Tests
 
             var copyTransform = new Transform(new Vector3((bounds.Max.X - bounds.Min.X) * 1.5, 0));
 
-            foreach (var segment in cellComplex.Segments.Values)
+            foreach (var edge in cellComplex.GetEdges())
             {
-                var line1 = cellComplex.GetSegmentGeometry(segment);
-                var line2 = cellComplexDeserialized.GetSegmentGeometry(cellComplexDeserialized.GetSegment(segment.Id));
+                var line1 = edge.GetGeometry();
+                var line2 = cellComplexDeserialized.GetEdge(edge.Id).GetGeometry();
                 Assert.True(line1.Start.Equals(line2.Start));
                 Assert.True(line1.End.Equals(line2.End));
             }
 
-            foreach (var face in cellComplex.Faces.Values)
+            foreach (var face in cellComplex.GetFaces())
             {
-                var faceGeo1 = cellComplex.GetFaceGeometry(face);
-                var faceGeo2 = cellComplexDeserialized.GetFaceGeometry(cellComplexDeserialized.GetFace(face.Id));
+                var faceGeo1 = face.GetGeometry();
+                var faceGeo2 = cellComplexDeserialized.GetFace(face.Id).GetGeometry();
                 Assert.True(faceGeo1.Area() == faceGeo2.Area());
                 this.Model.AddElement(new Panel(faceGeo1, DefaultPanelMaterial));
                 this.Model.AddElement(new Panel(faceGeo2, UMaterial, copyTransform));
             }
 
-            foreach (var vertex in cellComplex.Vertices.Values)
+            foreach (var vertex in vertices)
             {
                 var vertexCopy = cellComplexDeserialized.GetVertex(vertex.Id);
                 Assert.True(vertex.Name == vertexCopy.Name);
@@ -130,37 +128,34 @@ namespace Elements.Tests
         {
             this.Name = "Elements_CellComplex_Traversal";
 
-            var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 5);
+            var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
 
-            foreach (var segment in cellComplex.Segments.Values)
+            foreach (var edge in cellComplex.GetEdges())
             {
-                this.Model.AddElement(new ModelCurve(cellComplex.GetSegmentGeometry(segment), DefaultPanelMaterial));
+                this.Model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
             }
 
-            var baseCell = cellComplex.Cells.Values.First();
+            var baseCell = cellComplex.GetCells().First();
 
-            foreach (var face in cellComplex.GetFaces(baseCell))
+            foreach (var face in baseCell.GetFaces())
             {
-                this.Model.AddElement(new Panel(cellComplex.GetFaceGeometry(face), BaseMaterial));
+                this.Model.AddElement(new Panel(face.GetGeometry(), BaseMaterial));
             }
 
             // Traverse cells upward
-
             var curNeighbor = baseCell;
-            var upDirection = new Vector3(0, 0, 1);
             var numNeighbors = 0;
             var lastNeighbor = curNeighbor;
 
             while (curNeighbor != null)
             {
-                var matchingNeighbors = cellComplex.GetNeighbors(curNeighbor, upDirection);
-                curNeighbor = matchingNeighbors.Count == 0 ? null : matchingNeighbors[0];
+                curNeighbor = curNeighbor.GetNeighboringCell(curNeighbor.GetTopFace());
 
                 if (curNeighbor != null)
                 {
-                    foreach (var face in cellComplex.GetFaces(curNeighbor))
+                    foreach (var face in curNeighbor.GetFaces())
                     {
-                        this.Model.AddElement(new Panel(cellComplex.GetFaceGeometry(face), ZMaterial));
+                        this.Model.AddElement(new Panel(face.GetGeometry(), ZMaterial));
                     }
                     lastNeighbor = curNeighbor;
                     numNeighbors += 1;
@@ -171,20 +166,20 @@ namespace Elements.Tests
 
             // Traverse faces from top cell
             var baseFace = cellComplex.GetFace(lastNeighbor.TopFaceId);
-            this.Model.AddElement(new Panel(cellComplex.GetFaceGeometry(baseFace), BaseMaterial));
+            this.Model.AddElement(new Panel(baseFace.GetGeometry(), BaseMaterial));
 
             var curFaceNeighbor = baseFace;
             var lastFaceNeighbor = curFaceNeighbor;
             var numUNeighbors = 0;
 
-            while (curFaceNeighbor != null)
+            while (curFaceNeighbor != null && numUNeighbors < 30)
             {
-                var matchingNeighbors = cellComplex.GetNeighbors(curFaceNeighbor, cellComplex.GetUV(curFaceNeighbor.UId).Value, true);
-                curFaceNeighbor = matchingNeighbors.Count == 0 ? null : matchingNeighbors[0];
+                var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetOrientation(curFaceNeighbor.OrientationUId).GetGeometry() * 10000;
+                curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarU, true, false);
 
                 if (curFaceNeighbor != null)
                 {
-                    this.Model.AddElement(new Panel(cellComplex.GetFaceGeometry(curFaceNeighbor), UMaterial));
+                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), UMaterial));
                     lastFaceNeighbor = curFaceNeighbor;
                     numUNeighbors += 1;
                 }
@@ -197,18 +192,18 @@ namespace Elements.Tests
 
             while (curFaceNeighbor != null)
             {
-                var matchingNeighbors = cellComplex.GetNeighbors(curFaceNeighbor, cellComplex.GetUV(curFaceNeighbor.VId).Value, true);
-                curFaceNeighbor = matchingNeighbors.Count == 0 ? null : matchingNeighbors[0];
+                var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + cellComplex.GetOrientation(curFaceNeighbor.OrientationVId).GetGeometry() * 10000;
+                curFaceNeighbor = curFaceNeighbor.GetClosestNeighboringFace(pointFarV, true, false);
 
                 if (curFaceNeighbor != null)
                 {
-                    this.Model.AddElement(new Panel(cellComplex.GetFaceGeometry(curFaceNeighbor), VMaterial));
+                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), VMaterial));
                     lastFaceNeighbor = curFaceNeighbor;
                     numVNeighbors += 1;
                 }
             }
 
-            Assert.True(numVNeighbors == 4);
+            Assert.True(numVNeighbors == 9);
 
         }
     }
