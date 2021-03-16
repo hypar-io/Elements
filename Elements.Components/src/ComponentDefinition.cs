@@ -69,6 +69,7 @@ namespace Elements.Components
             return instance;
         }
 
+        // TODO: remove and use Vector3.PlaneAngleTo
         private static double Angle_2D(Vector3 A, Vector3 B)
         {
             // reject very small vectors
