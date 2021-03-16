@@ -309,11 +309,6 @@ namespace Elements
                 }
                 else if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
                 {
-                    if (!IsValidListType(genT[1]))
-                    {
-                        return false;
-                    }
-
                     if (typeof(Element).IsAssignableFrom(genT[1]))
                     {
                         return true;
