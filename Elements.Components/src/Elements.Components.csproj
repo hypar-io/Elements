@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Hypar.Elements.Components</AssemblyName>
+    <PackageTitle>Hypar Elements Components</PackageTitle>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>Hypar Elements Components</Title>
+    <PackageId>Hypar.Elements.Components</PackageId>
+    <PackageDescription>Utilities for working with flexible parametric components for Hypar.Elements.</PackageDescription>
+    <Summary>Parametric component utilities for Hypar.Elements.</Summary>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>$(Version)</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+  </ItemGroup>
+</Project>
