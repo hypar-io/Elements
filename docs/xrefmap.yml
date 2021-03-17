@@ -5430,6 +5430,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Offset
   nameWithType: Polyline.Offset
+- uid: Elements.Geometry.Polyline.OffsetOnSide(System.Double,System.Boolean)
+  name: OffsetOnSide(Double, Boolean)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetOnSide_System_Double_System_Boolean_
+  commentId: M:Elements.Geometry.Polyline.OffsetOnSide(System.Double,System.Boolean)
+  fullName: Elements.Geometry.Polyline.OffsetOnSide(System.Double, System.Boolean)
+  nameWithType: Polyline.OffsetOnSide(Double, Boolean)
+- uid: Elements.Geometry.Polyline.OffsetOnSide*
+  name: OffsetOnSide
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetOnSide_
+  commentId: Overload:Elements.Geometry.Polyline.OffsetOnSide
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.OffsetOnSide
+  nameWithType: Polyline.OffsetOnSide
 - uid: Elements.Geometry.Polyline.Plane
   name: Plane()
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane
