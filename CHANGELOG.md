@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.5
+
+### Added
+- `Grid2d.ToModelCurves()`
+
 ## 0.8.4
 
 ### Added
