@@ -137,7 +137,13 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(mass1);
             model.AddElement(mass2);
-            Assert.Equal(2, model.AllElementsOfType<Profile>().Count());
+
+            // TODO: This was previously 2 profiles, one for the stand alone 
+            // profile in the ctor and one created for the representation. 
+            // After we moved UpdateReprensentations into AddElement, this
+            // became 1 again because as soon as AddElement is called, the
+            // representation's profile is overridden with the main profile.
+            Assert.Equal(1, model.AllElementsOfType<Profile>().Count());
             Assert.Equal(2, model.AllElementsOfType<Mass>().Count());
             Assert.Single<Material>(model.AllElementsOfType<Material>());
 
@@ -145,7 +151,7 @@ namespace Elements.Tests
             File.WriteAllText("./deepSerialize.json", json);
 
             var newModel = Model.FromJson(json);
-            Assert.Equal(2, newModel.AllElementsOfType<Profile>().Count());
+            Assert.Equal(1, newModel.AllElementsOfType<Profile>().Count());
             Assert.Equal(2, newModel.AllElementsOfType<Mass>().Count());
             Assert.Single<Material>(newModel.AllElementsOfType<Material>());
         }
@@ -275,7 +281,10 @@ namespace Elements.Tests
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)));
             model.AddElement(ue);
-            Assert.Single(model.AllElementsOfType<Profile>());
+
+            // The profile of the user element and the one
+            // created inside UpdateRepresentation.
+            Assert.Equal(2, model.AllElementsOfType<Profile>().Count());
         }
 
         [Fact]
@@ -288,7 +297,10 @@ namespace Elements.Tests
                 new Mass(Polygon.Rectangle(1,1)),
                 new Mass(Polygon.L(2,2,1))});
             model.AddElement(ue);
-            Assert.Equal(3, model.AllElementsOfType<Profile>().Count());
+
+            // The profiles from the user element, the two sub elements
+            // and one profile generated in UpdateRepresentations.
+            Assert.Equal(4, model.AllElementsOfType<Profile>().Count());
         }
 
         [Fact]
