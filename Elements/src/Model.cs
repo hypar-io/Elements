@@ -248,34 +248,41 @@ namespace Elements
             var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
             foreach (var p in constrainedProps)
             {
-                var pValue = p.GetValue(obj, null);
-                if (pValue == null)
+                try
                 {
-                    continue;
-                }
-
-                var elems = pValue as IList;
-                if (elems != null)
-                {
-                    foreach (var item in elems)
+                    var pValue = p.GetValue(obj, null);
+                    if (pValue == null)
                     {
-                        elements.AddRange(RecursiveGatherSubElements(item));
+                        continue;
                     }
-                    continue;
-                }
 
-                // Get the properties dictionaries.
-                var dict = pValue as IDictionary;
-                if (dict != null)
-                {
-                    foreach (var value in dict.Values)
+                    var elems = pValue as IList;
+                    if (elems != null)
                     {
-                        elements.AddRange(RecursiveGatherSubElements(value));
+                        foreach (var item in elems)
+                        {
+                            elements.AddRange(RecursiveGatherSubElements(item));
+                        }
+                        continue;
                     }
-                    continue;
-                }
 
-                elements.AddRange(RecursiveGatherSubElements(pValue));
+                    // Get the properties dictionaries.
+                    var dict = pValue as IDictionary;
+                    if (dict != null)
+                    {
+                        foreach (var value in dict.Values)
+                        {
+                            elements.AddRange(RecursiveGatherSubElements(value));
+                        }
+                        continue;
+                    }
+
+                    elements.AddRange(RecursiveGatherSubElements(pValue));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"The {p.Name} property or one of its children was not valid for introspection. Check the inner exception for details.", ex);
+                }
             }
 
             if (e != null)
