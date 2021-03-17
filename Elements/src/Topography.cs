@@ -473,8 +473,11 @@ namespace Elements
             for (var i = 0; i < e1.Length; i++)
             {
                 var pos = e1[i].Position.Average(e2[i].Position);
+                var normal = ((e1[i].Normal + e2[i].Normal) / 2).Unitized();
                 e1[i].Position = pos;
+                e1[i].Normal = normal;
                 e2[i].Position = pos;
+                e2[i].Normal = normal;
             }
         }
 
