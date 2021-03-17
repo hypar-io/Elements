@@ -38,7 +38,7 @@ namespace Elements.Tests
             var floor = new Floor(new Profile((Polygon)grid.GetCellGeometry()), 0.5, new Transform(0, 0, -0.51));
 
             // Create model curves from all subdivided cells of the grid
-            var modelCurves = grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry()));
+            var modelCurves = grid.ToModelCurves();
             // </example>
 
             Model.AddElement(floor);
@@ -345,7 +345,7 @@ namespace Elements.Tests
             Model.AddElements(new Circle(new Vector3(17, 15), 0.2));
             grid2[1, 1].U.DivideByCount(4);
             grid2[1, 1].SplitAtPoint(new Vector3(17, 15));
-            Model.AddElements(grid2.GetCells().SelectMany(c => c.GetTrimmedCellGeometry().Select(c2 => new ModelCurve(c2, BuiltInMaterials.XAxis))));
+            Model.AddElements(grid2.ToModelCurves(material: BuiltInMaterials.XAxis));
             Model.AddElement(shape);
             Assert.Equal(13, grid2.GetCells().Count);
         }

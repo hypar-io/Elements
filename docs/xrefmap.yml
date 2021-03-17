@@ -15564,6 +15564,12 @@ references:
   commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform,Elements.Geometry.Transform)
   fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform, Elements.Geometry.Transform)
   nameWithType: ModelCurveExtensions.ToModelCurves(Transform, Transform)
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(Grid2d, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Spatial_Grid2d_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(Grid2d, Transform, Material)
 - uid: Elements.ModelCurveExtensions.ToModelCurves*
   name: ToModelCurves
   href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_

@@ -3,6 +3,7 @@
 ## 0.8.5
 
 ### Added
+- `Grid2d.ToModelCurves()`
 - `Polyline.OffsetOnSide`
 
 ## 0.8.4
