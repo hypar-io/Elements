@@ -85,40 +85,16 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">RandomExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_RandomExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class RandomExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class RandomExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_RandomExtensions_NextColor_" data-uid="Elements.RandomExtensions.NextColor*"></a>
-  <h4 id="Elements_RandomExtensions_NextColor_System_Random_" data-uid="Elements.RandomExtensions.NextColor(System.Random)">NextColor(Random)</h4>
+  <h4 id="Elements_RandomExtensions_NextColor_Random_" data-uid="Elements.RandomExtensions.NextColor(Random)">NextColor(Random)</h4>
   <div class="markdown level1 summary"><p>Generate a new color with a random R, G, and B component. Useful for debugging purposes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -137,7 +113,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Random</span></td>
+        <td><span class="xref">Random</span></td>
         <td><span class="parametername">random</span></td>
         <td><p>The <code>Random</code> object to generate from</p>
 </td>
@@ -160,7 +136,7 @@
     </tbody>
   </table>
   <a id="Elements_RandomExtensions_NextMaterial_" data-uid="Elements.RandomExtensions.NextMaterial*"></a>
-  <h4 id="Elements_RandomExtensions_NextMaterial_System_Random_System_Boolean_" data-uid="Elements.RandomExtensions.NextMaterial(System.Random,System.Boolean)">NextMaterial(Random, Boolean)</h4>
+  <h4 id="Elements_RandomExtensions_NextMaterial_Random_System_Boolean_" data-uid="Elements.RandomExtensions.NextMaterial(Random,System.Boolean)">NextMaterial(Random, Boolean)</h4>
   <div class="markdown level1 summary"><p>Generate a new material with a random color assigned. Useful for debugging purposes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -179,7 +155,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Random</span></td>
+        <td><span class="xref">Random</span></td>
         <td><span class="parametername">random</span></td>
         <td><p>The <code>Random</code> object to generate from</p>
 </td>

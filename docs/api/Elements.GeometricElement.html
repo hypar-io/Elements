@@ -100,10 +100,6 @@
       <div class="level3"><a class="xref" href="Elements.Wall.html">Wall</a></div>
       <div class="level3"><a class="xref" href="Elements.WallByProfile.html">WallByProfile</a></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -121,34 +117,12 @@
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_GeometricElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class GeometricElement : Element, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class GeometricElement : Element</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -158,8 +132,7 @@ public class GeometricElement : Element, INotifyPropertyChanged</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public GeometricElement(Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public GeometricElement(Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -212,8 +185,7 @@ public GeometricElement(Transform transform, Material material, Representation r
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;IsElementDefinition&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool IsElementDefinition { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsElementDefinition { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -237,8 +209,7 @@ public bool IsElementDefinition { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Material&quot;, Required = Required.AllowNull)]
-public Material Material { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Material Material { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -262,8 +233,7 @@ public Material Material { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Representation&quot;, Required = Required.AllowNull)]
-public Representation Representation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Representation Representation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -287,8 +257,7 @@ public Representation Representation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
-public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -367,10 +336,6 @@ the profile of the floor.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public virtual void UpdateRepresentations()</code></pre>
-  </div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
   </div>
 </article>
           </div>

@@ -224,10 +224,6 @@ var modelPoints = new ModelPoints(pts, pink);
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">ModelPoints</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -263,45 +259,23 @@ var modelPoints = new ModelPoints(pts, pink);
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ModelPoints_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ModelPoints : GeometricElement, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class ModelPoints : GeometricElement</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ModelPoints__ctor_" data-uid="Elements.ModelPoints.#ctor*"></a>
-  <h4 id="Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_ModelPoints__ctor_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_Guid_System_String_" data-uid="Elements.ModelPoints.#ctor(IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)">ModelPoints(IList&lt;Vector3&gt;, Material, Transform, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a collection of points.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = null, string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -314,7 +288,7 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">locations</span></td>
         <td><p>The locations of the points.</p>
 </td>
@@ -338,7 +312,7 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Guid</span></td>
+        <td><span class="xref">Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the model curve.</p>
 </td>
@@ -372,15 +346,11 @@ public ModelPoints(IList&lt;Vector3&gt; locations = null, Material material = nu
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
 </article>
           </div>
           
