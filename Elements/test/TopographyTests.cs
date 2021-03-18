@@ -82,6 +82,7 @@ namespace Elements.Tests
             this.Model.AddElement(topo);
             sw.Stop();
             _output.WriteLine($"Serialization of topography: {sw.ElapsedMilliseconds.ToString()}ms");
+            Assert.True(sw.ElapsedMilliseconds < 20);
             this.Model.Elements.Clear();
             sw.Reset();
             sw.Start();
