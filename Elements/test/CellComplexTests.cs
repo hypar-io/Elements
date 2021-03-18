@@ -250,6 +250,11 @@ namespace Elements.Tests
             }
 
             var facesToDraw = cc.GetFaces();
+            foreach (var face in facesToDraw)
+            {
+                var faceGeo1 = face.GetGeometry();
+                this.Model.AddElement(new Panel(faceGeo1, BuiltInMaterials.Mass));
+            }
 
             var startPt = new Vector3(-20, -20, 0);
             var endPt = new Vector3(20, 20, 10);
@@ -291,11 +296,6 @@ namespace Elements.Tests
                     }
                 }
 
-                foreach (var f in chosenEdge.GetFaces())
-                {
-                    facesToDraw.Remove(f);
-                }
-
                 // If the last connected segment points sufficiently away
                 // from the target, then we assume there is no better
                 // forward solution and we exit.
@@ -309,13 +309,6 @@ namespace Elements.Tests
 
                 start = newStart;
                 count++;
-            }
-
-
-            foreach (var face in facesToDraw)
-            {
-                var faceGeo1 = face.GetGeometry();
-                this.Model.AddElement(new Panel(faceGeo1, BuiltInMaterials.Mass));
             }
 
             var pline = new Polyline(path);
