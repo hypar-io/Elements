@@ -86,35 +86,11 @@ bounded by intersecting or overlapping edges.</p>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">HalfEdgeGraph2d</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Spatial_HalfEdgeGraph2d_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class HalfEdgeGraph2d</code></pre>
+    <pre><code class="lang-csharp hljs">public class HalfEdgeGraph2d : object</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -137,7 +113,7 @@ bounded by intersecting or overlapping edges.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;&gt;</td>
+        <td><span class="xref">List</span>&lt;<span class="xref">List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -161,7 +137,7 @@ bounded by intersecting or overlapping edges.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -217,7 +193,7 @@ bounded by intersecting or overlapping edges.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_HalfEdgeGraph2d_Construct_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct*"></a>
-  <h4 id="Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})">Construct(IEnumerable&lt;Polygon&gt;, IEnumerable&lt;Polyline&gt;)</h4>
+  <h4 id="Elements_Spatial_HalfEdgeGraph2d_Construct_IEnumerable_Elements_Geometry_Polygon__IEnumerable_Elements_Geometry_Polyline__" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct(IEnumerable{Elements.Geometry.Polygon},IEnumerable{Elements.Geometry.Polyline})">Construct(IEnumerable&lt;Polygon&gt;, IEnumerable&lt;Polyline&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a 2D Half Edge Graph from a collection of polygons and a collection of intersecting polylines.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -236,13 +212,13 @@ bounded by intersecting or overlapping edges.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">pg</span></td>
         <td><p>The polygons.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
         <td><span class="parametername">pl</span></td>
         <td><p>The polylines.</p>
 </td>
@@ -283,7 +259,7 @@ bounded by intersecting or overlapping edges.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

@@ -218,7 +218,7 @@ var offset = pline.Offset(1, EndType.Square);
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
+    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -227,24 +227,6 @@ var offset = pline.Offset(1, EndType.Square);
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
@@ -256,13 +238,12 @@ var offset = pline.Offset(1, EndType.Square);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polyline__ctor_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -275,7 +256,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
@@ -290,8 +271,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,8 +295,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -340,10 +319,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
-[Required]
-[MinLength(2)]
-public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -355,7 +331,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -389,7 +365,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
   <a id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow*"></a>
-  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Check for coincident vertices in the supplied vertex collection.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -408,7 +384,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
         <td></td>
       </tr>
@@ -612,7 +588,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual Polygon[] Offset(double offset, EndType endType, double tolerance = 1E-05)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Polygon[] Offset(double offset, EndType endType, double tolerance = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -930,7 +906,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;</td>
+        <td><span class="xref">List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;</td>
         <td><p>Returns a list of tuples of indices for the segments that match in each polyline.</p>
 </td>
       </tr>
@@ -960,8 +936,6 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Polyline_TransformAt_" data-uid="Elements.Geometry.Polyline.TransformAt*"></a>
   <h4 id="Elements_Geometry_Polyline_TransformAt_System_Double_" data-uid="Elements.Geometry.Polyline.TransformAt(System.Double)">TransformAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get the Transform at the specified parameter along the Polygon.</p>
@@ -1146,7 +1120,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <span class="xref">IEquatable&lt;&gt;</span>
   </div>
 </article>
           </div>

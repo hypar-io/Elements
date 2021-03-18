@@ -101,33 +101,12 @@
     <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid">SolidOperation.Solid</a>
     </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Solids.html">Elements.Geometry.Solids</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Solids_Sweep_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Sweep : SolidOperation, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class Sweep : SolidOperation, ComponentModel.INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -137,8 +116,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -191,8 +169,7 @@ public Sweep(Profile profile, Curve curve, double startSetback, double endSetbac
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Curve&quot;, Required = Required.AllowNull)]
-public Curve Curve { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Curve Curve { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -216,8 +193,7 @@ public Curve Curve { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndSetback&quot;, Required = Required.Always)]
-public double EndSetback { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double EndSetback { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -241,8 +217,7 @@ public double EndSetback { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Profile&quot;, Required = Required.AllowNull)]
-public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -266,8 +241,7 @@ public Profile Profile { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;ProfileRotation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double ProfileRotation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double ProfileRotation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -291,8 +265,7 @@ public double ProfileRotation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartSetback&quot;, Required = Required.Always)]
-public double StartSetback { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double StartSetback { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -343,7 +316,7 @@ public double StartSetback { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler PropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public event ComponentModel.PropertyChangedEventHandler PropertyChanged</code></pre>
   </div>
   <h5 class="eventType">Event Type</h5>
   <table class="table table-bordered table-striped table-condensed">
