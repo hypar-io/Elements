@@ -1,6 +1,5 @@
 using System;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Elements.Spatial;
 using Elements.Spatial.CellComplex;
 using Xunit;
@@ -228,6 +227,102 @@ namespace Elements.Tests
 
             Assert.False(count != 1000); // If it got this big, we are likely in an infinite traversal
 
+        }
+
+        [Fact]
+        public void StarShapedCellComplex()
+        {
+            this.Name = "StarShapedCellComplex";
+            var cc = new CellComplex(Guid.NewGuid(), "Hooray");
+            var boundary = Polygon.Star(20, 10, 5);
+            var grid = new Grid2d(boundary, Vector3.Origin, Vector3.XAxis, Vector3.YAxis);
+            grid.U.DivideByFixedLength(5);
+            grid.V.DivideByFixedLength(5);
+            for (var i = 0; i < 5; i++)
+            {
+                foreach (var cell in grid.GetCells())
+                {
+                    foreach (var crv in cell.GetTrimmedCellGeometry())
+                    {
+                        cc.AddCell((Polygon)crv, 2, i, grid.U, grid.V);
+                    }
+                }
+            }
+
+            var facesToDraw = cc.GetFaces();
+
+            var startPt = new Vector3(-20, -20, 0);
+            var endPt = new Vector3(20, 20, 10);
+            this.Model.AddElement(new Mass(Polygon.Rectangle(0.5, 0.5), 0.5, BuiltInMaterials.XAxis, transform: new Transform(startPt)));
+            this.Model.AddElement(new Mass(Polygon.Rectangle(0.5, 0.5), 0.5, BuiltInMaterials.XAxis, transform: new Transform(endPt)));
+
+            // A list of vertices to record the traversal path.
+            var path = new List<Vector3>();
+            path.Add(startPt);
+            var start = cc.GetClosestVertex(startPt);
+
+            // A list to contains previously visited sites
+            // so that we don't backtrack.
+            var visited = new List<Elements.Spatial.CellComplex.Vertex>();
+
+            var stop = false;
+            var count = 0;
+            while (!stop && count < 500)
+            {
+                visited.Add(start);
+                path.Add(start.Value);
+                var neighbors = start.GetEdges();
+
+                var minDist = double.MaxValue;
+                Elements.Spatial.CellComplex.Vertex newStart = null;
+                Elements.Spatial.CellComplex.Edge chosenEdge = null;
+                foreach (var e in neighbors)
+                {
+                    var a = cc.GetVertex(e.StartVertexId);
+                    var b = cc.GetVertex(e.EndVertexId);
+                    var sample = start == a ? b : a;
+
+                    var d = endPt.DistanceTo(sample.Value);
+                    if (d < minDist && !visited.Contains(sample))
+                    {
+                        minDist = d;
+                        newStart = sample;
+                        chosenEdge = e;
+                    }
+                }
+
+                foreach (var f in chosenEdge.GetFaces())
+                {
+                    facesToDraw.Remove(f);
+                }
+
+                // If the last connected segment points sufficiently away
+                // from the target, then we assume there is no better
+                // forward solution and we exit.
+                var lastSegmentDirection = (newStart.Value - path[path.Count - 1]).Unitized();
+                var targetSegmentDirection = (endPt - newStart.Value).Unitized();
+                if (lastSegmentDirection.Dot(targetSegmentDirection) < -0.5)
+                {
+                    stop = true;
+                    path.Add(endPt);
+                }
+
+                start = newStart;
+                count++;
+            }
+
+
+            foreach (var face in facesToDraw)
+            {
+                var faceGeo1 = face.GetGeometry();
+                this.Model.AddElement(new Panel(faceGeo1, BuiltInMaterials.Mass));
+            }
+
+            var pline = new Polyline(path);
+            foreach (var s in pline.Segments())
+            {
+                this.Model.AddElement(new Beam(s, Polygon.Rectangle(0.2, 0.2), BuiltInMaterials.XAxis));
+            }
         }
     }
 }
