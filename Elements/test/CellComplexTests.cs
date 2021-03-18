@@ -226,7 +226,7 @@ namespace Elements.Tests
                 count += 1;
             }
 
-            Assert.False(count != 1000); // If it got this big, we are likely in an infinite traversal
+            Assert.False(count == 1000); // If it got this big, we are likely in an infinite traversal
 
         }
     }
