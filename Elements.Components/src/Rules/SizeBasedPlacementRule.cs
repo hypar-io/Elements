@@ -48,19 +48,15 @@ namespace Elements.Components
             List<Vector3> newVertices = TransformPolyline(this, definition);
             Polygon newBoundary =  new Polygon(newVertices);
             var targetCenter = newVertices.Distinct().ToList().Average();
-            // placedElements.Add(new ModelCurve(newBoundary));
 
             foreach (var possiblePlacement in ElementsAndClearances)
             {
                 var clearance = possiblePlacement.clearance.TransformedPolygon(definition.OrientationGuide);
-                var clearanceCtr = clearance.Centroid(); // clearance.Vertices.Average();
+                var clearanceCtr = clearance.Centroid();
                 var displacement = new Transform(targetCenter - clearanceCtr);
-                // placedElements.Add(new ModelCurve(clearance.TransformedPolygon(displacement), new Material("red", Colors.Red)));
-                // var lastArea = double.MinValue;
                 //TODO: don't assume options come in descending area order
                 if (Covers(newBoundary, clearance.TransformedPolygon(displacement)))
                 {
-                    // lastArea = clearance.Area();
                     possiblePlacement.element.IsElementDefinition = true;
                     var transform = new Transform(definition.OrientationGuide);
                     transform.Concatenate(displacement);
@@ -83,8 +79,6 @@ namespace Elements.Components
                 }
 
             }
-
-            // Console.WriteLine("🟣 IM DONE TRYING!!!");
 
             return placedElements;
         }

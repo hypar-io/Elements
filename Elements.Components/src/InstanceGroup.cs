@@ -5,6 +5,7 @@ using Elements.Geometry;
 
 namespace Elements.Components
 {
+    // TODO: Consolidate with `ComponentInstance`, I think this is doing the same thing pretty much. 
     public class InstanceGroup : GeometricElement
     {
         public List<ElementInstance> Instances { get; set; }

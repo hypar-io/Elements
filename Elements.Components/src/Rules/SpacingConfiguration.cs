@@ -1,4 +1,4 @@
-namespace Elements.Spatial
+namespace Elements.Components
 {
     /// <summary>
     /// Different ways to space elements
