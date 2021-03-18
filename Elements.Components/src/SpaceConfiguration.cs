@@ -27,9 +27,24 @@ namespace Elements.Components
         /// </summary>
         public class BoundaryDefinition
         {
+            /// <summary>
+            /// The minimum point of this boundary definition.
+            /// </summary>
             public Vector3 Min { get; set; }
+
+            /// <summary>
+            /// The maximum point of this boundary definition.
+            /// </summary>
             public Vector3 Max { get; set; }
+
+            /// <summary>
+            /// The calculated width of this boundary definition.
+            /// </summary>
             public double Width => Max.X - Min.X;
+
+            /// <summary>
+            /// The calculated depth of this boundary definition.
+            /// </summary>
             public double Depth => Max.Y - Min.Y;
         }
 
@@ -56,7 +71,7 @@ namespace Elements.Components
             /// <summary>
             /// The reference position this content item should move with.
             /// </summary>
-            /// <value></value>
+    
             public Vector3 Anchor { get; set; }
 
             /// <summary>

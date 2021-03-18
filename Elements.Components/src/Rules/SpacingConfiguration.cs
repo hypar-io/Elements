@@ -5,8 +5,17 @@ namespace Elements.Components
     /// </summary>
     public enum SpacingMode
     {
+        /// <summary>
+        /// Construct the array with a fixed count. Value = Count.
+        /// </summary>    
         ByCount,
+        /// <summary>
+        /// Construct the array with a fixed length. Value = length.
+        /// </summary>    
         ByLength,
+        /// <summary>
+        /// Construct the array with an approximate length. Value = target length.
+        /// </summary>    
         ByApproximateLength
     }
 
@@ -15,12 +24,24 @@ namespace Elements.Components
     /// </summary>
     public struct SpacingConfiguration
     {
+        /// <summary>
+        /// Construct a spacing configuration
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="value"></param>
         public SpacingConfiguration(SpacingMode mode, double value)
         {
             this.SpacingMode = mode;
             this.Value = value;
         }
+        /// <summary>
+        /// How to space this array
+        /// </summary>
         public SpacingMode SpacingMode { get; set; }
+
+        /// <summary>
+        /// The driving value of the array (meaning of this value depends on the choice of spacing mode.)
+        /// </summary>
         public double Value { get; set; }
     }
 }

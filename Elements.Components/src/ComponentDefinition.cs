@@ -13,14 +13,20 @@ namespace Elements.Components
     /// </summary>
     public class ComponentDefinition : Element
     {
+        /// <summary>
+        /// Construct a ComponentDefinition from rules and anchors.
+        /// </summary>
+        /// <param name="rules"></param>
+        /// <param name="referenceAnchors"></param>
+        /// <returns></returns>
         public ComponentDefinition(IList<IComponentPlacementRule> rules, IList<Vector3> referenceAnchors) : base(Guid.NewGuid(), null)
         {
             Rules = rules;
             ReferenceAnchors = referenceAnchors;
         }
-        public IList<IComponentPlacementRule> Rules { get; set; }
+        internal IList<IComponentPlacementRule> Rules { get; set; }
 
-        public IList<Vector3> ReferenceAnchors { get; set; }
+        internal IList<Vector3> ReferenceAnchors { get; set; }
         internal IList<Vector3> AnchorDisplacements { get; set; }
         internal Transform OrientationGuide { get; set; }
         /// <summary>
