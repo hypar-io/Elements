@@ -4,8 +4,11 @@
 
 ### Added
 - `Grid2d.ToModelCurves()`
+- Alpha release of `Hypar.Elements.Components`
 - `Polyline.OffsetOnSide`
+### Changed
 
+### Fixed
 ## 0.8.4
 
 ### Added
