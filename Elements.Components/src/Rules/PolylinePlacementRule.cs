@@ -17,7 +17,6 @@ namespace Elements.Components
         /// <param name="anchorIndices"></param>
         /// <param name="anchorDisplacements"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
         public PolylinePlacementRule(Polyline p, IList<int> anchorIndices, IList<Vector3> anchorDisplacements, string name) : base(Guid.NewGuid(), name)
         {
             Curve = p;
@@ -52,7 +51,6 @@ namespace Elements.Components
         /// <param name="p"></param>
         /// <param name="Anchors"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
         public static PolylinePlacementRule FromClosestPoints(Polyline p, IList<Vector3> Anchors, string name)
         {
             var anchorIndices = new List<int>();

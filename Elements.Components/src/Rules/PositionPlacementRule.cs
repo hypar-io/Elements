@@ -49,7 +49,6 @@ namespace Elements.Components
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="Anchors"></param>
-        /// <returns></returns>
         public static IList<IComponentPlacementRule> FromClosestPoints(IEnumerable<GeometricElement> elements, IList<Vector3> Anchors)
         {
             var rules = new List<IComponentPlacementRule>();
@@ -72,7 +71,6 @@ namespace Elements.Components
         /// <param name="orientationGuide"></param>
         /// <param name="referenceAnchors"></param>
         /// <param name="anchorDisplacements"></param>
-        /// <returns></returns>
 
         public Transform GenerateTransform(Transform orientationGuide, IList<Vector3> referenceAnchors, IList<Vector3> anchorDisplacements)
         {

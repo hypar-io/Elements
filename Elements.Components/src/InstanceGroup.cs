@@ -19,7 +19,6 @@ namespace Elements.Components
         /// <summary>
         /// Construct a new instance group
         /// </summary>
-        /// <returns></returns>
         public InstanceGroup() : base(new Transform(), null, null, true, Guid.NewGuid(), null)
         {
             this.Instances = new List<ElementInstance>();

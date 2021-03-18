@@ -18,7 +18,6 @@ namespace Elements.Components
         /// </summary>
         /// <param name="rules"></param>
         /// <param name="referenceAnchors"></param>
-        /// <returns></returns>
         public ComponentDefinition(IList<IComponentPlacementRule> rules, IList<Vector3> referenceAnchors) : base(Guid.NewGuid(), null)
         {
             Rules = rules;
@@ -34,7 +33,6 @@ namespace Elements.Components
         /// </summary>
         /// <param name="anchors">The anchor points used to set the component geometry.</param>
         /// <param name="orientationGuide">An optional transform to help guide the orientation of the elements.</param>
-        /// <returns></returns>
         public ComponentInstance Instantiate(IList<Vector3> anchors, Transform orientationGuide = null)
         {
             var instance = new ComponentInstance();

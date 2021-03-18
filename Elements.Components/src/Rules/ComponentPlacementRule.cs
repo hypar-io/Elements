@@ -38,7 +38,6 @@ namespace Elements.Components
         /// <param name="Anchors"></param>
         /// <param name="name"></param>
         /// <param name="anchorTransformer"></param>
-        /// <returns></returns>
         public static IComponentPlacementRule FromClosestPoints(ComponentDefinition component, Polyline p, IList<Vector3> Anchors, string name, Func<List<Vector3>, List<Vector3>> anchorTransformer = null)
         {
             var anchorIndices = new List<int>();

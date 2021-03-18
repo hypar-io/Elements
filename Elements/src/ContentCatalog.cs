@@ -22,7 +22,6 @@ namespace Elements
         /// Deserialize the give JSON text into the ContentCatalog
         /// </summary>
         /// <param name="json"></param>
-        /// <returns></returns>
         public static ContentCatalog FromJson(string json)
         {
             var catalogObject = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(json);

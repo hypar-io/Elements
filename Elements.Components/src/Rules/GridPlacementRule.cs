@@ -116,7 +116,6 @@ namespace Elements.Components
         /// <param name="Anchors"></param>
         /// <param name="name"></param>
         /// <param name="gridCreationRule"></param>
-        /// <returns></returns>
         public static GridPlacementRule FromClosestPoints(GridCellDefinition cell, Polygon gridArea, IList<Vector3> Anchors, string name, Action<Grid2d> gridCreationRule = null)
         {
             var anchorIndices = new List<int>();

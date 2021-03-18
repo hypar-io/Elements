@@ -15,7 +15,6 @@ namespace Elements.Components
         /// create Component Instances, rather than making them manually)
         /// /// </summary>
         /// <param name="name"></param>
-        /// <returns></returns>
         public ComponentInstance(string name = null) : base(Guid.NewGuid(), name)
         {
             Instances = new List<Element>();
