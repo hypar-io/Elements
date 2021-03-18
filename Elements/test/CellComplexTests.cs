@@ -266,7 +266,7 @@ namespace Elements.Tests
             path.Add(startPt);
             var start = cc.GetClosestVertex(startPt);
 
-            // A list to contains previously visited sites
+            // A list that contains previously visited sites
             // so that we don't backtrack.
             var visited = new List<Elements.Spatial.CellComplex.Vertex>();
 
@@ -285,6 +285,8 @@ namespace Elements.Tests
                 {
                     var a = cc.GetVertex(e.StartVertexId);
                     var b = cc.GetVertex(e.EndVertexId);
+
+                    // Don't test against the current vertex.
                     var sample = start == a ? b : a;
 
                     var d = endPt.DistanceTo(sample.Value);
