@@ -309,7 +309,6 @@ namespace Elements
                 if (genT.Length == 1)
                 {
                     if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
-                    //|| typeof(IEnumerable<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
                     {
                         if (!IsValidListType(genT[0]))
                         {
