@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Vertex
+    <title>Class VertexBase
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Vertex
+    <meta name="title" content="Class VertexBase
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.56.7.0">
     
@@ -73,9 +73,9 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Spatial.Vertex">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.CellComplex.VertexBase">
   
-  <h1 id="Elements_Spatial_Vertex" data-uid="Elements.Spatial.Vertex" class="text-break">Class Vertex
+  <h1 id="Elements_Spatial_CellComplex_VertexBase" data-uid="Elements.Spatial.CellComplex.VertexBase" class="text-break">Class VertexBase
   </h1>
   <div class="markdown level0 summary"><p>A unique vertex in a cell complex</p>
 </div>
@@ -83,19 +83,27 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Vertex</span></div>
-      <div class="level2"><a class="xref" href="Elements.Spatial.UV.html">UV</a></div>
+    <div class="level1"><a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html">ChildBase</a>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</div>
+    <div class="level2"><span class="xref">VertexBase</span></div>
+      <div class="level3"><a class="xref" href="Elements.Spatial.CellComplex.Orientation.html">Orientation</a></div>
+      <div class="level3"><a class="xref" href="Elements.Spatial.CellComplex.Vertex.html">Vertex</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_Id">ChildBase&lt;Vector3&gt;.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_CellComplex">ChildBase&lt;Vector3&gt;.CellComplex</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_GetHashCode">ChildBase&lt;Vector3&gt;.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_Equals_System_Object_">ChildBase&lt;Vector3&gt;.Equals(Object)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -110,79 +118,15 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.CellComplex.html">Elements.Spatial.CellComplex</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Spatial_Vertex_syntax">Syntax</h5>
+  <h5 id="Elements_Spatial_CellComplex_VertexBase_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Vertex</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class VertexBase : ChildBase&lt;Vector3&gt;</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <a id="Elements_Spatial_Vertex__ctor_" data-uid="Elements.Spatial.Vertex.#ctor*"></a>
-  <h4 id="Elements_Spatial_Vertex__ctor_System_Int64_Elements_Geometry_Vector3_System_String_" data-uid="Elements.Spatial.Vertex.#ctor(System.Int64,Elements.Geometry.Vector3,System.String)">Vertex(Int64, Vector3, String)</h4>
-  <div class="markdown level1 summary"><p>Represents a unique Vertex within a CellComplex.
-Is not intended to be created or modified outside of the CellComplex class code.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex(long id, Vector3 point, string name = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">point</span></td>
-        <td><p>Location of the vertex</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">name</span></td>
-        <td><p>Optional name</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="fields">Fields
   </h3>
-  <h4 id="Elements_Spatial_Vertex_Id" data-uid="Elements.Spatial.Vertex.Id">Id</h4>
-  <div class="markdown level1 summary"><p>ID</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Id</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h4 id="Elements_Spatial_Vertex_Value" data-uid="Elements.Spatial.Vertex.Value">Value</h4>
+  <h4 id="Elements_Spatial_CellComplex_VertexBase_Value" data-uid="Elements.Spatial.CellComplex.VertexBase.Value">Value</h4>
   <div class="markdown level1 summary"><p>Location in space</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -207,9 +151,9 @@ Is not intended to be created or modified outside of the CellComplex class code.
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Spatial_Vertex_Name_" data-uid="Elements.Spatial.Vertex.Name*"></a>
-  <h4 id="Elements_Spatial_Vertex_Name" data-uid="Elements.Spatial.Vertex.Name">Name</h4>
-  <div class="markdown level1 summary"><p>Some optional name, if we want it</p>
+  <a id="Elements_Spatial_CellComplex_VertexBase_Name_" data-uid="Elements.Spatial.CellComplex.VertexBase.Name*"></a>
+  <h4 id="Elements_Spatial_CellComplex_VertexBase_Name" data-uid="Elements.Spatial.CellComplex.VertexBase.Name">Name</h4>
+  <div class="markdown level1 summary"><p>An optional user-supplied name</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -231,6 +175,77 @@ Is not intended to be created or modified outside of the CellComplex class code.
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Spatial_CellComplex_VertexBase_DistanceTo_" data-uid="Elements.Spatial.CellComplex.VertexBase.DistanceTo*"></a>
+  <h4 id="Elements_Spatial_CellComplex_VertexBase_DistanceTo_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.CellComplex.VertexBase.DistanceTo(Elements.Geometry.Vector3)">DistanceTo(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Get the shortest distance to a given point</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double DistanceTo(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Elements.Spatial.CellComplex.ChildBase&lt;Elements.Geometry.Vector3&gt;.DistanceTo(Elements.Geometry.Vector3)</span></div>
+  <a id="Elements_Spatial_CellComplex_VertexBase_GetGeometry_" data-uid="Elements.Spatial.CellComplex.VertexBase.GetGeometry*"></a>
+  <h4 id="Elements_Spatial_CellComplex_VertexBase_GetGeometry" data-uid="Elements.Spatial.CellComplex.VertexBase.GetGeometry">GetGeometry()</h4>
+  <div class="markdown level1 summary"><p>Get the Vector3 that represents this Vertex or Orientation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 GetGeometry()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Elements.Spatial.CellComplex.ChildBase&lt;Elements.Geometry.Vector3&gt;.GetGeometry()</span></div>
 </article>
           </div>
           

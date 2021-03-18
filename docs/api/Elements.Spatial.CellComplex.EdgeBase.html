@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Face
+    <title>Class EdgeBase
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Face
+    <meta name="title" content="Class EdgeBase
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.56.7.0">
     
@@ -73,28 +73,36 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Spatial.Face">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.CellComplex.EdgeBase">
   
-  <h1 id="Elements_Spatial_Face" data-uid="Elements.Spatial.Face" class="text-break">Class Face
+  <h1 id="Elements_Spatial_CellComplex_EdgeBase" data-uid="Elements.Spatial.CellComplex.EdgeBase" class="text-break">Class EdgeBase
   </h1>
-  <div class="markdown level0 summary"><p>A face of a cell. Multiple cells can share the same face.</p>
+  <div class="markdown level0 summary"><p>A unique edge in a cell complex.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Face</span></div>
+    <div class="level1"><a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html">ChildBase</a>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
+    <div class="level2"><span class="xref">EdgeBase</span></div>
+      <div class="level3"><a class="xref" href="Elements.Spatial.CellComplex.Edge.html">Edge</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_Id">ChildBase&lt;Line&gt;.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_CellComplex">ChildBase&lt;Line&gt;.CellComplex</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_GetHashCode">ChildBase&lt;Line&gt;.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Spatial.CellComplex.ChildBase-1.html#Elements_Spatial_CellComplex_ChildBase_1_Equals_System_Object_">ChildBase&lt;Line&gt;.Equals(Object)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -109,23 +117,22 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.CellComplex.html">Elements.Spatial.CellComplex</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Spatial_Face_syntax">Syntax</h5>
+  <h5 id="Elements_Spatial_CellComplex_EdgeBase_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Face</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class EdgeBase : ChildBase&lt;Line&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
-  <a id="Elements_Spatial_Face__ctor_" data-uid="Elements.Spatial.Face.#ctor*"></a>
-  <h4 id="Elements_Spatial_Face__ctor_System_Int64_System_Collections_Generic_List_Elements_Spatial_DirectedSegment__Elements_Spatial_UV_Elements_Spatial_UV_" data-uid="Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.DirectedSegment},Elements.Spatial.UV,Elements.Spatial.UV)">Face(Int64, List&lt;DirectedSegment&gt;, UV, UV)</h4>
-  <div class="markdown level1 summary"><p>Represents a unique Face within a CellComplex.
-Is not intended to be created or modified outside of the CellComplex class code.</p>
+  <a id="Elements_Spatial_CellComplex_EdgeBase__ctor_" data-uid="Elements.Spatial.CellComplex.EdgeBase.#ctor*"></a>
+  <h4 id="Elements_Spatial_CellComplex_EdgeBase__ctor_System_UInt64_Elements_Spatial_CellComplex_CellComplex_" data-uid="Elements.Spatial.CellComplex.EdgeBase.#ctor(System.UInt64,Elements.Spatial.CellComplex.CellComplex)">EdgeBase(UInt64, CellComplex)</h4>
+  <div class="markdown level1 summary"><p>Create an EdgeBase (just calls CellChild constructor)</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Face(long id, List&lt;DirectedSegment&gt; directedSegments, UV u = null, UV v = null)</code></pre>
+    <pre><code class="lang-csharp hljs">protected EdgeBase(ulong id, CellComplex cellComplex)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -138,81 +145,26 @@ Is not intended to be created or modified outside of the CellComplex class code.
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.UInt64</span></td>
         <td><span class="parametername">id</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.DirectedSegment.html">DirectedSegment</a>&gt;</td>
-        <td><span class="parametername">directedSegments</span></td>
-        <td><p>List of the DirectedSegments that make up this Face</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Spatial.UV.html">UV</a></td>
-        <td><span class="parametername">u</span></td>
-        <td><p>Optional but highly recommended intended U direction for the Face</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Spatial.UV.html">UV</a></td>
-        <td><span class="parametername">v</span></td>
-        <td><p>Optional but highly recommended intended V direction for the Face</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_Face__ctor_" data-uid="Elements.Spatial.Face.#ctor*"></a>
-  <h4 id="Elements_Spatial_Face__ctor_System_Int64_System_Collections_Generic_List_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__" data-uid="Elements.Spatial.Face.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})">Face(Int64, List&lt;Int64&gt;, Nullable&lt;Int64&gt;, Nullable&lt;Int64&gt;)</h4>
-  <div class="markdown level1 summary"><p>Used for deserialization only!</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Face(long id, List&lt;long&gt; directedSegmentIds, long? uId = default(long? ), long? vId = default(long? ))</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">directedSegmentIds</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">uId</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">vId</span></td>
+        <td><a class="xref" href="Elements.Spatial.CellComplex.CellComplex.html">CellComplex</a></td>
+        <td><span class="parametername">cellComplex</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="fields">Fields
   </h3>
-  <h4 id="Elements_Spatial_Face_DirectedSegmentIds" data-uid="Elements.Spatial.Face.DirectedSegmentIds">DirectedSegmentIds</h4>
-  <div class="markdown level1 summary"><p>Directed segment IDs</p>
+  <h4 id="Elements_Spatial_CellComplex_EdgeBase_EndVertexId" data-uid="Elements.Spatial.CellComplex.EdgeBase.EndVertexId">EndVertexId</h4>
+  <div class="markdown level1 summary"><p>ID of second vertex</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;long&gt; DirectedSegmentIds</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong EndVertexId</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -224,18 +176,18 @@ public Face(long id, List&lt;long&gt; directedSegmentIds, long? uId = default(lo
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><span class="xref">System.UInt64</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h4 id="Elements_Spatial_Face_Id" data-uid="Elements.Spatial.Face.Id">Id</h4>
-  <div class="markdown level1 summary"><p>ID</p>
+  <h4 id="Elements_Spatial_CellComplex_EdgeBase_StartVertexId" data-uid="Elements.Spatial.CellComplex.EdgeBase.StartVertexId">StartVertexId</h4>
+  <div class="markdown level1 summary"><p>ID of first vertex</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Id</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong StartVertexId</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -247,20 +199,40 @@ public Face(long id, List&lt;long&gt; directedSegmentIds, long? uId = default(lo
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.UInt64</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h4 id="Elements_Spatial_Face_UId" data-uid="Elements.Spatial.Face.UId">UId</h4>
-  <div class="markdown level1 summary"><p>ID of U direction</p>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Spatial_CellComplex_EdgeBase_DistanceTo_" data-uid="Elements.Spatial.CellComplex.EdgeBase.DistanceTo*"></a>
+  <h4 id="Elements_Spatial_CellComplex_EdgeBase_DistanceTo_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.CellComplex.EdgeBase.DistanceTo(Elements.Geometry.Vector3)">DistanceTo(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Shortest distance to a given point</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? UId</code></pre>
+    <pre><code class="lang-csharp hljs">public override double DistanceTo(Vector3 point)</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -270,20 +242,23 @@ public Face(long id, List&lt;long&gt; directedSegmentIds, long? uId = default(lo
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h4 id="Elements_Spatial_Face_VId" data-uid="Elements.Spatial.Face.VId">VId</h4>
-  <div class="markdown level1 summary"><p>ID of V direction</p>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Elements.Spatial.CellComplex.ChildBase&lt;Elements.Geometry.Line&gt;.DistanceTo(Elements.Geometry.Vector3)</span></div>
+  <a id="Elements_Spatial_CellComplex_EdgeBase_GetGeometry_" data-uid="Elements.Spatial.CellComplex.EdgeBase.GetGeometry*"></a>
+  <h4 id="Elements_Spatial_CellComplex_EdgeBase_GetGeometry" data-uid="Elements.Spatial.CellComplex.EdgeBase.GetGeometry">GetGeometry()</h4>
+  <div class="markdown level1 summary"><p>Get the geometry for this Edge</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? VId</code></pre>
+    <pre><code class="lang-csharp hljs">public override Line GetGeometry()</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -293,11 +268,13 @@ public Face(long id, List&lt;long&gt; directedSegmentIds, long? uId = default(lo
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">Elements.Spatial.CellComplex.ChildBase&lt;Elements.Geometry.Line&gt;.GetGeometry()</span></div>
 </article>
           </div>
           
