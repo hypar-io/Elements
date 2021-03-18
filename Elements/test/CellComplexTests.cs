@@ -265,6 +265,7 @@ namespace Elements.Tests
             var path = new List<Vector3>();
             path.Add(startPt);
             var start = cc.GetClosestVertex(startPt);
+            var end = cc.GetClosestVertex(endPt);
 
             // A list that contains previously visited sites
             // so that we don't backtrack.
@@ -303,7 +304,7 @@ namespace Elements.Tests
                 // forward solution and we exit.
                 var lastSegmentDirection = (newStart.Value - path[path.Count - 1]).Unitized();
                 var targetSegmentDirection = (endPt - newStart.Value).Unitized();
-                if (lastSegmentDirection.Dot(targetSegmentDirection) < -0.5)
+                if (lastSegmentDirection.Dot(targetSegmentDirection) < -0.5 || newStart == end)
                 {
                     stop = true;
                     path.Add(endPt);
