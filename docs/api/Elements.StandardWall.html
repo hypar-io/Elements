@@ -215,6 +215,7 @@ wall.AddOpening(3, 1, 1, 2);
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
     <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
@@ -258,23 +259,44 @@ wall.AddOpening(3, 1, 1, 2);
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_StandardWall_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, IHasOpenings</code></pre>
+    <pre><code class="lang-csharp hljs">public class StandardWall : Wall, INotifyPropertyChanged, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_StandardWall__ctor_" data-uid="Elements.StandardWall.#ctor*"></a>
-  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)">StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)</h4>
+  <h4 id="Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a wall along a line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, double thickness, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public StandardWall(Line centerLine, double thickness, double height, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -330,7 +352,7 @@ This transform will be concatenated to the transform created to describe the wal
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the wall.</p>
 </td>
@@ -545,6 +567,9 @@ This transform will be concatenated to the transform created to describe the wal
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Wall.html#Elements_Wall_UpdateRepresentations">Wall.UpdateRepresentations()</a></div>
   <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
   </div>

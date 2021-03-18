@@ -88,6 +88,10 @@
     <div class="level3"><a class="xref" href="Elements.StructuralFraming.html">StructuralFraming</a></div>
     <div class="level4"><span class="xref">Brace</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -144,23 +148,44 @@
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Brace_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Brace : StructuralFraming</code></pre>
+    <pre><code class="lang-csharp hljs">public class Brace : StructuralFraming, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Brace__ctor_" data-uid="Elements.Brace.#ctor*"></a>
-  <h4 id="Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_Guid_System_String_" data-uid="Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,Guid,System.String)">Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a Brace.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Brace(Curve curve, Profile profile, Material material, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, bool isElementDefinition = false, Guid id = null, string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Brace(Curve curve, Profile profile, Material material, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -221,7 +246,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Guid</span></td>
+        <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The brace's id.</p>
 </td>
@@ -234,6 +259,10 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
 </article>
           </div>
           
