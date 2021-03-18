@@ -328,7 +328,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "ifXD9NE3cjOFSVvv3iObrw=="
+          "hash": "UOzkGa8cHdxp54gY6wkzdQ=="
         }
       },
       "is_incremental": false,
@@ -586,7 +586,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "NfKLN9tvCBN8iIB02v3o3w=="
+          "hash": "KxhJGlh3e2+pGNxAtkMGTw=="
         }
       },
       "is_incremental": false,
@@ -1486,7 +1486,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Vector3.html",
-          "hash": "Uls5HOvYlcaRenLUB4FXWA=="
+          "hash": "kNhhiqOFYqlin1A41ncWWw=="
         }
       },
       "is_incremental": false,
@@ -1830,11 +1830,107 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Cell.yml",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.Cell.yml",
       "output": {
         ".html": {
-          "relative_path": "api/Elements.Spatial.Cell.html",
-          "hash": "TtXw6S9EkLbaaVIhyUD/Bw=="
+          "relative_path": "api/Elements.Spatial.CellComplex.Cell.html",
+          "hash": "kqkR+Z1p/GqSB09Q6xZUtQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.CellComplex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.CellComplex.html",
+          "hash": "ug0lG7jPmOeE7Yuqk2iblw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.ChildBase-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.ChildBase-1.html",
+          "hash": "Cm3b6kfC95WjbUwombX9Qw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.Edge.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.Edge.html",
+          "hash": "jTYMSXdOc3YepSvIEW5HVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.EdgeBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.EdgeBase.html",
+          "hash": "K8d67Q/QnZdT/7jQjs+OLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.Face.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.Face.html",
+          "hash": "soU5BConSs5rYVy4gX1Itw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.Orientation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.Orientation.html",
+          "hash": "aipzo2DNGvCqSLg9ZqQ7rw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.Vertex.html",
+          "hash": "5/j0RAj6O42EZVKNOXfv/Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.CellComplex.VertexBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.CellComplex.VertexBase.html",
+          "hash": "+1ZFzfjxWZZmtaA/g60qdw=="
         }
       },
       "is_incremental": false,
@@ -1846,19 +1942,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.CellComplex.html",
-          "hash": "VGPon6sAV3UZ0nLLX3XzEg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.DirectedSegment.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.DirectedSegment.html",
-          "hash": "f6zqv3++WiAI86TxI/P96g=="
+          "hash": "/I0vFbnNJKVLCotnT4VD5w=="
         }
       },
       "is_incremental": false,
@@ -1871,18 +1955,6 @@
         ".html": {
           "relative_path": "api/Elements.Spatial.EvenDivisionMode.html",
           "hash": "p+R3rKXPCaAwUXNBP99hbQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Face.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Face.html",
-          "hash": "F5Dk9lcR4eD9XWjUOxc1wQ=="
         }
       },
       "is_incremental": false,
@@ -1962,42 +2034,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Segment.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Segment.html",
-          "hash": "LgRt1uj7bFJOKIAR9yHBng=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.UV.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.UV.html",
-          "hash": "ALGBLUkd6Pq9ngd2pa5gaQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Vertex.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Vertex.html",
-          "hash": "UH2FlHM75P0WcqO3nciIrQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Spatial.WebMercatorProjection.yml",
       "output": {
         ".html": {
@@ -2014,7 +2050,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.html",
-          "hash": "Re+arY6enc2IdnJ45MeQmg=="
+          "hash": "r12hTm1FqFgJXb+vzEL9cQ=="
         }
       },
       "is_incremental": false,
@@ -4317,7 +4353,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 162,
+          "total_file_count": 165,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

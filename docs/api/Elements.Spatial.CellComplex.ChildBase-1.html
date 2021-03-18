@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class Cell
+    <title>Class ChildBase&lt;GeometryType&gt;
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class Cell
+    <meta name="title" content="Class ChildBase&lt;GeometryType&gt;
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.56.7.0">
     
@@ -73,28 +73,26 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Spatial.Cell">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.CellComplex.ChildBase`1">
   
-  <h1 id="Elements_Spatial_Cell" data-uid="Elements.Spatial.Cell" class="text-break">Class Cell
+  <h1 id="Elements_Spatial_CellComplex_ChildBase_1" data-uid="Elements.Spatial.CellComplex.ChildBase`1" class="text-break">Class ChildBase&lt;GeometryType&gt;
   </h1>
-  <div class="markdown level0 summary"><p>A cell: a 3-dimensional closed cell within a complex</p>
+  <div class="markdown level0 summary"><p>Base class for all children of Cell</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Cell</span></div>
+    <div class="level1"><span class="xref">ChildBase&lt;GeometryType&gt;</span></div>
+      <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.Cell.html">Cell</a></div>
+      <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.EdgeBase.html">EdgeBase</a></div>
+      <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.Face.html">Face</a></div>
+      <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.VertexBase.html">VertexBase</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -109,156 +107,36 @@
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.CellComplex.html">Elements.Spatial.CellComplex</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Spatial_Cell_syntax">Syntax</h5>
+  <h5 id="Elements_Spatial_CellComplex_ChildBase_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Cell</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class ChildBase&lt;GeometryType&gt;</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <a id="Elements_Spatial_Cell__ctor_" data-uid="Elements.Spatial.Cell.#ctor*"></a>
-  <h4 id="Elements_Spatial_Cell__ctor_System_Int64_System_Collections_Generic_List_Elements_Spatial_Face__Elements_Spatial_Face_Elements_Spatial_Face_" data-uid="Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{Elements.Spatial.Face},Elements.Spatial.Face,Elements.Spatial.Face)">Cell(Int64, List&lt;Face&gt;, Face, Face)</h4>
-  <div class="markdown level1 summary"><p>Represents a unique Cell wtihin a CellComplex.
-Is not intended to be created or modified outside of the CellComplex class code.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Cell(long id, List&lt;Face&gt; faces, Face bottomFace, Face topFace)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
-        <th>Type</th>
         <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Face.html">Face</a>&gt;</td>
-        <td><span class="parametername">faces</span></td>
-        <td><p>List of faces which make up this CellComplex</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Spatial.Face.html">Face</a></td>
-        <td><span class="parametername">bottomFace</span></td>
-        <td><p>The bottom face for this cell (should also be included in the list of all faces)</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Spatial.Face.html">Face</a></td>
-        <td><span class="parametername">topFace</span></td>
-        <td><p>The top face for this cell (should also be included in the list of all faces</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_Cell__ctor_" data-uid="Elements.Spatial.Cell.#ctor*"></a>
-  <h4 id="Elements_Spatial_Cell__ctor_System_Int64_System_Collections_Generic_List_System_Int64__System_Nullable_System_Int64__System_Nullable_System_Int64__" data-uid="Elements.Spatial.Cell.#ctor(System.Int64,System.Collections.Generic.List{System.Int64},System.Nullable{System.Int64},System.Nullable{System.Int64})">Cell(Int64, List&lt;Int64&gt;, Nullable&lt;Int64&gt;, Nullable&lt;Int64&gt;)</h4>
-  <div class="markdown level1 summary"><p>Used for deserialization only!</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Cell(long id, List&lt;long&gt; faceIds, long? bottomFaceId, long? topFaceId)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int64</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">faceIds</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">bottomFaceId</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td><span class="parametername">topFaceId</span></td>
+        <td><span class="parametername">GeometryType</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="fields">Fields
   </h3>
-  <h4 id="Elements_Spatial_Cell_BottomFaceId" data-uid="Elements.Spatial.Cell.BottomFaceId">BottomFaceId</h4>
-  <div class="markdown level1 summary"><p>Bottom face. Can be null. Expected to be duplicated in list of faces.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? BottomFaceId</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h4 id="Elements_Spatial_Cell_FaceIds" data-uid="Elements.Spatial.Cell.FaceIds">FaceIds</h4>
-  <div class="markdown level1 summary"><p>All faces</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;long&gt; FaceIds</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h4 id="Elements_Spatial_Cell_Id" data-uid="Elements.Spatial.Cell.Id">Id</h4>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_Id" data-uid="Elements.Spatial.CellComplex.ChildBase`1.Id">Id</h4>
   <div class="markdown level1 summary"><p>ID</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long Id</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong Id</code></pre>
   </div>
   <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -270,20 +148,24 @@ public Cell(long id, List&lt;long&gt; faceIds, long? bottomFaceId, long? topFace
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int64</span></td>
+        <td><span class="xref">System.UInt64</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h4 id="Elements_Spatial_Cell_TopFaceId" data-uid="Elements.Spatial.Cell.TopFaceId">TopFaceId</h4>
-  <div class="markdown level1 summary"><p>Top face. Can be null. Expected to be duplicated in list of faces.</p>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Spatial_CellComplex_ChildBase_1_CellComplex_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.CellComplex*"></a>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_CellComplex" data-uid="Elements.Spatial.CellComplex.ChildBase`1.CellComplex">CellComplex</h4>
+  <div class="markdown level1 summary"><p>The CellComplex that this child belongs to</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? TopFaceId</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public CellComplex CellComplex { get; }</code></pre>
   </div>
-  <h5 class="fieldValue">Field Value</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -293,11 +175,147 @@ public Cell(long id, List&lt;long&gt; faceIds, long? bottomFaceId, long? topFace
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int64</span>&gt;</td>
+        <td><a class="xref" href="Elements.Spatial.CellComplex.CellComplex.html">CellComplex</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Spatial_CellComplex_ChildBase_1_DistanceTo_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.DistanceTo*"></a>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_DistanceTo_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.DistanceTo(Elements.Geometry.Vector3)">DistanceTo(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Get the distance from a point to the geometry representing this child</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract double DistanceTo(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_CellComplex_ChildBase_1_Equals_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.Equals*"></a>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_Equals_System_Object_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Used for HashSets</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <a id="Elements_Spatial_CellComplex_ChildBase_1_GetGeometry_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.GetGeometry*"></a>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_GetGeometry" data-uid="Elements.Spatial.CellComplex.ChildBase`1.GetGeometry">GetGeometry()</h4>
+  <div class="markdown level1 summary"><p>Get the associated geometry for this child</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract GeometryType GetGeometry()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeometryType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_CellComplex_ChildBase_1_GetHashCode_" data-uid="Elements.Spatial.CellComplex.ChildBase`1.GetHashCode*"></a>
+  <h4 id="Elements_Spatial_CellComplex_ChildBase_1_GetHashCode" data-uid="Elements.Spatial.CellComplex.ChildBase`1.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Used for HashSets</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
 </article>
           </div>
           

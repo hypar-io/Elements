@@ -887,6 +887,97 @@ The distance will be negative when this point lies
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polygon)">DistanceTo(Polygon)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point within the polygon</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polygon polygon)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon for computing the distance</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polygon_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polygon,Elements.Geometry.Vector3@)">DistanceTo(Polygon, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point within the
+polygon, and output the location of the closest point on that polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polygon polygon, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon for computing the distance</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>Point within the polygon that is closest to this point</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
   <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polyline_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polyline)">DistanceTo(Polyline)</h4>
   <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point on the
 polyline, and output the location of the closest point on that polyline.</p>
