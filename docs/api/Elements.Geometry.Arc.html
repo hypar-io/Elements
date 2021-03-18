@@ -218,7 +218,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
-    <div><span class="xref">IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Arc.html">Arc</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Arc.html">Arc</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -230,6 +230,27 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
@@ -246,7 +267,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -328,7 +350,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Center { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Center&quot;, Required = Required.AllowNull)]
+public Vector3 Center { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -352,7 +375,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -376,7 +400,9 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double EndAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double EndAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -400,7 +426,9 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Radius { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Radius&quot;, Required = Required.Always)]
+[Range(0, 1.7976931348623157E+308)]
+public double Radius { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -424,7 +452,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -448,7 +477,9 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double StartAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double StartAngle { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -820,7 +851,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <span class="xref">IEquatable&lt;&gt;</span>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
 </article>
           </div>

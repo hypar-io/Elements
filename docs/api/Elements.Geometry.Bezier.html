@@ -228,6 +228,27 @@ var bezier = new Bezier(ctrlPts);
     <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
     </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
@@ -238,7 +259,7 @@ var bezier = new Bezier(ctrlPts);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Bezier__ctor_" data-uid="Elements.Geometry.Bezier.#ctor*"></a>
-  <h4 id="Elements_Geometry_Bezier__ctor_List_Elements_Geometry_Vector3__Elements_Geometry_FrameType_" data-uid="Elements.Geometry.Bezier.#ctor(List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)">Bezier(List&lt;Vector3&gt;, FrameType)</h4>
+  <h4 id="Elements_Geometry_Bezier__ctor_System_Collections_Generic_List_Elements_Geometry_Vector3__Elements_Geometry_FrameType_" data-uid="Elements.Geometry.Bezier.#ctor(System.Collections.Generic.List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)">Bezier(List&lt;Vector3&gt;, FrameType)</h4>
   <div class="markdown level1 summary"><p>Construct a bezier.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -257,7 +278,7 @@ var bezier = new Bezier(ctrlPts);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">controlPoints</span></td>
         <td><p>The control points of the curve.</p>
 </td>
@@ -292,7 +313,7 @@ var bezier = new Bezier(ctrlPts);
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -440,7 +461,7 @@ var bezier = new Bezier(ctrlPts);
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback = null, double endSetback = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback = 0, double endSetback = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

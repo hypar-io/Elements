@@ -19,13 +19,13 @@ references:
   commentId: T:Elements.Analysis.AnalysisMesh
   fullName: Elements.Analysis.AnalysisMesh
   nameWithType: AnalysisMesh
-- uid: Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,Func{Elements.Geometry.Vector3,System.Double},Guid,System.String)
+- uid: Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,System.Func{Elements.Geometry.Vector3,System.Double},System.Guid,System.String)
   name: AnalysisMesh(Polygon, Double, Double, ColorScale, Func<Vector3, Double>, Guid, String)
-  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Analysis_ColorScale_Func_Elements_Geometry_Vector3_System_Double__Guid_System_String_
-  commentId: M:Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,Func{Elements.Geometry.Vector3,System.Double},Guid,System.String)
+  href: api/Elements.Analysis.AnalysisMesh.html#Elements_Analysis_AnalysisMesh__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Analysis_ColorScale_System_Func_Elements_Geometry_Vector3_System_Double__System_Guid_System_String_
+  commentId: M:Elements.Analysis.AnalysisMesh.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Analysis.ColorScale,System.Func{Elements.Geometry.Vector3,System.Double},System.Guid,System.String)
   name.vb: AnalysisMesh(Polygon, Double, Double, ColorScale, Func(Of Vector3, Double), Guid, String)
-  fullName: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, Func<Elements.Geometry.Vector3, System.Double>, Guid, System.String)
-  fullName.vb: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, Func(Of Elements.Geometry.Vector3, System.Double), Guid, System.String)
+  fullName: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, System.Func<Elements.Geometry.Vector3, System.Double>, System.Guid, System.String)
+  fullName.vb: Elements.Analysis.AnalysisMesh.AnalysisMesh(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Analysis.ColorScale, System.Func(Of Elements.Geometry.Vector3, System.Double), System.Guid, System.String)
   nameWithType: AnalysisMesh.AnalysisMesh(Polygon, Double, Double, ColorScale, Func<Vector3, Double>, Guid, String)
   nameWithType.vb: AnalysisMesh.AnalysisMesh(Polygon, Double, Double, ColorScale, Func(Of Vector3, Double), Guid, String)
 - uid: Elements.Analysis.AnalysisMesh.#ctor*
@@ -135,22 +135,22 @@ references:
   commentId: T:Elements.Analysis.ColorScale
   fullName: Elements.Analysis.ColorScale
   nameWithType: ColorScale
-- uid: Elements.Analysis.ColorScale.#ctor(List{Elements.Geometry.Color})
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
   name: ColorScale(List<Color>)
-  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_List_Elements_Geometry_Color__
-  commentId: M:Elements.Analysis.ColorScale.#ctor(List{Elements.Geometry.Color})
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
   name.vb: ColorScale(List(Of Color))
-  fullName: Elements.Analysis.ColorScale.ColorScale(List<Elements.Geometry.Color>)
-  fullName.vb: Elements.Analysis.ColorScale.ColorScale(List(Of Elements.Geometry.Color))
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color))
   nameWithType: ColorScale.ColorScale(List<Color>)
   nameWithType.vb: ColorScale.ColorScale(List(Of Color))
-- uid: Elements.Analysis.ColorScale.#ctor(List{Elements.Geometry.Color},System.Int32)
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)
   name: ColorScale(List<Color>, Int32)
-  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_List_Elements_Geometry_Color__System_Int32_
-  commentId: M:Elements.Analysis.ColorScale.#ctor(List{Elements.Geometry.Color},System.Int32)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Int32_
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)
   name.vb: ColorScale(List(Of Color), Int32)
-  fullName: Elements.Analysis.ColorScale.ColorScale(List<Elements.Geometry.Color>, System.Int32)
-  fullName.vb: Elements.Analysis.ColorScale.ColorScale(List(Of Elements.Geometry.Color), System.Int32)
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>, System.Int32)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color), System.Int32)
   nameWithType: ColorScale.ColorScale(List<Color>, Int32)
   nameWithType.vb: ColorScale.ColorScale(List(Of Color), Int32)
 - uid: Elements.Analysis.ColorScale.#ctor*
@@ -192,11 +192,11 @@ references:
   commentId: T:Elements.Beam
   fullName: Elements.Beam
   nameWithType: Beam
-- uid: Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
+- uid: Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
   name: Beam(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
-  href: api/Elements.Beam.html#Elements_Beam__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
-  fullName: Elements.Beam.Beam(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, Guid, System.String)
+  href: api/Elements.Beam.html#Elements_Beam__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Beam.Beam(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
   nameWithType: Beam.Beam(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
 - uid: Elements.Beam.#ctor*
   name: Beam
@@ -211,11 +211,11 @@ references:
   commentId: T:Elements.Brace
   fullName: Elements.Brace
   nameWithType: Brace
-- uid: Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
+- uid: Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
   name: Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
-  href: api/Elements.Brace.html#Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
-  fullName: Elements.Brace.Brace(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, Guid, System.String)
+  href: api/Elements.Brace.html#Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Brace.Brace(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
   nameWithType: Brace.Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)
 - uid: Elements.Brace.#ctor*
   name: Brace
@@ -437,11 +437,11 @@ references:
   commentId: T:Elements.Column
   fullName: Elements.Column
   nameWithType: Column
-- uid: Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,Guid,System.String)
+- uid: Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,System.Guid,System.String)
   name: Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Boolean, Guid, String)
-  href: api/Elements.Column.html#Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Profile_Elements_Material_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,Guid,System.String)
-  fullName: Elements.Column.Column(Elements.Geometry.Vector3, System.Double, Elements.Geometry.Profile, Elements.Material, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Boolean, Guid, System.String)
+  href: api/Elements.Column.html#Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Profile_Elements_Material_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Column.Column(Elements.Geometry.Vector3, System.Double, Elements.Geometry.Profile, Elements.Material, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Boolean, System.Guid, System.String)
   nameWithType: Column.Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Boolean, Guid, String)
 - uid: Elements.Column.#ctor*
   name: Column
@@ -482,13 +482,13 @@ references:
   commentId: T:Elements.ContentCatalog
   fullName: Elements.ContentCatalog
   nameWithType: ContentCatalog
-- uid: Elements.ContentCatalog.#ctor(IList{Elements.ContentElement},IList{Elements.Element},System.Guid,System.String)
+- uid: Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Collections.Generic.IList{Elements.Element},System.Guid,System.String)
   name: ContentCatalog(IList<ContentElement>, IList<Element>, Guid, String)
-  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_IList_Elements_ContentElement__IList_Elements_Element__System_Guid_System_String_
-  commentId: M:Elements.ContentCatalog.#ctor(IList{Elements.ContentElement},IList{Elements.Element},System.Guid,System.String)
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog__ctor_System_Collections_Generic_IList_Elements_ContentElement__System_Collections_Generic_IList_Elements_Element__System_Guid_System_String_
+  commentId: M:Elements.ContentCatalog.#ctor(System.Collections.Generic.IList{Elements.ContentElement},System.Collections.Generic.IList{Elements.Element},System.Guid,System.String)
   name.vb: ContentCatalog(IList(Of ContentElement), IList(Of Element), Guid, String)
-  fullName: Elements.ContentCatalog.ContentCatalog(IList<Elements.ContentElement>, IList<Elements.Element>, System.Guid, System.String)
-  fullName.vb: Elements.ContentCatalog.ContentCatalog(IList(Of Elements.ContentElement), IList(Of Elements.Element), System.Guid, System.String)
+  fullName: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList<Elements.ContentElement>, System.Collections.Generic.IList<Elements.Element>, System.Guid, System.String)
+  fullName.vb: Elements.ContentCatalog.ContentCatalog(System.Collections.Generic.IList(Of Elements.ContentElement), System.Collections.Generic.IList(Of Elements.Element), System.Guid, System.String)
   nameWithType: ContentCatalog.ContentCatalog(IList<ContentElement>, IList<Element>, Guid, String)
   nameWithType.vb: ContentCatalog.ContentCatalog(IList(Of ContentElement), IList(Of Element), Guid, String)
 - uid: Elements.ContentCatalog.#ctor*
@@ -672,11 +672,11 @@ references:
   commentId: T:Elements.DirectionalLight
   fullName: Elements.DirectionalLight
   nameWithType: DirectionalLight
-- uid: Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,Guid,System.String)
+- uid: Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
   name: DirectionalLight(Color, Transform, Double, Guid, String)
-  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_Guid_System_String_
-  commentId: M:Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,Guid,System.String)
-  fullName: Elements.DirectionalLight.DirectionalLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, Guid, System.String)
+  href: api/Elements.DirectionalLight.html#Elements_DirectionalLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Guid_System_String_
+  commentId: M:Elements.DirectionalLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  fullName: Elements.DirectionalLight.DirectionalLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Guid, System.String)
   nameWithType: DirectionalLight.DirectionalLight(Color, Transform, Double, Guid, String)
 - uid: Elements.DirectionalLight.#ctor*
   name: DirectionalLight
@@ -968,11 +968,11 @@ references:
   commentId: T:Elements.Floor
   fullName: Elements.Floor
   nameWithType: Floor
-- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Floor(Profile, Double, Transform, Material, Representation, Boolean, Guid, String)
-  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Floor.html#Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Floor.Floor(Elements.Geometry.Profile, System.Double, Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Floor.Floor(Profile, Double, Transform, Material, Representation, Boolean, Guid, String)
 - uid: Elements.Floor.#ctor*
   name: Floor
@@ -1110,11 +1110,11 @@ references:
   commentId: T:Elements.Frame
   fullName: Elements.Frame
   nameWithType: Frame
-- uid: Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Frame(Polygon, Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Frame.html#Elements_Frame__ctor_Elements_Geometry_Polygon_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Frame.Frame(Elements.Geometry.Polygon, Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Frame.html#Elements_Frame__ctor_Elements_Geometry_Polygon_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Frame.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Frame.Frame(Elements.Geometry.Polygon, Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Frame.Frame(Polygon, Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Frame.#ctor*
   name: Frame
@@ -1174,13 +1174,13 @@ references:
   commentId: T:Elements.GeoJSON.Feature
   fullName: Elements.GeoJSON.Feature
   nameWithType: Feature
-- uid: Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,Dictionary{System.String,System.Object})
+- uid: Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
   name: Feature(Geometry, Dictionary<String, Object>)
-  href: api/Elements.GeoJSON.Feature.html#Elements_GeoJSON_Feature__ctor_Elements_GeoJSON_Geometry_Dictionary_System_String_System_Object__
-  commentId: M:Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,Dictionary{System.String,System.Object})
+  href: api/Elements.GeoJSON.Feature.html#Elements_GeoJSON_Feature__ctor_Elements_GeoJSON_Geometry_System_Collections_Generic_Dictionary_System_String_System_Object__
+  commentId: M:Elements.GeoJSON.Feature.#ctor(Elements.GeoJSON.Geometry,System.Collections.Generic.Dictionary{System.String,System.Object})
   name.vb: Feature(Geometry, Dictionary(Of String, Object))
-  fullName: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, Dictionary<System.String, System.Object>)
-  fullName.vb: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, Dictionary(Of System.String, System.Object))
+  fullName: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, System.Collections.Generic.Dictionary<System.String, System.Object>)
+  fullName.vb: Elements.GeoJSON.Feature.Feature(Elements.GeoJSON.Geometry, System.Collections.Generic.Dictionary(Of System.String, System.Object))
   nameWithType: Feature.Feature(Geometry, Dictionary<String, Object>)
   nameWithType.vb: Feature.Feature(Geometry, Dictionary(Of String, Object))
 - uid: Elements.GeoJSON.Feature.#ctor*
@@ -1248,13 +1248,13 @@ references:
   commentId: T:Elements.GeoJSON.FeatureCollection
   fullName: Elements.GeoJSON.FeatureCollection
   nameWithType: FeatureCollection
-- uid: Elements.GeoJSON.FeatureCollection.#ctor(IEnumerable{Elements.GeoJSON.Feature})
+- uid: Elements.GeoJSON.FeatureCollection.#ctor(System.Collections.Generic.IEnumerable{Elements.GeoJSON.Feature})
   name: FeatureCollection(IEnumerable<Feature>)
-  href: api/Elements.GeoJSON.FeatureCollection.html#Elements_GeoJSON_FeatureCollection__ctor_IEnumerable_Elements_GeoJSON_Feature__
-  commentId: M:Elements.GeoJSON.FeatureCollection.#ctor(IEnumerable{Elements.GeoJSON.Feature})
+  href: api/Elements.GeoJSON.FeatureCollection.html#Elements_GeoJSON_FeatureCollection__ctor_System_Collections_Generic_IEnumerable_Elements_GeoJSON_Feature__
+  commentId: M:Elements.GeoJSON.FeatureCollection.#ctor(System.Collections.Generic.IEnumerable{Elements.GeoJSON.Feature})
   name.vb: FeatureCollection(IEnumerable(Of Feature))
-  fullName: Elements.GeoJSON.FeatureCollection.FeatureCollection(IEnumerable<Elements.GeoJSON.Feature>)
-  fullName.vb: Elements.GeoJSON.FeatureCollection.FeatureCollection(IEnumerable(Of Elements.GeoJSON.Feature))
+  fullName: Elements.GeoJSON.FeatureCollection.FeatureCollection(System.Collections.Generic.IEnumerable<Elements.GeoJSON.Feature>)
+  fullName.vb: Elements.GeoJSON.FeatureCollection.FeatureCollection(System.Collections.Generic.IEnumerable(Of Elements.GeoJSON.Feature))
   nameWithType: FeatureCollection.FeatureCollection(IEnumerable<Feature>)
   nameWithType.vb: FeatureCollection.FeatureCollection(IEnumerable(Of Feature))
 - uid: Elements.GeoJSON.FeatureCollection.#ctor*
@@ -2024,22 +2024,22 @@ references:
   commentId: M:Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   fullName: Elements.Geometry.BBox3.BBox3(Elements.Geometry.Vector3, Elements.Geometry.Vector3)
   nameWithType: BBox3.BBox3(Vector3, Vector3)
-- uid: Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Polygon})
+- uid: Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name: BBox3(IList<Polygon>)
-  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3__ctor_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Polygon})
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name.vb: BBox3(IList(Of Polygon))
-  fullName: Elements.Geometry.BBox3.BBox3(IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.BBox3.BBox3(IList(Of Elements.Geometry.Polygon))
+  fullName: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: BBox3.BBox3(IList<Polygon>)
   nameWithType.vb: BBox3.BBox3(IList(Of Polygon))
-- uid: Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: BBox3(IList<Vector3>)
-  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3__ctor_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.BBox3.#ctor(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.BBox3.html#Elements_Geometry_BBox3__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: BBox3(IList(Of Vector3))
-  fullName: Elements.Geometry.BBox3.BBox3(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.BBox3.BBox3(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.BBox3.BBox3(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: BBox3.BBox3(IList<Vector3>)
   nameWithType.vb: BBox3.BBox3(IList(Of Vector3))
 - uid: Elements.Geometry.BBox3.#ctor*
@@ -2198,13 +2198,13 @@ references:
   commentId: T:Elements.Geometry.Bezier
   fullName: Elements.Geometry.Bezier
   nameWithType: Bezier
-- uid: Elements.Geometry.Bezier.#ctor(List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)
+- uid: Elements.Geometry.Bezier.#ctor(System.Collections.Generic.List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)
   name: Bezier(List<Vector3>, FrameType)
-  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier__ctor_List_Elements_Geometry_Vector3__Elements_Geometry_FrameType_
-  commentId: M:Elements.Geometry.Bezier.#ctor(List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)
+  href: api/Elements.Geometry.Bezier.html#Elements_Geometry_Bezier__ctor_System_Collections_Generic_List_Elements_Geometry_Vector3__Elements_Geometry_FrameType_
+  commentId: M:Elements.Geometry.Bezier.#ctor(System.Collections.Generic.List{Elements.Geometry.Vector3},Elements.Geometry.FrameType)
   name.vb: Bezier(List(Of Vector3), FrameType)
-  fullName: Elements.Geometry.Bezier.Bezier(List<Elements.Geometry.Vector3>, Elements.Geometry.FrameType)
-  fullName.vb: Elements.Geometry.Bezier.Bezier(List(Of Elements.Geometry.Vector3), Elements.Geometry.FrameType)
+  fullName: Elements.Geometry.Bezier.Bezier(System.Collections.Generic.List<Elements.Geometry.Vector3>, Elements.Geometry.FrameType)
+  fullName.vb: Elements.Geometry.Bezier.Bezier(System.Collections.Generic.List(Of Elements.Geometry.Vector3), Elements.Geometry.FrameType)
   nameWithType: Bezier.Bezier(List<Vector3>, FrameType)
   nameWithType.vb: Bezier.Bezier(List(Of Vector3), FrameType)
 - uid: Elements.Geometry.Bezier.#ctor*
@@ -3102,13 +3102,13 @@ references:
   commentId: T:Elements.Geometry.Contour
   fullName: Elements.Geometry.Contour
   nameWithType: Contour
-- uid: Elements.Geometry.Contour.#ctor(List{Elements.Geometry.Curve})
+- uid: Elements.Geometry.Contour.#ctor(System.Collections.Generic.List{Elements.Geometry.Curve})
   name: Contour(List<Curve>)
-  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour__ctor_List_Elements_Geometry_Curve__
-  commentId: M:Elements.Geometry.Contour.#ctor(List{Elements.Geometry.Curve})
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour__ctor_System_Collections_Generic_List_Elements_Geometry_Curve__
+  commentId: M:Elements.Geometry.Contour.#ctor(System.Collections.Generic.List{Elements.Geometry.Curve})
   name.vb: Contour(List(Of Curve))
-  fullName: Elements.Geometry.Contour.Contour(List<Elements.Geometry.Curve>)
-  fullName.vb: Elements.Geometry.Contour.Contour(List(Of Elements.Geometry.Curve))
+  fullName: Elements.Geometry.Contour.Contour(System.Collections.Generic.List<Elements.Geometry.Curve>)
+  fullName.vb: Elements.Geometry.Contour.Contour(System.Collections.Generic.List(Of Elements.Geometry.Curve))
   nameWithType: Contour.Contour(List<Curve>)
   nameWithType.vb: Contour.Contour(List(Of Curve))
 - uid: Elements.Geometry.Contour.#ctor*
@@ -3131,6 +3131,23 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Contour.GetEnumerator
   nameWithType: Contour.GetEnumerator
+- uid: Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: Elements.Geometry.Contour.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: Contour.IEnumerable.GetEnumerator()
+  nameWithType.vb: Contour.System.Collections.IEnumerable.GetEnumerator()
+- uid: Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:Elements.Geometry.Contour.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: Elements.Geometry.Contour.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: Contour.IEnumerable.GetEnumerator
+  nameWithType.vb: Contour.System.Collections.IEnumerable.GetEnumerator
 - uid: Elements.Geometry.Contour.ToPolygon
   name: ToPolygon()
   href: api/Elements.Geometry.Contour.html#Elements_Geometry_Contour_ToPolygon
@@ -3150,13 +3167,13 @@ references:
   commentId: T:Elements.Geometry.ConvexHull
   fullName: Elements.Geometry.ConvexHull
   nameWithType: ConvexHull
-- uid: Elements.Geometry.ConvexHull.FromPoints(IEnumerable{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name: FromPoints(IEnumerable<Vector3>)
-  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_IEnumerable_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.ConvexHull.FromPoints(IEnumerable{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name.vb: FromPoints(IEnumerable(Of Vector3))
-  fullName: Elements.Geometry.ConvexHull.FromPoints(IEnumerable<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.ConvexHull.FromPoints(IEnumerable(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
   nameWithType: ConvexHull.FromPoints(IEnumerable<Vector3>)
   nameWithType.vb: ConvexHull.FromPoints(IEnumerable(Of Vector3))
 - uid: Elements.Geometry.ConvexHull.FromPoints*
@@ -3179,13 +3196,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.ConvexHull.FromPolyline
   nameWithType: ConvexHull.FromPolyline
-- uid: Elements.Geometry.ConvexHull.FromPolylines(IEnumerable{Elements.Geometry.Polyline})
+- uid: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name: FromPolylines(IEnumerable<Polyline>)
-  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_IEnumerable_Elements_Geometry_Polyline__
-  commentId: M:Elements.Geometry.ConvexHull.FromPolylines(IEnumerable{Elements.Geometry.Polyline})
+  href: api/Elements.Geometry.ConvexHull.html#Elements_Geometry_ConvexHull_FromPolylines_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name.vb: FromPolylines(IEnumerable(Of Polyline))
-  fullName: Elements.Geometry.ConvexHull.FromPolylines(IEnumerable<Elements.Geometry.Polyline>)
-  fullName.vb: Elements.Geometry.ConvexHull.FromPolylines(IEnumerable(Of Elements.Geometry.Polyline))
+  fullName: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.ConvexHull.FromPolylines(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
   nameWithType: ConvexHull.FromPolylines(IEnumerable<Polyline>)
   nameWithType.vb: ConvexHull.FromPolylines(IEnumerable(Of Polyline))
 - uid: Elements.Geometry.ConvexHull.FromPolylines*
@@ -3656,13 +3673,13 @@ references:
   commentId: M:Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile,System.Boolean,System.Boolean)
   fullName: Elements.Geometry.Line.ExtendTo(Elements.Geometry.Profile, System.Boolean, System.Boolean)
   nameWithType: Line.ExtendTo(Profile, Boolean, Boolean)
-- uid: Elements.Geometry.Line.ExtendTo(IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
+- uid: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
   name: ExtendTo(IEnumerable<Line>, Boolean, Boolean)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_
-  commentId: M:Elements.Geometry.Line.ExtendTo(IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_ExtendTo_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_System_Boolean_
+  commentId: M:Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean,System.Boolean)
   name.vb: ExtendTo(IEnumerable(Of Line), Boolean, Boolean)
-  fullName: Elements.Geometry.Line.ExtendTo(IEnumerable<Elements.Geometry.Line>, System.Boolean, System.Boolean)
-  fullName.vb: Elements.Geometry.Line.ExtendTo(IEnumerable(Of Elements.Geometry.Line), System.Boolean, System.Boolean)
+  fullName: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable<Elements.Geometry.Line>, System.Boolean, System.Boolean)
+  fullName.vb: Elements.Geometry.Line.ExtendTo(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Line), System.Boolean, System.Boolean)
   nameWithType: Line.ExtendTo(IEnumerable<Line>, Boolean, Boolean)
   nameWithType.vb: Line.ExtendTo(IEnumerable(Of Line), Boolean, Boolean)
 - uid: Elements.Geometry.Line.ExtendTo*
@@ -3866,13 +3883,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.TransformedLine
   nameWithType: Line.TransformedLine
-- uid: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,List{Elements.Geometry.Line}@)
+- uid: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)
   name: Trim(Polygon, out List<Line>)
-  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_List_Elements_Geometry_Line___
-  commentId: M:Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,List{Elements.Geometry.Line}@)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Trim_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Line___
+  commentId: M:Elements.Geometry.Line.Trim(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Line}@)
   name.vb: Trim(Polygon, ByRef List(Of Line))
-  fullName: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, out List<Elements.Geometry.Line>)
-  fullName.vb: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, ByRef List(Of Elements.Geometry.Line))
+  fullName: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, out System.Collections.Generic.List<Elements.Geometry.Line>)
+  fullName.vb: Elements.Geometry.Line.Trim(Elements.Geometry.Polygon, ByRef System.Collections.Generic.List(Of Elements.Geometry.Line))
   nameWithType: Line.Trim(Polygon, out List<Line>)
   nameWithType.vb: Line.Trim(Polygon, ByRef List(Of Line))
 - uid: Elements.Geometry.Line.Trim*
@@ -3913,13 +3930,13 @@ references:
   commentId: M:Elements.Geometry.Matrix.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Matrix.Matrix(Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
   nameWithType: Matrix.Matrix(Vector3, Vector3, Vector3, Vector3)
-- uid: Elements.Geometry.Matrix.#ctor(IList{System.Double})
+- uid: Elements.Geometry.Matrix.#ctor(System.Collections.Generic.IList{System.Double})
   name: Matrix(IList<Double>)
-  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix__ctor_IList_System_Double__
-  commentId: M:Elements.Geometry.Matrix.#ctor(IList{System.Double})
+  href: api/Elements.Geometry.Matrix.html#Elements_Geometry_Matrix__ctor_System_Collections_Generic_IList_System_Double__
+  commentId: M:Elements.Geometry.Matrix.#ctor(System.Collections.Generic.IList{System.Double})
   name.vb: Matrix(IList(Of Double))
-  fullName: Elements.Geometry.Matrix.Matrix(IList<System.Double>)
-  fullName.vb: Elements.Geometry.Matrix.Matrix(IList(Of System.Double))
+  fullName: Elements.Geometry.Matrix.Matrix(System.Collections.Generic.IList<System.Double>)
+  fullName.vb: Elements.Geometry.Matrix.Matrix(System.Collections.Generic.IList(Of System.Double))
   nameWithType: Matrix.Matrix(IList<Double>)
   nameWithType.vb: Matrix.Matrix(IList(Of Double))
 - uid: Elements.Geometry.Matrix.#ctor*
@@ -4356,13 +4373,13 @@ references:
   commentId: M:Elements.Geometry.Mesh.#ctor
   fullName: Elements.Geometry.Mesh.Mesh()
   nameWithType: Mesh.Mesh()
-- uid: Elements.Geometry.Mesh.#ctor(IList{Elements.Geometry.Vertex},IList{Elements.Geometry.Triangle})
+- uid: Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle})
   name: Mesh(IList<Vertex>, IList<Triangle>)
-  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh__ctor_IList_Elements_Geometry_Vertex__IList_Elements_Geometry_Triangle__
-  commentId: M:Elements.Geometry.Mesh.#ctor(IList{Elements.Geometry.Vertex},IList{Elements.Geometry.Triangle})
+  href: api/Elements.Geometry.Mesh.html#Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__
+  commentId: M:Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle})
   name.vb: Mesh(IList(Of Vertex), IList(Of Triangle))
-  fullName: Elements.Geometry.Mesh.Mesh(IList<Elements.Geometry.Vertex>, IList<Elements.Geometry.Triangle>)
-  fullName.vb: Elements.Geometry.Mesh.Mesh(IList(Of Elements.Geometry.Vertex), IList(Of Elements.Geometry.Triangle))
+  fullName: Elements.Geometry.Mesh.Mesh(System.Collections.Generic.IList<Elements.Geometry.Vertex>, System.Collections.Generic.IList<Elements.Geometry.Triangle>)
+  fullName.vb: Elements.Geometry.Mesh.Mesh(System.Collections.Generic.IList(Of Elements.Geometry.Vertex), System.Collections.Generic.IList(Of Elements.Geometry.Triangle))
   nameWithType: Mesh.Mesh(IList<Vertex>, IList<Triangle>)
   nameWithType.vb: Mesh.Mesh(IList(Of Vertex), IList(Of Triangle))
 - uid: Elements.Geometry.Mesh.#ctor*
@@ -4509,13 +4526,13 @@ references:
   commentId: M:Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   fullName: Elements.Geometry.Plane.Plane(Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
   nameWithType: Plane.Plane(Vector3, Vector3, Vector3)
-- uid: Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: Plane(Vector3, IList<Vector3>)
-  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane__ctor_Elements_Geometry_Vector3_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Plane.html#Elements_Geometry_Plane__ctor_Elements_Geometry_Vector3_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: Plane(Vector3, IList(Of Vector3))
-  fullName: Elements.Geometry.Plane.Plane(Elements.Geometry.Vector3, IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Plane.Plane(Elements.Geometry.Vector3, IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Plane.Plane(Elements.Geometry.Vector3, System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Plane.Plane(Elements.Geometry.Vector3, System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Plane.Plane(Vector3, IList<Vector3>)
   nameWithType.vb: Plane.Plane(Vector3, IList(Of Vector3))
 - uid: Elements.Geometry.Plane.#ctor*
@@ -4596,13 +4613,13 @@ references:
   commentId: T:Elements.Geometry.Polygon
   fullName: Elements.Geometry.Polygon
   nameWithType: Polygon
-- uid: Elements.Geometry.Polygon.#ctor(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Polygon.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: Polygon(IList<Vector3>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon__ctor_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Polygon.#ctor(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polygon.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: Polygon(IList(Of Vector3))
-  fullName: Elements.Geometry.Polygon.Polygon(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Polygon.Polygon(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Polygon.Polygon(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polygon.Polygon(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Polygon.Polygon(IList<Vector3>)
   nameWithType.vb: Polygon.Polygon(IList(Of Vector3))
 - uid: Elements.Geometry.Polygon.#ctor*
@@ -4704,22 +4721,22 @@ references:
   commentId: M:Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon,System.Double)
   fullName: Elements.Geometry.Polygon.Difference(Elements.Geometry.Polygon, System.Double)
   nameWithType: Polygon.Difference(Polygon, Double)
-- uid: Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: Difference(IList<Polygon>, IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: Difference(IList(Of Polygon), IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.Difference(IList<Elements.Geometry.Polygon>, IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.Difference(IList(Of Elements.Geometry.Polygon), IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.Difference(IList<Polygon>, IList<Polygon>, Double)
   nameWithType.vb: Polygon.Difference(IList(Of Polygon), IList(Of Polygon), Double)
-- uid: Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: Difference(IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.Difference(IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Difference_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: Difference(IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.Difference(IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.Difference(IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Difference(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.Difference(IList<Polygon>, Double)
   nameWithType.vb: Polygon.Difference(IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Difference*
@@ -4787,13 +4804,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Frames
   nameWithType: Polygon.Frames
-- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(IEnumerable{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name: FromAlignedBoundingBox2d(IEnumerable<Vector3>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_IEnumerable_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Polygon.FromAlignedBoundingBox2d(IEnumerable{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name.vb: FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
-  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(IEnumerable<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(IEnumerable(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
   nameWithType: Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3>)
   nameWithType.vb: Polygon.FromAlignedBoundingBox2d(IEnumerable(Of Vector3))
 - uid: Elements.Geometry.Polygon.FromAlignedBoundingBox2d*
@@ -4822,13 +4839,13 @@ references:
   commentId: M:Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon,System.Double)
   fullName: Elements.Geometry.Polygon.Intersection(Elements.Geometry.Polygon, System.Double)
   nameWithType: Polygon.Intersection(Polygon, Double)
-- uid: Elements.Geometry.Polygon.Intersection(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: Intersection(IList<Polygon>, IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.Intersection(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Intersection_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: Intersection(IList(Of Polygon), IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.Intersection(IList<Elements.Geometry.Polygon>, IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.Intersection(IList(Of Elements.Geometry.Polygon), IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Intersection(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.Intersection(IList<Polygon>, IList<Polygon>, Double)
   nameWithType.vb: Polygon.Intersection(IList(Of Polygon), IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Intersection*
@@ -5089,13 +5106,13 @@ references:
   commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   nameWithType: Polygon.Split(Polyline)
-- uid: Elements.Geometry.Polygon.Split(IEnumerable{Elements.Geometry.Polyline})
+- uid: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name: Split(IEnumerable<Polyline>)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_IEnumerable_Elements_Geometry_Polyline__
-  commentId: M:Elements.Geometry.Polygon.Split(IEnumerable{Elements.Geometry.Polyline})
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name.vb: Split(IEnumerable(Of Polyline))
-  fullName: Elements.Geometry.Polygon.Split(IEnumerable<Elements.Geometry.Polyline>)
-  fullName.vb: Elements.Geometry.Polygon.Split(IEnumerable(Of Elements.Geometry.Polyline))
+  fullName: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
   nameWithType: Polygon.Split(IEnumerable<Polyline>)
   nameWithType.vb: Polygon.Split(IEnumerable(Of Polyline))
 - uid: Elements.Geometry.Polygon.Split*
@@ -5208,22 +5225,22 @@ references:
   commentId: M:Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon,System.Double)
   fullName: Elements.Geometry.Polygon.Union(Elements.Geometry.Polygon, System.Double)
   nameWithType: Polygon.Union(Polygon, Double)
-- uid: Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: Union(IList<Polygon>, IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: Union(IList(Of Polygon), IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.Union(IList<Elements.Geometry.Polygon>, IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.Union(IList(Of Elements.Geometry.Polygon), IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.Union(IList<Polygon>, IList<Polygon>, Double)
   nameWithType.vb: Polygon.Union(IList(Of Polygon), IList(Of Polygon), Double)
-- uid: Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: Union(IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.Union(IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Union_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.Union(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: Union(IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.Union(IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.Union(IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.Union(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.Union(IList<Polygon>, Double)
   nameWithType.vb: Polygon.Union(IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.Union*
@@ -5233,13 +5250,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polygon.Union
   nameWithType: Polygon.Union
-- uid: Elements.Geometry.Polygon.UnionAll(IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: UnionAll(IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_UnionAll_IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.UnionAll(IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_UnionAll_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: UnionAll(IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.UnionAll(IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.UnionAll(IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.UnionAll(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.UnionAll(IList<Polygon>, Double)
   nameWithType.vb: Polygon.UnionAll(IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.UnionAll*
@@ -5255,13 +5272,13 @@ references:
   commentId: M:Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon,System.Double)
   fullName: Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon, System.Double)
   nameWithType: Polygon.XOR(Polygon, Double)
-- uid: Elements.Geometry.Polygon.XOR(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+- uid: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name: XOR(IList<Polygon>, IList<Polygon>, Double)
-  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_IList_Elements_Geometry_Polygon__IList_Elements_Geometry_Polygon__System_Double_
-  commentId: M:Elements.Geometry.Polygon.XOR(IList{Elements.Geometry.Polygon},IList{Elements.Geometry.Polygon},System.Double)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_XOR_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_
+  commentId: M:Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double)
   name.vb: XOR(IList(Of Polygon), IList(Of Polygon), Double)
-  fullName: Elements.Geometry.Polygon.XOR(IList<Elements.Geometry.Polygon>, IList<Elements.Geometry.Polygon>, System.Double)
-  fullName.vb: Elements.Geometry.Polygon.XOR(IList(Of Elements.Geometry.Polygon), IList(Of Elements.Geometry.Polygon), System.Double)
+  fullName: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double)
+  fullName.vb: Elements.Geometry.Polygon.XOR(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double)
   nameWithType: Polygon.XOR(IList<Polygon>, IList<Polygon>, Double)
   nameWithType.vb: Polygon.XOR(IList(Of Polygon), IList(Of Polygon), Double)
 - uid: Elements.Geometry.Polygon.XOR*
@@ -5277,13 +5294,13 @@ references:
   commentId: T:Elements.Geometry.Polyline
   fullName: Elements.Geometry.Polyline
   nameWithType: Polyline
-- uid: Elements.Geometry.Polyline.#ctor(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: Polyline(IList<Vector3>)
-  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline__ctor_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Polyline.#ctor(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: Polyline(IList(Of Vector3))
-  fullName: Elements.Geometry.Polyline.Polyline(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Polyline.Polyline(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Polyline.Polyline(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polyline.Polyline(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Polyline.Polyline(IList<Vector3>)
   nameWithType.vb: Polyline.Polyline(IList(Of Vector3))
 - uid: Elements.Geometry.Polyline.#ctor*
@@ -5306,13 +5323,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Bounds
   nameWithType: Polyline.Bounds
-- uid: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: CheckCoincidenceAndThrow(IList<Vector3>)
-  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: CheckCoincidenceAndThrow(IList(Of Vector3))
-  fullName: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Polyline.CheckCoincidenceAndThrow(IList<Vector3>)
   nameWithType.vb: Polyline.CheckCoincidenceAndThrow(IList(Of Vector3))
 - uid: Elements.Geometry.Polyline.CheckCoincidenceAndThrow*
@@ -5616,22 +5633,22 @@ references:
   commentId: M:Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Polygon)
   fullName: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, Elements.Geometry.Polygon)
   nameWithType: Profile.Profile(Polygon, Polygon)
-- uid: Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Guid,System.String)
+- uid: Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Guid,System.String)
   name: Profile(Polygon, IList<Polygon>, Guid, String)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__System_Guid_System_String_
-  commentId: M:Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Guid,System.String)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Guid_System_String_
+  commentId: M:Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Guid,System.String)
   name.vb: Profile(Polygon, IList(Of Polygon), Guid, String)
-  fullName: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, IList<Elements.Geometry.Polygon>, System.Guid, System.String)
-  fullName.vb: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, IList(Of Elements.Geometry.Polygon), System.Guid, System.String)
+  fullName: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Guid, System.String)
+  fullName.vb: Elements.Geometry.Profile.Profile(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Guid, System.String)
   nameWithType: Profile.Profile(Polygon, IList<Polygon>, Guid, String)
   nameWithType.vb: Profile.Profile(Polygon, IList(Of Polygon), Guid, String)
-- uid: Elements.Geometry.Profile.#ctor(IList{Elements.Geometry.Polygon})
+- uid: Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name: Profile(IList<Polygon>)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Profile.#ctor(IList{Elements.Geometry.Polygon})
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Profile.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name.vb: Profile(IList(Of Polygon))
-  fullName: Elements.Geometry.Profile.Profile(IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Profile.Profile(IList(Of Elements.Geometry.Polygon))
+  fullName: Elements.Geometry.Profile.Profile(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Profile.Profile(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: Profile.Profile(IList<Polygon>)
   nameWithType.vb: Profile.Profile(IList(Of Polygon))
 - uid: Elements.Geometry.Profile.#ctor(System.String)
@@ -5682,13 +5699,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Contains
   nameWithType: Profile.Contains
-- uid: Elements.Geometry.Profile.Difference(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)
+- uid: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name: Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Profile__System_Double_
-  commentId: M:Elements.Geometry.Profile.Difference(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Difference_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name.vb: Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
-  fullName: Elements.Geometry.Profile.Difference(IEnumerable<Elements.Geometry.Profile>, IEnumerable<Elements.Geometry.Profile>, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Difference(IEnumerable(Of Elements.Geometry.Profile), IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  fullName: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Difference(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
   nameWithType: Profile.Difference(IEnumerable<Profile>, IEnumerable<Profile>, Double)
   nameWithType.vb: Profile.Difference(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
 - uid: Elements.Geometry.Profile.Difference*
@@ -5711,13 +5728,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Equals
   nameWithType: Profile.Equals
-- uid: Elements.Geometry.Profile.Intersection(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)
+- uid: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name: Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Profile__System_Double_
-  commentId: M:Elements.Geometry.Profile.Intersection(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Profile},System.Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Intersection_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name.vb: Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
-  fullName: Elements.Geometry.Profile.Intersection(IEnumerable<Elements.Geometry.Profile>, IEnumerable<Elements.Geometry.Profile>, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Intersection(IEnumerable(Of Elements.Geometry.Profile), IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  fullName: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Intersection(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
   nameWithType: Profile.Intersection(IEnumerable<Profile>, IEnumerable<Profile>, Double)
   nameWithType.vb: Profile.Intersection(IEnumerable(Of Profile), IEnumerable(Of Profile), Double)
 - uid: Elements.Geometry.Profile.Intersection*
@@ -5792,22 +5809,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Segments
   nameWithType: Profile.Segments
-- uid: Elements.Geometry.Profile.Split(IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
   name: Split(IEnumerable<Profile>, Polyline, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_IEnumerable_Elements_Geometry_Profile__Elements_Geometry_Polyline_System_Double_
-  commentId: M:Elements.Geometry.Profile.Split(IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__Elements_Geometry_Polyline_System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},Elements.Geometry.Polyline,System.Double)
   name.vb: Split(IEnumerable(Of Profile), Polyline, Double)
-  fullName: Elements.Geometry.Profile.Split(IEnumerable<Elements.Geometry.Profile>, Elements.Geometry.Polyline, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Split(IEnumerable(Of Elements.Geometry.Profile), Elements.Geometry.Polyline, System.Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, Elements.Geometry.Polyline, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), Elements.Geometry.Polyline, System.Double)
   nameWithType: Profile.Split(IEnumerable<Profile>, Polyline, Double)
   nameWithType.vb: Profile.Split(IEnumerable(Of Profile), Polyline, Double)
-- uid: Elements.Geometry.Profile.Split(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Polyline},System.Double)
+- uid: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
   name: Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_IEnumerable_Elements_Geometry_Profile__IEnumerable_Elements_Geometry_Polyline__System_Double_
-  commentId: M:Elements.Geometry.Profile.Split(IEnumerable{Elements.Geometry.Profile},IEnumerable{Elements.Geometry.Polyline},System.Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__System_Double_
+  commentId: M:Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline},System.Double)
   name.vb: Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
-  fullName: Elements.Geometry.Profile.Split(IEnumerable<Elements.Geometry.Profile>, IEnumerable<Elements.Geometry.Polyline>, System.Double)
-  fullName.vb: Elements.Geometry.Profile.Split(IEnumerable(Of Elements.Geometry.Profile), IEnumerable(Of Elements.Geometry.Polyline), System.Double)
+  fullName: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline), System.Double)
   nameWithType: Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline>, Double)
   nameWithType.vb: Profile.Split(IEnumerable(Of Profile), IEnumerable(Of Polyline), Double)
 - uid: Elements.Geometry.Profile.Split*
@@ -5843,13 +5860,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Profile.Union
   nameWithType: Profile.Union
-- uid: Elements.Geometry.Profile.UnionAll(IEnumerable{Elements.Geometry.Profile},System.Double)
+- uid: Elements.Geometry.Profile.UnionAll(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name: UnionAll(IEnumerable<Profile>, Double)
-  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_UnionAll_IEnumerable_Elements_Geometry_Profile__System_Double_
-  commentId: M:Elements.Geometry.Profile.UnionAll(IEnumerable{Elements.Geometry.Profile},System.Double)
+  href: api/Elements.Geometry.Profile.html#Elements_Geometry_Profile_UnionAll_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_
+  commentId: M:Elements.Geometry.Profile.UnionAll(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double)
   name.vb: UnionAll(IEnumerable(Of Profile), Double)
-  fullName: Elements.Geometry.Profile.UnionAll(IEnumerable<Elements.Geometry.Profile>, System.Double)
-  fullName.vb: Elements.Geometry.Profile.UnionAll(IEnumerable(Of Elements.Geometry.Profile), System.Double)
+  fullName: Elements.Geometry.Profile.UnionAll(System.Collections.Generic.IEnumerable<Elements.Geometry.Profile>, System.Double)
+  fullName.vb: Elements.Geometry.Profile.UnionAll(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Profile), System.Double)
   nameWithType: Profile.UnionAll(IEnumerable<Profile>, Double)
   nameWithType.vb: Profile.UnionAll(IEnumerable(Of Profile), Double)
 - uid: Elements.Geometry.Profile.UnionAll*
@@ -5914,11 +5931,11 @@ references:
   commentId: T:Elements.Geometry.Profiles.HSSPipeProfile
   fullName: Elements.Geometry.Profiles.HSSPipeProfile
   nameWithType: HSSPipeProfile
-- uid: Elements.Geometry.Profiles.HSSPipeProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
+- uid: Elements.Geometry.Profiles.HSSPipeProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
   name: HSSPipeProfile(String, Guid, Double, Double, Double)
-  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile__ctor_System_String_Guid_System_Double_System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profiles.HSSPipeProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
-  fullName: Elements.Geometry.Profiles.HSSPipeProfile.HSSPipeProfile(System.String, Guid, System.Double, System.Double, System.Double)
+  href: api/Elements.Geometry.Profiles.HSSPipeProfile.html#Elements_Geometry_Profiles_HSSPipeProfile__ctor_System_String_System_Guid_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profiles.HSSPipeProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Profiles.HSSPipeProfile.HSSPipeProfile(System.String, System.Guid, System.Double, System.Double, System.Double)
   nameWithType: HSSPipeProfile.HSSPipeProfile(String, Guid, Double, Double, Double)
 - uid: Elements.Geometry.Profiles.HSSPipeProfile.#ctor*
   name: HSSPipeProfile
@@ -7062,11 +7079,11 @@ references:
   commentId: T:Elements.Geometry.Profiles.RHSProfile
   fullName: Elements.Geometry.Profiles.RHSProfile
   nameWithType: RHSProfile
-- uid: Elements.Geometry.Profiles.RHSProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
+- uid: Elements.Geometry.Profiles.RHSProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
   name: RHSProfile(String, Guid, Double, Double, Double)
-  href: api/Elements.Geometry.Profiles.RHSProfile.html#Elements_Geometry_Profiles_RHSProfile__ctor_System_String_Guid_System_Double_System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profiles.RHSProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
-  fullName: Elements.Geometry.Profiles.RHSProfile.RHSProfile(System.String, Guid, System.Double, System.Double, System.Double)
+  href: api/Elements.Geometry.Profiles.RHSProfile.html#Elements_Geometry_Profiles_RHSProfile__ctor_System_String_System_Guid_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profiles.RHSProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Profiles.RHSProfile.RHSProfile(System.String, System.Guid, System.Double, System.Double, System.Double)
   nameWithType: RHSProfile.RHSProfile(String, Guid, Double, Double, Double)
 - uid: Elements.Geometry.Profiles.RHSProfile.#ctor*
   name: RHSProfile
@@ -8800,11 +8817,11 @@ references:
   commentId: T:Elements.Geometry.Profiles.SHSProfile
   fullName: Elements.Geometry.Profiles.SHSProfile
   nameWithType: SHSProfile
-- uid: Elements.Geometry.Profiles.SHSProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
+- uid: Elements.Geometry.Profiles.SHSProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
   name: SHSProfile(String, Guid, Double, Double, Double)
-  href: api/Elements.Geometry.Profiles.SHSProfile.html#Elements_Geometry_Profiles_SHSProfile__ctor_System_String_Guid_System_Double_System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profiles.SHSProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double)
-  fullName: Elements.Geometry.Profiles.SHSProfile.SHSProfile(System.String, Guid, System.Double, System.Double, System.Double)
+  href: api/Elements.Geometry.Profiles.SHSProfile.html#Elements_Geometry_Profiles_SHSProfile__ctor_System_String_System_Guid_System_Double_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profiles.SHSProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double)
+  fullName: Elements.Geometry.Profiles.SHSProfile.SHSProfile(System.String, System.Guid, System.Double, System.Double, System.Double)
   nameWithType: SHSProfile.SHSProfile(String, Guid, Double, Double, Double)
 - uid: Elements.Geometry.Profiles.SHSProfile.#ctor*
   name: SHSProfile
@@ -9927,11 +9944,11 @@ references:
   commentId: M:Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String)
   fullName: Elements.Geometry.Profiles.WideFlangeProfile.WideFlangeProfile(System.String)
   nameWithType: WideFlangeProfile.WideFlangeProfile(String)
-- uid: Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Profiles.VerticalAlignment,Elements.Geometry.Profiles.HorizontalAlignment,System.Double,System.Double)
+- uid: Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Profiles.VerticalAlignment,Elements.Geometry.Profiles.HorizontalAlignment,System.Double,System.Double)
   name: WideFlangeProfile(String, Guid, Double, Double, Double, Double, VerticalAlignment, HorizontalAlignment, Double, Double)
-  href: api/Elements.Geometry.Profiles.WideFlangeProfile.html#Elements_Geometry_Profiles_WideFlangeProfile__ctor_System_String_Guid_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Profiles_VerticalAlignment_Elements_Geometry_Profiles_HorizontalAlignment_System_Double_System_Double_
-  commentId: M:Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,Guid,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Profiles.VerticalAlignment,Elements.Geometry.Profiles.HorizontalAlignment,System.Double,System.Double)
-  fullName: Elements.Geometry.Profiles.WideFlangeProfile.WideFlangeProfile(System.String, Guid, System.Double, System.Double, System.Double, System.Double, Elements.Geometry.Profiles.VerticalAlignment, Elements.Geometry.Profiles.HorizontalAlignment, System.Double, System.Double)
+  href: api/Elements.Geometry.Profiles.WideFlangeProfile.html#Elements_Geometry_Profiles_WideFlangeProfile__ctor_System_String_System_Guid_System_Double_System_Double_System_Double_System_Double_Elements_Geometry_Profiles_VerticalAlignment_Elements_Geometry_Profiles_HorizontalAlignment_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Profiles.WideFlangeProfile.#ctor(System.String,System.Guid,System.Double,System.Double,System.Double,System.Double,Elements.Geometry.Profiles.VerticalAlignment,Elements.Geometry.Profiles.HorizontalAlignment,System.Double,System.Double)
+  fullName: Elements.Geometry.Profiles.WideFlangeProfile.WideFlangeProfile(System.String, System.Guid, System.Double, System.Double, System.Double, System.Double, Elements.Geometry.Profiles.VerticalAlignment, Elements.Geometry.Profiles.HorizontalAlignment, System.Double, System.Double)
   nameWithType: WideFlangeProfile.WideFlangeProfile(String, Guid, Double, Double, Double, Double, VerticalAlignment, HorizontalAlignment, Double, Double)
 - uid: Elements.Geometry.Profiles.WideFlangeProfile.#ctor*
   name: WideFlangeProfile
@@ -12270,13 +12287,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Ray.Equals
   nameWithType: Ray.Equals
-- uid: Elements.Geometry.Ray.Intersects(Elements.GeometricElement,List{Elements.Geometry.Vector3}@)
+- uid: Elements.Geometry.Ray.Intersects(Elements.GeometricElement,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
   name: Intersects(GeometricElement, out List<Vector3>)
-  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_GeometricElement_List_Elements_Geometry_Vector3___
-  commentId: M:Elements.Geometry.Ray.Intersects(Elements.GeometricElement,List{Elements.Geometry.Vector3}@)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_GeometricElement_System_Collections_Generic_List_Elements_Geometry_Vector3___
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.GeometricElement,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
   name.vb: Intersects(GeometricElement, ByRef List(Of Vector3))
-  fullName: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, out List<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, ByRef List(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, out System.Collections.Generic.List<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.GeometricElement, ByRef System.Collections.Generic.List(Of Elements.Geometry.Vector3))
   nameWithType: Ray.Intersects(GeometricElement, out List<Vector3>)
   nameWithType.vb: Ray.Intersects(GeometricElement, ByRef List(Of Vector3))
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Line,Elements.Geometry.Vector3@)
@@ -12315,13 +12332,13 @@ references:
   fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray, ByRef Elements.Geometry.Vector3, System.Boolean)
   nameWithType: Ray.Intersects(Ray, out Vector3, Boolean)
   nameWithType.vb: Ray.Intersects(Ray, ByRef Vector3, Boolean)
-- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,List{Elements.Geometry.Vector3}@)
+- uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
   name: Intersects(SolidOperation, out List<Vector3>)
-  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Solids_SolidOperation_List_Elements_Geometry_Vector3___
-  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,List{Elements.Geometry.Vector3}@)
+  href: api/Elements.Geometry.Ray.html#Elements_Geometry_Ray_Intersects_Elements_Geometry_Solids_SolidOperation_System_Collections_Generic_List_Elements_Geometry_Vector3___
+  commentId: M:Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation,System.Collections.Generic.List{Elements.Geometry.Vector3}@)
   name.vb: Intersects(SolidOperation, ByRef List(Of Vector3))
-  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, out List<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, ByRef List(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, out System.Collections.Generic.List<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Ray.Intersects(Elements.Geometry.Solids.SolidOperation, ByRef System.Collections.Generic.List(Of Elements.Geometry.Vector3))
   nameWithType: Ray.Intersects(SolidOperation, out List<Vector3>)
   nameWithType.vb: Ray.Intersects(SolidOperation, ByRef List(Of Vector3))
 - uid: Elements.Geometry.Ray.Intersects(Elements.Geometry.Triangle,Elements.Geometry.Vector3@)
@@ -12368,13 +12385,13 @@ references:
   commentId: T:Elements.Geometry.Representation
   fullName: Elements.Geometry.Representation
   nameWithType: Representation
-- uid: Elements.Geometry.Representation.#ctor(IList{Elements.Geometry.Solids.SolidOperation})
+- uid: Elements.Geometry.Representation.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.SolidOperation})
   name: Representation(IList<SolidOperation>)
-  href: api/Elements.Geometry.Representation.html#Elements_Geometry_Representation__ctor_IList_Elements_Geometry_Solids_SolidOperation__
-  commentId: M:Elements.Geometry.Representation.#ctor(IList{Elements.Geometry.Solids.SolidOperation})
+  href: api/Elements.Geometry.Representation.html#Elements_Geometry_Representation__ctor_System_Collections_Generic_IList_Elements_Geometry_Solids_SolidOperation__
+  commentId: M:Elements.Geometry.Representation.#ctor(System.Collections.Generic.IList{Elements.Geometry.Solids.SolidOperation})
   name.vb: Representation(IList(Of SolidOperation))
-  fullName: Elements.Geometry.Representation.Representation(IList<Elements.Geometry.Solids.SolidOperation>)
-  fullName.vb: Elements.Geometry.Representation.Representation(IList(Of Elements.Geometry.Solids.SolidOperation))
+  fullName: Elements.Geometry.Representation.Representation(System.Collections.Generic.IList<Elements.Geometry.Solids.SolidOperation>)
+  fullName.vb: Elements.Geometry.Representation.Representation(System.Collections.Generic.IList(Of Elements.Geometry.Solids.SolidOperation))
   nameWithType: Representation.Representation(IList<SolidOperation>)
   nameWithType.vb: Representation.Representation(IList(Of SolidOperation))
 - uid: Elements.Geometry.Representation.#ctor*
@@ -12888,13 +12905,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Solid.AddEdges
   nameWithType: Solid.AddEdges
-- uid: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon})
+- uid: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name: AddFace(Polygon, IList<Polygon>)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon})
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name.vb: AddFace(Polygon, IList(Of Polygon))
-  fullName: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, IList(Of Elements.Geometry.Polygon))
+  fullName: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: Solid.AddFace(Polygon, IList<Polygon>)
   nameWithType.vb: Solid.AddFace(Polygon, IList(Of Polygon))
 - uid: Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Solids.Loop,Elements.Geometry.Solids.Loop[])
@@ -12942,13 +12959,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Solid.Cap
   nameWithType: Solid.Cap
-- uid: Elements.Geometry.Solids.Solid.CreateLamina(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: CreateLamina(IList<Vector3>)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_CreateLamina_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Solids.Solid.CreateLamina(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_CreateLamina_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: CreateLamina(IList(Of Vector3))
-  fullName: Elements.Geometry.Solids.Solid.CreateLamina(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Solids.Solid.CreateLamina(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Solid.CreateLamina(IList<Vector3>)
   nameWithType.vb: Solid.CreateLamina(IList(Of Vector3))
 - uid: Elements.Geometry.Solids.Solid.CreateLamina*
@@ -12997,22 +13014,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Solid.LoopFromPolygon
   nameWithType: Solid.LoopFromPolygon
-- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
   name: SweepFace(Polygon, IList<Polygon>, Vector3, Double, Boolean, Double)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_System_Double_System_Boolean_System_Double_
-  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_System_Double_System_Boolean_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,System.Double,System.Boolean,System.Double)
   name.vb: SweepFace(Polygon, IList(Of Polygon), Vector3, Double, Boolean, Double)
-  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
-  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, System.Double, System.Boolean, System.Double)
   nameWithType: Solid.SweepFace(Polygon, IList<Polygon>, Vector3, Double, Boolean, Double)
   nameWithType.vb: Solid.SweepFace(Polygon, IList(Of Polygon), Vector3, Double, Boolean, Double)
-- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
   name: SweepFace(Polygon, IList<Polygon>, Double, Boolean, Double)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__System_Double_System_Boolean_System_Double_
-  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Double_System_Boolean_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Double,System.Boolean,System.Double)
   name.vb: SweepFace(Polygon, IList(Of Polygon), Double, Boolean, Double)
-  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, IList<Elements.Geometry.Polygon>, System.Double, System.Boolean, System.Double)
-  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, IList(Of Elements.Geometry.Polygon), System.Double, System.Boolean, System.Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, System.Double, System.Boolean, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFace(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), System.Double, System.Boolean, System.Double)
   nameWithType: Solid.SweepFace(Polygon, IList<Polygon>, Double, Boolean, Double)
   nameWithType.vb: Solid.SweepFace(Polygon, IList(Of Polygon), Double, Boolean, Double)
 - uid: Elements.Geometry.Solids.Solid.SweepFace*
@@ -13022,13 +13039,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Solids.Solid.SweepFace
   nameWithType: Solid.SweepFace
-- uid: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
+- uid: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
   name: SweepFaceAlongCurve(Polygon, IList<Polygon>, ICurve, Double, Double)
-  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_
-  commentId: M:Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
+  href: api/Elements.Geometry.Solids.Solid.html#Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_
+  commentId: M:Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)
   name.vb: SweepFaceAlongCurve(Polygon, IList(Of Polygon), ICurve, Double, Double)
-  fullName: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, IList<Elements.Geometry.Polygon>, Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
-  fullName.vb: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, IList(Of Elements.Geometry.Polygon), Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
+  fullName: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
+  fullName.vb: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon, System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Interfaces.ICurve, System.Double, System.Double)
   nameWithType: Solid.SweepFaceAlongCurve(Polygon, IList<Polygon>, ICurve, Double, Double)
   nameWithType.vb: Solid.SweepFaceAlongCurve(Polygon, IList(Of Polygon), ICurve, Double, Double)
 - uid: Elements.Geometry.Solids.Solid.SweepFaceAlongCurve*
@@ -13563,13 +13580,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Transform.OfPolygon
   nameWithType: Transform.OfPolygon
-- uid: Elements.Geometry.Transform.OfPolygons(IList{Elements.Geometry.Polygon})
+- uid: Elements.Geometry.Transform.OfPolygons(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name: OfPolygons(IList<Polygon>)
-  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfPolygons_IList_Elements_Geometry_Polygon__
-  commentId: M:Elements.Geometry.Transform.OfPolygons(IList{Elements.Geometry.Polygon})
+  href: api/Elements.Geometry.Transform.html#Elements_Geometry_Transform_OfPolygons_System_Collections_Generic_IList_Elements_Geometry_Polygon__
+  commentId: M:Elements.Geometry.Transform.OfPolygons(System.Collections.Generic.IList{Elements.Geometry.Polygon})
   name.vb: OfPolygons(IList(Of Polygon))
-  fullName: Elements.Geometry.Transform.OfPolygons(IList<Elements.Geometry.Polygon>)
-  fullName.vb: Elements.Geometry.Transform.OfPolygons(IList(Of Elements.Geometry.Polygon))
+  fullName: Elements.Geometry.Transform.OfPolygons(System.Collections.Generic.IList<Elements.Geometry.Polygon>)
+  fullName.vb: Elements.Geometry.Transform.OfPolygons(System.Collections.Generic.IList(Of Elements.Geometry.Polygon))
   nameWithType: Transform.OfPolygons(IList<Polygon>)
   nameWithType.vb: Transform.OfPolygons(IList(Of Polygon))
 - uid: Elements.Geometry.Transform.OfPolygons*
@@ -13797,13 +13814,13 @@ references:
   commentId: M:Elements.Geometry.Triangle.#ctor(Elements.Geometry.Vertex,Elements.Geometry.Vertex,Elements.Geometry.Vertex)
   fullName: Elements.Geometry.Triangle.Triangle(Elements.Geometry.Vertex, Elements.Geometry.Vertex, Elements.Geometry.Vertex)
   nameWithType: Triangle.Triangle(Vertex, Vertex, Vertex)
-- uid: Elements.Geometry.Triangle.#ctor(IList{Elements.Geometry.Vertex},Elements.Geometry.Vector3)
+- uid: Elements.Geometry.Triangle.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},Elements.Geometry.Vector3)
   name: Triangle(IList<Vertex>, Vector3)
-  href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_IList_Elements_Geometry_Vertex__Elements_Geometry_Vector3_
-  commentId: M:Elements.Geometry.Triangle.#ctor(IList{Elements.Geometry.Vertex},Elements.Geometry.Vector3)
+  href: api/Elements.Geometry.Triangle.html#Elements_Geometry_Triangle__ctor_System_Collections_Generic_IList_Elements_Geometry_Vertex__Elements_Geometry_Vector3_
+  commentId: M:Elements.Geometry.Triangle.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},Elements.Geometry.Vector3)
   name.vb: Triangle(IList(Of Vertex), Vector3)
-  fullName: Elements.Geometry.Triangle.Triangle(IList<Elements.Geometry.Vertex>, Elements.Geometry.Vector3)
-  fullName.vb: Elements.Geometry.Triangle.Triangle(IList(Of Elements.Geometry.Vertex), Elements.Geometry.Vector3)
+  fullName: Elements.Geometry.Triangle.Triangle(System.Collections.Generic.IList<Elements.Geometry.Vertex>, Elements.Geometry.Vector3)
+  fullName.vb: Elements.Geometry.Triangle.Triangle(System.Collections.Generic.IList(Of Elements.Geometry.Vertex), Elements.Geometry.Vector3)
   nameWithType: Triangle.Triangle(IList<Vertex>, Vector3)
   nameWithType.vb: Triangle.Triangle(IList(Of Vertex), Vector3)
 - uid: Elements.Geometry.Triangle.#ctor*
@@ -14598,13 +14615,13 @@ references:
   commentId: T:Elements.Geometry.Vector3Extensions
   fullName: Elements.Geometry.Vector3Extensions
   nameWithType: Vector3Extensions
-- uid: Elements.Geometry.Vector3Extensions.AreCollinear(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: AreCollinear(IList<Vector3>)
-  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Vector3Extensions.AreCollinear(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCollinear_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: AreCollinear(IList(Of Vector3))
-  fullName: Elements.Geometry.Vector3Extensions.AreCollinear(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Vector3Extensions.AreCollinear(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.AreCollinear(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Vector3Extensions.AreCollinear(IList<Vector3>)
   nameWithType.vb: Vector3Extensions.AreCollinear(IList(Of Vector3))
 - uid: Elements.Geometry.Vector3Extensions.AreCollinear*
@@ -14614,13 +14631,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3Extensions.AreCollinear
   nameWithType: Vector3Extensions.AreCollinear
-- uid: Elements.Geometry.Vector3Extensions.AreCoplanar(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: AreCoplanar(IList<Vector3>)
-  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCoplanar_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Vector3Extensions.AreCoplanar(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: AreCoplanar(IList(Of Vector3))
-  fullName: Elements.Geometry.Vector3Extensions.AreCoplanar(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Vector3Extensions.AreCoplanar(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Vector3Extensions.AreCoplanar(IList<Vector3>)
   nameWithType.vb: Vector3Extensions.AreCoplanar(IList(Of Vector3))
 - uid: Elements.Geometry.Vector3Extensions.AreCoplanar*
@@ -14630,13 +14647,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3Extensions.AreCoplanar
   nameWithType: Vector3Extensions.AreCoplanar
-- uid: Elements.Geometry.Vector3Extensions.Average(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: Average(IList<Vector3>)
-  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_Average_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Vector3Extensions.Average(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_Average_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: Average(IList(Of Vector3))
-  fullName: Elements.Geometry.Vector3Extensions.Average(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Vector3Extensions.Average(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Vector3Extensions.Average(IList<Vector3>)
   nameWithType.vb: Vector3Extensions.Average(IList(Of Vector3))
 - uid: Elements.Geometry.Vector3Extensions.Average*
@@ -14662,13 +14679,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3Extensions.Shrink
   nameWithType: Vector3Extensions.Shrink
-- uid: Elements.Geometry.Vector3Extensions.ToArray(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Vector3Extensions.ToArray(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: ToArray(IList<Vector3>)
-  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_ToArray_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Vector3Extensions.ToArray(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_ToArray_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.ToArray(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: ToArray(IList(Of Vector3))
-  fullName: Elements.Geometry.Vector3Extensions.ToArray(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Vector3Extensions.ToArray(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.ToArray(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.ToArray(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Vector3Extensions.ToArray(IList<Vector3>)
   nameWithType.vb: Vector3Extensions.ToArray(IList(Of Vector3))
 - uid: Elements.Geometry.Vector3Extensions.ToArray*
@@ -14678,13 +14695,13 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Vector3Extensions.ToArray
   nameWithType: Vector3Extensions.ToArray
-- uid: Elements.Geometry.Vector3Extensions.ToTransform(IList{Elements.Geometry.Vector3})
+- uid: Elements.Geometry.Vector3Extensions.ToTransform(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name: ToTransform(IList<Vector3>)
-  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_ToTransform_IList_Elements_Geometry_Vector3__
-  commentId: M:Elements.Geometry.Vector3Extensions.ToTransform(IList{Elements.Geometry.Vector3})
+  href: api/Elements.Geometry.Vector3Extensions.html#Elements_Geometry_Vector3Extensions_ToTransform_System_Collections_Generic_IList_Elements_Geometry_Vector3__
+  commentId: M:Elements.Geometry.Vector3Extensions.ToTransform(System.Collections.Generic.IList{Elements.Geometry.Vector3})
   name.vb: ToTransform(IList(Of Vector3))
-  fullName: Elements.Geometry.Vector3Extensions.ToTransform(IList<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Geometry.Vector3Extensions.ToTransform(IList(Of Elements.Geometry.Vector3))
+  fullName: Elements.Geometry.Vector3Extensions.ToTransform(System.Collections.Generic.IList<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Geometry.Vector3Extensions.ToTransform(System.Collections.Generic.IList(Of Elements.Geometry.Vector3))
   nameWithType: Vector3Extensions.ToTransform(IList<Vector3>)
   nameWithType.vb: Vector3Extensions.ToTransform(IList(Of Vector3))
 - uid: Elements.Geometry.Vector3Extensions.ToTransform*
@@ -14843,11 +14860,11 @@ references:
   commentId: T:Elements.ImportMeshElement
   fullName: Elements.ImportMeshElement
   nameWithType: ImportMeshElement
-- uid: Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,Guid,System.String)
+- uid: Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,System.Guid,System.String)
   name: ImportMeshElement(String, Units.LengthUnit, Material, Guid, String)
-  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement__ctor_System_String_Elements_Units_LengthUnit_Elements_Material_Guid_System_String_
-  commentId: M:Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,Guid,System.String)
-  fullName: Elements.ImportMeshElement.ImportMeshElement(System.String, Elements.Units.LengthUnit, Elements.Material, Guid, System.String)
+  href: api/Elements.ImportMeshElement.html#Elements_ImportMeshElement__ctor_System_String_Elements_Units_LengthUnit_Elements_Material_System_Guid_System_String_
+  commentId: M:Elements.ImportMeshElement.#ctor(System.String,Elements.Units.LengthUnit,Elements.Material,System.Guid,System.String)
+  fullName: Elements.ImportMeshElement.ImportMeshElement(System.String, Elements.Units.LengthUnit, Elements.Material, System.Guid, System.String)
   nameWithType: ImportMeshElement.ImportMeshElement(String, Units.LengthUnit, Material, Guid, String)
 - uid: Elements.ImportMeshElement.#ctor*
   name: ImportMeshElement
@@ -14900,11 +14917,11 @@ references:
   commentId: T:Elements.Light
   fullName: Elements.Light
   nameWithType: Light
-- uid: Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,Guid,System.String)
+- uid: Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,System.Guid,System.String)
   name: Light(Double, Color, Transform, Guid, String)
-  href: api/Elements.Light.html#Elements_Light__ctor_System_Double_Elements_Geometry_Color_Elements_Geometry_Transform_Guid_System_String_
-  commentId: M:Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,Guid,System.String)
-  fullName: Elements.Light.Light(System.Double, Elements.Geometry.Color, Elements.Geometry.Transform, Guid, System.String)
+  href: api/Elements.Light.html#Elements_Light__ctor_System_Double_Elements_Geometry_Color_Elements_Geometry_Transform_System_Guid_System_String_
+  commentId: M:Elements.Light.#ctor(System.Double,Elements.Geometry.Color,Elements.Geometry.Transform,System.Guid,System.String)
+  fullName: Elements.Light.Light(System.Double, Elements.Geometry.Color, Elements.Geometry.Transform, System.Guid, System.String)
   nameWithType: Light.Light(Double, Color, Transform, Guid, String)
 - uid: Elements.Light.#ctor*
   name: Light
@@ -15001,11 +15018,11 @@ references:
   commentId: T:Elements.Mass
   fullName: Elements.Mass
   nameWithType: Mass
-- uid: Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Mass(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Mass.html#Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Mass.Mass(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Mass.html#Elements_Mass__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Mass.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Mass.Mass(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Mass.Mass(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Mass.#ctor*
   name: Mass
@@ -15104,17 +15121,17 @@ references:
   commentId: M:Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Guid,System.String)
   fullName: Elements.Material.Material(Elements.Geometry.Color, System.Double, System.Double, System.Boolean, System.String, System.Boolean, System.Guid, System.String)
   nameWithType: Material.Material(Color, Double, Double, Boolean, String, Boolean, Guid, String)
-- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,Guid)
+- uid: Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)
   name: Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_Guid_
-  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,Guid)
-  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Double, System.Double, System.String, System.Boolean, System.Boolean, Guid)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Guid_
+  commentId: M:Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)
+  fullName: Elements.Material.Material(System.String, Elements.Geometry.Color, System.Double, System.Double, System.String, System.Boolean, System.Boolean, System.Guid)
   nameWithType: Material.Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)
-- uid: Elements.Material.#ctor(System.String,Guid)
+- uid: Elements.Material.#ctor(System.String,System.Guid)
   name: Material(String, Guid)
-  href: api/Elements.Material.html#Elements_Material__ctor_System_String_Guid_
-  commentId: M:Elements.Material.#ctor(System.String,Guid)
-  fullName: Elements.Material.Material(System.String, Guid)
+  href: api/Elements.Material.html#Elements_Material__ctor_System_String_System_Guid_
+  commentId: M:Elements.Material.#ctor(System.String,System.Guid)
+  fullName: Elements.Material.Material(System.String, System.Guid)
   nameWithType: Material.Material(String, Guid)
 - uid: Elements.Material.#ctor*
   name: Material
@@ -15246,11 +15263,11 @@ references:
   commentId: T:Elements.MeshElement
   fullName: Elements.MeshElement
   nameWithType: MeshElement
-- uid: Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
+- uid: Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
   name: MeshElement(Mesh, Material, Transform, Boolean, Guid, String)
-  href: api/Elements.MeshElement.html#Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_Guid_System_String_
-  commentId: M:Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
-  fullName: Elements.MeshElement.MeshElement(Elements.Geometry.Mesh, Elements.Material, Elements.Geometry.Transform, System.Boolean, Guid, System.String)
+  href: api/Elements.MeshElement.html#Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
+  fullName: Elements.MeshElement.MeshElement(Elements.Geometry.Mesh, Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
   nameWithType: MeshElement.MeshElement(Mesh, Material, Transform, Boolean, Guid, String)
 - uid: Elements.MeshElement.#ctor*
   name: MeshElement
@@ -15306,24 +15323,24 @@ references:
   commentId: M:Elements.Model.#ctor
   fullName: Elements.Model.Model()
   nameWithType: Model.Model()
-- uid: Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})
-  name: Model(Position, Transform, Collections.Generic.IDictionary<Guid, Element>)
-  href: api/Elements.Model.html#Elements_Model__ctor_Elements_GeoJSON_Position_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_Guid_Elements_Element__
-  commentId: M:Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})
-  name.vb: Model(Position, Transform, Collections.Generic.IDictionary(Of Guid, Element))
-  fullName: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary<Guid, Elements.Element>)
-  fullName.vb: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of Guid, Elements.Element))
-  nameWithType: Model.Model(Position, Transform, Collections.Generic.IDictionary<Guid, Element>)
-  nameWithType.vb: Model.Model(Position, Transform, Collections.Generic.IDictionary(Of Guid, Element))
-- uid: Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})
-  name: Model(Transform, Collections.Generic.IDictionary<Guid, Element>)
-  href: api/Elements.Model.html#Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_Guid_Elements_Element__
-  commentId: M:Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{Guid,Elements.Element})
-  name.vb: Model(Transform, Collections.Generic.IDictionary(Of Guid, Element))
-  fullName: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary<Guid, Elements.Element>)
-  fullName.vb: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of Guid, Elements.Element))
-  nameWithType: Model.Model(Transform, Collections.Generic.IDictionary<Guid, Element>)
-  nameWithType.vb: Model.Model(Transform, Collections.Generic.IDictionary(Of Guid, Element))
+- uid: Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name: Model(Position, Transform, IDictionary<Guid, Element>)
+  href: api/Elements.Model.html#Elements_Model__ctor_Elements_GeoJSON_Position_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
+  commentId: M:Elements.Model.#ctor(Elements.GeoJSON.Position,Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name.vb: Model(Position, Transform, IDictionary(Of Guid, Element))
+  fullName: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
+  fullName.vb: Elements.Model.Model(Elements.GeoJSON.Position, Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
+  nameWithType: Model.Model(Position, Transform, IDictionary<Guid, Element>)
+  nameWithType.vb: Model.Model(Position, Transform, IDictionary(Of Guid, Element))
+- uid: Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name: Model(Transform, IDictionary<Guid, Element>)
+  href: api/Elements.Model.html#Elements_Model__ctor_Elements_Geometry_Transform_System_Collections_Generic_IDictionary_System_Guid_Elements_Element__
+  commentId: M:Elements.Model.#ctor(Elements.Geometry.Transform,System.Collections.Generic.IDictionary{System.Guid,Elements.Element})
+  name.vb: Model(Transform, IDictionary(Of Guid, Element))
+  fullName: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary<System.Guid, Elements.Element>)
+  fullName.vb: Elements.Model.Model(Elements.Geometry.Transform, System.Collections.Generic.IDictionary(Of System.Guid, Elements.Element))
+  nameWithType: Model.Model(Transform, IDictionary<Guid, Element>)
+  nameWithType.vb: Model.Model(Transform, IDictionary(Of Guid, Element))
 - uid: Elements.Model.#ctor*
   name: Model
   href: api/Elements.Model.html#Elements_Model__ctor_
@@ -15353,13 +15370,13 @@ references:
   fullName.vb: Elements.Model.AddElements(Elements.Element())
   nameWithType: Model.AddElements(Element[])
   nameWithType.vb: Model.AddElements(Element())
-- uid: Elements.Model.AddElements(IEnumerable{Elements.Element},System.Boolean)
+- uid: Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)
   name: AddElements(IEnumerable<Element>, Boolean)
-  href: api/Elements.Model.html#Elements_Model_AddElements_IEnumerable_Elements_Element__System_Boolean_
-  commentId: M:Elements.Model.AddElements(IEnumerable{Elements.Element},System.Boolean)
+  href: api/Elements.Model.html#Elements_Model_AddElements_System_Collections_Generic_IEnumerable_Elements_Element__System_Boolean_
+  commentId: M:Elements.Model.AddElements(System.Collections.Generic.IEnumerable{Elements.Element},System.Boolean)
   name.vb: AddElements(IEnumerable(Of Element), Boolean)
-  fullName: Elements.Model.AddElements(IEnumerable<Elements.Element>, System.Boolean)
-  fullName.vb: Elements.Model.AddElements(IEnumerable(Of Elements.Element), System.Boolean)
+  fullName: Elements.Model.AddElements(System.Collections.Generic.IEnumerable<Elements.Element>, System.Boolean)
+  fullName.vb: Elements.Model.AddElements(System.Collections.Generic.IEnumerable(Of Elements.Element), System.Boolean)
   nameWithType: Model.AddElements(IEnumerable<Element>, Boolean)
   nameWithType.vb: Model.AddElements(IEnumerable(Of Element), Boolean)
 - uid: Elements.Model.AddElements*
@@ -15398,21 +15415,21 @@ references:
   isSpec: "True"
   fullName: Elements.Model.Elements
   nameWithType: Model.Elements
-- uid: Elements.Model.FromJson(System.String,List{System.String}@,System.Boolean)
-  name: FromJson(String, out List<String>, Boolean)
-  href: api/Elements.Model.html#Elements_Model_FromJson_System_String_List_System_String___System_Boolean_
-  commentId: M:Elements.Model.FromJson(System.String,List{System.String}@,System.Boolean)
-  name.vb: FromJson(String, ByRef List(Of String), Boolean)
-  fullName: Elements.Model.FromJson(System.String, out List<System.String>, System.Boolean)
-  fullName.vb: Elements.Model.FromJson(System.String, ByRef List(Of System.String), System.Boolean)
-  nameWithType: Model.FromJson(String, out List<String>, Boolean)
-  nameWithType.vb: Model.FromJson(String, ByRef List(Of String), Boolean)
 - uid: Elements.Model.FromJson(System.String,System.Boolean)
   name: FromJson(String, Boolean)
   href: api/Elements.Model.html#Elements_Model_FromJson_System_String_System_Boolean_
   commentId: M:Elements.Model.FromJson(System.String,System.Boolean)
   fullName: Elements.Model.FromJson(System.String, System.Boolean)
   nameWithType: Model.FromJson(String, Boolean)
+- uid: Elements.Model.FromJson(System.String,System.Collections.Generic.List{System.String}@,System.Boolean)
+  name: FromJson(String, out List<String>, Boolean)
+  href: api/Elements.Model.html#Elements_Model_FromJson_System_String_System_Collections_Generic_List_System_String___System_Boolean_
+  commentId: M:Elements.Model.FromJson(System.String,System.Collections.Generic.List{System.String}@,System.Boolean)
+  name.vb: FromJson(String, ByRef List(Of String), Boolean)
+  fullName: Elements.Model.FromJson(System.String, out System.Collections.Generic.List<System.String>, System.Boolean)
+  fullName.vb: Elements.Model.FromJson(System.String, ByRef System.Collections.Generic.List(Of System.String), System.Boolean)
+  nameWithType: Model.FromJson(String, out List<String>, Boolean)
+  nameWithType.vb: Model.FromJson(String, ByRef List(Of String), Boolean)
 - uid: Elements.Model.FromJson*
   name: FromJson
   href: api/Elements.Model.html#Elements_Model_FromJson_
@@ -15443,13 +15460,13 @@ references:
   isSpec: "True"
   fullName: Elements.Model.GetElementOfType
   nameWithType: Model.GetElementOfType
-- uid: Elements.Model.GetElementOfType``1(Guid)
+- uid: Elements.Model.GetElementOfType``1(System.Guid)
   name: GetElementOfType<T>(Guid)
-  href: api/Elements.Model.html#Elements_Model_GetElementOfType__1_Guid_
-  commentId: M:Elements.Model.GetElementOfType``1(Guid)
+  href: api/Elements.Model.html#Elements_Model_GetElementOfType__1_System_Guid_
+  commentId: M:Elements.Model.GetElementOfType``1(System.Guid)
   name.vb: GetElementOfType(Of T)(Guid)
-  fullName: Elements.Model.GetElementOfType<T>(Guid)
-  fullName.vb: Elements.Model.GetElementOfType(Of T)(Guid)
+  fullName: Elements.Model.GetElementOfType<T>(System.Guid)
+  fullName.vb: Elements.Model.GetElementOfType(Of T)(System.Guid)
   nameWithType: Model.GetElementOfType<T>(Guid)
   nameWithType.vb: Model.GetElementOfType(Of T)(Guid)
 - uid: Elements.Model.Origin
@@ -15497,11 +15514,11 @@ references:
   commentId: T:Elements.ModelCurve
   fullName: Elements.ModelCurve
   nameWithType: ModelCurve
-- uid: Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: ModelCurve(Curve, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.ModelCurve.html#Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.ModelCurve.ModelCurve(Elements.Geometry.Curve, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.ModelCurve.html#Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.ModelCurve.ModelCurve(Elements.Geometry.Curve, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: ModelCurve.ModelCurve(Curve, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.ModelCurve.#ctor*
   name: ModelCurve
@@ -15566,13 +15583,13 @@ references:
   commentId: T:Elements.ModelPoints
   fullName: Elements.ModelPoints
   nameWithType: ModelPoints
-- uid: Elements.ModelPoints.#ctor(IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
+- uid: Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
   name: ModelPoints(IList<Vector3>, Material, Transform, Boolean, Guid, String)
-  href: api/Elements.ModelPoints.html#Elements_ModelPoints__ctor_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_Guid_System_String_
-  commentId: M:Elements.ModelPoints.#ctor(IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,Guid,System.String)
+  href: api/Elements.ModelPoints.html#Elements_ModelPoints__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.ModelPoints.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)
   name.vb: ModelPoints(IList(Of Vector3), Material, Transform, Boolean, Guid, String)
-  fullName: Elements.ModelPoints.ModelPoints(IList<Elements.Geometry.Vector3>, Elements.Material, Elements.Geometry.Transform, System.Boolean, Guid, System.String)
-  fullName.vb: Elements.ModelPoints.ModelPoints(IList(Of Elements.Geometry.Vector3), Elements.Material, Elements.Geometry.Transform, System.Boolean, Guid, System.String)
+  fullName: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList<Elements.Geometry.Vector3>, Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
+  fullName.vb: Elements.ModelPoints.ModelPoints(System.Collections.Generic.IList(Of Elements.Geometry.Vector3), Elements.Material, Elements.Geometry.Transform, System.Boolean, System.Guid, System.String)
   nameWithType: ModelPoints.ModelPoints(IList<Vector3>, Material, Transform, Boolean, Guid, String)
   nameWithType.vb: ModelPoints.ModelPoints(IList(Of Vector3), Material, Transform, Boolean, Guid, String)
 - uid: Elements.ModelPoints.#ctor*
@@ -15601,11 +15618,11 @@ references:
   commentId: T:Elements.Opening
   fullName: Elements.Opening
   nameWithType: Opening
-- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Opening.html#Elements_Opening__ctor_Elements_Geometry_Polygon_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Opening.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Opening.Opening(Elements.Geometry.Polygon, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Opening.Opening(Polygon, Double, Double, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Opening.#ctor*
   name: Opening
@@ -15685,11 +15702,11 @@ references:
   commentId: T:Elements.Panel
   fullName: Elements.Panel
   nameWithType: Panel
-- uid: Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Panel(Polygon, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Panel.html#Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Panel.Panel(Elements.Geometry.Polygon, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Panel.html#Elements_Panel__ctor_Elements_Geometry_Polygon_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Panel.#ctor(Elements.Geometry.Polygon,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Panel.Panel(Elements.Geometry.Polygon, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Panel.Panel(Polygon, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.Panel.#ctor*
   name: Panel
@@ -15756,11 +15773,11 @@ references:
   commentId: T:Elements.PointLight
   fullName: Elements.PointLight
   nameWithType: PointLight
-- uid: Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,Guid,System.String)
+- uid: Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
   name: PointLight(Color, Transform, Double, Guid, String)
-  href: api/Elements.PointLight.html#Elements_PointLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_Guid_System_String_
-  commentId: M:Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,Guid,System.String)
-  fullName: Elements.PointLight.PointLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, Guid, System.String)
+  href: api/Elements.PointLight.html#Elements_PointLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Guid_System_String_
+  commentId: M:Elements.PointLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Guid,System.String)
+  fullName: Elements.PointLight.PointLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Guid, System.String)
   nameWithType: PointLight.PointLight(Color, Transform, Double, Guid, String)
 - uid: Elements.PointLight.#ctor*
   name: PointLight
@@ -15775,11 +15792,11 @@ references:
   commentId: T:Elements.RandomExtensions
   fullName: Elements.RandomExtensions
   nameWithType: RandomExtensions
-- uid: Elements.RandomExtensions.NextColor(Random)
+- uid: Elements.RandomExtensions.NextColor(System.Random)
   name: NextColor(Random)
-  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextColor_Random_
-  commentId: M:Elements.RandomExtensions.NextColor(Random)
-  fullName: Elements.RandomExtensions.NextColor(Random)
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextColor_System_Random_
+  commentId: M:Elements.RandomExtensions.NextColor(System.Random)
+  fullName: Elements.RandomExtensions.NextColor(System.Random)
   nameWithType: RandomExtensions.NextColor(Random)
 - uid: Elements.RandomExtensions.NextColor*
   name: NextColor
@@ -15788,11 +15805,11 @@ references:
   isSpec: "True"
   fullName: Elements.RandomExtensions.NextColor
   nameWithType: RandomExtensions.NextColor
-- uid: Elements.RandomExtensions.NextMaterial(Random,System.Boolean)
+- uid: Elements.RandomExtensions.NextMaterial(System.Random,System.Boolean)
   name: NextMaterial(Random, Boolean)
-  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextMaterial_Random_System_Boolean_
-  commentId: M:Elements.RandomExtensions.NextMaterial(Random,System.Boolean)
-  fullName: Elements.RandomExtensions.NextMaterial(Random, System.Boolean)
+  href: api/Elements.RandomExtensions.html#Elements_RandomExtensions_NextMaterial_System_Random_System_Boolean_
+  commentId: M:Elements.RandomExtensions.NextMaterial(System.Random,System.Boolean)
+  fullName: Elements.RandomExtensions.NextMaterial(System.Random, System.Boolean)
   nameWithType: RandomExtensions.NextMaterial(Random, Boolean)
 - uid: Elements.RandomExtensions.NextMaterial*
   name: NextMaterial
@@ -15948,11 +15965,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ElementwiseSerialization
   nameWithType: JsonInheritanceConverter.ElementwiseSerialization
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  name: ReadJson(JsonReader, Type, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*
   name: ReadJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_
@@ -15961,11 +15978,11 @@ references:
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson
   nameWithType: JsonInheritanceConverter.ReadJson
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
-  name: WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  name: WriteJson(JsonWriter, Object, JsonSerializer)
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
   commentId: M:Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   fullName: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
-  nameWithType: JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)
+  nameWithType: JsonInheritanceConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*
   name: WriteJson
   href: api/Elements.Serialization.JSON.JsonInheritanceConverter.html#Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_
@@ -15979,11 +15996,11 @@ references:
   commentId: T:Elements.Serialization.JSON.MeshConverter
   fullName: Elements.Serialization.JSON.MeshConverter
   nameWithType: MeshConverter
-- uid: Elements.Serialization.JSON.MeshConverter.CanConvert(Type)
+- uid: Elements.Serialization.JSON.MeshConverter.CanConvert(System.Type)
   name: CanConvert(Type)
-  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_CanConvert_Type_
-  commentId: M:Elements.Serialization.JSON.MeshConverter.CanConvert(Type)
-  fullName: Elements.Serialization.JSON.MeshConverter.CanConvert(Type)
+  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_CanConvert_System_Type_
+  commentId: M:Elements.Serialization.JSON.MeshConverter.CanConvert(System.Type)
+  fullName: Elements.Serialization.JSON.MeshConverter.CanConvert(System.Type)
   nameWithType: MeshConverter.CanConvert(Type)
 - uid: Elements.Serialization.JSON.MeshConverter.CanConvert*
   name: CanConvert
@@ -15992,11 +16009,11 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.MeshConverter.CanConvert
   nameWithType: MeshConverter.CanConvert
-- uid: Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader,Type,System.Object,JsonSerializer)
+- uid: Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
   name: ReadJson(JsonReader, Type, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_ReadJson_JsonReader_Type_System_Object_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader,Type,System.Object,JsonSerializer)
-  fullName: Elements.Serialization.JSON.MeshConverter.ReadJson(JsonReader, Type, System.Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.MeshConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)
   nameWithType: MeshConverter.ReadJson(JsonReader, Type, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.MeshConverter.ReadJson*
   name: ReadJson
@@ -16005,11 +16022,11 @@ references:
   isSpec: "True"
   fullName: Elements.Serialization.JSON.MeshConverter.ReadJson
   nameWithType: MeshConverter.ReadJson
-- uid: Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter,System.Object,JsonSerializer)
+- uid: Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
   name: WriteJson(JsonWriter, Object, JsonSerializer)
-  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_WriteJson_JsonWriter_System_Object_JsonSerializer_
-  commentId: M:Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter,System.Object,JsonSerializer)
-  fullName: Elements.Serialization.JSON.MeshConverter.WriteJson(JsonWriter, System.Object, JsonSerializer)
+  href: api/Elements.Serialization.JSON.MeshConverter.html#Elements_Serialization_JSON_MeshConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_
+  commentId: M:Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)
+  fullName: Elements.Serialization.JSON.MeshConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)
   nameWithType: MeshConverter.WriteJson(JsonWriter, Object, JsonSerializer)
 - uid: Elements.Serialization.JSON.MeshConverter.WriteJson*
   name: WriteJson
@@ -16024,17 +16041,17 @@ references:
   commentId: T:Elements.Space
   fullName: Elements.Space
   nameWithType: Space
-- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Space(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Space.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Space.Space(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Space.Space(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-- uid: Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,Guid,System.String)
+- uid: Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,System.Guid,System.String)
   name: Space(Solid, Transform, Material, Boolean, Guid, String)
-  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Solids_Solid_Elements_Geometry_Transform_Elements_Material_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,Guid,System.String)
-  fullName: Elements.Space.Space(Elements.Geometry.Solids.Solid, Elements.Geometry.Transform, Elements.Material, System.Boolean, Guid, System.String)
+  href: api/Elements.Space.html#Elements_Space__ctor_Elements_Geometry_Solids_Solid_Elements_Geometry_Transform_Elements_Material_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Space.#ctor(Elements.Geometry.Solids.Solid,Elements.Geometry.Transform,Elements.Material,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Space.Space(Elements.Geometry.Solids.Solid, Elements.Geometry.Transform, Elements.Material, System.Boolean, System.Guid, System.String)
   nameWithType: Space.Space(Solid, Transform, Material, Boolean, Guid, String)
 - uid: Elements.Space.#ctor*
   name: Space
@@ -16205,15 +16222,6 @@ references:
   commentId: M:Elements.Spatial.Grid1d.#ctor(Elements.Spatial.Grid1d)
   fullName: Elements.Spatial.Grid1d.Grid1d(Elements.Spatial.Grid1d)
   nameWithType: Grid1d.Grid1d(Grid1d)
-- uid: Elements.Spatial.Grid1d.#ctor(List{Elements.Spatial.Grid1d},System.String,Elements.Domain1d,Elements.Geometry.Curve,Elements.Domain1d)
-  name: Grid1d(List<Grid1d>, String, Domain1d, Curve, Domain1d)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_List_Elements_Spatial_Grid1d__System_String_Elements_Domain1d_Elements_Geometry_Curve_Elements_Domain1d_
-  commentId: M:Elements.Spatial.Grid1d.#ctor(List{Elements.Spatial.Grid1d},System.String,Elements.Domain1d,Elements.Geometry.Curve,Elements.Domain1d)
-  name.vb: Grid1d(List(Of Grid1d), String, Domain1d, Curve, Domain1d)
-  fullName: Elements.Spatial.Grid1d.Grid1d(List<Elements.Spatial.Grid1d>, System.String, Elements.Domain1d, Elements.Geometry.Curve, Elements.Domain1d)
-  fullName.vb: Elements.Spatial.Grid1d.Grid1d(List(Of Elements.Spatial.Grid1d), System.String, Elements.Domain1d, Elements.Geometry.Curve, Elements.Domain1d)
-  nameWithType: Grid1d.Grid1d(List<Grid1d>, String, Domain1d, Curve, Domain1d)
-  nameWithType.vb: Grid1d.Grid1d(List(Of Grid1d), String, Domain1d, Curve, Domain1d)
 - uid: Elements.Spatial.Grid1d.#ctor(System.Double)
   name: Grid1d(Double)
   href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d__ctor_System_Double_
@@ -16331,22 +16339,22 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.DivideByFixedLengthFromPosition
   nameWithType: Grid1d.DivideByFixedLengthFromPosition
-- uid: Elements.Spatial.Grid1d.DivideByPattern(IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+- uid: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
   name: DivideByPattern(IList<Double>, PatternMode, FixedDivisionMode)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_IList_System_Double__Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
-  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_System_Collections_Generic_IList_System_Double__Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
+  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.Double},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
   name.vb: DivideByPattern(IList(Of Double), PatternMode, FixedDivisionMode)
-  fullName: Elements.Spatial.Grid1d.DivideByPattern(IList<System.Double>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
-  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(IList(Of System.Double), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList<System.Double>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList(Of System.Double), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
   nameWithType: Grid1d.DivideByPattern(IList<Double>, PatternMode, FixedDivisionMode)
   nameWithType.vb: Grid1d.DivideByPattern(IList(Of Double), PatternMode, FixedDivisionMode)
-- uid: Elements.Spatial.Grid1d.DivideByPattern(IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+- uid: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
   name: DivideByPattern(IList<(String typeName, Double length)>, PatternMode, FixedDivisionMode)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_IList_System_ValueTuple_System_String_System_Double___Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
-  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_DivideByPattern_System_Collections_Generic_IList_System_ValueTuple_System_String_System_Double___Elements_Spatial_PatternMode_Elements_Spatial_FixedDivisionMode_
+  commentId: M:Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList{System.ValueTuple{System.String,System.Double}},Elements.Spatial.PatternMode,Elements.Spatial.FixedDivisionMode)
   name.vb: DivideByPattern(IList(Of (typeName As String, length As Double)), PatternMode, FixedDivisionMode)
-  fullName: Elements.Spatial.Grid1d.DivideByPattern(IList<System.ValueTuple<System.String, System.Double>>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
-  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(IList(Of System.ValueTuple(Of System.String, System.Double)), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList<System.ValueTuple<System.String, System.Double>>, Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
+  fullName.vb: Elements.Spatial.Grid1d.DivideByPattern(System.Collections.Generic.IList(Of System.ValueTuple(Of System.String, System.Double)), Elements.Spatial.PatternMode, Elements.Spatial.FixedDivisionMode)
   nameWithType: Grid1d.DivideByPattern(IList<(String typeName, Double length)>, PatternMode, FixedDivisionMode)
   nameWithType.vb: Grid1d.DivideByPattern(IList(Of (typeName As String, length As Double)), PatternMode, FixedDivisionMode)
 - uid: Elements.Spatial.Grid1d.DivideByPattern*
@@ -16463,13 +16471,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtOffset
   nameWithType: Grid1d.SplitAtOffset
-- uid: Elements.Spatial.Grid1d.SplitAtOffsets(IEnumerable{System.Double},System.Boolean)
+- uid: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable{System.Double},System.Boolean)
   name: SplitAtOffsets(IEnumerable<Double>, Boolean)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffsets_IEnumerable_System_Double__System_Boolean_
-  commentId: M:Elements.Spatial.Grid1d.SplitAtOffsets(IEnumerable{System.Double},System.Boolean)
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtOffsets_System_Collections_Generic_IEnumerable_System_Double__System_Boolean_
+  commentId: M:Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable{System.Double},System.Boolean)
   name.vb: SplitAtOffsets(IEnumerable(Of Double), Boolean)
-  fullName: Elements.Spatial.Grid1d.SplitAtOffsets(IEnumerable<System.Double>, System.Boolean)
-  fullName.vb: Elements.Spatial.Grid1d.SplitAtOffsets(IEnumerable(Of System.Double), System.Boolean)
+  fullName: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable<System.Double>, System.Boolean)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtOffsets(System.Collections.Generic.IEnumerable(Of System.Double), System.Boolean)
   nameWithType: Grid1d.SplitAtOffsets(IEnumerable<Double>, Boolean)
   nameWithType.vb: Grid1d.SplitAtOffsets(IEnumerable(Of Double), Boolean)
 - uid: Elements.Spatial.Grid1d.SplitAtOffsets*
@@ -16492,13 +16500,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtParameter
   nameWithType: Grid1d.SplitAtParameter
-- uid: Elements.Spatial.Grid1d.SplitAtParameters(IEnumerable{System.Double})
+- uid: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable{System.Double})
   name: SplitAtParameters(IEnumerable<Double>)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameters_IEnumerable_System_Double__
-  commentId: M:Elements.Spatial.Grid1d.SplitAtParameters(IEnumerable{System.Double})
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtParameters_System_Collections_Generic_IEnumerable_System_Double__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable{System.Double})
   name.vb: SplitAtParameters(IEnumerable(Of Double))
-  fullName: Elements.Spatial.Grid1d.SplitAtParameters(IEnumerable<System.Double>)
-  fullName.vb: Elements.Spatial.Grid1d.SplitAtParameters(IEnumerable(Of System.Double))
+  fullName: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable<System.Double>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtParameters(System.Collections.Generic.IEnumerable(Of System.Double))
   nameWithType: Grid1d.SplitAtParameters(IEnumerable<Double>)
   nameWithType.vb: Grid1d.SplitAtParameters(IEnumerable(Of Double))
 - uid: Elements.Spatial.Grid1d.SplitAtParameters*
@@ -16521,13 +16529,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtPoint
   nameWithType: Grid1d.SplitAtPoint
-- uid: Elements.Spatial.Grid1d.SplitAtPoints(IEnumerable{Elements.Geometry.Vector3})
+- uid: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name: SplitAtPoints(IEnumerable<Vector3>)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoints_IEnumerable_Elements_Geometry_Vector3__
-  commentId: M:Elements.Spatial.Grid1d.SplitAtPoints(IEnumerable{Elements.Geometry.Vector3})
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name.vb: SplitAtPoints(IEnumerable(Of Vector3))
-  fullName: Elements.Spatial.Grid1d.SplitAtPoints(IEnumerable<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Spatial.Grid1d.SplitAtPoints(IEnumerable(Of Elements.Geometry.Vector3))
+  fullName: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
   nameWithType: Grid1d.SplitAtPoints(IEnumerable<Vector3>)
   nameWithType.vb: Grid1d.SplitAtPoints(IEnumerable(Of Vector3))
 - uid: Elements.Spatial.Grid1d.SplitAtPoints*
@@ -16550,13 +16558,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid1d.SplitAtPosition
   nameWithType: Grid1d.SplitAtPosition
-- uid: Elements.Spatial.Grid1d.SplitAtPositions(IEnumerable{System.Double})
+- uid: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable{System.Double})
   name: SplitAtPositions(IEnumerable<Double>)
-  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPositions_IEnumerable_System_Double__
-  commentId: M:Elements.Spatial.Grid1d.SplitAtPositions(IEnumerable{System.Double})
+  href: api/Elements.Spatial.Grid1d.html#Elements_Spatial_Grid1d_SplitAtPositions_System_Collections_Generic_IEnumerable_System_Double__
+  commentId: M:Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable{System.Double})
   name.vb: SplitAtPositions(IEnumerable(Of Double))
-  fullName: Elements.Spatial.Grid1d.SplitAtPositions(IEnumerable<System.Double>)
-  fullName.vb: Elements.Spatial.Grid1d.SplitAtPositions(IEnumerable(Of System.Double))
+  fullName: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable<System.Double>)
+  fullName.vb: Elements.Spatial.Grid1d.SplitAtPositions(System.Collections.Generic.IEnumerable(Of System.Double))
   nameWithType: Grid1d.SplitAtPositions(IEnumerable<Double>)
   nameWithType.vb: Grid1d.SplitAtPositions(IEnumerable(Of Double))
 - uid: Elements.Spatial.Grid1d.SplitAtPositions*
@@ -16609,15 +16617,6 @@ references:
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Polygon, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
   nameWithType: Grid2d.Grid2d(Polygon, Grid1d, Grid1d)
-- uid: Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Transform,Elements.Geometry.Transform,Elements.Domain1d,Elements.Domain1d,List{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d,System.String,List{Elements.Spatial.Grid2d.IndexedCell})
-  name: Grid2d(Transform, Transform, Domain1d, Domain1d, List<Polygon>, Grid1d, Grid1d, String, List<Grid2d.IndexedCell>)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Geometry_Transform_Elements_Geometry_Transform_Elements_Domain1d_Elements_Domain1d_List_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_System_String_List_Elements_Spatial_Grid2d_IndexedCell__
-  commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Transform,Elements.Geometry.Transform,Elements.Domain1d,Elements.Domain1d,List{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d,System.String,List{Elements.Spatial.Grid2d.IndexedCell})
-  name.vb: Grid2d(Transform, Transform, Domain1d, Domain1d, List(Of Polygon), Grid1d, Grid1d, String, List(Of Grid2d.IndexedCell))
-  fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Transform, Elements.Geometry.Transform, Elements.Domain1d, Elements.Domain1d, List<Elements.Geometry.Polygon>, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d, System.String, List<Elements.Spatial.Grid2d.IndexedCell>)
-  fullName.vb: Elements.Spatial.Grid2d.Grid2d(Elements.Geometry.Transform, Elements.Geometry.Transform, Elements.Domain1d, Elements.Domain1d, List(Of Elements.Geometry.Polygon), Elements.Spatial.Grid1d, Elements.Spatial.Grid1d, System.String, List(Of Elements.Spatial.Grid2d.IndexedCell))
-  nameWithType: Grid2d.Grid2d(Transform, Transform, Domain1d, Domain1d, List<Polygon>, Grid1d, Grid1d, String, List<Grid2d.IndexedCell>)
-  nameWithType.vb: Grid2d.Grid2d(Transform, Transform, Domain1d, Domain1d, List(Of Polygon), Grid1d, Grid1d, String, List(Of Grid2d.IndexedCell))
 - uid: Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   name: Grid2d(Grid1d, Grid1d)
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
@@ -16636,31 +16635,31 @@ references:
   commentId: M:Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   fullName: Elements.Spatial.Grid2d.Grid2d(Elements.Spatial.Grid2d, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
   nameWithType: Grid2d.Grid2d(Grid2d, Grid1d, Grid1d)
-- uid: Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
   name: Grid2d(IList<Polygon>, Transform)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_
-  commentId: M:Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)
   name.vb: Grid2d(IList(Of Polygon), Transform)
-  fullName: Elements.Spatial.Grid2d.Grid2d(IList<Elements.Geometry.Polygon>, Elements.Geometry.Transform)
-  fullName.vb: Elements.Spatial.Grid2d.Grid2d(IList(Of Elements.Geometry.Polygon), Elements.Geometry.Transform)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Transform)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Transform)
   nameWithType: Grid2d.Grid2d(IList<Polygon>, Transform)
   nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Transform)
-- uid: Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name: Grid2d(IList<Polygon>, Vector3, Vector3, Vector3)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
-  commentId: M:Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)
   name.vb: Grid2d(IList(Of Polygon), Vector3, Vector3, Vector3)
-  fullName: Elements.Spatial.Grid2d.Grid2d(IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
-  fullName.vb: Elements.Spatial.Grid2d.Grid2d(IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Geometry.Vector3, Elements.Geometry.Vector3, Elements.Geometry.Vector3)
   nameWithType: Grid2d.Grid2d(IList<Polygon>, Vector3, Vector3, Vector3)
   nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Vector3, Vector3, Vector3)
-- uid: Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+- uid: Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   name: Grid2d(IList<Polygon>, Grid1d, Grid1d)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
-  commentId: M:Elements.Spatial.Grid2d.#ctor(IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_
+  commentId: M:Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)
   name.vb: Grid2d(IList(Of Polygon), Grid1d, Grid1d)
-  fullName: Elements.Spatial.Grid2d.Grid2d(IList<Elements.Geometry.Polygon>, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
-  fullName.vb: Elements.Spatial.Grid2d.Grid2d(IList(Of Elements.Geometry.Polygon), Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  fullName: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList<Elements.Geometry.Polygon>, Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
+  fullName.vb: Elements.Spatial.Grid2d.Grid2d(System.Collections.Generic.IList(Of Elements.Geometry.Polygon), Elements.Spatial.Grid1d, Elements.Spatial.Grid1d)
   nameWithType: Grid2d.Grid2d(IList<Polygon>, Grid1d, Grid1d)
   nameWithType.vb: Grid2d.Grid2d(IList(Of Polygon), Grid1d, Grid1d)
 - uid: Elements.Spatial.Grid2d.#ctor(System.Double,System.Double)
@@ -16819,64 +16818,6 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid2d.GetTrimmedCellGeometry
   nameWithType: Grid2d.GetTrimmedCellGeometry
-- uid: Elements.Spatial.Grid2d.IndexedCell
-  name: Grid2d.IndexedCell
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html
-  commentId: T:Elements.Spatial.Grid2d.IndexedCell
-  fullName: Elements.Spatial.Grid2d.IndexedCell
-  nameWithType: Grid2d.IndexedCell
-- uid: Elements.Spatial.Grid2d.IndexedCell.#ctor(System.Int32,System.Int32,Elements.Spatial.Grid2d)
-  name: IndexedCell(Int32, Int32, Grid2d)
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell__ctor_System_Int32_System_Int32_Elements_Spatial_Grid2d_
-  commentId: M:Elements.Spatial.Grid2d.IndexedCell.#ctor(System.Int32,System.Int32,Elements.Spatial.Grid2d)
-  fullName: Elements.Spatial.Grid2d.IndexedCell.IndexedCell(System.Int32, System.Int32, Elements.Spatial.Grid2d)
-  nameWithType: Grid2d.IndexedCell.IndexedCell(Int32, Int32, Grid2d)
-- uid: Elements.Spatial.Grid2d.IndexedCell.#ctor*
-  name: IndexedCell
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell__ctor_
-  commentId: Overload:Elements.Spatial.Grid2d.IndexedCell.#ctor
-  isSpec: "True"
-  fullName: Elements.Spatial.Grid2d.IndexedCell.IndexedCell
-  nameWithType: Grid2d.IndexedCell.IndexedCell
-- uid: Elements.Spatial.Grid2d.IndexedCell.Grid
-  name: Grid
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_Grid
-  commentId: P:Elements.Spatial.Grid2d.IndexedCell.Grid
-  fullName: Elements.Spatial.Grid2d.IndexedCell.Grid
-  nameWithType: Grid2d.IndexedCell.Grid
-- uid: Elements.Spatial.Grid2d.IndexedCell.Grid*
-  name: Grid
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_Grid_
-  commentId: Overload:Elements.Spatial.Grid2d.IndexedCell.Grid
-  isSpec: "True"
-  fullName: Elements.Spatial.Grid2d.IndexedCell.Grid
-  nameWithType: Grid2d.IndexedCell.Grid
-- uid: Elements.Spatial.Grid2d.IndexedCell.I
-  name: I
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_I
-  commentId: P:Elements.Spatial.Grid2d.IndexedCell.I
-  fullName: Elements.Spatial.Grid2d.IndexedCell.I
-  nameWithType: Grid2d.IndexedCell.I
-- uid: Elements.Spatial.Grid2d.IndexedCell.I*
-  name: I
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_I_
-  commentId: Overload:Elements.Spatial.Grid2d.IndexedCell.I
-  isSpec: "True"
-  fullName: Elements.Spatial.Grid2d.IndexedCell.I
-  nameWithType: Grid2d.IndexedCell.I
-- uid: Elements.Spatial.Grid2d.IndexedCell.J
-  name: J
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_J
-  commentId: P:Elements.Spatial.Grid2d.IndexedCell.J
-  fullName: Elements.Spatial.Grid2d.IndexedCell.J
-  nameWithType: Grid2d.IndexedCell.J
-- uid: Elements.Spatial.Grid2d.IndexedCell.J*
-  name: J
-  href: api/Elements.Spatial.Grid2d.IndexedCell.html#Elements_Spatial_Grid2d_IndexedCell_J_
-  commentId: Overload:Elements.Spatial.Grid2d.IndexedCell.J
-  isSpec: "True"
-  fullName: Elements.Spatial.Grid2d.IndexedCell.J
-  nameWithType: Grid2d.IndexedCell.J
 - uid: Elements.Spatial.Grid2d.IsSingleCell
   name: IsSingleCell
   href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_IsSingleCell
@@ -16932,13 +16873,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid2d.SplitAtPoint
   nameWithType: Grid2d.SplitAtPoint
-- uid: Elements.Spatial.Grid2d.SplitAtPoints(IEnumerable{Elements.Geometry.Vector3})
+- uid: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name: SplitAtPoints(IEnumerable<Vector3>)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoints_IEnumerable_Elements_Geometry_Vector3__
-  commentId: M:Elements.Spatial.Grid2d.SplitAtPoints(IEnumerable{Elements.Geometry.Vector3})
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name.vb: SplitAtPoints(IEnumerable(Of Vector3))
-  fullName: Elements.Spatial.Grid2d.SplitAtPoints(IEnumerable<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Spatial.Grid2d.SplitAtPoints(IEnumerable(Of Elements.Geometry.Vector3))
+  fullName: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
   nameWithType: Grid2d.SplitAtPoints(IEnumerable<Vector3>)
   nameWithType.vb: Grid2d.SplitAtPoints(IEnumerable(Of Vector3))
 - uid: Elements.Spatial.Grid2d.SplitAtPoints*
@@ -16967,13 +16908,13 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.Grid2d.SplitAtPosition
   nameWithType: Grid2d.SplitAtPosition
-- uid: Elements.Spatial.Grid2d.SplitAtPositions(IEnumerable{Elements.Geometry.Vector3})
+- uid: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name: SplitAtPositions(IEnumerable<Vector3>)
-  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPositions_IEnumerable_Elements_Geometry_Vector3__
-  commentId: M:Elements.Spatial.Grid2d.SplitAtPositions(IEnumerable{Elements.Geometry.Vector3})
+  href: api/Elements.Spatial.Grid2d.html#Elements_Spatial_Grid2d_SplitAtPositions_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__
+  commentId: M:Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})
   name.vb: SplitAtPositions(IEnumerable(Of Vector3))
-  fullName: Elements.Spatial.Grid2d.SplitAtPositions(IEnumerable<Elements.Geometry.Vector3>)
-  fullName.vb: Elements.Spatial.Grid2d.SplitAtPositions(IEnumerable(Of Elements.Geometry.Vector3))
+  fullName: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable<Elements.Geometry.Vector3>)
+  fullName.vb: Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Vector3))
   nameWithType: Grid2d.SplitAtPositions(IEnumerable<Vector3>)
   nameWithType.vb: Grid2d.SplitAtPositions(IEnumerable(Of Vector3))
 - uid: Elements.Spatial.Grid2d.SplitAtPositions*
@@ -17052,13 +16993,13 @@ references:
   commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon,Elements.Geometry.Polyline)
   fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon, Elements.Geometry.Polyline)
   nameWithType: HalfEdgeGraph2d.Construct(Polygon, Polyline)
-- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(IEnumerable{Elements.Geometry.Polygon},IEnumerable{Elements.Geometry.Polyline})
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name: Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
-  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_IEnumerable_Elements_Geometry_Polygon__IEnumerable_Elements_Geometry_Polyline__
-  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(IEnumerable{Elements.Geometry.Polygon},IEnumerable{Elements.Geometry.Polyline})
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
   name.vb: Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
-  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(IEnumerable<Elements.Geometry.Polygon>, IEnumerable<Elements.Geometry.Polyline>)
-  fullName.vb: Elements.Spatial.HalfEdgeGraph2d.Construct(IEnumerable(Of Elements.Geometry.Polygon), IEnumerable(Of Elements.Geometry.Polyline))
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable<Elements.Geometry.Polygon>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polygon), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
   nameWithType: HalfEdgeGraph2d.Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
   nameWithType.vb: HalfEdgeGraph2d.Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
 - uid: Elements.Spatial.HalfEdgeGraph2d.Construct*
@@ -17253,11 +17194,11 @@ references:
   commentId: T:Elements.SpotLight
   fullName: Elements.SpotLight
   nameWithType: SpotLight
-- uid: Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,Guid,System.String)
+- uid: Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
   name: SpotLight(Color, Transform, Double, Double, Double, Guid, String)
-  href: api/Elements.SpotLight.html#Elements_SpotLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Double_System_Double_Guid_System_String_
-  commentId: M:Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,Guid,System.String)
-  fullName: Elements.SpotLight.SpotLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Double, System.Double, Guid, System.String)
+  href: api/Elements.SpotLight.html#Elements_SpotLight__ctor_Elements_Geometry_Color_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Guid_System_String_
+  commentId: M:Elements.SpotLight.#ctor(Elements.Geometry.Color,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Guid,System.String)
+  fullName: Elements.SpotLight.SpotLight(Elements.Geometry.Color, Elements.Geometry.Transform, System.Double, System.Double, System.Double, System.Guid, System.String)
   nameWithType: SpotLight.SpotLight(Color, Transform, Double, Double, Double, Guid, String)
 - uid: Elements.SpotLight.#ctor*
   name: SpotLight
@@ -17298,11 +17239,11 @@ references:
   commentId: T:Elements.StandardWall
   fullName: Elements.StandardWall
   nameWithType: StandardWall
-- uid: Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.StandardWall.html#Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.StandardWall.StandardWall(Elements.Geometry.Line, System.Double, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.StandardWall.html#Elements_StandardWall__ctor_Elements_Geometry_Line_System_Double_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.StandardWall.#ctor(Elements.Geometry.Line,System.Double,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.StandardWall.StandardWall(Elements.Geometry.Line, System.Double, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: StandardWall.StandardWall(Line, Double, Double, Material, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.StandardWall.#ctor*
   name: StandardWall
@@ -17394,11 +17335,11 @@ references:
   commentId: T:Elements.StructuralFraming
   fullName: Elements.StructuralFraming
   nameWithType: StructuralFraming
-- uid: Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.StructuralFraming.StructuralFraming(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.StructuralFraming.html#Elements_StructuralFraming__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.StructuralFraming.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.StructuralFraming.StructuralFraming(Elements.Geometry.Curve, Elements.Geometry.Profile, Elements.Material, System.Double, System.Double, System.Double, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: StructuralFraming.StructuralFraming(Curve, Profile, Material, Double, Double, Double, Transform, Representation, Boolean, Guid, String)
 - uid: Elements.StructuralFraming.#ctor*
   name: StructuralFraming
@@ -17517,13 +17458,13 @@ references:
   commentId: T:Elements.Topography
   fullName: Elements.Topography
   nameWithType: Topography
-- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,Guid,System.String)
+- uid: Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
   name: Topography(Vector3, Double, Double[], Material, Transform, Guid, String)
-  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_Elements_Geometry_Transform_Guid_System_String_
-  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,Guid,System.String)
+  href: api/Elements.Topography.html#Elements_Topography__ctor_Elements_Geometry_Vector3_System_Double_System_Double___Elements_Material_Elements_Geometry_Transform_System_Guid_System_String_
+  commentId: M:Elements.Topography.#ctor(Elements.Geometry.Vector3,System.Double,System.Double[],Elements.Material,Elements.Geometry.Transform,System.Guid,System.String)
   name.vb: Topography(Vector3, Double, Double(), Material, Transform, Guid, String)
-  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double[], Elements.Material, Elements.Geometry.Transform, Guid, System.String)
-  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double(), Elements.Material, Elements.Geometry.Transform, Guid, System.String)
+  fullName: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double[], Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
+  fullName.vb: Elements.Topography.Topography(Elements.Geometry.Vector3, System.Double, System.Double(), Elements.Material, Elements.Geometry.Transform, System.Guid, System.String)
   nameWithType: Topography.Topography(Vector3, Double, Double[], Material, Transform, Guid, String)
   nameWithType.vb: Topography.Topography(Vector3, Double, Double(), Material, Transform, Guid, String)
 - uid: Elements.Topography.#ctor*
@@ -18726,17 +18667,17 @@ references:
   commentId: T:Elements.Wall
   fullName: Elements.Wall
   nameWithType: Wall
-- uid: Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Wall(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Wall.Wall(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Profile_System_Double_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Profile,System.Double,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Wall.Wall(Elements.Geometry.Profile, System.Double, Elements.Material, Elements.Geometry.Transform, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Wall.Wall(Profile, Double, Material, Transform, Representation, Boolean, Guid, String)
-- uid: Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
+- uid: Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
   name: Wall(Transform, Material, Representation, Boolean, Guid, String)
-  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_Guid_System_String_
-  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,Guid,System.String)
-  fullName: Elements.Wall.Wall(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, Guid, System.String)
+  href: api/Elements.Wall.html#Elements_Wall__ctor_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_
+  commentId: M:Elements.Wall.#ctor(Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)
+  fullName: Elements.Wall.Wall(Elements.Geometry.Transform, Elements.Material, Elements.Geometry.Representation, System.Boolean, System.Guid, System.String)
   nameWithType: Wall.Wall(Transform, Material, Representation, Boolean, Guid, String)
 - uid: Elements.Wall.#ctor*
   name: Wall
