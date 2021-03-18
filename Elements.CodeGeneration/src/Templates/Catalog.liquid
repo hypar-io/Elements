@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Elements.Geometry;
 
 namespace Elements {
-public static class {{ catalog.name }} {
+public static class {{ catalog.name | safeidentifierupper }} {
     {%for content in catalog.content%}
     public static ContentElement {{content.name | safeidentifierupper}} = new ContentElement( {{content.constructorArgs}} );
     {% endfor %}
@@ -11,7 +11,7 @@ public static class {{ catalog.name }} {
     public static List<ContentElement> All = new List<ContentElement> { {% for content in catalog.content%}
                                                         {{content.name|safeidentifierupper}}, {%endfor%} };
     public static List<ElementInstance> Reference = new List<ElementInstance> { {% for inst in catalog.reference_configuration %}
-                                                            {{catalog.name}}.{{inst.baseName | safeidentifierupper}}.CreateInstance(
+                                                            {{catalog.name | safeidentifierupper}}.{{inst.baseName | safeidentifierupper}}.CreateInstance(
                                                                                   {{inst.transform}},
                                                                                   "{{inst.name}}"),
                                                         {%endfor%}
