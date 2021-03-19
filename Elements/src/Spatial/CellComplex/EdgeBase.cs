@@ -1,29 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Elements;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique edge in a cell complex.
+    /// A unique edge or directed edge in a cell complex.
     /// </summary>
     public abstract class EdgeBase : ChildBase<Line>
     {
         /// <summary>
-        /// ID of first vertex
+        /// ID of start Vertex.
         /// </summary>
         public ulong StartVertexId;
 
         /// <summary>
-        /// ID of second vertex
+        /// ID of end Vertex.
         /// </summary>
         public ulong EndVertexId;
 
         /// <summary>
-        /// Create an EdgeBase (just calls CellChild constructor)
+        /// Create an EdgeBase (just calls CellChild constructor).
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cellComplex"></param>
@@ -31,7 +26,7 @@ namespace Elements.Spatial.CellComplex
         protected EdgeBase(ulong id, CellComplex cellComplex) : base(id, cellComplex) { }
 
         /// <summary>
-        /// Get the geometry for this Edge
+        /// Get the geometry that represents this Edge or DirectedEdge.
         /// </summary>
         /// <returns></returns>
         public override Line GetGeometry()
@@ -43,7 +38,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Shortest distance to a given point
+        /// Get the shortest distance from a point to the geometry representing this edge.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>

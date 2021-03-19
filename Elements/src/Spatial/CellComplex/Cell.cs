@@ -8,37 +8,43 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A cell: a 3-dimensional closed cell within a complex
+    /// A cell is a 3-dimensional closed extrusion within a complex.
     /// </summary>
     public class Cell : ChildBase<Extrude>
     {
         /// <summary>
-        /// Bottom face. Can be null. Expected to be duplicated in list of faces.
+        /// The ID of this cell's bottom face. If set, it is also expected to be duplicated in list of faces.
+        /// In the current implementation of CellComplex, this should always be set.
+        /// This may not be the case in the future, if Cells are no longer constrainted to vertical extrusions.
         /// </summary>
         public ulong? BottomFaceId = null;
 
         /// <summary>
-        /// Top face. Can be null. Expected to be duplicated in list of faces.
+        /// The ID of this cell's top face. If set, it is also expected to be duplicated in list of faces.
+        /// In the current implementation of CellComplex, this should always be set.
+        /// This may not be the case in the future, if Cells are no longer constrainted to vertical extrusions.
         /// </summary>
         public ulong? TopFaceId = null;
 
         /// <summary>
-        /// All faces
+        /// The IDs of all the faces which belong to this Cell.
         /// </summary>
         public List<ulong> FaceIds;
 
-        [JsonIgnore]
+        /// <summary>
+        /// An Extrusion that we generate and store internally, and which can be accessed through GetGeometry()
+        /// </summary>
         private Extrude _geometry;
 
         /// <summary>
         /// Represents a unique Cell wtihin a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
-        /// <param name="cellComplex">CellComplex that this belongs to</param>
-        /// <param name="id"></param>
-        /// <param name="faces">List of faces which make up this CellComplex</param>
-        /// <param name="bottomFace">The bottom face for this cell (should also be included in the list of all faces)</param>
-        /// <param name="topFace">The top face for this cell (should also be included in the list of all faces</param>
+        /// <param name="cellComplex">CellComplex that this cell belongs to.</param>
+        /// <param name="id">Cell ID.</param>
+        /// <param name="faces">List of faces which make up this CellComplex.</param>
+        /// <param name="bottomFace">The bottom face for this cell. This should also be included in the list of all faces.</param>
+        /// <param name="topFace">The top face for this cell. This should also be included in the list of all faces.</param>
         internal Cell(CellComplex cellComplex, ulong id, List<Face> faces, Face bottomFace, Face topFace) : base(id, cellComplex)
         {
             if (bottomFace != null)
@@ -70,7 +76,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a Solid representing this Geometry
+        /// Get a Solid Extrusion representing this Cell.
         /// </summary>
         /// <returns></returns>
         public override Extrude GetGeometry()
@@ -79,7 +85,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Shortest distance to a point
+        /// Get the shortest distance from a point to the geometry representing this cell.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -103,7 +109,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get top face, if defined
+        /// Get top face, if defined.
         /// </summary>
         /// <returns></returns>
         public Face GetTopFace()
@@ -112,7 +118,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get bottom face, if defined
+        /// Get bottom face, if defined.
         /// </summary>
         /// <returns></returns>
         public Face GetBottomFace()
@@ -121,7 +127,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Faces
+        /// Get associated Faces.
         /// </summary>
         /// <returns></returns>
         public List<Face> GetFaces()
@@ -130,7 +136,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated face to the supplied position
+        /// Get the closest associated face to the supplied position.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -140,7 +146,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Edges
+        /// Get associated Edges.
         /// </summary>
         /// <returns></returns>
         public List<Edge> GetEdges()
@@ -149,7 +155,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated edge that is closest to a point
+        /// Get the associated Edge that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -159,7 +165,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Vertices
+        /// Get associated Vertices.
         /// </summary>
         /// <returns></returns>
         public List<Vertex> GetVertices(Vector3? point = null)
@@ -178,7 +184,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get list of Cells that are neighbors
+        /// Get list of Cells that are neighbors.
         /// </summary>
         /// <returns></returns>
         public List<Cell> GetNeighbors()
@@ -214,7 +220,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated cell to the supplied point, calculating to the approximate center of the cell
+        /// Get the closest associated cell to the supplied point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>

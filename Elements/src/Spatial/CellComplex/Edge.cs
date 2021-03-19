@@ -9,12 +9,12 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique edge in a cell complex, regardless of directionality when it comes to face traversal.
     /// Directional edges for this purpose are in associated DirectedEdges.
-    /// There is a maximum of two DirectedEdges per Edge
+    /// There is a maximum of two DirectedEdges per Edge.
     /// </summary>
     public class Edge : EdgeBase
     {
         /// <summary>
-        /// DirectedEdges that reference this Edge
+        /// DirectedEdges that reference this Edge.
         /// </summary>
         [JsonIgnore]
         internal HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
@@ -23,15 +23,23 @@ namespace Elements.Spatial.CellComplex
         /// Represents a unique Edge within a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
-        /// <param name="cellComplex">CellComplex that this belongs to</param>
-        /// <param name="id"></param>
-        /// <param name="vertexId1">One of the vertex IDs for this edge</param>
-        /// <param name="vertexId2">The other vertex ID for this edge</param>
+        /// <param name="cellComplex">CellComplex that this belongs to.</param>
+        /// <param name="id">Edge ID.</param>
+        /// <param name="vertexId1">One of the vertex IDs for this edge.</param>
+        /// <param name="vertexId2">The other vertex ID for this edge.</param>
         internal Edge(CellComplex cellComplex, ulong id, ulong vertexId1, ulong vertexId2) : base(id, cellComplex)
         {
             this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
+        /// <summary>
+        /// Used for deserialization only!
+        /// Simply omits the associated CellComplex, which we manually add in the CellComplex deserializer.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="startVertexId"></param>
+        /// <param name="endVertexId"></param>
+        /// <returns></returns>
         [JsonConstructor]
         internal Edge(ulong id, ulong startVertexId, ulong endVertexId) : base(id, null)
         {
@@ -39,10 +47,10 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Ensures start vertex always has a smaller ID than end vertex
+        /// Sets the StartVertexId and EndVertexId so that start vertex always has a smaller ID than end vertex.
         /// </summary>
-        /// <param name="id1"></param>
-        /// <param name="id2"></param>
+        /// <param name="id1">One of the two applicable vertex IDs.</param>
+        /// <param name="id2">The other applicable vertex IDs.</param>
         private void SetVerticesFromIds(ulong id1, ulong id2)
         {
             if (id1 < id2)
@@ -58,7 +66,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs
+        /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs.
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <returns></returns>
@@ -71,7 +79,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Vertices
+        /// Get associated Vertices.
         /// </summary>
         /// <returns></returns>
         public List<Vertex> GetVertices()
@@ -80,7 +88,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Faces
+        /// Get associated Faces.
         /// </summary>
         /// <returns></returns>
         public List<Face> GetFaces()
@@ -98,7 +106,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated vertex that is closest to a point
+        /// Get the associated Vertex that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -108,7 +116,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated face that is closest to a point
+        /// Get the associated Face that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -118,7 +126,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated cell that is closest to a point
+        /// Get the associated Cell that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -128,7 +136,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a list of all neighboring edges that share a vertex
+        /// Get a list of all neighboring Edges that share a Vertex.
         /// </summary>
         /// <returns></returns>
         public List<Edge> GetNeighbors()
@@ -137,7 +145,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest neighboring edge to a vertex
+        /// Get the closest neighboring Edge to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -147,7 +155,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges
+        /// Get associated DirectedEdges.
         /// </summary>
         /// <returns></returns>
         internal List<DirectedEdge> GetDirectedEdges()

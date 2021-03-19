@@ -6,12 +6,12 @@ using System.Linq;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique vertex in a cell complex
+    /// A unique Vertex in a CellComplex.
     /// </summary>
     public class Vertex : VertexBase
     {
         /// <summary>
-        /// All edges connected to this Vertex
+        /// All Edges connected to this Vertex.
         /// </summary>
         [JsonIgnore]
         internal HashSet<Edge> Edges = new HashSet<Edge>();
@@ -26,11 +26,18 @@ namespace Elements.Spatial.CellComplex
         /// <param name="name">Optional name</param>
         internal Vertex(CellComplex cellComplex, ulong id, Vector3 point, string name = null) : base(cellComplex, id, point, name) { }
 
+        /// <summary>
+        /// For deserialization only!
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="point"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         [JsonConstructor]
         internal Vertex(ulong id, Vector3 point, string name = null) : base(id, point, name) { }
 
         /// <summary>
-        /// Get associated Edges
+        /// Get associated Edges.
         /// </summary>
         /// <returns></returns>
         public List<Edge> GetEdges()
@@ -39,7 +46,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Faces
+        /// Get associated Faces.
         /// </summary>
         /// <returns></returns>
         public List<Face> GetFaces()
@@ -48,7 +55,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Cells
+        /// Get associated Cells.
         /// </summary>
         /// <returns></returns>
         public List<Cell> GetCells()
@@ -57,7 +64,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated edge that is closest to a point
+        /// Get the associated Edge that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -67,7 +74,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated face that is closest to a point
+        /// Get the associated Face that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -77,7 +84,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated cell that is closest to a point
+        /// Get the associated Cell that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -87,7 +94,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges
+        /// Get associated DirectedEdges.
         /// </summary>
         /// <returns></returns>
         private List<DirectedEdge> GetDirectedEdges()

@@ -3,12 +3,12 @@ using Elements.Geometry;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A unique orientation direction in a cell complex
+    /// A unique orientation direction in a CellComplex.
     /// </summary>
     public class Orientation : VertexBase
     {
         /// <summary>
-        /// Represents a uniqueorientation direction within a CellComplex.
+        /// Represents a unique orientation direction within a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
@@ -19,7 +19,7 @@ namespace Elements.Spatial.CellComplex
         internal Orientation(CellComplex cellComplex, ulong id, Vector3 orientation, string name = null) : base(cellComplex, id, orientation, name) { }
 
         /// <summary>
-        /// Do not use this method: it just throws an exception:
+        /// Do not use this method: it just throws an exception.
         /// Orientations are relative directions and do not exist at any point in absolute space. A distance cannot be calculated for orientations.
         /// </summary>
         /// <param name="point"></param>

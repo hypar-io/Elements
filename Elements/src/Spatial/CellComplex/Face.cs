@@ -7,29 +7,29 @@ using Elements.Geometry;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A face of a cell. Multiple cells can share the same face.
+    /// A Face within a cell. Multiple cells can share the same Face.
     /// </summary>
     public class Face : ChildBase<Polygon>
     {
         /// <summary>
-        /// Directed edge IDs
+        /// Directed edge IDs.
         /// </summary>
         public List<ulong> DirectedEdgeIds;
 
         /// <summary>
-        /// ID of U orientation
+        /// ID of U orientation.
         /// </summary>
         [JsonProperty]
         private ulong? _orientationUId;
 
         /// <summary>
-        /// ID of V orientation
+        /// ID of V orientation.
         /// </summary>
         [JsonProperty]
         private ulong? _orientationVId;
 
         /// <summary>
-        /// Cells that reference this Face
+        /// Cells that reference this Face.
         /// </summary>
         [JsonIgnore]
         internal HashSet<Cell> Cells = new HashSet<Cell>();
@@ -38,11 +38,11 @@ namespace Elements.Spatial.CellComplex
         /// Represents a unique Face within a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
-        /// <param name="cellComplex">CellComplex that this Face belongs to</param>
-        /// <param name="id"></param>
-        /// <param name="directedEdges">List of the DirectedEdges that make up this Face</param>
-        /// <param name="u">Optional but highly recommended intended U direction for the Face</param>
-        /// <param name="v">Optional but highly recommended intended V direction for the Face</param>
+        /// <param name="cellComplex">CellComplex that this Face belongs to.</param>
+        /// <param name="id">ID of this Face.</param>
+        /// <param name="directedEdges">List of the DirectedEdges that make up this Face.</param>
+        /// <param name="u">Optional but highly recommended intended U direction for the Face.</param>
+        /// <param name="v">Optional but highly recommended intended V direction for the Face.</param>
         internal Face(CellComplex cellComplex, ulong id, List<DirectedEdge> directedEdges, Orientation u = null, Orientation v = null) : base(id, cellComplex)
         {
             this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
@@ -69,7 +69,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the geometry for this Face
+        /// Get the geometry for this Face.
         /// </summary>
         /// <returns></returns>
         public override Polygon GetGeometry()
@@ -78,7 +78,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Shortest distance to point
+        ///  Get the shortest distance from a point to the geometry representing this face.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -88,8 +88,8 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Face lookup hash is edgeIds in ascending order.
-        /// We do not directly use the `directedEdgeIds` because they could wind differently on a shared face.
+        /// Face lookup hash is EdgeIds in ascending order.
+        /// We do not directly use the `DirectedEdgeIds` because they could wind differently on a shared face.
         /// </summary>
         /// <param name="directedEdges"></param>
         /// <returns></returns>
@@ -102,7 +102,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges
+        /// Get associated DirectedEdges.
         /// </summary>
         /// <returns></returns>
         private List<DirectedEdge> GetDirectedEdges()
@@ -111,7 +111,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the normal vector for this Face
+        /// Get the normal vector for this Face.
         /// </summary>
         /// <returns></returns>
         private Vector3 GetNormal()
@@ -120,7 +120,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Whether this Face is parallel to another Face
+        /// Whether this Face is parallel to another Face.
         /// </summary>
         /// <param name="face"></param>
         /// <returns></returns>
@@ -130,7 +130,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Cells
+        /// Get associated Cells.
         /// </summary>
         /// <returns></returns>
         public List<Cell> GetCells()
@@ -139,7 +139,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Vertices
+        /// Get associated Vertices.
         /// </summary>
         /// <returns></returns>
         public List<Vertex> GetVertices()
@@ -148,7 +148,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Edges
+        /// Get associated Edges.
         /// </summary>
         /// <returns></returns>
         public List<Edge> GetEdges()
@@ -157,7 +157,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated vertex that is closest to a point
+        /// Get the associated Vertex that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -167,7 +167,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated edge that is closest to a point
+        /// Get the associated Edge that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -177,7 +177,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated cell that is closest to a point
+        /// Get the associated Cell that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -187,7 +187,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the user-set orientation of this face
+        /// Get the user-set U and V Orientatinos of this face.
         /// </summary>
         /// <returns></returns>
         public (Orientation U, Orientation V) GetOrientation()
@@ -196,11 +196,11 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a list of all neighbors of this face.
-        /// A neighbor is defined as a Face which shares any edge.
+        /// Get a list of all neighbors of this Face.
+        /// A neighbor is defined as a Face which shares any Edge.
         /// </summary>
-        /// <param name="parallel">If true, only returns faces that are oriented the same way as this face</param>
-        /// <param name="includeSharedVertices">If true, includes faces that share a vertex as well as faces that share a edge</param>
+        /// <param name="parallel">If true, only returns Faces that are oriented the same way as this Face.</param>
+        /// <param name="includeSharedVertices">If true, includes Faces that share a Vertex as well as Faces that share an Edge.</param>
         /// <returns></returns>
         public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
         {
@@ -217,10 +217,10 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a list of neighbor faces that share a specific edge
+        /// Get a list of neighboring Faces that share a specific Edge.
         /// </summary>
-        /// <param name="edge"></param>
-        /// <param name="parallel">Whether to only return faces that are parallel to this face.</param>
+        /// <param name="edge">Edge that the neighbor should share.</param>
+        /// <param name="parallel">Whether to only return Faces that are parallel to this Face.</param>
         /// <returns></returns>
         public List<Face> GetNeighbors(Edge edge, bool parallel = false)
         {
@@ -235,11 +235,11 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the closest associated Face
+        /// Get the closest associated Face to a given point.
         /// </summary>
         /// <param name="point"></param>
-        /// <param name="parallel"></param>
-        /// <param name="includeSharedVertices"></param>
+        /// <param name="parallel">If true, only checks faces that are oriented the same way as this Face.</param>
+        /// <param name="includeSharedVertices">If true, checks Faces that share a Vertex as well as Faces that share a Edge.</param>
         /// <returns></returns>
         public Face GetClosestNeighbor(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
         {

@@ -7,99 +7,89 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A geometric cell representation for structures and potential other systems requiring traversal
+    /// A geometric cell representation for structures and potential other systems requiring traversal.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/CellComplexTests.cs?name=Elements_CellComplex_Example)]
+    /// </example>
     public class CellComplex : Elements.Element
     {
         /// <summary>
         /// Tolerance for points being considered the same.
         /// Applies individually to X, Y, and Z coordinates, not the cumulative difference!
         /// </summary>
-        [JsonProperty]
         public double Tolerance = Vector3.EPSILON;
 
-        [JsonIgnore]
         private ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        [JsonIgnore]
         private ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        [JsonIgnore]
         private ulong _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        [JsonIgnore]
         private ulong _faceId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        [JsonIgnore]
         private ulong _cellId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        [JsonIgnore]
         private ulong _orientationId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         /// <summary>
-        /// Vertices by ID
+        /// Vertices by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
-        /// U or V directions by ID
+        /// U or V directions by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, Orientation> _orientations = new Dictionary<ulong, Orientation>();
 
         /// <summary>
-        /// Edges by ID
+        /// Edges by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
-        /// DirectedEdges by ID
+        /// DirectedEdges by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
 
         /// <summary>
-        /// Faces by ID
+        /// Faces by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, Face> _faces = new Dictionary<ulong, Face>();
 
         /// <summary>
-        /// Cells by ID
+        /// Cells by ID.
         /// </summary>
         [JsonProperty]
         private Dictionary<ulong, Cell> _cells = new Dictionary<ulong, Cell>();
 
-        [JsonIgnore]
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+        // Vertex lookup by x, y, z coordinate.
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
-        [JsonIgnore]
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> orientationsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+        // Orientation lookup by x, y, z coordinate.
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _orientationsLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         // See Edge.GetHash for how faces are identified as unique.
-        [JsonIgnore]
-        private Dictionary<string, ulong> edgesLookup = new Dictionary<string, ulong>();
+        private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
         // Same as edgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
-        [JsonIgnore]
-        private Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>> directedEdgesLookup = new Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>>();
+        private Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>> _directedEdgesLookup = new Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>>();
 
         // See Face.GetHash for how faces are identified as unique.
-        [JsonIgnore]
-        private Dictionary<string, ulong> facesLookup = new Dictionary<string, ulong>();
+        private Dictionary<string, ulong> _facesLookup = new Dictionary<string, ulong>();
 
         /// <summary>
-        /// Create a CellComplex
+        /// Create a CellComplex.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
+        /// <param name="id">Optional ID: If blank, a new Guid will be created.</param>
+        /// <param name="name">Optional name of your CellComplex.</param>
         /// <returns></returns>
-        public CellComplex(Guid id, string name) : base(id, name)
-        {
-
-        }
+        public CellComplex(Guid id = default(Guid), string name = null) : base(id != default(Guid) ? id : Guid.NewGuid(), name) { }
 
         /// <summary>
         /// This constructor is intended for serialization and deserialization only.
@@ -181,12 +171,12 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Add a cell to the CellComplex.
         /// </summary>
-        /// <param name="polygon">The polygon that forms the base of this cell</param>
-        /// <param name="height">The height of the cell</param>
-        /// <param name="elevation">The elevation of the bottom of this cell</param>
-        /// <param name="uGrid">An optional but highly recommended U grid that allows the cell's top and bottom faces to store intended directionality</param>
-        /// <param name="vGrid">An optional but highly recommended V grid that allows the cell's top and bottom faces to store intended directionality</param>
-        /// <returns>Created Cell</returns>
+        /// <param name="polygon">The polygon that forms the base of this cell.</param>
+        /// <param name="height">The height of the cell.</param>
+        /// <param name="elevation">The elevation of the bottom of this cell.</param>
+        /// <param name="uGrid">An optional but highly recommended U grid that allows the cell's top and bottom faces to store intended directionality.</param>
+        /// <param name="vGrid">An optional but highly recommended V grid that allows the cell's top and bottom faces to store intended directionality.</param>
+        /// <returns>The created Cell.</returns>
         public Cell AddCell(Polygon polygon, double height, double elevation, Grid1d uGrid = null, Grid1d vGrid = null)
         {
             var elevationVector = new Vector3(0, 0, elevation);
@@ -229,24 +219,24 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Add a Face to the CellComplex
+        /// Add a Face to the CellComplex.
         /// </summary>
-        /// <param name="polygon"></param>
-        /// <param name="u"></param>
-        /// <param name="v"></param>
-        /// <returns>Created Face</returns>
-        internal Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
+        /// <param name="polygon">A polygon representing a unique Face.</param>
+        /// <param name="u">Orientation of U axis.</param>
+        /// <param name="v">Orientation of V axis.</param>
+        /// <returns>The created Face.</returns>
+        private Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
         {
             this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
         }
 
         /// <summary>
-        /// Add a DirectedEdge to the CellComplex
+        /// Add a DirectedEdge to the CellComplex.
         /// </summary>
-        /// <param name="line">Line with Start and End in the expected direction</param>
-        /// <returns>Created DirectedEdge</returns>
-        internal DirectedEdge AddDirectedEdge(Line line)
+        /// <param name="line">Line with Start and End in the expected direction.</param>
+        /// <returns>The created DirectedEdge.</returns>
+        private DirectedEdge AddDirectedEdge(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrOrientation<Vertex>(vertex)).ToList();
@@ -257,14 +247,14 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a Cell
+        /// The lowest-level method to add a Cell: all other AddCell methods will eventually call this one.
         /// </summary>
         /// <param name="cellId"></param>
         /// <param name="faces"></param>
         /// <param name="bottomFace"></param>
         /// <param name="topFace"></param>
         /// <param name="cell"></param>
-        /// <returns>Whether the cell was successfully added. Will be false if cellId already exists</returns>
+        /// <returns>Whether the cell was successfully added. Will be false if cellId already exists.</returns>
         private Boolean AddCell(ulong cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
         {
             if (this._cells.ContainsKey(cellId))
@@ -286,7 +276,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a Face
+        /// The lowest-level method to add a Face: all other AddFace methods will eventually call this one.
         /// </summary>
         /// <param name="polygon"></param>
         /// <param name="idIfNew"></param>
@@ -305,11 +295,11 @@ namespace Elements.Spatial.CellComplex
 
             var hash = Face.GetHash(directedEdges);
 
-            if (!this.facesLookup.TryGetValue(hash, out var faceId))
+            if (!this._facesLookup.TryGetValue(hash, out var faceId))
             {
                 face = new Face(this, idIfNew, directedEdges, u, v);
                 faceId = face.Id;
-                this.facesLookup.Add(hash, faceId);
+                this._facesLookup.Add(hash, faceId);
                 this._faces.Add(faceId, face);
 
                 foreach (var directedEdge in directedEdges)
@@ -328,21 +318,21 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a DirectedEdge
+        /// The lowest-level method to add a DirectedEdge: all other AddDirectedEdge methods will eventually call this one.
         /// </summary>
         /// <param name="edge"></param>
         /// <param name="edgeTupleIsInOrder"></param>
         /// <param name="idIfNew"></param>
         /// <param name="directedEdge"></param>
-        /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists</returns>
+        /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists.</returns>
         private Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
         {
             var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
 
-            if (!this.directedEdgesLookup.TryGetValue(edgeTuple, out var directedEdgeDict))
+            if (!this._directedEdgesLookup.TryGetValue(edgeTuple, out var directedEdgeDict))
             {
                 directedEdgeDict = new Dictionary<bool, ulong>();
-                this.directedEdgesLookup.Add(edgeTuple, directedEdgeDict);
+                this._directedEdgesLookup.Add(edgeTuple, directedEdgeDict);
             }
 
             if (!directedEdgeDict.TryGetValue(edgeTupleIsInOrder, out var directedEdgeId))
@@ -368,22 +358,22 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Internal method to add a Edge
+        /// The lowest-level method to add an Edge: all other AddEdge methods will eventually call this one.
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <param name="idIfNew"></param>
         /// <param name="edge"></param>
-        /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists</returns>
+        /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists.</returns>
         private Boolean AddEdge(List<ulong> vertexIds, ulong idIfNew, out Edge edge)
         {
             var hash = Edge.GetHash(vertexIds);
 
-            if (!this.edgesLookup.TryGetValue(hash, out var edgeId))
+            if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
             {
                 edge = new Edge(this, idIfNew, vertexIds[0], vertexIds[1]);
                 edgeId = edge.Id;
 
-                this.edgesLookup[hash] = edgeId;
+                this._edgesLookup[hash] = edgeId;
                 this._edges.Add(edgeId, edge);
 
                 this.GetVertex(edge.StartVertexId).Edges.Add(edge);
@@ -400,6 +390,11 @@ namespace Elements.Spatial.CellComplex
             }
         }
 
+        /// <summary>
+        /// Utility to get the address dictionary of Vertices or Orientations
+        /// </summary>
+        /// <typeparam name="T">Vertex or Orientation.</typeparam>
+        /// <returns></returns>
         private Dictionary<ulong, T> GetVertexOrOrientationDictionary<T>() where T : VertexBase
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
@@ -409,15 +404,26 @@ namespace Elements.Spatial.CellComplex
             return typeof(T) == typeof(Orientation) ? this._orientations as Dictionary<ulong, T> : this._vertices as Dictionary<ulong, T>;
         }
 
+        /// <summary>
+        /// Utility to get the lookup dictionary of Vertices or Orientations.
+        /// </summary>
+        /// <typeparam name="T">Vertex or Orientation.</typeparam>
+        /// <returns></returns>
         private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrOrientationLookup<T>() where T : VertexBase
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
             {
                 throw new Exception("Unsupported type provided, expected Vertex or Orientation");
             }
-            return typeof(T) == typeof(Orientation) ? this.orientationsLookup : this.verticesLookup;
+            return typeof(T) == typeof(Orientation) ? this._orientationsLookup : this._verticesLookup;
         }
 
+        /// <summary>
+        /// Add a Vertex or an Orientation by its location or vector direction.
+        /// </summary>
+        /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
+        /// <typeparam name="T">Vertex or Orientation.</typeparam>
+        /// <returns>The created or existing Vertex or Orientation.</returns>
         private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase
         {
             var newId = typeof(T) == typeof(Orientation) ? this._orientationId : this._vertexId;
@@ -427,6 +433,14 @@ namespace Elements.Spatial.CellComplex
             return vertexOrOrientation as T;
         }
 
+        /// <summary>
+        /// Add a Vertex or an Orientation by its location or vector direction, and its ID.
+        /// This should only be used during deserialization, when we know exactly what our IDs are ahead of time.
+        /// </summary>
+        /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
+        /// <param name="id">ID of the item to create.</param>
+        /// <typeparam name="T">Vertex or Orientation.</typeparam>
+        /// <returns>The created Vertex or Orientation.</returns>
         private T AddVertexOrOrientation<T>(Vector3 point, ulong id) where T : VertexBase
         {
             var dict = GetVertexOrOrientationDictionary<T>();
@@ -440,6 +454,14 @@ namespace Elements.Spatial.CellComplex
             return vertexOrOrientation as T;
         }
 
+        /// <summary>
+        /// The lowest-level method to add a Vertex or Orientation: all other AddVertexOrOrientation methods will eventually call this one.
+        /// </summary>
+        /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
+        /// <param name="idIfNew">ID to use if we want to create a new item.</param>
+        /// <param name="id">ID of created or existing item.</param>
+        /// <typeparam name="T">Vertex or Orientation.</typeparam>
+        /// <returns>Whether the item was successfully added. Will be false if idIfNew already exists.</returns>
         private Boolean AddVertexOrOrientation<T>(Vector3 point, ulong idIfNew, out ulong id) where T : VertexBase
         {
             var lookups = this.GetVertexOrOrientationLookup<T>();
@@ -468,7 +490,7 @@ namespace Elements.Spatial.CellComplex
         #endregion add content
 
         /// <summary>
-        /// Get a Vertex by its ID
+        /// Get a Vertex by its ID.
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
@@ -479,7 +501,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all Vertices
+        /// Get all Vertices.
         /// </summary>
         /// <returns></returns>
         public List<Vertex> GetVertices()
@@ -488,7 +510,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a U or V direction by its ID
+        /// Get a U or V direction by its ID.
         /// </summary>
         /// <param name="orientationId"></param>
         /// <returns></returns>
@@ -503,7 +525,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all Orientations
+        /// Get all Orientations.
         /// </summary>
         /// <returns></returns>
         internal List<Orientation> GetOrientations()
@@ -512,7 +534,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a Edge by its ID
+        /// Get a Edge by its ID.
         /// </summary>
         /// <param name="edgeId"></param>
         /// <returns></returns>
@@ -523,7 +545,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all Edges
+        /// Get all Edges.
         /// </summary>
         /// <returns></returns>
         public List<Edge> GetEdges()
@@ -532,7 +554,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a Face by its ID
+        /// Get a Face by its ID.
         /// </summary>
         /// <param name="faceId"></param>
         /// <returns></returns>
@@ -547,7 +569,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all Faces
+        /// Get all Faces.
         /// </summary>
         /// <returns></returns>
         public List<Face> GetFaces()
@@ -556,7 +578,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a Cell by its ID
+        /// Get a Cell by its ID.
         /// </summary>
         /// <param name="cellId"></param>
         /// <returns></returns>
@@ -567,7 +589,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all Cells
+        /// Get all Cells.
         /// </summary>
         /// <returns></returns>
         public List<Cell> GetCells()
@@ -576,7 +598,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated vertex that is closest to a point
+        /// Get the associated Vertex that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -586,7 +608,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated edge that is closest to a point
+        /// Get the associated Edge that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -596,7 +618,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated face that is closest to a point
+        /// Get the associated Face that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -606,7 +628,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated cell that is closest to a point
+        /// Get the associated Cell that is closest to a point.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -616,7 +638,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a DirectedEdge by its ID
+        /// Get a DirectedEdge by its ID.
         /// </summary>
         /// <param name="directedEdgeId"></param>
         /// <returns></returns>
@@ -627,7 +649,7 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all DirectedEdges
+        /// Get all DirectedEdges.
         /// </summary>
         /// <returns></returns>
         internal List<DirectedEdge> GetDirectedEdges()
@@ -636,16 +658,16 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get all vertices matching an X/Y coordinate, regardless of Z
+        /// Get all vertices matching an X/Y coordinate, regardless of Z.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <param name="x">X coordinate.</param>
+        /// <param name="y">Y coordinate.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns></returns>
         public List<Vertex> GetVerticesMatchingXY(double x, double y, Nullable<double> fuzzyFactor = null)
         {
             var vertices = new List<Vertex>();
-            var zDict = GetAddressParent(this.verticesLookup, new Vector3(x, y), fuzzyFactor: fuzzyFactor);
+            var zDict = GetAddressParent(this._verticesLookup, new Vector3(x, y), fuzzyFactor: fuzzyFactor);
             if (zDict == null)
             {
                 return vertices;
@@ -654,15 +676,15 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Whether a vertex location already exists in the CellComplex
+        /// Whether a vertex location already exists in the CellComplex.
         /// </summary>
         /// <param name="point"></param>
-        /// <param name="id"></param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <param name="id">The ID of the Vertex, if a match is found.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns></returns>
         public Boolean VertexExists(Vector3 point, out ulong id, Nullable<double> fuzzyFactor = null)
         {
-            return ValueExists(this.verticesLookup, point, out id, fuzzyFactor);
+            return ValueExists(this._verticesLookup, point, out id, fuzzyFactor);
         }
 
         /// <summary>
@@ -678,7 +700,6 @@ namespace Elements.Spatial.CellComplex
             {
                 dict.Add(key, new HashSet<ulong>());
             }
-
             dict.TryGetValue(key, out var set);
             set.Add(value);
             return set;
@@ -689,9 +710,9 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="dict"></param>
         /// <param name="point"></param>
-        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist</param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
-        /// <returns>Can be null if the dictionary address didn't exist previously, and we chose not to add it</returns>
+        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
+        /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
         private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, Boolean addAddressIfNonExistent = false, Nullable<double> fuzzyFactor = null)
         {
             if (!TryGetValue<Dictionary<double, Dictionary<double, ulong>>>(dict, point.X, out var yzDict, fuzzyFactor))
@@ -721,16 +742,15 @@ namespace Elements.Spatial.CellComplex
             }
 
             return zDict;
-
         }
 
         /// <summary>
-        /// In a dictionary of x, y, and z coordinates, whether a point value is represented
+        /// In a dictionary of x, y, and z coordinates, whether a point value is represented.
         /// </summary>
         /// <param name="dict"></param>
         /// <param name="point"></param>
-        /// <param name="id"></param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate</param>
+        /// <param name="id">ID of the found vertex or orientation, if found.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns></returns>
         private static Boolean ValueExists(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, out ulong id, Nullable<double> fuzzyFactor = null)
         {
@@ -744,14 +764,14 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// A version of TryGetValue on a dictionary that optionally takes in a tolerance when running the comparison
+        /// A version of TryGetValue on a dictionary that optionally takes in a tolerance when running the comparison.
         /// </summary>
         /// <param name="dict"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="fuzzyFactor"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns>Amount of tolerance in the search against each component of the coordinate</returns>
+        /// <param name="key">Number to search for.</param>
+        /// <param name="value">Value if match was found.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search for the key.</param>
+        /// <typeparam name="T">The type of the dictionary values.</typeparam>
+        /// <returns>Whether a match was found.</returns>
         private static Boolean TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, Nullable<double> fuzzyFactor = null)
         {
             if (dict.TryGetValue(key, out value))

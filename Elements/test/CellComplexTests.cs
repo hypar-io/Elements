@@ -1,11 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Elements.Spatial;
 using Elements.Spatial.CellComplex;
 using Xunit;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace Elements.Tests
 {
@@ -69,6 +68,64 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CellComplexExample()
+        {
+            this.Name = "Elements_CellComplex_Example";
+
+            // Assemble CellComplex from Grid2d
+            var numLevels = 10;
+            var levelHeight = 1;
+            var cellSize = 2;
+            var complex = new CellComplex();
+            var boundary = new Circle(new Vector3(), 10).ToPolygon();
+            var grid = new Grid2d(boundary, Vector3.Origin, Vector3.XAxis, Vector3.YAxis);
+            var pathMaterial = new Material("Path", new Color(1, 0, 0, 0.75));
+
+            grid.U.DivideByFixedLength(cellSize);
+            grid.V.DivideByFixedLength(cellSize);
+
+
+            for (var i = 0; i < numLevels; i++)
+            {
+                foreach (var cell in grid.GetCells())
+                {
+                    foreach (var crv in cell.GetTrimmedCellGeometry())
+                    {
+                        complex.AddCell((Polygon)crv, levelHeight, i * levelHeight, grid.U, grid.V);
+                    }
+                }
+            }
+
+            // Draw base CellComplex
+            foreach (var face in complex.GetFaces())
+            {
+                this.Model.AddElement(new Panel(face.GetGeometry(), BuiltInMaterials.Mass));
+            }
+
+            // Traverse CellComplex
+            var start = new Vector3(15, 15, 15);
+            var end = new Vector3(-15, -15, -15);
+
+            // Draw lines from start and end to closest points, for reference
+            foreach (var pt in new List<Vector3>() { start, end })
+            {
+                var closest = complex.GetClosestVertex(pt).GetGeometry();
+                this.Model.AddElement(new ModelCurve(new Line(pt, closest), pathMaterial));
+            }
+
+            var curCell = complex.GetClosestCell(start);
+            var j = 0; // this shouldn't happen but in case of infinite traversal it's good to have some sanity check
+
+            while (j < 500 && curCell != null)
+            {
+                var rep = new Representation(new[] { curCell.GetGeometry() });
+                this.Model.AddElement(new GeometricElement(new Transform(), pathMaterial, rep, false, Guid.NewGuid(), "Path"));
+                curCell = curCell.GetClosestNeighbor(end);
+                j += 1;
+            }
+        }
+
+        [Fact]
         public void CellComplexSerializesAndDeserializes()
         {
             this.Name = "Elements_CellComplex_Serialization";
@@ -77,6 +134,7 @@ namespace Elements.Tests
             var cellComplex = MakeASimpleCellComplex(uDirection: uDirection);
             var vertices = cellComplex.GetVertices();
             var bounds = new BBox3(vertices.Select(v => v.Value).ToList());
+            cellComplex.Tolerance = 0.005;
 
             var i = 0;
             foreach (var vertex in vertices)
