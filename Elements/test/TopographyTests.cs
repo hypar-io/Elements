@@ -260,16 +260,16 @@ namespace Elements.Tests
         {
             this.Name = "Topography_Tunnel";
             var topo = CreateTopoFromMapboxElevations();
-            var csg = topo.DepthMesh.Mesh.ToCsg();
+            var csg = topo.Mesh.ToCsg();
 
-            var tunnel = new Sweep(new Circle(Vector3.Origin, 50).ToPolygon(20), new Line(new Vector3(-10000, 0, -200), new Vector3(10000, 0, -200)), 0, 0, 0, false);
+            var tunnel = new Sweep(new Circle(Vector3.Origin, 50).ToPolygon(20), new Line(new Vector3(-10000, 0, -20), new Vector3(10000, 0, -20)), 0, 0, 0, false);
             csg = csg.Substract(tunnel._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
 
             var result = new Mesh();
             csg.Tessellate(ref result);
             result.ComputeNormals();
 
-            topo.DepthMesh.Mesh = result;
+            topo.Mesh = result;
             this.Model.AddElement(topo);
         }
 
