@@ -302,8 +302,7 @@ namespace Elements
                 Vertex l1 = null;
                 var i1 = u * rowWidth;
                 var v1Existing = mesh.Vertices[i1];
-                var v1 = mesh.AddVertex(v1Existing.Position,
-                                             ComputeUVForBasisAndPosition(basisLeft, v1Existing.Position));
+                var v1 = mesh.AddVertex(v1Existing.Position);
                 if (lastL != null)
                 {
                     l1 = lastL;
@@ -311,15 +310,15 @@ namespace Elements
                 else
                 {
                     var p = new Vector3(v1.Position.X, v1.Position.Y, depth);
-                    l1 = mesh.AddVertex(p, ComputeUVForBasisAndPosition(basisLeft, p));
+                    l1 = mesh.AddVertex(p);
                 }
 
                 var i2 = i1 + rowWidth;
                 var v2Existing = mesh.Vertices[i2];
-                var v2 = mesh.AddVertex(v2Existing.Position, ComputeUVForBasisAndPosition(basisLeft, v2Existing.Position));
+                var v2 = mesh.AddVertex(v2Existing.Position);
 
                 var pl2 = new Vector3(v2.Position.X, v2.Position.Y, depth);
-                var l2 = mesh.AddVertex(pl2, ComputeUVForBasisAndPosition(basisLeft, pl2));
+                var l2 = mesh.AddVertex(pl2);
                 lastL = l2;
 
                 mesh.AddTriangle(l1, v1, v2);
@@ -329,8 +328,7 @@ namespace Elements
                 Vertex l3 = null;
                 var i3 = u * (rowWidth) + (rowWidth - 1);
                 var v3Existing = mesh.Vertices[i3];
-                var v3 = mesh.AddVertex(v3Existing.Position, ComputeUVForBasisAndPosition(basisRight,
-                                                                                              v3Existing.Position));
+                var v3 = mesh.AddVertex(v3Existing.Position);
 
                 if (lastR != null)
                 {
@@ -339,14 +337,14 @@ namespace Elements
                 else
                 {
                     var p = new Vector3(v3.Position.X, v3.Position.Y, depth);
-                    l3 = mesh.AddVertex(p, ComputeUVForBasisAndPosition(basisRight, p));
+                    l3 = mesh.AddVertex(p);
                 }
 
                 var i4 = i3 + rowWidth;
                 var v4Existing = mesh.Vertices[i4];
-                var v4 = mesh.AddVertex(v4Existing.Position, ComputeUVForBasisAndPosition(basisRight, v4Existing.Position));
+                var v4 = mesh.AddVertex(v4Existing.Position);
                 var pl4 = new Vector3(v4.Position.X, v4.Position.Y, depth);
-                var l4 = mesh.AddVertex(pl4, ComputeUVForBasisAndPosition(basisRight, pl4));
+                var l4 = mesh.AddVertex(pl4);
                 lastR = l4;
 
                 mesh.AddTriangle(l3, v4, v3);
@@ -356,7 +354,7 @@ namespace Elements
                 Vertex l5 = null;
                 var i5 = u;
                 var v5Existing = mesh.Vertices[i5];
-                var v5 = mesh.AddVertex(v5Existing.Position, ComputeUVForBasisAndPosition(basisTop, v5Existing.Position));
+                var v5 = mesh.AddVertex(v5Existing.Position);
                 if (lastT != null)
                 {
                     l5 = lastT;
@@ -364,14 +362,14 @@ namespace Elements
                 else
                 {
                     var p = new Vector3(v5.Position.X, v5.Position.Y, depth);
-                    l5 = mesh.AddVertex(p, ComputeUVForBasisAndPosition(basisTop, p));
+                    l5 = mesh.AddVertex(p);
                 }
 
                 var i6 = i5 + 1;
                 var v6Existing = mesh.Vertices[i6];
-                var v6 = mesh.AddVertex(v6Existing.Position, ComputeUVForBasisAndPosition(basisTop, v6Existing.Position));
+                var v6 = mesh.AddVertex(v6Existing.Position);
                 var pl6 = new Vector3(v6.Position.X, v6.Position.Y, depth);
-                var l6 = mesh.AddVertex(pl6, ComputeUVForBasisAndPosition(basisTop, pl6));
+                var l6 = mesh.AddVertex(pl6);
                 lastT = l6;
 
                 mesh.AddTriangle(l5, v6, v5);
@@ -381,7 +379,7 @@ namespace Elements
                 Vertex l7 = null;
                 var i7 = rowWidth * rowWidth - u - 1;
                 var v7Existing = mesh.Vertices[i7];
-                var v7 = mesh.AddVertex(v7Existing.Position, ComputeUVForBasisAndPosition(basisBottom, v7Existing.Position));
+                var v7 = mesh.AddVertex(v7Existing.Position);
 
                 if (lastB != null)
                 {
@@ -390,14 +388,14 @@ namespace Elements
                 else
                 {
                     var p = new Vector3(v7.Position.X, v7.Position.Y, depth);
-                    l7 = mesh.AddVertex(p, ComputeUVForBasisAndPosition(basisBottom, p));
+                    l7 = mesh.AddVertex(p);
                 }
 
                 var i8 = i7 - 1;
                 var v8Existing = mesh.Vertices[i8];
-                var v8 = mesh.AddVertex(v8Existing.Position, ComputeUVForBasisAndPosition(basisBottom, v8Existing.Position));
+                var v8 = mesh.AddVertex(v8Existing.Position);
                 var pl8 = new Vector3(v8.Position.X, v8.Position.Y, depth);
-                var l8 = mesh.AddVertex(pl8, ComputeUVForBasisAndPosition(basisBottom, pl8));
+                var l8 = mesh.AddVertex(pl8);
                 lastB = l8;
 
                 mesh.AddTriangle(l7, v8, v7);
