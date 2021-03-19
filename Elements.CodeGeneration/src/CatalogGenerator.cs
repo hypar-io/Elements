@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Elements.Geometry;
 using System.Reflection;
+using Elements.Generate.StringUtils;
 
 namespace Elements.Generate
 {
@@ -44,14 +45,20 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uri">The location of the catalog json file.</param>
         /// <param name="saveDirectory">The folder of where to save the resulting generated code.</param>
-        public static void FromUri(string uri, string saveDirectory)
+        /// <param name="useReferenceOrientation">Should ContentElements be reoriented to match the rotation they had when they were exported?</param>
+        public static void FromUri(string uri, string saveDirectory, bool useReferenceOrientation = true)
         {
-            Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content" });
+            Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content", "ReferenceConfiguration" });
             Template.RegisterSafeType(typeof(ContentElement), GetContentElementToRender);
+            Template.RegisterSafeType(typeof(ElementInstance), GetElementInstanceToRender);
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var json = GetContentsOfUri(uri);
             ContentCatalog catalog = ContentCatalog.FromJson(json);
+            if (useReferenceOrientation)
+            {
+                catalog.UseReferenceOrientation();
+            }
             var templateText = File.ReadAllText(CatalogTemplatePath);
             var template = DotLiquid.Template.Parse(templateText);
             var result = template.Render(Hash.FromAnonymousObject(new
@@ -59,13 +66,24 @@ namespace Elements.Generate
                 catalog = catalog
             }));
 
-            var path = Path.Combine(saveDirectory, catalog.Name + ".g.cs");
+            var path = Path.Combine(saveDirectory, catalog.Name.ToSafeIdentifier() + ".g.cs");
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
             File.WriteAllText(path, result);
         }
+
+        private static Func<object, object> GetElementInstanceToRender = (element) =>
+        {
+            var inst = element as ElementInstance;
+            return new
+            {
+                name = inst.Name,
+                baseName = inst.BaseDefinition.Name,
+                transform = TransformToCode(inst.Transform).Replace("\n", "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
+            };
+        };
 
         private static Func<object, object> GetContentElementToRender = (element) =>
         {
@@ -100,10 +118,7 @@ namespace Elements.Generate
                             codeToAdd = $"new BBox3(new Vector3({bBox.Min.X},{bBox.Min.Y},{bBox.Min.Z}), new Vector3({bBox.Max.X},{bBox.Max.Y},{bBox.Max.Z}))";
                             break;
                         case Transform tr:
-                            codeToAdd = $"new Transform(new Vector3({tr.Origin.X},{tr.Origin.Y},{tr.Origin.Z})," +
-                                        $"\n\t\tnew Vector3({tr.XAxis.X},{tr.XAxis.Y},{tr.XAxis.Z})," +
-                                        $"\n\t\tnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
-                                        $"\n\t\tnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
+                            codeToAdd = TransformToCode(tr);
                             break;
                         case Vector3 v:
                             codeToAdd = $"new Vector3({v.X},{v.Y},{v.Z})";
@@ -142,6 +157,14 @@ namespace Elements.Generate
                 constructorArgs = string.Join(",\n", constructorParams).Replace("\n", "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
             };
         };
+
+        private static string TransformToCode(Transform tr)
+        {
+            return $"new Transform(new Vector3({tr.Origin.X},{tr.Origin.Y},{tr.Origin.Z})," +
+                        $"\n\t\tnew Vector3({tr.XAxis.X},{tr.XAxis.Y},{tr.XAxis.Z})," +
+                        $"\n\t\tnew Vector3({tr.YAxis.X},{tr.YAxis.Y},{tr.YAxis.Z})," +
+                        $"\n\t\tnew Vector3({tr.ZAxis.X},{tr.ZAxis.Y},{tr.ZAxis.Z}))";
+        }
 
         private static string GetContentsOfUri(string uri)
         {

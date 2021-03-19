@@ -328,7 +328,7 @@
       "output": {
         ".html": {
           "relative_path": "Elements/toc.html",
-          "hash": "ifXD9NE3cjOFSVvv3iObrw=="
+          "hash": "HxFwt7KXZXFBNs5YNcEAxA=="
         }
       },
       "is_incremental": false,
@@ -526,7 +526,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ContentCatalog.html",
-          "hash": "eZB8wTCTprkTX7yjIAC5LQ=="
+          "hash": "l6vrn++xscw2oNLqbxvpxA=="
         }
       },
       "is_incremental": false,
@@ -586,7 +586,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Element.html",
-          "hash": "NfKLN9tvCBN8iIB02v3o3w=="
+          "hash": "8DMp7Ed/KLFi4/xEt3tpZA=="
         }
       },
       "is_incremental": false,
@@ -1054,7 +1054,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polygon.html",
-          "hash": "UtI9GGpu56HEH+Hd2ZRQbA=="
+          "hash": "L4QEcrYabSEII7hAJbmPkA=="
         }
       },
       "is_incremental": false,
@@ -1066,7 +1066,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Polyline.html",
-          "hash": "pcP4Cm61YTHOaJksMQ/e/w=="
+          "hash": "T1vQWAevI2A/Nd5/itEeBA=="
         }
       },
       "is_incremental": false,
@@ -1294,7 +1294,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Ray.html",
-          "hash": "FkhcrhT5uVYCKoP0o/jTvg=="
+          "hash": "Xs52oFX0HwiWFpLQrjQPRw=="
         }
       },
       "is_incremental": false,
@@ -1654,7 +1654,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Model.html",
-          "hash": "P0DNvFUtQ4PgwbY4qlV//Q=="
+          "hash": "4rTUhZA8DSjkH5O+Pc0lXA=="
         }
       },
       "is_incremental": false,
@@ -1678,7 +1678,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.ModelCurveExtensions.html",
-          "hash": "wszBPTIfl84fVANrEOdTBw=="
+          "hash": "miTJhcvSzNY1L8QqpURCgg=="
         }
       },
       "is_incremental": false,
@@ -1830,59 +1830,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Cell.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Cell.html",
-          "hash": "TtXw6S9EkLbaaVIhyUD/Bw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.CellComplex.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.CellComplex.html",
-          "hash": "VGPon6sAV3UZ0nLLX3XzEg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.DirectedSegment.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.DirectedSegment.html",
-          "hash": "f6zqv3++WiAI86TxI/P96g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Spatial.EvenDivisionMode.yml",
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.EvenDivisionMode.html",
           "hash": "p+R3rKXPCaAwUXNBP99hbQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Face.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Face.html",
-          "hash": "F5Dk9lcR4eD9XWjUOxc1wQ=="
         }
       },
       "is_incremental": false,
@@ -1918,7 +1870,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.Grid2d.html",
-          "hash": "K4vOogPiraz0Mpz5ortZ2w=="
+          "hash": "V4GjQZIBkRf5MMMgtjeFEQ=="
         }
       },
       "is_incremental": false,
@@ -1931,6 +1883,18 @@
         ".html": {
           "relative_path": "api/Elements.Spatial.GridDirection.html",
           "hash": "iNB+0tytALHeoHmgGpotmw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Elements.Spatial.HalfEdgeGraph2d.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Elements.Spatial.HalfEdgeGraph2d.html",
+          "hash": "iHpllV8YWH42Cvoixhtfrw=="
         }
       },
       "is_incremental": false,
@@ -1962,42 +1926,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Segment.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Segment.html",
-          "hash": "LgRt1uj7bFJOKIAR9yHBng=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.UV.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.UV.html",
-          "hash": "ALGBLUkd6Pq9ngd2pa5gaQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/Elements.Spatial.Vertex.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Elements.Spatial.Vertex.html",
-          "hash": "UH2FlHM75P0WcqO3nciIrQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/Elements.Spatial.WebMercatorProjection.yml",
       "output": {
         ".html": {
@@ -2014,7 +1942,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.html",
-          "hash": "Re+arY6enc2IdnJ45MeQmg=="
+          "hash": "9dJZnkzF7daD+tk949zeYA=="
         }
       },
       "is_incremental": false,
@@ -4317,7 +4245,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 162,
+          "total_file_count": 156,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
