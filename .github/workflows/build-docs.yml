@@ -1,0 +1,30 @@
+name: Build Docs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup docfx
+        run: choco install docfx -y
+      - name: Build docs
+        run: |
+          rm -r docs
+          dotnet test --filter Category=Examples
+          docfx ./doc/docfx.json -f --serve
+      - name: Commit docs
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: github-actions[bot]
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: "update docs [skip ci]"
