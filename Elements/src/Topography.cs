@@ -22,7 +22,7 @@ namespace Elements
 
         private double _maxElevation = double.NegativeInfinity;
 
-        private double _depthBelowMinimumElevation = 200;
+        private double _depthBelowMinimumElevation = 10;
 
         private double? _absoluteMinimumElevation;
 
@@ -77,7 +77,6 @@ namespace Elements
                     _depthBelowMinimumElevation = value < 1 ? 1.0 : value;
                     RaisePropertyChanged("DepthBelowMinimumElevation");
                 }
-
             }
         }
 
