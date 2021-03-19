@@ -11,6 +11,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 using Xunit.Abstractions;
+using SixLabors.ImageSharp.Processing;
 
 namespace Elements.Tests
 {
@@ -186,56 +187,79 @@ namespace Elements.Tests
 
             var zoom = 16;
             var selectedOrigin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
-            var sampleSize = 4;
+            var sampleSize = 8;
 
-            var topographies = new Topography[maps.Length];
+            Topography topography;
             var minElevation = double.MaxValue;
 
-            for (var i = 0; i < maps.Length; i++)
+            var topoImage = new Image<Rgba32>(512 * 2, 512 * 2);
+            var mapImage = new Image<Rgba32>(512 * 2, 512 * 2);
+
+            using (var map0 = Image.Load<Rgba32>(maps[0]))
+            using (var map1 = Image.Load<Rgba32>(maps[1]))
+            using (var map2 = Image.Load<Rgba32>(maps[2]))
+            using (var map3 = Image.Load<Rgba32>(maps[3]))
+            using (var topo0 = Image.Load<Rgba32>(topos[0]))
+            using (var topo1 = Image.Load<Rgba32>(topos[1]))
+            using (var topo2 = Image.Load<Rgba32>(topos[2]))
+            using (var topo3 = Image.Load<Rgba32>(topos[3]))
             {
-                using (var topo = Image.Load<Rgba32>(topos[i]))
+                topoImage.Mutate(o => o
+                .DrawImage(topo0, new Point(0, 0), 1.0f)
+                .DrawImage(topo1, new Point(512, 0), 1.0f)
+                .DrawImage(topo2, new Point(0, 512), 1.0f)
+                .DrawImage(topo3, new Point(512, 512), 1.0f));
+
+                mapImage.Mutate(o => o
+                .DrawImage(map0, new Point(0, 0), 1.0f)
+                .DrawImage(map1, new Point(512, 0), 1.0f)
+                .DrawImage(map2, new Point(0, 512), 1.0f)
+                .DrawImage(map3, new Point(512, 512), 1.0f));
+
+                var mapImagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
+                mapImage.Save(mapImagePath);
+
+                var size = topoImage.Width / sampleSize;
+                var elevationData = new double[(int)Math.Pow(size, 2)];
+
+                var idx = 0;
+                // Read the rows in reverse order as images
+                // start in the top left and meshes start
+                // in the lower left.
+                for (var y = topoImage.Width - 1; y >= 0; y -= sampleSize)
                 {
-                    var size = topo.Width / sampleSize;
-                    var elevationData = new double[(int)Math.Pow(size, 2)];
-
-                    var idx = 0;
-                    // Read the rows in reverse order as images
-                    // start in the top left and meshes start
-                    // in the lower left.
-                    for (var y = topo.Width - 1; y >= 0; y -= sampleSize)
+                    if (y - sampleSize < 0)
                     {
-                        for (var x = 0; x < topo.Width; x += sampleSize)
-                        {
-                            var c = topo[x, y];
-                            var height = -10000 + ((c.R * 256 * 256 + c.G * 256 + c.B) * 0.1);
-                            elevationData[idx] = height;
-                            idx++;
-                        }
+                        y = 0;
                     }
-
-                    var tileSize = WebMercatorProjection.GetTileSizeMeters(0, zoom);
-                    var origin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[i].Item1, tiles[i].Item2, zoom) - new Vector3(tileSize / 2.0, tileSize / 2.0) - selectedOrigin;
-                    var material = new Material($"Topo_{i}", Colors.White, 0.0f, 0.0f, maps[i]);
-                    var topography = new Topography(origin, tileSize, elevationData, material);
-                    topographies[i] = topography;
-                    minElevation = Math.Min(minElevation, topography.MinElevation);
+                    for (var x = 0; x < topoImage.Width; x += sampleSize)
+                    {
+                        if (x + sampleSize > topoImage.Width - 1)
+                        {
+                            x = topoImage.Width - 1;
+                        }
+                        var color = topoImage[x, y];
+                        var height = -10000 + ((color.R * 256 * 256 + color.G * 256 + color.B) * 0.1);
+                        elevationData[idx] = height;
+                        idx++;
+                    }
                 }
+
+                var tileSize = WebMercatorProjection.GetTileSizeMeters(0, zoom);
+                var a = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
+                var b = WebMercatorProjection.TileIdToCenterWebMercator(tiles[1].Item1, tiles[1].Item2, zoom);
+                var c = WebMercatorProjection.TileIdToCenterWebMercator(tiles[2].Item1, tiles[2].Item2, zoom);
+                var d = WebMercatorProjection.TileIdToCenterWebMercator(tiles[3].Item1, tiles[3].Item2, zoom);
+
+                var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, mapImagePath);
+                // var material = BuiltInMaterials.Topography;
+                topography = new Topography(new[] { a, b, c, d }.Average() - selectedOrigin, tileSize, elevationData, material);
+                // {
+                //     AbsoluteMinimumElevation = -20
+                // };
+                minElevation = Math.Min(minElevation, topography.MinElevation);
+                this.Model.AddElement(topography);
             }
-
-            foreach (var topo in topographies)
-            {
-                topo.AbsoluteMinimumElevation = -200;
-            }
-
-            this.Model.AddElements(topographies);
-
-            // 1 2
-            // 2 3
-
-            topographies[0].AverageEdges(topographies[1], Units.CardinalDirection.East);
-            topographies[0].AverageEdges(topographies[2], Units.CardinalDirection.South);
-            topographies[1].AverageEdges(topographies[3], Units.CardinalDirection.South);
-            topographies[2].AverageEdges(topographies[3], Units.CardinalDirection.East);
         }
 
         [Fact]
@@ -262,8 +286,11 @@ namespace Elements.Tests
             var topo = CreateTopoFromMapboxElevations();
             var csg = topo.Mesh.ToCsg();
 
-            var tunnel = new Sweep(new Circle(Vector3.Origin, 50).ToPolygon(20), new Line(new Vector3(-10000, 0, -20), new Vector3(10000, 0, -20)), 0, 0, 0, false);
-            csg = csg.Substract(tunnel._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
+            var w = topo.RowWidth * topo.CellWidth;
+            var tunnelPath = new Line(new Vector3((-w - 100) / 2, 0, -20), new Vector3((w + 100) / 2, 0, -20));
+            var tunnel = new Sweep(new Circle(Vector3.Origin, 20).ToPolygon(20), tunnelPath, 0, 0, 0, false);
+            var tunnelTransform = new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50));
+            csg = csg.Substract(tunnel._csg.Transform(tunnelTransform.ToMatrix4x4()));
 
             var result = new Mesh();
             csg.Tessellate(ref result);
@@ -271,6 +298,9 @@ namespace Elements.Tests
 
             topo.Mesh = result;
             this.Model.AddElement(topo);
+
+            var tunnelWalls = new Beam(tunnelPath, new Profile(new Circle(Vector3.Origin, 20).ToPolygon(20), new Circle(Vector3.Origin, 19).ToPolygon(20).Reversed()), transform: tunnelTransform);
+            this.Model.AddElement(tunnelWalls);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
