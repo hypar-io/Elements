@@ -193,7 +193,7 @@ namespace Elements.Tests
             var minElevation = double.MaxValue;
 
             var topoImage = new Image<Rgba32>(512 * 2, 512 * 2);
-            var mapImage = new Image<Rgba32>(512 * 2, 512 * 2);
+            var mapImage = new Image<Rgba32>(1024 * 2, 1024 * 2);
 
             using (var map0 = Image.Load<Rgba32>(maps[0]))
             using (var map1 = Image.Load<Rgba32>(maps[1]))
@@ -212,9 +212,9 @@ namespace Elements.Tests
 
                 mapImage.Mutate(o => o
                 .DrawImage(map0, new Point(0, 0), 1.0f)
-                .DrawImage(map1, new Point(512, 0), 1.0f)
-                .DrawImage(map2, new Point(0, 512), 1.0f)
-                .DrawImage(map3, new Point(512, 512), 1.0f));
+                .DrawImage(map1, new Point(1024, 0), 1.0f)
+                .DrawImage(map2, new Point(0, 1024), 1.0f)
+                .DrawImage(map3, new Point(1024, 1024), 1.0f));
 
                 var mapImagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
                 mapImage.Save(mapImagePath);
@@ -252,11 +252,7 @@ namespace Elements.Tests
                 var d = WebMercatorProjection.TileIdToCenterWebMercator(tiles[3].Item1, tiles[3].Item2, zoom);
 
                 var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, mapImagePath);
-                // var material = BuiltInMaterials.Topography;
-                topography = new Topography(new[] { a, b, c, d }.Average() - selectedOrigin, tileSize, elevationData, material);
-                // {
-                //     AbsoluteMinimumElevation = -20
-                // };
+                topography = new Topography(new[] { a, b, c, d }.Average() - selectedOrigin, tileSize * 2, elevationData, material);
                 minElevation = Math.Min(minElevation, topography.MinElevation);
                 this.Model.AddElement(topography);
             }
