@@ -120,36 +120,13 @@ namespace Elements
                                                      id == null ? Guid.NewGuid() : id,
                                                      name)
         {
-            this._mesh = new Mesh();
             this.Origin = origin;
             this.Elevations = elevations;
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
 
-            GenerateMeshAndSetInternals();
-            double depth = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
-            CreateSidesAndBottomMesh(this._mesh,
-                                     this.RowWidth,
-                                     depth,
-                                     this.CellHeight,
-                                     this.CellWidth,
-                                     this.Origin);
-
-            this.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
-                {
-                    GenerateMeshAndSetInternals();
-                    depth = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
-                    CreateSidesAndBottomMesh(this._mesh,
-                                             this.RowWidth,
-                                             depth,
-                                             this.CellHeight,
-                                             this.CellWidth,
-                                             this.Origin);
-                }
-            };
+            ConstructMeshesAndRegisterPropertyChangeHandlers();
         }
 
         [JsonConstructor]
@@ -173,11 +150,16 @@ namespace Elements
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
 
+            ConstructMeshesAndRegisterPropertyChangeHandlers();
+        }
+
+        internal void ConstructMeshesAndRegisterPropertyChangeHandlers()
+        {
             GenerateMeshAndSetInternals();
-            double depth = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            double absoluteMinimumElevation = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
             CreateSidesAndBottomMesh(this._mesh,
                                      this.RowWidth,
-                                     depth,
+                                     absoluteMinimumElevation,
                                      this.CellHeight,
                                      this.CellWidth,
                                      this.Origin);
@@ -187,10 +169,10 @@ namespace Elements
                 if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
                 {
                     GenerateMeshAndSetInternals();
-                    depth = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+                    absoluteMinimumElevation = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
                     CreateSidesAndBottomMesh(this._mesh,
                                              this.RowWidth,
-                                             depth,
+                                             absoluteMinimumElevation,
                                              this.CellHeight,
                                              this.CellWidth,
                                              this.Origin);

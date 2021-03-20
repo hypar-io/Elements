@@ -189,9 +189,6 @@ namespace Elements.Tests
             var selectedOrigin = WebMercatorProjection.TileIdToCenterWebMercator(tiles[0].Item1, tiles[0].Item2, zoom);
             var sampleSize = 8;
 
-            Topography topography;
-            var minElevation = double.MaxValue;
-
             var topoImage = new Image<Rgba32>(512 * 2, 512 * 2);
             var mapImage = new Image<Rgba32>(1024 * 2, 1024 * 2);
 
@@ -252,8 +249,7 @@ namespace Elements.Tests
                 var d = WebMercatorProjection.TileIdToCenterWebMercator(tiles[3].Item1, tiles[3].Item2, zoom);
 
                 var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, mapImagePath);
-                topography = new Topography(new[] { a, b, c, d }.Average() - selectedOrigin, tileSize * 2, elevationData, material);
-                minElevation = Math.Min(minElevation, topography.MinElevation);
+                var topography = new Topography(new[] { a, b, c, d }.Average() - selectedOrigin, tileSize * 2, elevationData, material);
                 this.Model.AddElement(topography);
             }
         }
