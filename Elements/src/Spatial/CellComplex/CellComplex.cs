@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// A geometric cell representation for structures and potential other systems requiring traversal.
+    /// A non-manifold cellular structure.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/CellComplexTests.cs?name=Elements_CellComplex_Example)]
