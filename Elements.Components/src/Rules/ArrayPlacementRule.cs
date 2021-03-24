@@ -57,7 +57,7 @@ namespace Elements.Components
         public GeometricElement ElementDefinition { get; set; }
 
         /// <summary>
-        /// Is the array path a closed shape?.
+        /// Is the array path a closed shape?
         /// </summary>
 
         public bool IsClosed { get; set; }

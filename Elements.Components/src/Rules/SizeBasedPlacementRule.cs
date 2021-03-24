@@ -44,7 +44,7 @@ namespace Elements.Components
         public Polyline Curve { get; set; }
 
         /// <summary>
-        /// Is the boundary a closed shape?.
+        /// Is the boundary a closed shape?
         /// </summary>
         /// <value></value>
 

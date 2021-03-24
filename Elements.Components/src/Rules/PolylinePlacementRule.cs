@@ -41,7 +41,7 @@ namespace Elements.Components
         public Polyline Curve { get; set; }
 
         /// <summary>
-        /// Should the curve be treated as a closed polygon?.
+        /// Should the curve be treated as a closed polygon?
         /// </summary>
         public bool IsPolygon { get; set; }
 
