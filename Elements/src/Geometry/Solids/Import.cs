@@ -1,6 +1,9 @@
 namespace Elements.Geometry.Solids
 {
-    internal class Import : SolidOperation
+    /// <summary>
+    /// Create a custom SolidOperation from imported geometry.
+    /// </summary>
+    public class Import : SolidOperation
     {
         /// <summary>
         /// Create an import solid.
