@@ -12,7 +12,7 @@ using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
-    public class SolidTests
+    public class SolidTests : ModelTest
     {
         private readonly ITestOutputHelper output;
 
@@ -196,8 +196,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ImportSolid()
+        public void ConstructedSolid()
         {
+            Name = nameof(ConstructedSolid);
             var solid = new Solid();
             var A = new Vector3(0, 0, 0);
             var B = new Vector3(1, 0, 0);
@@ -213,13 +214,15 @@ namespace Elements.Tests
             solid.AddFace(new Polygon(new[] { B, C, G, F }));
             solid.AddFace(new Polygon(new[] { C, D, H, G }));
             solid.AddFace(new Polygon(new[] { D, A, E, H }));
-            var import = new Import(solid, false);
+
+            var emptySolid = new ConstructedSolid(new Solid(), false);
+            var import = new ConstructedSolid(solid, false);
             var representation = new Representation(new[] { import });
+            var emptyRep = new Representation(new[] { emptySolid });
             var userElement = new GeometricElement(new Transform(), BuiltInMaterials.Default, representation, false, Guid.NewGuid(), "Import");
-            var model = new Model();
-            model.AddElement(userElement);
-            var json = model.ToJson();
-            var gltf = model.ToGlTF();
+            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import");
+            Model.AddElement(userElement);
+            Model.AddElement(userElementWithEmptySolid);
         }
     }
 
