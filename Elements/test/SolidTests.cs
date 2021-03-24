@@ -194,6 +194,33 @@ namespace Elements.Tests
             Assert.Equal(6, newSolid.Faces.Count);
             newSolid.ToGlb("models/SweptSolidDeserialized.glb");
         }
+
+        [Fact]
+        public void ImportSolid()
+        {
+            var solid = new Solid();
+            var A = new Vector3(0, 0, 0);
+            var B = new Vector3(1, 0, 0);
+            var C = new Vector3(1, 1, 0);
+            var D = new Vector3(0, 1, 0);
+            var E = new Vector3(0, 0, 1);
+            var F = new Vector3(1, 0, 1);
+            var G = new Vector3(1, 1, 1);
+            var H = new Vector3(0, 1, 1);
+            solid.AddFace(new Polygon(new[] { A, B, C, D }));
+            solid.AddFace(new Polygon(new[] { E, F, G, H }));
+            solid.AddFace(new Polygon(new[] { A, B, F, E }));
+            solid.AddFace(new Polygon(new[] { B, C, G, F }));
+            solid.AddFace(new Polygon(new[] { C, D, H, G }));
+            solid.AddFace(new Polygon(new[] { D, A, E, H }));
+            var import = new Import(solid, false);
+            var representation = new Representation(new[] { import });
+            var userElement = new GeometricElement(new Transform(), BuiltInMaterials.Default, representation, false, Guid.NewGuid(), "Import");
+            var model = new Model();
+            model.AddElement(userElement);
+            var json = model.ToJson();
+            var gltf = model.ToGlTF();
+        }
     }
 
 }
