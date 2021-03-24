@@ -12,6 +12,11 @@ namespace Elements.Components
     public static class ContentCatalogRetrieval
     {
         private static ContentCatalog catalog = null;
+        
+        /// <summary>
+        /// Get the ContentCatalog stored in `catalog.json`.
+        /// </summary>
+        /// <returns></returns>
         public static ContentCatalog GetCatalog()
         {
             if (catalog == null)

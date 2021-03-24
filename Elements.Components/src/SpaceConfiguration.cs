@@ -27,14 +27,29 @@ namespace Elements.Components
         /// </summary>
         public class BoundaryDefinition
         {
+            /// <summary>
+            /// The minimum point of this boundary definition.
+            /// </summary>
             public Vector3 Min { get; set; }
+
+            /// <summary>
+            /// The maximum point of this boundary definition.
+            /// </summary>
             public Vector3 Max { get; set; }
+
+            /// <summary>
+            /// The calculated width of this boundary definition.
+            /// </summary>
             public double Width => Max.X - Min.X;
+
+            /// <summary>
+            /// The calculated depth of this boundary definition.
+            /// </summary>
             public double Depth => Max.Y - Min.Y;
         }
 
         /// <summary>
-        /// A reference 
+        /// A reference .
         /// </summary>
         public class ContentItem
         {
@@ -56,7 +71,7 @@ namespace Elements.Components
             /// <summary>
             /// The reference position this content item should move with.
             /// </summary>
-            /// <value></value>
+    
             public Vector3 Anchor { get; set; }
 
             /// <summary>
@@ -137,13 +152,13 @@ namespace Elements.Components
         /// <summary>
         /// Generate a consistent set of anchors from a rectangular polygon — corners, midpoints, and center.
         /// </summary>
-        /// <param name="p">The polygon from which to generate anchors.</param>
-        public static List<Vector3> AnchorsFromRect(Polygon p)
+        /// <param name="polygon">The polygon from which to generate anchors.</param>
+        public static List<Vector3> AnchorsFromRect(Polygon polygon)
         {
             var anchors = new List<Vector3>();
-            anchors.AddRange(p.Vertices);
-            anchors.AddRange(p.Segments().Select(s => s.PointAt(0.5)));
-            anchors.Add(p.Centroid());
+            anchors.AddRange(polygon.Vertices);
+            anchors.AddRange(polygon.Segments().Select(s => s.PointAt(0.5)));
+            anchors.Add(polygon.Centroid());
             return anchors;
         }
 

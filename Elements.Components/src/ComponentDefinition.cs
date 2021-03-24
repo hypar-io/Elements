@@ -13,14 +13,19 @@ namespace Elements.Components
     /// </summary>
     public class ComponentDefinition : Element
     {
+        /// <summary>
+        /// Construct a ComponentDefinition from rules and anchors.
+        /// </summary>
+        /// <param name="rules">The rules for this component.</param>
+        /// <param name="referenceAnchors">The reference anchors for this component definition.</param>
         public ComponentDefinition(IList<IComponentPlacementRule> rules, IList<Vector3> referenceAnchors) : base(Guid.NewGuid(), null)
         {
             Rules = rules;
             ReferenceAnchors = referenceAnchors;
         }
-        public IList<IComponentPlacementRule> Rules { get; set; }
+        internal IList<IComponentPlacementRule> Rules { get; set; }
 
-        public IList<Vector3> ReferenceAnchors { get; set; }
+        internal IList<Vector3> ReferenceAnchors { get; set; }
         internal IList<Vector3> AnchorDisplacements { get; set; }
         internal Transform OrientationGuide { get; set; }
         /// <summary>
@@ -28,7 +33,6 @@ namespace Elements.Components
         /// </summary>
         /// <param name="anchors">The anchor points used to set the component geometry.</param>
         /// <param name="orientationGuide">An optional transform to help guide the orientation of the elements.</param>
-        /// <returns></returns>
         public ComponentInstance Instantiate(IList<Vector3> anchors, Transform orientationGuide = null)
         {
             var instance = new ComponentInstance();

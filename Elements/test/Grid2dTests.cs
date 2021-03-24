@@ -410,7 +410,7 @@ namespace Elements.Tests
                 // We gave it U and V coordinates that do not intersect with the bounds.
                 // We expect empty trimmed cells back.
                 var trimmed = cell.GetTrimmedCellGeometry();
-                Assert.Equal(0, trimmed.Count());
+                Assert.True(trimmed.Count() == 0);
             }
         }
     }
