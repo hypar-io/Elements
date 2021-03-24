@@ -7,6 +7,7 @@
 - Alpha release of `Hypar.Elements.Components`
 - `Polyline.OffsetOnSide`
 ### Changed
+- `Solids.Import` is now public.
 
 ### Fixed
 ## 0.8.4
