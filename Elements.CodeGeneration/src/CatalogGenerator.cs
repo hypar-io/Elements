@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Elements.Geometry;
 using System.Reflection;
+using Elements.Generate.StringUtils;
 
 namespace Elements.Generate
 {
@@ -65,7 +66,7 @@ namespace Elements.Generate
                 catalog = catalog
             }));
 
-            var path = Path.Combine(saveDirectory, catalog.Name + ".g.cs");
+            var path = Path.Combine(saveDirectory, catalog.Name.ToSafeIdentifier() + ".g.cs");
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
