@@ -7,15 +7,15 @@ namespace Elements.Components
     {
         /// <summary>
         /// Construct the array with a fixed count. Value = Count.
-        /// </summary>    
+        /// </summary>
         ByCount,
         /// <summary>
         /// Construct the array with a fixed length. Value = length.
-        /// </summary>    
+        /// </summary>
         ByLength,
         /// <summary>
         /// Construct the array with an approximate length. Value = target length.
-        /// </summary>    
+        /// </summary>
         ByApproximateLength
     }
 

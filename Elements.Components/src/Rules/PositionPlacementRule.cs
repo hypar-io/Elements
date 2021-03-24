@@ -30,7 +30,7 @@ namespace Elements.Components
         public string Name { get; set; }
 
         /// <summary>
-        /// The index of the anchor this element transforms with.
+        /// The index of the anchor with which this element is transformed.
         /// </summary>
         public int AnchorIndex { get; set; }
 
