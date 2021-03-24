@@ -19,6 +19,10 @@
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `Topography.DepthMesh`
+- `Topography.DepthBelowMinimumElevation`
+- `Topography.AbsoluteMinimumElevation`
+- `Material.RepeatTexture`
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
 - `Polygon.Split(Polyline)`

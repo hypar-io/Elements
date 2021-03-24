@@ -141,7 +141,6 @@ namespace Elements.Serialization.glTF
 
             var matId = 0;
             var texId = 0;
-            var normalTexId = 0;
             var imageId = 0;
             var samplerId = 0;
 
@@ -205,7 +204,7 @@ namespace Elements.Serialization.glTF
                         tex.Source = imageId;
                         images.Add(image);
 
-                        var sampler = CreateSampler();
+                        var sampler = CreateSampler(material.RepeatTexture);
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
@@ -221,7 +220,7 @@ namespace Elements.Serialization.glTF
                 {
                     var ti = new MaterialNormalTextureInfo();
                     m.NormalTexture = ti;
-                    ti.Index = normalTexId;
+                    ti.Index = texId;
                     ti.Scale = 1.0f;
                     // Use the same texture coordinate as the
                     // base texture.
@@ -238,13 +237,13 @@ namespace Elements.Serialization.glTF
                         var image = CreateImage(material.NormalTexture, bufferViews, buffer, out _);
                         tex.Source = imageId;
                         images.Add(image);
-                        textureDict.Add(material.NormalTexture, normalTexId);
+                        textureDict.Add(material.NormalTexture, texId);
 
-                        var sampler = CreateSampler();
+                        var sampler = CreateSampler(material.RepeatTexture);
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
-                        normalTexId++;
+                        texId++;
                         imageId++;
                         samplerId++;
                     }
@@ -314,13 +313,13 @@ namespace Elements.Serialization.glTF
             return image;
         }
 
-        private static glTFLoader.Schema.Sampler CreateSampler()
+        private static glTFLoader.Schema.Sampler CreateSampler(bool repeatTexture)
         {
             var sampler = new Sampler();
             sampler.MagFilter = Sampler.MagFilterEnum.LINEAR;
             sampler.MinFilter = Sampler.MinFilterEnum.LINEAR;
-            sampler.WrapS = Sampler.WrapSEnum.REPEAT;
-            sampler.WrapT = Sampler.WrapTEnum.REPEAT;
+            sampler.WrapS = repeatTexture ? Sampler.WrapSEnum.REPEAT : Sampler.WrapSEnum.CLAMP_TO_EDGE;
+            sampler.WrapT = repeatTexture ? Sampler.WrapTEnum.REPEAT : Sampler.WrapTEnum.CLAMP_TO_EDGE;
             return sampler;
         }
 
