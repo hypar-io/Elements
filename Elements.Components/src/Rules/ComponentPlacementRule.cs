@@ -12,14 +12,14 @@ namespace Elements.Components
     public class ComponentPlacementRule : ICurveBasedComponentPlacementRule
     {
         /// <summary>
-        /// Construct a new ComponentPlacementRule from scratch
+        /// Construct a new ComponentPlacementRule from scratch.
         /// </summary>
-        /// <param name="component"></param>
-        /// <param name="p"></param>
-        /// <param name="anchorIndices"></param>
-        /// <param name="anchorDisplacements"></param>
-        /// <param name="name"></param>
-        /// <param name="anchorTransformer"></param>
+        /// <param name="component">The component to place.</param>
+        /// <param name="p">The polyline boundary used to determine placement.</param>
+        /// <param name="anchorIndices">For each vertex, the index of the corresponding anchor.</param>
+        /// <param name="anchorDisplacements">For each vertex, the displacement from its anchor.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="anchorTransformer">An optional function to tweak anchor placement.</param>
         public ComponentPlacementRule(ComponentDefinition component, Polyline p, IList<int> anchorIndices, IList<Vector3> anchorDisplacements, string name, Func<List<Vector3>, List<Vector3>> anchorTransformer = null)
         {
             Component = component;
@@ -31,13 +31,13 @@ namespace Elements.Components
         }
 
         /// <summary>
-        /// 
+        /// .
         /// </summary>
-        /// <param name="component"></param>
-        /// <param name="p"></param>
-        /// <param name="Anchors"></param>
-        /// <param name="name"></param>
-        /// <param name="anchorTransformer"></param>
+        /// <param name="component">The component to place.</param>
+        /// <param name="p">The polyline boundary used to determine placement.</param>
+        /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
+        /// <param name="name">The name of the rule.</param>
+        /// <param name="anchorTransformer">An optional function to tweak anchor placement.</param>
         public static IComponentPlacementRule FromClosestPoints(ComponentDefinition component, Polyline p, IList<Vector3> Anchors, string name, Func<List<Vector3>, List<Vector3>> anchorTransformer = null)
         {
             var anchorIndices = new List<int>();
@@ -53,23 +53,23 @@ namespace Elements.Components
         }
 
         /// <summary>
-        /// The component definition to place
+        /// The component definition to place.
         /// </summary>
 
         public ComponentDefinition Component { get; set; }
 
         /// <summary>
-        /// The guide curve acting as the component's boundary
+        /// The guide curve acting as the component's boundary.
         /// </summary>
 
         public Polyline Curve { get; set; }
         /// <summary>
-        /// The indices of the source anchors corresponding to each displacement
+        /// The indices of the source anchors corresponding to each displacement.
         /// </summary>
         public IList<int> AnchorIndices { get; set; }
 
         /// <summary>
-        /// The displacement from each anchor
+        /// The displacement from each anchor.
         /// </summary>
         public IList<Vector3> AnchorDisplacements { get; set; }
 
@@ -86,7 +86,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The definition to instantiate.</param>
         public List<Element> Instantiate(ComponentDefinition definition)
         {
             var transformedVertices = PolylinePlacementRule.TransformPolyline(this, definition);

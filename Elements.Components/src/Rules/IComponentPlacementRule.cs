@@ -9,14 +9,14 @@ namespace Elements.Components
     public interface IComponentPlacementRule
     {
         /// <summary>
-        /// The name of the rule
+        /// The name of the rule.
         /// </summary>
         string Name { get; set; }
 
         /// <summary>
-        /// Create elements from this rule based on a 
+        /// Create elements from this rule based on a component definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The definition to instantiate.</param>
         List<Element> Instantiate(ComponentDefinition definition);
     }
 
@@ -26,18 +26,18 @@ namespace Elements.Components
     public interface ICurveBasedComponentPlacementRule : IComponentPlacementRule
     {
         /// <summary>
-        /// The abstract curve being deformed by this rule
+        /// The abstract curve being deformed by this rule.
         /// </summary>
         Polyline Curve { get; set; }
 
         /// <summary>
-        /// The indices matching curve vertices to anchors
+        /// The indices matching curve vertices to anchors.
         /// </summary>
 
         IList<int> AnchorIndices { get; set; }
 
         /// <summary>
-        /// The displacement vectors for each curve vertex from its anchor
+        /// The displacement vectors for each curve vertex from its anchor.
         /// </summary>
 
         IList<Vector3> AnchorDisplacements { get; set; }

@@ -14,11 +14,11 @@ namespace Elements.Components
         /// <summary>
         /// Construct a new Size-based placement rule from scratch.
         /// </summary>
-        /// <param name="elementsAndClearances"></param>
-        /// <param name="boundary"></param>
-        /// <param name="anchorIndices"></param>
-        /// <param name="anchorDisplacements"></param>
-        /// <param name="name"></param>
+        /// <param name="elementsAndClearances">The collection of possible elements and their clearances that can be placed.</param>
+        /// <param name="boundary">The boundary curve used to determine fit.</param>
+        /// <param name="anchorIndices">For each vertex, the index of the corresponding anchor.</param>
+        /// <param name="anchorDisplacements">For each vertex, the displacement from its anchor.</param>
+        /// <param name="name">The name of the rule.</param>
         public SizeBasedPlacementRule(List<(GeometricElement elem, Polygon clearance)> elementsAndClearances, Polygon boundary, IList<int> anchorIndices, IList<Vector3> anchorDisplacements, string name) : base(Guid.NewGuid(), name)
         {
             Curve = boundary;
@@ -29,22 +29,22 @@ namespace Elements.Components
             ElementsAndClearances = elementsAndClearances.OrderByDescending(item => item.clearance.Area()).ToList();
         }
         /// <summary>
-        /// The indices of the source anchors corresponding to each displacement
+        /// The indices of the source anchors corresponding to each displacement.
         /// </summary>
         public IList<int> AnchorIndices { get; set; }
 
         /// <summary>
-        /// The displacement from each anchor
+        /// The displacement from each anchor.
         /// </summary>
         public IList<Vector3> AnchorDisplacements { get; set; }
 
         /// <summary>
-        /// The boundary curve used to determine fit
+        /// The boundary curve used to determine fit.
         /// </summary>
         public Polyline Curve { get; set; }
 
         /// <summary>
-        /// Is the boundary a closed shape?
+        /// Is the boundary a closed shape?.
         /// </summary>
         /// <value></value>
 
@@ -59,10 +59,11 @@ namespace Elements.Components
         /// <summary>
         /// Construct a size-based placement rule based on the closest point to the vertices of a reference polygon.
         /// </summary>
-        /// <param name="elementsAndClearances"></param>
-        /// <param name="p"></param>
-        /// <param name="Anchors"></param>
-        /// <param name="name"></param>
+        /// <param name="elementsAndClearances">The collection of possible elements and their clearances that can be placed.</param>
+        /// <param name="p">The polygon .</param>
+        /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
+
+        /// <param name="name">The name.</param>
         public static SizeBasedPlacementRule FromClosestPoints(List<(GeometricElement elem, Polygon clearance)> elementsAndClearances, Polygon p, IList<Vector3> Anchors, string name)
         {
             var anchorIndices = new List<int>();
@@ -80,7 +81,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The boundary curve used to determine fit.</param>
         public List<Element> Instantiate(ComponentDefinition definition)
         {
             var placedElements = new List<Element>();

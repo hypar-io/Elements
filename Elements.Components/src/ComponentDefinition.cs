@@ -16,8 +16,8 @@ namespace Elements.Components
         /// <summary>
         /// Construct a ComponentDefinition from rules and anchors.
         /// </summary>
-        /// <param name="rules"></param>
-        /// <param name="referenceAnchors"></param>
+        /// <param name="rules">The rules for this component.</param>
+        /// <param name="referenceAnchors">The reference anchors for this component definition.</param>
         public ComponentDefinition(IList<IComponentPlacementRule> rules, IList<Vector3> referenceAnchors) : base(Guid.NewGuid(), null)
         {
             Rules = rules;

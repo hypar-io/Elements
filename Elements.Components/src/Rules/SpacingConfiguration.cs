@@ -25,22 +25,22 @@ namespace Elements.Components
     public struct SpacingConfiguration
     {
         /// <summary>
-        /// Construct a spacing configuration
+        /// Construct a spacing configuration.
         /// </summary>
-        /// <param name="mode"></param>
-        /// <param name="value"></param>
+        /// <param name="mode">How to space this array.</param>
+        /// <param name="value">The driving value of the array. (The meaning of this value depends on the choice of spacing mode.)</param>
         public SpacingConfiguration(SpacingMode mode, double value)
         {
             this.SpacingMode = mode;
             this.Value = value;
         }
         /// <summary>
-        /// How to space this array
+        /// How to space this array.
         /// </summary>
         public SpacingMode SpacingMode { get; set; }
 
         /// <summary>
-        /// The driving value of the array (meaning of this value depends on the choice of spacing mode.)
+        /// The driving value of the array (meaning of this value depends on the choice of spacing mode.).
         /// </summary>
         public double Value { get; set; }
     }

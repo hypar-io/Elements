@@ -13,10 +13,10 @@ namespace Elements.Components
         /// <summary>
         /// Construct a new position placement rule from scratch.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="anchorIndex"></param>
-        /// <param name="definition"></param>
-        /// <param name="anchorOffset"></param>
+        /// <param name="name">The name of the rule.</param>
+        /// <param name="anchorIndex">The index of the anchor this element moves with.</param>
+        /// <param name="definition">The element that this rule places.</param>
+        /// <param name="anchorOffset">An optional transform for this element relative to its anchor.</param>
         public PositionPlacementRule(string name, int anchorIndex, GeometricElement definition, Transform anchorOffset = null)
         {
             Name = name;
@@ -30,12 +30,12 @@ namespace Elements.Components
         public string Name { get; set; }
 
         /// <summary>
-        /// The index of the anchor this element transforms with
+        /// The index of the anchor this element transforms with.
         /// </summary>
         public int AnchorIndex { get; set; }
 
         /// <summary>
-        /// The transform for this item, relative to its anchor
+        /// The transform for this item, relative to its anchor.
         /// </summary>
         public Transform AnchorTransform { get; set; }
 
@@ -47,8 +47,9 @@ namespace Elements.Components
         /// <summary>
         /// Construct a position placement rule by closest point.
         /// </summary>
-        /// <param name="elements"></param>
-        /// <param name="Anchors"></param>
+        /// <param name="elements">The elements to create rules for.</param>
+        /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
+
         public static IList<IComponentPlacementRule> FromClosestPoints(IEnumerable<GeometricElement> elements, IList<Vector3> Anchors)
         {
             var rules = new List<IComponentPlacementRule>();
@@ -65,14 +66,7 @@ namespace Elements.Components
             return rules;
         }
 
-        /// <summary>
-        /// Calculate the appropriate transform to instantiate this element relative to an anchor.
-        /// </summary>
-        /// <param name="orientationGuide"></param>
-        /// <param name="referenceAnchors"></param>
-        /// <param name="anchorDisplacements"></param>
-
-        public Transform GenerateTransform(Transform orientationGuide, IList<Vector3> referenceAnchors, IList<Vector3> anchorDisplacements)
+        private Transform GenerateTransform(Transform orientationGuide, IList<Vector3> referenceAnchors, IList<Vector3> anchorDisplacements)
         {
             // offset relative to reference anchor
             var transform = new Transform(AnchorTransform);
@@ -90,7 +84,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The definition to instantiate.</param>
         public List<Element> Instantiate(ComponentDefinition definition)
         {
             var t = GenerateTransform(definition.OrientationGuide, definition.ReferenceAnchors, definition.AnchorDisplacements);

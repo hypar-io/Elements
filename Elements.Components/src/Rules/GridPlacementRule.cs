@@ -12,11 +12,11 @@ namespace Elements.Components
     public struct GridCellDefinition
     {
         /// <summary>
-        /// Construct a new GridCellDefinition
+        /// Construct a new GridCellDefinition.
         /// </summary>
-        /// <param name="elements">The elements to place in the grid cells</param>
-        /// <param name="cellWidth">The cell width</param>
-        /// <param name="cellLength">The cell length</param>
+        /// <param name="elements">The elements to place in the grid cells.</param>
+        /// <param name="cellWidth">The cell width.</param>
+        /// <param name="cellLength">The cell length.</param>
         public GridCellDefinition(IEnumerable<GeometricElement> elements, double cellWidth, double cellLength)
         {
             Elements = elements;
@@ -24,18 +24,18 @@ namespace Elements.Components
             CellLength = cellLength;
         }
         /// <summary>
-        /// The elements to place
+        /// The elements to place.
         /// </summary>
 
         public IEnumerable<GeometricElement> Elements { get; set; }
 
         /// <summary>
-        /// The width of the grid cell
+        /// The width of the grid cell.
         /// </summary>
         public double CellWidth { get; set; }
 
         /// <summary>
-        /// The length of the grid cell
+        /// The length of the grid cell.
         /// </summary>
 
         public double CellLength { get; set; }
@@ -49,11 +49,11 @@ namespace Elements.Components
         /// <summary>
         /// Construct a new grid placement rule from scratch.
         /// </summary>
-        /// <param name="definition">The grid cell definition</param>
-        /// <param name="gridArea"></param>
-        /// <param name="anchorIndices"></param>
-        /// <param name="anchorDisplacements"></param>
-        /// <param name="name"></param>
+        /// <param name="definition">The grid cell definition.</param>
+        /// <param name="gridArea">The region in which to lay out the grid.</param>
+        /// <param name="anchorIndices">For each vertex, the index of the corresponding anchor.</param>
+        /// <param name="anchorDisplacements">For each vertex, the displacement from its anchor.</param>
+        /// <param name="name">The name.</param>
         /// <param name="gridCreationRule">An optional action that handles subdividing the created Grid2d.</param>
         public GridPlacementRule(GridCellDefinition definition, Polygon gridArea, IList<int> anchorIndices, IList<Vector3> anchorDisplacements, string name, Action<Grid2d> gridCreationRule = null)
         {
@@ -81,17 +81,17 @@ namespace Elements.Components
         public string Name { get; set; }
 
         /// <summary>
-        /// The indices of the source anchors corresponding to each displacement
+        /// The indices of the source anchors corresponding to each displacement.
         /// </summary>
         public IList<int> AnchorIndices { get; set; }
 
         /// <summary>
-        /// The displacement from each anchor
+        /// The displacement from each anchor.
         /// </summary>
         public IList<Vector3> AnchorDisplacements { get; set; }
 
         /// <summary>
-        /// The boundary curve in which to construct the grid
+        /// The boundary curve in which to construct the grid.
         /// </summary>
 
         public Polyline Curve { get; set; }
@@ -109,13 +109,13 @@ namespace Elements.Components
         public Action<Grid2d> GridCreationRule { get; set; }
 
         /// <summary>
-        /// Construct an ArrayPlacementRule from closest points using a set of reference anchors. Each polyline vertex will be associated with its closest anchor.
+        /// Construct a GridPlacementRule from closest points using a set of reference anchors. Each polyline vertex will be associated with its closest anchor.
         /// </summary>
-        /// <param name="cell"></param>
-        /// <param name="gridArea"></param>
-        /// <param name="Anchors"></param>
-        /// <param name="name"></param>
-        /// <param name="gridCreationRule"></param>
+        /// <param name="cell">The definition of the grid cell.</param>
+        /// <param name="gridArea">The region in which to lay out the grid.</param>
+        /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="gridCreationRule">An optional function to apply to the grid to override its default subdivision.</param>
         public static GridPlacementRule FromClosestPoints(GridCellDefinition cell, Polygon gridArea, IList<Vector3> Anchors, string name, Action<Grid2d> gridCreationRule = null)
         {
             var anchorIndices = new List<int>();
@@ -133,7 +133,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The definition to instantiate.</param>
         public List<Element> Instantiate(ComponentDefinition definition)
         {
             var arrayElements = new List<Element>();

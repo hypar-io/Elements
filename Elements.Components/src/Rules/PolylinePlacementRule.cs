@@ -11,12 +11,12 @@ namespace Elements.Components
     public class PolylinePlacementRule : Element, ICurveBasedComponentPlacementRule
     {
         /// <summary>
-        /// Construct a new Polyline Placement rule
+        /// Construct a new Polyline Placement rule.
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="anchorIndices"></param>
-        /// <param name="anchorDisplacements"></param>
-        /// <param name="name"></param>
+        /// <param name="p">The polyline to place.</param>
+        /// <param name="anchorIndices">For each vertex, the index of the corresponding anchor.</param>
+        /// <param name="anchorDisplacements">For each vertex, the displacement from its anchor.</param>
+        /// <param name="name">The name.</param>
         public PolylinePlacementRule(Polyline p, IList<int> anchorIndices, IList<Vector3> anchorDisplacements, string name) : base(Guid.NewGuid(), name)
         {
             Curve = p;
@@ -26,31 +26,32 @@ namespace Elements.Components
             IsPolygon = p is Polygon;
         }
         /// <summary>
-        /// The indices of the source anchors corresponding to each displacement
+        /// The indices of the source anchors corresponding to each displacement.
         /// </summary>
         public IList<int> AnchorIndices { get; set; }
 
         /// <summary>
-        /// The displacement from each anchor
+        /// The displacement from each anchor.
         /// </summary>
         public IList<Vector3> AnchorDisplacements { get; set; }
 
         /// <summary>
-        /// The curve being deformed by this rule
+        /// The curve being deformed by this rule.
         /// </summary>
         public Polyline Curve { get; set; }
 
         /// <summary>
-        /// Should the curve be treated as a closed polygon?
+        /// Should the curve be treated as a closed polygon?.
         /// </summary>
         public bool IsPolygon { get; set; }
 
         /// <summary>
         /// Construct a PolylinePlacementRule from closest points using a set of reference anchors. Each polyline vertex will be associated with its closest anchor.
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="Anchors"></param>
-        /// <param name="name"></param>
+        /// <param name="p">The polyline to place.</param>
+        /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
+
+        /// <param name="name">The name.</param>
         public static PolylinePlacementRule FromClosestPoints(Polyline p, IList<Vector3> Anchors, string name)
         {
             var anchorIndices = new List<int>();
@@ -68,7 +69,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
-        /// <param name="definition"></param>
+        /// <param name="definition">The definition to instantiate.</param>
         public List<Element> Instantiate(ComponentDefinition definition)
         {
             var transformedCurves = new List<Element>();

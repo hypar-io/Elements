@@ -49,7 +49,7 @@ namespace Elements.Components
         }
 
         /// <summary>
-        /// A reference 
+        /// A reference .
         /// </summary>
         public class ContentItem
         {

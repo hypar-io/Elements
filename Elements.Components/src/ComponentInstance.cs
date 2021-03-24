@@ -14,14 +14,14 @@ namespace Elements.Components
         /// Construct a new ComponentInstance (You probably should use ComponentDefinition.Instantiate() to 
         /// create Component Instances, rather than making them manually)
         /// /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">The name.</param>
         public ComponentInstance(string name = null) : base(Guid.NewGuid(), name)
         {
             Instances = new List<Element>();
         }
 
         /// <summary>
-        /// The internal elements contained in this ComponentInstance
+        /// The internal elements contained in this ComponentInstance.
         /// </summary>
 
         public List<Element> Instances { get; set; }
