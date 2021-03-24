@@ -71,23 +71,23 @@ namespace Elements.Components
         /// <summary>
         /// Construct an ArrayPlacementRule from closest points using a set of reference anchors. Each polyline vertex will be associated with its closest anchor.
         /// </summary>
-        /// <param name="e">The element to array.</param>
-        /// <param name="p">The array path.</param>
+        /// <param name="element">The element to array.</param>
+        /// <param name="polyline">The array path.</param>
         /// <param name="spacingRule">The spacing configuration.</param>
         /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
         /// <param name="name">The rule name.</param>
-        public static ArrayPlacementRule FromClosestPoints(GeometricElement e, Polyline p, SpacingConfiguration spacingRule, IList<Vector3> Anchors, string name)
+        public static ArrayPlacementRule FromClosestPoints(GeometricElement element, Polyline polyline, SpacingConfiguration spacingRule, IList<Vector3> Anchors, string name)
         {
             var anchorIndices = new List<int>();
             var anchorDisplacements = new List<Vector3>();
-            foreach (var v in p.Vertices)
+            foreach (var v in polyline.Vertices)
             {
                 var closestAnchorIndex = Enumerable.Range(0, Anchors.Count).OrderBy(a => Anchors[a].DistanceTo(v)).First();
                 anchorIndices.Add(closestAnchorIndex);
                 var closestAnchor = Anchors[closestAnchorIndex];
                 anchorDisplacements.Add(v - closestAnchor);
             }
-            return new ArrayPlacementRule(e, p, spacingRule, anchorIndices, anchorDisplacements, name);
+            return new ArrayPlacementRule(element, polyline, spacingRule, anchorIndices, anchorDisplacements, name);
         }
 
         /// <summary>

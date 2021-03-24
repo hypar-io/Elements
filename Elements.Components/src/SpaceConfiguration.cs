@@ -152,13 +152,13 @@ namespace Elements.Components
         /// <summary>
         /// Generate a consistent set of anchors from a rectangular polygon — corners, midpoints, and center.
         /// </summary>
-        /// <param name="p">The polygon from which to generate anchors.</param>
-        public static List<Vector3> AnchorsFromRect(Polygon p)
+        /// <param name="polygon">The polygon from which to generate anchors.</param>
+        public static List<Vector3> AnchorsFromRect(Polygon polygon)
         {
             var anchors = new List<Vector3>();
-            anchors.AddRange(p.Vertices);
-            anchors.AddRange(p.Segments().Select(s => s.PointAt(0.5)));
-            anchors.Add(p.Centroid());
+            anchors.AddRange(polygon.Vertices);
+            anchors.AddRange(polygon.Segments().Select(s => s.PointAt(0.5)));
+            anchors.Add(polygon.Centroid());
             return anchors;
         }
 

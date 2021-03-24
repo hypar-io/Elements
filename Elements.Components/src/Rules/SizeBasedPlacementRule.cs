@@ -60,22 +60,22 @@ namespace Elements.Components
         /// Construct a size-based placement rule based on the closest point to the vertices of a reference polygon.
         /// </summary>
         /// <param name="elementsAndClearances">The collection of possible elements and their clearances that can be placed.</param>
-        /// <param name="p">The polygon .</param>
+        /// <param name="polygon">The polygon .</param>
         /// <param name="Anchors">The reference anchors from which to calculate the associations.</param>
 
         /// <param name="name">The name.</param>
-        public static SizeBasedPlacementRule FromClosestPoints(List<(GeometricElement elem, Polygon clearance)> elementsAndClearances, Polygon p, IList<Vector3> Anchors, string name)
+        public static SizeBasedPlacementRule FromClosestPoints(List<(GeometricElement elem, Polygon clearance)> elementsAndClearances, Polygon polygon, IList<Vector3> Anchors, string name)
         {
             var anchorIndices = new List<int>();
             var anchorDisplacements = new List<Vector3>();
-            foreach (var v in p.Vertices)
+            foreach (var v in polygon.Vertices)
             {
                 var closestAnchorIndex = Enumerable.Range(0, Anchors.Count).OrderBy(a => Anchors[a].DistanceTo(v)).First();
                 anchorIndices.Add(closestAnchorIndex);
                 var closestAnchor = Anchors[closestAnchorIndex];
                 anchorDisplacements.Add(v - closestAnchor);
             }
-            return new SizeBasedPlacementRule(elementsAndClearances, p, anchorIndices, anchorDisplacements, name);
+            return new SizeBasedPlacementRule(elementsAndClearances, polygon, anchorIndices, anchorDisplacements, name);
         }
 
         /// <summary>
