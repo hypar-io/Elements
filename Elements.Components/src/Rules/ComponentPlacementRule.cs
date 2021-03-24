@@ -31,7 +31,7 @@ namespace Elements.Components
         }
 
         /// <summary>
-        /// .
+        /// Create a component placement rule by associating anchors with the closest vertex on the bounding polyline.
         /// </summary>
         /// <param name="component">The component to place.</param>
         /// <param name="p">The polyline boundary used to determine placement.</param>
