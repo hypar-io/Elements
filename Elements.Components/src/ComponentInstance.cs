@@ -13,7 +13,7 @@ namespace Elements.Components
         /// <summary>
         /// Construct a new ComponentInstance (You probably should use ComponentDefinition.Instantiate() to 
         /// create Component Instances, rather than making them manually)
-        /// /// </summary>
+        /// </summary>
         /// <param name="name">The name.</param>
         public ComponentInstance(string name = null) : base(Guid.NewGuid(), name)
         {
