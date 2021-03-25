@@ -143,16 +143,16 @@ namespace Elements.Tests
             // After we moved UpdateReprensentations into AddElement, this
             // became 1 again because as soon as AddElement is called, the
             // representation's profile is overridden with the main profile.
-            Assert.Equal(1, model.AllElementsOfType<Profile>().Count());
-            Assert.Equal(2, model.AllElementsOfType<Mass>().Count());
+            Assert.True(model.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(model.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(model.AllElementsOfType<Material>());
 
             var json = model.ToJson();
             File.WriteAllText("./deepSerialize.json", json);
 
             var newModel = Model.FromJson(json);
-            Assert.Equal(1, newModel.AllElementsOfType<Profile>().Count());
-            Assert.Equal(2, newModel.AllElementsOfType<Mass>().Count());
+            Assert.True(newModel.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(newModel.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(newModel.AllElementsOfType<Material>());
         }
 
