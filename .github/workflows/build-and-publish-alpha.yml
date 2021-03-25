@@ -19,7 +19,9 @@ jobs:
           dotnet-version: 3.1.x
       - name: Get previous tag.
         id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        run: |
+          lastTag=`git tag -l --sort=-creatordate --format='%(refname:short)' | head -n 1`
+          echo "::set-output name=tag::$lastTag"
       - name: Bump if alpha.
         id: bump-with-alpha
         uses: actions/github-script@v3
