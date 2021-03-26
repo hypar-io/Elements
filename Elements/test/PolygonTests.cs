@@ -1314,5 +1314,18 @@ namespace Elements.Geometry.Tests
 
             Assert.Throws<Exception>(() => circle.TransformSegment(t, 0));
         }
+
+        [Fact]
+        public void VerticalContainment() {
+            var point = new Vector3(8.874555, 6.112945, 30);
+            var polygon = new Polygon(new List<Vector3>() {
+                new Vector3(11.37475, 8.56224, -3),
+                new Vector3(6.37436, 3.66365, -3),
+                new Vector3(6.37436, 3.66365, 0),
+                new Vector3(11.37475, 8.56224, 0)
+            });
+            var contains = polygon.Contains(point, out var type);
+            Assert.Equal(contains, false);
+        }
     }
 }

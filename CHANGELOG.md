@@ -8,6 +8,7 @@
 - `Polyline.OffsetOnSide`
 ### Changed
 - `Solids.Import` is now public.
+- `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
 
 ### Fixed
 ## 0.8.4
@@ -30,7 +31,7 @@
 - `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
 - `Elements.Spatial.HalfEdgeGraph2d`
   - `.Construct()`
-  - `.Polygonize()` 
+  - `.Polygonize()`
 - Release helper github action
 
 ### Changed
