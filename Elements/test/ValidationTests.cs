@@ -20,11 +20,11 @@ namespace Elements.Tests
                     new Vector3(10,10)
                 });
             };
-            Assert.Throws(typeof(System.ArgumentException), action);
+            Assert.Throws<System.ArgumentException>(action);
             Validator.DisableValidationOnConstruction = true;
             action();
             Validator.DisableValidationOnConstruction = false;
-            Assert.Throws(typeof(System.ArgumentException), action);
+            Assert.Throws<System.ArgumentException>(action);
         }
 
     }

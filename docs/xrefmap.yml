@@ -262,6 +262,19 @@ references:
   isSpec: "True"
   fullName: Elements.BuiltInMaterials.Default
   nameWithType: BuiltInMaterials.Default
+- uid: Elements.BuiltInMaterials.Dirt
+  name: Dirt
+  href: api/Elements.BuiltInMaterials.html#Elements_BuiltInMaterials_Dirt
+  commentId: P:Elements.BuiltInMaterials.Dirt
+  fullName: Elements.BuiltInMaterials.Dirt
+  nameWithType: BuiltInMaterials.Dirt
+- uid: Elements.BuiltInMaterials.Dirt*
+  name: Dirt
+  href: api/Elements.BuiltInMaterials.html#Elements_BuiltInMaterials_Dirt_
+  commentId: Overload:Elements.BuiltInMaterials.Dirt
+  isSpec: "True"
+  fullName: Elements.BuiltInMaterials.Dirt
+  nameWithType: BuiltInMaterials.Dirt
 - uid: Elements.BuiltInMaterials.Edges
   name: Edges
   href: api/Elements.BuiltInMaterials.html#Elements_BuiltInMaterials_Edges
@@ -550,6 +563,19 @@ references:
   isSpec: "True"
   fullName: Elements.ContentCatalog.ToJson
   nameWithType: ContentCatalog.ToJson
+- uid: Elements.ContentCatalog.UseReferenceOrientation
+  name: UseReferenceOrientation()
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_UseReferenceOrientation
+  commentId: M:Elements.ContentCatalog.UseReferenceOrientation
+  fullName: Elements.ContentCatalog.UseReferenceOrientation()
+  nameWithType: ContentCatalog.UseReferenceOrientation()
+- uid: Elements.ContentCatalog.UseReferenceOrientation*
+  name: UseReferenceOrientation
+  href: api/Elements.ContentCatalog.html#Elements_ContentCatalog_UseReferenceOrientation_
+  commentId: Overload:Elements.ContentCatalog.UseReferenceOrientation
+  isSpec: "True"
+  fullName: Elements.ContentCatalog.UseReferenceOrientation
+  nameWithType: ContentCatalog.UseReferenceOrientation
 - uid: Elements.ContentElement
   name: ContentElement
   href: api/Elements.ContentElement.html
@@ -5093,6 +5119,15 @@ references:
   commentId: M:Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   fullName: Elements.Geometry.Polygon.Split(Elements.Geometry.Polyline)
   nameWithType: Polygon.Split(Polyline)
+- uid: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: Split(IEnumerable<Polyline>)
+  href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: Split(IEnumerable(Of Polyline))
+  fullName: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Geometry.Polygon.Split(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: Polygon.Split(IEnumerable<Polyline>)
+  nameWithType.vb: Polygon.Split(IEnumerable(Of Polyline))
 - uid: Elements.Geometry.Polygon.Split*
   name: Split
   href: api/Elements.Geometry.Polygon.html#Elements_Geometry_Polygon_Split_
@@ -5408,6 +5443,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Polyline.Offset
   nameWithType: Polyline.Offset
+- uid: Elements.Geometry.Polyline.OffsetOnSide(System.Double,System.Boolean)
+  name: OffsetOnSide(Double, Boolean)
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetOnSide_System_Double_System_Boolean_
+  commentId: M:Elements.Geometry.Polyline.OffsetOnSide(System.Double,System.Boolean)
+  fullName: Elements.Geometry.Polyline.OffsetOnSide(System.Double, System.Boolean)
+  nameWithType: Polyline.OffsetOnSide(Double, Boolean)
+- uid: Elements.Geometry.Polyline.OffsetOnSide*
+  name: OffsetOnSide
+  href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetOnSide_
+  commentId: Overload:Elements.Geometry.Polyline.OffsetOnSide
+  isSpec: "True"
+  fullName: Elements.Geometry.Polyline.OffsetOnSide
+  nameWithType: Polyline.OffsetOnSide
 - uid: Elements.Geometry.Polyline.Plane
   name: Plane()
   href: api/Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane
@@ -15183,6 +15231,19 @@ references:
   isSpec: "True"
   fullName: Elements.Material.NormalTexture
   nameWithType: Material.NormalTexture
+- uid: Elements.Material.RepeatTexture
+  name: RepeatTexture
+  href: api/Elements.Material.html#Elements_Material_RepeatTexture
+  commentId: P:Elements.Material.RepeatTexture
+  fullName: Elements.Material.RepeatTexture
+  nameWithType: Material.RepeatTexture
+- uid: Elements.Material.RepeatTexture*
+  name: RepeatTexture
+  href: api/Elements.Material.html#Elements_Material_RepeatTexture_
+  commentId: Overload:Elements.Material.RepeatTexture
+  isSpec: "True"
+  fullName: Elements.Material.RepeatTexture
+  nameWithType: Material.RepeatTexture
 - uid: Elements.Material.SpecularFactor
   name: SpecularFactor
   href: api/Elements.Material.html#Elements_Material_SpecularFactor
@@ -15529,6 +15590,12 @@ references:
   commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform,Elements.Geometry.Transform)
   fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Geometry.Transform, Elements.Geometry.Transform)
   nameWithType: ModelCurveExtensions.ToModelCurves(Transform, Transform)
+- uid: Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d,Elements.Geometry.Transform,Elements.Material)
+  name: ToModelCurves(Grid2d, Transform, Material)
+  href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Spatial_Grid2d_Elements_Geometry_Transform_Elements_Material_
+  commentId: M:Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d,Elements.Geometry.Transform,Elements.Material)
+  fullName: Elements.ModelCurveExtensions.ToModelCurves(Elements.Spatial.Grid2d, Elements.Geometry.Transform, Elements.Material)
+  nameWithType: ModelCurveExtensions.ToModelCurves(Grid2d, Transform, Material)
 - uid: Elements.ModelCurveExtensions.ToModelCurves*
   name: ToModelCurves
   href: api/Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_
@@ -16940,6 +17007,73 @@ references:
   commentId: F:Elements.Spatial.GridDirection.V
   fullName: Elements.Spatial.GridDirection.V
   nameWithType: GridDirection.V
+- uid: Elements.Spatial.HalfEdgeGraph2d
+  name: HalfEdgeGraph2d
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html
+  commentId: T:Elements.Spatial.HalfEdgeGraph2d
+  fullName: Elements.Spatial.HalfEdgeGraph2d
+  nameWithType: HalfEdgeGraph2d
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon,Elements.Geometry.Polyline)
+  name: Construct(Polygon, Polyline)
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_Elements_Geometry_Polygon_Elements_Geometry_Polyline_
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon,Elements.Geometry.Polyline)
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(Elements.Geometry.Polygon, Elements.Geometry.Polyline)
+  nameWithType: HalfEdgeGraph2d.Construct(Polygon, Polyline)
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name: Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})
+  name.vb: Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable<Elements.Geometry.Polygon>, System.Collections.Generic.IEnumerable<Elements.Geometry.Polyline>)
+  fullName.vb: Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polygon), System.Collections.Generic.IEnumerable(Of Elements.Geometry.Polyline))
+  nameWithType: HalfEdgeGraph2d.Construct(IEnumerable<Polygon>, IEnumerable<Polyline>)
+  nameWithType.vb: HalfEdgeGraph2d.Construct(IEnumerable(Of Polygon), IEnumerable(Of Polyline))
+- uid: Elements.Spatial.HalfEdgeGraph2d.Construct*
+  name: Construct
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Construct_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Construct
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Construct
+  nameWithType: HalfEdgeGraph2d.Construct
+- uid: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  name: EdgesPerVertex
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_EdgesPerVertex
+  commentId: P:Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  fullName: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  nameWithType: HalfEdgeGraph2d.EdgesPerVertex
+- uid: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex*
+  name: EdgesPerVertex
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_EdgesPerVertex_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.EdgesPerVertex
+  nameWithType: HalfEdgeGraph2d.EdgesPerVertex
+- uid: Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  name: Polygonize()
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Polygonize
+  commentId: M:Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Polygonize()
+  nameWithType: HalfEdgeGraph2d.Polygonize()
+- uid: Elements.Spatial.HalfEdgeGraph2d.Polygonize*
+  name: Polygonize
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Polygonize_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Polygonize
+  nameWithType: HalfEdgeGraph2d.Polygonize
+- uid: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  name: Vertices
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Vertices
+  commentId: P:Elements.Spatial.HalfEdgeGraph2d.Vertices
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  nameWithType: HalfEdgeGraph2d.Vertices
+- uid: Elements.Spatial.HalfEdgeGraph2d.Vertices*
+  name: Vertices
+  href: api/Elements.Spatial.HalfEdgeGraph2d.html#Elements_Spatial_HalfEdgeGraph2d_Vertices_
+  commentId: Overload:Elements.Spatial.HalfEdgeGraph2d.Vertices
+  isSpec: "True"
+  fullName: Elements.Spatial.HalfEdgeGraph2d.Vertices
+  nameWithType: HalfEdgeGraph2d.Vertices
 - uid: Elements.Spatial.MercatorProjection
   name: MercatorProjection
   href: api/Elements.Spatial.MercatorProjection.html
@@ -17366,6 +17500,19 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.Topography
   nameWithType: Topography.Topography
+- uid: Elements.Topography.AbsoluteMinimumElevation
+  name: AbsoluteMinimumElevation
+  href: api/Elements.Topography.html#Elements_Topography_AbsoluteMinimumElevation
+  commentId: P:Elements.Topography.AbsoluteMinimumElevation
+  fullName: Elements.Topography.AbsoluteMinimumElevation
+  nameWithType: Topography.AbsoluteMinimumElevation
+- uid: Elements.Topography.AbsoluteMinimumElevation*
+  name: AbsoluteMinimumElevation
+  href: api/Elements.Topography.html#Elements_Topography_AbsoluteMinimumElevation_
+  commentId: Overload:Elements.Topography.AbsoluteMinimumElevation
+  isSpec: "True"
+  fullName: Elements.Topography.AbsoluteMinimumElevation
+  nameWithType: Topography.AbsoluteMinimumElevation
 - uid: Elements.Topography.AverageEdges(Elements.Topography,Elements.Units.CardinalDirection)
   name: AverageEdges(Topography, Units.CardinalDirection)
   href: api/Elements.Topography.html#Elements_Topography_AverageEdges_Elements_Topography_Elements_Units_CardinalDirection_
@@ -17405,6 +17552,32 @@ references:
   isSpec: "True"
   fullName: Elements.Topography.CellWidth
   nameWithType: Topography.CellWidth
+- uid: Elements.Topography.DepthBelowMinimumElevation
+  name: DepthBelowMinimumElevation
+  href: api/Elements.Topography.html#Elements_Topography_DepthBelowMinimumElevation
+  commentId: P:Elements.Topography.DepthBelowMinimumElevation
+  fullName: Elements.Topography.DepthBelowMinimumElevation
+  nameWithType: Topography.DepthBelowMinimumElevation
+- uid: Elements.Topography.DepthBelowMinimumElevation*
+  name: DepthBelowMinimumElevation
+  href: api/Elements.Topography.html#Elements_Topography_DepthBelowMinimumElevation_
+  commentId: Overload:Elements.Topography.DepthBelowMinimumElevation
+  isSpec: "True"
+  fullName: Elements.Topography.DepthBelowMinimumElevation
+  nameWithType: Topography.DepthBelowMinimumElevation
+- uid: Elements.Topography.DepthMesh
+  name: DepthMesh
+  href: api/Elements.Topography.html#Elements_Topography_DepthMesh
+  commentId: P:Elements.Topography.DepthMesh
+  fullName: Elements.Topography.DepthMesh
+  nameWithType: Topography.DepthMesh
+- uid: Elements.Topography.DepthMesh*
+  name: DepthMesh
+  href: api/Elements.Topography.html#Elements_Topography_DepthMesh_
+  commentId: Overload:Elements.Topography.DepthMesh
+  isSpec: "True"
+  fullName: Elements.Topography.DepthMesh
+  nameWithType: Topography.DepthMesh
 - uid: Elements.Topography.Elevations
   name: Elevations
   href: api/Elements.Topography.html#Elements_Topography_Elevations

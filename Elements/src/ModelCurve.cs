@@ -93,20 +93,20 @@ namespace Elements
                     mc.Add(new ModelCurve(new Line(from, to), mat, context));
                 }
             };
-            
-            tryAddLine(a,b);
-            tryAddLine(b,c); 
-            tryAddLine(c,d); 
-            tryAddLine(d,a); 
-            tryAddLine(e,f); 
-            tryAddLine(f,g); 
-            tryAddLine(g,h); 
-            tryAddLine(h,e); 
-            tryAddLine(a,e); 
-            tryAddLine(b,f); 
-            tryAddLine(c,g); 
-            tryAddLine(d,h); 
-             
+
+            tryAddLine(a, b);
+            tryAddLine(b, c);
+            tryAddLine(c, d);
+            tryAddLine(d, a);
+            tryAddLine(e, f);
+            tryAddLine(f, g);
+            tryAddLine(g, h);
+            tryAddLine(h, e);
+            tryAddLine(a, e);
+            tryAddLine(b, f);
+            tryAddLine(c, g);
+            tryAddLine(d, h);
+
             return mc;
         }
 
@@ -128,6 +128,19 @@ namespace Elements
                 mc.AddRange(p.Voids.Select(v => new ModelCurve(v, mat, xform)));
             }
             return mc;
+        }
+
+        /// <summary>
+        /// Convert a Grid2d to a set of model curves.
+        /// </summary>
+        /// <param name="grid">The grid to convert.</param>
+        /// <param name="context">An optional transform to apply to these curves.</param>
+        /// <param name="material">An optional material to use for these curves.</param>
+        public static IEnumerable<ModelCurve> ToModelCurves(this Elements.Spatial.Grid2d grid, Transform context = null, Material material = null)
+        {
+            var mat = material ?? BuiltInMaterials.Black;
+            var xform = context ?? new Transform();
+            return grid.GetCells().SelectMany(c => c.GetTrimmedCellGeometry()).Select(c => new ModelCurve(c, material, xform));
         }
     }
 }
