@@ -6,9 +6,10 @@ using Newtonsoft.Json;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// Base class for all children of Cell.
+    /// An abstract base for ChildBase that does not contain the geometry constraints.
+    /// Do not inherit from this directly, always use the geometry constraints.
     /// </summary>
-    public abstract class ChildBase< GeometryType>
+    public abstract class ChildBase
     {
         /// <summary>
         /// ID of this child.
@@ -30,16 +31,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Used to handle comparisons for when we make HashSets of children of this type.
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            ChildBase<GeometryType> other = obj as ChildBase<GeometryType>;
-            if (other == null) return false;
-            return this.Id == other.Id;
-        }
-
-        /// <summary>
         /// Base constructor for a CellComplex child.
         /// </summary>
         /// <param name="id"></param>
@@ -51,17 +42,21 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the associated geometry for this child.
-        /// </summary>
-        /// <returns></returns>
-        public abstract GeometryType GetGeometry();
-
-        /// <summary>
         /// Get the shortest distance from a point to the geometry representing this child.
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
         public abstract double DistanceTo(Vector3 point);
+
+        /// <summary>
+        /// Used to handle comparisons for when we make HashSets of children of this type.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            ChildBase other = obj as ChildBase;
+            if (other == null) return false;
+            return this.Id == other.Id;
+        }
 
         /// <summary>
         /// Get the closest candidate from a list of candidates.
@@ -70,7 +65,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">Our target point to determine closest distance from.</param>
         /// <typeparam name="T">Return object type.</typeparam>
         /// <returns></returns>
-        internal static T GetClosest<T>(List<T> candidates, Vector3 point) where T: ChildBase<GeometryType>
+        internal static T GetClosest<T>(List<T> candidates, Vector3 point) where T : ChildBase
         {
             if (candidates.Count == 0)
             {
@@ -78,5 +73,19 @@ namespace Elements.Spatial.CellComplex
             }
             return candidates.OrderBy(c => c.DistanceTo(point)).ToList()[0];
         }
+    }
+
+    /// <summary>
+    /// Base class for all children of Cell.
+    /// </summary>
+    public abstract class ChildBase<GeometryType> : ChildBase
+    {
+        internal ChildBase(ulong id, CellComplex cellComplex = null) : base(id, cellComplex) { }
+
+        /// <summary>
+        /// Get the associated geometry for this child.
+        /// </summary>
+        /// <returns></returns>
+        public abstract GeometryType GetGeometry();
     }
 }

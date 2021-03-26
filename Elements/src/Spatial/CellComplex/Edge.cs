@@ -162,5 +162,27 @@ namespace Elements.Spatial.CellComplex
         {
             return this.DirectedEdges.ToList();
         }
+
+        /// <summary>
+        /// Traverse the neighbors of this Edge toward the starting point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns></returns>
+        public List<Edge> TraversedNeighbors(Vector3 point, double completedRadius = 0)
+        {
+            var neighbors = new List<Edge>();
+            var curNeighbor = this;
+            while (curNeighbor != null)
+            {
+                neighbors.Add(curNeighbor);
+                if (curNeighbor.DistanceTo(point) <= completedRadius)
+                {
+                    break;
+                }
+                curNeighbor = curNeighbor.GetClosestNeighbor(point);
+            }
+            return neighbors;
+        }
     }
 }

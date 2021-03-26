@@ -245,5 +245,29 @@ namespace Elements.Spatial.CellComplex
         {
             return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
         }
+
+        /// <summary>
+        /// Traverse the neighbors of this Face toward the starting point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="parallel"></param>
+        /// <param name="includeSharedVertices"></param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns></returns>
+        public List<Face> TraversedNeighbors(Vector3 point, bool parallel = false, bool includeSharedVertices = false, double completedRadius = 0)
+        {
+            var neighbors = new List<Face>();
+            var curNeighbor = this;
+            while (curNeighbor != null)
+            {
+                neighbors.Add(curNeighbor);
+                if (curNeighbor.DistanceTo(point) <= completedRadius)
+                {
+                    break;
+                }
+                curNeighbor = curNeighbor.GetClosestNeighbor(point, parallel, includeSharedVertices);
+            }
+            return neighbors;
+        }
     }
 }

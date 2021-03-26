@@ -228,5 +228,27 @@ namespace Elements.Spatial.CellComplex
         {
             return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
         }
+
+        /// <summary>
+        /// Traverse the neighbors of this Cell toward the starting point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns></returns>
+        public List<Cell> TraversedNeighbors(Vector3 point, double completedRadius = 0)
+        {
+            var neighbors = new List<Cell>();
+            var curNeighbor = this;
+            while (curNeighbor != null)
+            {
+                neighbors.Add(curNeighbor);
+                if (curNeighbor.DistanceTo(point) <= completedRadius)
+                {
+                    break;
+                }
+                curNeighbor = curNeighbor.GetClosestNeighbor(point);
+            }
+            return neighbors;
+        }
     }
 }
