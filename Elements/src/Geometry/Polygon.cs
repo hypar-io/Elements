@@ -81,15 +81,8 @@ namespace Elements.Geometry
         // Projects non-flat containment request into XY plane and returns the answer for this projection
         internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
         {
-            var is3D = false;
-            var vertices = segments.Select(segment =>
-            {
-                if (segment.Start.Z != 0)
-                {
-                    is3D = true;
-                }
-                return segment.Start;
-            }).ToList();
+            var vertices = segments.Select(segment => segment.Start).ToList();
+            var is3D = vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
                 return Contains(segments, location, out containment);
@@ -97,7 +90,7 @@ namespace Elements.Geometry
             var transformTo3D = vertices.ToTransform();
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = segments.Select(segment =>  (Line)segment.Transformed(transformToGround)).ToList();
+            var groundSegments = segments.Select(segment =>  segment.TransformedLine(transformToGround));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
         }
