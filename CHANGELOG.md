@@ -10,6 +10,8 @@
 - `Ray.Intersects(Polygon)`
 - `Vector3.DistanceTo(Polygon)`
 ### Changed
+- `Solids.Import` is now public.
+- `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
 
 ### Fixed
 ## 0.8.4
@@ -23,6 +25,10 @@
 - `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `Topography.DepthMesh`
+- `Topography.DepthBelowMinimumElevation`
+- `Topography.AbsoluteMinimumElevation`
+- `Material.RepeatTexture`
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
 - `Polygon.Split(Polyline)`

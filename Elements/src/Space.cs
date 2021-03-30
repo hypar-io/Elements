@@ -93,7 +93,7 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("You must supply one IBRep to construct a Space.");
             }
             this.Transform = transform;
-            this.Representation.SolidOperations.Add(new Import(geometry));
+            this.Representation.SolidOperations.Add(new ConstructedSolid(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
             // we won't have a profile. This will cause problems with JSON 
@@ -130,7 +130,7 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             // Don't override imported geometry.
-            if (this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s => s.GetType() == typeof(Import)))
+            if (this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s => s.GetType() == typeof(ConstructedSolid)))
             {
                 return;
             }

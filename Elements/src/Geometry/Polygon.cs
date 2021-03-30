@@ -75,7 +75,24 @@ namespace Elements.Geometry
         /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
         public bool Contains(Vector3 vector, out Containment containment)
         {
-            return Contains(Segments(), vector, out containment);
+            return Contains3D(Segments(), vector, out containment);
+        }
+
+        // Projects non-flat containment request into XY plane and returns the answer for this projection
+        internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
+        {
+            var vertices = segments.Select(segment => segment.Start).ToList();
+            var is3D = vertices.Any(vertex => vertex.Z != 0);
+            if (!is3D)
+            {
+                return Contains(segments, location, out containment);
+            }
+            var transformTo3D = vertices.ToTransform();
+            var transformToGround = new Transform(transformTo3D);
+            transformToGround.Invert();
+            var groundSegments = segments.Select(segment =>  segment.TransformedLine(transformToGround));
+            var groundLocation = transformToGround.OfPoint(location);
+            return Contains(groundSegments, groundLocation, out containment);
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
@@ -786,8 +803,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Find the minimum-area rotated rectangle containing a set of points, 
-        /// calculated without regard for Z coordinate. 
+        /// Find the minimum-area rotated rectangle containing a set of points,
+        /// calculated without regard for Z coordinate.
         /// </summary>
         /// <param name="points">The points to contain within the rectangle</param>
         /// <returns>A rectangular polygon that contains all input points</returns>
@@ -836,9 +853,9 @@ namespace Elements.Geometry
                     return centroid;
                 }
                 // find midpoint of the diagonal between two non-adjacent vertices.
-                // At any convex corner, this will be inside the boundary 
+                // At any convex corner, this will be inside the boundary
                 // (unless it passes all the way through to the other side — but
-                // this can't be true for all corners). Inspired by 
+                // this can't be true for all corners). Inspired by
                 // http://apodeline.free.fr/FAQ/CGAFAQ/CGAFAQ-3.html 3.6
                 var a = Vertices[currentIndex];
                 var b = Vertices[(currentIndex + 2) % Vertices.Count];
@@ -1189,8 +1206,8 @@ namespace Elements.Geometry
             }
             catch
             {
-                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back. 
-                // here we make a last-ditch attempt to fix this and construct a new polygon. 
+                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back.
+                // here we make a last-ditch attempt to fix this and construct a new polygon.
                 var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
                 try
                 {
