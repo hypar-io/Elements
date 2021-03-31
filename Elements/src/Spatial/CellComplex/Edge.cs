@@ -171,9 +171,11 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Edge> TraversedNeighbors(Vector3 point, double completedRadius = 0)
         {
+            var count = 0;
+            var maxCount = this.CellComplex.GetEdges().Count;
             var neighbors = new List<Edge>();
             var curNeighbor = this;
-            while (curNeighbor != null)
+            while (curNeighbor != null && count <= maxCount)
             {
                 neighbors.Add(curNeighbor);
                 if (curNeighbor.DistanceTo(point) <= completedRadius)
@@ -181,6 +183,7 @@ namespace Elements.Spatial.CellComplex
                     break;
                 }
                 curNeighbor = curNeighbor.GetClosestNeighbor(point);
+                count += 1;
             }
             return neighbors;
         }

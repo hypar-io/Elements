@@ -243,7 +243,14 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public Face GetClosestNeighbor(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
         {
-            return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f => {
+                var d1 = this.DistanceTo(point);
+                var d2 = f.DistanceTo(point);
+                if(f.DistanceTo(point)<this.DistanceTo(point)) {
+
+                }
+                return f.DistanceTo(point) < this.DistanceTo(point);
+            }).ToList(), point);
         }
 
         /// <summary>
@@ -256,9 +263,11 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> TraversedNeighbors(Vector3 point, bool parallel = false, bool includeSharedVertices = false, double completedRadius = 0)
         {
+            var count = 0;
+            var maxCount = this.CellComplex.GetFaces().Count;
             var neighbors = new List<Face>();
             var curNeighbor = this;
-            while (curNeighbor != null)
+            while (curNeighbor != null && count <= maxCount)
             {
                 neighbors.Add(curNeighbor);
                 if (curNeighbor.DistanceTo(point) <= completedRadius)
@@ -266,6 +275,7 @@ namespace Elements.Spatial.CellComplex
                     break;
                 }
                 curNeighbor = curNeighbor.GetClosestNeighbor(point, parallel, includeSharedVertices);
+                count += 1;
             }
             return neighbors;
         }

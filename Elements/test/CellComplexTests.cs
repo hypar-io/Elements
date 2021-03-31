@@ -114,14 +114,12 @@ namespace Elements.Tests
             }
 
             var curCell = complex.GetClosestCell(start);
-            var j = 0; // this shouldn't happen but in case of infinite traversal it's good to have some sanity check
+            var traversedCells = curCell.TraversedNeighbors(end);
 
-            while (j < 500 && curCell != null)
+            foreach (var cell in traversedCells)
             {
-                var rep = new Representation(new[] { curCell.GetGeometry() });
+                var rep = new Representation(new[] { cell.GetGeometry() });
                 this.Model.AddElement(new GeometricElement(new Transform(), pathMaterial, rep, false, Guid.NewGuid(), "Path"));
-                curCell = curCell.GetClosestNeighbor(end);
-                j += 1;
             }
         }
 
@@ -198,6 +196,8 @@ namespace Elements.Tests
 
             var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
 
+            var bigNumber = 100000;
+
             foreach (var edge in cellComplex.GetEdges())
             {
                 this.Model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
@@ -212,80 +212,52 @@ namespace Elements.Tests
 
             // Traverse cells upward
             var curNeighbor = baseCell;
-            var numNeighbors = 0;
-            var lastNeighbor = curNeighbor;
+            var curTarget = baseCell.GetBottomFace().GetGeometry().Centroid() + Vector3.ZAxis * bigNumber;
+            var traversedCells = baseCell.TraversedNeighbors(curTarget);
 
-            while (curNeighbor != null)
+            foreach (var cell in traversedCells)
             {
-                curNeighbor = curNeighbor.GetNeighbors(curNeighbor.GetTopFace());
-
-                if (curNeighbor != null)
-                {
-                    var rep = new Representation(new[] { curNeighbor.GetGeometry() });
-                    this.Model.AddElement(new GeometricElement(new Transform(), ZMaterial, rep, false, Guid.NewGuid(), "Test"));
-                    lastNeighbor = curNeighbor;
-                    numNeighbors += 1;
-                }
+                var rep = new Representation(new[] { cell.GetGeometry() });
+                this.Model.AddElement(new GeometricElement(new Transform(), ZMaterial, rep, false, Guid.NewGuid(), "Test"));
             }
 
-            Assert.True(numNeighbors == 9);
+            Assert.True(traversedCells.Count == 10);
 
             // Traverse faces from top cell
-            var baseFace = cellComplex.GetFace(lastNeighbor.TopFaceId);
+            var baseFace = cellComplex.GetFace(traversedCells.Last().TopFaceId);
             this.Model.AddElement(new Panel(baseFace.GetGeometry(), BaseMaterial));
 
             var curFaceNeighbor = baseFace;
-            var lastFaceNeighbor = curFaceNeighbor;
-            var numUNeighbors = 0;
+            var curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * bigNumber;
+            var curFaceTraversals = baseFace.TraversedNeighbors(curFaceTarget, true);
 
-            while (curFaceNeighbor != null && numUNeighbors < 30)
+            foreach (var face in curFaceTraversals)
             {
-                var pointFarU = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * 10000;
-                curFaceNeighbor = curFaceNeighbor.GetClosestNeighbor(pointFarU, true, false);
-
-                if (curFaceNeighbor != null)
-                {
-                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), UMaterial));
-                    lastFaceNeighbor = curFaceNeighbor;
-                    numUNeighbors += 1;
-                }
+                this.Model.AddElement(new Panel(face.GetGeometry(), UMaterial));
             }
 
-            Assert.True(numUNeighbors == 4);
+            Assert.True(curFaceTraversals.Count == 5);
 
-            var numVNeighbors = 0;
-            curFaceNeighbor = lastFaceNeighbor;
+            curFaceNeighbor = baseFace;
+            curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * bigNumber;
+            curFaceTraversals = curFaceNeighbor.TraversedNeighbors(curFaceTarget, true);
 
-            while (curFaceNeighbor != null)
+            foreach (var face in curFaceTraversals)
             {
-                var pointFarV = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * 10000;
-                curFaceNeighbor = curFaceNeighbor.GetClosestNeighbor(pointFarV, true, false);
-
-                if (curFaceNeighbor != null)
-                {
-                    this.Model.AddElement(new Panel(curFaceNeighbor.GetGeometry(), VMaterial));
-                    lastFaceNeighbor = curFaceNeighbor;
-                    numVNeighbors += 1;
-                }
+                this.Model.AddElement(new Panel(face.GetGeometry(), VMaterial));
             }
 
-            Assert.True(numVNeighbors == 9);
+            Assert.True(curFaceTraversals.Count == 10);
 
             var origin = new Vector3(50, 50);
 
-            var curEdge = lastFaceNeighbor.GetClosestEdge(origin);
+            var curEdge = curFaceTraversals.Last().GetClosestEdge(origin);
+            var traversedEdges = curEdge.TraversedNeighbors(origin);
 
-            var count = 0;
-
-            while (count < 1000 && curEdge != null)
+            foreach (var edge in traversedEdges)
             {
                 this.Model.AddElement(new ModelCurve(curEdge.GetGeometry(), LineMaterial));
-                curEdge = curEdge.GetClosestNeighbor(origin);
-                count += 1;
             }
-
-            Assert.False(count == 1000); // If it got this big, we are likely in an infinite traversal
-
         }
     }
 }
