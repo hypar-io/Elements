@@ -804,19 +804,19 @@ namespace Elements.Geometry.Tests
 
             var splitResults2 = convexPolygon.Split(convexSplitPolyline);
             Model.AddElements(splitResults2.Select(s => new Panel(s, random.NextMaterial())));
-            Assert.Equal(3, splitResults2.Count);
+            Assert.True(splitResults2.Count == 3);
 
             // doesn't intersect, no change
             var shiftedPolygon = convexPolygon.TransformedPolygon(new Transform(6, 0, 0));
             var splitResults3 = shiftedPolygon.Split(convexSplitPolyline);
-            Assert.Equal(1, splitResults3.Count);
+            Assert.True(splitResults3.Count == 1);
             Model.AddElements(splitResults3.Select(s => new Panel(s, random.NextMaterial())));
 
             // totally contained, no change
             var internalPl = new Polyline(new[] { new Vector3(6 - 2.5 + 0.5, -2), new Vector3(6 - 2.5 + 0.5, 2) });
             Model.AddElement(internalPl);
             var splitResults4 = shiftedPolygon.Split(internalPl);
-            Assert.Equal(1, splitResults4.Count);
+            Assert.True(splitResults4.Count == 1);
 
             // split with pass through vertex
             var cornerPg = new Polygon(new[] { new Vector3(0, 10), new Vector3(3, 10), new Vector3(3, 13), new Vector3(0, 13) });
@@ -826,7 +826,7 @@ namespace Elements.Geometry.Tests
             });
             Model.AddElements(cornerPg, cornerPl);
             var splitResults5 = cornerPg.Split(cornerPl);
-            Assert.Equal(2, splitResults5.Count);
+            Assert.True(splitResults5.Count == 2);
             Model.AddElements(splitResults5.Select(s => new Panel(s, random.NextMaterial())));
 
             // pass through incompletely, no change
@@ -836,13 +836,13 @@ namespace Elements.Geometry.Tests
             });
 
             var splitResults6 = cornerPg.Split(cornerPl2);
-            Assert.Equal(1, splitResults6.Count);
+            Assert.True(splitResults6.Count == 1);
 
             // overlap at edge, no change.ioU
             var rect2 = Polygon.Ngon(5, 5).TransformedPolygon(new Transform(-6, -8, 0));
             var splitCrv = rect2.Segments()[3];
             var splitResults7 = rect2.Split(splitCrv.ToPolyline(1));
-            Assert.Equal(1, splitResults7.Count);
+            Assert.True(splitResults7.Count == 1);
             Model.AddElements(splitResults7.Select(s => new Panel(s, random.NextMaterial())));
 
 
@@ -1313,6 +1313,19 @@ namespace Elements.Geometry.Tests
             var t = new Transform(2, 2, 2);
 
             Assert.Throws<Exception>(() => circle.TransformSegment(t, 0));
+        }
+
+        [Fact]
+        public void VerticalContainment() {
+            var point = new Vector3(8.874555, 6.112945, 30);
+            var polygon = new Polygon(new List<Vector3>() {
+                new Vector3(11.37475, 8.56224, -3),
+                new Vector3(6.37436, 3.66365, -3),
+                new Vector3(6.37436, 3.66365, 0),
+                new Vector3(11.37475, 8.56224, 0)
+            });
+            var contains = polygon.Contains(point, out var type);
+            Assert.Equal(contains, false);
         }
     }
 }

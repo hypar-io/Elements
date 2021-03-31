@@ -19,7 +19,6 @@ namespace Elements
         /// <param name="transform">The light's transform.</param>
         /// <param name="id">The unique identifier of the light.</param>
         /// <param name="name">The name of the light.</param>
-        /// <returns></returns>
         public DirectionalLight(Color color,
                                 Transform transform,
                                 double intensity = 1.0,
