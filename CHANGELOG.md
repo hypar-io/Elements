@@ -10,6 +10,7 @@
 - `Ray.Intersects(Polygon)`
 - `Vector3.DistanceTo(Polygon)`
 ### Changed
+- `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
 - `Solids.Import` is now public.
 - `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
 
@@ -58,7 +59,6 @@
 ## 0.8.3
 
 ### Added
-
 - `Profile.ToModelCurves()`
 - `Profile.Difference()`
 - `Profile.Intersection()`
