@@ -15,14 +15,14 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// The ID of this cell's bottom face. If set, it is also expected to be duplicated in list of faces.
         /// In the current implementation of CellComplex, this should always be set.
-        /// This may not be the case in the future, if Cells are no longer constrainted to vertical extrusions.
+        /// This may not be the case in the future, if Cells are no longer constrained to vertical extrusions.
         /// </summary>
         public ulong? BottomFaceId = null;
 
         /// <summary>
         /// The ID of this cell's top face. If set, it is also expected to be duplicated in list of faces.
         /// In the current implementation of CellComplex, this should always be set.
-        /// This may not be the case in the future, if Cells are no longer constrainted to vertical extrusions.
+        /// This may not be the case in the future, if Cells are no longer constrained to vertical extrusions.
         /// </summary>
         public ulong? TopFaceId = null;
 
