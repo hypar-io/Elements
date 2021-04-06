@@ -35,6 +35,10 @@ namespace Elements.Analysis
         [JsonProperty]
         private Boolean Discrete { get; } = false;
 
+        /// <summary>
+        /// Create a ColorScale from a list of colors. The scale will automatically have a domain from 0 to 1.
+        /// </summary>
+        /// <param name="colors"></param>
         public ColorScale(List<Color> colors)
         {
             this.Colors = colors;
@@ -49,7 +53,7 @@ namespace Elements.Analysis
         /// <param name="discrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        public ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
+        internal ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
             this.Discrete = discrete;
@@ -132,7 +136,6 @@ namespace Elements.Analysis
         /// approximating the provided value.
         /// </summary>
         /// <param name="t">A number within the numerical parameters from when you constructed your color scale. If this was initiated with colorCount, must be between 0 and 1.</param>
-        /// <param name="discrete">If true, returns exactly one of the colors initially created, rather than a smoothly interpolated value.</param>
         /// <returns>A color.</returns>
         public Color GetColor(double t)
         {
