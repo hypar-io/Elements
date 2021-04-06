@@ -135,15 +135,24 @@ references:
   commentId: T:Elements.Analysis.ColorScale
   fullName: Elements.Analysis.ColorScale
   nameWithType: ColorScale
-- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
-  name: ColorScale(List<Color>)
-  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__
-  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color})
-  name.vb: ColorScale(List(Of Color))
-  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>)
-  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color))
-  nameWithType: ColorScale.ColorScale(List<Color>)
-  nameWithType.vb: ColorScale.ColorScale(List(Of Color))
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{Elements.Domain1d})
+  name: ColorScale(List<Color>, List<Domain1d>)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Collections_Generic_List_Elements_Domain1d__
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{Elements.Domain1d})
+  name.vb: ColorScale(List(Of Color), List(Of Domain1d))
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>, System.Collections.Generic.List<Elements.Domain1d>)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color), System.Collections.Generic.List(Of Elements.Domain1d))
+  nameWithType: ColorScale.ColorScale(List<Color>, List<Domain1d>)
+  nameWithType.vb: ColorScale.ColorScale(List(Of Color), List(Of Domain1d))
+- uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{System.Double})
+  name: ColorScale(List<Color>, List<Double>)
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Collections_Generic_List_System_Double__
+  commentId: M:Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Collections.Generic.List{System.Double})
+  name.vb: ColorScale(List(Of Color), List(Of Double))
+  fullName: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List<Elements.Geometry.Color>, System.Collections.Generic.List<System.Double>)
+  fullName.vb: Elements.Analysis.ColorScale.ColorScale(System.Collections.Generic.List(Of Elements.Geometry.Color), System.Collections.Generic.List(Of System.Double))
+  nameWithType: ColorScale.ColorScale(List<Color>, List<Double>)
+  nameWithType.vb: ColorScale.ColorScale(List(Of Color), List(Of Double))
 - uid: Elements.Analysis.ColorScale.#ctor(System.Collections.Generic.List{Elements.Geometry.Color},System.Int32)
   name: ColorScale(List<Color>, Int32)
   href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale__ctor_System_Collections_Generic_List_Elements_Geometry_Color__System_Int32_
@@ -173,6 +182,19 @@ references:
   isSpec: "True"
   fullName: Elements.Analysis.ColorScale.Colors
   nameWithType: ColorScale.Colors
+- uid: Elements.Analysis.ColorScale.Domains
+  name: Domains
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_Domains
+  commentId: P:Elements.Analysis.ColorScale.Domains
+  fullName: Elements.Analysis.ColorScale.Domains
+  nameWithType: ColorScale.Domains
+- uid: Elements.Analysis.ColorScale.Domains*
+  name: Domains
+  href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_Domains_
+  commentId: Overload:Elements.Analysis.ColorScale.Domains
+  isSpec: "True"
+  fullName: Elements.Analysis.ColorScale.Domains
+  nameWithType: ColorScale.Domains
 - uid: Elements.Analysis.ColorScale.GetColorForValue(System.Double)
   name: GetColorForValue(Double)
   href: api/Elements.Analysis.ColorScale.html#Elements_Analysis_ColorScale_GetColorForValue_System_Double_
