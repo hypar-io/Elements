@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// A non-manifold cellular structure.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../Elements/test/CellComplexTests.cs?name=Elements_CellComplex_Example)]
+    /// [!code-csharp[Main](../../Elements/test/CellComplexTests.cs?name=example)]
     /// </example>
     public class CellComplex : Elements.Element
     {
