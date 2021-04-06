@@ -17,16 +17,15 @@ jobs:
           dotnet-version: 3.1.x
       - name: Setup docfx
         run: choco install docfx -y
-      - name: Setup AWS CLI
-        run: choco install awscli -y
       - name: Build docs
         run: |
           rm -r docs
           dotnet test --filter Category=Examples
           docfx ./doc/docfx.json -f
       - name: Deploy Docs
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-1
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws configure set default.region us-west-1
           aws sync ./docs s3://${{ secrets.AWS_BUCKET }}
