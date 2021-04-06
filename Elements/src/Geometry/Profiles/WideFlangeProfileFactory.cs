@@ -325,9 +325,9 @@ namespace Elements.Geometry.Profiles
     }
 
     /// <summary>
-    ///A singleton class which serves every Wide Flange section as defined by AISC.
+    /// A profile factory for wide flange profiles.
     /// </summary>
-    public sealed class WideFlangeProfileServer : ProfileServer<WideFlangeProfileType>
+    public sealed class WideFlangeProfileFactory : ProfileFactory<WideFlangeProfileType, WideFlangeProfile>
     {
         private static string _data = @"A,d,tw,bf,tf,T,k,k1,gage,rt,d/Af,Ix,Sx,rx,Iy,Sy,ry,Zx,Zy,J,Cw,Wno,Sw,Qf,Qw
 98.3,44,1.02,16,1.77,38-3/4,2.56,1.3125,5-1/2,4.12,1.56,31100,1410,17.8,1200,151,3.5,1620,236,74.4,536000,168,1190,279,805
@@ -647,90 +647,70 @@ namespace Elements.Geometry.Profiles
 4.71,5.01,0.24,5,0.36,3-1/2,0.66,0.4375,2-3/4,1.37,2.78,21.4,8.55,2.13,7.51,3,1.26,9.63,4.58,0.192,40.6,5.81,2.62,1.99,4.74
 3.83,4.16,0.28,4.06,0.345,2-5/8,0.595,0.5,2-1/4,1.1,2.97,11.3,5.46,1.72,3.86,1.9,1,6.28,2.92,0.151,14,3.87,1.36,1.24,3.09
 ";
-        private static WideFlangeProfileServer instance = null;
 
-        private WideFlangeProfileServer()
+        /// <summary>
+        /// Construct a wide flange profile factory.
+        /// </summary>
+        public WideFlangeProfileFactory() : base(_data) { }
+
+        /// <summary>
+        /// Get a profile by name.
+        /// </summary>
+        /// <param name="name">The name of the profile.</param>
+        /// <returns>A wide flange profile.</returns>
+        public override WideFlangeProfile GetProfileByName(string name)
         {
-            // Read the data.
-            using (var reader = new StringReader(_data))
-            {
-                var lineCount = -1;
-                while (true)
-                {
-                    lineCount++;
-                    var line = reader.ReadLine();
-
-                    if (lineCount == 0)
-                    {
-                        continue;
-                    }
-
-                    if (line != null)
-                    {
-                        var values = line.Split(',');
-                        var profileType = (WideFlangeProfileType)(lineCount - 1);
-                        try
-                        {
-                            var profile = new WideFlangeProfile(profileType.ToString(),
-                                Guid.NewGuid(),
-                                double.Parse(values[3]) * InchesToMeters,
-                                double.Parse(values[1]) * InchesToMeters,
-                                double.Parse(values[4]) * InchesToMeters,
-                                double.Parse(values[2]) * InchesToMeters)
-                            {
-                                A = double.Parse(values[0]),
-                                T = values[5],
-                                k = double.Parse(values[6]),
-                                k1 = double.Parse(values[7]),
-                                gage = values[8],
-                                rt = double.Parse(values[9]),
-                                dAf = double.Parse(values[10]),
-                                Ix = double.Parse(values[11]),
-                                Sx = double.Parse(values[12]),
-                                rx = double.Parse(values[13]),
-                                Iy = double.Parse(values[14]),
-                                Sy = double.Parse(values[15]),
-                                ry = double.Parse(values[16]),
-                                Zx = double.Parse(values[17]),
-                                Zy = double.Parse(values[18]),
-                                J = double.Parse(values[19]),
-                                Cw = double.Parse(values[20]),
-                                Wno = double.Parse(values[21]),
-                                Sw = double.Parse(values[22]),
-                                Qf = double.Parse(values[23]),
-                                Qw = double.Parse(values[24])
-                            };
-                            _profiles.Add(profileType, profile);
-                        }
-                        catch(Exception ex)
-                        {
-                            Console.WriteLine($"The section, {profileType.ToString()}, could not be loaded.");
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine(ex.StackTrace);
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
+            var profileType = (WideFlangeProfileType)Enum.Parse(typeof(WideFlangeProfileType), name, true);
+            return CreateProfile((int)profileType);
         }
 
         /// <summary>
-        /// The WideFlangeProfileServer singleton.
+        /// Get a profile by type.
         /// </summary>
-        public static WideFlangeProfileServer Instance
+        /// <param name="type">The type of the profile.</param>
+        /// <returns>A wide flange profile.</returns>
+        public override WideFlangeProfile GetProfileByType(WideFlangeProfileType type)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new WideFlangeProfileServer();
-                }
-                return instance;
-            }
+            return CreateProfile((int)type);
         }
 
+        protected override WideFlangeProfile CreateProfile(int typeIndex)
+        {
+            var profileType = (WideFlangeProfileType)Enum.ToObject(typeof(WideFlangeProfileType), typeIndex);
+
+            var values = _profileData[typeIndex];
+
+            var profile = new WideFlangeProfile(profileType.ToString(),
+                                Guid.NewGuid(),
+                                Units.InchesToMeters(double.Parse(values[3])),
+                                Units.InchesToMeters(double.Parse(values[1])),
+                                Units.InchesToMeters(double.Parse(values[4])),
+                                Units.InchesToMeters(double.Parse(values[2])))
+            {
+                A = double.Parse(values[0]),
+                T = values[5],
+                k = double.Parse(values[6]),
+                k1 = double.Parse(values[7]),
+                gage = values[8],
+                rt = double.Parse(values[9]),
+                dAf = double.Parse(values[10]),
+                Ix = double.Parse(values[11]),
+                Sx = double.Parse(values[12]),
+                rx = double.Parse(values[13]),
+                Iy = double.Parse(values[14]),
+                Sy = double.Parse(values[15]),
+                ry = double.Parse(values[16]),
+                Zx = double.Parse(values[17]),
+                Zy = double.Parse(values[18]),
+                J = double.Parse(values[19]),
+                Cw = double.Parse(values[20]),
+                Wno = double.Parse(values[21]),
+                Sw = double.Parse(values[22]),
+                Qf = double.Parse(values[23]),
+                Qw = double.Parse(values[24])
+            };
+
+            return profile;
+        }
     }
 }

@@ -1,4 +1,5 @@
 #pragma warning disable CS1591
+#pragma warning disable CS1570
 
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Validators;
+using Elements.Geometry.Solids;
 
 namespace Elements
 {
@@ -47,6 +49,8 @@ namespace Elements
         /// This operation recursively searches the element's properties
         /// for element sub-properties and adds those elements to the elements
         /// dictionary before adding the element itself.
+        /// Properties of the following types are be supported for introspection:
+        /// Element, IList<Element>, IDictionary<Element>, Representation, IList<SolidOperation>
         /// </summary>
         /// <param name="element">The element to add to the model.</param>
         /// <param name="gatherSubElements">Should sub-elements in properties be
@@ -56,6 +60,14 @@ namespace Elements
             if (element == null || this.Elements.ContainsKey(element.Id))
             {
                 return;
+            }
+
+            // Some elements compute profiles and transforms
+            // during UpdateRepresentation. Call UpdateRepresentation
+            // here to ensure these values are correct in the JSON.
+            if (element is GeometricElement)
+            {
+                ((GeometricElement)element).UpdateRepresentations();
             }
 
             if (gatherSubElements)
@@ -162,19 +174,11 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                // Some elements compute profiles and transforms
-                // during UpdateRepresentation. Call UpdateRepresentation
-                // here to ensure these values are correct in the JSON.
-                if (kvp.Value is GeometricElement)
-                {
-                    ((GeometricElement)kvp.Value).UpdateRepresentations();
-                }
                 exportModel.AddElement(kvp.Value);
             }
             exportModel.Transform = this.Transform;
-
             return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
-                                                               indent ? Formatting.Indented : Formatting.None);
+                                                           indent ? Formatting.Indented : Formatting.None);
         }
 
         /// <summary>
@@ -241,39 +245,45 @@ namespace Elements
                 return elements;
             }
 
-            t.GetCustomAttribute(typeof(JsonIgnoreAttribute));
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                         .Where(p => p.GetCustomAttribute(typeof(JsonIgnoreAttribute)) == null);
-            foreach (var p in props)
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
+            foreach (var p in constrainedProps)
             {
-                var pValue = p.GetValue(obj, null);
-                if (pValue == null)
+                try
                 {
-                    continue;
-                }
-
-                var elems = pValue as IList;
-                if (elems != null)
-                {
-                    foreach (var item in elems)
+                    var pValue = p.GetValue(obj, null);
+                    if (pValue == null)
                     {
-                        elements.AddRange(RecursiveGatherSubElements(item));
+                        continue;
                     }
-                    continue;
-                }
 
-                // Get the properties dictionaries.
-                var dict = pValue as IDictionary;
-                if (dict != null)
-                {
-                    foreach (var value in dict.Values)
+                    var elems = pValue as IList;
+                    if (elems != null)
                     {
-                        elements.AddRange(RecursiveGatherSubElements(value));
+                        foreach (var item in elems)
+                        {
+                            elements.AddRange(RecursiveGatherSubElements(item));
+                        }
+                        continue;
                     }
-                    continue;
-                }
 
-                elements.AddRange(RecursiveGatherSubElements(pValue));
+                    // Get the properties dictionaries.
+                    var dict = pValue as IDictionary;
+                    if (dict != null)
+                    {
+                        foreach (var value in dict.Values)
+                        {
+                            elements.AddRange(RecursiveGatherSubElements(value));
+                        }
+                        continue;
+                    }
+
+                    elements.AddRange(RecursiveGatherSubElements(pValue));
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"The {p.Name} property or one of its children was not valid for introspection. Check the inner exception for details.", ex);
+                }
             }
 
             if (e != null)
@@ -282,6 +292,60 @@ namespace Elements
             }
 
             return elements;
+        }
+
+        /// <summary>
+        /// Check whether a type is valid for introspection.
+        /// TODO: When representations become elements, we should
+        /// remove the inclusion for Representation, but keep that
+        /// for SolidOperation.
+        /// </summary>
+        /// <param name="t">The type to check.</param>
+        /// <returns>Return true if a type is valid for introspection, otherwise false.</returns>
+        internal static bool IsValidForRecursiveAddition(Type t)
+        {
+            if (t.IsGenericType)
+            {
+                var genT = t.GetGenericArguments();
+                if (genT.Length == 1)
+                {
+                    if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
+                    {
+                        if (!IsValidListType(genT[0]))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }
+                else if (genT.Length == 2)
+                {
+                    if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
+                    {
+                        if (typeof(Element).IsAssignableFrom(genT[1]))
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+
+            if (t.IsArray)
+            {
+                return typeof(Element).IsAssignableFrom(t.GetElementType());
+            }
+
+            return typeof(Element).IsAssignableFrom(t)
+                   || typeof(Representation).IsAssignableFrom(t)
+                   || typeof(SolidOperation).IsAssignableFrom(t);
+        }
+
+        private static bool IsValidListType(Type t)
+        {
+            return typeof(Element).IsAssignableFrom(t)
+                   || typeof(SolidOperation).IsAssignableFrom(t);
         }
     }
 }

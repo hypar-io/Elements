@@ -32,11 +32,15 @@ namespace Elements
 
         /// <summary>
         /// Update the ContentElement representation with a solid of the
-        /// Bounding Box.  This is used in the absence of finding a the
+        /// Bounding Box. This is used in the absence of finding a
         /// Gltf for import.
         /// </summary>
         public override void UpdateRepresentations()
         {
+            if (!BoundingBox.IsValid() || BoundingBox.IsDegenerate())
+            {
+                return;
+            }
             var vertices = new List<Vector3> { BoundingBox.Min, BoundingBox.Max };
             var bottomProfile = new Polygon(new List<Vector3>{
                             new Vector3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z),

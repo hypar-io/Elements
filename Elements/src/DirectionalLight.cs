@@ -7,27 +7,10 @@ namespace Elements
     /// A directional light.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../Elements/test/LightTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/LightTests.cs?name=directional_example)]
     /// </example>
-    public class DirectionalLight : Element
+    public class DirectionalLight : Light
     {
-        /// <summary>
-        /// The color of the light.
-        /// The color's alpha value will be ignored.
-        /// </summary>
-        public Color Color { get; set; }
-
-        /// <summary>
-        /// The intensity of the light measured in lux.
-        /// </summary>
-        public double Intensity { get; set; }
-
-        /// <summary>
-        /// The light's transform.
-        /// The light will be aimed along the transform's -Z axis.
-        /// </summary>
-        public Transform Transform { get; set; }
-
         /// <summary>
         /// Create a directional light.
         /// </summary>
@@ -36,17 +19,17 @@ namespace Elements
         /// <param name="transform">The light's transform.</param>
         /// <param name="id">The unique identifier of the light.</param>
         /// <param name="name">The name of the light.</param>
-        /// <returns></returns>
         public DirectionalLight(Color color,
                                 Transform transform,
                                 double intensity = 1.0,
                                 Guid id = default(Guid),
-                                string name = "Sun") : base(id != default(Guid) ? id : Guid.NewGuid(),
+                                string name = "Sun") : base(intensity,
+                                                            color == null ? Colors.White : color,
+                                                            transform == null ? new Transform() : transform,
+                                                            id == default(Guid) ? Guid.NewGuid() : id,
                                                             name)
         {
-            this.Color = color;
-            this.Intensity = intensity;
-            this.Transform = transform;
+            this.LightType = LightType.Directional;
         }
     }
 }

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Grid2d
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -220,7 +220,7 @@ cell.V.DivideByCount(4);
 var floor = new Floor(new Profile((Polygon)grid.GetCellGeometry()), 0.5, new Transform(0, 0, -0.51));
 
 // Create model curves from all subdivided cells of the grid
-var modelCurves = grid.GetCells().Select(c =&gt; new ModelCurve(c.GetCellGeometry()));
+var modelCurves = grid.ToModelCurves();
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -1326,6 +1326,10 @@ If the cell falls completely outside of the boundary, an empty array will be ret
       </tr>
     </tbody>
   </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Spatial_Grid2d_Elements_Geometry_Transform_Elements_Material_">ModelCurveExtensions.ToModelCurves(Grid2d, Transform, Material)</a>
+  </div>
 </article>
           </div>
           

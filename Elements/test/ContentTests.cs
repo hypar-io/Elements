@@ -43,7 +43,7 @@ namespace Elements.Tests
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
 
 
-            var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, Guid.NewGuid(), "test");
+            var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, new List<Element>(), Guid.NewGuid(), "test");
 
             var savePath = "../../../models/ContentCatalog.json";
             var json = testCatalog.ToJson();
@@ -92,8 +92,13 @@ namespace Elements.Tests
             var twoDuck = duckType.CreateInstance(new Transform(new Vector3(15, 0, 0)), "A Duck");
             model.AddElement(twoDuck);
             // </example>
-            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             model.ToGlTF("./models/ContentInstancing.glb");
+            var firstRun = sw.Elapsed.TotalSeconds;
+            sw.Restart();
+            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            var secondRun = sw.Elapsed.TotalSeconds;
+            Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }
     }
 }

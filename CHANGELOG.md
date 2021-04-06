@@ -1,11 +1,60 @@
 # Changelog
 
-## 0.8.3
+## 0.8.5
 
 ### Added
-
+- `Elements.Spatial.CellComplex`
+- `Grid2d.ToModelCurves()`
+- Alpha release of `Hypar.Elements.Components`
+- `Polyline.OffsetOnSide`
+- `Ray.Intersects(Polygon)`
+- `Vector3.DistanceTo(Polygon)`
 ### Changed
 - `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
+- `Solids.Import` is now public.
+- `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
+
+### Fixed
+## 0.8.4
+
+### Added
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
+- `Elements.Light`
+- `Elements.PointLight`
+- `Elements.SpotLight`
+- `Identity.AddOverrideIdentity`
+- `Material.NormalTexture`
+- `Polygon.PointInternal()`
+- `Topography.DepthMesh`
+- `Topography.DepthBelowMinimumElevation`
+- `Topography.AbsoluteMinimumElevation`
+- `Material.RepeatTexture`
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
+- `Polygon.Split(Polyline)`
+- `Polygon.Split(IEnumerable<Polyline> polylines)`
+- `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
+- `Elements.Spatial.HalfEdgeGraph2d`
+  - `.Construct()`
+  - `.Polygonize()`
+- Release helper github action
+
+### Changed
+- `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
+- `SHSProfile`
+- `SHSProfileFactory`
+- `RHSProfile`
+- `RHSProfileFactory`
+- `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
+- Adding glb elements to a model uses a cache rather than fetching the stream every time.
+- `ProfileServer` is now `ProfileFactory`
+- `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- First alpha after minor release logic was fixed
+- `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
+- TypeGeneratorTests weren't actually running.
+- `Profile.Split(IEnumerable<Profile>, Polyline p)` now uses improved logic
 
 ## 0.8.3
 
@@ -32,7 +81,9 @@
 - `Random.NextColor()` and `Random.NextMaterial()`
 - `Validator.DisableValidationOnConstruction`
 - `Vector3.ComputeDefaultBasisVectors()`
+
 ### Changed
+
 - Make MeshConverter deserialization more flexible to accommodate a schema used in function `input_schema`.
 - Prevent the Polygon / Polyline constructors from throwing an exception on duplicate vertices, by removing duplicates automatically.
 - Make `Grid1d` and `Grid2d` serializable
@@ -40,11 +91,13 @@
 - All solids and csgs will now have planar texture coordinates.
 - Triangles are now validated to check for 3 distinct vertex positions.
 
-
 ### Fixed
+
 - Fixed a bug where `Polygon.UnionAll` was sometimes returning null when it shouldn't (Thanks @M-Juliani !)
 - Fixed [#517](https://github.com/hypar-io/Elements/issues/517)
 - Fixed a bug where Grid2d subcells would not split correctly with `SplitAtPoint`
+- Fixed [#528](https://github.com/hypar-io/Elements/issues/528)
+
 ## 0.8.2
 
 ### Changed

@@ -137,9 +137,10 @@ namespace Elements.Geometry
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
-            var d = MinimumChordLength;
             var r = this.Radius;
-            var t = 2 * Math.Asin(d / (2 * r));
+            var two_r = 2 * r;
+            var d = Math.Min(MinimumChordLength, two_r);
+            var t = 2 * Math.Asin(d / two_r);
             var div = (int)Math.Ceiling((DegToRad(partialAngleSpan)) / t);
 
             var parameters = new double[div + 1];

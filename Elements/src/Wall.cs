@@ -117,7 +117,7 @@ namespace Elements
             {
                 this.Transform = transform;
             }
-            this.Representation.SolidOperations.Add(new Import(geometry));
+            this.Representation.SolidOperations.Add(new ConstructedSolid(geometry));
         }
     }
 }

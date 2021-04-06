@@ -130,7 +130,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this ray intersect with the provided Solid? 
+        /// Does this ray intersect with the provided Solid?
         /// </summary>
         /// <param name="solid">The Solid to intersect with.</param>
         /// <param name="result">The intersection result.</param>
@@ -175,6 +175,34 @@ namespace Elements.Geometry
                 {
                     curveList = curveList.Union(voids.SelectMany(v => v.Segments()));
                 }
+                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
+
+                if (Polygon.Contains(curveList, transformedIntersection, out _))
+                {
+                    result = intersection;
+                    return true;
+                }
+            }
+            result = default(Vector3);
+            return false;
+        }
+
+        /// <summary>
+        /// Does this ray intersect the provided polygon area?
+        /// </summary>
+        /// <param name="polygon">The Polygon to intersect with.</param>
+        /// <param name="result">The intersection result.</param>
+        /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
+        public bool Intersects(Polygon polygon, out Vector3 result)
+        {
+            var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
+            if (Intersects(plane, out Vector3 intersection))
+            {
+                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
+                var transformFromPolygon = new Transform(transformToPolygon);
+                transformFromPolygon.Invert();
+                var transformedIntersection = transformFromPolygon.OfVector(intersection);
+                IEnumerable<Line> curveList = polygon.Segments();
                 curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 
                 if (Polygon.Contains(curveList, transformedIntersection, out _))
@@ -238,7 +266,7 @@ namespace Elements.Geometry
         /// <param name="topo">The topography.</param>
         /// <param name="result">The location of intersection.</param>
         /// <returns>True if an intersection result occurs.
-        /// The type of intersection should be checked in the intersection result. 
+        /// The type of intersection should be checked in the intersection result.
         /// False if no intersection occurs.</returns>
         public bool Intersects(Topography topo, out Vector3 result)
         {

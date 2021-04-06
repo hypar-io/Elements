@@ -55,6 +55,11 @@ namespace Elements.Serialization.glTF
 
         internal static byte[] CombineBufferAndFixRefs(this Gltf gltf, byte[][] buffers)
         {
+            if (buffers.All(b => b.Length == 0))
+            {
+                return new byte[0];
+            }
+
             var fullBuffer = new List<byte>();
             for (int i = 0; i < buffers.Length; i++)
             {

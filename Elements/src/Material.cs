@@ -10,6 +10,17 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
+        /// Should the texture be repeated?
+        /// </summary>
+        /// <value>The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</value>
+        public bool RepeatTexture { get; set; } = true;
+
+        /// <summary>
+        /// A relative path to a jpg or png image file to be used as a normal texture.
+        /// </summary>
+        public string NormalTexture { get; set; }
+
+        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>
@@ -47,7 +58,8 @@ namespace Elements
                  texture,
                  doubleSided,
                  id != default(Guid) ? id : Guid.NewGuid(),
-                 name){}
+                 name)
+        { }
 
         /// <summary>
         /// Is this material equal to the provided material?

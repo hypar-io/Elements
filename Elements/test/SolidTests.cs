@@ -12,9 +12,11 @@ using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
-    public class SolidTests
+    public class SolidTests : ModelTest
     {
         private readonly ITestOutputHelper output;
+
+        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
 
         public SolidTests(ITestOutputHelper output)
         {
@@ -112,7 +114,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidCollinearPolyline()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1), new Vector3(0, 5, 1) });
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -127,7 +129,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidPolyline()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Polyline(new[] { new Vector3(-2, 2, 0), new Vector3(0, 2, 0), new Vector3(0, 3, 1), new Vector3(0, 5, 1), new Vector3(-2, 6, 0) });
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -142,7 +144,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidArc()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = new Arc(Vector3.Origin, 5, 0, 90);
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -157,7 +159,7 @@ namespace Elements.Tests
         [Fact]
         public void SweptSolidPolygon()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
             var path = Polygon.Ngon(12, 5);
             var solid = Solid.SweepFaceAlongCurve(profile.Perimeter, null, path);
             foreach (var e in solid.Edges.Values)
@@ -191,6 +193,36 @@ namespace Elements.Tests
             Assert.Equal(12, newSolid.Edges.Count);
             Assert.Equal(6, newSolid.Faces.Count);
             newSolid.ToGlb("models/SweptSolidDeserialized.glb");
+        }
+
+        [Fact]
+        public void ConstructedSolid()
+        {
+            Name = nameof(ConstructedSolid);
+            var solid = new Solid();
+            var A = new Vector3(0, 0, 0);
+            var B = new Vector3(1, 0, 0);
+            var C = new Vector3(1, 1, 0);
+            var D = new Vector3(0, 1, 0);
+            var E = new Vector3(0, 0, 1);
+            var F = new Vector3(1, 0, 1);
+            var G = new Vector3(1, 1, 1);
+            var H = new Vector3(0, 1, 1);
+            solid.AddFace(new Polygon(new[] { A, B, C, D }));
+            solid.AddFace(new Polygon(new[] { E, F, G, H }));
+            solid.AddFace(new Polygon(new[] { A, B, F, E }));
+            solid.AddFace(new Polygon(new[] { B, C, G, F }));
+            solid.AddFace(new Polygon(new[] { C, D, H, G }));
+            solid.AddFace(new Polygon(new[] { D, A, E, H }));
+
+            var emptySolid = new ConstructedSolid(new Solid(), false);
+            var import = new ConstructedSolid(solid, false);
+            var representation = new Representation(new[] { import });
+            var emptyRep = new Representation(new[] { emptySolid });
+            var userElement = new GeometricElement(new Transform(), BuiltInMaterials.Default, representation, false, Guid.NewGuid(), "Import");
+            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import");
+            Model.AddElement(userElement);
+            Model.AddElement(userElementWithEmptySolid);
         }
     }
 
