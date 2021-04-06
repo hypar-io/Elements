@@ -158,6 +158,17 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DistanceToPolygon()
+        {
+            var squareSize = 10;
+            var rect = Polygon.Rectangle(squareSize, squareSize);
+            Assert.Equal(new Vector3().DistanceTo(rect), 0);
+            Assert.Equal(new Vector3(-5, 0).DistanceTo(rect), 0);
+            Assert.Equal(new Vector3(10, 0).DistanceTo(rect), 5);
+            Assert.Equal(new Vector3(0, 0, 5).DistanceTo(rect), 5);
+        }
+
+        [Fact]
         public void AreCoplanar()
         {
             var a = Vector3.Origin;
@@ -190,8 +201,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ToleranceInvariance() {
-            var polygon = new Polygon(new [] {
+        public void ToleranceInvariance()
+        {
+            var polygon = new Polygon(new[] {
                 new Vector3(0,0),
                 new Vector3(Vector3.EPSILON * 1.1, 0),
                 new Vector3(4, 0),
@@ -201,7 +213,7 @@ namespace Elements.Tests
             var rotation = new Transform();
             rotation.Rotate(Vector3.ZAxis, 45);
             var rotatedPolygon = polygon.TransformedPolygon(rotation);
-            // Should execute without exception. 
+            // Should execute without exception.
         }
 
         [Fact]

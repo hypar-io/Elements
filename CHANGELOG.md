@@ -3,9 +3,12 @@
 ## 0.8.5
 
 ### Added
+- `Elements.Spatial.CellComplex`
 - `Grid2d.ToModelCurves()`
 - Alpha release of `Hypar.Elements.Components`
 - `Polyline.OffsetOnSide`
+- `Ray.Intersects(Polygon)`
+- `Vector3.DistanceTo(Polygon)`
 ### Changed
 - `Solids.Import` is now public.
 - `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
@@ -14,6 +17,8 @@
 ## 0.8.4
 
 ### Added
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
