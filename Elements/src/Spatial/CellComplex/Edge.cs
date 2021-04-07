@@ -147,11 +147,11 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest neighboring Edge to a point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public Edge GetClosestNeighbor(Vector3 point)
+        public Edge GetClosestNeighbor(Vector3 target)
         {
-            return Edge.GetClosest<Edge>(this.GetNeighbors().Where(e => e.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Edge.GetClosest<Edge>(this.GetNeighbors().Where(e => e.DistanceTo(target) < this.DistanceTo(target)).ToList(), target);
         }
 
         /// <summary>
@@ -164,28 +164,16 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Traverse the neighbors of this Edge toward the starting point.
+        /// Traverse the neighbors of this Edge toward the target point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
-        /// <returns></returns>
-        public List<Edge> TraversedNeighbors(Vector3 point, double completedRadius = 0)
+        /// <returns>A collection of traversed Edges, including the starting Edge.</returns>
+        public List<Edge> TraverseNeighbors(Vector3 target, double completedRadius = 0)
         {
-            var count = 0;
             var maxCount = this.CellComplex.GetEdges().Count;
-            var neighbors = new List<Edge>();
-            var curNeighbor = this;
-            while (curNeighbor != null && count <= maxCount)
-            {
-                neighbors.Add(curNeighbor);
-                if (curNeighbor.DistanceTo(point) <= completedRadius)
-                {
-                    break;
-                }
-                curNeighbor = curNeighbor.GetClosestNeighbor(point);
-                count += 1;
-            }
-            return neighbors;
+            Func<Edge, Edge> getNextNeighbor = (Edge curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
+            return ChildBase.TraverseNeighbors<Edge>(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }

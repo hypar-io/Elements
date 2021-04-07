@@ -222,36 +222,24 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest associated cell to the supplied point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public Cell GetClosestNeighbor(Vector3 point)
+        public Cell GetClosestNeighbor(Vector3 target)
         {
-            return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(target) < this.DistanceTo(target)).ToList(), target);
         }
 
         /// <summary>
-        /// Traverse the neighbors of this Cell toward the starting point.
+        /// Traverse the neighbors of this Cell toward the target point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
-        /// <returns></returns>
-        public List<Cell> TraversedNeighbors(Vector3 point, double completedRadius = 0)
+        /// <returns>A collection of traversed Cells, including the starting Cell.</returns>
+        public List<Cell> TraverseNeighbors(Vector3 target, double completedRadius = 0)
         {
-            var count = 0;
             var maxCount = this.CellComplex.GetCells().Count;
-            var neighbors = new List<Cell>();
-            var curNeighbor = this;
-            while (curNeighbor != null && count <= maxCount)
-            {
-                neighbors.Add(curNeighbor);
-                if (curNeighbor.DistanceTo(point) <= completedRadius)
-                {
-                    break;
-                }
-                curNeighbor = curNeighbor.GetClosestNeighbor(point);
-                count += 1;
-            }
-            return neighbors;
+            Func<Cell, Cell> getNextNeighbor = (Cell curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
+            return ChildBase.TraverseNeighbors<Cell>(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }

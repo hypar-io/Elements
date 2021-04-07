@@ -10,12 +10,15 @@ namespace Elements.Tests
 {
     public class CellComplexTests : ModelTest
     {
-        private static Material DefaultPanelMaterial = new Material("Default", new Color(0.3, 0.3, 0.3, 0.5));
-        private static Material ZMaterial = new Material("Z", new Color(0, 0, 1, 0.5));
-        private static Material UMaterial = new Material("U", new Color(1, 0, 0, 0.5));
-        private static Material VMaterial = new Material("V", new Color(0, 1, 0, 0.5));
-        private static Material BaseMaterial = new Material("Base", new Color(0, 0, 0, 1));
-        private static Material LineMaterial = new Material("Line", new Color(1, 0, 1, 1));
+        private static readonly Material DefaultPanelMaterial = new Material("Default", new Color(0.3, 0.3, 0.3, 0.5));
+        private static readonly Material ZMaterial = new Material("Z", new Color(0, 0, 1, 0.5));
+        private static readonly Material UMaterial = new Material("U", new Color(1, 0, 0, 0.5));
+        private static readonly Material VMaterial = new Material("V", new Color(0, 1, 0, 0.5));
+        private static readonly Material BaseMaterial = new Material("Base", new Color(0, 0, 0, 1));
+        private static readonly Material LineMaterial = new Material("Line", new Color(1, 0, 1, 1));
+
+        // Used to create target points when generally traversing in a direction, rather than toward a specific point
+        private static readonly double BIG_NUMBER = 1000000;
 
         // Utility
         private static CellComplex MakeASimpleCellComplex(
@@ -67,6 +70,14 @@ namespace Elements.Tests
             return cellComplex;
         }
 
+        private static void DrawCellComplexSkeleton(Model model, CellComplex cellComplex)
+        {
+            foreach (var edge in cellComplex.GetEdges())
+            {
+                model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
+            }
+        }
+
         [Fact, Trait("Category", "Examples")]
         public void CellComplexExample()
         {
@@ -116,7 +127,7 @@ namespace Elements.Tests
             }
 
             var curCell = complex.GetClosestCell(start);
-            var traversedCells = curCell.TraversedNeighbors(end);
+            var traversedCells = curCell.TraverseNeighbors(end);
 
             foreach (var cell in traversedCells)
             {
@@ -193,18 +204,13 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CellComplexTraversal()
+        public void CellComplexTraverseCells()
         {
-            this.Name = "Elements_Spatial_CellComplex_Traversal";
+            this.Name = "Elements_Spatial_CellComplex_TraverseCells";
 
             var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
 
-            var bigNumber = 100000;
-
-            foreach (var edge in cellComplex.GetEdges())
-            {
-                this.Model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
-            }
+            DrawCellComplexSkeleton(this.Model, cellComplex);
 
             var baseCell = cellComplex.GetCells().First();
 
@@ -215,8 +221,8 @@ namespace Elements.Tests
 
             // Traverse cells upward
             var curNeighbor = baseCell;
-            var curTarget = baseCell.GetBottomFace().GetGeometry().Centroid() + Vector3.ZAxis * bigNumber;
-            var traversedCells = baseCell.TraversedNeighbors(curTarget);
+            var curTarget = baseCell.GetBottomFace().GetGeometry().Centroid() + Vector3.ZAxis * BIG_NUMBER;
+            var traversedCells = baseCell.TraverseNeighbors(curTarget);
 
             foreach (var cell in traversedCells)
             {
@@ -225,14 +231,25 @@ namespace Elements.Tests
             }
 
             Assert.True(traversedCells.Count == 10);
+        }
 
-            // Traverse faces from top cell
-            var baseFace = cellComplex.GetFace(traversedCells.Last().TopFaceId);
+
+        [Fact]
+        public void CellComplexTraverseFaces()
+        {
+            this.Name = "Elements_Spatial_CellComplex_TraverseFaces";
+
+            var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
+
+            DrawCellComplexSkeleton(this.Model, cellComplex);
+
+            // Traverse faces from top corner
+            var baseFace = cellComplex.GetClosestFace(new Vector3(-BIG_NUMBER, -BIG_NUMBER, BIG_NUMBER));
             this.Model.AddElement(new Panel(baseFace.GetGeometry(), BaseMaterial));
 
             var curFaceNeighbor = baseFace;
-            var curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * bigNumber;
-            var curFaceTraversals = baseFace.TraversedNeighbors(curFaceTarget, true);
+            var curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * BIG_NUMBER;
+            var curFaceTraversals = baseFace.TraverseNeighbors(curFaceTarget, true);
 
             foreach (var face in curFaceTraversals)
             {
@@ -242,8 +259,8 @@ namespace Elements.Tests
             Assert.True(curFaceTraversals.Count == 5);
 
             curFaceNeighbor = baseFace;
-            curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * bigNumber;
-            curFaceTraversals = curFaceNeighbor.TraversedNeighbors(curFaceTarget, true);
+            curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * BIG_NUMBER;
+            curFaceTraversals = curFaceNeighbor.TraverseNeighbors(curFaceTarget, true);
 
             foreach (var face in curFaceTraversals)
             {
@@ -251,15 +268,27 @@ namespace Elements.Tests
             }
 
             Assert.True(curFaceTraversals.Count == 10);
+        }
 
-            var origin = new Vector3(50, 50);
+        [Fact]
+        public void CellComplexTraverseEdges()
+        {
+            this.Name = "Elements_Spatial_CellComplex_TraverseEdges";
 
-            var curEdge = curFaceTraversals.Last().GetClosestEdge(origin);
-            var traversedEdges = curEdge.TraversedNeighbors(origin);
+            var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
+
+            DrawCellComplexSkeleton(this.Model, cellComplex);
+
+            var origin = new Vector3(-BIG_NUMBER, -BIG_NUMBER, -BIG_NUMBER);
+            var target = new Vector3(BIG_NUMBER, BIG_NUMBER, BIG_NUMBER);
+
+            var curEdge = cellComplex.GetClosestEdge(origin);
+
+            var traversedEdges = curEdge.TraverseNeighbors(target);
 
             foreach (var edge in traversedEdges)
             {
-                this.Model.AddElement(new ModelCurve(curEdge.GetGeometry(), LineMaterial));
+                this.Model.AddElement(new ModelCurve(edge.GetGeometry(), LineMaterial));
             }
         }
     }

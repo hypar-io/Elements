@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
+using System;
 
 namespace Elements.Spatial.CellComplex
 {
@@ -72,6 +73,34 @@ namespace Elements.Spatial.CellComplex
                 return null;
             }
             return candidates.OrderBy(c => c.DistanceTo(point)).ToList()[0];
+        }
+
+        /// <summary>
+        /// A utility to traverse the neighbors of a traversable child.
+        /// </summary>
+        /// <param name="startChild">Starting child.</param>
+        /// <param name="maxCount">The number of traversals after which this will abort. This is a safety measure against infinite loops.</param>
+        /// <param name="target">Target to traverse toward.</param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <param name="getNextNeighbor">Provide the method by which we will grab the next neighbor in the traversal series.</param>
+        /// <typeparam name="T">The derived child class.</typeparam>
+        /// <returns>A collection of traversed children, including the starting child.</returns>
+        internal static List<T> TraverseNeighbors<T>(T startChild, int maxCount, Vector3 target, double completedRadius, Func<T, T> getNextNeighbor) where T : ChildBase
+        {
+            var count = 0;
+            var neighbors = new List<T>();
+            var curNeighbor = startChild;
+            while (curNeighbor != null && count <= maxCount)
+            {
+                neighbors.Add(curNeighbor);
+                if (curNeighbor.DistanceTo(target) <= completedRadius)
+                {
+                    break;
+                }
+                curNeighbor = getNextNeighbor(curNeighbor);
+                count += 1;
+            }
+            return neighbors;
         }
     }
 
