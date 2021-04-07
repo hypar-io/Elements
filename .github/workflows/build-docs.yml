@@ -21,10 +21,11 @@ jobs:
         run: |
           rm -r docs
           dotnet test --filter Category=Examples
-          docfx ./doc/docfx.json -f --serve
-      - name: Commit docs
-        uses: EndBug/add-and-commit@v7
-        with:
-          author_name: github-actions[bot]
-          author_email: github-actions[bot]@users.noreply.github.com
-          message: "update docs [skip ci]"
+          docfx ./doc/docfx.json -f
+      - name: Deploy Docs
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-1
+        run: |
+          aws s3 sync ./docs s3://${{ secrets.AWS_BUCKET }}

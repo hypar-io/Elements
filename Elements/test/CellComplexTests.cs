@@ -67,10 +67,12 @@ namespace Elements.Tests
             return cellComplex;
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Examples")]
         public void CellComplexExample()
         {
-            this.Name = "Elements_CellComplex_Example";
+            this.Name = "Elements_Spatial_CellComplex_CellComplex";
+
+            // <example>
 
             // Assemble CellComplex from Grid2d
             var numLevels = 10;
@@ -121,12 +123,13 @@ namespace Elements.Tests
                 var rep = new Representation(new[] { cell.GetGeometry() });
                 this.Model.AddElement(new GeometricElement(new Transform(), pathMaterial, rep, false, Guid.NewGuid(), "Path"));
             }
+            // </example>
         }
 
         [Fact]
         public void CellComplexSerializesAndDeserializes()
         {
-            this.Name = "Elements_CellComplex_Serialization";
+            this.Name = "Elements_Spatial_CellComplex_Serialization";
 
             var uDirection = new Vector3(1, 1, 0).Unitized();
             var cellComplex = MakeASimpleCellComplex(uDirection: uDirection);
@@ -192,7 +195,7 @@ namespace Elements.Tests
         [Fact]
         public void CellComplexTraversal()
         {
-            this.Name = "Elements_CellComplex_Traversal";
+            this.Name = "Elements_Spatial_CellComplex_Traversal";
 
             var cellComplex = MakeASimpleCellComplex(numLevels: 10, uNumCells: 5, vNumCells: 10);
 
