@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Elements.Interfaces;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
+    public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>, INullable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations of 1e-5.
@@ -26,6 +28,12 @@ namespace Elements.Geometry
         public static Vector3 Origin
         {
             get { return _origin; }
+        }
+
+        public Vector3 CoerceNull()
+        {
+            Console.WriteLine("Coercing null value!");
+            return new Vector3();
         }
 
         /// <summary>
