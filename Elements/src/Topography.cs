@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Analysis;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
@@ -284,7 +285,7 @@ namespace Elements
                 Vertex l1 = null;
                 var i1 = u * rowWidth;
                 var v1Existing = mesh.Vertices[i1];
-                var v1 = mesh.AddVertex(v1Existing.Position);
+                var v1 = mesh.AddVertex(v1Existing.Position, normal: Vector3.XAxis.Negate());
                 if (lastL != null)
                 {
                     l1 = lastL;
@@ -310,7 +311,7 @@ namespace Elements
                 Vertex l3 = null;
                 var i3 = u * (rowWidth) + (rowWidth - 1);
                 var v3Existing = mesh.Vertices[i3];
-                var v3 = mesh.AddVertex(v3Existing.Position);
+                var v3 = mesh.AddVertex(v3Existing.Position, normal: Vector3.XAxis);
 
                 if (lastR != null)
                 {
@@ -336,7 +337,7 @@ namespace Elements
                 Vertex l5 = null;
                 var i5 = u;
                 var v5Existing = mesh.Vertices[i5];
-                var v5 = mesh.AddVertex(v5Existing.Position);
+                var v5 = mesh.AddVertex(v5Existing.Position, normal: Vector3.YAxis);
                 if (lastT != null)
                 {
                     l5 = lastT;
@@ -361,7 +362,7 @@ namespace Elements
                 Vertex l7 = null;
                 var i7 = rowWidth * rowWidth - u - 1;
                 var v7Existing = mesh.Vertices[i7];
-                var v7 = mesh.AddVertex(v7Existing.Position);
+                var v7 = mesh.AddVertex(v7Existing.Position, normal: Vector3.YAxis.Negate());
 
                 if (lastB != null)
                 {
@@ -481,6 +482,100 @@ namespace Elements
                     return null;
             }
             return range.Select(i => this.Mesh.Vertices[start + i * increment]).ToArray();
+        }
+
+        /// <summary>
+        /// Cut the topography with the specified perimeter to the specified depth.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the cut area.</param>
+        /// <param name="bottomElevation">The elevation of the bottom of the cut area.</param>
+        /// <param name="cutVolume">A mesh representing the volume cut from the topography.</param>
+        /// <returns>The cut volume or 0.0 if not cut is required.</returns>
+        public double Cut(Polygon perimeter, double bottomElevation, out Mesh cutVolume)
+        {
+            if (bottomElevation > this.MaxElevation)
+            {
+                cutVolume = null;
+                return 0.0;
+            }
+
+            if (this.AbsoluteMinimumElevation == null || bottomElevation < this.AbsoluteMinimumElevation)
+            {
+                this.AbsoluteMinimumElevation = bottomElevation - 1;
+            }
+
+            var csg1 = this.Mesh.ToCsg();
+            var cut = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, bottomElevation);
+            var csg2 = cut.Solid.ToCsg().Transform(t.ToMatrix4x4());
+
+            // Calculate the volume of the cut
+            // as the union of the two solids.
+            var xsect = csg1.Intersect(csg2);
+            cutVolume = new Mesh();
+            xsect.Tessellate(ref cutVolume);
+
+            var colorScale = new ColorScale(new List<Geometry.Color>() { Colors.Blue, Colors.Orange });
+            var cutBounds = cutVolume.Bounds;
+            var minHeight = cutBounds.Min.Z;
+            var maxHeight = cutBounds.Max.Z;
+            foreach (var v in cutVolume.Vertices)
+            {
+                v.Color = colorScale.GetColor((v.Position.Z - minHeight) / (maxHeight - minHeight));
+            }
+
+            var result = csg1.Substract(csg2);
+            var mesh = new Mesh();
+            result.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            return cutVolume.Volume();
+        }
+
+        /// <summary>
+        /// Fill the topography with the specified perimeter to the specified height.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the fill area.</param>
+        /// <param name="topElevation">The top elevation of the fill area.</param>
+        /// <param name="batterAngle">The angle of the battering surrounding the fill area in degrees.</param>
+        /// <param name="fillVolume">A mesh representing the fill volume in the topography.</param>
+        /// <returns>The fill volume or 0.0 if no fill is required.</returns>
+        public double Fill(Polygon perimeter, double topElevation, double batterAngle, out Mesh fillVolume)
+        {
+            if (topElevation < this.MinElevation)
+            {
+                fillVolume = null;
+                return 0.0;
+            }
+
+            var height = topElevation - this.MinElevation;
+
+            var topoCsg = this.Mesh.ToCsg();
+            var cut = new Extrude(perimeter, height, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, this.MinElevation);
+            var csgT = t.ToMatrix4x4();
+            var fillCsg = cut.Solid.ToCsg().Transform(csgT);
+
+            var batterWidth = height / Math.Cos(batterAngle);
+            var batterProfile = new Polygon(new[]{
+                Vector3.Origin,
+                new Vector3(batterWidth, 0),
+                new Vector3(0, height)
+            });
+            var sweep = new Sweep(batterProfile, perimeter, 0, 0, 0, false);
+            var batterCsg = sweep.Solid.ToCsg().Transform(csgT);
+            fillCsg = fillCsg.Union(batterCsg);
+
+            var xsect = topoCsg.Intersect(fillCsg);
+            fillVolume = new Mesh();
+            xsect.Tessellate(ref fillVolume);
+
+            var result = topoCsg.Union(fillCsg);
+            var mesh = new Mesh();
+            result.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            return fillVolume.Volume();
         }
 
         /// <summary>
