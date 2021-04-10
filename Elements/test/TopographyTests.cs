@@ -266,7 +266,7 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
-            result.ComputeNormals();
+
             var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
             this.Model.AddElement(new MeshElement(result, material));
         }
@@ -286,13 +286,55 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
-            result.ComputeNormals();
 
             topo.Mesh = result;
             this.Model.AddElement(topo);
 
             var tunnelWalls = new Beam(tunnelPath, new Profile(new Circle(Vector3.Origin, 20).ToPolygon(20), new Circle(Vector3.Origin, 19).ToPolygon(20).Reversed()), transform: tunnelTransform);
             this.Model.AddElement(tunnelWalls);
+        }
+
+        [Fact]
+        public void Cut()
+        {
+            this.Name = "Topography_Cut";
+            var topo = CreateTopoFromMapboxElevations();
+
+            this._output.WriteLine($"{topo.Mesh.Vertices.Count} vertices before CSG.");
+
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+
+            var bottomElevation = center.Z - 40;
+            var cutVolume = topo.Cut(site, bottomElevation, out Mesh cutMesh);
+            this._output.WriteLine($"{topo.Mesh.Vertices.Count} vertices after CSG.");
+
+            var cutMaterial = new Material("Cut", Colors.White);
+            this.Model.AddElement(new MeshElement(cutMesh, cutMaterial));
+            this._output.WriteLine($"Cut volume: {cutVolume}");
+            this.Model.AddElement(topo);
+
+            var mass = new Floor(site, 0.1, new Transform(new Vector3(0, 0, bottomElevation)));
+            this.Model.AddElement(mass);
+        }
+
+        [Fact]
+        public void Fill()
+        {
+            this.Name = "Topography_Fill";
+            var topo = CreateTopoFromMapboxElevations();
+
+            var height = topo.MinElevation + 200;
+
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+
+            var cutVolume = topo.Cut(site, height, out Mesh cutMesh);
+
+            topo.Fill(site, height, 45, out Mesh fillVolume);
+            this.Model.AddElement(topo);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
