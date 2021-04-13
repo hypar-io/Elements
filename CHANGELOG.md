@@ -9,6 +9,8 @@
 - `Polyline.OffsetOnSide`
 - `Ray.Intersects(Polygon)`
 - `Vector3.DistanceTo(Polygon)`
+- `double Topography.Cut(Polygon perimeter, double bottomElevation, out Mesh cutVolume)`
+- `double Topography.Fill(Polygon perimeter, double topElevation, double batterAngle, out Mesh fillVolume)`
 ### Changed
 - `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
 - `Solids.Import` is now public.
