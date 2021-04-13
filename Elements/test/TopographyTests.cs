@@ -307,9 +307,6 @@ namespace Elements.Tests
             var bottomElevation = center.Z - 40;
             var cutAndFill = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
 
-            var cutMaterial = new Material("Cut", Colors.White);
-            this.Model.AddElement(new MeshElement(cutMesh, cutMaterial));
-
             this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
 
             this.Model.AddElement(topo);
