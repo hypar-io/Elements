@@ -205,6 +205,8 @@ namespace Elements
             var mesh = new Mesh();
             var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
 
+            var r = new Random();
+
             for (var y = 0; y < rowWidth; y++)
             {
                 for (var x = 0; x < rowWidth; x++)
@@ -227,7 +229,11 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
+                    // Add the tiniest amount of fuzz to avoid the 
+                    // triangles being identified as coplanar during
+                    // operations like CSG.
+                    var fuzz = r.NextDouble() * 0.0001;
+                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el + fuzz), uv: uv);
 
                     if (y > 0 && x > 0)
                     {
@@ -514,15 +520,6 @@ namespace Elements
             var xsect = csg1.Intersect(csg2);
             cutVolume = new Mesh();
             xsect.Tessellate(ref cutVolume);
-
-            var colorScale = new ColorScale(new List<Geometry.Color>() { Colors.Blue, Colors.Orange });
-            var cutBounds = cutVolume.Bounds;
-            var minHeight = cutBounds.Min.Z;
-            var maxHeight = cutBounds.Max.Z;
-            foreach (var v in cutVolume.Vertices)
-            {
-                v.Color = colorScale.GetColor((v.Position.Z - minHeight) / (maxHeight - minHeight));
-            }
 
             var result = csg1.Substract(csg2);
             var mesh = new Mesh();

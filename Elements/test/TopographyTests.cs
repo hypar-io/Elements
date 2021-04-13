@@ -314,26 +314,29 @@ namespace Elements.Tests
             this.Model.AddElement(new MeshElement(cutMesh, cutMaterial));
             this._output.WriteLine($"Cut volume: {cutVolume}");
             this.Model.AddElement(topo);
-
-            var mass = new Floor(site, 0.1, new Transform(new Vector3(0, 0, bottomElevation)));
-            this.Model.AddElement(mass);
         }
 
         [Fact]
         public void Fill()
         {
+            var sw = new Stopwatch();
+
             this.Name = "Topography_Fill";
             var topo = CreateTopoFromMapboxElevations();
 
-            var height = topo.MinElevation + 200;
+            var height = topo.MinElevation + 100;
 
             // Create a site transformed to the center of the topography.
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
+            sw.Start();
             var cutVolume = topo.Cut(site, height, out Mesh cutMesh);
 
             topo.Fill(site, height, 45, out Mesh fillVolume);
+            sw.Stop();
+            _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for calculating fill.");
+
             this.Model.AddElement(topo);
         }
 
