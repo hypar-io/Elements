@@ -305,19 +305,19 @@ namespace Elements.Tests
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
             var bottomElevation = center.Z - 40;
-            var cutVolume = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
+            var cutAndFill = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
 
             var cutMaterial = new Material("Cut", Colors.White);
             this.Model.AddElement(new MeshElement(cutMesh, cutMaterial));
-            this._output.WriteLine($"Cut volume: {cutVolume}");
+
+            this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
+
             this.Model.AddElement(topo);
         }
 
         [Fact]
         public void Fill()
         {
-            var sw = new Stopwatch();
-
             this.Name = "Topography_Fill";
             var topo = CreateTopoFromMapboxElevations();
 
@@ -327,11 +327,8 @@ namespace Elements.Tests
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
-            sw.Start();
-            topo.CutAndFill(site, height, out Mesh cutVolume, out Mesh fillVolume, 45.0);
-            sw.Stop();
-
-            _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for calculating fill.");
+            var cutAndFill = topo.CutAndFill(site, height, out Mesh cutVolume, out Mesh fillVolume, 45.0);
+            this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
 
             this.Model.AddElement(topo);
         }

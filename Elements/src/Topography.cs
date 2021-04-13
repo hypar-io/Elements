@@ -502,6 +502,8 @@ namespace Elements
         {
             if (this.AbsoluteMinimumElevation == null || elevation < this.AbsoluteMinimumElevation)
             {
+                // Push the depth of the topography down past
+                // the required elevation.
                 this.AbsoluteMinimumElevation = elevation - 1;
             }
 
@@ -554,6 +556,7 @@ namespace Elements
                     new Vector3(0, height)
                 });
 
+                // Calculate the whole fill by adding the battering.
                 var batterSweep = new Sweep(batterProfile, perimeter, 0, 0, 0, false);
                 var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
                 fillCsg = fillCsg.Union(batterCsg);
