@@ -490,88 +490,85 @@ namespace Elements
         }
 
         /// <summary>
-        /// Cut the topography with the specified perimeter to the specified depth.
-        /// </summary>
-        /// <param name="perimeter">The perimeter of the cut area.</param>
-        /// <param name="bottomElevation">The elevation of the bottom of the cut area.</param>
-        /// <param name="cutVolume">A mesh representing the volume cut from the topography.</param>
-        /// <returns>The cut volume or 0.0 if not cut is required.</returns>
-        public double Cut(Polygon perimeter, double bottomElevation, out Mesh cutVolume)
-        {
-            if (bottomElevation > this.MaxElevation)
-            {
-                cutVolume = null;
-                return 0.0;
-            }
-
-            if (this.AbsoluteMinimumElevation == null || bottomElevation < this.AbsoluteMinimumElevation)
-            {
-                this.AbsoluteMinimumElevation = bottomElevation - 1;
-            }
-
-            var csg1 = this.Mesh.ToCsg();
-            var cut = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
-            var t = new Transform(0, 0, bottomElevation);
-            var csg2 = cut.Solid.ToCsg().Transform(t.ToMatrix4x4());
-
-            // Calculate the volume of the cut
-            // as the union of the two solids.
-            var xsect = csg1.Intersect(csg2);
-            cutVolume = new Mesh();
-            xsect.Tessellate(ref cutVolume);
-
-            var result = csg1.Substract(csg2);
-            var mesh = new Mesh();
-            result.Tessellate(ref mesh);
-            this.Mesh = mesh;
-
-            return cutVolume.Volume();
-        }
-
-        /// <summary>
-        /// Fill the topography with the specified perimeter to the specified height.
+        /// Cut and or fill the topography with the specified perimeter to the specified elevation.
         /// </summary>
         /// <param name="perimeter">The perimeter of the fill area.</param>
-        /// <param name="topElevation">The top elevation of the fill area.</param>
+        /// <param name="elevation">The final elevation of the cut and fill.</param>
         /// <param name="batterAngle">The angle of the battering surrounding the fill area in degrees.</param>
         /// <param name="fillVolume">A mesh representing the fill volume in the topography.</param>
-        /// <returns>The fill volume or 0.0 if no fill is required.</returns>
-        public double Fill(Polygon perimeter, double topElevation, double batterAngle, out Mesh fillVolume)
+        /// <param name="cutVolume">A mesh representing the cut volume in the topography.</param>
+        /// <returns>The cut and fill volumes.</returns>
+        public (double Cut, double Fill) CutAndFill(Polygon perimeter, double elevation, out Mesh cutVolume, out Mesh fillVolume, double batterAngle = 45.0)
         {
-            if (topElevation < this.MinElevation)
+            if (this.AbsoluteMinimumElevation == null || elevation < this.AbsoluteMinimumElevation)
             {
-                fillVolume = null;
-                return 0.0;
+                this.AbsoluteMinimumElevation = elevation - 1;
             }
 
-            var height = topElevation - this.MinElevation;
+            if (batterAngle < 0.0)
+            {
+                throw new ArgumentException("The batter angle must be greater than 0.0", "batterAngle");
+            }
+
+            cutVolume = null;
+            fillVolume = null;
 
             var topoCsg = this.Mesh.ToCsg();
-            var cut = new Extrude(perimeter, height, Vector3.ZAxis, false);
-            var t = new Transform(0, 0, this.MinElevation);
-            var csgT = t.ToMatrix4x4();
-            var fillCsg = cut.Solid.ToCsg().Transform(csgT);
 
-            var batterWidth = height / Math.Cos(batterAngle);
-            var batterProfile = new Polygon(new[]{
-                Vector3.Origin,
-                new Vector3(batterWidth, 0),
-                new Vector3(0, height)
-            });
-            var sweep = new Sweep(batterProfile, perimeter, 0, 0, 0, false);
-            var batterCsg = sweep.Solid.ToCsg().Transform(csgT);
-            fillCsg = fillCsg.Union(batterCsg);
+            // This check isn't perfect. Sites with topography may have
+            // areas where the elevation is lower, and areas where the elevation
+            // is higher.
+            if (elevation < this.MaxElevation)
+            {
+                // Cut
+                var cut = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
+                var t = new Transform(0, 0, elevation);
+                // Transform the cut volume to the elevation.
+                var cutCsg = cut.Solid.ToCsg().Transform(t.ToMatrix4x4());
 
-            var xsect = topoCsg.Intersect(fillCsg);
-            fillVolume = new Mesh();
-            xsect.Tessellate(ref fillVolume);
+                // Calculate the volume of the cut
+                // as the union of the two solids.
+                var cutXsect = topoCsg.Intersect(cutCsg);
+                cutVolume = new Mesh();
+                cutXsect.Tessellate(ref cutVolume);
 
-            var result = topoCsg.Union(fillCsg);
+                topoCsg = topoCsg.Substract(cutCsg);
+            }
+
+            if (elevation > this.MinElevation)
+            {
+                // Fill
+                var height = elevation - this.MinElevation;
+
+                var fill = new Extrude(perimeter, height, Vector3.ZAxis, false);
+                // Transform the fill volume down to the minimum elevation
+                // and fill up to the elevation.
+                var fillT = new Transform(0, 0, this.MinElevation);
+                var csgT = fillT.ToMatrix4x4();
+                var fillCsg = fill.Solid.ToCsg().Transform(csgT);
+
+                var batterWidth = height / Math.Cos(batterAngle);
+                var batterProfile = new Polygon(new[]{
+                    Vector3.Origin,
+                    new Vector3(batterWidth, 0),
+                    new Vector3(0, height)
+                });
+
+                var batterSweep = new Sweep(batterProfile, perimeter, 0, 0, 0, false);
+                var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
+                fillCsg = fillCsg.Union(batterCsg);
+
+                var xsect = topoCsg.Intersect(fillCsg);
+                fillVolume = new Mesh();
+                xsect.Tessellate(ref fillVolume);
+                topoCsg = topoCsg.Union(fillCsg);
+            }
+
             var mesh = new Mesh();
-            result.Tessellate(ref mesh);
+            topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
 
-            return fillVolume.Volume();
+            return (cutVolume == null ? 0 : cutVolume.Volume(), fillVolume == null ? 0 : fillVolume.Volume());
         }
 
         /// <summary>

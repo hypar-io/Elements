@@ -300,15 +300,12 @@ namespace Elements.Tests
             this.Name = "Topography_Cut";
             var topo = CreateTopoFromMapboxElevations();
 
-            this._output.WriteLine($"{topo.Mesh.Vertices.Count} vertices before CSG.");
-
             // Create a site transformed to the center of the topography.
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
             var bottomElevation = center.Z - 40;
-            var cutVolume = topo.Cut(site, bottomElevation, out Mesh cutMesh);
-            this._output.WriteLine($"{topo.Mesh.Vertices.Count} vertices after CSG.");
+            var cutVolume = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
 
             var cutMaterial = new Material("Cut", Colors.White);
             this.Model.AddElement(new MeshElement(cutMesh, cutMaterial));
@@ -331,10 +328,9 @@ namespace Elements.Tests
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
             sw.Start();
-            var cutVolume = topo.Cut(site, height, out Mesh cutMesh);
-
-            topo.Fill(site, height, 45, out Mesh fillVolume);
+            topo.CutAndFill(site, height, out Mesh cutVolume, out Mesh fillVolume, 45.0);
             sw.Stop();
+
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for calculating fill.");
 
             this.Model.AddElement(topo);
