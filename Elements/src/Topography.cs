@@ -490,6 +490,22 @@ namespace Elements
         }
 
         /// <summary>
+        /// Trim the topography with the specified perimeter.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the trimmed topography.</param>
+        public void Trim(Polygon perimeter)
+        {
+            var topoCsg = this.Mesh.ToCsg();
+            var trim = new Extrude(perimeter, this.MaxElevation - this.MinElevation, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, this.MinElevation);
+            var trimCsg = trim._solid.ToCsg().Transform(t.ToMatrix4x4());
+            topoCsg = topoCsg.Intersect(trimCsg);
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+        }
+
+        /// <summary>
         /// Cut and or fill the topography with the specified perimeter to the specified elevation.
         /// </summary>
         /// <param name="perimeter">The perimeter of the fill area.</param>

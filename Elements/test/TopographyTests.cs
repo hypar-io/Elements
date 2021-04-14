@@ -295,6 +295,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Trim()
+        {
+            this.Name = "Topography_Trim";
+            var topo = CreateTopoFromMapboxElevations();
+
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            topo.Trim(site);
+            this.Model.AddElement(topo);
+        }
+
+        [Fact]
         public void Cut()
         {
             this.Name = "Topography_Cut";
