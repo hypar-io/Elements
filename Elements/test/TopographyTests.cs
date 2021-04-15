@@ -320,7 +320,7 @@ namespace Elements.Tests
             var bottomElevation = center.Z - 40;
             var cutAndFill = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
 
-            this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
+            this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
             this.Model.AddElement(topo);
 
@@ -343,7 +343,7 @@ namespace Elements.Tests
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
             var cutAndFill = topo.CutAndFill(site, height, out Mesh cutVolume, out Mesh fillVolume, 45.0);
-            this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
+            this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
             this.Model.AddElement(topo);
         }
