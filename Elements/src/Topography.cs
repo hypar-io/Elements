@@ -402,6 +402,8 @@ namespace Elements
             var bb3 = mesh.AddVertex(origin + new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, depth));
             var bb4 = mesh.AddVertex(origin + new Vector3(0, (rowWidth - 1) * cellHeight, depth));
 
+            _baseVerts.AddRange(new[] { bb1, bb2, bb3, bb4 });
+
             mesh.AddTriangle(bb1, bb3, bb2);
             mesh.AddTriangle(bb1, bb4, bb3);
 
@@ -603,7 +605,7 @@ namespace Elements
                 var csgT = fillT.ToMatrix4x4();
                 var fillCsg = fillSolid.Solid.ToCsg().Transform(csgT);
 
-                var batterWidth = height / Math.Cos(batterAngle);
+                var batterWidth = height * Math.Cos(Units.DegreesToRadians(batterAngle));
                 var batterProfile = new Polygon(new[]{
                     Vector3.Origin,
                     new Vector3(batterWidth, 0),

@@ -269,7 +269,7 @@ Triangles:{Triangles.Count}";
                                 Vector3 normal = default(Vector3),
                                 Color color = default(Color),
                                 bool merge = false,
-                                double edgeAngle = 45.0)
+                                double edgeAngle = 30.0)
         {
             var p = new Octree.Point((float)position.X, (float)position.Y, (float)position.Z);
 

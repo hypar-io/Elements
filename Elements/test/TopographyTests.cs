@@ -323,11 +323,6 @@ namespace Elements.Tests
             this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
             this.Model.AddElement(topo);
-
-            foreach (var v in topo._baseVerts)
-            {
-                this.Model.AddElement(new Mass(Polygon.Rectangle(10, 10), 1, BuiltInMaterials.XAxis, new Transform(v.Position)));
-            }
         }
 
         [Fact]
