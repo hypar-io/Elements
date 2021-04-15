@@ -26,6 +26,8 @@ namespace Elements
 
         private double? _absoluteMinimumElevation;
 
+        internal List<Vertex> _baseVerts = new List<Vertex>();
+
         /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
@@ -168,14 +170,8 @@ namespace Elements
             {
                 if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
                 {
-                    GenerateMeshAndSetInternals();
-                    absoluteMinimumElevation = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
-                    CreateSidesAndBottomMesh(this._mesh,
-                                             this.RowWidth,
-                                             absoluteMinimumElevation,
-                                             this.CellHeight,
-                                             this.CellWidth,
-                                             this.Origin);
+                    var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+                    MoveBaseVerts(minHeight);
                 }
             };
         }
@@ -257,7 +253,7 @@ namespace Elements
             return (mesh, maxElevation, minElevation);
         }
 
-        private static void CreateSidesAndBottomMesh(Mesh mesh,
+        private void CreateSidesAndBottomMesh(Mesh mesh,
                                                      int rowWidth,
                                                      double depth,
                                                      double cellHeight,
@@ -275,6 +271,8 @@ namespace Elements
             (Vector3 U, Vector3 V) basisRight = (default(Vector3), default(Vector3));
             (Vector3 U, Vector3 V) basisTop = (default(Vector3), default(Vector3));
             (Vector3 U, Vector3 V) basisBottom = (default(Vector3), default(Vector3));
+
+            this._baseVerts.Clear();
 
             for (var u = 0; u < rowWidth - 1; u++)
             {
@@ -299,6 +297,7 @@ namespace Elements
                 {
                     var p = new Vector3(v1.Position.X, v1.Position.Y, depth);
                     l1 = mesh.AddVertex(p);
+                    _baseVerts.Add(l1);
                 }
 
                 var i2 = i1 + rowWidth;
@@ -307,6 +306,7 @@ namespace Elements
 
                 var pl2 = new Vector3(v2.Position.X, v2.Position.Y, depth);
                 var l2 = mesh.AddVertex(pl2);
+                _baseVerts.Add(l2);
                 lastL = l2;
 
                 mesh.AddTriangle(l1, v1, v2);
@@ -326,6 +326,7 @@ namespace Elements
                 {
                     var p = new Vector3(v3.Position.X, v3.Position.Y, depth);
                     l3 = mesh.AddVertex(p);
+                    _baseVerts.Add(l3);
                 }
 
                 var i4 = i3 + rowWidth;
@@ -333,6 +334,7 @@ namespace Elements
                 var v4 = mesh.AddVertex(v4Existing.Position);
                 var pl4 = new Vector3(v4.Position.X, v4.Position.Y, depth);
                 var l4 = mesh.AddVertex(pl4);
+                _baseVerts.Add(l4);
                 lastR = l4;
 
                 mesh.AddTriangle(l3, v4, v3);
@@ -351,6 +353,7 @@ namespace Elements
                 {
                     var p = new Vector3(v5.Position.X, v5.Position.Y, depth);
                     l5 = mesh.AddVertex(p);
+                    _baseVerts.Add(l5);
                 }
 
                 var i6 = i5 + 1;
@@ -358,6 +361,7 @@ namespace Elements
                 var v6 = mesh.AddVertex(v6Existing.Position);
                 var pl6 = new Vector3(v6.Position.X, v6.Position.Y, depth);
                 var l6 = mesh.AddVertex(pl6);
+                _baseVerts.Add(l6);
                 lastT = l6;
 
                 mesh.AddTriangle(l5, v6, v5);
@@ -377,6 +381,7 @@ namespace Elements
                 {
                     var p = new Vector3(v7.Position.X, v7.Position.Y, depth);
                     l7 = mesh.AddVertex(p);
+                    _baseVerts.Add(l7);
                 }
 
                 var i8 = i7 - 1;
@@ -384,6 +389,7 @@ namespace Elements
                 var v8 = mesh.AddVertex(v8Existing.Position);
                 var pl8 = new Vector3(v8.Position.X, v8.Position.Y, depth);
                 var l8 = mesh.AddVertex(pl8);
+                _baseVerts.Add(l8);
                 lastB = l8;
 
                 mesh.AddTriangle(l7, v8, v7);
@@ -496,13 +502,45 @@ namespace Elements
         public void Trim(Polygon perimeter)
         {
             var topoCsg = this.Mesh.ToCsg();
-            var trim = new Extrude(perimeter, this.MaxElevation - this.MinElevation, Vector3.ZAxis, false);
-            var t = new Transform(0, 0, this.MinElevation);
+            var trim = new Extrude(perimeter, 200000, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, -100000);
             var trimCsg = trim._solid.ToCsg().Transform(t.ToMatrix4x4());
-            topoCsg = topoCsg.Intersect(trimCsg);
+            topoCsg = trimCsg.Intersect(topoCsg);
             var mesh = new Mesh();
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
+
+            // We've trimmed the mesh. We now need to
+            // reset the min and max elevation.    
+            SetBaseVerts();
+            SetMinAndMaxElevation();
+        }
+
+        /// <summary>
+        /// Cut a tunnel through a topography.
+        /// </summary>
+        /// <param name="path">The path of the tunnel.</param>
+        /// <param name="diameter">The diameter of the tunnel.</param>
+        public void Tunnel(Curve path, double diameter)
+        {
+            if (diameter < 0.0)
+            {
+                throw new ArgumentException("Diameter must be greater than 0.0.", "diameter");
+            }
+
+            var topoCsg = this.Mesh.ToCsg();
+
+            var profile = new Circle(diameter / 2).ToPolygon(20);
+            var sweep = new Sweep(profile, path, 0.0, 0.0, 0.0, false);
+            var tunnelCsg = sweep._solid.ToCsg();
+
+            topoCsg = topoCsg.Substract(tunnelCsg);
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            SetBaseVerts();
+            SetMinAndMaxElevation();
         }
 
         /// <summary>
@@ -784,6 +822,51 @@ namespace Elements
             }
 
             return output;
+        }
+
+        private void MoveBaseVerts(double newElevation)
+        {
+            foreach (var v in this._baseVerts)
+            {
+                v.Position = new Vector3(v.Position.X, v.Position.Y, newElevation);
+            }
+        }
+
+        private void SetBaseVerts()
+        {
+            var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            this._baseVerts.Clear();
+            foreach (var v in this.Mesh.Vertices)
+            {
+                if (v.Position.Z.ApproximatelyEquals(minHeight))
+                {
+                    this._baseVerts.Add(v);
+                }
+            }
+        }
+
+        private void SetMinAndMaxElevation()
+        {
+            // Ignore any vertices that have the depth of the sides.
+            var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            var max = double.MinValue;
+            var min = double.MaxValue;
+            foreach (var v in this.Mesh.Vertices)
+            {
+                if (!_baseVerts.Contains(v))
+                {
+                    if (v.Position.Z > max)
+                    {
+                        max = v.Position.Z;
+                    }
+                    if (v.Position.Z < min)
+                    {
+                        min = v.Position.Z;
+                    }
+                }
+            }
+            this._minElevation = min;
+            this._maxElevation = max;
         }
 
         /// <summary>
