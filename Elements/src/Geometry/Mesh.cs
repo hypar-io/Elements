@@ -246,8 +246,7 @@ Triangles:{Triangles.Count}";
         {
             if (HasDuplicatedVertices(t, out Vector3 duplicate))
             {
-                return null;
-                // throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
+                throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
             this.Triangles.Add(t);
             return t;
