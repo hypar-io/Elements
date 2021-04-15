@@ -329,13 +329,6 @@ Triangles:{Triangles.Count}";
             }
         }
 
-        private void ResetIndices()
-        {
-            for (var i = 0; i < this.Vertices.Count; i++)
-            {
-                this.Vertices[i].Index = i;
-            }
-        }
         private bool IsInvalid(Vertex v)
         {
             if (v.Position.IsNaN())

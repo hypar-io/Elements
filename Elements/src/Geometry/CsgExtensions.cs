@@ -267,7 +267,6 @@ namespace Elements.Geometry
                 var polygon = new Csg.Polygon(new List<Csg.Vertex>() { a, b, c });
                 polygons.Add(polygon);
             }
-            var solid = new Csg.Solid();
 
             return Csg.Solid.FromPolygons(polygons);
         }
