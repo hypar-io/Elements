@@ -21,16 +21,6 @@ namespace Elements.Geometry
             }
         }
 
-        /// <summary>
-        /// Construct a bounding box from an existing bounding box.
-        /// </summary>
-        /// <param name="bounds">The existing bounding box.</param>
-        public BBox3(BBox3 bounds)
-        {
-            this.Min = bounds.Min;
-            this.Max = bounds.Max;
-        }
-
         internal void Extend(Vector3 v)
         {
             var newMin = new Vector3(Min.X, Min.Y, Min.Z);
