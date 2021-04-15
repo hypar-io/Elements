@@ -276,22 +276,12 @@ namespace Elements.Tests
         {
             this.Name = "Topography_Tunnel";
             var topo = CreateTopoFromMapboxElevations();
-            var csg = topo.Mesh.ToCsg();
-
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var w = topo.RowWidth * topo.CellWidth;
-            var tunnelPath = new Line(new Vector3((-w - 100) / 2, 0, -20), new Vector3((w + 100) / 2, 0, -20));
-            var tunnel = new Sweep(new Circle(Vector3.Origin, 20).ToPolygon(20), tunnelPath, 0, 0, 0, false);
-            var tunnelTransform = new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50));
-            csg = csg.Substract(tunnel._csg.Transform(tunnelTransform.ToMatrix4x4()));
-
-            var result = new Mesh();
-            csg.Tessellate(ref result);
-
-            topo.Mesh = result;
+            var tunnelPath = new Line(new Vector3(center.X - w / 2 - 100, center.Y, center.Z - 20), new Vector3(center.X + w / 2 + 100, center.Y, center.Z - 20));
+            topo.Tunnel(tunnelPath, 15.0);
             this.Model.AddElement(topo);
-
-            var tunnelWalls = new Beam(tunnelPath, new Profile(new Circle(Vector3.Origin, 20).ToPolygon(20), new Circle(Vector3.Origin, 19).ToPolygon(20).Reversed()), transform: tunnelTransform);
-            this.Model.AddElement(tunnelWalls);
+            this.Model.AddElement(new ModelCurve(tunnelPath));
         }
 
         [Fact]
@@ -305,6 +295,11 @@ namespace Elements.Tests
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
             topo.Trim(site);
             this.Model.AddElement(topo);
+
+            foreach (var v in topo._baseVerts)
+            {
+                this.Model.AddElement(new Mass(Polygon.Rectangle(10, 10), 1, BuiltInMaterials.XAxis, new Transform(v.Position)));
+            }
         }
 
         [Fact]
@@ -315,6 +310,11 @@ namespace Elements.Tests
 
             // Create a site transformed to the center of the topography.
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+
+            var outer = (Polygon)Polygon.Rectangle(500, 500).Transformed(new Transform(center));
+            this.Model.AddElement(new ModelCurve(outer));
+            topo.Trim(outer);
+
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
             var bottomElevation = center.Z - 40;
@@ -323,6 +323,11 @@ namespace Elements.Tests
             this._output.WriteLine($"Cut volume: {cutAndFill.Cut}, Fill volume: {cutAndFill.Fill}");
 
             this.Model.AddElement(topo);
+
+            foreach (var v in topo._baseVerts)
+            {
+                this.Model.AddElement(new Mass(Polygon.Rectangle(10, 10), 1, BuiltInMaterials.XAxis, new Transform(v.Position)));
+            }
         }
 
         [Fact]
