@@ -577,10 +577,10 @@ namespace Elements
             if (elevation < this.MaxElevation)
             {
                 // Cut
-                var cut = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
+                var cutSolid = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
                 var t = new Transform(0, 0, elevation);
                 // Transform the cut volume to the elevation.
-                var cutCsg = cut.Solid.ToCsg().Transform(t.ToMatrix4x4());
+                var cutCsg = cutSolid.Solid.ToCsg().Transform(t.ToMatrix4x4());
 
                 // Calculate the volume of the cut
                 // as the union of the two solids.
@@ -596,12 +596,12 @@ namespace Elements
                 // Fill
                 var height = elevation - this.MinElevation;
 
-                var fill = new Extrude(perimeter, height, Vector3.ZAxis, false);
+                var fillSolid = new Extrude(perimeter, height, Vector3.ZAxis, false);
                 // Transform the fill volume down to the minimum elevation
                 // and fill up to the elevation.
                 var fillT = new Transform(0, 0, this.MinElevation);
                 var csgT = fillT.ToMatrix4x4();
-                var fillCsg = fill.Solid.ToCsg().Transform(csgT);
+                var fillCsg = fillSolid.Solid.ToCsg().Transform(csgT);
 
                 var batterWidth = height / Math.Cos(batterAngle);
                 var batterProfile = new Polygon(new[]{
