@@ -549,10 +549,10 @@ namespace Elements
         /// <param name="perimeter">The perimeter of the fill area.</param>
         /// <param name="elevation">The final elevation of the cut and fill.</param>
         /// <param name="batterAngle">The angle of the battering surrounding the fill area in degrees.</param>
-        /// <param name="fillVolume">A mesh representing the fill volume in the topography.</param>
-        /// <param name="cutVolume">A mesh representing the cut volume in the topography.</param>
+        /// <param name="fill">A mesh representing the fill volume in the topography.</param>
+        /// <param name="cut">A mesh representing the cut volume in the topography.</param>
         /// <returns>The cut and fill volumes.</returns>
-        public (double Cut, double Fill) CutAndFill(Polygon perimeter, double elevation, out Mesh cutVolume, out Mesh fillVolume, double batterAngle = 45.0)
+        public (double CutVolume, double FillVolume) CutAndFill(Polygon perimeter, double elevation, out Mesh cut, out Mesh fill, double batterAngle = 45.0)
         {
             if (this.AbsoluteMinimumElevation == null || elevation < this.AbsoluteMinimumElevation)
             {
@@ -566,8 +566,8 @@ namespace Elements
                 throw new ArgumentException("The batter angle must be greater than 0.0", "batterAngle");
             }
 
-            cutVolume = null;
-            fillVolume = null;
+            cut = null;
+            fill = null;
 
             var topoCsg = this.Mesh.ToCsg();
 
@@ -585,8 +585,8 @@ namespace Elements
                 // Calculate the volume of the cut
                 // as the union of the two solids.
                 var cutXsect = topoCsg.Intersect(cutCsg);
-                cutVolume = new Mesh();
-                cutXsect.Tessellate(ref cutVolume);
+                cut = new Mesh();
+                cutXsect.Tessellate(ref cut);
 
                 topoCsg = topoCsg.Substract(cutCsg);
             }
@@ -616,8 +616,8 @@ namespace Elements
                 fillCsg = fillCsg.Union(batterCsg);
 
                 var xsect = topoCsg.Intersect(fillCsg);
-                fillVolume = new Mesh();
-                xsect.Tessellate(ref fillVolume);
+                fill = new Mesh();
+                xsect.Tessellate(ref fill);
                 topoCsg = topoCsg.Union(fillCsg);
             }
 
@@ -625,7 +625,7 @@ namespace Elements
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
 
-            return (cutVolume == null ? 0 : cutVolume.Volume(), fillVolume == null ? 0 : fillVolume.Volume());
+            return (cut == null ? 0 : cut.Volume(), fill == null ? 0 : fill.Volume());
         }
 
         /// <summary>
