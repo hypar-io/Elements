@@ -314,9 +314,10 @@ namespace Elements.Tests
             var outer = (Polygon)Polygon.Rectangle(500, 500).Transformed(new Transform(center));
 
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            var site2 = (Polygon)Polygon.Star(100, 50, 6).Transformed(new Transform(new Vector3(center.X - 300, center.Y - 300)));
 
             var bottomElevation = center.Z - 40;
-            var cutAndFill = topo.CutAndFill(site, bottomElevation, out Mesh cutMesh, out Mesh fillMesh);
+            var cutAndFill = topo.CutAndFill(new[] { site, site2 }, bottomElevation, out List<Mesh> cutMesh, out List<Mesh> fillMesh);
 
             this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
@@ -334,8 +335,9 @@ namespace Elements.Tests
             // Create a site transformed to the center of the topography.
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            var site2 = (Polygon)Polygon.Star(100, 50, 6).Transformed(new Transform(new Vector3(center.X - 300, center.Y - 300)));
 
-            var cutAndFill = topo.CutAndFill(site, height, out Mesh cutVolume, out Mesh fillVolume, 45.0);
+            var cutAndFill = topo.CutAndFill(new[] { site, site2 }, height, out List<Mesh> cutVolumes, out List<Mesh> fillVolumes, 45.0);
             this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
             this.Model.AddElement(topo);

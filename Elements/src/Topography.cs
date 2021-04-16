@@ -548,13 +548,13 @@ namespace Elements
         /// <summary>
         /// Cut and or fill the topography with the specified perimeter to the specified elevation.
         /// </summary>
-        /// <param name="perimeter">The perimeter of the fill area.</param>
+        /// <param name="perimeters">The perimeters of the cut and fill areas.</param>
         /// <param name="elevation">The final elevation of the cut and fill.</param>
         /// <param name="batterAngle">The angle of the battering surrounding the fill area in degrees.</param>
-        /// <param name="fill">A mesh representing the fill volume in the topography.</param>
-        /// <param name="cut">A mesh representing the cut volume in the topography.</param>
-        /// <returns>The cut and fill volumes.</returns>
-        public (double CutVolume, double FillVolume) CutAndFill(Polygon perimeter, double elevation, out Mesh cut, out Mesh fill, double batterAngle = 45.0)
+        /// <param name="fills">Meshes representing the fill volume in the topography.</param>
+        /// <param name="cuts">Meshes representing the cut volume in the topography.</param>
+        /// <returns>The sum of all cut and fill volumes.</returns>
+        public (double CutVolume, double FillVolume) CutAndFill(IList<Polygon> perimeters, double elevation, out List<Mesh> cuts, out List<Mesh> fills, double batterAngle = 45.0)
         {
             if (this.AbsoluteMinimumElevation == null || elevation < this.AbsoluteMinimumElevation)
             {
@@ -568,11 +568,24 @@ namespace Elements
                 throw new ArgumentException("The batter angle must be greater than 0.0", "batterAngle");
             }
 
-            cut = null;
-            fill = null;
+            cuts = new List<Mesh>();
+            fills = new List<Mesh>();
 
             var topoCsg = this.Mesh.ToCsg();
+            foreach (var p in perimeters)
+            {
+                topoCsg = CutAndFillInternal(topoCsg, elevation, p, cuts, fills, batterAngle);
+            }
 
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            return (cuts.Sum(c => c.Volume()), fills.Sum(f => f.Volume()));
+        }
+
+        private Csg.Solid CutAndFillInternal(Csg.Solid topoCsg, double elevation, Polygon perimeter, List<Mesh> cuts, List<Mesh> fills, double batterAngle = 45.0)
+        {
             // This check isn't perfect. Sites with topography may have
             // areas where the elevation is lower, and areas where the elevation
             // is higher.
@@ -587,8 +600,9 @@ namespace Elements
                 // Calculate the volume of the cut
                 // as the union of the two solids.
                 var cutXsect = topoCsg.Intersect(cutCsg);
-                cut = new Mesh();
+                var cut = new Mesh();
                 cutXsect.Tessellate(ref cut);
+                cuts.Add(cut);
 
                 topoCsg = topoCsg.Substract(cutCsg);
             }
@@ -618,16 +632,13 @@ namespace Elements
                 fillCsg = fillCsg.Union(batterCsg);
 
                 var xsect = topoCsg.Intersect(fillCsg);
-                fill = new Mesh();
+                var fill = new Mesh();
                 xsect.Tessellate(ref fill);
+                fills.Add(fill);
                 topoCsg = topoCsg.Union(fillCsg);
             }
 
-            var mesh = new Mesh();
-            topoCsg.Tessellate(ref mesh);
-            this.Mesh = mesh;
-
-            return (cut == null ? 0 : cut.Volume(), fill == null ? 0 : fill.Volume());
+            return topoCsg;
         }
 
         /// <summary>
