@@ -312,8 +312,6 @@ namespace Elements.Tests
             var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
 
             var outer = (Polygon)Polygon.Rectangle(500, 500).Transformed(new Transform(center));
-            this.Model.AddElement(new ModelCurve(outer));
-            topo.Trim(outer);
 
             var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
 
