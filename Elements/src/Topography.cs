@@ -631,7 +631,7 @@ namespace Elements
                 var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
                 fillCsg = fillCsg.Union(batterCsg);
 
-                var xsect = topoCsg.Intersect(fillCsg);
+                var xsect = fillCsg.Substract(topoCsg);
                 var fill = new Mesh();
                 xsect.Tessellate(ref fill);
                 fills.Add(fill);

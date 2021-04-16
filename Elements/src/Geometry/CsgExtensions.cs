@@ -284,14 +284,21 @@ namespace Elements.Geometry
             {
                 // Don't tesselate unless we need to.
 
-                var a = p.Vertices[0];
-                var b = p.Vertices[1];
-                var c = p.Vertices[2];
-                var av = mesh.AddVertex(a.Pos.ToElementsVector(), a.Tex.ToUV(), n, merge: true);
-                var bv = mesh.AddVertex(b.Pos.ToElementsVector(), b.Tex.ToUV(), n, merge: true);
-                var cv = mesh.AddVertex(c.Pos.ToElementsVector(), c.Tex.ToUV(), n, merge: true);
+                try
+                {
+                    var a = p.Vertices[0];
+                    var b = p.Vertices[1];
+                    var c = p.Vertices[2];
+                    var av = mesh.AddVertex(a.Pos.ToElementsVector(), a.Tex.ToUV(), n, merge: true);
+                    var bv = mesh.AddVertex(b.Pos.ToElementsVector(), b.Tex.ToUV(), n, merge: true);
+                    var cv = mesh.AddVertex(c.Pos.ToElementsVector(), c.Tex.ToUV(), n, merge: true);
 
-                mesh.AddTriangle(av, bv, cv);
+                    mesh.AddTriangle(av, bv, cv);
+                }
+                catch (ArgumentException)
+                {
+                    return;
+                }
             }
             else
             {
@@ -300,19 +307,26 @@ namespace Elements.Geometry
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
-                    var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
+                    try
+                    {
+                        var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
+                        var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
+                        var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
 
-                    var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
-                    var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
-                    var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
+                        var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
+                        var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
+                        var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
 
-                    var v1 = mesh.AddVertex(a, uva.ToUV(), n, merge: true);
-                    var v2 = mesh.AddVertex(b, uvb.ToUV(), n, merge: true);
-                    var v3 = mesh.AddVertex(c, uvc.ToUV(), n, merge: true);
+                        var v1 = mesh.AddVertex(a, uva.ToUV(), n, merge: true);
+                        var v2 = mesh.AddVertex(b, uvb.ToUV(), n, merge: true);
+                        var v3 = mesh.AddVertex(c, uvc.ToUV(), n, merge: true);
 
-                    mesh.AddTriangle(v1, v2, v3);
+                        mesh.AddTriangle(v1, v2, v3);
+                    }
+                    catch (ArgumentException)
+                    {
+                        continue;
+                    }
                 }
             }
         }

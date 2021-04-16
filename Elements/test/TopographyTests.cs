@@ -341,6 +341,11 @@ namespace Elements.Tests
             this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
 
             this.Model.AddElement(topo);
+
+            foreach (var mesh in fillVolumes)
+            {
+                this.Model.AddElement(new MeshElement(mesh, BuiltInMaterials.XAxis));
+            }
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
