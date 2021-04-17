@@ -503,6 +503,10 @@ namespace Elements
         /// <param name="perimeter">The perimeter of the trimmed topography.</param>
         public void Trim(Polygon perimeter)
         {
+            // This creates a tall trimming object which is extruded
+            // from the zero plane but then transformed in -Z by half its
+            // elevation to assure a trim through the object.
+
             var topoCsg = this.Mesh.ToCsg();
             var trim = new Extrude(perimeter, 200000, Vector3.ZAxis, false);
             var t = new Transform(0, 0, -100000);
@@ -513,7 +517,7 @@ namespace Elements
             this.Mesh = mesh;
 
             // We've trimmed the mesh. We now need to
-            // reset the min and max elevation.    
+            // reset the min and max elevation.
             SetBaseVerts();
             SetMinAndMaxElevation();
         }
@@ -861,7 +865,6 @@ namespace Elements
         private void SetMinAndMaxElevation()
         {
             // Ignore any vertices that have the depth of the sides.
-            var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
             var max = double.MinValue;
             var min = double.MaxValue;
             foreach (var v in this.Mesh.Vertices)
