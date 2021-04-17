@@ -64,7 +64,7 @@ namespace Elements.Geometry
                     if (line.StartsWith("endfacet"))
                     {
                         var t = new Triangle(vertexCache[0], vertexCache[1], vertexCache[2]);
-                        if (!HasDuplicatedVertices(t, out _))
+                        if (!t.HasDuplicatedVertices(out _))
                         {
                             mesh.AddTriangle(t);
                         }
@@ -229,7 +229,7 @@ Triangles:{Triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
-            if (HasDuplicatedVertices(t, out Vector3 duplicate))
+            if (t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
@@ -243,7 +243,7 @@ Triangles:{Triangles.Count}";
         /// <param name="t">The triangle to add.</param>
         public Triangle AddTriangle(Triangle t)
         {
-            if (HasDuplicatedVertices(t, out Vector3 duplicate))
+            if (t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
@@ -339,27 +339,6 @@ Triangles:{Triangles.Count}";
                 return true;
             }
 
-            return false;
-        }
-
-        private static bool HasDuplicatedVertices(Triangle t, out Vector3 duplicate)
-        {
-            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[1].Position))
-            {
-                duplicate = t.Vertices[0].Position;
-                return true;
-            }
-            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[2].Position))
-            {
-                duplicate = t.Vertices[0].Position;
-                return true;
-            }
-            if (t.Vertices[1].Position.IsAlmostEqualTo(t.Vertices[2].Position))
-            {
-                duplicate = t.Vertices[1].Position;
-                return true;
-            }
-            duplicate = default(Vector3);
             return false;
         }
 
