@@ -348,6 +348,36 @@ namespace Elements.Tests
             }
         }
 
+        [Fact]
+        public void CutToDepthLowerThanMinimumIncreasesMinimum()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, -20, out List<Mesh> _, out List<Mesh> _);
+            Assert.Equal(topo.AbsoluteMinimumElevation, -21);
+        }
+
+        [Fact]
+        public void FillVolumeIsCorrectWhenFilledToSameElevationAsTopOfTopography()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, 100, out List<Mesh> _, out List<Mesh> _);
+            Assert.Equal(result.FillVolume, 0);
+        }
+
+        [Fact]
+        public void CutVolumeIsCorrect()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, 99, out List<Mesh> _, out List<Mesh> _);
+            // The cut volume will never be exactly the same due to imprecision
+            // introduced by the CSG operation. We round to 3 decimal places here
+            // which is millimeter accuracy.
+            Assert.Equal(result.CutVolume, 1, 3);
+        }
+
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
@@ -358,6 +388,16 @@ namespace Elements.Tests
             var tileSize = WebMercatorProjection.GetTileSizeMeters(0, 15);
 
             return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, tileSize, elevations, material);
+        }
+
+        private static Topography CreateTestTopography()
+        {
+            var elevations = new double[16];
+            for (var i = 0; i < elevations.Length; i++)
+            {
+                elevations[i] = 100.0;
+            }
+            return new Topography(Vector3.Origin, 40, elevations);
         }
     }
 }
