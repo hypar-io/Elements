@@ -113,13 +113,15 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Sweep(this.Profile,
+            if (this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Sweep(this.Profile,
                                                             this.Curve,
                                                             this.StartSetback,
                                                             this.EndSetback,
                                                             this.Rotation,
                                                             false));
+            }
         }
     }
 }
