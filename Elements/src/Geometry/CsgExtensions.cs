@@ -98,7 +98,6 @@ namespace Elements.Geometry
                     for (var i = 0; i < p.Vertices.Count; i++)
                     {
                         var v = p.Vertices[i];
-                        Console.WriteLine(v.Pos.ToElementsVector());
                         WriteVertex(v.Pos.ToElementsVector(),
                                     n,
                                     vertices,
@@ -365,11 +364,6 @@ namespace Elements.Geometry
 
         private static void AddToMesh(this Csg.Polygon p, ref Mesh mesh)
         {
-            // Polygons coming back from Csg can have an arbitrary number
-            // of vertices. We need to retessellate the returned polygon.
-            var tess = new Tess();
-            tess.NoEmptyPolygons = true;
-
             var n = p.Plane.Normal.ToElementsVector();
 
             if (p.Vertices.Count == 3)
@@ -389,8 +383,38 @@ namespace Elements.Geometry
                     mesh.AddTriangle(t);
                 }
             }
+            else if (p.Vertices.Count == 4)
+            {
+                // Don't tesselate unless we need to.
+
+                var a = p.Vertices[0];
+                var b = p.Vertices[1];
+                var c = p.Vertices[2];
+                var d = p.Vertices[3];
+                var av = mesh.AddVertex(a.Pos.ToElementsVector(), a.Tex.ToUV(), n, merge: true);
+                var bv = mesh.AddVertex(b.Pos.ToElementsVector(), b.Tex.ToUV(), n, merge: true);
+                var cv = mesh.AddVertex(c.Pos.ToElementsVector(), c.Tex.ToUV(), n, merge: true);
+                var dv = mesh.AddVertex(d.Pos.ToElementsVector(), d.Tex.ToUV(), n, merge: true);
+
+                var t = new Triangle(av, bv, cv);
+                if (!t.HasDuplicatedVertices(out Vector3 _))
+                {
+                    mesh.AddTriangle(t);
+                }
+
+                var t1 = new Triangle(av, cv, dv);
+                if (!t1.HasDuplicatedVertices(out Vector3 _))
+                {
+                    mesh.AddTriangle(t1);
+                }
+            }
             else
             {
+                // Polygons coming back from Csg can have an arbitrary number
+                // of vertices. We need to retessellate the returned polygon.
+                var tess = new Tess();
+                tess.NoEmptyPolygons = true;
+
                 tess.AddContour(p.Vertices.ToContourVertices());
 
                 tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
