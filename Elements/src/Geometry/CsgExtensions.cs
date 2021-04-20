@@ -29,33 +29,14 @@ namespace Elements.Geometry
             out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax,
             out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)
         {
-            var tessellations = new Tess[csg.Polygons.Count];
-
-            var fi = 0;
-            foreach (var p in csg.Polygons)
-            {
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-                tess.AddContour(p.Vertices.ToContourVertices());
-
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-                tessellations[fi] = tess;
-                fi++;
-            }
-
-            var floatSize = sizeof(float);
-            var ushortSize = sizeof(ushort);
-
-            var vertexCount = tessellations.Sum(t => t.VertexCount);
-            var indexCount = tessellations.Sum(t => t.Elements.Length);
-
-            vertexBuffer = new byte[vertexCount * floatSize * 3];
-            normalBuffer = new byte[vertexCount * floatSize * 3];
-            indexBuffer = new byte[indexCount * ushortSize];
-            uvBuffer = new byte[vertexCount * floatSize * 2];
+            // Initialize everything
+            var vertices = new List<byte>();
+            var normals = new List<byte>();
+            var indices = new List<byte>();
+            var uvs = new List<byte>();
 
             // Vertex colors are not used in this context currently.
-            colorBuffer = new byte[0];
+            var colors = new List<byte>();
             cmin = new float[0];
             cmax = new float[0];
 
@@ -68,89 +49,200 @@ namespace Elements.Geometry
             uvmax = new double[2] { double.MinValue, double.MinValue };
 
             imax = ushort.MinValue;
-            imin = ushort.MaxValue;
+            imin = 0;
 
-            var vi = 0;
-            var ii = 0;
-            var uvi = 0;
-
-            var iCursor = 0;
+            ushort iCursor = 0;
 
             (Vector3 U, Vector3 V) basis;
 
-            for (var i = 0; i < tessellations.Length; i++)
+            foreach (var p in csg.Polygons)
             {
-                var tess = tessellations[i];
-                if (tess.ElementCount == 0)
+                if (p.Vertices.Count == 3)
                 {
-                    continue;
+                    // It's just a triangle. Add it directly.
+                    var a = p.Vertices[0].Pos.ToElementsVector();
+                    var b = p.Vertices[1].Pos.ToElementsVector();
+                    var c = p.Vertices[2].Pos.ToElementsVector();
+                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
+                    for (var i = 0; i < p.Vertices.Count; i++)
+                    {
+                        var v = p.Vertices[i];
+                        WriteVertex(v.Pos.ToElementsVector(),
+                                    n,
+                                    vertices,
+                                    normals,
+                                    uvs,
+                                    basis,
+                                    ref vmax,
+                                    ref vmin,
+                                    ref nmax,
+                                    ref nmin,
+                                    ref uvmax,
+                                    ref uvmin);
+                    }
+                    indices.AddRange(BitConverter.GetBytes(iCursor));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 1)));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
+                    imax = Math.Max(imax, (ushort)(iCursor + 2));
+                    imin = Math.Min(imin, (ushort)(iCursor));
+                    iCursor = (ushort)(imax + 1);
                 }
-                var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
-                var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
-                var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var tmp = (b - a).Unitized();
-                var n = tmp.Cross(c - a).Unitized();
-
-                // Calculate the texture space basis vectors
-                // from the first triangle. This is acceptable
-                // for planar faces.
-                // TODO: Update this when we support non-planar faces.
-                // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                basis = n.ComputeDefaultBasisVectors();
-
-                for (var j = 0; j < tess.Vertices.Length; j++)
+                if (p.Vertices.Count == 4)
                 {
-                    var v = tess.Vertices[j];
-                    var p = v.Position.ToVector3();
+                    // Triangulate into two triangles.
+                    var a = p.Vertices[0].Pos.ToElementsVector();
+                    var b = p.Vertices[1].Pos.ToElementsVector();
+                    var c = p.Vertices[2].Pos.ToElementsVector();
+                    var d = p.Vertices[3].Pos.ToElementsVector();
+                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
+                    for (var i = 0; i < p.Vertices.Count; i++)
+                    {
+                        var v = p.Vertices[i];
+                        Console.WriteLine(v.Pos.ToElementsVector());
+                        WriteVertex(v.Pos.ToElementsVector(),
+                                    n,
+                                    vertices,
+                                    normals,
+                                    uvs,
+                                    basis,
+                                    ref vmax,
+                                    ref vmin,
+                                    ref nmax,
+                                    ref nmin,
+                                    ref uvmax,
+                                    ref uvmin);
+                    }
 
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.X), 0, vertexBuffer, vi, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.Y), 0, vertexBuffer, vi + floatSize, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)p.Z), 0, vertexBuffer, vi + 2 * floatSize, floatSize);
+                    // Triangle 1
+                    indices.AddRange(BitConverter.GetBytes(iCursor));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 1)));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
 
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.X), 0, normalBuffer, vi, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Y), 0, normalBuffer, vi + floatSize, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)n.Z), 0, normalBuffer, vi + 2 * floatSize, floatSize);
+                    // Triangle 2
+                    indices.AddRange(BitConverter.GetBytes(iCursor));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
+                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 3)));
 
-                    var uu = basis.U.Dot(p);
-                    var vv = basis.V.Dot(p);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)uu), 0, uvBuffer, uvi, floatSize);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)vv), 0, uvBuffer, uvi + floatSize, floatSize);
-
-                    uvi += 2 * floatSize;
-                    vi += 3 * floatSize;
-
-                    vmax[0] = Math.Max(vmax[0], v.Position.X);
-                    vmax[1] = Math.Max(vmax[1], v.Position.Y);
-                    vmax[2] = Math.Max(vmax[2], v.Position.Z);
-                    vmin[0] = Math.Min(vmin[0], v.Position.X);
-                    vmin[1] = Math.Min(vmin[1], v.Position.Y);
-                    vmin[2] = Math.Min(vmin[2], v.Position.Z);
-
-                    nmax[0] = Math.Max(nmax[0], n.X);
-                    nmax[1] = Math.Max(nmax[1], n.Y);
-                    nmax[2] = Math.Max(nmax[2], n.Z);
-                    nmin[0] = Math.Min(nmin[0], n.X);
-                    nmin[1] = Math.Min(nmin[1], n.Y);
-                    nmin[2] = Math.Min(nmin[2], n.Z);
-
-                    uvmax[0] = Math.Max(uvmax[0], uu);
-                    uvmax[1] = Math.Max(uvmax[1], vv);
-                    uvmin[0] = Math.Min(uvmin[0], uu);
-                    uvmin[1] = Math.Min(uvmin[1], vv);
+                    imax = Math.Max(imax, (ushort)(iCursor + 3));
+                    imin = Math.Min(imin, (ushort)(iCursor));
+                    iCursor = (ushort)(imax + 1);
                 }
-
-                for (var k = 0; k < tess.Elements.Length; k++)
+                else if (p.Vertices.Count > 4)
                 {
-                    var t = tess.Elements[k];
-                    var index = (ushort)(t + iCursor);
-                    System.Buffer.BlockCopy(BitConverter.GetBytes(index), 0, indexBuffer, ii, ushortSize);
-                    imax = Math.Max(imax, index);
-                    imin = Math.Min(imin, index);
-                    ii += ushortSize;
-                }
+                    var tess = new Tess();
+                    tess.NoEmptyPolygons = true;
+                    tess.AddContour(p.Vertices.ToContourVertices());
 
-                iCursor = imax + 1;
+                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+
+                    if (tess.ElementCount == 0)
+                    {
+                        continue;
+                    }
+
+                    var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
+                    var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
+                    var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
+                    var tmp = (b - a).Unitized();
+                    var n = tmp.Cross(c - a).Unitized();
+
+                    // Calculate the texture space basis vectors
+                    // from the first triangle. This is acceptable
+                    // for planar faces.
+                    // TODO: Update this when we support non-planar faces.
+                    // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                    basis = n.ComputeDefaultBasisVectors();
+
+                    for (var j = 0; j < tess.Vertices.Length; j++)
+                    {
+                        var v = tess.Vertices[j];
+                        var pos = v.Position.ToVector3();
+                        WriteVertex(pos,
+                                    n,
+                                    vertices,
+                                    normals,
+                                    uvs,
+                                    basis,
+                                    ref vmax,
+                                    ref vmin,
+                                    ref nmax,
+                                    ref nmin,
+                                    ref uvmax,
+                                    ref uvmin);
+                    }
+
+                    for (var k = 0; k < tess.Elements.Length; k++)
+                    {
+                        var t = tess.Elements[k];
+                        var index = (ushort)(t + iCursor);
+                        indices.AddRange(BitConverter.GetBytes(index));
+                        imax = Math.Max(imax, index);
+                        imin = Math.Min(imin, index);
+                    }
+
+                    iCursor = (ushort)(imax + 1);
+                }
             }
+
+            vertexBuffer = vertices.ToArray();
+            normalBuffer = normals.ToArray();
+            indexBuffer = indices.ToArray();
+            uvBuffer = uvs.ToArray();
+            colorBuffer = colors.ToArray();
+        }
+
+        private static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)
+        {
+            var tmp = (b - a).Unitized();
+            n = tmp.Cross(c - a).Unitized();
+            var basis = n.ComputeDefaultBasisVectors();
+            return basis;
+        }
+
+        private static void WriteVertex(Vector3 pos,
+                                        Vector3 n,
+                                        List<byte> vertices,
+                                        List<byte> normals,
+                                        List<byte> uvs,
+                                        (Vector3 U, Vector3 V) basis,
+                                        ref double[] vmax,
+                                        ref double[] vmin,
+                                        ref double[] nmax,
+                                        ref double[] nmin,
+                                        ref double[] uvmax,
+                                        ref double[] uvmin)
+        {
+            vertices.AddRange(BitConverter.GetBytes((float)pos.X));
+            vertices.AddRange(BitConverter.GetBytes((float)pos.Y));
+            vertices.AddRange(BitConverter.GetBytes((float)pos.Z));
+
+            normals.AddRange(BitConverter.GetBytes((float)n.X));
+            normals.AddRange(BitConverter.GetBytes((float)n.Y));
+            normals.AddRange(BitConverter.GetBytes((float)n.Z));
+
+            var uu = basis.U.Dot(pos);
+            var vv = basis.V.Dot(pos);
+            uvs.AddRange(BitConverter.GetBytes((float)uu));
+            uvs.AddRange(BitConverter.GetBytes((float)vv));
+
+            vmax[0] = Math.Max(vmax[0], pos.X);
+            vmax[1] = Math.Max(vmax[1], pos.Y);
+            vmax[2] = Math.Max(vmax[2], pos.Z);
+            vmin[0] = Math.Min(vmin[0], pos.X);
+            vmin[1] = Math.Min(vmin[1], pos.Y);
+            vmin[2] = Math.Min(vmin[2], pos.Z);
+
+            nmax[0] = Math.Max(nmax[0], n.X);
+            nmax[1] = Math.Max(nmax[1], n.Y);
+            nmax[2] = Math.Max(nmax[2], n.Z);
+            nmin[0] = Math.Min(nmin[0], n.X);
+            nmin[1] = Math.Min(nmin[1], n.Y);
+            nmin[2] = Math.Min(nmin[2], n.Z);
+
+            uvmax[0] = Math.Max(uvmax[0], uu);
+            uvmax[1] = Math.Max(uvmax[1], vv);
+            uvmin[0] = Math.Min(uvmin[0], uu);
+            uvmin[1] = Math.Min(uvmin[1], vv);
         }
 
         internal static Csg.Matrix4x4 ToMatrix4x4(this Transform transform)
