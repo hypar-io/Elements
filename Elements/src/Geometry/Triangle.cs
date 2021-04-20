@@ -76,5 +76,26 @@ namespace Elements.Geometry
             }
             return contour;
         }
+
+        internal bool HasDuplicatedVertices(out Vector3 duplicate)
+        {
+            if (this.Vertices[0].Position.IsAlmostEqualTo(this.Vertices[1].Position))
+            {
+                duplicate = this.Vertices[0].Position;
+                return true;
+            }
+            if (this.Vertices[0].Position.IsAlmostEqualTo(this.Vertices[2].Position))
+            {
+                duplicate = this.Vertices[0].Position;
+                return true;
+            }
+            if (this.Vertices[1].Position.IsAlmostEqualTo(this.Vertices[2].Position))
+            {
+                duplicate = this.Vertices[1].Position;
+                return true;
+            }
+            duplicate = default(Vector3);
+            return false;
+        }
     }
 }

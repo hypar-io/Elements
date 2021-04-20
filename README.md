@@ -109,6 +109,7 @@ docfx -f --serve
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
 - [Csg](https://github.com/praeclarum/Csg)
+- [NetOctree](https://github.com/mcserep/NetOctree)
 
 ## Updating the Changelog
 We use [`CHANGELOG.md`](CHANGELOG.md) to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.

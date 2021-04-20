@@ -21,7 +21,7 @@ namespace Elements.Geometry
             }
         }
 
-        private void Extend(Vector3 v)
+        internal void Extend(Vector3 v)
         {
             var newMin = new Vector3(Min.X, Min.Y, Min.Z);
             if (v.X < this.Min.X) newMin.X = v.X;

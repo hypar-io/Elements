@@ -1,9 +1,11 @@
 using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
+using Octree;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using static Elements.Units;
 
 namespace Elements.Geometry
@@ -11,6 +13,8 @@ namespace Elements.Geometry
     [JsonConverter(typeof(MeshConverter))]
     public partial class Mesh
     {
+        private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
+
         /// <summary>
         /// Construct an empty mesh.
         /// </summary>
@@ -60,7 +64,7 @@ namespace Elements.Geometry
                     if (line.StartsWith("endfacet"))
                     {
                         var t = new Triangle(vertexCache[0], vertexCache[1], vertexCache[2]);
-                        if (!HasDuplicatedVertices(t, out _))
+                        if (!t.HasDuplicatedVertices(out _))
                         {
                             mesh.AddTriangle(t);
                         }
@@ -225,7 +229,7 @@ Triangles:{Triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
-            if (HasDuplicatedVertices(t, out Vector3 duplicate))
+            if (t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
@@ -239,7 +243,7 @@ Triangles:{Triangles.Count}";
         /// <param name="t">The triangle to add.</param>
         public Triangle AddTriangle(Triangle t)
         {
-            if (HasDuplicatedVertices(t, out Vector3 duplicate))
+            if (t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
@@ -253,14 +257,39 @@ Triangles:{Triangles.Count}";
         /// <param name="position">The position of the vertex.</param>
         /// <param name="normal">The vertex's normal.</param>
         /// <param name="color">The vertex's color.</param>
+        /// <param name="merge">If true, and a vertex already exists with a 
+        /// position within Vector3.EPSILON, that vertex will be returned.</param>
+        /// <param name="edgeAngle">If merge is true, vertices will be 
+        /// merged if the angle between them is less than edgeAngle.</param>
         /// <param name="uv">The texture coordinate of the vertex.</param>
         /// <returns>The newly created vertex.</returns>
-        public Vertex AddVertex(Vector3 position, UV uv = default(UV), Vector3 normal = default(Vector3), Color color = default(Color))
+        public Vertex AddVertex(Vector3 position,
+                                UV uv = default(UV),
+                                Vector3 normal = default(Vector3),
+                                Color color = default(Color),
+                                bool merge = false,
+                                double edgeAngle = 30.0)
         {
+            var p = new Octree.Point((float)position.X, (float)position.Y, (float)position.Z);
+
+            if (merge)
+            {
+                var search = this._octree.GetNearby(p, (float)Vector3.EPSILON);
+                if (search.Length > 0)
+                {
+                    var angle = search[0].Normal.AngleTo(normal);
+                    if (angle < edgeAngle)
+                    {
+                        return search[0];
+                    }
+                }
+            }
+
             var v = new Vertex(position, normal, color);
             v.UV = uv;
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
+            this._octree.Add(v, p);
             return v;
         }
 
@@ -273,6 +302,16 @@ Triangles:{Triangles.Count}";
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
             return v;
+        }
+
+        /// <summary>
+        /// Calculate the volume of the mesh.
+        /// This value will be inexact for open meshes.
+        /// </summary>
+        /// <returns>The volume of the mesh.</returns>
+        public double Volume()
+        {
+            return Math.Abs(this.Triangles.Sum(t => SignedVolumeOfTriangle(t)));
         }
 
         internal void AddMesh(Mesh mesh)
@@ -303,25 +342,19 @@ Triangles:{Triangles.Count}";
             return false;
         }
 
-        private static bool HasDuplicatedVertices(Triangle t, out Vector3 duplicate)
+        private double SignedVolumeOfTriangle(Triangle t)
         {
-            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[1].Position))
-            {
-                duplicate = t.Vertices[0].Position;
-                return true;
-            }
-            if (t.Vertices[0].Position.IsAlmostEqualTo(t.Vertices[2].Position))
-            {
-                duplicate = t.Vertices[0].Position;
-                return true;
-            }
-            if (t.Vertices[1].Position.IsAlmostEqualTo(t.Vertices[2].Position))
-            {
-                duplicate = t.Vertices[1].Position;
-                return true;
-            }
-            duplicate = default(Vector3);
-            return false;
+            var p1 = t.Vertices[0].Position;
+            var p2 = t.Vertices[1].Position;
+            var p3 = t.Vertices[2].Position;
+
+            var v321 = p3.X * p2.Y * p1.Z;
+            var v231 = p2.X * p3.Y * p1.Z;
+            var v312 = p3.X * p1.Y * p2.Z;
+            var v132 = p1.X * p3.Y * p2.Z;
+            var v213 = p2.X * p1.Y * p3.Z;
+            var v123 = p1.X * p2.Y * p3.Z;
+            return (1.0 / 6.0) * (-v321 + v231 + v312 - v132 - v213 + v123);
         }
     }
 
