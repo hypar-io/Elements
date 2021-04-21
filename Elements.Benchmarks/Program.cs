@@ -58,7 +58,7 @@ namespace Elements.Benchmarks
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var m = new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f);
+                var m = new Material(Guid.NewGuid().ToString(), color, 0.1f, 0.4f);
                 model.AddElement(m, false);
                 var beam = new Beam(line, profile, m);
                 model.AddElement(beam, false);
