@@ -67,6 +67,7 @@ namespace Elements
                                                             name)
         {
             SetProperties(curve, profile, startSetback, endSetback, rotation);
+            this.UpdateRepresentations();
         }
 
         private void SetProperties(Curve curve,
