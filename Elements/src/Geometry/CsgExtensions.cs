@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 using Octree;
@@ -55,7 +56,16 @@ namespace Elements.Geometry
 
             (Vector3 U, Vector3 V) basis;
 
-            var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(100000f, new Point(0f, 0f, 0f), (float)Vector3.EPSILON);
+            const float SEARCH_RADIUS = 0.001f;
+
+            // Setup the octree to fit around the csg.
+            // This requires one expensive initialization.
+            var verts = csg.Polygons.SelectMany(p => p.Vertices).Select(v => v.Pos.ToElementsVector()).ToArray();
+            var bounds = new BBox3(verts);
+            var center = bounds.Center();
+            var origin = new Point((float)center.X, (float)center.Y, (float)center.Z);
+            var size = (float)bounds.Max.DistanceTo(bounds.Min);
+            var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(size, origin, SEARCH_RADIUS);
 
             foreach (var p in csg.Polygons)
             {
@@ -72,7 +82,7 @@ namespace Elements.Geometry
                         var v = p.Vertices[i];
                         var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
                         var ep = v.Pos.ToElementsVector();
-                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
+                        var search = octree.GetNearby(op, 0.001f);
 
                         var useExisting = false;
                         foreach (var existing in search)
@@ -155,7 +165,7 @@ namespace Elements.Geometry
                         var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
                         var ep = v.Position.ToVector3();
 
-                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
+                        var search = octree.GetNearby(op, SEARCH_RADIUS);
 
                         var useExisting = false;
                         foreach (var existing in search)
@@ -200,8 +210,6 @@ namespace Elements.Geometry
                     }
                 }
             }
-
-            // Console.WriteLine($"There are {vertices.Count / (3 * 4)} vertices.");
 
             vertexBuffer = vertices.ToArray();
             normalBuffer = normals.ToArray();
