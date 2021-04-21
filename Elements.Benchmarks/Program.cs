@@ -1,4 +1,7 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.IO;
+using System.Linq;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
@@ -7,7 +10,7 @@ using Elements.Serialization.glTF;
 
 namespace Elements.Benchmarks
 {
-    [SimpleJob(launchCount: 1, warmupCount: 10, targetCount: 30)]
+    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
     public class Csg
     {
         private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
@@ -39,11 +42,42 @@ namespace Elements.Benchmarks
         }
     }
 
+    [MemoryDiagnoser]
+    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
+    public class HSS
+    {
+        [Benchmark(Description = "Create all HSS beams.")]
+        public void CreateAllHSSBeams()
+        {
+            var x = 0.0;
+            var z = 0.0;
+            var hssFactory = new HSSPipeProfileFactory();
+            var profiles = hssFactory.AllProfiles().ToList();
+            var model = new Model();
+            foreach (var profile in profiles)
+            {
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var m = new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f);
+                model.AddElement(m, false);
+                var beam = new Beam(line, profile, m);
+                model.AddElement(beam, false);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+            model.ToGlTF(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "CreateAllHSSBeamsBenchmark.glb"));
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<Csg>();
+            var summary = BenchmarkRunner.Run<HSS>();
         }
     }
 }

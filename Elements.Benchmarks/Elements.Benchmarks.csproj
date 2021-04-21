@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <ProjectReference Include="..\Elements\src\Elements.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Elements\src\Elements.csproj" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
   </ItemGroup>
 
 </Project>
