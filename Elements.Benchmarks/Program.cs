@@ -43,7 +43,7 @@ namespace Elements.Benchmarks
     }
 
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
+    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
     public class HSS
     {
         [Benchmark(Description = "Create all HSS beams.")]
