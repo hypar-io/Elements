@@ -61,9 +61,8 @@ namespace Elements.Geometry
             {
                 var ii = new ushort[p.Vertices.Count];
 
-                if (p.Vertices.Count == 3)
+                if (p.Vertices.Count > 2 && p.Vertices.Count <= 4)
                 {
-                    // It's just a triangle. Add it directly.
                     var a = p.Vertices[0].Pos.ToElementsVector();
                     var b = p.Vertices[1].Pos.ToElementsVector();
                     var c = p.Vertices[2].Pos.ToElementsVector();
@@ -109,77 +108,20 @@ namespace Elements.Geometry
                                     ref uvmax,
                                     ref uvmin);
                         octree.Add((ep, n, ii[i]), op);
-
                     }
+
+                    // First triangle
                     indices.AddRange(BitConverter.GetBytes(ii[0]));
                     indices.AddRange(BitConverter.GetBytes(ii[1]));
                     indices.AddRange(BitConverter.GetBytes(ii[2]));
-                }
-                if (p.Vertices.Count == 4)
-                {
-                    // Triangulate into two triangles.
-                    var a = p.Vertices[0].Pos.ToElementsVector();
-                    var b = p.Vertices[1].Pos.ToElementsVector();
-                    var c = p.Vertices[2].Pos.ToElementsVector();
-                    var d = p.Vertices[3].Pos.ToElementsVector();
-                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
 
-                    for (var i = 0; i < p.Vertices.Count; i++)
+                    if (p.Vertices.Count == 4)
                     {
-                        var v = p.Vertices[i];
-                        var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
-                        var ep = v.Pos.ToElementsVector();
-                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
-
-                        var useExisting = false;
-                        foreach (var existing in search)
-                        {
-                            var angle = existing.normal.AngleTo(n);
-
-                            if (angle < 45.0)
-                            {
-                                ii[i] = existing.index;
-                                useExisting = true;
-                                break;
-                            }
-                        }
-                        if (useExisting)
-                        {
-                            continue;
-                        }
-
-                        ii[i] = iCursor;
-                        imax = Math.Max(imax, iCursor);
-                        imin = Math.Min(imin, iCursor);
-                        iCursor++;
-                        WriteVertex(ep,
-                                    n,
-                                    vertices,
-                                    normals,
-                                    uvs,
-                                    basis,
-                                    ref vmax,
-                                    ref vmin,
-                                    ref nmax,
-                                    ref nmin,
-                                    ref uvmax,
-                                    ref uvmin);
-                        octree.Add((ep, n, ii[i]), op);
+                        // Triangle 2
+                        indices.AddRange(BitConverter.GetBytes(ii[0]));
+                        indices.AddRange(BitConverter.GetBytes(ii[2]));
+                        indices.AddRange(BitConverter.GetBytes(ii[3]));
                     }
-
-                    // Triangle 1
-                    indices.AddRange(BitConverter.GetBytes(ii[0]));
-                    indices.AddRange(BitConverter.GetBytes(ii[1]));
-                    indices.AddRange(BitConverter.GetBytes(ii[2]));
-
-                    // Console.WriteLine($"{ii[0]},{ii[1]},{ii[2]}");
-
-                    // Triangle 2
-                    indices.AddRange(BitConverter.GetBytes(ii[0]));
-                    indices.AddRange(BitConverter.GetBytes(ii[2]));
-                    indices.AddRange(BitConverter.GetBytes(ii[3]));
-
-                    // Console.WriteLine($"{ii[0]},{ii[2]},{ii[3]}");
                 }
                 else if (p.Vertices.Count > 4)
                 {
@@ -207,9 +149,9 @@ namespace Elements.Geometry
                     // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
                     basis = n.ComputeDefaultBasisVectors();
 
-                    for (var j = 0; j < tess.Vertices.Length; j++)
+                    for (var i = 0; i < tess.Vertices.Length; i++)
                     {
-                        var v = tess.Vertices[j];
+                        var v = tess.Vertices[i];
                         var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
                         var ep = v.Position.ToVector3();
 
@@ -222,7 +164,7 @@ namespace Elements.Geometry
 
                             if (angle < 45.0)
                             {
-                                ii[j] = existing.index;
+                                ii[i] = existing.index;
                                 useExisting = true;
                                 break;
                             }
@@ -232,7 +174,7 @@ namespace Elements.Geometry
                             continue;
                         }
 
-                        ii[j] = iCursor;
+                        ii[i] = iCursor;
                         imax = Math.Max(imax, iCursor);
                         imin = Math.Min(imin, iCursor);
                         iCursor++;
@@ -248,7 +190,7 @@ namespace Elements.Geometry
                                     ref nmin,
                                     ref uvmax,
                                     ref uvmin);
-                        octree.Add((ep, n, ii[j]), op);
+                        octree.Add((ep, n, ii[i]), op);
                     }
 
                     for (var k = 0; k < tess.Elements.Length; k++)
@@ -371,6 +313,9 @@ namespace Elements.Geometry
                         Csg.Vertex cv = null;
 
                         // TODO: Figure out if this is required.
+                        // We merge vertices on the final output of a CSG,
+                        // so merging them here has no effect.
+
                         // Merge vertices.
                         // foreach (var v in vertices)
                         // {
