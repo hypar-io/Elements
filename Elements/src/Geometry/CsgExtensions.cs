@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
+using Octree;
 
 namespace Elements.Geometry
 {
@@ -54,8 +55,12 @@ namespace Elements.Geometry
 
             (Vector3 U, Vector3 V) basis;
 
+            var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(100000f, new Point(0f, 0f, 0f), (float)Vector3.EPSILON);
+
             foreach (var p in csg.Polygons)
             {
+                var ii = new ushort[p.Vertices.Count];
+
                 if (p.Vertices.Count == 3)
                 {
                     // It's just a triangle. Add it directly.
@@ -66,7 +71,32 @@ namespace Elements.Geometry
                     for (var i = 0; i < p.Vertices.Count; i++)
                     {
                         var v = p.Vertices[i];
-                        WriteVertex(v.Pos.ToElementsVector(),
+                        var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
+                        var ep = v.Pos.ToElementsVector();
+                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
+
+                        var useExisting = false;
+                        foreach (var existing in search)
+                        {
+                            var angle = existing.normal.AngleTo(n);
+
+                            if (angle < 45.0)
+                            {
+                                ii[i] = existing.index;
+                                useExisting = true;
+                                break;
+                            }
+                        }
+                        if (useExisting)
+                        {
+                            continue;
+                        }
+
+                        ii[i] = iCursor;
+                        imax = Math.Max(imax, iCursor);
+                        imin = Math.Min(imin, iCursor);
+                        iCursor++;
+                        WriteVertex(ep,
                                     n,
                                     vertices,
                                     normals,
@@ -78,13 +108,12 @@ namespace Elements.Geometry
                                     ref nmin,
                                     ref uvmax,
                                     ref uvmin);
+                        octree.Add((ep, n, ii[i]), op);
+
                     }
-                    indices.AddRange(BitConverter.GetBytes(iCursor));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 1)));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
-                    imax = Math.Max(imax, (ushort)(iCursor + 2));
-                    imin = Math.Min(imin, (ushort)(iCursor));
-                    iCursor = (ushort)(imax + 1);
+                    indices.AddRange(BitConverter.GetBytes(ii[0]));
+                    indices.AddRange(BitConverter.GetBytes(ii[1]));
+                    indices.AddRange(BitConverter.GetBytes(ii[2]));
                 }
                 if (p.Vertices.Count == 4)
                 {
@@ -94,10 +123,36 @@ namespace Elements.Geometry
                     var c = p.Vertices[2].Pos.ToElementsVector();
                     var d = p.Vertices[3].Pos.ToElementsVector();
                     basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
+
                     for (var i = 0; i < p.Vertices.Count; i++)
                     {
                         var v = p.Vertices[i];
-                        WriteVertex(v.Pos.ToElementsVector(),
+                        var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
+                        var ep = v.Pos.ToElementsVector();
+                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
+
+                        var useExisting = false;
+                        foreach (var existing in search)
+                        {
+                            var angle = existing.normal.AngleTo(n);
+
+                            if (angle < 45.0)
+                            {
+                                ii[i] = existing.index;
+                                useExisting = true;
+                                break;
+                            }
+                        }
+                        if (useExisting)
+                        {
+                            continue;
+                        }
+
+                        ii[i] = iCursor;
+                        imax = Math.Max(imax, iCursor);
+                        imin = Math.Min(imin, iCursor);
+                        iCursor++;
+                        WriteVertex(ep,
                                     n,
                                     vertices,
                                     normals,
@@ -109,21 +164,22 @@ namespace Elements.Geometry
                                     ref nmin,
                                     ref uvmax,
                                     ref uvmin);
+                        octree.Add((ep, n, ii[i]), op);
                     }
 
                     // Triangle 1
-                    indices.AddRange(BitConverter.GetBytes(iCursor));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 1)));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
+                    indices.AddRange(BitConverter.GetBytes(ii[0]));
+                    indices.AddRange(BitConverter.GetBytes(ii[1]));
+                    indices.AddRange(BitConverter.GetBytes(ii[2]));
+
+                    // Console.WriteLine($"{ii[0]},{ii[1]},{ii[2]}");
 
                     // Triangle 2
-                    indices.AddRange(BitConverter.GetBytes(iCursor));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 2)));
-                    indices.AddRange(BitConverter.GetBytes((ushort)(iCursor + 3)));
+                    indices.AddRange(BitConverter.GetBytes(ii[0]));
+                    indices.AddRange(BitConverter.GetBytes(ii[2]));
+                    indices.AddRange(BitConverter.GetBytes(ii[3]));
 
-                    imax = Math.Max(imax, (ushort)(iCursor + 3));
-                    imin = Math.Min(imin, (ushort)(iCursor));
-                    iCursor = (ushort)(imax + 1);
+                    // Console.WriteLine($"{ii[0]},{ii[2]},{ii[3]}");
                 }
                 else if (p.Vertices.Count > 4)
                 {
@@ -154,8 +210,33 @@ namespace Elements.Geometry
                     for (var j = 0; j < tess.Vertices.Length; j++)
                     {
                         var v = tess.Vertices[j];
-                        var pos = v.Position.ToVector3();
-                        WriteVertex(pos,
+                        var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
+                        var ep = v.Position.ToVector3();
+
+                        var search = octree.GetNearby(op, (float)Vector3.EPSILON);
+
+                        var useExisting = false;
+                        foreach (var existing in search)
+                        {
+                            var angle = existing.normal.AngleTo(n);
+
+                            if (angle < 45.0)
+                            {
+                                ii[j] = existing.index;
+                                useExisting = true;
+                                break;
+                            }
+                        }
+                        if (useExisting)
+                        {
+                            continue;
+                        }
+
+                        ii[j] = iCursor;
+                        imax = Math.Max(imax, iCursor);
+                        imin = Math.Min(imin, iCursor);
+                        iCursor++;
+                        WriteVertex(ep,
                                     n,
                                     vertices,
                                     normals,
@@ -167,20 +248,18 @@ namespace Elements.Geometry
                                     ref nmin,
                                     ref uvmax,
                                     ref uvmin);
+                        octree.Add((ep, n, ii[j]), op);
                     }
 
                     for (var k = 0; k < tess.Elements.Length; k++)
                     {
-                        var t = tess.Elements[k];
-                        var index = (ushort)(t + iCursor);
+                        var index = ii[tess.Elements[k]];
                         indices.AddRange(BitConverter.GetBytes(index));
-                        imax = Math.Max(imax, index);
-                        imin = Math.Min(imin, index);
                     }
-
-                    iCursor = (ushort)(imax + 1);
                 }
             }
+
+            // Console.WriteLine($"There are {vertices.Count / (3 * 4)} vertices.");
 
             vertexBuffer = vertices.ToArray();
             normalBuffer = normals.ToArray();
@@ -291,24 +370,25 @@ namespace Elements.Geometry
                         Csg.Vertex bv = null;
                         Csg.Vertex cv = null;
 
+                        // TODO: Figure out if this is required.
                         // Merge vertices.
-                        foreach (var v in vertices)
-                        {
-                            if (v.Pos.IsAlmostEqualTo(a))
-                            {
-                                av = v;
-                            }
+                        // foreach (var v in vertices)
+                        // {
+                        //     if (v.Pos.IsAlmostEqualTo(a))
+                        //     {
+                        //         av = v;
+                        //     }
 
-                            if (v.Pos.IsAlmostEqualTo(b))
-                            {
-                                bv = v;
-                            }
+                        //     if (v.Pos.IsAlmostEqualTo(b))
+                        //     {
+                        //         bv = v;
+                        //     }
 
-                            if (v.Pos.IsAlmostEqualTo(c))
-                            {
-                                cv = v;
-                            }
-                        }
+                        //     if (v.Pos.IsAlmostEqualTo(c))
+                        //     {
+                        //         cv = v;
+                        //     }
+                        // }
                         if (i == 0)
                         {
                             var n = f.Plane().Normal;
