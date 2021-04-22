@@ -14,10 +14,10 @@ namespace Elements.Analysis
     /// </example>
     public class AnalysisMesh : GeometricElement, ITessellate
     {
-        private List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
-        private Func<Vector3, double> _analyze;
-        private double _min = double.MaxValue;
-        private double _max = double.MinValue;
+        internal List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
+        internal Func<Vector3, double> _analyze;
+        internal double _min = double.MaxValue;
+        internal double _max = double.MinValue;
 
         /// <summary>
         /// The total number of analysis locations.

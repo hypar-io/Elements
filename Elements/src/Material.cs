@@ -10,6 +10,13 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
+        /// Should the texture be interpolated?
+        /// If false, renders hard pixels in the texture rather than fading between adjacent pixels.
+        /// </summary>
+        /// <value></value>
+        public bool InterpolateTexture { get; set; } = true;
+
+        /// <summary>
         /// Should the texture be repeated?
         /// </summary>
         /// <value>The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</value>
