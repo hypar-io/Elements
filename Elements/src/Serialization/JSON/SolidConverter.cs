@@ -200,15 +200,26 @@ namespace Elements.Serialization.JSON
             writer.WriteEndObject();
         }
 
-        private void WriteHalfEdge(HalfEdge he, JsonWriter writer, object value)
+        private void WriteHalfEdge(HalfEdge leftEdge, JsonWriter writer, object value)
         {
+            // TODO: figure out why we're only ever passing 
+            // left edges to this method
             writer.WriteStartObject();
             writer.WritePropertyName("vertex_id");
-            writer.WriteValue(he.Vertex.Id);
+            writer.WriteValue(leftEdge.Vertex.Id);
             writer.WritePropertyName("edge_id");
-            writer.WriteValue(he.Edge.Id);
+            writer.WriteValue(leftEdge.Edge.Id);
             writer.WritePropertyName("edge_side");
-            writer.WriteValue(he.Edge.Left == he ? "left" : "right");
+            writer.WriteValue("left");
+            writer.WriteEndObject();
+            var rightEdge = leftEdge.Edge.Right;
+            writer.WriteStartObject();
+            writer.WritePropertyName("vertex_id");
+            writer.WriteValue(rightEdge.Vertex.Id);
+            writer.WritePropertyName("edge_id");
+            writer.WriteValue(rightEdge.Edge.Id);
+            writer.WritePropertyName("edge_side");
+            writer.WriteValue("right");
             writer.WriteEndObject();
         }
     }
