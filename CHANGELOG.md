@@ -1,8 +1,15 @@
 # Changelog
 
+## 0.9.0
+
+### Changed
+
+- `ConstructedSolid` serializes and deserializes correctly.
+
 ## 0.8.5
 
 ### Added
+
 - `Elements.Spatial.CellComplex`
 - `Grid2d.ToModelCurves()`
 - Alpha release of `Hypar.Elements.Components`
@@ -13,14 +20,17 @@
 - `void Topography.Trim(Polygon perimeter)`
 
 ### Changed
+
 - `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
 - `Solids.Import` is now public.
 - `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
 
 ### Fixed
+
 ## 0.8.4
 
 ### Added
+
 - `BBox3.IsValid()`
 - `BBox3.IsDegenerate()`
 - `Elements.Light`
@@ -44,6 +54,7 @@
 - Release helper github action
 
 ### Changed
+
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
 - `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
 - `SHSProfile`
@@ -62,6 +73,7 @@
 ## 0.8.3
 
 ### Added
+
 - `Profile.ToModelCurves()`
 - `Profile.Difference()`
 - `Profile.Intersection()`
