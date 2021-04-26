@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -198,6 +199,7 @@ namespace Elements.Tests
         [Fact]
         public void ConstructedSolid()
         {
+            GenerateIfc = false;
             Name = nameof(ConstructedSolid);
             var solid = new Solid();
             var A = new Vector3(0, 0, 0);
@@ -220,9 +222,18 @@ namespace Elements.Tests
             var representation = new Representation(new[] { import });
             var emptyRep = new Representation(new[] { emptySolid });
             var userElement = new GeometricElement(new Transform(), BuiltInMaterials.Default, representation, false, Guid.NewGuid(), "Import");
-            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import");
+            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import Empty");
             Model.AddElement(userElement);
             Model.AddElement(userElementWithEmptySolid);
+
+            // ensure serialized solid
+            var modelJson = Model.ToJson();
+
+            var deserializedModel = Model.FromJson(modelJson);
+            var userElemDeserialized = deserializedModel.GetElementByName<GeometricElement>("Import");
+            var opDeserialized = userElemDeserialized.Representation.SolidOperations.First();
+            var solidDeserialized = opDeserialized?.Solid;
+            Assert.NotNull(solidDeserialized);
         }
     }
 
