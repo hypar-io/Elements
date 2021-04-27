@@ -10,9 +10,11 @@ namespace Elements.Analysis
 {
     /// <summary>
     /// A visualization of computed values at locations in space.
+    /// Use this instead of AnalysisMesh to create a lightweight mesh with an image texture,
+    /// rather than mesh faces for each pixel.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/AnalysisImageTests.cs?name=example)]
     /// </example>
     public class AnalysisImage : AnalysisMesh
     {
@@ -56,7 +58,7 @@ namespace Elements.Analysis
                             ColorScale colorScale,
                             Func<Vector3, double> analyze,
                             Guid id = default(Guid),
-                            string name = null) : base(perimeter, uLength, vLength, colorScale, analyze, id, name) {}
+                            string name = null) : base(perimeter, uLength, vLength, colorScale, analyze, id, name) { }
 
         /// <summary>
         /// Gives an element with a mapped texture.
@@ -100,7 +102,7 @@ namespace Elements.Analysis
                     image[x, y] = rgbaColor;
 
                     // Extend this color to the right
-                    if (result.cell.Max.X == perimBounds.Max.X)
+                    if (Math.Abs(result.cell.Max.X - perimBounds.Max.X) < Vector3.EPSILON)
                     {
                         while (x < imgPixels - 1)
                         {
@@ -110,7 +112,7 @@ namespace Elements.Analysis
                     }
 
                     // Extend this color to the top
-                    if (result.cell.Max.Y == perimBounds.Max.Y)
+                    if (Math.Abs(result.cell.Max.Y - perimBounds.Max.Y) < Vector3.EPSILON)
                     {
                         while (y >= 0)
                         {
@@ -122,9 +124,6 @@ namespace Elements.Analysis
             }
 
             var imagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
-
-            Console.WriteLine($"💿 saved: {imagePath}");
-
             image.Save(imagePath);
 
             var material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
