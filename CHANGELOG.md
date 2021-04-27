@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.0
+
+### Added
+- `Elements.Anaysis.AnalysisImage`
+
+### Changed
+
+### Fixed
+
 ## 0.8.5
 
 ### Added
