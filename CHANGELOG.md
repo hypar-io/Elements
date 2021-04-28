@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.0
+
+### Changed
+
+- `ConstructedSolid` serializes and deserializes correctly.
+- `Solid.AddFace(Polygon, Polygon[])` can take an optional third `mergeVerticesAndEdges` argument which will automatically reuse existing edges + vertices in the solid.
+
+### Fixed
+
+- Fixed a bug in `ConvexHull.FromPoints` when multiple X coordinates are equal.
+
+
 ## 0.8.5
 
 ### Added
