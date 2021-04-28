@@ -11,7 +11,7 @@ namespace Elements.Tests
     public class ConvexHullTests : ModelTest
     {
         [Fact]
-        public void ConvexHullOrthogonal()
+        public void ConvexHullOrthogonalWithDuplicateVertices()
         {
             var points = new List<Vector3>()
             {
