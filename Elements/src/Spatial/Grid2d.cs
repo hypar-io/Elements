@@ -761,22 +761,6 @@ namespace Elements.Spatial
             return IsOutside(baseRect);
         }
 
-        private bool IsOutside(Polygon baseRect)
-        {
-            var perimeter = boundariesInGridSpace.First();
-            // if any vertex of the rect is fully outside, we are trimmed
-            perimeter.Contains(baseRect.Vertices.First(), out var containment);
-            if (containment == Containment.Outside)
-            {
-                return true;
-            }
-            if (boundariesInGridSpace.Count() > 1)
-            {
-                return boundariesInGridSpace.Skip(1).Any(boundary => boundary.Covers(baseRect));
-            }
-            return false;
-        }
-
         #endregion
 
         #region Private/Internal Methods
@@ -792,6 +776,22 @@ namespace Elements.Spatial
                 throw new NotSupportedException("An attempt was made to modify the underlying U or V grid of a 2D Grid, after some of its cells had already been further subdivided.");
             }
             this.cells = null;
+        }
+
+        private bool IsOutside(Polygon baseRect)
+        {
+            var perimeter = boundariesInGridSpace.First();
+            // if any vertex of the rect is fully outside, we are trimmed
+            perimeter.Contains(baseRect.Vertices.First(), out var containment);
+            if (containment == Containment.Outside)
+            {
+                return true;
+            }
+            if (boundariesInGridSpace.Count() > 1)
+            {
+                return boundariesInGridSpace.Skip(1).Any(boundary => boundary.Covers(baseRect));
+            }
+            return false;
         }
 
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
