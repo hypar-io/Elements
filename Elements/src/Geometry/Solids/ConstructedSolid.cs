@@ -1,3 +1,6 @@
+using Elements.Serialization.JSON;
+using Newtonsoft.Json;
+
 namespace Elements.Geometry.Solids
 {
     /// <summary>
@@ -15,5 +18,11 @@ namespace Elements.Geometry.Solids
             this._solid = solid;
             this._csg = solid.ToCsg();
         }
+
+        // This is a hack to get the normally JsonIgnored
+        // `Solid` property to serialize.
+        [JsonProperty("Solid")]
+        [JsonConverter(typeof(SolidConverter))]
+        internal Solid InternalSolid => base.Solid;
     }
 }
