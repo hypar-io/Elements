@@ -77,20 +77,23 @@ namespace Elements.Tests
             var trimmedCells = grid.GetCells().Select(c =>
                 (TrimmedGeometry: c.GetTrimmedCellGeometry(),
                 BaseRect: c.GetCellGeometry(),
-                IsTrimmed: c.IsTrimmed()));
+                IsTrimmed: c.IsTrimmed(),
+                IsTrimmedButNotOutside: c.IsTrimmed(false)));
 
             foreach (var trimGeometry in trimmedCells)
             {
                 var trimGeo = trimGeometry.TrimmedGeometry.OfType<Polygon>();
-                var material = trimGeometry.IsTrimmed ? BuiltInMaterials.XAxis : BuiltInMaterials.ZAxis;
+                var material = trimGeometry.IsTrimmed ? (trimGeometry.IsTrimmedButNotOutside ? BuiltInMaterials.XAxis : BuiltInMaterials.YAxis) : BuiltInMaterials.ZAxis;
                 foreach (var t in trimGeo)
                 {
                     Model.AddElement(new ModelCurve(t));
-                    Model.AddElement(new Mass(t, 1, material, new Transform(0, 0, -1.001)));
+                    Model.AddElement(new Mass(t, 0.1, material, new Transform(0, 0, -1.001)));
                 }
+                Model.AddElement(new ModelCurve(trimGeometry.BaseRect, material, new Transform(0, 0, 1)));
             }
             Assert.Equal(87, trimmedCells.Count());
-            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmed));
+            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmedButNotOutside));
+            Assert.Equal(35, trimmedCells.Count(c => c.IsTrimmed));
         }
 
         [Fact]
