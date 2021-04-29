@@ -269,10 +269,11 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="outer">A polygon representing the perimeter of the face.</param>
         /// <param name="inner">An array of polygons representing the holes in the face.</param>
+        /// <param name="mergeVerticesAndEdges">Should existing vertices / edges in the solid be used for the added face?</param>
         /// <returns>The newly added face.</returns>
-        public Face AddFace(Polygon outer, IList<Polygon> inner = null)
+        public Face AddFace(Polygon outer, IList<Polygon> inner = null, bool mergeVerticesAndEdges = false)
         {
-            var outerLoop = LoopFromPolygon(outer);
+            var outerLoop = LoopFromPolygon(outer, mergeVerticesAndEdges);
             Loop[] innerLoops = null;
 
             if (inner != null)
@@ -280,7 +281,7 @@ namespace Elements.Geometry.Solids
                 innerLoops = new Loop[inner.Count];
                 for (var i = 0; i < inner.Count; i++)
                 {
-                    innerLoops[i] = LoopFromPolygon(inner[i]);
+                    innerLoops[i] = LoopFromPolygon(inner[i], mergeVerticesAndEdges);
                 }
             }
 
@@ -300,6 +301,27 @@ namespace Elements.Geometry.Solids
             this.Edges.Add(_edgeId, e);
             _edgeId++;
             return e;
+        }
+
+        private Edge AddEdge(Vertex from, Vertex to, bool useExistingEdges, out string edgeType)
+        {
+            if (useExistingEdges)
+            {
+                var matchingLeftEdge = Edges.Values.FirstOrDefault(e => e.Left.Vertex == from && e.Right.Vertex == to);
+                if (matchingLeftEdge != null)
+                {
+                    edgeType = "left";
+                    return matchingLeftEdge;
+                }
+                var matchingRightEdge = Edges.Values.FirstOrDefault(e => e.Right.Vertex == from && e.Left.Vertex == to);
+                if (matchingRightEdge != null)
+                {
+                    edgeType = "right";
+                    return matchingRightEdge;
+                }
+            }
+            edgeType = "left";
+            return AddEdge(from, to);
         }
 
         /// <summary>
@@ -601,20 +623,28 @@ namespace Elements.Geometry.Solids
             AddFace(loop, inner);
         }
 
-        protected Loop LoopFromPolygon(Polygon p)
+        protected Loop LoopFromPolygon(Polygon p, bool mergeVerticesAndEdges = false)
         {
             var loop = new Loop();
             var verts = new Vertex[p.Vertices.Count];
             for (var i = 0; i < p.Vertices.Count; i++)
             {
-                verts[i] = AddVertex(p.Vertices[i]);
+                if (mergeVerticesAndEdges)
+                {
+                    var existingVertex = Vertices.Select(v => v.Value).FirstOrDefault(v => v.Point.IsAlmostEqualTo(p.Vertices[i]));
+                    verts[i] = existingVertex ?? AddVertex(p.Vertices[i]);
+                }
+                else
+                {
+                    verts[i] = AddVertex(p.Vertices[i]);
+                }
             }
             for (var i = 0; i < p.Vertices.Count; i++)
             {
                 var v1 = verts[i];
                 var v2 = i == verts.Length - 1 ? verts[0] : verts[i + 1];
-                var edge = AddEdge(v1, v2);
-                loop.AddEdgeToEnd(edge.Left);
+                var edge = AddEdge(v1, v2, mergeVerticesAndEdges, out var edgeType);
+                loop.AddEdgeToEnd(edgeType == "left" ? edge.Left : edge.Right);
             }
             return loop;
         }
