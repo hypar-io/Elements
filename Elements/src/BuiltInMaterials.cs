@@ -24,14 +24,6 @@ namespace Elements
         private static Material _yAxis = new Material("Y", new Color(0.0f, 1.0f, 0.0f, 1.0f), 0.1f, 0.1f, null, true, false, Guid.Parse("30ab5b47-7ef8-4376-98c1-8d58f3c61c5f"));
         private static Material _zAxis = new Material("Z", new Color(0.0f, 0.0f, 1.0f, 1.0f), 0.1f, 0.1f, null, true, false, Guid.Parse("0dd0b2da-f4ca-47c5-a50e-6d4f8b044c36"));
         private static Material _trans = new Material("trans", new Color(0.0f, 0.0f, 0.0f, 0.0f), 0.0f, 0.0f, null, false, false, Guid.Parse("0af9722a-3bbc-4731-aaff-1d023e02b573"));
-        private static Material _dirt = new Material("dirt", Colors.White, 0.1f, 0.1f, "./Textures/Ground039_1K_Color.jpg", false, false, Guid.Parse("919cf0d2-cc48-4393-a6a8-904bc047ef65"))
-        {
-            NormalTexture = "./Textures/Ground039_1K_Normal.jpg"
-        };
-        private static Material _grass = new Material("grass", Colors.White, 0.1f, 0.1f, "./Textures/Ground037_1K_Color.jpg", false, false, Guid.Parse("ab838896-b7ef-43a2-afac-f3294153b3db"))
-        {
-            NormalTexture = "./Textures/Ground037_1K_Normal.jpg"
-        };
 
         /// <summary>
         /// Glass.
@@ -112,15 +104,5 @@ namespace Elements
         /// Fully transparent material.
         /// </summary>
         public static Material Trans => _trans;
-
-        /// <summary>
-        /// Dirt
-        /// </summary>
-        public static Material Dirt => _dirt;
-
-        /// <summary>
-        /// Grass
-        /// </summary>
-        public static Material Grass => _grass;
     }
 }
