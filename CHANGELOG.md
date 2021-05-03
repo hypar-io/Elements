@@ -6,6 +6,10 @@
 
 - `Grid2d.IsOutside()`
 
+### Removed
+- `BuiltInMaterials.Dirt`
+- `BuiltInMaterials.Grass`
+
 ### Changed
 
 - `Grid2d.IsTrimmed()` now takes an optional boolean parameter `treatFullyOutsideAsTrimmed`
