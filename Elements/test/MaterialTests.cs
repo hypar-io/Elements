@@ -38,7 +38,7 @@ namespace Elements.Tests
         public void TextureTest()
         {
             this.Name = "TextureTest";
-            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "./Textures/Concrete.jpg", true);
+            var m = new Material("test", Colors.Gray, 0.0f, 0.0f, "./Textures/UV.jpg", true);
             var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
             this.Model.AddElement(mass);
         }
@@ -49,7 +49,7 @@ namespace Elements.Tests
             this.Name = "NormalTextureTest";
             var m = new Material("test", Colors.Sand, 0.5f, 0.5f)
             {
-                NormalTexture = "./Textures/Wood_Normals.jpg"
+                NormalTexture = "./Textures/UV.jpg"
             };
             var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
             this.Model.AddElement(mass);
