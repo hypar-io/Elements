@@ -307,27 +307,5 @@ namespace Elements.Geometry.Tests
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);
         }
-
-        [Fact]
-        public void ExtendDebug()
-        {
-            this.Name = "ExtendDebug";
-            var line = new Line(new Vector3(-12.5391, -34.3170, 0.0000), new Vector3(28.5783, -34.4500, 0.0000));
-            var boundary = new Polygon(new List<Vector3>(){
-                new Vector3(-12.0362, -34.3204, 0.0000 ),
-                new Vector3(29.0811, -34.3204, 0.0000 ),
-                new Vector3(29.0811, 23.6511, 0.0000),
-                new Vector3(-12.0362, 23.6511, 0.0000)
-            });
-            this.Model.AddElement(new ModelCurve(line, new Material("Red", Colors.Red)));
-            this.Model.AddElement(new ModelCurve(boundary, new Material("Blue", Colors.Blue)));
-            var newLine = line.ExtendTo(boundary, true, true);
-            // this.Model.AddElement(new ModelCurve(line, new Material("Green", Colors.Green)));
-
-            var dirBefore = (line.End - line.Start).Unitized();
-            var dirAfter = (newLine.End - newLine.Start).Unitized();
-
-            Assert.True(dirBefore.Equals(dirAfter));
-        }
     }
 }
