@@ -950,6 +950,13 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// The default extension tolerances of Vector3.EPSILON were creating funny conditions
+        /// when gridlines were close to but not quite parallel to a polygon edge.
+        /// We pass along a much smaller tolerance when we run our line extensions for Grid2d.
+        /// </summary>
+        private const double ExtensionTolerance = Vector3.EPSILON * Vector3.EPSILON;
+
+        /// <summary>
         /// Modifies a list of lines intended to represent uv guides in place to hit the bounds.
         /// Accounts for skewed, parallel lists of 2. If list contains more lines, those will be ignored.
         /// </summary>
@@ -962,7 +969,7 @@ namespace Elements.Spatial
 
             for (var i = 0; i < lines.Count(); i++)
             {
-                lines[i] = lines[i].ExtendTo(boundary, true, true);
+                lines[i] = lines[i].ExtendTo(boundary, true, true, ExtensionTolerance);
             }
 
             var new1 = ExtendLineSkewed(bounds, lines[0], lines[1]);
@@ -997,12 +1004,12 @@ namespace Elements.Spatial
                 // move to start and extend
                 var toStart = possiblySkewedLine.Start - intersection;
                 newLine = newLine.TransformedLine(new Transform(toStart));
-                newLine = newLine.ExtendTo(boundary, true, true);
+                newLine = newLine.ExtendTo(boundary, true, true, ExtensionTolerance);
 
                 // move to end and extend
                 var toEnd = possiblySkewedLine.End - possiblySkewedLine.Start;
                 newLine = newLine.TransformedLine(new Transform(toEnd));
-                newLine = newLine.ExtendTo(boundary, true, true);
+                newLine = newLine.ExtendTo(boundary, true, true, ExtensionTolerance);
 
                 // move back to original
                 var toBeginning = intersection - possiblySkewedLine.End;
