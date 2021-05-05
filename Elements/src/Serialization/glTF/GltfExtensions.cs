@@ -1200,18 +1200,6 @@ namespace Elements.Serialization.glTF
 
             csg = csg.Transform(inverse.ToMatrix4x4());
 
-            // byte[] vertexBuffer;
-            // byte[] normalBuffer;
-            // byte[] indexBuffer;
-            // byte[] colorBuffer;
-            // byte[] uvBuffer;
-
-            // double[] vmin; double[] vmax;
-            // double[] nmin; double[] nmax;
-            // float[] cmin; float[] cmax;
-            // ushort imin; ushort imax;
-            // double[] uvmin; double[] uvmax;
-
             csg.Tessellate(out GraphicsBuffers b);
 
             if (b.Vertices.Count == 0)
