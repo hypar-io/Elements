@@ -25,9 +25,9 @@ namespace Elements.Geometry
         /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        internal static void Tessellate(this Csg.Solid csg, out GraphicsBuffers buffers)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid csg)
         {
-            buffers = new GraphicsBuffers();
+            var buffers = new GraphicsBuffers();
 
             ushort iCursor = 0;
 
@@ -132,6 +132,8 @@ namespace Elements.Geometry
                     }
                 }
             }
+
+            return buffers;
         }
 
         private static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)

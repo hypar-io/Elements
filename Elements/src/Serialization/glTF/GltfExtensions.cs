@@ -1200,9 +1200,9 @@ namespace Elements.Serialization.glTF
 
             csg = csg.Transform(inverse.ToMatrix4x4());
 
-            csg.Tessellate(out GraphicsBuffers b);
+            var buffers = csg.Tessellate();
 
-            if (b.Vertices.Count == 0)
+            if (buffers.Vertices.Count == 0)
             {
                 return -1;
             }
@@ -1212,7 +1212,7 @@ namespace Elements.Serialization.glTF
                                         bufferViews,
                                         accessors,
                                         materials[materialName],
-                                        b,
+                                        buffers,
                                         null,
                                         meshes);
         }
