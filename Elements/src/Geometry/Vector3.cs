@@ -492,11 +492,12 @@ namespace Elements.Geometry
         /// Determine whether this vector is parallel to v.
         /// </summary>
         /// <param name="v">The vector to compare to this vector.</param>
+        /// <param name="tolerance">The amount of tolerance in the parallel comparison.</param>
         /// <returns>True if the vectors are parallel, otherwise false.</returns>
-        public bool IsParallelTo(Vector3 v)
+        public bool IsParallelTo(Vector3 v, double tolerance = Vector3.EPSILON)
         {
             var result = Math.Abs(this.Unitized().Dot(v.Unitized()));
-            return result.ApproximatelyEquals(1);
+            return result.ApproximatelyEquals(1, tolerance);
         }
 
         /// <summary>
