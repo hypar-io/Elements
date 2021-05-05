@@ -69,7 +69,7 @@ namespace Elements.Benchmarks
                     x = 0.0;
                 }
             }
-            model.ToGlTF(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "CreateAllHSSBeamsBenchmark.glb"));
+            model.ToGlTF();
         }
     }
 
