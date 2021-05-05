@@ -954,7 +954,7 @@ namespace Elements.Spatial
         /// when gridlines were close to but not quite parallel to a polygon edge.
         /// We pass along a much smaller tolerance when we run our line extensions for Grid2d.
         /// </summary>
-        private static readonly double ExtensionTolerance = Vector3.EPSILON * Vector3.EPSILON;
+        private const double ExtensionTolerance = Vector3.EPSILON * Vector3.EPSILON;
 
         /// <summary>
         /// Modifies a list of lines intended to represent uv guides in place to hit the bounds.
