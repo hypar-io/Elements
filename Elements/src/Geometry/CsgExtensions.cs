@@ -25,32 +25,9 @@ namespace Elements.Geometry
         /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        internal static void Tessellate(this Csg.Solid csg, out byte[] vertexBuffer,
-            out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer,
-            out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax,
-            out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)
+        internal static void Tessellate(this Csg.Solid csg, out GraphicsBuffers buffers)
         {
-            // Initialize everything
-            var vertices = new List<byte>();
-            var normals = new List<byte>();
-            var indices = new List<byte>();
-            var uvs = new List<byte>();
-
-            // Vertex colors are not used in this context currently.
-            var colors = new List<byte>();
-            cmin = new float[0];
-            cmax = new float[0];
-
-            vmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-            vmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
-            nmin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
-            nmax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-
-            uvmin = new double[2] { double.MaxValue, double.MaxValue };
-            uvmax = new double[2] { double.MinValue, double.MinValue };
-
-            imax = ushort.MinValue;
-            imin = 0;
+            buffers = new GraphicsBuffers();
 
             ushort iCursor = 0;
 
@@ -71,66 +48,46 @@ namespace Elements.Geometry
             {
                 var ii = new ushort[p.Vertices.Count];
 
+                var a = p.Vertices[0].Pos.ToElementsVector();
+                var b = p.Vertices[1].Pos.ToElementsVector();
+                var c = p.Vertices[2].Pos.ToElementsVector();
+                basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
+
                 if (p.Vertices.Count > 2 && p.Vertices.Count <= 4)
                 {
-                    var a = p.Vertices[0].Pos.ToElementsVector();
-                    var b = p.Vertices[1].Pos.ToElementsVector();
-                    var c = p.Vertices[2].Pos.ToElementsVector();
-                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
                     for (var i = 0; i < p.Vertices.Count; i++)
                     {
                         var v = p.Vertices[i];
+
                         var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
                         var ep = v.Pos.ToElementsVector();
-                        var search = octree.GetNearby(op, 0.001f);
-
-                        var useExisting = false;
-                        foreach (var existing in search)
+                        if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
                         {
-                            var angle = existing.normal.AngleTo(n);
-
-                            if (angle < 45.0)
-                            {
-                                ii[i] = existing.index;
-                                useExisting = true;
-                                break;
-                            }
-                        }
-                        if (useExisting)
-                        {
+                            ii[i] = vertexIndex;
                             continue;
                         }
 
                         ii[i] = iCursor;
-                        imax = Math.Max(imax, iCursor);
-                        imin = Math.Min(imin, iCursor);
                         iCursor++;
-                        WriteVertex(ep,
-                                    n,
-                                    vertices,
-                                    normals,
-                                    uvs,
-                                    basis,
-                                    ref vmax,
-                                    ref vmin,
-                                    ref nmax,
-                                    ref nmin,
-                                    ref uvmax,
-                                    ref uvmin);
-                        octree.Add((ep, n, ii[i]), op);
+
+                        var uu = basis.U.Dot(ep);
+                        var vv = basis.V.Dot(ep);
+                        buffers.AddVertex(ep, normal, new UV(uu, vv));
+
+                        octree.Add((ep, normal, ii[i]), op);
                     }
 
                     // First triangle
-                    indices.AddRange(BitConverter.GetBytes(ii[0]));
-                    indices.AddRange(BitConverter.GetBytes(ii[1]));
-                    indices.AddRange(BitConverter.GetBytes(ii[2]));
+                    buffers.AddIndex(ii[0]);
+                    buffers.AddIndex(ii[1]);
+                    buffers.AddIndex(ii[2]);
 
                     if (p.Vertices.Count == 4)
                     {
                         // Triangle 2
-                        indices.AddRange(BitConverter.GetBytes(ii[0]));
-                        indices.AddRange(BitConverter.GetBytes(ii[2]));
-                        indices.AddRange(BitConverter.GetBytes(ii[3]));
+                        buffers.AddIndex(ii[0]);
+                        buffers.AddIndex(ii[2]);
+                        buffers.AddIndex(ii[3]);
                     }
                 }
                 else if (p.Vertices.Count > 4)
@@ -146,76 +103,35 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                    var tmp = (b - a).Unitized();
-                    var n = tmp.Cross(c - a).Unitized();
-
-                    // Calculate the texture space basis vectors
-                    // from the first triangle. This is acceptable
-                    // for planar faces.
-                    // TODO: Update this when we support non-planar faces.
-                    // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                    basis = n.ComputeDefaultBasisVectors();
-
                     for (var i = 0; i < tess.Vertices.Length; i++)
                     {
                         var v = tess.Vertices[i];
                         var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
                         var ep = v.Position.ToVector3();
 
-                        var search = octree.GetNearby(op, SEARCH_RADIUS);
-
-                        var useExisting = false;
-                        foreach (var existing in search)
+                        if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
                         {
-                            var angle = existing.normal.AngleTo(n);
-
-                            if (angle < 45.0)
-                            {
-                                ii[i] = existing.index;
-                                useExisting = true;
-                                break;
-                            }
-                        }
-                        if (useExisting)
-                        {
+                            ii[i] = vertexIndex;
                             continue;
                         }
 
                         ii[i] = iCursor;
-                        imax = Math.Max(imax, iCursor);
-                        imin = Math.Min(imin, iCursor);
                         iCursor++;
-                        WriteVertex(ep,
-                                    n,
-                                    vertices,
-                                    normals,
-                                    uvs,
-                                    basis,
-                                    ref vmax,
-                                    ref vmin,
-                                    ref nmax,
-                                    ref nmin,
-                                    ref uvmax,
-                                    ref uvmin);
-                        octree.Add((ep, n, ii[i]), op);
+
+                        var uu = basis.U.Dot(ep);
+                        var vv = basis.V.Dot(ep);
+                        buffers.AddVertex(ep, normal, new UV(uu, vv));
+
+                        octree.Add((ep, normal, ii[i]), op);
                     }
 
                     for (var k = 0; k < tess.Elements.Length; k++)
                     {
                         var index = ii[tess.Elements[k]];
-                        indices.AddRange(BitConverter.GetBytes(index));
+                        buffers.AddIndex(index);
                     }
                 }
             }
-
-            vertexBuffer = vertices.ToArray();
-            normalBuffer = normals.ToArray();
-            indexBuffer = indices.ToArray();
-            uvBuffer = uvs.ToArray();
-            colorBuffer = colors.ToArray();
         }
 
         private static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)
@@ -226,50 +142,30 @@ namespace Elements.Geometry
             return basis;
         }
 
-        private static void WriteVertex(Vector3 pos,
-                                        Vector3 n,
-                                        List<byte> vertices,
-                                        List<byte> normals,
-                                        List<byte> uvs,
-                                        (Vector3 U, Vector3 V) basis,
-                                        ref double[] vmax,
-                                        ref double[] vmin,
-                                        ref double[] nmax,
-                                        ref double[] nmin,
-                                        ref double[] uvmax,
-                                        ref double[] uvmin)
+        private static bool TryGetExistingVertex(Point op,
+                                                 Vector3 ep,
+                                                 PointOctree<(Vector3 position, Vector3 normal, ushort index)> octree,
+                                                 Vector3 n,
+                                                 float searchRadius,
+                                                 out ushort vertexIndex
+                                                 )
         {
-            vertices.AddRange(BitConverter.GetBytes((float)pos.X));
-            vertices.AddRange(BitConverter.GetBytes((float)pos.Y));
-            vertices.AddRange(BitConverter.GetBytes((float)pos.Z));
+            var search = octree.GetNearby(op, searchRadius);
 
-            normals.AddRange(BitConverter.GetBytes((float)n.X));
-            normals.AddRange(BitConverter.GetBytes((float)n.Y));
-            normals.AddRange(BitConverter.GetBytes((float)n.Z));
+            vertexIndex = 0;
 
-            var uu = basis.U.Dot(pos);
-            var vv = basis.V.Dot(pos);
-            uvs.AddRange(BitConverter.GetBytes((float)uu));
-            uvs.AddRange(BitConverter.GetBytes((float)vv));
+            foreach (var existing in search)
+            {
+                var angle = existing.normal.AngleTo(n);
 
-            vmax[0] = Math.Max(vmax[0], pos.X);
-            vmax[1] = Math.Max(vmax[1], pos.Y);
-            vmax[2] = Math.Max(vmax[2], pos.Z);
-            vmin[0] = Math.Min(vmin[0], pos.X);
-            vmin[1] = Math.Min(vmin[1], pos.Y);
-            vmin[2] = Math.Min(vmin[2], pos.Z);
+                if (angle < 45.0)
+                {
+                    vertexIndex = existing.index;
+                    return true;
+                }
+            }
 
-            nmax[0] = Math.Max(nmax[0], n.X);
-            nmax[1] = Math.Max(nmax[1], n.Y);
-            nmax[2] = Math.Max(nmax[2], n.Z);
-            nmin[0] = Math.Min(nmin[0], n.X);
-            nmin[1] = Math.Min(nmin[1], n.Y);
-            nmin[2] = Math.Min(nmin[2], n.Z);
-
-            uvmax[0] = Math.Max(uvmax[0], uu);
-            uvmax[1] = Math.Max(uvmax[1], vv);
-            uvmin[0] = Math.Min(uvmin[0], uu);
-            uvmin[1] = Math.Min(uvmin[1], vv);
+            return false;
         }
 
         internal static Csg.Matrix4x4 ToMatrix4x4(this Transform transform)
@@ -320,28 +216,6 @@ namespace Elements.Geometry
                         Csg.Vertex bv = null;
                         Csg.Vertex cv = null;
 
-                        // TODO: Figure out if this is required.
-                        // We merge vertices on the final output of a CSG,
-                        // so merging them here has no effect.
-
-                        // Merge vertices.
-                        // foreach (var v in vertices)
-                        // {
-                        //     if (v.Pos.IsAlmostEqualTo(a))
-                        //     {
-                        //         av = v;
-                        //     }
-
-                        //     if (v.Pos.IsAlmostEqualTo(b))
-                        //     {
-                        //         bv = v;
-                        //     }
-
-                        //     if (v.Pos.IsAlmostEqualTo(c))
-                        //     {
-                        //         cv = v;
-                        //     }
-                        // }
                         if (i == 0)
                         {
                             var n = f.Plane().Normal;
