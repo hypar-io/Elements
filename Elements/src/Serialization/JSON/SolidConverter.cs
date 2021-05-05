@@ -21,20 +21,30 @@ namespace Elements.Serialization.JSON
     internal class SolidConverter : JsonConverter
     {
         private List<Type> _solidTypes;
-        
+
         public SolidConverter(IDictionary<Guid, Material> materials)
+        {
+            LoadSolidTypes();
+        }
+
+        private void LoadSolidTypes()
         {
             try
             {
-                _solidTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t=>typeof(Solid).IsAssignableFrom(t)).ToList();
+                _solidTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(Solid).IsAssignableFrom(t)).ToList();
             }
-            catch(System.Reflection.ReflectionTypeLoadException ex)
+            catch (System.Reflection.ReflectionTypeLoadException ex)
             {
-                foreach(var x in ex.LoaderExceptions)
+                foreach (var x in ex.LoaderExceptions)
                 {
                     Console.WriteLine(x.Message);
                 }
             }
+        }
+
+        public SolidConverter()
+        {
+            LoadSolidTypes();
         }
 
         public override bool CanConvert(Type objectType)
@@ -46,43 +56,43 @@ namespace Elements.Serialization.JSON
         {
             var obj = JObject.Load(reader);
             var typeName = (string)obj.GetValue("type");
-            var foundType = _solidTypes.FirstOrDefault(t=>t.FullName.ToLower() == typeName);
-            if(foundType == null)
+            var foundType = _solidTypes.FirstOrDefault(t => t.FullName.ToLower() == typeName);
+            if (foundType == null)
             {
                 throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
             }
 
-            var solid = (Solid)Activator.CreateInstance(foundType, new object[]{});
-            
-            foreach(JObject vobj in (JArray)obj.GetValue("vertices"))
+            var solid = (Solid)Activator.CreateInstance(foundType, new object[] { });
+
+            foreach (JObject vobj in (JArray)obj.GetValue("vertices"))
             {
                 var id = (long)vobj.GetValue("id");
                 var x = (double)vobj.GetValue("x");
                 var y = (double)vobj.GetValue("y");
                 var z = (double)vobj.GetValue("z");
-                solid.AddVertex(id, new Vector3(x,y,z));
+                solid.AddVertex(id, new Vector3(x, y, z));
             }
 
-            foreach(JObject face in (JArray)obj.GetValue("faces"))
+            foreach (JObject face in (JArray)obj.GetValue("faces"))
             {
                 var id = (long)face.GetValue("id");
 
                 var outer = new Loop();
 
-                foreach(JObject heobj in (JArray)face.GetValue("outer"))
+                foreach (JObject heobj in (JArray)face.GetValue("outer"))
                 {
                     ReadHalfEdge(heobj, outer, solid);
                 }
 
                 JToken innerobjs;
                 var inners = new List<Loop>();
-                if(face.TryGetValue("inner", out innerobjs))
+                if (face.TryGetValue("inner", out innerobjs))
                 {
-                    foreach(JArray innerobj in innerobjs)
+                    foreach (JArray innerobj in innerobjs)
                     {
                         var inner = new Loop();
                         inners.Add(inner);
-                        foreach(JObject heobj in innerobj)
+                        foreach (JObject heobj in innerobj)
                         {
                             ReadHalfEdge(heobj, inner, solid);
                         }
@@ -105,7 +115,7 @@ namespace Elements.Serialization.JSON
 
             var eid = (long)heobj.GetValue("edge_id");
             Edge edge;
-            if(!solid.Edges.TryGetValue(eid, out edge))
+            if (!solid.Edges.TryGetValue(eid, out edge))
             {
                 edge = solid.AddEdge(eid);
             }
@@ -113,7 +123,7 @@ namespace Elements.Serialization.JSON
             he.Edge = edge;
 
             var side = (string)heobj.GetValue("edge_side");
-            if(side == "left")
+            if (side == "left")
             {
                 edge.Left = he;
             }
@@ -133,7 +143,7 @@ namespace Elements.Serialization.JSON
 
             writer.WritePropertyName("vertices");
             writer.WriteStartArray();
-            foreach(var v in solid.Vertices.Values)
+            foreach (var v in solid.Vertices.Values)
             {
                 writer.WriteStartObject();
                 writer.WritePropertyName("id");
@@ -151,7 +161,7 @@ namespace Elements.Serialization.JSON
             writer.WritePropertyName("faces");
             writer.WriteStartArray();
 
-            foreach(var f in solid.Faces.Values)
+            foreach (var f in solid.Faces.Values)
             {
                 writer.WriteStartObject();
 
@@ -160,21 +170,21 @@ namespace Elements.Serialization.JSON
 
                 writer.WritePropertyName("outer");
                 writer.WriteStartArray();
-                foreach(var he in f.Outer.Edges)
+                foreach (var he in f.Outer.Edges)
                 {
                     WriteHalfEdge(he, writer, value);
                 }
                 writer.WriteEndArray();
-                
-                if(f.Inner != null)
+
+                if (f.Inner != null)
                 {
                     writer.WritePropertyName("inner");
                     writer.WriteStartArray();
 
-                    foreach(var loop in f.Inner)
+                    foreach (var loop in f.Inner)
                     {
                         writer.WriteStartArray();
-                        foreach(var he in loop.Edges)
+                        foreach (var he in loop.Edges)
                         {
                             WriteHalfEdge(he, writer, value);
                         }
@@ -192,7 +202,7 @@ namespace Elements.Serialization.JSON
 
         private void WriteHalfEdge(HalfEdge he, JsonWriter writer, object value)
         {
-            writer.WriteStartObject();            
+            writer.WriteStartObject();
             writer.WritePropertyName("vertex_id");
             writer.WriteValue(he.Vertex.Id);
             writer.WritePropertyName("edge_id");

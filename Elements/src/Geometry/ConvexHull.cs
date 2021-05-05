@@ -10,7 +10,7 @@ namespace Elements.Geometry
     public static class ConvexHull
     {
         /// <summary>
-        /// Calculate a polygon from the 2d convex hull of a collection of points. 
+        /// Calculate a polygon from the 2d convex hull of a collection of points.
         /// Adapted from https://rosettacode.org/wiki/Convex_hull#C.23
         /// </summary>
         /// <param name="points">A collection of points</param>
@@ -21,7 +21,7 @@ namespace Elements.Geometry
             {
                 return null;
             }
-            var pointsSorted = points.OrderBy(p => p.X).ToArray();
+            var pointsSorted = points.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
             List<Vector3> hullPoints = new List<Vector3>();
 
             Func<Vector3, Vector3, Vector3, bool> Ccw = (Vector3 a, Vector3 b, Vector3 c) => ((b.X - a.X) * (c.Y - a.Y)) > ((b.Y - a.Y) * (c.X - a.X));
@@ -53,7 +53,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a polygon from the 2d convex hull of a polyline or polygon's vertices. 
+        /// Calculate a polygon from the 2d convex hull of a polyline or polygon's vertices.
         /// </summary>
         /// <param name="p">A polygon</param>
         /// <returns>A polygon representing the convex hull of the provided shape.</returns>
@@ -63,7 +63,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a polygon from the 2d convex hull of the vertices of a collection of polylines or polygons. 
+        /// Calculate a polygon from the 2d convex hull of the vertices of a collection of polylines or polygons.
         /// </summary>
         /// <param name="polylines">A collection of polygons</param>
         /// <returns>A polygon representing the convex hull of the provided shapes.</returns>
@@ -73,7 +73,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a polygon from the 2d convex hull of a profile. 
+        /// Calculate a polygon from the 2d convex hull of a profile.
         /// </summary>
         /// <param name="p">A profile</param>
         /// <returns>A polygon representing the convex hull of the provided shape.</returns>

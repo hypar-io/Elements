@@ -727,8 +727,9 @@ namespace Elements.Spatial
         /// <summary>
         /// Test if the cell is trimmed by a boundary.
         /// </summary>
+        /// <param name="treatFullyOutsideAsTrimmed">Should cells that fall entirely outside of the boundary be treated as trimmed? True by default.</param>
         /// <returns>True if the cell is trimmed by the grid boundary.</returns>
-        public bool IsTrimmed()
+        public bool IsTrimmed(bool treatFullyOutsideAsTrimmed = true)
         {
             if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
             {
@@ -736,10 +737,28 @@ namespace Elements.Spatial
             }
 
             var baseRect = GetBaseRectangleTransformed();
+            if (treatFullyOutsideAsTrimmed && IsOutside(baseRect))
+            {
+                return true;
+            }
             var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
             if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
             if (trimmedRect.Count > 1) { return true; }
             return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
+        }
+
+        /// <summary>
+        /// Test if the cell is fully outside the boundary.
+        /// </summary>
+        /// <returns>True if the grid cell is totally outside the boundary.</returns>
+        public bool IsOutside()
+        {
+            if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
+            {
+                return false;
+            }
+            var baseRect = GetBaseRectangleTransformed();
+            return IsOutside(baseRect);
         }
 
         #endregion
@@ -757,6 +776,22 @@ namespace Elements.Spatial
                 throw new NotSupportedException("An attempt was made to modify the underlying U or V grid of a 2D Grid, after some of its cells had already been further subdivided.");
             }
             this.cells = null;
+        }
+
+        private bool IsOutside(Polygon baseRect)
+        {
+            var perimeter = boundariesInGridSpace.First();
+            // if any vertex of the rect is fully outside, we are trimmed
+            perimeter.Contains(baseRect.Vertices.First(), out var containment);
+            if (containment == Containment.Outside)
+            {
+                return true;
+            }
+            if (boundariesInGridSpace.Count() > 1)
+            {
+                return boundariesInGridSpace.Skip(1).Any(boundary => boundary.Covers(baseRect));
+            }
+            return false;
         }
 
         private void InitializeUV(Domain1d uDomain, Domain1d vDomain)
