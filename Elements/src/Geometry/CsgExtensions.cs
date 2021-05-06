@@ -46,7 +46,7 @@ namespace Elements.Geometry
 
             foreach (var p in csg.Polygons)
             {
-                var ii = new ushort[p.Vertices.Count];
+                var vertexIndices = new ushort[p.Vertices.Count];
 
                 var a = p.Vertices[0].Pos.ToElementsVector();
                 var b = p.Vertices[1].Pos.ToElementsVector();
@@ -63,31 +63,31 @@ namespace Elements.Geometry
                         var ep = v.Pos.ToElementsVector();
                         if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
                         {
-                            ii[i] = vertexIndex;
+                            vertexIndices[i] = vertexIndex;
                             continue;
                         }
 
-                        ii[i] = iCursor;
+                        vertexIndices[i] = iCursor;
                         iCursor++;
 
                         var uu = basis.U.Dot(ep);
                         var vv = basis.V.Dot(ep);
                         buffers.AddVertex(ep, normal, new UV(uu, vv));
 
-                        octree.Add((ep, normal, ii[i]), op);
+                        octree.Add((ep, normal, vertexIndices[i]), op);
                     }
 
                     // First triangle
-                    buffers.AddIndex(ii[0]);
-                    buffers.AddIndex(ii[1]);
-                    buffers.AddIndex(ii[2]);
+                    buffers.AddIndex(vertexIndices[0]);
+                    buffers.AddIndex(vertexIndices[1]);
+                    buffers.AddIndex(vertexIndices[2]);
 
                     if (p.Vertices.Count == 4)
                     {
                         // Triangle 2
-                        buffers.AddIndex(ii[0]);
-                        buffers.AddIndex(ii[2]);
-                        buffers.AddIndex(ii[3]);
+                        buffers.AddIndex(vertexIndices[0]);
+                        buffers.AddIndex(vertexIndices[2]);
+                        buffers.AddIndex(vertexIndices[3]);
                     }
                 }
                 else if (p.Vertices.Count > 4)
@@ -111,23 +111,23 @@ namespace Elements.Geometry
 
                         if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
                         {
-                            ii[i] = vertexIndex;
+                            vertexIndices[i] = vertexIndex;
                             continue;
                         }
 
-                        ii[i] = iCursor;
+                        vertexIndices[i] = iCursor;
                         iCursor++;
 
                         var uu = basis.U.Dot(ep);
                         var vv = basis.V.Dot(ep);
                         buffers.AddVertex(ep, normal, new UV(uu, vv));
 
-                        octree.Add((ep, normal, ii[i]), op);
+                        octree.Add((ep, normal, vertexIndices[i]), op);
                     }
 
                     for (var k = 0; k < tess.Elements.Length; k++)
                     {
-                        var index = ii[tess.Elements[k]];
+                        var index = vertexIndices[tess.Elements[k]];
                         buffers.AddIndex(index);
                     }
                 }

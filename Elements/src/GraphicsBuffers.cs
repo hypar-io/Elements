@@ -13,19 +13,16 @@ namespace Elements
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
         /// </summary>
-        /// <value></value>
         public List<byte> Vertices { get; }
 
         /// <summary>
         /// A collection of indices stored as sequential bytes.
         /// </summary>
-        /// <value></value>
         public List<byte> Indices { get; }
 
         /// <summary>
         /// A collection of sequential normal values stored as sequential bytes.
         /// </summary>
-        /// <value></value>
         public List<byte> Normals { get; }
 
         /// <summary>
@@ -39,32 +36,32 @@ namespace Elements
         public List<byte> UVs { get; }
 
         /// <summary>
-        /// The maximum position value.
+        /// The maximum of the axis-aligned bounding box of the data as [x,y,z].
         /// </summary>
         public double[] VMax { get; }
 
         /// <summary>
-        /// The minimum position value.
+        /// The minimum of the axis-aligned bounding box of the data as [x,y,z].
         /// </summary>
         public double[] VMin { get; }
 
         /// <summary>
-        /// The minimum normal value.
+        /// The minimum normal of the data as [x,y,z].
         /// </summary>
         public double[] NMin { get; }
 
         /// <summary>
-        /// The maximum normal value.
+        /// The maximum normal of the data as [x,y,z].
         /// </summary>
         public double[] NMax { get; }
 
         /// <summary>
-        /// The minimum color value.
+        /// The minimum color value as [r,g,b].
         /// </summary>
         public double[] CMin { get; }
 
         /// <summary>
-        /// The maximum color value.
+        /// The maximum color value as [r,g,b].
         /// </summary>
         public double[] CMax { get; }
 
@@ -79,14 +76,13 @@ namespace Elements
         public ushort IMin { get; internal set; } = ushort.MaxValue;
 
         /// <summary>
-        /// The maximum UV value.
+        /// The maximum UV value as [u,v].
         /// </summary>
         public double[] UVMin { get; }
 
         /// <summary>
-        /// The minimum UV value.
+        /// The maximum UV value as [u,v].
         /// </summary>
-        /// <value></value>
         public double[] UVMax { get; }
 
         /// <summary>
