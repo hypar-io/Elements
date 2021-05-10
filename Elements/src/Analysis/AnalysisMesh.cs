@@ -126,7 +126,7 @@ namespace Elements.Analysis
         /// <summary>
         /// Compute a value for each grid cell.
         /// </summary>
-        public void Analyze()
+        public virtual void Analyze()
         {
             var bounds = new BBox3(new[] { this.Perimeter });
             var w = bounds.Max.X - bounds.Min.X;
