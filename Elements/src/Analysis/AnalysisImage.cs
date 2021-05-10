@@ -62,9 +62,8 @@ namespace Elements.Analysis
         /// <summary>
         /// Gives an element with a mapped texture.
         /// </summary>
-        public MeshElement GetMeshElement()
+        public override void Tessellate(ref Mesh mesh, Transform transform = null, Elements.Geometry.Color color = default(Elements.Geometry.Color))
         {
-            var mesh = new Mesh();
             var perimBounds = new BBox3(new[] { this.Perimeter });
             var perimW = perimBounds.Max.X - perimBounds.Min.X;
             var perimH = perimBounds.Max.Y - perimBounds.Min.Y;
@@ -125,10 +124,10 @@ namespace Elements.Analysis
             var imagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
             image.Save(imagePath);
 
-            var material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
 
-            material.Texture = imagePath;
-            material.InterpolateTexture = this.InterpolateTexture;
+            this.Material.Texture = imagePath;
+            this.Material.InterpolateTexture = this.InterpolateTexture;
 
             var meshVertices = new List<Vertex>();
 
@@ -147,7 +146,7 @@ namespace Elements.Analysis
                 i++;
             }
 
-            return new MeshElement(mesh, material);
+            // return new MeshElement(mesh, material);
         }
 
     }

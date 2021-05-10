@@ -102,7 +102,7 @@ namespace Elements.Analysis
         /// <param name="mesh"></param>
         /// <param name="transform"></param>
         /// <param name="color"></param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public virtual void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             var span = this._max - this._min;
 

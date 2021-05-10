@@ -27,7 +27,7 @@ namespace Elements.Tests
 
             var analysisImage = new AnalysisImage(shape, 10, 10, colorScale, analyze);
             analysisImage.Analyze();
-            this.Model.AddElement(analysisImage.GetMeshElement());
+            this.Model.AddElement(analysisImage);
             // </example>
         }
     }
