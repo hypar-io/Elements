@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -198,6 +199,7 @@ namespace Elements.Tests
         [Fact]
         public void ConstructedSolid()
         {
+            GenerateIfc = false;
             Name = nameof(ConstructedSolid);
             var solid = new Solid();
             var A = new Vector3(0, 0, 0);
@@ -208,21 +210,30 @@ namespace Elements.Tests
             var F = new Vector3(1, 0, 1);
             var G = new Vector3(1, 1, 1);
             var H = new Vector3(0, 1, 1);
-            solid.AddFace(new Polygon(new[] { A, B, C, D }));
-            solid.AddFace(new Polygon(new[] { E, F, G, H }));
-            solid.AddFace(new Polygon(new[] { A, B, F, E }));
-            solid.AddFace(new Polygon(new[] { B, C, G, F }));
-            solid.AddFace(new Polygon(new[] { C, D, H, G }));
-            solid.AddFace(new Polygon(new[] { D, A, E, H }));
+            solid.AddFace(new Polygon(new[] { A, B, C, D }), mergeVerticesAndEdges: true);
+            solid.AddFace(new Polygon(new[] { E, F, G, H }), mergeVerticesAndEdges: true);
+            solid.AddFace(new Polygon(new[] { A, B, F, E }), mergeVerticesAndEdges: true);
+            solid.AddFace(new Polygon(new[] { B, C, G, F }), mergeVerticesAndEdges: true);
+            solid.AddFace(new Polygon(new[] { C, D, H, G }), mergeVerticesAndEdges: true);
+            solid.AddFace(new Polygon(new[] { D, A, E, H }), mergeVerticesAndEdges: true);
 
             var emptySolid = new ConstructedSolid(new Solid(), false);
             var import = new ConstructedSolid(solid, false);
             var representation = new Representation(new[] { import });
             var emptyRep = new Representation(new[] { emptySolid });
             var userElement = new GeometricElement(new Transform(), BuiltInMaterials.Default, representation, false, Guid.NewGuid(), "Import");
-            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import");
+            var userElementWithEmptySolid = new GeometricElement(new Transform(), BuiltInMaterials.Default, emptyRep, false, Guid.NewGuid(), "Import Empty");
             Model.AddElement(userElement);
             Model.AddElement(userElementWithEmptySolid);
+
+            // ensure serialized solid
+            var modelJson = Model.ToJson();
+
+            var deserializedModel = Model.FromJson(modelJson);
+            var userElemDeserialized = deserializedModel.GetElementByName<GeometricElement>("Import");
+            var opDeserialized = userElemDeserialized.Representation.SolidOperations.First();
+            var solidDeserialized = opDeserialized?.Solid;
+            Assert.NotNull(solidDeserialized);
         }
     }
 
