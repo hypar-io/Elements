@@ -11,9 +11,8 @@ namespace Elements
     {
         /// <summary>
         /// Should the texture be interpolated?
-        /// If false, renders hard pixels in the texture rather than fading between adjacent pixels.
         /// </summary>
-        /// <value></value>
+        /// <value>If false, renders hard pixels in the texture rather than fading between adjacent pixels.</value>
         public bool InterpolateTexture { get; set; } = true;
 
         /// <summary>

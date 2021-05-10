@@ -8,16 +8,33 @@ namespace Elements.Analysis
 {
     /// <summary>
     /// A visualization of computed values at locations in space.
+    /// A maximum of 65,535 analytical values is allowed. For an unlimited number of analytical values, use AnalysisImage.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
     public class AnalysisMesh : GeometricElement, ITessellate
     {
-        internal List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
-        internal Func<Vector3, double> _analyze;
-        internal double _min = double.MaxValue;
-        internal double _max = double.MinValue;
+
+        /// <summary>
+        /// A list of all the created cells and their resultant value via the _analyze function.
+        /// </summary>
+        protected List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
+
+        /// <summary>
+        /// A function that returns a numerical analysis result, given a point in space.
+        /// </summary>
+        protected Func<Vector3, double> _analyze;
+
+        /// <summary>
+        /// A computed minimum result value.
+        /// </summary>
+        protected double _min = double.MaxValue;
+
+        /// <summary>
+        /// A computed maximum result value.
+        /// </summary>
+        protected double _max = double.MinValue;
 
         /// <summary>
         /// The total number of analysis locations.

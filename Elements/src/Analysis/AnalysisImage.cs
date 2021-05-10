@@ -34,10 +34,9 @@ namespace Elements.Analysis
 
         /// <summary>
         /// Should the texture be interpolated?
-        /// If false, renders hard pixels in the texture rather than fading between adjacent pixels.
-        /// False by default
+        /// False by default.
         /// </summary>
-        /// <value></value>
+        /// <value>If false, renders hard pixels in the texture rather than fading between adjacent pixels.</value>
         public bool InterpolateTexture { get; set; } = false;
 
         /// <summary>
@@ -127,6 +126,7 @@ namespace Elements.Analysis
             image.Save(imagePath);
 
             var material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+
             material.Texture = imagePath;
             material.InterpolateTexture = this.InterpolateTexture;
 
