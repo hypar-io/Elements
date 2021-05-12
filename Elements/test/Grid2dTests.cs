@@ -394,6 +394,43 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SkewedGridsWithNearlyParallelBoundary()
+        {
+            var transformStr = @"{
+                ""Matrix"": {
+                ""Components"": [
+                    0.9999947633971941,
+                    -0.009614940148020392,
+                    0,
+                    -10.992100150908389,
+                    -0.003236229007759388,
+                    -0.9999537753946179,
+                    0,
+                    17.971426034076142,
+                    0,
+                    0,
+                    1.0000000000000004,
+                    0
+                ]
+                }
+            }";
+            var transform = JsonConvert.DeserializeObject<Transform>(transformStr);
+            var origin = transform.Origin;
+            var uDirection = transform.XAxis;
+            var vDirection = transform.YAxis;
+            var boundary = new Polygon(new List<Vector3>()
+            {
+                new Vector3(-12.0362, -34.1879, 0.0000),
+                new Vector3(28.8939, -34.3204, 0.0000),
+                new Vector3(29.0811, 23.5186, 0.0000),
+                new Vector3(-11.8491, 23.6511, 0.0000)
+            });
+            var grid = new Grid2d(boundary, origin, uDirection, vDirection);
+            Assert.True(uDirection.Unitized().Equals((grid.U.Curve.PointAt(1) - grid.U.Curve.PointAt(0)).Unitized()));
+            Assert.True(vDirection.Unitized().Equals((grid.V.Curve.PointAt(1) - grid.V.Curve.PointAt(0)).Unitized()));
+        }
+
+        [Fact]
         public void CustomUVAndBounds()
         {
             var boundary = Polygon.Rectangle(new Vector3(), new Vector3(1, 1));
