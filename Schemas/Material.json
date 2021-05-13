@@ -53,6 +53,11 @@
             "description": "Is this material to be rendered from both sides?",
             "type": "boolean",
             "default": false
+        },
+        "InterpolateTexture": {
+            "description": "Should the texture colors be interpolated between pixels?",
+            "type": "boolean",
+            "default": true
         }
     },
     "additionalProperties": false
