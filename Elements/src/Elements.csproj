@@ -31,11 +31,21 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>lib\$(TargetFramework)</PackagePath>
     </Content>
+    <Content Include="../lib/Octree.dll">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Csg">
       <HintPath>../lib/Csg.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="NetOctree">
+      <HintPath>../lib/Octree.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -266,7 +266,7 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
-            result.ComputeNormals();
+
             var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
             this.Model.AddElement(new MeshElement(result, material));
         }
@@ -276,23 +276,106 @@ namespace Elements.Tests
         {
             this.Name = "Topography_Tunnel";
             var topo = CreateTopoFromMapboxElevations();
-            var csg = topo.Mesh.ToCsg();
-
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
             var w = topo.RowWidth * topo.CellWidth;
-            var tunnelPath = new Line(new Vector3((-w - 100) / 2, 0, -20), new Vector3((w + 100) / 2, 0, -20));
-            var tunnel = new Sweep(new Circle(Vector3.Origin, 20).ToPolygon(20), tunnelPath, 0, 0, 0, false);
-            var tunnelTransform = new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50));
-            csg = csg.Substract(tunnel._csg.Transform(tunnelTransform.ToMatrix4x4()));
+            var tunnelPath = new Line(new Vector3(center.X - w / 2 - 100, center.Y, center.Z - 20), new Vector3(center.X + w / 2 + 100, center.Y, center.Z - 20));
+            topo.Tunnel(tunnelPath, 15.0);
+            this.Model.AddElement(topo);
+            this.Model.AddElement(new ModelCurve(tunnelPath));
+        }
 
-            var result = new Mesh();
-            csg.Tessellate(ref result);
-            result.ComputeNormals();
+        [Fact]
+        public void Trim()
+        {
+            this.Name = "Topography_Trim";
+            var topo = CreateTopoFromMapboxElevations();
 
-            topo.Mesh = result;
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            topo.Trim(site);
             this.Model.AddElement(topo);
 
-            var tunnelWalls = new Beam(tunnelPath, new Profile(new Circle(Vector3.Origin, 20).ToPolygon(20), new Circle(Vector3.Origin, 19).ToPolygon(20).Reversed()), transform: tunnelTransform);
-            this.Model.AddElement(tunnelWalls);
+            foreach (var v in topo._baseVerts)
+            {
+                this.Model.AddElement(new Mass(Polygon.Rectangle(10, 10), 1, BuiltInMaterials.XAxis, new Transform(v.Position)));
+            }
+        }
+
+        [Fact]
+        public void Cut()
+        {
+            this.Name = "Topography_Cut";
+            var topo = CreateTopoFromMapboxElevations();
+
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+
+            var outer = (Polygon)Polygon.Rectangle(500, 500).Transformed(new Transform(center));
+
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            var site2 = (Polygon)Polygon.Star(100, 50, 6).Transformed(new Transform(new Vector3(center.X - 300, center.Y - 300)));
+
+            var bottomElevation = center.Z - 40;
+            var cutAndFill = topo.CutAndFill(new[] { site, site2 }, bottomElevation, out List<Mesh> cutMesh, out List<Mesh> fillMesh);
+
+            this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
+
+            this.Model.AddElement(topo);
+        }
+
+        [Fact]
+        public void Fill()
+        {
+            this.Name = "Topography_Fill";
+            var topo = CreateTopoFromMapboxElevations();
+
+            var height = topo.MinElevation + 100;
+
+            // Create a site transformed to the center of the topography.
+            var center = topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position;
+            var site = (Polygon)Polygon.L(400, 200, 100).Transformed(new Transform(new Vector3(center.X, center.Y)));
+            var site2 = (Polygon)Polygon.Star(100, 50, 6).Transformed(new Transform(new Vector3(center.X - 300, center.Y - 300)));
+
+            var cutAndFill = topo.CutAndFill(new[] { site, site2 }, height, out List<Mesh> cutVolumes, out List<Mesh> fillVolumes, 45.0);
+            this._output.WriteLine($"Cut volume: {cutAndFill.CutVolume}, Fill volume: {cutAndFill.FillVolume}");
+
+            this.Model.AddElement(topo);
+
+            foreach (var mesh in fillVolumes)
+            {
+                this.Model.AddElement(new MeshElement(mesh, BuiltInMaterials.XAxis));
+            }
+        }
+
+        [Fact]
+        public void CutToDepthLowerThanMinimumIncreasesMinimum()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, -20, out List<Mesh> _, out List<Mesh> _);
+            Assert.Equal(topo.AbsoluteMinimumElevation, -21);
+        }
+
+        [Fact]
+        public void FillVolumeIsCorrectWhenFilledToSameElevationAsTopOfTopography()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, 100, out List<Mesh> _, out List<Mesh> _);
+            Assert.Equal(result.FillVolume, 0);
+        }
+
+        [Fact]
+        public void CutVolumeIsCorrect()
+        {
+            var topo = CreateTestTopography();
+            var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
+            var result = topo.CutAndFill(new[] { polygon }, 99, out List<Mesh> _, out List<Mesh> _);
+            // The cut volume will never be exactly the same due to imprecision
+            // introduced by the CSG operation. We round to 3 decimal places here
+            // which is millimeter accuracy.
+            Assert.Equal(result.CutVolume, 1, 3);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
@@ -305,6 +388,16 @@ namespace Elements.Tests
             var tileSize = WebMercatorProjection.GetTileSizeMeters(0, 15);
 
             return new Topography(origin.Equals(default(Vector3)) ? origin : Vector3.Origin, tileSize, elevations, material);
+        }
+
+        private static Topography CreateTestTopography()
+        {
+            var elevations = new double[16];
+            for (var i = 0; i < elevations.Length; i++)
+            {
+                elevations[i] = 100.0;
+            }
+            return new Topography(Vector3.Origin, 40, elevations);
         }
     }
 }

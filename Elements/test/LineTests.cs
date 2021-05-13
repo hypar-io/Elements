@@ -302,7 +302,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(4, singleFurthestExtend.End.X);
 
             // If no intersections found, returns line with same endpoints
-            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1,1), new Vector3(2, 2)));
+            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1, 1), new Vector3(2, 2)));
 
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);
