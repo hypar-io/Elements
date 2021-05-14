@@ -386,15 +386,13 @@ namespace Elements.Geometry
         /// Split this polygon with a collection of open polylines.
         /// </summary>
         /// <param name="polylines">The polylines with which to split.</param>
-        public List<Polygon> Split(IEnumerable<Polyline> polylines, Model m = null)
+        public List<Polygon> Split(IEnumerable<Polyline> polylines)
         {
             var plXform = this.ToTransform();
             var inverse = new Transform(plXform);
             inverse.Invert();
             var thisInXY = this.TransformedPolygon(inverse);
             // Construct a half-edge graph from the polygon and the polylines
-            m?.AddElement(this.TransformedPolygon(inverse));
-            m?.AddElements(polylines.Select(p => new ModelCurve(p.TransformedPolyline(inverse))));
             var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { thisInXY }, polylines.Select(p => p.TransformedPolyline(inverse)));
             // Find closed regions in that graph
             return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();

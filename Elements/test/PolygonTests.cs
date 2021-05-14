@@ -893,7 +893,7 @@ namespace Elements.Geometry.Tests
                         })
                         };
 
-            var results = shape.Split(polylines, Model);
+            var results = shape.Split(polylines);
             Assert.True(results.Count == 5);
             Assert.Equal(Math.Abs(shape.Area()), results.Sum(r => Math.Abs(r.Area())));
             var rand = new Random(4);
