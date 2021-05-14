@@ -9,7 +9,7 @@ namespace Elements
     public static class BuiltInMaterials
     {
         private static Material _glass = new Material("glass", new Color(1.0f, 1.0f, 1.0f, 0.2f), 1.0f, 1.0f, null, false, false, Guid.Parse("28c5c2b1-d65c-4c46-8689-d651f50f07e7"));
-        private static Material _steel = new Material("steel", new Color(0.6f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f, null, false, false, Guid.Parse("13bef3c8-64c5-4283-a471-2571239cc14d"));
+        private static Material _steel = new Material("steel", new Color(0.6f, 0.5f, 0.5f, 1.0f), 0.1f, 0.4f, null, false, false, Guid.Parse("13bef3c8-64c5-4283-a471-2571239cc14d"));
         private static Material _default = new Material("default", new Color(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, 0.0f, null, false, false, Guid.Parse("9babb829-9b96-4e73-97f4-9658d4d6c31c"));
         private static Material _concrete = new Material("concrete", new Color(0.5f, 0.5f, 0.5f, 1.0f), 0.0f, 0.0f, null, false, false, Guid.Parse("e7492160-3d9c-4fde-83a9-618abd381169"));
         private static Material _mass = new Material("mass", new Color(0.5f, 0.5f, 1.0f, 0.2f), 0.0f, 0.0f, null, false, false, Guid.Parse("323c9495-d84e-4c57-b5af-a2e9fd1a8a19"));
