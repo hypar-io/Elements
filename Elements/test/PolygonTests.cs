@@ -864,6 +864,43 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void NonXYSplit()
+        {
+            Name = nameof(NonXYSplit);
+            var shape = new Polygon(new[] {
+                        new Vector3(3,0,1),
+                        new Vector3(1,0,10),
+                        new Vector3(10,0,17),
+                        new Vector3(21,0,14),
+                        new Vector3(12,0,11),
+                        new Vector3(15,0,5),
+                        new Vector3(22,0,8),
+                        new Vector3(22,0,2),
+                        new Vector3(13,0,2),
+                        new Vector3(13,0,1)
+                        });
+            var polylines = new List<Polyline> {
+                        new Polyline(new [] {
+                        new Vector3(1,0,16),
+                        new Vector3(7,0,9),
+                        new Vector3(7,0,-1)
+                        }),
+                        new Polyline(new [] {
+                        new Vector3(-2,0,5),
+                        new Vector3(10,0,5),
+                        new Vector3(17,0,9),
+                        new Vector3(14,0,18)
+                        })
+                        };
+
+            var results = shape.Split(polylines, Model);
+            Assert.True(results.Count == 5);
+            Assert.Equal(Math.Abs(shape.Area()), results.Sum(r => Math.Abs(r.Area())));
+            var rand = new Random(4);
+            Model.AddElements(results.Select(r => new Panel(r, rand.NextMaterial())));
+        }
+
+        [Fact]
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
@@ -1316,7 +1353,8 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void VerticalContainment() {
+        public void VerticalContainment()
+        {
             var point = new Vector3(8.874555, 6.112945, 30);
             var polygon = new Polygon(new List<Vector3>() {
                 new Vector3(11.37475, 8.56224, -3),

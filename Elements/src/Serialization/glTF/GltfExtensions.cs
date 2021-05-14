@@ -893,7 +893,7 @@ namespace Elements.Serialization.glTF
                                                                 textures,
                                                                 images,
                                                                 samplers,
-                                                                true
+                                                                false
                                                                 );
 
 
@@ -1096,7 +1096,7 @@ namespace Elements.Serialization.glTF
             }
         }
 
-        private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
+        public static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
 
         internal static Stream GetGlbStreamFromPath(string gltfLocation)
         {
