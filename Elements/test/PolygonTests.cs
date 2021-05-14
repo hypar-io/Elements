@@ -901,6 +901,26 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void ToTransformOrientation()
+        {
+            var polygon = new Polygon(new[] {
+                        new Vector3(3,0,1),
+                        new Vector3(1,0,10),
+                        new Vector3(10,0,17),
+                        new Vector3(21,0,14),
+                        new Vector3(12,0,11),
+                        new Vector3(15,0,5),
+                        new Vector3(22,0,8),
+                        new Vector3(22,0,2),
+                        new Vector3(13,0,2),
+                        new Vector3(13,0,1)
+                        });
+            var polygonNormal = polygon.Normal();
+            var transform = polygon.ToTransform();
+            Assert.Equal(1, transform.ZAxis.Dot(polygonNormal));
+        }
+
+        [Fact]
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
