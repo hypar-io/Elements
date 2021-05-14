@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Elements.Geometry;
 
-namespace Elements
+namespace Elements.Geometry
 {
     /// <summary>
     /// A container for graphics data.
