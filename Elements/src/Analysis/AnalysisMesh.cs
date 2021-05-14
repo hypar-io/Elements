@@ -92,7 +92,7 @@ namespace Elements.Analysis
             foreach (var result in this._results)
             {
                 var center = result.cell.Center();
-                var vertexColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColor((result.value - this._min) / span) : Colors.White;
+                var vertexColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColor(span == 0 ? result.value : (result.value - this._min) / span) : Colors.White;
                 var min = result.cell.Min;
                 var max = result.cell.Max;
                 var v1 = mesh.AddVertex(min, color: vertexColor);
