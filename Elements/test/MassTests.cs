@@ -19,11 +19,19 @@ namespace Elements.Tests
             var c = new Vector3(20, 50);
             var d = new Vector3(-10, 5);
             var poly = new Polygon(new[] { a, b, c, d });
-            
+
             // Create a mass.
             var mass = new Mass(poly, 5.0);
             //</example>
-            
+
+            this.Model.AddElement(mass);
+        }
+
+        [Fact]
+        public void Cylinder()
+        {
+            this.Name = "Cylinder";
+            var mass = new Mass(new Circle(2.0).ToPolygon(15), 5, BuiltInMaterials.Steel);
             this.Model.AddElement(mass);
         }
 
@@ -65,16 +73,16 @@ namespace Elements.Tests
             var material2 = new Material("mass2", new Color(0.0f, 1.0f, 0.0f, 0.5f), 0.0f, 0.0f);
             var material3 = new Material("mass3", new Color(0.0f, 1.0f, 1.0f, 0.5f), 0.0f, 0.0f);
             var mass1 = new Mass(profile1, 10.0, material1);
-            var mass2 = new Mass(profile2, 10.0, material2, new Transform(new Vector3(0,0,10.0)));
-            var mass3 = new Mass(profile3, 10.0, material3, new Transform(new Vector3(0,0,20.0)));
+            var mass2 = new Mass(profile2, 10.0, material2, new Transform(new Vector3(0, 0, 10.0)));
+            var mass3 = new Mass(profile3, 10.0, material3, new Transform(new Vector3(0, 0, 20.0)));
             this.Model.AddElements(new[] { mass1, mass2, mass3 });
 
             var f1 = new Floor(profile1, 0.2);
-            var f2 = new Floor(profile2, 0.2, new Transform(0,0,10.0));
-            var f3 = new Floor(profile3, 0.2, new Transform(0,0,20.0));
+            var f2 = new Floor(profile2, 0.2, new Transform(0, 0, 10.0));
+            var f3 = new Floor(profile3, 0.2, new Transform(0, 0, 20.0));
             this.Model.AddElements(new[] { f1, f2, f3 });
 
-            this.Model.ToGlTF("./models/TransformedMasses.gltf",false);
+            this.Model.ToGlTF("./models/TransformedMasses.gltf", false);
         }
 
         [Fact]

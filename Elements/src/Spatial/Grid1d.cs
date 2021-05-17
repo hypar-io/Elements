@@ -717,6 +717,11 @@ namespace Elements.Spatial
                 runningPosition += patternSegments[i].length;
                 SplitAtOffset(runningPosition);
             }
+            if (Cells == null && patternSegments.Count == 1)
+            {
+                Type = patternSegments[0].typeName;
+                return;
+            }
             for (int i = 0; i < patternSegments.Count; i++)
             {
                 var cellOffset = offset > 0 ? 1 : 0;
@@ -739,7 +744,7 @@ namespace Elements.Spatial
             {
                 var segmentToAdd = lengthPattern[i % lengthPattern.Count];
                 runningLength += segmentToAdd.length;
-                if (runningLength < Domain.Length)
+                if (runningLength <= Domain.Length)
                 {
                     patternSegments.Add(segmentToAdd);
 

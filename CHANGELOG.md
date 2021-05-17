@@ -16,6 +16,7 @@
 ### Added
 
 - `Grid2d.IsOutside()`
+- `GraphicsBuffers`
 
 ### Removed
 - `BuiltInMaterials.Dirt`
@@ -27,6 +28,9 @@
 - `ConstructedSolid` serializes and deserializes correctly.
 - `Solid.AddFace(Polygon, Polygon[])` can take an optional third `mergeVerticesAndEdges` argument which will automatically reuse existing edges + vertices in the solid.
 - Adds optional `tolerance` parameter to `Line.ExtendTo(Polygon)`, `Line.ExtendTo(IEnumerable<Line>)`, `Vector3.IsParallelTo(Vector3)`.
+- `Mesh.GetBuffers` now returns a `GraphicsBuffers` object.
+- `Solid.Tessellate` now returns a `GraphicsBuffers` object.
+- `CsgExtensions.Tessellate` now returns a `GraphicsBuffers` object.
 
 ### Fixed
 
