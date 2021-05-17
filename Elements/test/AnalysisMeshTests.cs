@@ -45,5 +45,17 @@ namespace Elements.Tests
 
             this.Model.AddElement(analysisMesh);
         }
+
+        [Fact]
+        public void SingleValueAnalysisMesh()
+        {
+            this.Name = "SingleValueAnalysis";
+            var perimeter = Polygon.Ngon(5, 5);
+            var colorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Orange }, 10);
+            var analysisMesh = new AnalysisMesh(perimeter, 0.2, 0.2, colorScale, (Vector3 vector) => { return 1; });
+            analysisMesh.Analyze();
+
+            this.Model.AddElement(analysisMesh);
+        }
     }
 }

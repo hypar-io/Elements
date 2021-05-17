@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.1
+
+### Added
+
+### Removed
+
+### Changed
+- Make AnalysisMesh handle single valued analysis.
+
+### Fixed
+
 ## 0.9.0
 
 ### Added
