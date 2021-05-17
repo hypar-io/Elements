@@ -306,6 +306,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct the inverse of this transform as a new transform.
+        /// </summary>
+        /// <returns></returns>
+        public Transform Inverted()
+        {
+            var transform = new Transform(this);
+            transform.Invert();
+            return transform;
+        }
+
+        /// <summary>
         /// Apply a translation to the transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
