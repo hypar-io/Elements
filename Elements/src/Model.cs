@@ -65,6 +65,11 @@ namespace Elements
             // Some elements compute profiles and transforms
             // during UpdateRepresentation. Call UpdateRepresentation
             // here to ensure these values are correct in the JSON.
+
+            // TODO: This is really expensive. This should be removed
+            // when all internal types have been updated to not create elements
+            // during UpdateRepresentation. This is now possible because 
+            // geometry operations are reactive to changes in their properties.
             if (element is GeometricElement)
             {
                 ((GeometricElement)element).UpdateRepresentations();
