@@ -1,11 +1,28 @@
 # Changelog
 
+## 0.9.1
+
+### Added
+
+### Removed
+
+### Changed
+
+- `Polygon.Split()` can now handle polygons that are not in the XY plane.
+- Make AnalysisMesh handle single valued analysis.
+- `Mesh.GetBuffers` now returns a `GraphicsBuffers` object.
+- `Solid.Tessellate` now returns a `GraphicsBuffers` object.
+- `CsgExtensions.Tessellate` now returns a `GraphicsBuffers` object.
+
+### Fixed
+
 ## 0.9.0
 
 ### Added
 
 - `Polygon.ToTransform()`
 - `Grid2d.IsOutside()`
+- `GraphicsBuffers`
 
 ### Removed
 
@@ -18,7 +35,6 @@
 - `ConstructedSolid` serializes and deserializes correctly.
 - `Solid.AddFace(Polygon, Polygon[])` can take an optional third `mergeVerticesAndEdges` argument which will automatically reuse existing edges + vertices in the solid.
 - Adds optional `tolerance` parameter to `Line.ExtendTo(Polygon)`, `Line.ExtendTo(IEnumerable<Line>)`, `Vector3.IsParallelTo(Vector3)`.
-- `Polygon.Split()` can now handle polygons that are not in the XY plane.
 
 ### Fixed
 
