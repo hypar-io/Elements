@@ -235,6 +235,26 @@ namespace Elements.Tests
             var solidDeserialized = opDeserialized?.Solid;
             Assert.NotNull(solidDeserialized);
         }
+
+        [Fact]
+        public void ConstructedSolidProducesValidGlb()
+        {
+            Name = nameof(ConstructedSolidProducesValidGlb);
+            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/TroubleSolidPolygons.json"));
+            var solid = new Solid();
+            foreach (var face in allPolygons)
+            {
+                solid.AddFace(face.outerLoop, face.innerLoops, true);
+            }
+            var solidOp = new Elements.Geometry.Solids.ConstructedSolid(solid, false);
+            solidOp.LocalTransform = new Transform();
+            var geoElem = new GeometricElement(new Transform(), BuiltInMaterials.Concrete, new Representation(new[] { solidOp }), false, Guid.NewGuid(), null);
+            var model = new Model();
+            model.AddElement(geoElem);
+            var bytes = model.ToGlTF();
+            Assert.True(bytes != null && bytes.Length > 3000);
+            Model.AddElement(geoElem);
+        }
     }
 
 }
