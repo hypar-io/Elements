@@ -54,8 +54,20 @@
             "type": "boolean",
             "default": false
         },
+        "RepeatTexture": {
+            "description": "Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.",
+            "type": "boolean",
+            "default": true
+        },
+        "NormalTexture": {
+            "description": "A relative path to a jpg or png image file to be used as a normal texture.",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
         "InterpolateTexture": {
-            "description": "Should the texture colors be interpolated between pixels?",
+            "description": "Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.",
             "type": "boolean",
             "default": true
         }

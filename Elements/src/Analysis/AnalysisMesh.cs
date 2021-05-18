@@ -93,7 +93,7 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, id: Guid.NewGuid());
         }
 
         /// <summary>

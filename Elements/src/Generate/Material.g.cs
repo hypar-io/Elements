@@ -25,13 +25,13 @@ namespace Elements
     public partial class Material : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, bool @interpolateTexture, System.Guid @id, string @name)
+        public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, bool @repeatTexture, string @normalTexture, bool @interpolateTexture, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Material>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @interpolateTexture, @id, @name});
+                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @repeatTexture, @normalTexture, @interpolateTexture, @id, @name});
             }
         
             this.Color = @color;
@@ -40,6 +40,8 @@ namespace Elements
             this.Unlit = @unlit;
             this.Texture = @texture;
             this.DoubleSided = @doubleSided;
+            this.RepeatTexture = @repeatTexture;
+            this.NormalTexture = @normalTexture;
             this.InterpolateTexture = @interpolateTexture;
             
             if(validator != null)
@@ -75,7 +77,15 @@ namespace Elements
         [Newtonsoft.Json.JsonProperty("DoubleSided", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool DoubleSided { get; set; } = false;
     
-        /// <summary>Should the texture colors be interpolated between pixels?</summary>
+        /// <summary>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</summary>
+        [Newtonsoft.Json.JsonProperty("RepeatTexture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool RepeatTexture { get; set; } = true;
+    
+        /// <summary>A relative path to a jpg or png image file to be used as a normal texture.</summary>
+        [Newtonsoft.Json.JsonProperty("NormalTexture", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string NormalTexture { get; set; }
+    
+        /// <summary>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</summary>
         [Newtonsoft.Json.JsonProperty("InterpolateTexture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool InterpolateTexture { get; set; } = true;
     

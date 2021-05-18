@@ -132,9 +132,7 @@ namespace Elements.Analysis
             var imagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
             image.Save(imagePath);
 
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
-            this.Material.Texture = imagePath;
-            this.Material.InterpolateTexture = this.InterpolateTexture;
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, imagePath, true, true, interpolateTexture:false, id: Guid.NewGuid());
         }
 
         /// <summary>

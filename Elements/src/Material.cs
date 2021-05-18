@@ -10,23 +10,6 @@ namespace Elements
     public partial class Material : Element
     {
         /// <summary>
-        /// Should the texture be interpolated?
-        /// </summary>
-        /// <value>If false, renders hard pixels in the texture rather than fading between adjacent pixels.</value>
-        public bool InterpolateTexture { get; set; } = true;
-
-        /// <summary>
-        /// Should the texture be repeated?
-        /// </summary>
-        /// <value>The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</value>
-        public bool RepeatTexture { get; set; } = true;
-
-        /// <summary>
-        /// A relative path to a jpg or png image file to be used as a normal texture.
-        /// </summary>
-        public string NormalTexture { get; set; }
-
-        /// <summary>
         /// Construct a material.
         /// </summary>
         /// <param name="name">The name of the material.</param>
@@ -46,6 +29,9 @@ namespace Elements
         /// <param name="texture">A relative path to a jpg or png image file to be used as a texture.</param>
         /// <param name="unlit">Is this material affected by lights?</param>
         /// <param name="doubleSided">Is this material to be rendered from both sides?</param>
+        /// <param name="repeatTexture">Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</param>
+        /// <param name="normalTexture">A relative path to a jpg or png image file to be used as a normal texture.</param>
+        /// <param name="interpolateTexture">Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</param>
         /// <param name="id">The id of the material.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
@@ -56,6 +42,9 @@ namespace Elements
                         string texture = null,
                         bool unlit = false,
                         bool doubleSided = false,
+                        bool repeatTexture = true,
+                        string normalTexture = null,
+                        bool interpolateTexture = true,
                         Guid id = default(Guid)) :
             this(color,
                  specularFactor,
@@ -63,6 +52,9 @@ namespace Elements
                  unlit,
                  texture,
                  doubleSided,
+                 repeatTexture,
+                 normalTexture,
+                 interpolateTexture,
                  id != default(Guid) ? id : Guid.NewGuid(),
                  name)
         { }
