@@ -1345,7 +1345,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal<int>(1, trimmed.Count);
             var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
             this.Model.AddElement(new ModelCurve(polygon));
-            this.Model.AddElements(trimmed.Select(t => new ModelCurve(t, BuiltInMaterials.XAxis)));
+            this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
             this.Model.AddElements(panels);
 
             // Trim below
