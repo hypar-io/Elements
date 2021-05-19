@@ -11,7 +11,7 @@ namespace Elements.Spatial
     /// </summary>
     public class HalfEdgeGraph2d
     {
-        private HalfEdgeGraph2d()
+        internal HalfEdgeGraph2d()
         {
             Vertices = new List<Vector3>();
             EdgesPerVertex = new List<List<(int from, int to)>>();
