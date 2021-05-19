@@ -56,6 +56,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a transform in the plane of this polygon, with its Z axis along the polygon's normal.
+        /// </summary>
+        /// <returns></returns>
+        public Transform ToTransform()
+        {
+            var normal = Normal();
+            return new Transform(Vertices[0], Vertices[1] - Vertices[0], normal);
+        }
+
+        /// <summary>
         /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
@@ -597,10 +607,14 @@ namespace Elements.Geometry
         /// <param name="pl">The polyline with which to split.</param>
         public List<Polygon> Split(Polyline pl)
         {
+            var plXform = this.ToTransform();
+            var inverse = new Transform(plXform);
+            inverse.Invert();
+            var thisInXY = this.TransformedPolygon(inverse);
             // Construct a half-edge graph from the polygon and the polyline
-            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(this, pl);
+            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(thisInXY, pl.TransformedPolyline(inverse));
             // Find closed regions in that graph
-            return graph.Polygonize();
+            return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
         }
 
         /// <summary>
@@ -609,10 +623,14 @@ namespace Elements.Geometry
         /// <param name="polylines">The polylines with which to split.</param>
         public List<Polygon> Split(IEnumerable<Polyline> polylines)
         {
+            var plXform = this.ToTransform();
+            var inverse = new Transform(plXform);
+            inverse.Invert();
+            var thisInXY = this.TransformedPolygon(inverse);
             // Construct a half-edge graph from the polygon and the polylines
-            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { this }, polylines);
+            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { thisInXY }, polylines.Select(p => p.TransformedPolyline(inverse)));
             // Find closed regions in that graph
-            return graph.Polygonize();
+            return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
         }
 
         /// <summary>

@@ -6,10 +6,14 @@
 - `Transform(Plane plane)`
 - `Polygon.Trimmed(Plane plane, bool flip)`
 
+- `Polygon.ToTransform()`
+
 ### Removed
 
 ### Changed
-- Make AnalysisMesh handle single valued analysis.
+
+- `AnalysisMesh` now handles single valued analysis.
+- `Polygon.Split()` can now handle polygons that are not in the XY plane.
 
 ### Fixed
 
@@ -21,6 +25,7 @@
 - `GraphicsBuffers`
 
 ### Removed
+
 - `BuiltInMaterials.Dirt`
 - `BuiltInMaterials.Grass`
 
@@ -38,7 +43,6 @@
 
 - Fixed a bug in `ConvexHull.FromPoints` when multiple X coordinates are equal.
 - Fixed a bug in `Grid2d(Polygon, Vector3, Vector3, Vector3)` where U or V directions skew slightly when they nearly parallel with a boundary edge.
-
 
 ## 0.8.5
 
