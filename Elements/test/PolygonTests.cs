@@ -1334,6 +1334,8 @@ namespace Elements.Geometry.Tests
         {
             this.Name = "TrimmedPolygon";
 
+            var r = new Random();
+
             // Trim above
             var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
             // t.Rotate(Vector3.XAxis, 15);
@@ -1341,7 +1343,7 @@ namespace Elements.Geometry.Tests
             var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmed = polygon.Trimmed(plane);
             Assert.Equal<int>(1, trimmed.Count);
-            var panels = trimmed.Select(t => new Panel(t));
+            var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
             this.Model.AddElement(new ModelCurve(polygon));
             this.Model.AddElements(trimmed.Select(t => new ModelCurve(t, BuiltInMaterials.XAxis)));
             this.Model.AddElements(panels);
@@ -1352,9 +1354,9 @@ namespace Elements.Geometry.Tests
             var move = new Transform(0, 0, 0);
             move.Rotate(Vector3.ZAxis, 15);
             move.Move(new Vector3(8, 0, 0));
-            var panel2 = trimmedReverse.Select(t => new Panel(t, transform: move));
+            var panel2 = trimmedReverse.Select(t => new Panel(t, r.NextMaterial(), transform: move));
             this.Model.AddElement(new ModelCurve(polygon, transform: move));
-            this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, BuiltInMaterials.XAxis, transform: move)));
+            this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, transform: move)));
             this.Model.AddElements(panel2);
 
             // Trim through vertex
@@ -1362,8 +1364,9 @@ namespace Elements.Geometry.Tests
             var trimmedAtVertex = polygon.Trimmed(vertexTrimPlane, true);
             Assert.Equal<int>(2, trimmedAtVertex.Count);
             var move2 = new Transform(16, 0, 0);
-            var panel3 = trimmedAtVertex.Select(t => new Panel(t, BuiltInMaterials.XAxis, transform: move2));
+            var panel3 = trimmedAtVertex.Select(t => new Panel(t, r.NextMaterial(), transform: move2));
             this.Model.AddElements(panel3);
+            this.Model.AddElements(trimmedAtVertex.Select(t => new ModelCurve(t, transform: move2)));
             this.Model.AddElement(new ModelCurve(polygon, transform: move2));
         }
 
