@@ -5,6 +5,7 @@
 ### Added
 
 - `Polygon.ToTransform()`
+- `Elements.Anaysis.AnalysisImage`
 
 ### Removed
 
@@ -18,7 +19,7 @@
 ## 0.9.0
 
 ### Added
-- `Elements.Anaysis.AnalysisImage`
+
 - `Grid2d.IsOutside()`
 - `GraphicsBuffers`
 
