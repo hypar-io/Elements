@@ -3,6 +3,8 @@
 ## 0.9.1
 
 ### Added
+- `Transform(Plane plane)`
+- `Polygon.Trimmed(Plane plane, bool flip)`
 
 ### Removed
 

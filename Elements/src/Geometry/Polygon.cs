@@ -1,5 +1,6 @@
 using ClipperLib;
 using Elements.Geometry.Interfaces;
+using Elements.Spatial;
 using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,240 @@ namespace Elements.Geometry
             return Contains3D(Segments(), vector, out containment);
         }
 
+        /// <summary>
+        /// Trim the polygon with a plane.
+        /// Everything on the "back" side of the plane will be trimmed.
+        /// </summary>
+        /// <param name="plane">The trimming plane.</param>
+        /// <param name="flip">Should the plane be flipped?</param>
+        /// <returns>A collection of new polygons, trimmed by the plane, or null if no
+        /// trimming occurred.</returns>
+        public List<Polygon> Trimmed(Plane plane, bool flip = false)
+        {
+            try
+            {
+                if (flip)
+                {
+                    plane = new Plane(plane.Origin, plane.Normal.Negate());
+                }
+
+                if (!this.Intersects(plane, out List<Vector3> intersections, false))
+                {
+                    return null;
+                }
+
+                var newVertices = new List<Vector3>();
+                for (var i = 0; i <= this.Vertices.Count - 1; i++)
+                {
+                    var v1 = this.Vertices[i];
+                    var v2 = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+
+                    var d1 = v1.DistanceTo(plane);
+                    var d2 = v2.DistanceTo(plane);
+
+                    if (d1.ApproximatelyEquals(0) && d2.ApproximatelyEquals(0))
+                    {
+                        // The segment is in the plane.
+                        newVertices.Add(v1);
+                        continue;
+                    }
+
+                    if (d1 < 0 && d2 < 0)
+                    {
+                        // Both points are on the outside of
+                        // the plane.
+                        continue;
+                    }
+
+                    if (d1 > 0 && d2 > 0)
+                    {
+                        // Both points are on the inside of
+                        // the plane.
+                        newVertices.Add(v1);
+                        continue;
+                    }
+
+                    if (d1 > 0 && d2.ApproximatelyEquals(0))
+                    {
+                        // The first point is inside and 
+                        // the second point is on the plane.
+                        newVertices.Add(v1);
+
+                        // Insert what will become a duplicate 
+                        // vertex.
+                        newVertices.Add(v2);
+                        continue;
+                    }
+
+                    if (d1.ApproximatelyEquals(0) && d2 > 0)
+                    {
+                        // The first point is on the plane,
+                        // and the second is inside.
+                        newVertices.Add(v1);
+                        continue;
+                    }
+
+                    var l = new Line(v1, v2);
+                    if (l.Intersects(plane, out Vector3 result))
+                    {
+                        // Figure out what side the intersection is on.
+                        if (d1 < 0)
+                        {
+                            newVertices.Add(result);
+                        }
+                        else
+                        {
+                            newVertices.Add(v1);
+                            newVertices.Add(result);
+                        }
+                    }
+                }
+
+                var graph = new HalfEdgeGraph2d();
+                graph.EdgesPerVertex = new List<List<(int from, int to)>>();
+
+                if (newVertices.Count > 0)
+                {
+                    graph.Vertices = newVertices;
+
+                    // Initialize the graph.
+                    foreach (var v in newVertices)
+                    {
+                        graph.EdgesPerVertex.Add(new List<(int from, int to)>());
+                    }
+
+                    for (var i = 0; i < newVertices.Count - 1; i++)
+                    {
+                        var a = i;
+                        var b = i + 1 > newVertices.Count - 1 ? 0 : i + 1;
+                        if (intersections.Contains(newVertices[a]) && intersections.Contains(newVertices[b]))
+                        {
+                            continue;
+                        }
+
+                        // Only add one edge around the outside of the shape.
+                        graph.EdgesPerVertex[a].Add((a, b));
+                    }
+
+                    for (var i = 0; i < intersections.Count - 1; i += 2)
+                    {
+                        // Because we'll have duplicate vertices where an 
+                        // intersection is on the plane, we need to choose
+                        // which one to use. This follows the rule of finding 
+                        // the one whose index is closer to the first index used.
+                        var a = ClosestIndexOf(newVertices, intersections[i], i);
+                        var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
+
+                        graph.EdgesPerVertex[a].Add((a, b));
+                    }
+
+                    if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
+                    {
+                        // Close the graph
+                        var a = newVertices.Count - 1;
+                        var b = 0;
+                        graph.EdgesPerVertex[a].Add((a, b));
+                    }
+                    return graph.Polygonize();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+            }
+            return null;
+        }
+
+        private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
+        {
+            var first = vertices.IndexOf(target);
+            var last = vertices.LastIndexOf(target);
+            if (first == last)
+            {
+                return first;
+            }
+            var d1 = Math.Abs(targetIndex - first);
+            var d2 = Math.Abs(targetIndex - last);
+            if (d1 < d2)
+            {
+                return first;
+            }
+            return last;
+        }
+
+        /// <summary>
+        /// Does this polygon intersect the provided plane?
+        /// </summary>
+        /// <param name="plane">The intersection plane.</param>
+        /// <param name="results">A collection of intersection results 
+        /// sorted along the plane.</param>
+        /// <param name="distinct">Should the intersections results that
+        /// are returned be distinct?</param>
+        /// <returns>True if the plane intersects the polygon, 
+        /// otherwise false.</returns>
+        public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true)
+        {
+            results = new List<Vector3>();
+            var d = this.Plane().Normal.Cross(plane.Normal).Unitized();
+
+            foreach (var s in this.Segments())
+            {
+                if (s.Intersects(plane, out Vector3 result))
+                {
+                    if (distinct)
+                    {
+                        if (!results.Contains(result))
+                        {
+                            results.Add(result);
+                        }
+                    }
+                    else
+                    {
+                        results.Add(result);
+                    }
+                }
+            }
+            if (results.Count > 0)
+            {
+                // Order the intersections along the direction.
+                results.Sort(new DotComparer(d));
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add a new vertex at the provided point
+        /// </summary>
+        /// <param name="point">The point at which to split.</param>
+        public void Split(Vector3 point)
+        {
+            for (var i = 0; i < this.Vertices.Count - 1; i++)
+            {
+                var pt1 = this.Vertices[i];
+                var pt2 = this.Vertices[i + 1];
+
+                if (point.IsAlmostEqualTo(pt1) || point.IsAlmostEqualTo(pt2))
+                {
+                    // It's a start or an end. Nothing to do.
+                    continue;
+                }
+
+                var d1 = point - pt1;
+                var d2 = pt2 - pt1;
+                var c = d1.Cross(d2);
+                if (c.X.ApproximatelyEquals(0.0)
+                    && c.Y.ApproximatelyEquals(0.0)
+                    && c.Z.ApproximatelyEquals(0.0) && d1.Dot(d2) > 0)
+                {
+                    // The pt is in the line between the start and the end.
+                    this.Vertices.Insert(i + 1, point);
+                    i++; // Skip this new point.
+                }
+            }
+        }
+
         // Projects non-flat containment request into XY plane and returns the answer for this projection
         internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
         {
@@ -90,7 +325,7 @@ namespace Elements.Geometry
             var transformTo3D = vertices.ToTransform();
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = segments.Select(segment =>  segment.TransformedLine(transformToGround));
+            var groundSegments = segments.Select(segment => segment.TransformedLine(transformToGround));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
         }
