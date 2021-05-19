@@ -272,6 +272,25 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DivideByPatternWithoutRemainder()
+        {
+            var grid = new Grid1d(6);
+            var pattern = new List<(string typename, double length)>
+            {
+                ("A", 2),
+                ("B", 1)
+            };
+            grid.DivideByPattern(pattern, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+            var cells = grid.GetCells();
+
+            for (int i = 0; i < cells.Count; i++)
+            {
+                Assert.Equal(pattern[i % pattern.Count].typename, cells[i].Type);
+                Assert.Equal(pattern[i % pattern.Count].length, cells[i].Domain.Length, 3);
+            }
+        }
+
+        [Fact]
         public void PatternTooLongThrowsException()
         {
             var grid = new Grid1d(4);
