@@ -147,14 +147,24 @@ namespace Elements.Validators
             var unlit = (bool)args[3];
             var texture = (string)args[4];
             var doubleSided = (bool)args[5];
-            var id = (Guid)args[6];
-            var name = (string)args[7];
+            var repeatTexture = (bool)args[6];
+            var normalTexture = (string)args[7];
+            var interpolateTexture = (bool)args[8];
+            var id = (Guid)args[9];
+            var name = (string)args[10];
 
             if (texture != null && !File.Exists(texture))
             {
                 // If the file doesn't exist, set the texture to null,
                 // so the material is still created.
                 texture = null;
+            }
+
+            if (normalTexture != null && !File.Exists(normalTexture))
+            {
+                // If the file doesn't exist, set the normalTexture to null,
+                // so the material is still created.
+                normalTexture = null;
             }
 
             if (specularFactor < 0.0 || glossinessFactor < 0.0)
@@ -351,7 +361,7 @@ namespace Elements.Validators
         {
             if (obj is Polygon)
             {
-                // we don't need to validate twice — 
+                // we don't need to validate twice —
                 // the Polygon PostConstruct validator will handle all of this correctly.
                 return;
             }

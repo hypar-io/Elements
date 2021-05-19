@@ -7,6 +7,7 @@
 - `Polygon.Trimmed(Plane plane, bool flip)`
 
 - `Polygon.ToTransform()`
+- `Elements.Anaysis.AnalysisImage`
 
 ### Removed
 
