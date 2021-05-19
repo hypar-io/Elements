@@ -25,7 +25,7 @@ namespace Elements
         public static Material NextMaterial(this Random random, bool unlit = true)
         {
             var color = random.NextColor();
-            return new Material(color, 0.1, 0.3, unlit, null, true, Guid.NewGuid(), color.ToString());
+            return new Material(color.ToString(), color, 0.1, 0.3, null, unlit, true);
         }
     }
 

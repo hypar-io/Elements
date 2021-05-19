@@ -5,6 +5,7 @@
 ### Added
 
 - `Polygon.ToTransform()`
+- `Elements.Anaysis.AnalysisImage`
 
 ### Removed
 
