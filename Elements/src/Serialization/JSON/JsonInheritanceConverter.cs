@@ -147,7 +147,14 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
+                    if (jObject.ContainsKey(_discriminator))
+                    {
+                        jObject[_discriminator] = value.GetType().FullName;
+                    }
+                    else
+                    {
+                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
+                    }
                     writer.WriteToken(jObject.CreateReader());
                 }
             }
@@ -218,10 +225,6 @@ namespace Elements.Serialization.JSON
                 subtype = GetObjectSubtype(objectType, discriminator, jObject);
 
                 var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
-                if (objectContract == null || System.Linq.Enumerable.All(objectContract.Properties, p => p.PropertyName != _discriminator))
-                {
-                    jObject.Remove(_discriminator);
-                }
             }
             else
             {

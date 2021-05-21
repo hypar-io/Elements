@@ -1067,7 +1067,13 @@ namespace Elements.Serialization.glTF
 
         private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
 
-        internal static Stream GetGlbStreamFromPath(string gltfLocation)
+        /// <summary>
+        /// Get a stream from a glb path, either file reference or remote.
+        /// The streams are cached based on the location, so updates to files may
+        /// not be reflected immediately, especially during long running parent processes.
+        /// </summary>
+        /// <param name="gltfLocation">The URI of the gltf binary file</param>
+        public static Stream GetGlbStreamFromPath(string gltfLocation)
         {
             var responseStream = new MemoryStream();
 
@@ -1174,40 +1180,7 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            // To properly compute csgs, all solid operation csgs need
-            // to be transformed into their final position. Then the csgs
-            // can be computed and the final csg can have the inverse of the
-            // geometric element's transform applied to "reset" it.
-            // The transforms applied to each node in the glTF will then
-            // ensure that the elements are correctly transformed.
-            Csg.Solid csg = new Csg.Solid();
-
-            var solids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                                        .Select(op => op.LocalTransform != null ?
-                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
-                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
-                                                                        .ToArray();
-            var voids = geometricElement.Representation.SolidOperations.Where(op => op.IsVoid == true)
-                                                                       .Select(op => op.LocalTransform != null ?
-                                                                            op._csg.Transform(geometricElement.Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
-                                                                            op._csg.Transform(geometricElement.Transform.ToMatrix4x4()))
-                                                                       .ToArray();
-
-            if (geometricElement is IHasOpenings)
-            {
-                var openingContainer = (IHasOpenings)geometricElement;
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
-                                                      .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
-            }
-
-            csg = csg.Union(solids);
-            csg = csg.Substract(voids);
-            var inverse = new Transform(geometricElement.Transform);
-            inverse.Invert();
-
-            csg = csg.Transform(inverse.ToMatrix4x4());
-
+            var csg = geometricElement.GetSolid();
             var buffers = csg.Tessellate();
 
             if (buffers.Vertices.Count == 0)
