@@ -4,7 +4,6 @@
 
 ### Added
 - `GetSolid()` method on GeometricElement that returns the Csg solid.
-
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
 
