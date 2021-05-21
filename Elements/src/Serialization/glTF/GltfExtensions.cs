@@ -205,6 +205,10 @@ namespace Elements.Serialization.glTF
                         images.Add(image);
 
                         var sampler = CreateSampler(material.RepeatTexture);
+                        if (!material.InterpolateTexture)
+                        {
+                            sampler.MagFilter = Sampler.MagFilterEnum.NEAREST;
+                        }
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
@@ -240,6 +244,10 @@ namespace Elements.Serialization.glTF
                         textureDict.Add(material.NormalTexture, texId);
 
                         var sampler = CreateSampler(material.RepeatTexture);
+                        if (!material.InterpolateTexture)
+                        {
+                            sampler.MagFilter = Sampler.MagFilterEnum.NEAREST;
+                        }
                         tex.Sampler = samplerId;
                         samplers.Add(sampler);
 
