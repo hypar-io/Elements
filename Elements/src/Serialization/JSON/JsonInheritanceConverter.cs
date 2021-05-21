@@ -218,10 +218,6 @@ namespace Elements.Serialization.JSON
                 subtype = GetObjectSubtype(objectType, discriminator, jObject);
 
                 var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
-                if (objectContract == null || System.Linq.Enumerable.All(objectContract.Properties, p => p.PropertyName != _discriminator))
-                {
-                    jObject.Remove(_discriminator);
-                }
             }
             else
             {
