@@ -3,7 +3,7 @@
 ## 0.9.1
 
 ### Added
-- GetSolid() method on GeometricElement that returns the Csg solid.
+- `GetSolid()` method on GeometricElement that returns the Csg solid.
 
 ### Removed
 
