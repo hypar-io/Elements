@@ -22,11 +22,6 @@
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
   </ItemGroup>
 
-<ItemGroup>
-  <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-    <_Parameter1>Elements.Conversion.Revit</_Parameter1>
-  </AssemblyAttribute>
-</ItemGroup>
 
   <ItemGroup>
     <Content Include="Textures\**\*.*">
