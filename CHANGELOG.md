@@ -3,11 +3,14 @@
 ## 0.9.1
 
 ### Added
+- GetSolid() method on GeometricElement that returns the Csg solid.
 
 ### Removed
 
 ### Changed
 - Make AnalysisMesh handle single valued analysis.
+- Make the GltfExtensions.GetGlbStreamFromPath() method public.
+- Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
 
 ### Fixed
 
