@@ -147,7 +147,14 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
+                    if (jObject.ContainsKey(_discriminator))
+                    {
+                        jObject[_discriminator] = value.GetType().FullName;
+                    }
+                    else
+                    {
+                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
+                    }
                     writer.WriteToken(jObject.CreateReader());
                 }
             }
