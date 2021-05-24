@@ -35,9 +35,21 @@ namespace Elements
         }
 
         /// <summary>
+        /// Get the complete final mesh of this geometric element.  This mesh is centered about the origin, and meant to be transformed
+        /// into the final location using the Geometric Element's Transform property.
+        /// </summary>
+        public Mesh ToMesh()
+        {
+            var mesh = new Mesh();
+            var solid = this.GetSolid();
+            solid.Tessellate(ref mesh);
+            return mesh;
+        }
+
+        /// <summary>
         /// Get the computed csg solid centered about the origin.
         /// </summary>
-        public Csg.Solid GetSolid()
+        internal Csg.Solid GetSolid()
         {
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
