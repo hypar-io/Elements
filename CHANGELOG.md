@@ -5,17 +5,14 @@
 ### Added
 - `Transform(Plane plane)`
 - `Polygon.Trimmed(Plane plane, bool flip)`
-
+- `GetSolid()` method on GeometricElement that returns the Csg solid.
 - `Polygon.ToTransform()`
-
-### Removed
+- `Elements.Anaysis.AnalysisImage`
 
 ### Changed
-
 - `AnalysisMesh` now handles single valued analysis.
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
-
-### Fixed
+- Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
 
 ## 0.9.0
 

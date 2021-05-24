@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using Elements.Geometry;
+using Elements.Interfaces;
 
 namespace Elements
 {
@@ -30,6 +32,47 @@ namespace Elements
             }
 
             return new ElementInstance(this, transform, name, Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Get the computed csg solid centered about the origin.
+        /// </summary>
+        public Csg.Solid GetSolid()
+        {
+            // To properly compute csgs, all solid operation csgs need
+            // to be transformed into their final position. Then the csgs
+            // can be computed and the final csg can have the inverse of the
+            // geometric element's transform applied to "reset" it.
+            // The transforms applied to each node in the glTF will then
+            // ensure that the elements are correctly transformed.
+            Csg.Solid csg = new Csg.Solid();
+
+            var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
+                                                                        .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(Transform.ToMatrix4x4()))
+                                                                        .ToArray();
+            var voids = Representation.SolidOperations.Where(op => op.IsVoid == true)
+                                                                       .Select(op => op.LocalTransform != null ?
+                                                                            op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
+                                                                            op._csg.Transform(Transform.ToMatrix4x4()))
+                                                                       .ToArray();
+
+            if (this is IHasOpenings)
+            {
+                var openingContainer = (IHasOpenings)this;
+                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
+                                                      .Where(op => op.IsVoid == true)
+                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+            }
+
+            csg = csg.Union(solids);
+            csg = csg.Substract(voids);
+            var inverse = new Transform(Transform);
+            inverse.Invert();
+
+            csg = csg.Transform(inverse.ToMatrix4x4());
+            return csg;
         }
     }
 }
