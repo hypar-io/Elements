@@ -1,9 +1,11 @@
 # Changelog
 
+
 ## 0.9.1
 
 ### Added
-- `GetSolid()` method on GeometricElement that returns the Csg solid.
+- ~~`GetSolid()` method on GeometricElement that returns the Csg solid.~~
+- `ToMesh()` method on GeometricElement that return the mesh of a processed solid.
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
 
@@ -16,6 +18,7 @@
 - Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
 
 ### Fixed
+- Guard against missing transforms while generating CSGs.
 
 ## 0.9.0
 
