@@ -60,15 +60,11 @@ namespace Elements
             Csg.Solid csg = new Csg.Solid();
 
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                                        .Select(op => op.LocalTransform != null ?
-                                                                            op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
-                                                                            op._csg.Transform(Transform.ToMatrix4x4()))
-                                                                        .ToArray();
+                                                       .Select(op => TransformedSolidOperation(op))
+                                                       .ToArray();
             var voids = Representation.SolidOperations.Where(op => op.IsVoid == true)
-                                                                       .Select(op => op.LocalTransform != null ?
-                                                                            op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4()) :
-                                                                            op._csg.Transform(Transform.ToMatrix4x4()))
-                                                                       .ToArray();
+                                                      .Select(op => TransformedSolidOperation(op))
+                                                      .ToArray();
 
             if (this is IHasOpenings)
             {
@@ -80,11 +76,30 @@ namespace Elements
 
             csg = csg.Union(solids);
             csg = csg.Substract(voids);
-            var inverse = new Transform(Transform);
-            inverse.Invert();
 
-            csg = csg.Transform(inverse.ToMatrix4x4());
-            return csg;
+            if (Transform == null)
+            {
+                return csg;
+            }
+            else
+            {
+                var inverse = new Transform(Transform);
+                inverse.Invert();
+
+                csg = csg.Transform(inverse.ToMatrix4x4());
+                return csg;
+            }
+        }
+
+        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op)
+        {
+            if (Transform == null)
+            {
+                return op._csg;
+            }
+            return op.LocalTransform != null
+                        ? op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
+                        : op._csg.Transform(Transform.ToMatrix4x4());
         }
     }
 }
