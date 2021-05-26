@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A cell is a 3-dimensional closed extrusion within a complex.
     /// </summary>
-    public class Cell : ChildBase<Extrude>
+    public class Cell : ChildBase<Cell, Extrude>, Interfaces.IHasNeighbors<Cell, Extrude>
     {
         /// <summary>
         /// The ID of this cell's bottom face. If set, it is also expected to be duplicated in list of faces.
@@ -239,7 +239,7 @@ namespace Elements.Spatial.CellComplex
         {
             var maxCount = this.CellComplex.GetCells().Count;
             Func<Cell, Cell> getNextNeighbor = (Cell curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
-            return ChildBase.TraverseNeighbors<Cell>(this, maxCount, target, completedRadius, getNextNeighbor);
+            return Cell.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }

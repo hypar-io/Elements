@@ -5,7 +5,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique orientation direction in a CellComplex.
     /// </summary>
-    public class Orientation : VertexBase
+    public class Orientation : VertexBase<Orientation>
     {
         /// <summary>
         /// Represents a unique orientation direction within a CellComplex.

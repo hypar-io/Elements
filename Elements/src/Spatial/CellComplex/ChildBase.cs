@@ -7,15 +7,14 @@ using System;
 namespace Elements.Spatial.CellComplex
 {
     /// <summary>
-    /// An abstract base for ChildBase that does not contain the geometry constraints.
-    /// Do not inherit from this directly, always use the geometry constraints.
+    /// An abstract base for the children of CellComplex.
     /// </summary>
-    public abstract class ChildBase
+    public abstract class ChildBase<ChildClass, GeometryType> : Interfaces.IDistanceTo where ChildClass : ChildBase<ChildClass, GeometryType>
     {
         /// <summary>
         /// ID of this child.
         /// </summary>
-        public ulong Id;
+        public ulong Id { get; internal set; }
 
         /// <summary>
         /// The CellComplex that this child belongs to.
@@ -54,7 +53,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         public override bool Equals(object obj)
         {
-            ChildBase other = obj as ChildBase;
+            ChildClass other = obj as ChildClass;
             if (other == null) return false;
             return this.Id == other.Id;
         }
@@ -66,7 +65,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">Our target point to determine closest distance from.</param>
         /// <typeparam name="T">Return object type.</typeparam>
         /// <returns></returns>
-        internal static T GetClosest<T>(List<T> candidates, Vector3 point) where T : ChildBase
+        internal static T GetClosest<T>(List<T> candidates, Vector3 point) where T : class, Interfaces.IDistanceTo
         {
             if (candidates.Count == 0)
             {
@@ -85,10 +84,10 @@ namespace Elements.Spatial.CellComplex
         /// <param name="getNextNeighbor">Provide the method by which we will grab the next neighbor in the traversal series.</param>
         /// <typeparam name="T">The derived child class.</typeparam>
         /// <returns>A collection of traversed children, including the starting child.</returns>
-        internal static List<T> TraverseNeighbors<T>(T startChild, int maxCount, Vector3 target, double completedRadius, Func<T, T> getNextNeighbor) where T : ChildBase
+        internal static List<ChildClass> TraverseNeighbors(ChildClass startChild, int maxCount, Vector3 target, double completedRadius, Func<ChildClass, ChildClass> getNextNeighbor)
         {
             var count = 0;
-            var neighbors = new List<T>();
+            var neighbors = new List<ChildClass>();
             var curNeighbor = startChild;
             while (curNeighbor != null && count <= maxCount)
             {
@@ -102,14 +101,6 @@ namespace Elements.Spatial.CellComplex
             }
             return neighbors;
         }
-    }
-
-    /// <summary>
-    /// Base class for all children of Cell.
-    /// </summary>
-    public abstract class ChildBase<GeometryType> : ChildBase
-    {
-        internal ChildBase(ulong id, CellComplex cellComplex = null) : base(id, cellComplex) { }
 
         /// <summary>
         /// Get the associated geometry for this child.

@@ -11,7 +11,7 @@ namespace Elements.Spatial.CellComplex
     /// Directional edges for this purpose are in associated DirectedEdges.
     /// There is a maximum of two DirectedEdges per Edge.
     /// </summary>
-    public class Edge : EdgeBase
+    public class Edge : EdgeBase<Edge>, Interfaces.IHasNeighbors<Edge, Line>
     {
         /// <summary>
         /// DirectedEdges that reference this Edge.
@@ -173,7 +173,7 @@ namespace Elements.Spatial.CellComplex
         {
             var maxCount = this.CellComplex.GetEdges().Count;
             Func<Edge, Edge> getNextNeighbor = (Edge curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
-            return ChildBase.TraverseNeighbors<Edge>(this, maxCount, target, completedRadius, getNextNeighbor);
+            return Edge.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }
