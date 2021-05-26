@@ -15,7 +15,7 @@ namespace Elements.Tests
         {
             this.Name = "Elements_Spatial_Grid1d";
 
-            // <example>            
+            // <example>
             // Create a 1d Grid from a line
             var line = new Line(new Vector3(5, 0, 0), new Vector3(60, 0, 0));
             var grid = new Grid1d(line);
@@ -38,7 +38,7 @@ namespace Elements.Tests
 
             // Retrieve all bottom-level cells.
             // Note that grid.Cells gets the top-level cells only, and
-            // grid.GetCells() recursively gets the bottom-level individual cells. 
+            // grid.GetCells() recursively gets the bottom-level individual cells.
             var cells = grid.GetCells();
 
             // Get lines representing each cell
@@ -50,7 +50,7 @@ namespace Elements.Tests
             foreach (var wallLine in lines)
             {
                 var color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1.0);
-                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color, 0, 0, false, null, false, Guid.NewGuid(), color.ToString())));
+                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color.ToString(), color, 0, 0, null, false, false)));
             }
 
             // Create rectangles from top-level grid cells

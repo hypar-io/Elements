@@ -145,8 +145,10 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
-                this.Model.AddElement(beam);
+                var m = new Material(Guid.NewGuid().ToString(), color, 0.1f, 0.5f);
+                this.Model.AddElement(m);
+                var beam = new Beam(line, profile, m);
+                this.Model.AddElement(beam, false);
                 x += 2.0;
                 if (x > 20.0)
                 {

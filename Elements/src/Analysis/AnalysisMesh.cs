@@ -8,16 +8,33 @@ namespace Elements.Analysis
 {
     /// <summary>
     /// A visualization of computed values at locations in space.
+    /// A maximum of 65,535 analytical values is allowed. For an unlimited number of analytical values, use AnalysisImage.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
     public class AnalysisMesh : GeometricElement, ITessellate
     {
-        private List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
-        private Func<Vector3, double> _analyze;
-        private double _min = double.MaxValue;
-        private double _max = double.MinValue;
+
+        /// <summary>
+        /// A list of all the created cells and their resultant value via the _analyze function.
+        /// </summary>
+        protected List<(BBox3 cell, double value)> _results = new List<(BBox3 cell, double value)>();
+
+        /// <summary>
+        /// A function that returns a numerical analysis result, given a point in space.
+        /// </summary>
+        protected Func<Vector3, double> _analyze;
+
+        /// <summary>
+        /// A computed minimum result value.
+        /// </summary>
+        protected double _min = double.MaxValue;
+
+        /// <summary>
+        /// A computed maximum result value.
+        /// </summary>
+        protected double _max = double.MinValue;
 
         /// <summary>
         /// The total number of analysis locations.
@@ -76,7 +93,7 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, id: Guid.NewGuid());
         }
 
         /// <summary>
@@ -85,14 +102,14 @@ namespace Elements.Analysis
         /// <param name="mesh"></param>
         /// <param name="transform"></param>
         /// <param name="color"></param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public virtual void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             var span = this._max - this._min;
 
             foreach (var result in this._results)
             {
                 var center = result.cell.Center();
-                var vertexColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColor((result.value - this._min) / span) : Colors.White;
+                var vertexColor = this.Perimeter.Contains(center) ? this.ColorScale.GetColor(span == 0 ? result.value : (result.value - this._min) / span) : Colors.White;
                 var min = result.cell.Min;
                 var max = result.cell.Max;
                 var v1 = mesh.AddVertex(min, color: vertexColor);
@@ -109,7 +126,7 @@ namespace Elements.Analysis
         /// <summary>
         /// Compute a value for each grid cell.
         /// </summary>
-        public void Analyze()
+        public virtual void Analyze()
         {
             var bounds = new BBox3(new[] { this.Perimeter });
             var w = bounds.Max.X - bounds.Min.X;
