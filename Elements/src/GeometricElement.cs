@@ -40,6 +40,10 @@ namespace Elements
         /// </summary>
         public Mesh ToMesh()
         {
+            if (this.Representation == null || this.Representation.SolidOperations.Count == 0)
+            {
+                this.UpdateRepresentations();
+            }
             var mesh = new Mesh();
             var solid = this.GetSolid();
             solid.Tessellate(ref mesh);
