@@ -1385,5 +1385,83 @@ namespace Elements.Geometry.Tests
             var contains = polygon.Contains(point, out var type);
             Assert.Equal(contains, false);
         }
+
+        [Fact]
+        public void PolygonIsTrimmedWithPlane()
+        {
+            this.Name = nameof(PolygonIsTrimmedWithPlane);
+
+            var r = new Random();
+
+            // Trim above
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            // t.Rotate(Vector3.XAxis, 15);
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var trimmed = polygon.Trimmed(plane);
+            Assert.Equal<int>(1, trimmed.Count);
+            var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
+            this.Model.AddElement(new ModelCurve(polygon));
+            this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
+            this.Model.AddElements(panels);
+
+            // Trim below
+            var trimmedReverse = polygon.Trimmed(plane, true);
+            Assert.Equal<int>(2, trimmedReverse.Count);
+            var move = new Transform(0, 0, 0);
+            move.Rotate(Vector3.ZAxis, 15);
+            move.Move(new Vector3(8, 0, 0));
+            var panel2 = trimmedReverse.Select(t => new Panel(t, r.NextMaterial(), transform: move));
+            this.Model.AddElement(new ModelCurve(polygon, transform: move));
+            this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, transform: move)));
+            this.Model.AddElements(panel2);
+
+            // Trim through vertex
+            var vertexTrimPlane = new Plane(new Vector3(0, 0, polygon.Vertices[7].Z), Vector3.ZAxis);
+            var trimmedAtVertex = polygon.Trimmed(vertexTrimPlane, true);
+            Assert.Equal<int>(2, trimmedAtVertex.Count);
+            var move2 = new Transform(16, 0, 0);
+            var panel3 = trimmedAtVertex.Select(t => new Panel(t, r.NextMaterial(), transform: move2));
+            this.Model.AddElements(panel3);
+            this.Model.AddElements(trimmedAtVertex.Select(t => new ModelCurve(t, transform: move2)));
+            this.Model.AddElement(new ModelCurve(polygon, transform: move2));
+        }
+
+        [Fact]
+        public void PlaneIntersectsThroughEdges()
+        {
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var intersects = polygon.Intersects(plane, out List<Vector3> results);
+            Assert.True(intersects);
+            Assert.Equal<int>(4, results.Count);
+        }
+
+        [Fact]
+        public void PlaneIntersectsAtCoincidentPoint()
+        {
+            // A plane coincident with the right-most point of the star.
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var verticalRightPlane = new Plane(new Vector3(5.0, 0, 0), Vector3.XAxis);
+            var intersectsRight = polygon.Intersects(verticalRightPlane, out List<Vector3> resultsRight);
+            Assert.True(intersectsRight);
+            Assert.Equal<int>(1, resultsRight.Count);
+        }
+
+        [Fact]
+        public void IntersectionResultsAreOrderedAlongPlane()
+        {
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var intersects = polygon.Intersects(plane, out List<Vector3> results);
+            // Assert that results are ordered along the plane
+            for (var i = 1; i < results.Count; i++)
+            {
+                Assert.True(results[i].X > results[i - 1].X);
+            }
+        }
     }
 }
