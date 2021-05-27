@@ -307,6 +307,24 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CreateProfilesFromPolygons()
+        {
+            Name = nameof(CreateProfilesFromPolygons);
+            var polygons = new List<Polygon> {
+                Polygon.Rectangle(10,10),
+                Polygon.Star(4,2,5),
+                Polygon.Ngon(3,1),
+                Polygon.Rectangle(new Vector3(6, -5), new Vector3(11,0))
+            };
+            var profiles = Elements.Geometry.Profile.CreateFromPolygons(polygons);
+            Assert.True(profiles.Count == 3, $"There were {profiles.Count} profiles, 3 expected.");
+            var extrudes = profiles.Select(p => new Geometry.Solids.Extrude(p, 1, Vector3.ZAxis, false));
+            var rep = new Representation(new List<Geometry.Solids.SolidOperation>(extrudes));
+            var geoElem = new GeometricElement(new Transform(), BuiltInMaterials.Mass, rep, false, Guid.NewGuid(), null);
+            Model.AddElement(geoElem);
+        }
+
+        [Fact]
         public void SplitDonutProfileFromFunction()
         {
             Name = "SplitDonutProfileFromFunction";
