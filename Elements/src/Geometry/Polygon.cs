@@ -257,7 +257,7 @@ namespace Elements.Geometry
         /// <param name="plane">The intersection plane.</param>
         /// <param name="results">A collection of intersection results 
         /// sorted along the plane.</param>
-        /// <param name="distinct">Should the intersections results that
+        /// <param name="distinct">Should the intersection results that
         /// are returned be distinct?</param>
         /// <returns>True if the plane intersects the polygon, 
         /// otherwise false.</returns>
@@ -312,9 +312,7 @@ namespace Elements.Geometry
                 var d1 = point - pt1;
                 var d2 = pt2 - pt1;
                 var c = d1.Cross(d2);
-                if (c.X.ApproximatelyEquals(0.0)
-                    && c.Y.ApproximatelyEquals(0.0)
-                    && c.Z.ApproximatelyEquals(0.0) && d1.Dot(d2) > 0)
+                if (c.IsZero() && d1.Dot(d2) > 0)
                 {
                     // The pt is in the line between the start and the end.
                     this.Vertices.Insert(i + 1, point);
