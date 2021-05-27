@@ -37,15 +37,15 @@ namespace Elements
         /// <summary>
         /// Get the mesh representing the this Element's geometry. By default it will be untransformed.
         /// </summary>
-        /// <param name="transform">Wether or not the mesh should be transformed into its final location.</param>
+        /// <param name="transform">Should the mesh be transformed into its final location?</param>
         public Mesh ToMesh(bool transform = false)
         {
-            if (HasNoRepresentation())
+            if (!HasGeometry())
             {
                 this.UpdateRepresentations();
-                if (HasNoRepresentation())
+                if (!HasGeometry())
                 {
-                    throw new ArgumentNullException("This geometric element has no representation, no geometry, and cannot be turned into a mesh.");
+                    throw new ArgumentNullException("This geometric element has no geometry, and cannot be turned into a mesh.");
                 }
             }
             var mesh = new Mesh();
@@ -57,15 +57,16 @@ namespace Elements
         /// <summary>
         /// Does this geometric element have geometry?
         /// <summary>
-        public bool HasNoRepresentation()
+        public bool HasGeometry()
         {
-            return Representation == null || Representation.SolidOperations == null || Representation.SolidOperations.Count == 0;
+            return Representation != null && Representation.SolidOperations != null && Representation.SolidOperations.Count > 0;
         }
 
         /// <summary>
-        /// Get the computed csg solid centered about the origin.
+        /// Get the computed csg solid.
+        /// The csg is centered on the origin by default.
         /// </summary>
-        /// <param name="transformed">Wether or not to get the solid transformed to it's final location.</param>
+        /// <param name="transformed">Should the csg be transformed by the element's transform?</param>
         internal Csg.Solid GetFinalCsgFromSolids(bool transformed = false)
         {
             // To properly compute csgs, all solid operation csgs need

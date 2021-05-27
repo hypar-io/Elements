@@ -9,7 +9,7 @@ namespace Elements.Tests
     public class GeometricElementTests : ModelTest
     {
         [Fact]
-        public void CheckMeshVertexAndTriangleCount()
+        public void GeneratingMeshFromMassHasCorrectVerticesAndTriangles()
         {
             var profile = Polygon.Rectangle(1.0, 1.0);
             var mass = new Mass(profile, 5.0, BuiltInMaterials.Mass, new Transform());
@@ -20,7 +20,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ThrowExceptionForNoRepresentation()
+        public void ThrowsExceptionWhenCreatingMeshFromElementWithNoRepresentation()
         {
             var empty = new GeometricElement(new Transform(),
                                              BuiltInMaterials.Default,
@@ -32,7 +32,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CheckLaminaMeshAndTransforming()
+        public void GeneratedMeshHasSameAreaAsElementGeometry()
         {
             var center = new Vector3(2, 2, 2);
             var profile = Polygon.Rectangle(1.0, 1.0);
