@@ -40,14 +40,26 @@ namespace Elements
         /// <param name="transform">Wether or not the mesh should be transformed into its final location.</param>
         public Mesh ToMesh(bool transform = false)
         {
-            if (this.Representation == null || this.Representation.SolidOperations.Count == 0)
+            if (HasNoRepresentation())
             {
                 this.UpdateRepresentations();
+                if (HasNoRepresentation())
+                {
+                    throw new ArgumentNullException("This geometric element has no representation, no geometry, and cannot be turned into a mesh.");
+                }
             }
             var mesh = new Mesh();
             var solid = GetFinalCsgFromSolids(transform);
             solid.Tessellate(ref mesh);
             return mesh;
+        }
+
+        /// <summary>
+        /// Does this geometric element have geometry?
+        /// <summary>
+        public bool HasNoRepresentation()
+        {
+            return Representation == null || Representation.SolidOperations == null || Representation.SolidOperations.Count == 0;
         }
 
         /// <summary>

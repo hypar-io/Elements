@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Xunit;
@@ -15,6 +17,18 @@ namespace Elements.Tests
 
             Assert.Equal(24, mesh.Vertices.Count);
             Assert.Equal(12, mesh.Triangles.Count);
+        }
+
+        [Fact]
+        public void NoRepresentationTest()
+        {
+            var empty = new GeometricElement(new Transform(),
+                                             BuiltInMaterials.Default,
+                                             null,
+                                             false,
+                                             System.Guid.NewGuid(),
+                                             "");
+            Assert.Throws<ArgumentNullException>(() => empty.ToMesh());
         }
 
         [Fact]
