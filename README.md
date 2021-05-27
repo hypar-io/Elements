@@ -72,6 +72,9 @@ Elements contains a very simple BREP geometry kernel, and a small set of geometr
 
 We are often asked whether the Elements library supports the ____ geometry kernel. It does not. Yet. The geometry kernel that we've created for Elements is a very simple BREP kernel which does "flat stuff with holes in it" really well. We think Nurbs are sexy, and we'll definitely support more curvy stuff in the future, it's just that the effort required to support ____ geometry kernel for micro-services running in the cloud is not small. Good geometry kernels are also usually large, expensive, and not open source, so they introduce a lot of concerns which are orthogonal to why we built this library in the first place. If you are interested in using Elements with another geometry library, we love pull requests.
 
+## Precision
+Geometry operations in Elements use `Vector3.Epsilon=1e-05` to compare values that should be considered equal. This is important as geometric operations using floating point numbers are imprecise. In addition, .NET will return different values for these operations _on different systems_. We have seen intersection tests that pass on a mac and fail on linux. Please use the provided methods like `double.IsAlmostEqualTo(...)`, `Vector3.IsZero()`, and `Vector3.IsAlmostEqualTo(...)` which account for precision.
+
 ## Donate
 Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
