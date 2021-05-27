@@ -457,6 +457,27 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a collection of profiles from a collection of polygons. Inner polygons will be treated as voids in alternating fashion.
+        /// </summary>
+        /// <param name="polygons">The polygons to sort into profiles</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns></returns>
+        public static List<Profile> CreateFromPolygons(IEnumerable<Polygon> polygons, double tolerance = Vector3.EPSILON)
+        {
+            Clipper clipper = new Clipper();
+            foreach (var polygon in polygons)
+            {
+                var clipperPath = polygon.ToClipperPath(tolerance);
+                clipper.AddPath(clipperPath, PolyType.ptSubject, true);
+            }
+
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ClipType.ctUnion, solution, PolyFillType.pftEvenOdd);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
         /// Get all segments from a profile's perimeter and internal voids.
         /// </summary>
         public List<Line> Segments()
