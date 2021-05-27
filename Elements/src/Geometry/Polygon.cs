@@ -99,7 +99,7 @@ namespace Elements.Geometry
         /// trimming occurred.</returns>
         public List<Polygon> Trimmed(Plane plane, bool flip = false)
         {
-            const double precision = 1e-03;
+            const double precision = 1e-05;
             try
             {
                 if (flip)
