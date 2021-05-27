@@ -35,17 +35,17 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get the complete final mesh of this geometric element.  This mesh is centered about the origin, and meant to be transformed
-        /// into the final location using the Geometric Element's Transform property.
+        /// Get the mesh representing the this Element's geometry. By default it will be untransformed.
         /// </summary>
-        public Mesh ToMesh()
+        /// <param name="transform">Wether or not the mesh should be transformed into its final location.</param>
+        public Mesh ToMesh(bool transform = false)
         {
             if (this.Representation == null || this.Representation.SolidOperations.Count == 0)
             {
                 this.UpdateRepresentations();
             }
             var mesh = new Mesh();
-            var solid = this.GetSolid();
+            var solid = GetFinalCsgFromSolids(transform);
             solid.Tessellate(ref mesh);
             return mesh;
         }
@@ -53,11 +53,12 @@ namespace Elements
         /// <summary>
         /// Get the computed csg solid centered about the origin.
         /// </summary>
-        internal Csg.Solid GetSolid()
+        /// <param name="transformed">Wether or not to get the solid transformed to it's final location.</param>
+        internal Csg.Solid GetFinalCsgFromSolids(bool transformed = false)
         {
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
-            // can be computed and the final csg can have the inverse of the
+            // can be computed and by default the final csg will have the inverse of the
             // geometric element's transform applied to "reset" it.
             // The transforms applied to each node in the glTF will then
             // ensure that the elements are correctly transformed.
@@ -81,7 +82,7 @@ namespace Elements
             csg = csg.Union(solids);
             csg = csg.Substract(voids);
 
-            if (Transform == null)
+            if (Transform == null || transformed)
             {
                 return csg;
             }
