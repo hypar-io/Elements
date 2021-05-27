@@ -20,7 +20,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NoRepresentationTest()
+        public void ThrowExceptionForNoRepresentation()
         {
             var empty = new GeometricElement(new Transform(),
                                              BuiltInMaterials.Default,
