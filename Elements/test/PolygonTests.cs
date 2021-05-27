@@ -1389,7 +1389,7 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void PolygonIsTrimmedWithPlane()
         {
-            this.Name = "TrimmedPolygon";
+            this.Name = nameof(PolygonIsTrimmedWithPlane);
 
             var r = new Random();
 
