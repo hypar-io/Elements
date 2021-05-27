@@ -234,6 +234,63 @@ namespace Elements.Geometry
             return null;
         }
 
+        /// <summary>
+        /// Intersect this polygon with the provided polygon in 3d.
+        /// </summary>
+        /// <param name="polygon">The target polygon.</param>
+        /// <param name="result">The lines resulting from the intersection
+        /// of the two polygons.</param>
+        /// <returns>A collection of lines.</returns>
+        internal bool Intersects3d(Polygon polygon, out List<Line> result)
+        {
+            var p = this.Plane();
+            result = new List<Line>();
+            var orderedResults = new List<Vector3>();
+            var targetP = polygon.Plane();
+            var d = this.Plane().Normal.Cross(targetP.Normal).Unitized();
+
+            // Intersect the polygon against this polygon's plane.
+            // Keep the points that within the polygon.
+            if (polygon.Intersects(p, out List<Vector3> results))
+            {
+                foreach (var r in results)
+                {
+                    if (polygon.Contains(r))
+                    {
+                        orderedResults.Add(r);
+                    }
+                }
+            }
+
+            // Intersect this polygon against the target polyon's plane.
+            // Keep the points within the target polygon.
+
+            if (this.Intersects(targetP, out List<Vector3> results2))
+            {
+                foreach (var r in results2)
+                {
+                    if (polygon.Contains(r))
+                    {
+                        orderedResults.Add(r);
+                    }
+                }
+            }
+
+            if (orderedResults.Count > 0)
+            {
+                // Order the intersections along the direction.
+                orderedResults.Sort(new DotComparer(d));
+
+                for (var i = 0; i < orderedResults.Count; i += 2)
+                {
+                    result.Add(new Line(orderedResults[i], orderedResults[i + 1]));
+                }
+
+                return true;
+            }
+            return false;
+        }
+
         private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
         {
             var first = vertices.IndexOf(target);

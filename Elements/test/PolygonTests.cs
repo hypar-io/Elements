@@ -1389,7 +1389,7 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void PolygonIsTrimmedWithPlane()
         {
-            this.Name = "TrimmedPolygon";
+            this.Name = nameof(PolygonIsTrimmedWithPlane);
 
             var r = new Random();
 
@@ -1461,6 +1461,33 @@ namespace Elements.Geometry.Tests
             for (var i = 1; i < results.Count; i++)
             {
                 Assert.True(results[i].X > results[i - 1].X);
+            }
+        }
+
+        [Fact]
+        public void PolygonIntersectsPolygon()
+        {
+            this.Name = nameof(PolygonIntersectsPolygon);
+            var random = new Random();
+
+            var hex = Polygon.Ngon(6, 3);
+            var polygon = Polygon.Star(5, 2, 5);
+            this.Model.AddElement(new ModelCurve(polygon, random.NextMaterial()));
+            foreach (var s in hex.Segments())
+            {
+                var p = new Polygon(new[]{
+                    s.Start,
+                    s.End,
+                    s.End + new Vector3(0,0,2),
+                    s.Start + new Vector3(0,0,2)
+                });
+                if (polygon.Intersects3d(p, out List<Line> result))
+                {
+                    foreach (var l in result)
+                    {
+                        this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+                    }
+                }
             }
         }
     }
