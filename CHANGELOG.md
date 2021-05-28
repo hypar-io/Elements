@@ -17,6 +17,10 @@
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
 - Leave the discriminator property during deserialization. It will go to AdditionalProperties.
 
+### Fixed
+
+- Fixed a bug where CSG Booleans for certain representations (especially laminas) would fail.
+
 ## 0.9.0
 
 ### Added
