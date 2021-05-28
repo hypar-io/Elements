@@ -1180,7 +1180,7 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            var csg = geometricElement.GetSolid();
+            var csg = geometricElement.GetFinalCsgFromSolids();
             var buffers = csg.Tessellate();
 
             if (buffers.Vertices.Count == 0)

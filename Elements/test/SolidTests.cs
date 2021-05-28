@@ -173,6 +173,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SolidToMesh()
+        {
+            var n = 4;
+            var outer = Polygon.Ngon(n, 2);
+            var inner = Polygon.Ngon(n, 1.75).Reversed();
+
+            var solid = Solid.SweepFace(outer, new[] { inner }, new Vector3(0.5, 0.5, 0.5), 5);
+            var mesh = solid.ToMesh();
+            var subtraction = mesh.ToCsg().Substract(solid.ToCsg());
+            Assert.Equal(0, subtraction.Polygons.Count);
+        }
+
+        [Fact]
         public void Serialization()
         {
             var n = 4;
