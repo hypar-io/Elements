@@ -19,7 +19,7 @@
 
 ### Fixed
 
-- Fixed a bug where CSG Booleans for certain representations (especially laminas) would fail.
+- Fixed a bug ([#585](https://github.com/hypar-io/Elements/issues/585)) where CSG Booleans for certain representations (especially laminae) would fail.
 
 ## 0.9.0
 
