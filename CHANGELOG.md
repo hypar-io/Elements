@@ -17,7 +17,8 @@
 
 - `AnalysisMesh` now handles single valued analysis.
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
-- Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
+- Leave the discriminator property during deserialization. It will go to AdditionalProperties.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
 
 ### Fixed
 - Guard against missing transforms while generating CSGs.
