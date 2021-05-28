@@ -324,7 +324,7 @@ namespace Elements.Validators
 
         private void UpdateGeometry(Lamina lamina)
         {
-            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter, lamina.Voids);
             lamina._csg = lamina._solid.ToCsg();
         }
 

@@ -250,6 +250,22 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CreateLaminaWithHoles()
+        {
+            Name = nameof(CreateLaminaWithHoles);
+            var profile = new Profile(Polygon.Rectangle(15, 15), Polygon.Star(7, 4, 5));
+            var geoElem = new GeometricElement(
+                new Transform(),
+                BuiltInMaterials.XAxis,
+                new Representation(new[] {
+                    new Lamina(profile)
+                    }),
+                false, Guid.NewGuid(), "Planar Shape Test");
+            Model.AddElement(geoElem);
+        }
+
+
+        [Fact]
         public void ConstructedSolidProducesValidGlb()
         {
             Name = nameof(ConstructedSolidProducesValidGlb);
