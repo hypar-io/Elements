@@ -65,9 +65,20 @@ namespace Elements
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
+            // Only try CSG booleans if we have multiple solids.
+            if (solids.Count() == 1)
+            {
+                csg = solids.First();
+            }
+            else
+            {
+                csg = csg.Union(solids);
+            }
+            if (voids.Count() > 0)
+            {
+                csg = csg.Substract(voids);
+            }
 
-            csg = csg.Union(solids);
-            csg = csg.Substract(voids);
             var inverse = new Transform(Transform);
             inverse.Invert();
 
