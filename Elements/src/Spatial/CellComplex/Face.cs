@@ -9,7 +9,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A Face within a cell. Multiple cells can share the same Face.
     /// </summary>
-    public class Face : ChildBase<Polygon>
+    public class Face : ChildBase<Face, Polygon>, Interfaces.IHasNeighbors<Face, Polygon>
     {
         /// <summary>
         /// Directed edge IDs.
@@ -199,6 +199,15 @@ namespace Elements.Spatial.CellComplex
         /// Get a list of all neighbors of this Face.
         /// A neighbor is defined as a Face which shares any Edge.
         /// </summary>
+        /// <returns></returns>
+        public List<Face> GetNeighbors() {
+            return this.GetNeighbors(false, false);
+        }
+
+        /// <summary>
+        /// Get a list of all neighbors of this Face.
+        /// A neighbor is defined as a Face which shares any Edge.
+        /// </summary>
         /// <param name="parallel">If true, only returns Faces that are oriented the same way as this Face.</param>
         /// <param name="includeSharedVertices">If true, includes Faces that share a Vertex as well as Faces that share an Edge.</param>
         /// <returns></returns>
@@ -237,13 +246,56 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest associated Face to a given point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public Face GetClosestNeighbor(Vector3 target) {
+            return this.GetClosestNeighbor(target, false, false);
+        }
+
+        /// <summary>
+        /// Get the closest associated Face to a given point.
+        /// </summary>
+        /// <param name="target"></param>
         /// <param name="parallel">If true, only checks faces that are oriented the same way as this Face.</param>
         /// <param name="includeSharedVertices">If true, checks Faces that share a Vertex as well as Faces that share a Edge.</param>
         /// <returns></returns>
-        public Face GetClosestNeighbor(Vector3 point, bool parallel = false, bool includeSharedVertices = false)
+        public Face GetClosestNeighbor(Vector3 target, bool parallel = false, bool includeSharedVertices = false)
         {
-            return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f => f.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Face.GetClosest<Face>(this.GetNeighbors(parallel, includeSharedVertices).Where(f =>
+            {
+                var d1 = this.DistanceTo(target);
+                var d2 = f.DistanceTo(target);
+                if (f.DistanceTo(target) < this.DistanceTo(target))
+                {
+
+                }
+                return f.DistanceTo(target) < this.DistanceTo(target);
+            }).ToList(), target);
+        }
+
+        /// <summary>
+        /// Traverse the neighbors of this Face toward the target point.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="completedRadius"></param>
+        /// <returns></returns>
+        public List<Face> TraverseNeighbors(Vector3 target, double completedRadius = 0) {
+            return this.TraverseNeighbors(target, false, false, completedRadius);
+        }
+
+        /// <summary>
+        /// Traverse the neighbors of this Face toward the target point.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="parallel">If true, only checks faces that are oriented the same way as this Face.</param>
+        /// <param name="includeSharedVertices">If true, checks Faces that share a Vertex as well as Faces that share a Edge.</param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns>A collection of traversed Faces, including the starting Face.</returns>
+        public List<Face> TraverseNeighbors(Vector3 target, bool parallel = false, bool includeSharedVertices = false, double completedRadius = 0)
+        {
+            var maxCount = this.CellComplex.GetFaces().Count;
+            Func<Face, Face> getNextNeighbor = (Face curNeighbor) => (curNeighbor.GetClosestNeighbor(target, parallel, includeSharedVertices));
+            return Face.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }
