@@ -392,6 +392,16 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>
+        /// Get the Mesh of this Solid.
+        /// </summary>
+        public Mesh ToMesh()
+        {
+            var mesh = new Mesh();
+            this.Tessellate(ref mesh);
+            return mesh;
+        }
+
+        /// <summary>
         /// Triangulate this solid.
         /// </summary>
         /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
@@ -452,6 +462,8 @@ namespace Elements.Geometry.Solids
                 mesh.AddMesh(faceMesh);
             }
         }
+
+
 
         /// <summary>
         /// Triangulate this solid and pack the triangulated data into buffers
@@ -686,7 +698,7 @@ namespace Elements.Geometry.Solids
         private Loop SweepPolygonBetweenPlanes(Polygon p, Transform start, Transform end, double rotation = 0.0)
         {
             // Transform the polygon to the mid plane between two transforms
-            // then project onto the end transforms. We do this so that we 
+            // then project onto the end transforms. We do this so that we
             // do not introduce shear into the transform.
             var v = (start.Origin - end.Origin).Unitized();
             var midTrans = new Transform(end.Origin.Average(start.Origin), start.YAxis.Cross(v), v);

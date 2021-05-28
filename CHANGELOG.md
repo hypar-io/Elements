@@ -1,21 +1,27 @@
 # Changelog
 
+
 ## 0.9.1
 
 ### Added
-- `GetSolid()` method on GeometricElement that returns the Csg solid.
+
+- `Transform(Plane plane)`
+- `Polygon.Trimmed(Plane plane, bool flip)`
+- ~~`GetSolid()` method on GeometricElement that returns the Csg solid.~~
+- `ToMesh()` method on GeometricElement that return the mesh of a processed solid.
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
-
-### Removed
+- `Profile.CreateFromPolygons(IEnumerable<Polygon> polygons)`
 
 ### Changed
 
 - `AnalysisMesh` now handles single valued analysis.
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
-- Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
+- Leave the discriminator property during deserialization. It will go to AdditionalProperties.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
 
 ### Fixed
+- Guard against missing transforms while generating CSGs.
 
 ## 0.9.0
 

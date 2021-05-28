@@ -111,6 +111,12 @@ namespace Elements.Geometry
             ApplyRotationAndTranslation(rotation, z, origin);
         }
 
+        /// <summary>
+        /// Create a transform using the provided plane's origin and normal.
+        /// </summary>
+        /// <param name="plane">The plane used to orient the transform.</param>
+        public Transform(Plane plane) : this(plane.Origin, plane.Normal) { }
+
         private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
         {
             if (rotation != 0.0)
