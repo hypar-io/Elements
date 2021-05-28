@@ -12,7 +12,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Write the csg into a mesh.
         /// </summary>
-        internal static void Tessellate(this Csg.Solid csg, ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        internal static void Tessellate(this Csg.Solid csg, ref Mesh mesh)
         {
             foreach (var p in csg.Polygons)
             {
