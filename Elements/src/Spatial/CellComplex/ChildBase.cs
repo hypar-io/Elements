@@ -82,7 +82,6 @@ namespace Elements.Spatial.CellComplex
         /// <param name="target">Target to traverse toward.</param>
         /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
         /// <param name="getNextNeighbor">Provide the method by which we will grab the next neighbor in the traversal series.</param>
-        /// <typeparam name="T">The derived child class.</typeparam>
         /// <returns>A collection of traversed children, including the starting child.</returns>
         internal static List<ChildClass> TraverseNeighbors(ChildClass startChild, int maxCount, Vector3 target, double completedRadius, Func<ChildClass, ChildClass> getNextNeighbor)
         {
