@@ -10,12 +10,11 @@
   - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
   - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
 
-
 ### Changed
 
+- Code-generated constructors now get default arguments for inherited properties.
 
 ### Fixed
-
 
 ## 0.9.1
 
@@ -37,6 +36,7 @@
 - `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
 
 ### Fixed
+
 - Guard against missing transforms while generating CSGs.
 
 ## 0.9.0
