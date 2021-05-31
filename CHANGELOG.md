@@ -1,21 +1,3 @@
-# Changelog
-
-## 0.9.2
-
-### Added
-
-- `CellComplex`:
-  - `Cell.TraverseNeighbors(Vector3 target, double? completedRadius)`
-  - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
-  - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
-  - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
-
-### Changed
-
-- Code-generated constructors now get default arguments for inherited properties.
-
-### Fixed
-
 ## 0.9.1
 
 ### Added
@@ -27,6 +9,11 @@
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
 - `Profile.CreateFromPolygons(IEnumerable<Polygon> polygons)`
+- `CellComplex`:
+  - `Cell.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
 
 ### Changed
 
@@ -34,6 +21,7 @@
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
 - Leave the discriminator property during deserialization. It will go to AdditionalProperties.
 - `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
+- Code-generated constructors now get default arguments for inherited properties.
 
 ### Fixed
 
