@@ -187,19 +187,16 @@ namespace Elements.Geometry
 
             foreach (var f in solid.Faces.Values)
             {
-                if (f.Inner != null)
+                if (f.Inner != null && f.Inner.Count() > 0)
                 {
                     var tess = new Tess();
                     tess.NoEmptyPolygons = true;
 
                     tess.AddContour(f.Outer.ToContourVertexArray(f));
 
-                    if (f.Inner != null)
+                    foreach (var loop in f.Inner)
                     {
-                        foreach (var loop in f.Inner)
-                        {
-                            tess.AddContour(loop.ToContourVertexArray(f));
-                        }
+                        tess.AddContour(loop.ToContourVertexArray(f));
                     }
 
                     tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);

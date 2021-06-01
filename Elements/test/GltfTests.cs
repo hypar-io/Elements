@@ -6,6 +6,8 @@ using System.Linq;
 using System.Collections.Generic;
 using glTFLoader.Schema;
 using System;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -99,6 +101,29 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(testElement);
             Assert.True(testElement.Material == BuiltInMaterials.Default);
+        }
+
+        [Fact]
+        public void ThinObjectsGenerateCorrectly()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/Single-Panel.json");
+            var panel = JsonConvert.DeserializeObject<Panel>(json);
+            var model = new Model();
+            model.AddElement(panel);
+            var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
+            var gltfPath = Path.Combine(modelsDir, "Single-Panel.gltf");
+            model.ToGlTF(gltfPath, false);
+            var gltfJson = File.ReadAllText(gltfPath);
+            using (var glbStream = GltfExtensions.GetGlbStreamFromPath(gltfPath))
+            {
+                var loadingStream = new MemoryStream();
+                glbStream.Position = 0;
+                glbStream.CopyTo(loadingStream);
+                loadingStream.Position = 0;
+                var loaded = Interface.LoadModel(loadingStream);
+                var vertexCount = loaded.Accessors.First(a => a.Type == Accessor.TypeEnum.VEC3).Count;
+                Assert.True(vertexCount == 6, $"The stored mesh should contain 6 vertices, instead it contains {vertexCount}");
+            }
         }
     }
 }
