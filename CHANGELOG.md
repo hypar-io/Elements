@@ -14,6 +14,7 @@
   - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
   - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
   - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
+- Dxf creation framework with first Dxf converter.
 
 ### Changed
 
