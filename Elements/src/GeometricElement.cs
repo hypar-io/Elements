@@ -56,7 +56,7 @@ namespace Elements
 
         /// <summary>
         /// Does this geometric element have geometry?
-        /// <summary>
+        /// </summary>
         public bool HasGeometry()
         {
             return Representation != null && Representation.SolidOperations != null && Representation.SolidOperations.Count > 0;
