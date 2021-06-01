@@ -797,7 +797,7 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("Cannot test collinearity of an empty list");
             }
-            if (points.Count < 3)
+            if (points.Distinct(new Vector3Comparer()).Count() < 3)
             {
                 return true;
             }
@@ -913,6 +913,19 @@ namespace Elements.Geometry
                 c += 3;
             }
             return arr;
+        }
+    }
+
+    internal class Vector3Comparer : EqualityComparer<Vector3>
+    {
+        public override bool Equals(Vector3 x, Vector3 y)
+        {
+            return x.IsAlmostEqualTo(y);
+        }
+
+        public override int GetHashCode(Vector3 obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }
