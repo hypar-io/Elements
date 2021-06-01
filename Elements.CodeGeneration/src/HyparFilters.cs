@@ -80,5 +80,29 @@ namespace Elements.Generate
         {
             return ConversionUtilities.Tab(input, tabCount);
         }
+
+        /// <summary>
+        /// Specify a default value for typical arguments for Element types.
+        /// </summary>
+        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
+        /// <param name="input">The string to be formatted.</param>
+        /// <param name="baseClass">The base class of this type.</param>
+        public static string Defaultforelementargument(Context context, string input, string baseClass = null)
+        {
+            var defaults = new Dictionary<string, string>
+            {
+                {"id", "default"},
+                {"name", "null"},
+                {"isElementDefinition", "false"},
+                {"representation", "null"},
+                {"material", "null"},
+                {"transform", "null"},
+            };
+            if ((baseClass == "Element" || baseClass == "GeometricElement") && defaults.ContainsKey(input))
+            {
+                return $"{input} = {defaults[input]}";
+            }
+            return input;
+        }
     }
 }
