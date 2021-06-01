@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// There is a maximum of two DirectedEdges per Edge.
     /// This class is completely internal and only used for utilities inside of CellComplex.
     /// </summary>
-    internal class DirectedEdge : EdgeBase
+    internal class DirectedEdge : EdgeBase<DirectedEdge>
     {
         /// <summary>
         /// ID of the associated, direction-agnostic Edge.

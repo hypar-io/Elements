@@ -395,7 +395,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns></returns>
-        private Dictionary<ulong, T> GetVertexOrOrientationDictionary<T>() where T : VertexBase
+        private Dictionary<ulong, T> GetVertexOrOrientationDictionary<T>() where T : VertexBase<T>
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
             {
@@ -409,7 +409,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns></returns>
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrOrientationLookup<T>() where T : VertexBase
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> GetVertexOrOrientationLookup<T>() where T : VertexBase<T>
         {
             if (typeof(T) != typeof(Orientation) && typeof(T) != typeof(Vertex))
             {
@@ -424,7 +424,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns>The created or existing Vertex or Orientation.</returns>
-        private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase
+        private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase<T>
         {
             var newId = typeof(T) == typeof(Orientation) ? this._orientationId : this._vertexId;
             var dict = GetVertexOrOrientationDictionary<T>();
@@ -441,7 +441,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id">ID of the item to create.</param>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns>The created Vertex or Orientation.</returns>
-        private T AddVertexOrOrientation<T>(Vector3 point, ulong id) where T : VertexBase
+        private T AddVertexOrOrientation<T>(Vector3 point, ulong id) where T : VertexBase<T>
         {
             var dict = GetVertexOrOrientationDictionary<T>();
 
@@ -462,7 +462,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id">ID of created or existing item.</param>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns>Whether the item was successfully added. Will be false if idIfNew already exists.</returns>
-        private Boolean AddVertexOrOrientation<T>(Vector3 point, ulong idIfNew, out ulong id) where T : VertexBase
+        private Boolean AddVertexOrOrientation<T>(Vector3 point, ulong idIfNew, out ulong id) where T : VertexBase<T>
         {
             var lookups = this.GetVertexOrOrientationLookup<T>();
             var dict = this.GetVertexOrOrientationDictionary<T>();
