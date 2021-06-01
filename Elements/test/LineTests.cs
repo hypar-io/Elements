@@ -209,6 +209,13 @@ namespace Elements.Geometry.Tests
             Assert.Equal(4.186147, lines[0].Length(), 2);
         }
 
+        [Fact]
+        public void LineIntersectAtEnd()
+        {
+            var line1 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":22.63192881973488,\"Y\":23.07673264883112,\"Z\":0.0},\"End\":{\"X\":26.239210000000003,\"Y\":32.009170000000005,\"Z\":0.0}}");
+            var line2 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":26.23921,\"Y\":32.00917,\"Z\":0.0},\"End\":{\"X\":24.47373,\"Y\":32.72215,\"Z\":0.0}}");
+            line1.Intersects(line2, out var intersection, false, true);
+        }
 
         [Fact]
         public void LineTrimWithPolygon()
