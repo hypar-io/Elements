@@ -268,7 +268,7 @@ namespace Elements.Serialization.JSON
 
                 if (discriminator != null)
                 {
-                    _deserializationDiscriminatorWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage} {moreInfoMessage}");
+                    _deserializationDiscriminatorWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
                     return null;
                 }
                 else
