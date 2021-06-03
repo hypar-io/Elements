@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Elements;
-using Microsoft.Win32.SafeHandles;
 
 namespace Elements.DXF
 {
