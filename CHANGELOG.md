@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.9.1
 
 ### Added
@@ -27,10 +29,9 @@
 ### Fixed
 
 - Guard against missing transforms while generating CSGs.
-
-### Fixed
-
 - Fixed a bug ([#585](https://github.com/hypar-io/Elements/issues/585)) where CSG Booleans for certain representations (especially laminae) would fail.
+- Guard against missing transforms while generating CSGs.
+- In rare cases a `Line.Intersect(Line)` call would fail if there were near-duplicate vertices, this is fixed.
 
 ## 0.9.0
 
