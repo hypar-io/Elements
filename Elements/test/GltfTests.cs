@@ -30,6 +30,21 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void InstanceContentElements()
+        {
+            var cElement = new ContentElement("../../../models/MergeGlTF/multiple-instances.glb", new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
+
+            var model = new Model();
+            foreach (var i in Enumerable.Range(0, 5))
+            {
+                var inst = cElement.CreateInstance(new Transform(new Vector3(0, i * 3, 0)), "");
+                model.AddElement(inst);
+            }
+            model.ToGlTF("models/GltfInstancedContent.gltf", false);
+            model.ToGlTF("models/GltfInstancedContent.glb");
+        }
+
+        [Fact]
         public void MergeGlbFiles()
         {
             var testPath = "../../../models/MergeGlTF/Ours.glb";
@@ -46,10 +61,10 @@ namespace Elements.Tests
             using (var testStream = GltfExtensions.GetGlbStreamFromPath(testPath))
             {
                 var bufferByteArrays = ours.GetAllBufferByteArrays(testStream);
-
-                using (var avocadoStream = GltfExtensions.GetGlbStreamFromPath("../../../models/MergeGlTF/Avocado.glb"))
+                ProtoNode parentNode;
+                using (var avocadoStream = GltfExtensions.GetGlbStreamFromPath("../../../models/MergeGlTF/multiple-instances.glb"))
                 {
-                    GltfMergingUtils.AddAllMeshesFromFromGlb(avocadoStream,
+                    var ids = GltfMergingUtils.AddAllMeshesFromFromGlb(avocadoStream,
                                                              buffers,
                                                              bufferByteArrays,
                                                              buffViews,
@@ -59,7 +74,8 @@ namespace Elements.Tests
                                                              textures,
                                                              images,
                                                              samplers,
-                                                             true
+                                                             true,
+                                                             out parentNode
                                                              );
                 }
 
@@ -68,8 +84,8 @@ namespace Elements.Tests
                 ours.Accessors = accessors.ToArray();
                 ours.Meshes = meshes.ToArray();
                 ours.Materials = materials.ToArray();
-                ours.Images = images.ToArray();
-                ours.Textures = textures.ToArray();
+                // ours.Images = images.ToArray();
+                // ours.Textures = textures.ToArray();
                 if (samplers.Count > 0)
                 {
                     ours.Samplers = samplers.ToArray();
@@ -77,7 +93,9 @@ namespace Elements.Tests
 
                 var nodeList = ours.Nodes.ToList();
                 var transform = new Transform(new Vector3(1, 1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(20);
-                NodeUtilities.CreateNodeForMesh(ours.Meshes.Length - 1, nodeList, transform);
+                NodeUtilities.AddInstanceAsCopyOfNode(nodeList, parentNode, transform);
+                // NodeUtilities.CreateNodeForMesh(ours.Meshes.Length - 1, nodeList, transform);
+                // NodeUtilities.CreateNodeFromNode(parentNode, transform);
                 ours.Nodes = nodeList.ToArray();
 
                 var savepath = "models/GltfTestResult.gltf";
