@@ -1006,6 +1006,7 @@ namespace Elements.Serialization.glTF
                         {
                             transform.Concatenate(baseTransform);
                         }
+                        transform.Concatenate(i.Transform);
                         NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
                     }
                 }
