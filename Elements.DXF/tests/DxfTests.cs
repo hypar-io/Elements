@@ -19,6 +19,7 @@ namespace Elements.DXF.Tests
             var stream = renderer.Render(model);
             stream.Position = 0;
             var filePath = "../../../results/floorDXF.dxf";
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             using (var reader = new StreamReader(stream))
             {
                 File.WriteAllText(filePath, reader.ReadToEnd());
