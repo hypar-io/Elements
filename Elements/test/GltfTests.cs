@@ -43,7 +43,7 @@ namespace Elements.Tests
             }
             var glbWithInstancesPath = Path.Combine("models", "multiple-instances.glb");
             baseModel.ToGlTF(glbWithInstancesPath);
-            baseModel.ToGlTF(glbWithInstancesPath.Replace("glb", "gltf"), false);
+            // baseModel.ToGlTF(glbWithInstancesPath.Replace("glb", "gltf"), false);
             var cElement = new ContentElement(glbWithInstancesPath, new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
 
             var model = new Model();
@@ -52,7 +52,7 @@ namespace Elements.Tests
                 var inst = cElement.CreateInstance(new Transform(new Vector3(0, i * 3, 0)), "");
                 model.AddElement(inst);
             }
-            model.ToGlTF("models/GltfInstancedContent.gltf", false);
+            // model.ToGlTF("models/GltfInstancedContent.gltf", false);
             model.ToGlTF("models/GltfInstancedContent.glb");
         }
 
