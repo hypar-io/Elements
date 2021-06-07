@@ -6,7 +6,7 @@
 
 - `Transform(Plane plane)`
 - `Polygon.Trimmed(Plane plane, bool flip)`
-- `GetSolid()` method on GeometricElement that returns the Csg solid.
+- ~~`GetSolid()` method on GeometricElement that returns the Csg solid.~~
 - `ToMesh()` method on GeometricElement that return the mesh of a processed solid.
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
