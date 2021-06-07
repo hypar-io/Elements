@@ -148,7 +148,7 @@ namespace Elements.Serialization.glTF
             {
                 foreach (var child in node.Children)
                 {
-                    protoNode.Children.Add(RecursivelyModifyMeshIndices(loadedNodes[child], meshIndices, loadedNodes)); ;
+                    protoNode.Children.Add(RecursivelyModifyMeshIndices(loadedNodes[child], meshIndices, loadedNodes));
                 }
             }
             return protoNode;

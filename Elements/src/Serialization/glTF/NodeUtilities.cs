@@ -72,9 +72,15 @@ namespace Elements.Serialization.glTF
                                             ProtoNode nodeToCopy,
                                             Transform transform)
         {
-            // A new node is created that contains the node to copy as it's only child.
+            var rootTransform = new Transform();
+            // glb has Y up. transform it to have Z up so we
+            // can create instances of it in a Z up world. It will get switched
+            // back to Y up further up in the node hierarchy. 
+            rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
+            rootTransform.Concatenate(transform);
+            // A new node is created that contains the node to copy as its only child.
             // We use the node to copy exactly as is, with an unmodified transform.
-            float[] matrix = TransformToMatrix(transform);
+            float[] matrix = TransformToMatrix(rootTransform);
             var newNode = new glTFLoader.Schema.Node();
             newNode.Matrix = matrix;
             nodes.Add(newNode);
@@ -106,7 +112,6 @@ namespace Elements.Serialization.glTF
             }
             if (childIndices.Count > 0)
             {
-
                 newNode.Children = childIndices.ToArray();
             }
 

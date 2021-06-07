@@ -32,10 +32,22 @@ namespace Elements.Tests
         [Fact]
         public void InstanceContentElements()
         {
-            var cElement = new ContentElement("../../../models/MergeGlTF/multiple-instances.glb", new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
+            var singleElement = new ContentElement("https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/a1cf1df6-0762-45e7-942b-7ba17d813ff4/HermanMiller_Collection_Eames_MoldedPlywood_DiningChair_MtlBase+-+Upholstered.glb", new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
+            var baseModel = new Model();
+            for (int i = 0; i < 10; i++)
+            {
+                var transform = new Transform();
+                transform.Rotate(i * 10);
+                transform.Concatenate(new Transform(i * 2, 0, 0));
+                baseModel.AddElement(singleElement.CreateInstance(transform, "Individual Element"));
+            }
+            var glbWithInstancesPath = Path.Combine("models", "multiple-instances.glb");
+            baseModel.ToGlTF(glbWithInstancesPath);
+            baseModel.ToGlTF(glbWithInstancesPath.Replace("glb", "gltf"), false);
+            var cElement = new ContentElement(glbWithInstancesPath, new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
 
             var model = new Model();
-            foreach (var i in Enumerable.Range(0, 5))
+            foreach (var i in Enumerable.Range(1, 5))
             {
                 var inst = cElement.CreateInstance(new Transform(new Vector3(0, i * 3, 0)), "");
                 model.AddElement(inst);
