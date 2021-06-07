@@ -11,7 +11,7 @@ namespace Elements.Spatial.CellComplex
     /// Directional edges for this purpose are in associated DirectedEdges.
     /// There is a maximum of two DirectedEdges per Edge.
     /// </summary>
-    public class Edge : EdgeBase
+    public class Edge : EdgeBase<Edge>, Interfaces.IHasNeighbors<Edge, Line>
     {
         /// <summary>
         /// DirectedEdges that reference this Edge.
@@ -147,11 +147,11 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest neighboring Edge to a point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public Edge GetClosestNeighbor(Vector3 point)
+        public Edge GetClosestNeighbor(Vector3 target)
         {
-            return Edge.GetClosest<Edge>(this.GetNeighbors().Where(e => e.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Edge.GetClosest<Edge>(this.GetNeighbors().Where(e => e.DistanceTo(target) < this.DistanceTo(target)).ToList(), target);
         }
 
         /// <summary>
@@ -161,6 +161,19 @@ namespace Elements.Spatial.CellComplex
         internal List<DirectedEdge> GetDirectedEdges()
         {
             return this.DirectedEdges.ToList();
+        }
+
+        /// <summary>
+        /// Traverse the neighbors of this Edge toward the target point.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns>A collection of traversed Edges, including the starting Edge.</returns>
+        public List<Edge> TraverseNeighbors(Vector3 target, double completedRadius = 0)
+        {
+            var maxCount = this.CellComplex.GetEdges().Count;
+            Func<Edge, Edge> getNextNeighbor = (Edge curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
+            return Edge.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }

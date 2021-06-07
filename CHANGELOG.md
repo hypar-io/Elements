@@ -11,6 +11,12 @@
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
 - `Profile.CreateFromPolygons(IEnumerable<Polygon> polygons)`
+- `CellComplex`:
+  - `Cell.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
+- Dxf creation framework with first Dxf converter.
 
 ### Changed
 
@@ -22,10 +28,11 @@
 ### Fixed
 
 - Guard against missing transforms while generating CSGs.
-
-### Fixed
-
 - Fixed a bug ([#585](https://github.com/hypar-io/Elements/issues/585)) where CSG Booleans for certain representations (especially laminae) would fail.
+- Guard against missing transforms while generating CSGs.
+- In rare cases a `Line.Intersect(Line)` call would fail if there were near-duplicate vertices, this is fixed.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
+- Code-generated constructors now get default arguments for inherited properties.
 
 ## 0.9.0
 

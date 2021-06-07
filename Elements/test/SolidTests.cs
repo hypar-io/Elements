@@ -269,7 +269,7 @@ namespace Elements.Tests
         public void ConstructedSolidProducesValidGlb()
         {
             Name = nameof(ConstructedSolidProducesValidGlb);
-            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/TroubleSolidPolygons.json"));
+            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
             var solid = new Solid();
             foreach (var face in allPolygons)
             {

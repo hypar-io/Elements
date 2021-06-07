@@ -8,7 +8,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique Vertex in a CellComplex.
     /// </summary>
-    public class Vertex : VertexBase
+    public class Vertex : VertexBase<Vertex>
     {
         /// <summary>
         /// All Edges connected to this Vertex.

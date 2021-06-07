@@ -1,6 +1,7 @@
 {% assign skipComma = true -%}
 {% if HasInheritance %}
 {% assign parentProperties = BaseClass.AllProperties -%}
+{% assign baseClassName = BaseClass.ClassName -%}
 {% else %}
 {% assign parentProperties = "" | empty -%}
 {% endif %}
@@ -9,7 +10,7 @@
 {% assign sortedParentProperties = parentProperties | sort: "Name" -%}
 
 [Newtonsoft.Json.JsonConstructor]
-{% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | safeidentifierlower }}{% endfor -%})
+{% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | safeidentifierlower | defaultforelementargument: baseClassName }}{% endfor -%})
 {% assign skipComma = true -%}
 {% if HasInheritance -%}
     : base({% for property in parentProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%}{{ property.Name | safeidentifierlower }}{% endfor -%})
