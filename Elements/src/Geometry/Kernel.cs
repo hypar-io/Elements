@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elements.Geometry.Solids;
 
 namespace Elements.Geometry
@@ -16,14 +17,14 @@ namespace Elements.Geometry
         {
             get
             {
-                if(_instance == null)
+                if (_instance == null)
                 {
                     _instance = new Kernel();
                 }
                 return _instance;
             }
         }
-        
+
         /// <summary>
         /// Create a sweep along a curve.
         /// </summary>
@@ -47,12 +48,31 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a lamina.
+        /// Create a lamina from a polygon.
         /// </summary>
         /// <returns>A solid.</returns>
         public Solid CreateLamina(Polygon perimeter)
         {
             return Solid.CreateLamina(perimeter.Vertices);
         }
+
+        /// <summary>
+        /// Create a lamina from a polygon and voids.
+        /// </summary>
+        /// <returns>A solid.</returns>
+        public Solid CreateLamina(Polygon perimeter, IList<Polygon> voids)
+        {
+            return Solid.CreateLamina(perimeter, voids);
+        }
+
+        /// <summary>
+        /// Create a lamina from a profile.
+        /// </summary>
+        /// <returns>A solid.</returns>
+        public Solid CreateLamina(Profile profile)
+        {
+            return Solid.CreateLamina(profile);
+        }
+
     }
 }
