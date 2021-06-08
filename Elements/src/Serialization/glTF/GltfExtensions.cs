@@ -995,7 +995,6 @@ namespace Elements.Serialization.glTF
                     {
                         transform.Concatenate(i.Transform);
                         NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform);
-
                     }
                     else
                     {
