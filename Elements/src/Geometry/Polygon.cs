@@ -390,6 +390,9 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Calculates whether this polygon is configured clockwise.
+        /// This method only works for 2D polygons. For 3D polygons, you
+        /// will need to transform your polygon into the XY plane, then
+        /// run this method on that polygon.
         /// </summary>
         /// <returns>True if this polygon is oriented clockwise.</returns>
         public bool IsClockWise()
