@@ -211,6 +211,10 @@ namespace Elements.Serialization.JSON
             if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
+                if (!Elements.ContainsKey(id))
+                {
+                    return null;
+                }
                 return Elements[id];
             }
 
