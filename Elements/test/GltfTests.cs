@@ -152,7 +152,7 @@ namespace Elements.Tests
                 loadingStream.Position = 0;
                 var loaded = Interface.LoadModel(loadingStream);
                 var vertexCount = loaded.Accessors.First(a => a.Type == Accessor.TypeEnum.VEC3).Count;
-                Assert.True(vertexCount == 6, $"The stored mesh should contain 6 vertices, instead it contains {vertexCount}");
+                Assert.True(vertexCount == 12, $"The stored mesh should contain 12 vertices, instead it contains {vertexCount}");
             }
         }
     }

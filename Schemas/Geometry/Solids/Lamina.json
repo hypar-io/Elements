@@ -17,6 +17,16 @@
         "Perimeter": {
             "description": "The perimeter.",
             "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Polygon.json"
+        },
+        "Voids": {
+            "type": [
+                "array",
+                "null"
+            ],
+            "items": {
+                "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Polygon.json"
+            },
+            "default": []
         }
     },
     "additionalProperties": false
