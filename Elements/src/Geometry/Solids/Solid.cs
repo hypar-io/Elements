@@ -52,20 +52,29 @@ namespace Elements.Geometry.Solids
         /// <param name="perimeter">The perimeter of the lamina's faces.</param>
         public static Solid CreateLamina(IList<Vector3> perimeter)
         {
+            return CreateLamina(new Polygon(perimeter));
+        }
+
+        public static Solid CreateLamina(Polygon perimeter, IList<Polygon> voids = null)
+        {
             var solid = new Solid();
-            var loop1 = new Loop();
-            var loop2 = new Loop();
-            for (var i = 0; i < perimeter.Count; i++)
+            if (voids != null && voids.Count > 0)
             {
-                var a = solid.AddVertex(perimeter[i]);
-                var b = solid.AddVertex(perimeter[i == perimeter.Count - 1 ? 0 : i + 1]);
-                var e = solid.AddEdge(a, b);
-                loop1.AddEdgeToEnd(e.Left);
-                loop2.AddEdgeToStart(e.Right);
+                solid.AddFace(perimeter, voids);
+                solid.AddFace(perimeter.Reversed(), voids.Select(h => h.Reversed()).ToArray(), true);
             }
-            solid.AddFace(loop1);
-            solid.AddFace(loop2);
+            else
+            {
+                solid.AddFace(perimeter);
+                solid.AddFace(perimeter.Reversed(), null, true);
+            }
+
             return solid;
+        }
+
+        public static Solid CreateLamina(Profile profile)
+        {
+            return CreateLamina(profile.Perimeter, profile.Voids);
         }
 
         /// <summary>
