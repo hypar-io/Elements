@@ -387,5 +387,17 @@ namespace Elements.Tests
                 Assert.True(includes == pt.Value);
             }
         }
+
+        [Fact]
+        public void Collinear()
+        {
+            Vector3 p0 = new Vector3( 0, 0, 0);
+            Vector3 p1 = new Vector3( 10, 10, 10);
+            Vector3 p2 = new Vector3( 20, 20, 20);
+            Vector3 p3 = new Vector3( 15, 5, 20);
+
+            Assert.True( Vector3.AreCollinear( p0, p1, p2 ) );
+            Assert.False( Vector3.AreCollinear( p0, p1, p3 ) );
+        }
     }
 }

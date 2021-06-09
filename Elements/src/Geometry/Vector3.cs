@@ -686,6 +686,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check whether three points are on the same line.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var ba = (b - a).Unitized();
+            var cb = (c - b).Unitized();
+
+            if (ba.IsZero() || cb.IsZero())
+                return true;
+
+            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel

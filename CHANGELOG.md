@@ -17,6 +17,8 @@
   - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
   - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
 - Dxf creation framework with first Dxf converter.
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)`
+- `Polygon.CollinearPointsRemoved()`
 
 ### Changed
 
