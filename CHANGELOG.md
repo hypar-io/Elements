@@ -28,6 +28,9 @@
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
 - Leave the discriminator property during deserialization. It will go to AdditionalProperties.
 - `Lamina` representations can now include voids/holes.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
+- Code-generated constructors now get default arguments for inherited properties.
+- Deserialization no longer uses throw to catch all missing type exceptions.
 
 ### Fixed
 
