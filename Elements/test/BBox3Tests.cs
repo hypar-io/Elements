@@ -107,7 +107,7 @@ namespace Elements.Tests
             elements.Add(meshElem);
 
             // model curves
-            var polygon = Polygon.Circle(4, 10).TransformedPolygon(new Transform(new Vector3(8, 8, 8), new Vector3(1, 0, 2)));
+            var polygon = new Circle(4).ToPolygon(10).TransformedPolygon(new Transform(new Vector3(8, 8, 8), new Vector3(1, 0, 2)));
             elements.Add(new ModelCurve(polygon));
 
             // model points
@@ -117,9 +117,12 @@ namespace Elements.Tests
             elements.Add(modelPoints);
 
             // profile
-            var profile = new Profile(Polygon.Circle(7, 10).TransformedPolygon(new Transform(new Vector3(8, 8, 8), new Vector3(1, 0, 2))));
+            var profile = new Profile(new Circle(7).ToPolygon(10).TransformedPolygon(new Transform(new Vector3(8, 8, 8), new Vector3(1, 0, 2))));
+            var xzProfile = new Profile(new Circle(7).ToPolygon(10).TransformedPolygon(new Transform(new Vector3(-8, 8, 8), new Vector3(0, 1, 0))));
             elements.Add(profile);
+            elements.Add(xzProfile);
             Model.AddElements(profile.ToModelCurves());
+            Model.AddElements(xzProfile.ToModelCurves());
 
             // non-geometric element
             var invalidBBox = new BBox3(new Material("Red", Colors.Red));

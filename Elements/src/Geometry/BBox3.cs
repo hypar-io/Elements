@@ -78,7 +78,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create the BBox3 for an Element. Elements without any geometry will return invalid boxes.
+        /// Create the BBox3 for an Element. Elements without any geometry will return invalid boxes. 
+        /// Properties of the element that are themselves elements will not be considered.
         /// </summary>
         /// <param name="element">The element.</param>
         public BBox3(Element element)
@@ -166,8 +167,8 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Get all 8 corners of this bounding box. 
-        /// Ordering is CCW bottom from Min, then CCW top. For a unit cube this
-        /// would be:
+        /// Ordering is CCW bottom, then CCW top, each starting from minimum (X,Y). 
+        /// For a unit cube this would be:
         /// (0,0,0),(1,0,0),(1,1,0),(0,1,0),(0,0,1),(1,0,1),(1,1,1),(0,1,1)
         /// </summary>
         /// <returns>The corners of the bounding box.</returns>
