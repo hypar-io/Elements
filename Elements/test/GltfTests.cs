@@ -43,7 +43,6 @@ namespace Elements.Tests
             }
             var glbWithInstancesPath = Path.Combine("models", "multiple-instances.glb");
             baseModel.ToGlTF(glbWithInstancesPath);
-            // baseModel.ToGlTF(glbWithInstancesPath.Replace("glb", "gltf"), false);
             var cElement = new ContentElement(glbWithInstancesPath, new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
 
             var model = new Model();
@@ -52,71 +51,7 @@ namespace Elements.Tests
                 var inst = cElement.CreateInstance(new Transform(new Vector3(0, i * 3, 0)), "");
                 model.AddElement(inst);
             }
-            // model.ToGlTF("models/GltfInstancedContent.gltf", false);
             model.ToGlTF("models/GltfInstancedContent.glb");
-        }
-
-        [Fact]
-        public void MergeGlbFiles()
-        {
-            var testPath = "../../../models/MergeGlTF/Ours.glb";
-            var ours = Interface.LoadModel(testPath);
-            var buffers = ours.Buffers.ToList();
-            var buffViews = ours.BufferViews.ToList();
-            var accessors = ours.Accessors.ToList();
-            var meshes = ours.Meshes.ToList();
-            var materials = ours.Materials.ToList();
-            var images = ours.Images != null ? ours.Images.ToList() : new List<Image>();
-            var textures = ours.Textures != null ? ours.Textures.ToList() : new List<Texture>();
-            var samplers = ours.Samplers != null ? ours.Samplers.ToList() : new List<Sampler>();
-
-            using (var testStream = GltfExtensions.GetGlbStreamFromPath(testPath))
-            {
-                var bufferByteArrays = ours.GetAllBufferByteArrays(testStream);
-                ProtoNode parentNode;
-                using (var avocadoStream = GltfExtensions.GetGlbStreamFromPath("../../../models/MergeGlTF/multiple-instances.glb"))
-                {
-                    var ids = GltfMergingUtils.AddAllMeshesFromFromGlb(avocadoStream,
-                                                             buffers,
-                                                             bufferByteArrays,
-                                                             buffViews,
-                                                             accessors,
-                                                             meshes,
-                                                             materials,
-                                                             textures,
-                                                             images,
-                                                             samplers,
-                                                             true,
-                                                             out parentNode
-                                                             );
-                }
-
-                ours.Buffers = buffers.ToArray();
-                ours.BufferViews = buffViews.ToArray();
-                ours.Accessors = accessors.ToArray();
-                ours.Meshes = meshes.ToArray();
-                ours.Materials = materials.ToArray();
-                // ours.Images = images.ToArray();
-                // ours.Textures = textures.ToArray();
-                if (samplers.Count > 0)
-                {
-                    ours.Samplers = samplers.ToArray();
-                }
-
-                var nodeList = ours.Nodes.ToList();
-                var transform = new Transform(new Vector3(1, 1, 0), Vector3.XAxis, Vector3.YAxis.Negate()).Scaled(20);
-                NodeUtilities.AddInstanceAsCopyOfNode(nodeList, parentNode, transform);
-                // NodeUtilities.CreateNodeForMesh(ours.Meshes.Length - 1, nodeList, transform);
-                // NodeUtilities.CreateNodeFromNode(parentNode, transform);
-                ours.Nodes = nodeList.ToArray();
-
-                var savepath = "models/GltfTestResult.gltf";
-                ours.SaveBuffersAndAddUris(savepath, bufferByteArrays);
-                ours.SaveModel(savepath);
-
-                var mergedBuffer = ours.CombineBufferAndFixRefs(bufferByteArrays.ToArray());
-                ours.SaveBinaryModel(mergedBuffer, "models/GltfTestMerged.glb");
-            }
         }
 
         private class NoMaterial : GeometricElement
