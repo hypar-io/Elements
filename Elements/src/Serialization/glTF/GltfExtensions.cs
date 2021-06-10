@@ -914,6 +914,7 @@ namespace Elements.Serialization.glTF
                         {
                             nodeElementMap.Add(e.Id, parentNode);
                         }
+                        // TODO delete after 7/9 if not needed
                         // if (!meshElementMap.ContainsKey(e.Id))
                         // {
                         //     meshElementMap.Add(e.Id, meshIndices);
@@ -1221,40 +1222,6 @@ namespace Elements.Serialization.glTF
                                         meshes);
         }
 
-        // TODO delete this if still unused after 7/9/2021
-        // private static int ProcessSolid(Solid solid,
-        //                                  string id,
-        //                                  string materialName,
-        //                                  ref Gltf gltf,
-        //                                  ref Dictionary<string, int> materials,
-        //                                  ref List<byte> buffer,
-        //                                  List<BufferView> bufferViews,
-        //                                  List<Accessor> accessors,
-        //                                  List<glTFLoader.Schema.Mesh> meshes,
-        //                                  List<Vector3> lines,
-        //                                  bool drawEdges,
-        //                                  Transform t = null)
-        // {
-        //     var gbuffers = solid.Tessellate();
-
-        //     if (drawEdges)
-        //     {
-        //         foreach (var edge in solid.Edges.Values)
-        //         {
-        //             if (t != null)
-        //             {
-        //                 lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
-        //             }
-        //             else
-        //             {
-        //                 lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-        //             }
-        //         }
-        //     }
-
-        //     return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, materials[materialName], gbuffers, null, meshes);
-        // }
-
         private static void AddLines(long id,
                                      IList<Vector3> vertices,
                                      Gltf gltf,
@@ -1330,31 +1297,5 @@ namespace Elements.Serialization.glTF
             gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
                             bbox.Max.ToArray(), 0, (ushort)(vertices.Count - 1), material, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, t);
         }
-
-        // private static void AddArrow(long id,
-        //                              Vector3 origin,
-        //                              Vector3 direction,
-        //                              Gltf gltf,
-        //                              int material,
-        //                              Transform t,
-        //                              List<byte> buffer,
-        //                              List<BufferView> bufferViews,
-        //                              List<Accessor> accessors)
-        // {
-        //     var scale = 0.5;
-        //     var end = origin + direction * scale;
-        //     var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
-        //     var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
-        //     tr.Rotate(up, -45.0);
-        //     var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
-        //     var pts = new[] { origin, end, end + arrow1 };
-        //     var vBuff = pts.ToArray();
-        //     var vCount = 3;
-        //     var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
-        //     var bbox = new BBox3(pts);
-        //     gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
-        //                     bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINE_STRIP, t);
-
-        // }
     }
 }

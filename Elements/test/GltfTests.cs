@@ -32,7 +32,17 @@ namespace Elements.Tests
         [Fact]
         public void InstanceContentElements()
         {
-            var singleElement = new ContentElement("https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/a1cf1df6-0762-45e7-942b-7ba17d813ff4/HermanMiller_Collection_Eames_MoldedPlywood_DiningChair_MtlBase+-+Upholstered.glb", new BBox3(new Vector3(), new Vector3(1, 1, 1)), 1, Vector3.XAxis, new Transform(), null, null, true, Guid.NewGuid(), "", "");
+            var singleElement = new ContentElement("https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/a1cf1df6-0762-45e7-942b-7ba17d813ff4/HermanMiller_Collection_Eames_MoldedPlywood_DiningChair_MtlBase+-+Upholstered.glb",
+                                                   new BBox3(new Vector3(), new Vector3(1, 1, 1)),
+                                                   1,
+                                                   Vector3.XAxis,
+                                                   new Transform(),
+                                                   null,
+                                                   null,
+                                                   true,
+                                                   Guid.NewGuid(),
+                                                   "",
+                                                   "");
             var baseModel = new Model();
             for (int i = 0; i < 10; i++)
             {
