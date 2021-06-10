@@ -17,5 +17,15 @@ namespace Elements.Tests
             var diagonal = bbox.Max.DistanceTo(bbox.Min);
             Assert.Equal(159.676157, diagonal, 4);
         }
+
+        [Fact]
+        public void DegenerateTest()
+        {
+            var bbox = new BBox3(new Vector3(), new Vector3(1, 1, 1));
+            Assert.False(bbox.IsDegenerate());
+
+            var degenerateBbox = new BBox3(new Vector3(), new Vector3(1, 1, 0));
+            Assert.True(degenerateBbox.IsDegenerate());
+        }
     }
 }
