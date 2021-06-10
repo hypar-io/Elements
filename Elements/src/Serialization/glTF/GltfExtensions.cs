@@ -1221,38 +1221,39 @@ namespace Elements.Serialization.glTF
                                         meshes);
         }
 
-        private static int ProcessSolid(Solid solid,
-                                         string id,
-                                         string materialName,
-                                         ref Gltf gltf,
-                                         ref Dictionary<string, int> materials,
-                                         ref List<byte> buffer,
-                                         List<BufferView> bufferViews,
-                                         List<Accessor> accessors,
-                                         List<glTFLoader.Schema.Mesh> meshes,
-                                         List<Vector3> lines,
-                                         bool drawEdges,
-                                         Transform t = null)
-        {
-            var gbuffers = solid.Tessellate();
+        // TODO delete this if still unused after 7/9/2021
+        // private static int ProcessSolid(Solid solid,
+        //                                  string id,
+        //                                  string materialName,
+        //                                  ref Gltf gltf,
+        //                                  ref Dictionary<string, int> materials,
+        //                                  ref List<byte> buffer,
+        //                                  List<BufferView> bufferViews,
+        //                                  List<Accessor> accessors,
+        //                                  List<glTFLoader.Schema.Mesh> meshes,
+        //                                  List<Vector3> lines,
+        //                                  bool drawEdges,
+        //                                  Transform t = null)
+        // {
+        //     var gbuffers = solid.Tessellate();
 
-            if (drawEdges)
-            {
-                foreach (var edge in solid.Edges.Values)
-                {
-                    if (t != null)
-                    {
-                        lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
-                    }
-                    else
-                    {
-                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                    }
-                }
-            }
+        //     if (drawEdges)
+        //     {
+        //         foreach (var edge in solid.Edges.Values)
+        //         {
+        //             if (t != null)
+        //             {
+        //                 lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
+        //             }
+        //             else
+        //             {
+        //                 lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
+        //             }
+        //         }
+        //     }
 
-            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, materials[materialName], gbuffers, null, meshes);
-        }
+        //     return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, materials[materialName], gbuffers, null, meshes);
+        // }
 
         private static void AddLines(long id,
                                      IList<Vector3> vertices,
