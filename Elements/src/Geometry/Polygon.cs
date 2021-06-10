@@ -1131,6 +1131,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Remove collinear points from this Polygon.
+        /// </summary>
+        /// <returns>New Polygon without collinear points.</returns>
+        public Polygon CollinearPointsRemoved()
+        {
+            int count = this.Vertices.Count;
+            var unique = new List<Vector3>(count);
+
+            if (!Vector3.AreCollinear(Vertices[count - 1], Vertices[0], Vertices[1]))
+                unique.Add(Vertices[0]);
+
+            for (int i = 1; i < count - 1; i++)
+            {
+                if (!Vector3.AreCollinear(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                    unique.Add(Vertices[i]);
+            }
+
+            if (!Vector3.AreCollinear(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+                unique.Add(Vertices[count - 1]);
+
+            return new Polygon(unique);
+        }
+
+        /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
         /// <param name="startSetback"></param>

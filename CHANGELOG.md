@@ -19,6 +19,8 @@
 - Dxf creation framework with first Dxf converter.
 - `new BBox3(Element element)`
 - `Bbox3.Corners()`
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)`
+- `Polygon.CollinearPointsRemoved()`
 
 ### Changed
 
