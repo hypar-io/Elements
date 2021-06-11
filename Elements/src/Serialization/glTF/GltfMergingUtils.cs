@@ -136,6 +136,10 @@ namespace Elements.Serialization.glTF
             return meshIndices;
         }
 
+        /// <summary>
+        /// We construct a new, recursively-structured 'ProtoNode' from the flat gltf node, and mutate its mesh indices to
+        /// point to the correct mesh in the merged gltf.
+        /// </summary>
         private static ProtoNode RecursivelyModifyMeshIndices(glTFLoader.Schema.Node node, List<int> meshIndices, glTFLoader.Schema.Node[] loadedNodes)
         {
             var protoNode = new ProtoNode();

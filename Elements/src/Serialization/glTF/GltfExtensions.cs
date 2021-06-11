@@ -914,11 +914,6 @@ namespace Elements.Serialization.glTF
                         {
                             nodeElementMap.Add(e.Id, parentNode);
                         }
-                        // TODO delete after 7/9 if not needed
-                        // if (!meshElementMap.ContainsKey(e.Id))
-                        // {
-                        //     meshElementMap.Add(e.Id, meshIndices);
-                        // }
                         if (!content.IsElementDefinition)
                         {
                             // This element is not used for instancing.
