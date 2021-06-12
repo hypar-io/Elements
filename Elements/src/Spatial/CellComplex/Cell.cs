@@ -10,7 +10,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A cell is a 3-dimensional closed extrusion within a complex.
     /// </summary>
-    public class Cell : ChildBase<Extrude>
+    public class Cell : ChildBase<Cell, Extrude>, Interfaces.IHasNeighbors<Cell, Extrude>
     {
         /// <summary>
         /// The ID of this cell's bottom face. If set, it is also expected to be duplicated in list of faces.
@@ -222,11 +222,24 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the closest associated cell to the supplied point.
         /// </summary>
-        /// <param name="point"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public Cell GetClosestNeighbor(Vector3 point)
+        public Cell GetClosestNeighbor(Vector3 target)
         {
-            return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(point) < this.DistanceTo(point)).ToList(), point);
+            return Cell.GetClosest<Cell>(this.GetNeighbors().Where(c => c.DistanceTo(target) < this.DistanceTo(target)).ToList(), target);
+        }
+
+        /// <summary>
+        /// Traverse the neighbors of this Cell toward the target point.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="completedRadius">If provided, ends the traversal when the neighbor is within this distance to the target point.</param>
+        /// <returns>A collection of traversed Cells, including the starting Cell.</returns>
+        public List<Cell> TraverseNeighbors(Vector3 target, double completedRadius = 0)
+        {
+            var maxCount = this.CellComplex.GetCells().Count;
+            Func<Cell, Cell> getNextNeighbor = (Cell curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
+            return Cell.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
         }
     }
 }

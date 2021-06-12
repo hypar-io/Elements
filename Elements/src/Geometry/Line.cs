@@ -157,7 +157,8 @@ namespace Elements.Geometry
             var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
             if (rayIntersects)
             {
-                if (infinite || t <= Length())
+                var l = Length();
+                if (infinite || t.ApproximatelyEquals(l) || t < l)
                 {
                     result = location;
                     return true;

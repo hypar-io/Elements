@@ -173,6 +173,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SolidToMesh()
+        {
+            var n = 4;
+            var outer = Polygon.Ngon(n, 2);
+            var inner = Polygon.Ngon(n, 1.75).Reversed();
+
+            var solid = Solid.SweepFace(outer, new[] { inner }, new Vector3(0.5, 0.5, 0.5), 5);
+            var mesh = solid.ToMesh();
+            var subtraction = mesh.ToCsg().Substract(solid.ToCsg());
+            Assert.Equal(0, subtraction.Polygons.Count);
+        }
+
+        [Fact]
         public void Serialization()
         {
             var n = 4;
@@ -234,6 +247,42 @@ namespace Elements.Tests
             var opDeserialized = userElemDeserialized.Representation.SolidOperations.First();
             var solidDeserialized = opDeserialized?.Solid;
             Assert.NotNull(solidDeserialized);
+        }
+
+        [Fact]
+        public void CreateLaminaWithHoles()
+        {
+            Name = nameof(CreateLaminaWithHoles);
+            var profile = new Profile(Polygon.Rectangle(15, 15), Polygon.Star(7, 4, 5));
+            var geoElem = new GeometricElement(
+                new Transform(),
+                BuiltInMaterials.XAxis,
+                new Representation(new[] {
+                    new Lamina(profile)
+                    }),
+                false, Guid.NewGuid(), "Planar Shape Test");
+            Model.AddElement(geoElem);
+        }
+
+
+        [Fact]
+        public void ConstructedSolidProducesValidGlb()
+        {
+            Name = nameof(ConstructedSolidProducesValidGlb);
+            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
+            var solid = new Solid();
+            foreach (var face in allPolygons)
+            {
+                solid.AddFace(face.outerLoop, face.innerLoops, true);
+            }
+            var solidOp = new Elements.Geometry.Solids.ConstructedSolid(solid, false);
+            solidOp.LocalTransform = new Transform();
+            var geoElem = new GeometricElement(new Transform(), BuiltInMaterials.Concrete, new Representation(new[] { solidOp }), false, Guid.NewGuid(), null);
+            var model = new Model();
+            model.AddElement(geoElem);
+            var bytes = model.ToGlTF();
+            Assert.True(bytes != null && bytes.Length > 3000);
+            Model.AddElement(geoElem);
         }
     }
 

@@ -5,7 +5,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique edge or directed edge in a cell complex.
     /// </summary>
-    public abstract class EdgeBase : ChildBase<Line>
+    public abstract class EdgeBase<ChildClass> : ChildBase<ChildClass, Line> where ChildClass : ChildBase<ChildClass, Line>
     {
         /// <summary>
         /// ID of start Vertex.

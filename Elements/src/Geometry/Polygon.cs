@@ -99,6 +99,7 @@ namespace Elements.Geometry
         /// trimming occurred.</returns>
         public List<Polygon> Trimmed(Plane plane, bool flip = false)
         {
+            const double precision = 1e-05;
             try
             {
                 if (flip)
@@ -120,7 +121,7 @@ namespace Elements.Geometry
                     var d1 = v1.DistanceTo(plane);
                     var d2 = v2.DistanceTo(plane);
 
-                    if (d1.ApproximatelyEquals(0) && d2.ApproximatelyEquals(0))
+                    if (d1.ApproximatelyEquals(0, precision) && d2.ApproximatelyEquals(0, precision))
                     {
                         // The segment is in the plane.
                         newVertices.Add(v1);
@@ -142,7 +143,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1 > 0 && d2.ApproximatelyEquals(0))
+                    if (d1 > 0 && d2.ApproximatelyEquals(0, precision))
                     {
                         // The first point is inside and 
                         // the second point is on the plane.
@@ -154,7 +155,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1.ApproximatelyEquals(0) && d2 > 0)
+                    if (d1.ApproximatelyEquals(0, precision) && d2 > 0)
                     {
                         // The first point is on the plane,
                         // and the second is inside.
@@ -349,35 +350,6 @@ namespace Elements.Geometry
             return false;
         }
 
-        /// <summary>
-        /// Add a new vertex at the provided point
-        /// </summary>
-        /// <param name="point">The point at which to split.</param>
-        public void Split(Vector3 point)
-        {
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
-            {
-                var pt1 = this.Vertices[i];
-                var pt2 = this.Vertices[i + 1];
-
-                if (point.IsAlmostEqualTo(pt1) || point.IsAlmostEqualTo(pt2))
-                {
-                    // It's a start or an end. Nothing to do.
-                    continue;
-                }
-
-                var d1 = point - pt1;
-                var d2 = pt2 - pt1;
-                var c = d1.Cross(d2);
-                if (c.IsZero() && d1.Dot(d2) > 0)
-                {
-                    // The pt is in the line between the start and the end.
-                    this.Vertices.Insert(i + 1, point);
-                    i++; // Skip this new point.
-                }
-            }
-        }
-
         // Projects non-flat containment request into XY plane and returns the answer for this projection
         internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
         {
@@ -475,6 +447,9 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Calculates whether this polygon is configured clockwise.
+        /// This method only works for 2D polygons. For 3D polygons, you
+        /// will need to transform your polygon into the XY plane, then
+        /// run this method on that polygon.
         /// </summary>
         /// <returns>True if this polygon is oriented clockwise.</returns>
         public bool IsClockWise()
@@ -1213,6 +1188,30 @@ namespace Elements.Geometry
                 projected[i] = this.Vertices[i].ProjectAlong(direction, p);
             }
             return new Polygon(projected);
+        }
+
+        /// <summary>
+        /// Remove collinear points from this Polygon.
+        /// </summary>
+        /// <returns>New Polygon without collinear points.</returns>
+        public Polygon CollinearPointsRemoved()
+        {
+            int count = this.Vertices.Count;
+            var unique = new List<Vector3>(count);
+
+            if (!Vector3.AreCollinear(Vertices[count - 1], Vertices[0], Vertices[1]))
+                unique.Add(Vertices[0]);
+
+            for (int i = 1; i < count - 1; i++)
+            {
+                if (!Vector3.AreCollinear(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                    unique.Add(Vertices[i]);
+            }
+
+            if (!Vector3.AreCollinear(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+                unique.Add(Vertices[count - 1]);
+
+            return new Polygon(unique);
         }
 
         /// <summary>

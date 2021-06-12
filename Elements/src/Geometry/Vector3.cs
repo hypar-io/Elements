@@ -686,6 +686,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check whether three points are on the same line.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var ba = (b - a).Unitized();
+            var cb = (c - b).Unitized();
+
+            if (ba.IsZero() || cb.IsZero())
+                return true;
+
+            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel
@@ -797,7 +815,7 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("Cannot test collinearity of an empty list");
             }
-            if (points.Count < 3)
+            if (points.Distinct(new Vector3Comparer()).Count() < 3)
             {
                 return true;
             }
@@ -913,6 +931,19 @@ namespace Elements.Geometry
                 c += 3;
             }
             return arr;
+        }
+    }
+
+    internal class Vector3Comparer : EqualityComparer<Vector3>
+    {
+        public override bool Equals(Vector3 x, Vector3 y)
+        {
+            return x.IsAlmostEqualTo(y);
+        }
+
+        public override int GetHashCode(Vector3 obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

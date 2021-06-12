@@ -9,6 +9,25 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Validators
 {
+    public class ElementValidator : IValidator
+    {
+        public Type ValidatesType => typeof(Element);
+
+        public void PostConstruct(object obj)
+        {
+            var elem = (Element)obj;
+            if (elem.Id == default(Guid))
+            {
+                elem.Id = System.Guid.NewGuid();
+            }
+        }
+
+        public void PreConstruct(object[] args)
+        {
+            // Do nothing.
+        }
+    }
+
     public class GeometricElementValidator : IValidator
     {
         public Type ValidatesType => typeof(GeometricElement);
@@ -19,6 +38,10 @@ namespace Elements.Validators
             if (geom.Material == null)
             {
                 geom.Material = BuiltInMaterials.Default;
+            }
+            if (geom.Transform == null)
+            {
+                geom.Transform = new Transform();
             }
         }
 
@@ -324,7 +347,7 @@ namespace Elements.Validators
 
         private void UpdateGeometry(Lamina lamina)
         {
-            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter, lamina.Voids);
             lamina._csg = lamina._solid.ToCsg();
         }
 

@@ -3,16 +3,40 @@
 ## 0.9.1
 
 ### Added
+
 - `Transform(Plane plane)`
 - `Polygon.Trimmed(Plane plane, bool flip)`
-- `GetSolid()` method on GeometricElement that returns the Csg solid.
+- ~~`GetSolid()` method on GeometricElement that returns the Csg solid.~~
+- `ToMesh()` method on GeometricElement that return the mesh of a processed solid.
 - `Polygon.ToTransform()`
 - `Elements.Anaysis.AnalysisImage`
+- `Profile.CreateFromPolygons(IEnumerable<Polygon> polygons)`
+- `CellComplex`:
+  - `Cell.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
+- Dxf creation framework with first Dxf converter.
+- `new BBox3(Element element)`
+- `Bbox3.Corners()`
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)`
+- `Polygon.CollinearPointsRemoved()`
 
 ### Changed
+
 - `AnalysisMesh` now handles single valued analysis.
 - `Polygon.Split()` can now handle polygons that are not in the XY plane.
-- Leave the discriminator property during deserialization.  It will go to AdditionalProperties.
+- Leave the discriminator property during deserialization. It will go to AdditionalProperties.
+- `Lamina` representations can now include voids/holes.
+
+### Fixed
+
+- Guard against missing transforms while generating CSGs.
+- Fixed a bug ([#585](https://github.com/hypar-io/Elements/issues/585)) where CSG Booleans for certain representations (especially laminae) would fail.
+- Guard against missing transforms while generating CSGs.
+- In rare cases a `Line.Intersect(Line)` call would fail if there were near-duplicate vertices, this is fixed.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
+- Code-generated constructors now get default arguments for inherited properties.
 
 ## 0.9.0
 

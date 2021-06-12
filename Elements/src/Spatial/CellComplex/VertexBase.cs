@@ -6,7 +6,7 @@ namespace Elements.Spatial.CellComplex
     /// <summary>
     /// A unique Vertex or Orientation in a cell complex.
     /// </summary>
-    public abstract class VertexBase : ChildBase<Vector3>
+    public abstract class VertexBase<ChildClass> : ChildBase<ChildClass, Vector3> where ChildClass : ChildBase<ChildClass, Vector3>
     {
         /// <summary>
         /// Location in space if this is a Vertex, or a vector direction if this is an Orientation.

@@ -1490,5 +1490,21 @@ namespace Elements.Geometry.Tests
                 }
             }
         }
+
+        public void CollinearPointCanBeRemoved()
+        {
+            var points = new Vector3[6]{
+                new Vector3( 0, 0, 0),
+                new Vector3( 10,0,0),
+                new Vector3(20,0,0),
+                new Vector3( 20, 20, 0),
+                new Vector3( 10, 20, 0),
+                new Vector3( 0, 20 , 0)
+                };
+
+            var polygon = new Polygon(points);
+            polygon = polygon.CollinearPointsRemoved();
+            Assert.True(polygon.Vertices.Count == 4);
+        }
     }
 }
