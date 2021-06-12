@@ -1471,24 +1471,30 @@ namespace Elements.Geometry.Tests
             var random = new Random();
 
             var hex = Polygon.Ngon(6, 3);
-            var polygon = Polygon.Star(5, 2, 5);
-            this.Model.AddElement(new ModelCurve(polygon, random.NextMaterial()));
-            foreach (var s in hex.Segments())
+            var star = Polygon.Star(5, 2, 5);   //.TransformedPolygon(new Transform(new Vector3(0, 0, 1)));
+            this.Model.AddElement(new ModelCurve(star, random.NextMaterial()));
+            var segs = hex.Segments();
+            for (var i = 0; i < segs.Count(); i++)
             {
+                var s = segs[i];
                 var p = new Polygon(new[]{
                     s.Start,
                     s.End,
                     s.End + new Vector3(0,0,2),
                     s.Start + new Vector3(0,0,2)
                 });
-                if (polygon.Intersects3d(p, out List<Line> result))
+                this.Model.AddElement(new Panel(p, BuiltInMaterials.Mass));
+                if (star.Intersects3d(p, out List<Line> result))
                 {
                     foreach (var l in result)
                     {
                         this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+                        this.Model.AddElement(new ModelCurve(new Circle(l.Start, 0.05).ToPolygon(), BuiltInMaterials.YAxis));
+                        this.Model.AddElement(new ModelCurve(new Circle(l.End, 0.07).ToPolygon(), BuiltInMaterials.XAxis));
                     }
                 }
             }
+            this.Model.AddElement(new ModelCurve(hex.Offset(-0.05)[0]));
         }
 
         public void CollinearPointCanBeRemoved()

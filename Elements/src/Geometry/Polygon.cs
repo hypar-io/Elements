@@ -251,12 +251,12 @@ namespace Elements.Geometry
             var d = this.Plane().Normal.Cross(targetP.Normal).Unitized();
 
             // Intersect the polygon against this polygon's plane.
-            // Keep the points that within the polygon.
+            // Keep the points that lie within the polygon.
             if (polygon.Intersects(p, out List<Vector3> results))
             {
                 foreach (var r in results)
                 {
-                    if (polygon.Contains(r))
+                    if (this.Contains3D(r))
                     {
                         orderedResults.Add(r);
                     }
@@ -265,12 +265,11 @@ namespace Elements.Geometry
 
             // Intersect this polygon against the target polyon's plane.
             // Keep the points within the target polygon.
-
             if (this.Intersects(targetP, out List<Vector3> results2))
             {
                 foreach (var r in results2)
                 {
-                    if (polygon.Contains(r))
+                    if (polygon.Contains3D(r))
                     {
                         orderedResults.Add(r);
                     }
@@ -282,7 +281,7 @@ namespace Elements.Geometry
                 // Order the intersections along the direction.
                 orderedResults.Sort(new DotComparer(d));
 
-                for (var i = 0; i < orderedResults.Count; i += 2)
+                for (var i = 0; i < orderedResults.Count - 1; i += 2)
                 {
                     result.Add(new Line(orderedResults[i], orderedResults[i + 1]));
                 }
@@ -365,6 +364,36 @@ namespace Elements.Geometry
             var groundSegments = segments.Select(segment => segment.TransformedLine(transformToGround));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
+        }
+
+        internal bool Contains3D(Vector3 point)
+        {
+            var p = this.Plane();
+            var t = new Transform(point, p.Normal);
+
+            // Intersect a randomly directed ray in the plane
+            // of the polygon and intersect with the polygon edges.
+            var ray = new Ray(point, t.XAxis);
+            var intersects = 0;
+            var xsects = new List<Vector3>();
+            foreach (var s in this.Segments())
+            {
+                var result = default(Vector3);
+                if (s.Start.IsAlmostEqualTo(point) ||
+                    s.End.IsAlmostEqualTo(point) ||
+                    ray.Intersects(s, out result))
+                {
+                    // Look for duplicates like when a ray
+                    // hits a vertex. In this case, you
+                    // only want to register one intersection.
+                    if (!xsects.Contains(result))
+                    {
+                        xsects.Add(result);
+                        intersects++;
+                    }
+                }
+            }
+            return intersects % 2 != 0;
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
