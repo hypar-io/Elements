@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Collections.Generics;
@@ -66,10 +67,68 @@ namespace Elements.Serialization.glTF
             return parentId;
         }
 
+        internal static void AddInstanceAsCopyOfNode(
+                                            List<glTFLoader.Schema.Node> nodes,
+                                            ProtoNode nodeToCopy,
+                                            Transform transform)
+        {
+            var rootTransform = new Transform();
+            // glb has Y up. transform it to have Z up so we
+            // can create instances of it in a Z up world. It will get switched
+            // back to Y up further up in the node hierarchy. 
+            rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
+            rootTransform.Concatenate(transform);
+            // A new node is created that contains the node to copy as its only child.
+            // We use the node to copy exactly as is, with an unmodified transform.
+            float[] matrix = TransformToMatrix(rootTransform);
+            var newNode = new glTFLoader.Schema.Node();
+            newNode.Matrix = matrix;
+            nodes.Add(newNode);
+            newNode.Children = new[] { nodes.Count };
+
+            nodes[0].Children = (nodes[0].Children ?? Array.Empty<int>()).Concat(new[] { nodes.Count - 1 }).ToArray();
+
+            var nodeIndexOffset = nodes.Count;
+            RecursivelyCopyNode(nodes, nodeToCopy);
+
+        }
+
+        private static int RecursivelyCopyNode(List<Node> nodes, ProtoNode nodeToCopy)
+        {
+            var newNode = new Node();
+            newNode.Matrix = nodeToCopy.Matrix;
+            if (nodeToCopy.Mesh != null)
+            {
+                newNode.Mesh = nodeToCopy.Mesh;
+            }
+            nodes.Add(newNode);
+            var nodeIndex = nodes.Count - 1;
+
+            var childIndices = new List<int>();
+
+            foreach (var child in nodeToCopy.Children)
+            {
+                childIndices.Add(RecursivelyCopyNode(nodes, child));
+            }
+            if (childIndices.Count > 0)
+            {
+                newNode.Children = childIndices.ToArray();
+            }
+
+            return nodeIndex;
+        }
+
         internal static int[] AddInstanceNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
                                             Transform transform)
+        {
+            float[] matrix = TransformToMatrix(transform);
+            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
+            return AddNodes(nodes, newNodes, 0);
+        }
+
+        private static float[] TransformToMatrix(Transform transform)
         {
             var a = transform.XAxis;
             var b = transform.YAxis;
@@ -81,8 +140,7 @@ namespace Elements.Serialization.glTF
                     (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
                     (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
                 };
-            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
-            return AddNodes(nodes, newNodes, 0);
+            return matrix;
         }
 
         internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
@@ -96,6 +154,11 @@ namespace Elements.Serialization.glTF
             node.Mesh = meshId;
             var nodeId = AddNode(nodes, node, parentId);
             return nodeId;
+        }
+
+        internal static void CreateNodeFromNode(List<glTFLoader.Schema.Node> nodes, Node parentNode, Transform transform)
+        {
+            var parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, 0);
         }
     }
 }

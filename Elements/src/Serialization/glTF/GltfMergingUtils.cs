@@ -9,6 +9,12 @@ using glTFLoader.Schema;
 namespace Elements.Serialization.glTF
 {
 
+    internal class ProtoNode
+    {
+        public int? Mesh;
+        public float[] Matrix;
+        public List<ProtoNode> Children = new List<ProtoNode>();
+    }
     internal static class GltfMergingUtils
     {
         public static List<int> AddAllMeshesFromFromGlb(Stream glbStream,
@@ -21,7 +27,8 @@ namespace Elements.Serialization.glTF
                                         List<Texture> textures,
                                         List<Image> images,
                                         List<Sampler> samplers,
-                                        bool shouldAddMaterials
+                                        bool shouldAddMaterials,
+                                        out ProtoNode parentNode
                                         )
         {
             var loadingStream = new MemoryStream();
@@ -117,13 +124,38 @@ namespace Elements.Serialization.glTF
                     {
                         prim.Material = 0;  // This assumes that the default material is at index 0
                     }
-
                 }
                 meshes.Add(originMesh);
                 meshIndices.Add(meshes.Count - 1);
             }
 
+            var topNode = loaded.Nodes[loaded.Scenes[0].Nodes[0]];
+            parentNode = RecursivelyModifyMeshIndices(topNode, meshIndices, loaded.Nodes);
+            parentNode.Matrix = topNode.Matrix;
+
             return meshIndices;
+        }
+
+        /// <summary>
+        /// We construct a new, recursively-structured 'ProtoNode' from the flat gltf node, and mutate its mesh indices to
+        /// point to the correct mesh in the merged gltf.
+        /// </summary>
+        private static ProtoNode RecursivelyModifyMeshIndices(glTFLoader.Schema.Node node, List<int> meshIndices, glTFLoader.Schema.Node[] loadedNodes)
+        {
+            var protoNode = new ProtoNode();
+            protoNode.Matrix = node.Matrix;
+            if (node.Mesh != null)
+            {
+                protoNode.Mesh = meshIndices[node.Mesh.Value];
+            }
+            if (node.Children != null && node.Children.Count() > 0)
+            {
+                foreach (var child in node.Children)
+                {
+                    protoNode.Children.Add(RecursivelyModifyMeshIndices(loadedNodes[child], meshIndices, loadedNodes));
+                }
+            }
+            return protoNode;
         }
 
         private static void AddMaterials(List<glTFLoader.Schema.Material> materials, Gltf loaded, int textureIncrement)

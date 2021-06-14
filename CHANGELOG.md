@@ -37,6 +37,8 @@
 - In rare cases a `Line.Intersect(Line)` call would fail if there were near-duplicate vertices, this is fixed.
 - `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
 - Code-generated constructors now get default arguments for inherited properties.
+- `IsDegenerate()` method was reversed.
+- Adding content elements that contain multiple nodes used to only add the first mesh, now it adds all the nodes in the referenced glb hierarchy.
 
 ## 0.9.0
 

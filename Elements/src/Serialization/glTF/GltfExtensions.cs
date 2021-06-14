@@ -776,6 +776,7 @@ namespace Elements.Serialization.glTF
             var materials = gltf.Materials != null ? gltf.Materials.ToList() : new List<glTFLoader.Schema.Material>();
 
             var meshElementMap = new Dictionary<Guid, List<int>>();
+            var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
             foreach (var e in elements)
             {
@@ -803,6 +804,7 @@ namespace Elements.Serialization.glTF
                                         meshes,
                                         nodes,
                                         meshElementMap,
+                                        nodeElementMap,
                                         meshTransformMap,
                                         currLines,
                                         drawEdges);
@@ -877,6 +879,7 @@ namespace Elements.Serialization.glTF
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<glTFLoader.Schema.Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
                                                     Dictionary<Guid, Transform> meshTransformMap,
                                                     List<Vector3> lines,
                                                     bool drawEdges)
@@ -902,13 +905,14 @@ namespace Elements.Serialization.glTF
                                                                 textures,
                                                                 images,
                                                                 samplers,
-                                                                true
+                                                                true,
+                                                                out var parentNode
                                                                 );
 
 
-                        if (!meshElementMap.ContainsKey(e.Id))
+                        if (!nodeElementMap.ContainsKey(e.Id) && parentNode != null)
                         {
-                            meshElementMap.Add(e.Id, meshIndices);
+                            nodeElementMap.Add(e.Id, parentNode);
                         }
                         if (!content.IsElementDefinition)
                         {
@@ -982,16 +986,31 @@ namespace Elements.Serialization.glTF
                 var transform = new Transform();
                 if (i.BaseDefinition is ContentElement contentBase)
                 {
-                    // If there is a transform stored for the content base definition we
-                    // should apply it when creating instances.
-                    if (meshTransformMap.TryGetValue(i.BaseDefinition.Id, out var baseTransform))
+                    // if we have a stored node for this object, we use that when adding it to the gltf.
+                    if (nodeElementMap.TryGetValue(i.BaseDefinition.Id, out var nodeToCopy))
                     {
-                        transform.Concatenate(baseTransform);
+                        transform.Concatenate(i.Transform);
+                        NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform);
+                    }
+                    else
+                    {
+                        // If there is a transform stored for the content base definition we
+                        // should apply it when creating instances.
+                        // TODO check if this meshTransformMap ever does anything.
+                        if (meshTransformMap.TryGetValue(i.BaseDefinition.Id, out var baseTransform))
+                        {
+                            transform.Concatenate(baseTransform);
+                        }
+                        transform.Concatenate(i.Transform);
+                        NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
                     }
                 }
-                transform.Concatenate(i.Transform);
-                // Lookup the corresponding mesh in the map.
-                NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                else
+                {
+                    transform.Concatenate(i.Transform);
+                    // Lookup the corresponding mesh in the map.
+                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                }
 
                 if (drawEdges)
                 {
@@ -1198,39 +1217,6 @@ namespace Elements.Serialization.glTF
                                         meshes);
         }
 
-        private static int ProcessSolid(Solid solid,
-                                         string id,
-                                         string materialName,
-                                         ref Gltf gltf,
-                                         ref Dictionary<string, int> materials,
-                                         ref List<byte> buffer,
-                                         List<BufferView> bufferViews,
-                                         List<Accessor> accessors,
-                                         List<glTFLoader.Schema.Mesh> meshes,
-                                         List<Vector3> lines,
-                                         bool drawEdges,
-                                         Transform t = null)
-        {
-            var gbuffers = solid.Tessellate();
-
-            if (drawEdges)
-            {
-                foreach (var edge in solid.Edges.Values)
-                {
-                    if (t != null)
-                    {
-                        lines.AddRange(new[] { t.OfVector(edge.Left.Vertex.Point), t.OfVector(edge.Right.Vertex.Point) });
-                    }
-                    else
-                    {
-                        lines.AddRange(new[] { edge.Left.Vertex.Point, edge.Right.Vertex.Point });
-                    }
-                }
-            }
-
-            return gltf.AddTriangleMesh(id + "_mesh", buffer, bufferViews, accessors, materials[materialName], gbuffers, null, meshes);
-        }
-
         private static void AddLines(long id,
                                      IList<Vector3> vertices,
                                      Gltf gltf,
@@ -1306,31 +1292,5 @@ namespace Elements.Serialization.glTF
             gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
                             bbox.Max.ToArray(), 0, (ushort)(vertices.Count - 1), material, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, t);
         }
-
-        // private static void AddArrow(long id,
-        //                              Vector3 origin,
-        //                              Vector3 direction,
-        //                              Gltf gltf,
-        //                              int material,
-        //                              Transform t,
-        //                              List<byte> buffer,
-        //                              List<BufferView> bufferViews,
-        //                              List<Accessor> accessors)
-        // {
-        //     var scale = 0.5;
-        //     var end = origin + direction * scale;
-        //     var up = direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
-        //     var tr = new Transform(Vector3.Origin, direction.Cross(up), direction);
-        //     tr.Rotate(up, -45.0);
-        //     var arrow1 = tr.OfPoint(Vector3.XAxis * 0.1);
-        //     var pts = new[] { origin, end, end + arrow1 };
-        //     var vBuff = pts.ToArray();
-        //     var vCount = 3;
-        //     var indices = Enumerable.Range(0, vCount).Select(i => (ushort)i).ToArray();
-        //     var bbox = new BBox3(pts);
-        //     gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
-        //                     bbox.Max.ToArray(), 0, (ushort)(vCount - 1), material, MeshPrimitive.ModeEnum.LINE_STRIP, t);
-
-        // }
     }
 }

@@ -21,6 +21,16 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DegenerateTest()
+        {
+            var bbox = new BBox3(new Vector3(), new Vector3(1, 1, 1));
+            Assert.False(bbox.IsDegenerate());
+
+            var degenerateBbox = new BBox3(new Vector3(), new Vector3(1, 1, 0));
+            Assert.True(degenerateBbox.IsDegenerate());
+        }
+
+        [Fact]
         public void BBoxesForElements()
         {
             Name = nameof(BBoxesForElements);
