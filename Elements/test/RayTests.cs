@@ -286,6 +286,22 @@ namespace Elements.Tests
             Assert.False(new Ray(new Vector3(-1, -1, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
         }
 
+        [Fact]
+        private static void RayIntersectsPolygonWithTransformation()
+        {
+            var outer = Polygon.Rectangle(6, 6);
+            var mass = new Mass(new Profile(outer), 2);
+            var ray = new Ray(new Vector3(3.5, 0, -4), new Vector3(0, 0, 1));
+            //The mass (-3,-3,0);(3,3,2) not intersects with the ray
+            Assert.False(ray.Intersects(mass, out var _));
+            //Rotated mass (0,-3,3);(2,3,-3)
+            mass.Transform.Rotate(Vector3.YAxis, 90);
+            //Translated mass (2,-3,3);(4,3,-3) and it crosses the ray
+            mass.Transform.Move(new Vector3(2, 0, 0));
+            mass.UpdateRepresentations();
+            Assert.True(ray.Intersects(mass, out var _));
+        }
+
         private static Vector3 Center(Triangle t)
         {
             return new Vector3[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();
