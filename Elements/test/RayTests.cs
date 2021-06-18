@@ -287,7 +287,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        private static void RayIntersectsPolygonWithTransformation()
+        private static void RayIntersectsGeometryWithTransformation()
         {
             var outer = Polygon.Rectangle(6, 6);
             var mass = new Mass(new Profile(outer), 2);
