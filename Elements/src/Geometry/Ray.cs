@@ -96,12 +96,7 @@ namespace Elements.Geometry
             var transformFromElement = new Transform(element.Transform);
             transformFromElement.Invert();
             var transformToElement = new Transform(element.Transform);
-            var transformMinusTranslation = new Transform(transformFromElement);
-
-            // This transform ignores position so it can be used to transform the ray direction vector
-            transformMinusTranslation.Move(transformMinusTranslation.Origin.Negate());
-
-            var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
+            var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformFromElement.OfVector(Direction));
             //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
             foreach (var solidOp in element.Representation.SolidOperations.Where(e => !e.IsVoid))
@@ -169,7 +164,7 @@ namespace Elements.Geometry
                 var transformToPolygon = new Transform(plane.Origin, plane.Normal);
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfVector(intersection);
+                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
                 IEnumerable<Line> curveList = boundaryPolygon.Segments();
                 if (voids != null)
                 {
@@ -201,7 +196,7 @@ namespace Elements.Geometry
                 var transformToPolygon = new Transform(plane.Origin, plane.Normal);
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfVector(intersection);
+                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
                 IEnumerable<Line> curveList = polygon.Segments();
                 curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 

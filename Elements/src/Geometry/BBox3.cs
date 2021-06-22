@@ -241,7 +241,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this bounding box have a valid set value? 
+        /// Does this bounding box have a valid set value?
         /// </summary>
         public bool IsValid()
         {
@@ -255,14 +255,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this bounding box have a dimension of 0 along any axis? 
+        /// Does this bounding box have a dimension of 0 along any axis?
         /// </summary>
         public bool IsDegenerate()
         {
             return
-                !Min.X.ApproximatelyEquals(Max.X) &&
-                !Min.Y.ApproximatelyEquals(Max.Y) &&
-                !Min.Z.ApproximatelyEquals(Max.Z);
+                Min.X.ApproximatelyEquals(Max.X) ||
+                Min.Y.ApproximatelyEquals(Max.Y) ||
+                Min.Z.ApproximatelyEquals(Max.Z);
         }
     }
 }
