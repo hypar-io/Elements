@@ -168,7 +168,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform a vector into the coordinate space defined by this transform ignoring the translation.
+        /// Transform a vector into the coordinate space defined by this transform.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
@@ -178,17 +178,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform a vector into the coordinate space defined by this transform.
+        /// Transform a vector into the coordinate space defined by this transform ignoring the translation.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, this.Origin);
             return new Vector3(
-                vector.X * m.XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X + this.Origin.X,
-                vector.X * m.XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y + this.Origin.Y,
-                vector.X * m.XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z + this.Origin.Z
+                vector.X * XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X,
+                vector.X * XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y,
+                vector.X * XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z
             );
         }
 
@@ -246,10 +245,7 @@ namespace Elements.Geometry
         /// <returns>A new plane transformed by this transform.</returns>
         public Plane OfPlane(Plane plane)
         {
-            // The normal vector must be transformed in a way
-            // that considers only orientation and not position
-            var tempXform = new Transform(Vector3.Origin, this.XAxis, this.ZAxis);
-            return new Plane(OfPoint(plane.Origin), tempXform.OfVector(plane.Normal));
+            return new Plane(OfPoint(plane.Origin), OfVector(plane.Normal));
         }
 
         /// <summary>
