@@ -1471,9 +1471,11 @@ namespace Elements.Geometry.Tests
             var random = new Random();
 
             var hex = Polygon.Ngon(6, 3);
-            var star = Polygon.Star(5, 2, 5);   //.TransformedPolygon(new Transform(new Vector3(0, 0, 1)));
-            this.Model.AddElement(new ModelCurve(star, random.NextMaterial()));
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            // this.Model.AddElement(new ModelCurve(star, random.NextMaterial()));
             var segs = hex.Segments();
+            var trimPolys = new List<Polygon>();
+
             for (var i = 0; i < segs.Count(); i++)
             {
                 var s = segs[i];
@@ -1484,15 +1486,15 @@ namespace Elements.Geometry.Tests
                     s.Start + new Vector3(0,0,2)
                 });
                 this.Model.AddElement(new Panel(p, BuiltInMaterials.Mass));
-                if (star.Intersects3d(p, out List<Line> result))
-                {
-                    foreach (var l in result)
-                    {
-                        this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
-                        this.Model.AddElement(new ModelCurve(new Circle(l.Start, 0.05).ToPolygon(), BuiltInMaterials.YAxis));
-                        this.Model.AddElement(new ModelCurve(new Circle(l.End, 0.07).ToPolygon(), BuiltInMaterials.XAxis));
-                    }
-                }
+                trimPolys.Add(p);
+            }
+
+            var trimSegs = star.TrimmedTo(trimPolys);
+            foreach (var l in trimSegs)
+            {
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.05).ToPolygon().TransformedPolygon(new Transform(l.Start)), BuiltInMaterials.YAxis));
+                this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.07).ToPolygon().TransformedPolygon(new Transform(l.End)), BuiltInMaterials.XAxis));
             }
             this.Model.AddElement(new ModelCurve(hex.Offset(-0.05)[0]));
         }

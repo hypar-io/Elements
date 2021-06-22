@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.2
+
+### Added
+- `Polyline.Split(Vector3 point)`
+- `Polygon.Split(Vector3 point)`
+
 ## 0.9.1
 
 ### Added

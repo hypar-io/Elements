@@ -239,14 +239,13 @@ namespace Elements.Geometry
         /// Intersect this polygon with the provided polygon in 3d.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
-        /// <param name="result">The lines resulting from the intersection
+        /// <param name="result">The points resulting from the intersection
         /// of the two polygons.</param>
-        /// <returns>A collection of lines.</returns>
-        internal bool Intersects3d(Polygon polygon, out List<Line> result)
+        /// <returns>A collection of point sorted along the polygon's plane.</returns>
+        internal bool Intersects3d(Polygon polygon, out List<Vector3> result)
         {
             var p = this.Plane();
-            result = new List<Line>();
-            var orderedResults = new List<Vector3>();
+            result = new List<Vector3>();
             var targetP = polygon.Plane();
             var d = this.Plane().Normal.Cross(targetP.Normal).Unitized();
 
@@ -258,7 +257,7 @@ namespace Elements.Geometry
                 {
                     if (this.Contains3D(r))
                     {
-                        orderedResults.Add(r);
+                        result.Add(r);
                     }
                 }
             }
@@ -271,23 +270,17 @@ namespace Elements.Geometry
                 {
                     if (polygon.Contains3D(r))
                     {
-                        orderedResults.Add(r);
+                        result.Add(r);
                     }
                 }
             }
 
-            if (orderedResults.Count > 0)
+            if (result.Count > 0)
             {
-                // Order the intersections along the direction.
-                orderedResults.Sort(new DotComparer(d));
-
-                for (var i = 0; i < orderedResults.Count - 1; i += 2)
-                {
-                    result.Add(new Line(orderedResults[i], orderedResults[i + 1]));
-                }
-
+                result.Sort(new DotComparer(d));
                 return true;
             }
+
             return false;
         }
 
@@ -366,6 +359,12 @@ namespace Elements.Geometry
             return Contains(groundSegments, groundLocation, out containment);
         }
 
+        /// <summary>
+        /// Does this polygon contain the specified point.
+        /// https://en.wikipedia.org/wiki/Point_in_polygon
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
         internal bool Contains3D(Vector3 point)
         {
             var p = this.Plane();
@@ -690,6 +689,48 @@ namespace Elements.Geometry
             var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { thisInXY }, polylines.Select(p => p.TransformedPolyline(inverse)));
             // Find closed regions in that graph
             return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
+        }
+
+        /// <summary>
+        /// Insert a point into the polygon if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="point">The point at which to split the polygon.</param>
+        /// <returns>The index of the new vertex.</returns>
+        public override int Split(Vector3 point)
+        {
+            return Split(point, true);
+        }
+
+        /// <summary>
+        /// Trim the polygon with a collection of polygons.
+        /// </summary>
+        /// <param name="polygons">A collection of trimming polygons.</param>
+        /// <returns>A new polygon trimmed by the specified polygons.</returns>
+        public Line[] TrimmedTo(IList<Polygon> polygons)
+        {
+            var finalVertices = new List<Vector3>();
+            var splitPoly = new Polygon(this.Vertices);
+            var extraSegments = new List<Line>();
+            foreach (var p in polygons)
+            {
+                if (this.Intersects3d(p, out List<Vector3> result))
+                {
+                    foreach (var split in result)
+                    {
+                        splitPoly.Split(split);
+                    }
+
+                    for (var j = 0; j < result.Count - 1; j += 2)
+                    {
+                        var l = new Line(result[j], result[j + 1]);
+                        extraSegments.Add(l);
+                    }
+                }
+            }
+
+
+            return splitPoly.Segments().Concat(extraSegments).ToArray();
         }
 
         /// <summary>

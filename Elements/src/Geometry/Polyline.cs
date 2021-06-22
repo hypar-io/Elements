@@ -773,6 +773,50 @@ namespace Elements.Geometry
 
             return result;
         }
+
+        /// <summary>
+        /// Insert a point into the polyline if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="point">The point at which to split the polyline.</param>
+        /// <returns>The index of the new vertex.</returns>
+        public virtual int Split(Vector3 point)
+        {
+            return Split(point);
+        }
+
+        protected int Split(Vector3 point, bool closed = false)
+        {
+            var splits = new List<Polyline>();
+            var splitIndex = -1;
+            var end = closed ? this.Vertices.Count : this.Vertices.Count - 1;
+            for (var i = 0; i < end; i++)
+            {
+                var a = this.Vertices[i];
+                var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                {
+                    splitIndex = i;
+                    break;
+                }
+            }
+
+            if (splitIndex != -1)
+            {
+                if (splitIndex > this.Vertices.Count - 1)
+                {
+                    this.Vertices.Add(point);
+                    return this.Vertices.Count - 1;
+                }
+                else
+                {
+                    this.Vertices.Insert(splitIndex + 1, point);
+                    return splitIndex + 1;
+                }
+            }
+
+            return -1;
+        }
     }
 
     /// <summary>
