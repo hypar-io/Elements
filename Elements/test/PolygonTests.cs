@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Elements.Tests;
 using Elements.Serialization.glTF;
 using System.IO;
+using System.Diagnostics;
 
 namespace Elements.Geometry.Tests
 {
@@ -1485,18 +1486,20 @@ namespace Elements.Geometry.Tests
                     s.End + new Vector3(0,0,2),
                     s.Start + new Vector3(0,0,2)
                 });
+
                 this.Model.AddElement(new Panel(p, BuiltInMaterials.Mass));
                 trimPolys.Add(p);
             }
 
+            var sw = new Stopwatch();
+            sw.Start();
             var trimSegs = star.TrimmedTo(trimPolys);
+            sw.Stop();
+            _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
             foreach (var l in trimSegs)
             {
-                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
-                this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.05).ToPolygon().TransformedPolygon(new Transform(l.Start)), BuiltInMaterials.YAxis));
-                this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.07).ToPolygon().TransformedPolygon(new Transform(l.End)), BuiltInMaterials.XAxis));
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
             }
-            this.Model.AddElement(new ModelCurve(hex.Offset(-0.05)[0]));
         }
 
         public void CollinearPointCanBeRemoved()

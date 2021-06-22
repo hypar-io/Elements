@@ -707,20 +707,39 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygons">A collection of trimming polygons.</param>
         /// <returns>A new polygon trimmed by the specified polygons.</returns>
-        public Line[] TrimmedTo(IList<Polygon> polygons)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
         {
             var finalVertices = new List<Vector3>();
             var splitPoly = new Polygon(this.Vertices);
             var extraSegments = new List<Line>();
+
+            // The split dictionary stores split locations
+            // and the planes associated with the polygons
+            // that created those splits. In the case of a split
+            // located directly at the edge of the polygon, 
+            // multiple planes will be stored.
+            var splitDict = new Dictionary<Vector3, List<Plane>>();
+
             foreach (var p in polygons)
             {
+                var plane = p.Plane();
                 if (this.Intersects3d(p, out List<Vector3> result))
                 {
+                    // Split the polygon with the intersection points.
                     foreach (var split in result)
                     {
-                        splitPoly.Split(split);
+                        var splitIndex = splitPoly.Split(split);
+                        if (!splitDict.ContainsKey(split))
+                        {
+                            splitDict.Add(split, new List<Plane> { plane });
+                        }
+                        else
+                        {
+                            splitDict[split].Add(plane);
+                        }
                     }
 
+                    // Add new segments which weave between the points.
                     for (var j = 0; j < result.Count - 1; j += 2)
                     {
                         var l = new Line(result[j], result[j + 1]);
@@ -729,8 +748,62 @@ namespace Elements.Geometry
                 }
             }
 
+            // Remove segments where one vertex falls 
+            // outside the associated split plane.
+            var segments = new List<Line>(splitPoly.Segments());
+            for (var i = segments.Count - 1; i >= 0; i--)
+            {
+                var a = segments[i].Start;
+                var b = segments[i].End;
+                if (splitDict.ContainsKey(a))
+                {
+                    if (splitDict[a].Any(p => b.DistanceTo(p) < 0))
+                    {
+                        segments.Remove(segments[i]);
+                    }
+                }
+                else if (splitDict.ContainsKey(b))
+                {
+                    if (splitDict[b].Any(p => a.DistanceTo(p) < 0))
+                    {
+                        segments.Remove(segments[i]);
+                    }
+                }
+            }
 
-            return splitPoly.Segments().Concat(extraSegments).ToArray();
+            // TODO: This is slow. We have to rebuild the half edge
+            // graph from line segments. This graph should be built
+            // during the splitting operations above. For our simple test
+            // of a star in a hexagon, this adds 10ms, and it will get 
+            // worse for polygons with more vertices.
+            var allSegments = segments.Concat(extraSegments).ToArray();
+            var points = allSegments.SelectMany(s => new[] { s.Start, s.End }).Distinct().ToList();
+            var edges = new List<(int from, int to)>[points.Count];
+
+            foreach (var s in allSegments)
+            {
+                var a = points.IndexOf(s.Start);
+                var b = points.IndexOf(s.End);
+                if (edges[a] == null)
+                {
+                    edges[a] = new List<(int from, int to)>();
+                }
+                edges[a].Add((a, b));
+
+                if (edges[b] == null)
+                {
+                    edges[b] = new List<(int from, int to)>();
+                }
+                edges[b].Add((b, a));
+            }
+
+            var heg = new HalfEdgeGraph2d()
+            {
+                Vertices = points,
+                EdgesPerVertex = edges.ToList()
+            };
+
+            return heg.Polygonize();
         }
 
         /// <summary>
