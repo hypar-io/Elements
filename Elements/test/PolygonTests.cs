@@ -13,6 +13,8 @@ namespace Elements.Geometry.Tests
 {
     public class PolygonTests : ModelTest
     {
+        private const string _bigPoly = "{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-12.330319085473015,\"Y\":-12.608248581489981,\"Z\":0.0},{\"X\":19.35916170781505,\"Y\":-15.672958886892182,\"Z\":0.0},{\"X\":21.295342177562976,\"Y\":4.347384863139645,\"Z\":0.0},{\"X\":6.363400191236501,\"Y\":4.347384863139645,\"Z\":0.0},{\"X\":6.363400191236501,\"Y\":19.134320178583096,\"Z\":0.0},{\"X\":22.88039942030141,\"Y\":21.638839095895968,\"Z\":0.0},{\"X\":20.67861826061697,\"Y\":43.07898042004283,\"Z\":0.0},{\"X\":-6.526208021474245,\"Y\":35.050326680125984,\"Z\":0.0},{\"X\":-31.648970883272245,\"Y\":15.181167747161043,\"Z\":0.0}]}";
+        private const string _splitters = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":1.283510965111264,\"Y\":-16.672391732323188,\"Z\":-5.0},{\"X\":23.642056747347993,\"Y\":-2.1405882651190176,\"Z\":-5.0},{\"X\":23.642056747347993,\"Y\":-2.1405882651190176,\"Z\":5.0},{\"X\":1.283510965111264,\"Y\":-16.672391732323188,\"Z\":5.0}]}]";
         private readonly ITestOutputHelper _output;
 
         public PolygonTests(ITestOutputHelper output)
@@ -1429,6 +1431,35 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void CorrectWindingForTrims()
+        {
+            this.Name = nameof(CorrectWindingForTrims);
+
+            var r = new Random();
+
+            var bigPoly = JsonConvert.DeserializeObject<Polygon>(_bigPoly);
+            var splitters = JsonConvert.DeserializeObject<List<Polygon>>(_splitters);
+
+            foreach (var splitter in splitters)
+            {
+                this.Model.AddElement(new Panel(splitter, BuiltInMaterials.Mass));
+                this.Model.AddElement(new ModelCurve(new Line(splitter.Centroid(), splitter.Centroid() + splitter.Normal() * 1)));
+            }
+
+            var result1 = bigPoly.TrimmedTo(splitters);
+            foreach (var p in result1)
+            {
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+
+            var result2 = bigPoly.TrimmedTo(splitters.Select(s => s.Reversed()).ToList());
+            foreach (var p in result2)
+            {
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+        }
+
+        [Fact]
         public void PlaneIntersectsThroughEdges()
         {
             var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
@@ -1497,8 +1528,8 @@ namespace Elements.Geometry.Tests
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
 
-            Assert.Equal(1, trim1.Count());
-            Assert.Equal(5, trim2.Count());
+            Assert.Equal(5, trim1.Count());
+            Assert.Equal(1, trim2.Count());
 
             foreach (var l in trim1)
             {
@@ -1528,5 +1559,7 @@ namespace Elements.Geometry.Tests
             polygon = polygon.CollinearPointsRemoved();
             Assert.True(polygon.Vertices.Count == 4);
         }
+
+
     }
 }

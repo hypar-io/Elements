@@ -236,6 +236,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute the plane of the Polygon.
+        /// </summary>
+        /// <returns>A Plane.</returns>
+        public override Plane Plane()
+        {
+            return new Plane(this.Vertices[0], this.Normal());
+        }
+
+        /// <summary>
         /// Intersect this polygon with the provided polygon in 3d.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
@@ -247,7 +256,7 @@ namespace Elements.Geometry
             var p = this.Plane();
             result = new List<Vector3>();
             var targetP = polygon.Plane();
-            var d = this.Plane().Normal.Cross(targetP.Normal).Unitized();
+            var d = this.Normal().Cross(targetP.Normal).Unitized();
 
             // Intersect the polygon against this polygon's plane.
             // Keep the points that lie within the polygon.
@@ -314,7 +323,7 @@ namespace Elements.Geometry
         public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true)
         {
             results = new List<Vector3>();
-            var d = this.Plane().Normal.Cross(plane.Normal).Unitized();
+            var d = this.Normal().Cross(plane.Normal).Unitized();
 
             foreach (var s in this.Segments())
             {
@@ -720,9 +729,12 @@ namespace Elements.Geometry
             // multiple planes will be stored.
             var splitDict = new Dictionary<Vector3, List<Plane>>();
 
+            var trimPlanes = new List<Plane>();
             foreach (var p in polygons)
             {
                 var plane = p.Plane();
+                trimPlanes.Add(plane);
+
                 if (this.Intersects3d(p, out List<Vector3> result))
                 {
                     // Split the polygon with the intersection points.
@@ -796,6 +808,32 @@ namespace Elements.Geometry
                         {
                             continue;
                         }
+                    }
+                }
+                else
+                {
+                    // Segments that are not intersected by any of the planes
+                    // but are "behind" all the planes, should be discarded.
+                    var discard = 0;
+                    foreach (var t in trimPlanes)
+                    {
+                        var ad = a.DistanceTo(t);
+                        var bd = b.DistanceTo(t);
+
+                        if (ad.ApproximatelyEquals(0.0) && bd.ApproximatelyEquals(0.0))
+                        {
+                            discard = 0;
+                            break;
+                        }
+
+                        if (ad < -Vector3.EPSILON || bd < -Vector3.EPSILON)
+                        {
+                            discard++;
+                        }
+                    }
+                    if (discard > 0)
+                    {
+                        continue;
                     }
                 }
 
@@ -1547,6 +1585,7 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+
         /// <summary>
         /// Get the normal of each vertex on the polygon.
         /// </summary>

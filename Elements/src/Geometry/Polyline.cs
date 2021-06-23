@@ -310,7 +310,7 @@ namespace Elements.Geometry
         /// Compute the Plane defined by the first three non-collinear vertices of the Polygon.
         /// </summary>
         /// <returns>A Plane.</returns>
-        public Plane Plane()
+        public virtual Plane Plane()
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
