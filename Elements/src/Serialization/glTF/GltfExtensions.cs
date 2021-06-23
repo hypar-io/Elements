@@ -906,6 +906,7 @@ namespace Elements.Serialization.glTF
                                                                 images,
                                                                 samplers,
                                                                 true,
+                                                                e.Id,
                                                                 out var parentNode
                                                                 );
 
@@ -990,7 +991,7 @@ namespace Elements.Serialization.glTF
                     if (nodeElementMap.TryGetValue(i.BaseDefinition.Id, out var nodeToCopy))
                     {
                         transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform);
+                        NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform, i.Id);
                     }
                     else
                     {

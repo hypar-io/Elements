@@ -70,27 +70,39 @@ namespace Elements.Serialization.glTF
         internal static void AddInstanceAsCopyOfNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             ProtoNode nodeToCopy,
-                                            Transform transform)
+                                            Transform transform,
+                                            System.Guid instanceElementId)
         {
+            // Two new nodes are created: a top-level node, which has the
+            // element's Transform, and one just below that, which handles
+            // flipping the orientation of the glb to have Z up. That node has
+            // the node to copy as its only child. 
+            // We use the node to copy exactly as is, with an unmodified
+            // transform.
+            // We need the outermost node to be "purely" the element's
+            // transform, so that the transform can be modified in explore at
+            // runtime (e.g. by a transform override) and have the expected effect.
+            float[] elementTransform = TransformToMatrix(transform);
+            var newNode = new glTFLoader.Schema.Node();
+            newNode.Name = $"{instanceElementId}";
+            newNode.Matrix = elementTransform;
+            nodes.Add(newNode);
+            newNode.Children = new[] { nodes.Count };
+
             var rootTransform = new Transform();
             // glb has Y up. transform it to have Z up so we
             // can create instances of it in a Z up world. It will get switched
             // back to Y up further up in the node hierarchy. 
             rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
-            rootTransform.Concatenate(transform);
-            // A new node is created that contains the node to copy as its only child.
-            // We use the node to copy exactly as is, with an unmodified transform.
-            float[] matrix = TransformToMatrix(rootTransform);
-            var newNode = new glTFLoader.Schema.Node();
-            newNode.Matrix = matrix;
-            nodes.Add(newNode);
-            newNode.Children = new[] { nodes.Count };
+            float[] glbOrientationTransform = TransformToMatrix(rootTransform);
+            var elementOrientationNode = new glTFLoader.Schema.Node();
+            elementOrientationNode.Matrix = glbOrientationTransform;
+            nodes.Add(elementOrientationNode);
+            elementOrientationNode.Children = new[] { nodes.Count };
 
-            nodes[0].Children = (nodes[0].Children ?? Array.Empty<int>()).Concat(new[] { nodes.Count - 1 }).ToArray();
+            nodes[0].Children = (nodes[0].Children ?? Array.Empty<int>()).Concat(new[] { nodes.Count - 2 }).ToArray();
 
-            var nodeIndexOffset = nodes.Count;
             RecursivelyCopyNode(nodes, nodeToCopy);
-
         }
 
         private static int RecursivelyCopyNode(List<Node> nodes, ProtoNode nodeToCopy)
