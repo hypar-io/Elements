@@ -777,7 +777,7 @@ namespace Elements.Geometry
                         if (splitDict[a].Any(p =>
                         {
                             var d = b.DistanceTo(p);
-                            return d < 0 && !d.ApproximatelyEquals(0);
+                            return d < 0;
                         }))
                         {
                             continue;
@@ -791,7 +791,7 @@ namespace Elements.Geometry
                         if (splitDict[b].Any(p =>
                         {
                             var d = a.DistanceTo(p);
-                            return d < 0 && !d.ApproximatelyEquals(0);
+                            return d < 0;
                         }))
                         {
                             continue;
@@ -800,7 +800,6 @@ namespace Elements.Geometry
                 }
 
                 edges[ai].Add((ai, bi));
-                edges[bi].Add((bi, ai));
             }
 
             var heg = new HalfEdgeGraph2d()

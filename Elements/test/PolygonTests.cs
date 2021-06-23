@@ -1503,6 +1503,9 @@ namespace Elements.Geometry.Tests
             foreach (var l in trim2)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+                // this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.1), BuiltInMaterials.YAxis, new Transform(l.Start)));
+                // this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.15), BuiltInMaterials.XAxis, new Transform(l.End)));
             }
         }
 
