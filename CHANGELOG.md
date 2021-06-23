@@ -5,6 +5,8 @@
 ### Added
 - `Polyline.Split(Vector3 point)`
 - `Polygon.Split(Vector3 point)`
+- `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Polygon.Contains3D(Vector3 point)`
 
 ## 0.9.1
 

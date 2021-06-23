@@ -1496,6 +1496,10 @@ namespace Elements.Geometry.Tests
             var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
+
+            Assert.Equal(1, trim1.Count);
+            Assert.Equal(5, trim2.Count);
+
             foreach (var l in trim1)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
