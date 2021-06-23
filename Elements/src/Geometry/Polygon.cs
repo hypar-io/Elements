@@ -748,59 +748,65 @@ namespace Elements.Geometry
                 }
             }
 
-            // Remove segments where one vertex falls 
-            // outside the associated split plane.
-            var segments = new List<Line>(splitPoly.Segments());
-            for (var i = segments.Count - 1; i >= 0; i--)
+            var allSegments = splitPoly.Segments().ToList().Concat(extraSegments).ToArray();
+
+            var points = allSegments.SelectMany(s => new[] { s.Start, s.End }).Distinct().ToList();
+            var edges = new List<List<(int from, int to)>>();
+            for (var i = 0; i < points.Count; i++)
             {
-                var a = segments[i].Start;
-                var b = segments[i].End;
+                edges.Add(new List<(int from, int to)>());
+            }
+
+            // Where the segments are on the outside of the plane
+            // construct a half edge segment, otherwise skip constructing
+            // the segment. This will result in some vertex collections 
+            // that have zero edges.
+            foreach (var s in allSegments)
+            {
+                var a = s.Start;
+                var b = s.End;
+                var ai = points.IndexOf(s.Start);
+                var bi = points.IndexOf(s.End);
+
                 if (splitDict.ContainsKey(a))
                 {
-                    if (splitDict[a].Any(p => b.DistanceTo(p) < 0))
+                    // The split dictionary contains both a and b
+                    // it's because they're in the same plane.
+                    if (!splitDict.ContainsKey(b))
                     {
-                        segments.Remove(segments[i]);
+                        if (splitDict[a].Any(p =>
+                        {
+                            var d = b.DistanceTo(p);
+                            return d < 0 && !d.ApproximatelyEquals(0);
+                        }))
+                        {
+                            continue;
+                        }
                     }
                 }
                 else if (splitDict.ContainsKey(b))
                 {
-                    if (splitDict[b].Any(p => a.DistanceTo(p) < 0))
+                    if (!splitDict.ContainsKey(a))
                     {
-                        segments.Remove(segments[i]);
+                        if (splitDict[b].Any(p =>
+                        {
+                            var d = a.DistanceTo(p);
+                            return d < 0 && !d.ApproximatelyEquals(0);
+                        }))
+                        {
+                            continue;
+                        }
                     }
                 }
-            }
 
-            // TODO: This is slow. We have to rebuild the half edge
-            // graph from line segments. This graph should be built
-            // during the splitting operations above. For our simple test
-            // of a star in a hexagon, this adds 10ms, and it will get 
-            // worse for polygons with more vertices.
-            var allSegments = segments.Concat(extraSegments).ToArray();
-            var points = allSegments.SelectMany(s => new[] { s.Start, s.End }).Distinct().ToList();
-            var edges = new List<(int from, int to)>[points.Count];
-
-            foreach (var s in allSegments)
-            {
-                var a = points.IndexOf(s.Start);
-                var b = points.IndexOf(s.End);
-                if (edges[a] == null)
-                {
-                    edges[a] = new List<(int from, int to)>();
-                }
-                edges[a].Add((a, b));
-
-                if (edges[b] == null)
-                {
-                    edges[b] = new List<(int from, int to)>();
-                }
-                edges[b].Add((b, a));
+                edges[ai].Add((ai, bi));
+                edges[bi].Add((bi, ai));
             }
 
             var heg = new HalfEdgeGraph2d()
             {
                 Vertices = points,
-                EdgesPerVertex = edges.ToList()
+                EdgesPerVertex = edges
             };
 
             return heg.Polygonize();

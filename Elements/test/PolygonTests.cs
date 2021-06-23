@@ -1473,7 +1473,6 @@ namespace Elements.Geometry.Tests
 
             var hex = Polygon.Ngon(6, 3);
             var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            // this.Model.AddElement(new ModelCurve(star, random.NextMaterial()));
             var segs = hex.Segments();
             var trimPolys = new List<Polygon>();
 
@@ -1493,10 +1492,15 @@ namespace Elements.Geometry.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var trimSegs = star.TrimmedTo(trimPolys);
+            var trim1 = star.TrimmedTo(trimPolys);
+            var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
-            foreach (var l in trimSegs)
+            foreach (var l in trim1)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+            }
+            foreach (var l in trim2)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
             }
