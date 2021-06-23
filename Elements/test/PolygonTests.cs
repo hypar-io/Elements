@@ -1466,9 +1466,9 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void PolygonIntersectsPolygon()
+        public void PolygonIsTrimmedByPolygons()
         {
-            this.Name = nameof(PolygonIntersectsPolygon);
+            this.Name = nameof(PolygonIsTrimmedByPolygons);
             var random = new Random();
 
             var hex = Polygon.Ngon(6, 3);
