@@ -242,7 +242,7 @@ namespace Elements.Geometry
         /// <param name="result">The points resulting from the intersection
         /// of the two polygons.</param>
         /// <returns>A collection of point sorted along the polygon's plane.</returns>
-        internal bool Intersects3d(Polygon polygon, out List<Vector3> result)
+        private bool Intersects3d(Polygon polygon, out List<Vector3> result)
         {
             var p = this.Plane();
             result = new List<Vector3>();
@@ -365,7 +365,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point)
+        private bool Contains3D(Vector3 point)
         {
             var p = this.Plane();
             var t = new Transform(point, p.Normal);
