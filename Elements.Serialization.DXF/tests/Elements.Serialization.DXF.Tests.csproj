@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Elements.DXF.csproj" />
+    <ProjectReference Include="..\src\Elements.Serialization.DXF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

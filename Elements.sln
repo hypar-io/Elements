@@ -25,11 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTypeGenerator", "CoreTy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elements.Components", "Elements.Components\src\Elements.Components.csproj", "{3D0B0DCE-9B5B-4565-B46D-EEA81A8F1BAE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elements.DXF", "Elements.DXF", "{66613479-D643-47E3-B2AD-F6F0BA3AD4A0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elements.Serialization.DXF", "Elements.Serialization.DXF", "{66613479-D643-47E3-B2AD-F6F0BA3AD4A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elements.DXF", "Elements.DXF\src\Elements.DXF.csproj", "{175AF18D-3A3F-4142-9E64-F22AC55C94C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elements.Serialization.DXF", "Elements.Serialization.DXF\src\Elements.Serialization.DXF.csproj", "{175AF18D-3A3F-4142-9E64-F22AC55C94C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elements.DXF.Tests", "Elements.DXF\tests\Elements.DXF.Tests.csproj", "{BB09BB69-C3F0-4F18-945E-4D2FD5489E56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elements.Serialization.DXF.Tests", "Elements.Serialization.DXF\tests\Elements.Serialization.DXF.Tests.csproj", "{BB09BB69-C3F0-4F18-945E-4D2FD5489E56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
