@@ -5,7 +5,6 @@ using Xunit;
 using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
-using Elements.Serialization.glTF;
 using System.IO;
 using System.Diagnostics;
 
@@ -1494,6 +1493,17 @@ namespace Elements.Geometry.Tests
             {
                 Assert.True(results[i].X > results[i - 1].X);
             }
+        }
+
+        [Fact]
+        public void ThrowsExceptionForCoplanarTrimPolygons()
+        {
+            var hex = Polygon.Ngon(6, 3);
+            var star = Polygon.Star(5, 2, 5);
+            Assert.Throws<Exception>(() =>
+            {
+                star.TrimmedTo(new[] { hex });
+            });
         }
 
         [Fact]

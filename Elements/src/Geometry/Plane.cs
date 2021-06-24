@@ -6,7 +6,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A cartesian plane.
     /// </summary>
-    public partial class Plane: IEquatable<Plane>
+    public partial class Plane : IEquatable<Plane>
     {
         /// <summary>
         /// Construct a plane by three points.
@@ -19,8 +19,8 @@ namespace Elements.Geometry
         public Plane(Vector3 a, Vector3 b, Vector3 c)
         {
             this.Origin = a;
-            var ab = (b-a).Unitized();
-            var bc = (c-a).Unitized();
+            var ab = (b - a).Unitized();
+            var bc = (c - a).Unitized();
             this.Normal = ab.Cross(bc).Unitized();
         }
 
@@ -34,16 +34,16 @@ namespace Elements.Geometry
         /// <exception>Thrown when coincident points are provided.</exception>
         public Plane(Vector3 origin, IList<Vector3> points)
         {
-            if(points.Count < 3)
+            if (points.Count < 3)
             {
                 throw new ArgumentException("The plane could not be created. You must supply a minimum of 3 points.");
             }
-            if(points[0].Equals(points[1]) || points[0].Equals(points) || points[1].Equals(points[2]))
+            if (points[0].Equals(points[1]) || points[0].Equals(points) || points[1].Equals(points[2]))
             {
                 throw new ArgumentException("The plane could not be created. The points must not be coincident.");
             }
             this.Origin = origin;
-            this.Normal = (points[0]-points[1]).Unitized().Cross((points[2] - points[0]).Unitized());
+            this.Normal = (points[0] - points[1]).Unitized().Cross((points[2] - points[0]).Unitized());
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Elements.Geometry
             var fromPointToOrigin = Origin - point;
             var projectionVector = fromPointToOrigin.Dot(Normal) * Normal;
             return point + projectionVector;
-            
+
         }
 
         /// <summary>
@@ -79,11 +79,22 @@ namespace Elements.Geometry
         /// <returns>Returns true if the two planes are equal, otherwise false.</returns>
         public bool Equals(Plane other)
         {
-            if(other == null)
+            if (other == null)
             {
                 return false;
             }
             return this.Normal.Equals(other.Normal) && this.Origin.Equals(other.Origin);
+        }
+
+        /// <summary>
+        /// Is this plane coplanar with the provided plane?
+        /// </summary>
+        /// <param name="plane">The plane to test.</param>
+        /// <returns>True if the plane is coplanar, otherwise false.</returns>
+        public bool IsCoplanar(Plane plane)
+        {
+            var dot = Math.Abs(this.Normal.Dot(plane.Normal));
+            return dot.ApproximatelyEquals(1) && this.Origin.DistanceTo(plane).ApproximatelyEquals(0);
         }
     }
 }

@@ -250,12 +250,18 @@ namespace Elements.Geometry
         /// <param name="polygon">The target polygon.</param>
         /// <param name="result">The points resulting from the intersection
         /// of the two polygons.</param>
-        /// <returns>A collection of point sorted along the polygon's plane.</returns>
+        /// <returns>A collection of points sorted along the polygon's plane.</returns>
         private bool Intersects3d(Polygon polygon, out List<Vector3> result)
         {
             var p = this.Plane();
             result = new List<Vector3>();
             var targetP = polygon.Plane();
+
+            if (p.IsCoplanar(targetP))
+            {
+                return false;
+            }
+
             var d = this.Normal().Cross(targetP.Normal).Unitized();
 
             // Intersect the polygon against this polygon's plane.
@@ -712,10 +718,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim the polygon with a collection of polygons.
+        /// Trim the polygon with a collection of 3d polygons.
         /// </summary>
         /// <param name="polygons">A collection of trimming polygons.</param>
         /// <returns>A new polygon trimmed by the specified polygons.</returns>
+        /// <exception cref="System.Exception">Thrown when one of the trimming planes is coplanar with the polygon's plane.</exception>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons)
         {
             var finalVertices = new List<Vector3>();
@@ -729,10 +736,18 @@ namespace Elements.Geometry
             // multiple planes will be stored.
             var splitDict = new Dictionary<Vector3, List<Plane>>();
 
+            var localPlane = this.Plane();
+
             var trimPlanes = new List<Plane>();
             foreach (var p in polygons)
             {
                 var plane = p.Plane();
+
+                if (localPlane.IsCoplanar(plane))
+                {
+                    throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
+                }
+
                 trimPlanes.Add(plane);
 
                 if (this.Intersects3d(p, out List<Vector3> result))
