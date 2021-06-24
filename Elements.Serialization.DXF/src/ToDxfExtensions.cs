@@ -3,7 +3,7 @@ using System.Linq;
 using Elements.Geometry;
 using dxf = netDxf.Entities;
 
-namespace Elements.DXF.Extensions
+namespace Elements.Serialization.DXF.Extensions
 {
     /// <summary>
     /// Extension methods for converting Element geometric primitives into DXF Entities and objects.

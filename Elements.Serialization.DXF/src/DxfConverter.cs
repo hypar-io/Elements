@@ -3,7 +3,7 @@ using netDxf.Entities;
 using Elements;
 using Elements.Geometry;
 
-namespace Elements.DXF
+namespace Elements.Serialization.DXF
 {
     /// <summary>
     /// The class defining a drawing range used during rendering
