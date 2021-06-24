@@ -1,7 +1,7 @@
-using Elements.DXF.Extensions;
+using Elements.Serialization.DXF.Extensions;
 using netDxf.Entities;
 
-namespace Elements.DXF
+namespace Elements.Serialization.DXF
 {
     public class FloorToDXF : IRenderDxf
     {

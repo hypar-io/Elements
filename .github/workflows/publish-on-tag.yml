@@ -23,5 +23,6 @@ jobs:
         run: |
           dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.DXF.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Components.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}

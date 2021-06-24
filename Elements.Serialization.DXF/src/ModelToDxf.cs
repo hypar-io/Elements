@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Elements;
 
-namespace Elements.DXF
+namespace Elements.Serialization.DXF
 {
     /// <summary>
     /// This class is capable of rendering a model to DXF using an internal list of dxfCreators
