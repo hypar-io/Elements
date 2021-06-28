@@ -1493,7 +1493,7 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(2, trims.Count());
+            Assert.Equal(1, trims.Count());
 
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
             Assert.Equal(1, trims1.Count());
@@ -1684,25 +1684,23 @@ namespace Elements.Geometry.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var trim1 = star.TrimmedTo(trimPolys, new[] { star.Centroid() });
-            // var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
+            var trim1 = star.TrimmedTo(trimPolys);
+            var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
 
-            // Assert.Equal(5, trim1.Count());
-            // Assert.Equal(1, trim2.Count());
+            Assert.Equal(5, trim1.Count());
+            Assert.Equal(1, trim2.Count());
 
             foreach (var l in trim1)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
             }
-            // foreach (var l in trim2)
-            // {
-            //     this.Model.AddElement(new Panel(l, random.NextMaterial()));
-            //     this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
-            //     // this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.1), BuiltInMaterials.YAxis, new Transform(l.Start)));
-            //     // this.Model.AddElement(new ModelCurve(new Circle(Vector3.Origin, 0.15), BuiltInMaterials.XAxis, new Transform(l.End)));
-            // }
+            foreach (var l in trim2)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
         }
 
         [Fact]
@@ -1718,7 +1716,7 @@ namespace Elements.Geometry.Tests
         {
             var rect = Polygon.Rectangle(5, 5);
             rect.Split(new[] { new Vector3(2.5, 2.5) });
-            Assert.Equal(5, rect.Vertices.Count());
+            Assert.Equal(4, rect.Vertices.Count());
         }
 
         [Fact]

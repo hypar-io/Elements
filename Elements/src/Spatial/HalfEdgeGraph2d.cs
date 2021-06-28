@@ -14,7 +14,7 @@ namespace Elements.Spatial
         internal HalfEdgeGraph2d()
         {
             Vertices = new List<Vector3>();
-            EdgesPerVertex = new List<List<(int from, int to)>>();
+            EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Elements.Spatial
         /// <summary>
         /// The index pairs, grouped by starting vertex, representing unique half edges.
         /// </summary>
-        public List<List<(int from, int to)>> EdgesPerVertex { get; set; }
+        public List<List<(int from, int to, int? tag)>> EdgesPerVertex { get; set; }
 
         /// <summary>
         /// Construct a 2D Half Edge Graph from a polygon and an intersecting polyline.
@@ -113,19 +113,19 @@ namespace Elements.Spatial
                         {
                             fromIndex = vertices.Count;
                             vertices.Add(from);
-                            edgesPerVertex.Add(new List<(int from, int to)>());
+                            edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                         }
                         var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
                         if (toIndex == -1)
                         {
                             toIndex = vertices.Count;
                             vertices.Add(to);
-                            edgesPerVertex.Add(new List<(int from, int to)>());
+                            edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                         }
                         // only add one set of polygon halfEdges, so we don't wind up with an outer loop.
-                        if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)))
+                        if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex, null)))
                         {
-                            edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
+                            edgesPerVertex[fromIndex].Add((fromIndex, toIndex, null));
                         }
                     }
                 }
@@ -144,21 +144,21 @@ namespace Elements.Spatial
                     {
                         fromIndex = vertices.Count;
                         vertices.Add(from);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
+                        edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
                     var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
                     if (toIndex == -1)
                     {
                         toIndex = vertices.Count;
                         vertices.Add(to);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
+                        edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
                     // add both half edges for polyline segments. If we have a splitter 
                     // lying exactly on a polygon edge, don't add it. 
-                    if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)) && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex)))
+                    if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex, null)) && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex, null)))
                     {
-                        edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
-                        edgesPerVertex[toIndex].Add((toIndex, fromIndex));
+                        edgesPerVertex[fromIndex].Add((fromIndex, toIndex, null));
+                        edgesPerVertex[toIndex].Add((toIndex, fromIndex, null));
                     }
                 }
             }
@@ -169,9 +169,9 @@ namespace Elements.Spatial
         /// <summary>
         /// Calculate the closed polygons in this graph.
         /// </summary>
-        public List<Polygon> Polygonize()
+        public List<Polygon> Polygonize(Func<int?, bool> predicate = null)
         {
-            var edgesPerVertex = new List<List<(int from, int to)>>(this.EdgesPerVertex);
+            var edgesPerVertex = new List<List<(int from, int to, int? tag)>>(this.EdgesPerVertex);
             var vertices = this.Vertices;
             var newPolygons = new List<Polygon>();
             // construct polygons from half edge graph.
@@ -181,7 +181,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = new List<(int from, int to)>();
+                var currentEdgeList = new List<(int from, int to, int? tag)>();
                 // pick a starting point
                 var startingSet = edgesPerVertex.First(l => l.Count > 0);
                 var currentSegment = startingSet[0];
@@ -216,7 +216,7 @@ namespace Elements.Spatial
 
                 // remove duplicate edges in the same new polygon, 
                 // which will occur if we have a polyline that doesn't cross all the way through.
-                var validEdges = new List<(int from, int to)>(currentEdgeList);
+                var validEdges = new List<(int from, int to, int? tag)>(currentEdgeList);
                 int i = 0;
                 // guaranteed to terminate, since at every step we either increment i by one, or make validEdges.Count smaller by 2 (and decrement i by 1).
                 // validEdges.Count-i always gets smaller, every step, until 0. 
@@ -246,6 +246,14 @@ namespace Elements.Spatial
                         i++;
                     }
 
+                }
+
+                if (predicate != null)
+                {
+                    if (validEdges.Any(e => predicate(e.tag)))
+                    {
+                        continue;
+                    }
                 }
 
                 foreach (var edge in validEdges)

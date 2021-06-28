@@ -180,7 +180,7 @@ namespace Elements.Geometry
                 }
 
                 var graph = new HalfEdgeGraph2d();
-                graph.EdgesPerVertex = new List<List<(int from, int to)>>();
+                graph.EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
 
                 if (newVertices.Count > 0)
                 {
@@ -189,7 +189,7 @@ namespace Elements.Geometry
                     // Initialize the graph.
                     foreach (var v in newVertices)
                     {
-                        graph.EdgesPerVertex.Add(new List<(int from, int to)>());
+                        graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
 
                     for (var i = 0; i < newVertices.Count - 1; i++)
@@ -202,7 +202,7 @@ namespace Elements.Geometry
                         }
 
                         // Only add one edge around the outside of the shape.
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
 
                     for (var i = 0; i < intersections.Count - 1; i += 2)
@@ -214,7 +214,7 @@ namespace Elements.Geometry
                         var a = ClosestIndexOf(newVertices, intersections[i], i);
                         var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
 
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
 
                     if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
@@ -222,7 +222,7 @@ namespace Elements.Geometry
                         // Close the graph
                         var a = newVertices.Count - 1;
                         var b = 0;
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
                     return graph.Polygonize();
                 }
@@ -734,11 +734,11 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons, IList<Vector3> keep = null)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
-            var edges = new List<List<(int from, int to)>>();
+            var edges = new List<List<(int from, int to, int? tag)>>();
 
             var splitPoly = new Polygon(this.Vertices);
             var results = new List<List<Vector3>>();
@@ -764,8 +764,8 @@ namespace Elements.Geometry
                 var a = i;
                 var b = i == splitPoly.Vertices.Count - 1 ? 0 : i + 1;
                 graphVertices.Add(splitPoly.Vertices[i]);
-                edges.Add(new List<(int from, int to)>());
-                edges[i].Add((a, b));
+                edges.Add(new List<(int from, int to, int? tag)>());
+                edges[i].Add((a, b, 0));
             }
 
             foreach (var result in results)
@@ -783,17 +783,17 @@ namespace Elements.Geometry
                         // An intersection that does not happen on the original poly
                         graphVertices.Add(result[j]);
                         a = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to)>());
+                        edges.Add(new List<(int from, int to, int? tag)>());
                     }
                     var b = graphVertices.IndexOf(result[j + 1]);
                     if (b == -1)
                     {
                         graphVertices.Add(result[j + 1]);
                         b = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to)>());
+                        edges.Add(new List<(int from, int to, int? tag)>());
                     }
-                    edges[a].Add((a, b));
-                    edges[b].Add((b, a));
+                    edges[a].Add((a, b, 0));
+                    edges[b].Add((b, a, 1));
                 }
             }
 
@@ -803,19 +803,10 @@ namespace Elements.Geometry
                 EdgesPerVertex = edges
             };
 
-            var polys = heg.Polygonize();
-
-            if (keep != null)
+            var polys = heg.Polygonize((tag) =>
             {
-                for (var i = polys.Count - 1; i >= 0; i--)
-                {
-                    if (keep.Any(p => polys[i].Contains3D(p, true)))
-                    {
-                        continue;
-                    }
-                    polys.RemoveAt(i);
-                }
-            }
+                return tag.HasValue && tag == 1;
+            });
 
             return polys;
         }
