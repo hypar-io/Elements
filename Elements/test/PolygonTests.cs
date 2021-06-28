@@ -1648,6 +1648,16 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolygonContains3D()
+        {
+            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            Assert.True(rect.Contains3D(rect.Centroid(), true));
+
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            Assert.True(star.Contains3D(star.Centroid(), true));
+        }
+
+        [Fact]
         public void PolygonIsTrimmedByPolygons()
         {
             this.Name = nameof(PolygonIsTrimmedByPolygons);
@@ -1674,7 +1684,7 @@ namespace Elements.Geometry.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var trim1 = star.TrimmedTo(trimPolys);
+            var trim1 = star.TrimmedTo(trimPolys, new[] { star.Centroid() });
             // var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");

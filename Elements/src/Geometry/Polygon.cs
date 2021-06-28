@@ -379,10 +379,17 @@ namespace Elements.Geometry
         /// https://en.wikipedia.org/wiki/Point_in_polygon
         /// </summary>
         /// <param name="point">The point to test.</param>
+        /// <param name="unique">Should intersections be unique?</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        private bool Contains3D(Vector3 point)
+        internal bool Contains3D(Vector3 point, bool unique = false)
         {
             var p = this.Plane();
+
+            if (!point.DistanceTo(p).ApproximatelyEquals(0))
+            {
+                return false;
+            }
+
             var t = new Transform(point, p.Normal);
 
             // Intersect a randomly directed ray in the plane
@@ -397,17 +404,19 @@ namespace Elements.Geometry
                     s.End.IsAlmostEqualTo(point) ||
                     ray.Intersects(s, out result))
                 {
-                    // There is a possibility that the ray
-                    // intersects at a vertex, in which case
-                    // there will be one addition for each
-                    // segment containing that vertex. This is
-                    // acceptable as intersects=2 will return false.
-                    // If you want that not to be treated as an intersection
-                    // then you can check here whether the list already
-                    // contains the intersection and skip addint it
-                    // a second time.
-                    xsects.Add(result);
-                    intersects++;
+                    if (unique)
+                    {
+                        if (!xsects.Contains(result))
+                        {
+                            xsects.Add(result);
+                            intersects++;
+                        }
+                    }
+                    else
+                    {
+                        xsects.Add(result);
+                        intersects++;
+                    }
                 }
             }
             return intersects % 2 != 0;
@@ -725,7 +734,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, IList<Vector3> keep = null)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
@@ -795,13 +804,19 @@ namespace Elements.Geometry
             };
 
             var polys = heg.Polygonize();
-            // for (var i = polys.Count - 1; i >= 0; i--)
-            // {
-            //     if (polys[i].Centroid().DistanceTo(plane) < -Vector3.EPSILON)
-            //     {
-            //         polys.RemoveAt(i);
-            //     }
-            // }
+
+            if (keep != null)
+            {
+                for (var i = polys.Count - 1; i >= 0; i--)
+                {
+                    if (keep.Any(p => polys[i].Contains3D(p, true)))
+                    {
+                        continue;
+                    }
+                    polys.RemoveAt(i);
+                }
+            }
+
             return polys;
         }
 

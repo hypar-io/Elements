@@ -787,10 +787,7 @@ namespace Elements.Geometry
 
         protected void Split(IList<Vector3> points, bool closed = false)
         {
-            var splits = new List<Polyline>();
-            var splitIndex = -1;
-            var end = closed ? this.Vertices.Count : this.Vertices.Count - 1;
-            for (var i = 0; i < end; i++)
+            for (var i = 0; i < this.Vertices.Count; i++)
             {
                 var a = this.Vertices[i];
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
@@ -807,15 +804,13 @@ namespace Elements.Geometry
 
                     if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
                     {
-                        splitIndex = i;
-
-                        if (splitIndex > this.Vertices.Count - 1)
+                        if (i > this.Vertices.Count - 1)
                         {
                             this.Vertices.Add(point);
                         }
                         else
                         {
-                            this.Vertices.Insert(splitIndex + 1, point);
+                            this.Vertices.Insert(i + 1, point);
                         }
 
                         break;
