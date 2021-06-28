@@ -778,14 +778,14 @@ namespace Elements.Geometry
         /// Insert a point into the polyline if it lies along one
         /// of the polyline's segments.
         /// </summary>
-        /// <param name="point">The point at which to split the polyline.</param>
+        /// <param name="points">The points at which to split the polyline.</param>
         /// <returns>The index of the new vertex.</returns>
-        public virtual int Split(Vector3 point)
+        public virtual void Split(IList<Vector3> points)
         {
-            return Split(point);
+            Split(points);
         }
 
-        protected int Split(Vector3 point, bool closed = false)
+        protected void Split(IList<Vector3> points, bool closed = false)
         {
             var splits = new List<Polyline>();
             var splitIndex = -1;
@@ -795,34 +795,34 @@ namespace Elements.Geometry
                 var a = this.Vertices[i];
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
 
-                if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                for (var j = points.Count - 1; j >= 0; j--)
                 {
-                    // The split point is coincident with a vertex.
-                    return -1;
-                }
+                    var point = points[j];
 
-                if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
-                {
-                    splitIndex = i;
-                    break;
+                    if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                    {
+                        // The split point is coincident with a vertex.
+                        continue;
+                    }
+
+                    if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                    {
+                        splitIndex = i;
+
+                        if (splitIndex > this.Vertices.Count - 1)
+                        {
+                            this.Vertices.Add(point);
+                        }
+                        else
+                        {
+                            this.Vertices.Insert(splitIndex + 1, point);
+                        }
+
+                        break;
+                    }
                 }
             }
-
-            if (splitIndex != -1)
-            {
-                if (splitIndex > this.Vertices.Count - 1)
-                {
-                    this.Vertices.Add(point);
-                    return this.Vertices.Count - 1;
-                }
-                else
-                {
-                    this.Vertices.Insert(splitIndex + 1, point);
-                    return splitIndex + 1;
-                }
-            }
-
-            return -1;
+            return;
         }
     }
 

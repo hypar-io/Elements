@@ -3,9 +3,11 @@
 ## 0.9.2
 
 ### Added
-- `Polyline.Split(Vector3 point)`
-- `Polygon.Split(Vector3 point)`
+- `Polyline.Split(List<Vector3> point)`
+- `Polygon.Split(List<Vector3> point)`
 - `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Vector3.>=`
+- `Vector3.<=`
 
 ## 0.9.1
 

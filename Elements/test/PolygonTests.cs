@@ -1695,6 +1695,30 @@ namespace Elements.Geometry.Tests
             // }
         }
 
+        [Fact]
+        public void PolygonSplitsAtNewPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(2.5, 0) });
+            Assert.Equal(5, rect.Vertices.Count());
+        }
+
+        [Fact]
+        public void PolygonDoesNotSplitAtExistingPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(2.5, 2.5) });
+            Assert.Equal(5, rect.Vertices.Count());
+        }
+
+        [Fact]
+        public void PolygonDoesNotSplitAtNonIntersectingPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(1, 1) });
+            Assert.Equal(4, rect.Vertices.Count());
+        }
+
         public void CollinearPointCanBeRemoved()
         {
             var points = new Vector3[6]{
