@@ -794,6 +794,13 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+
+                if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                {
+                    // The split point is coincident with a vertex.
+                    return -1;
+                }
+
                 if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
                 {
                     splitIndex = i;

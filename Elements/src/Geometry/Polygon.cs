@@ -397,14 +397,17 @@ namespace Elements.Geometry
                     s.End.IsAlmostEqualTo(point) ||
                     ray.Intersects(s, out result))
                 {
-                    // Look for duplicates like when a ray
-                    // hits a vertex. In this case, you
-                    // only want to register one intersection.
-                    if (!xsects.Contains(result))
-                    {
-                        xsects.Add(result);
-                        intersects++;
-                    }
+                    // There is a possibility that the ray
+                    // intersects at a vertex, in which case
+                    // there will be one addition for each
+                    // segment containing that vertex. This is
+                    // acceptable as intersects=2 will return false.
+                    // If you want that not to be treated as an intersection
+                    // then you can check here whether the list already
+                    // contains the intersection and skip addint it
+                    // a second time.
+                    xsects.Add(result);
+                    intersects++;
                 }
             }
             return intersects % 2 != 0;
@@ -718,151 +721,257 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim the polygon with a collection of 3d polygons.
+        /// Trim this polygon to the provided polygons in 3d.
         /// </summary>
-        /// <param name="polygons">A collection of trimming polygons.</param>
-        /// <returns>A new polygon trimmed by the specified polygons.</returns>
-        /// <exception cref="System.Exception">Thrown when one of the trimming planes is coplanar with the polygon's plane.</exception>
+        /// <param name="polygons">The trimming polygons.</param>
+        /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons)
         {
-            var finalVertices = new List<Vector3>();
-            var splitPoly = new Polygon(this.Vertices);
-            var extraSegments = new List<Line>();
-
-            // The split dictionary stores split locations
-            // and the planes associated with the polygons
-            // that created those splits. In the case of a split
-            // located directly at the edge of the polygon, 
-            // multiple planes will be stored.
-            var splitDict = new Dictionary<Vector3, List<Plane>>();
-
             var localPlane = this.Plane();
+            var graphVertices = new List<Vector3>();
+            var edges = new List<List<(int from, int to)>>();
 
-            var trimPlanes = new List<Plane>();
-            foreach (var p in polygons)
+            var splitPoly = new Polygon(this.Vertices);
+            var results = new List<List<Vector3>>();
+
+            foreach (var polygon in polygons)
             {
-                var plane = p.Plane();
+                var plane = polygon.Plane();
 
                 if (localPlane.IsCoplanar(plane))
                 {
                     throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
                 }
 
-                trimPlanes.Add(plane);
-
-                if (this.Intersects3d(p, out List<Vector3> result))
+                if (this.Intersects3d(polygon, out List<Vector3> result))
                 {
                     // Split the polygon with the intersection points.
+                    // TODO: Do all these splits in one call
                     foreach (var split in result)
                     {
-                        var splitIndex = splitPoly.Split(split);
-                        if (!splitDict.ContainsKey(split))
-                        {
-                            splitDict.Add(split, new List<Plane> { plane });
-                        }
-                        else
-                        {
-                            splitDict[split].Add(plane);
-                        }
+                        splitPoly.Split(split);
                     }
-
-                    // Add new segments which weave between the points.
-                    for (var j = 0; j < result.Count - 1; j += 2)
-                    {
-                        var l = new Line(result[j], result[j + 1]);
-                        extraSegments.Add(l);
-                    }
+                    results.Add(result);
                 }
             }
 
-            var allSegments = splitPoly.Segments().ToList().Concat(extraSegments).ToArray();
-
-            var points = allSegments.SelectMany(s => new[] { s.Start, s.End }).Distinct().ToList();
-            var edges = new List<List<(int from, int to)>>();
-            for (var i = 0; i < points.Count; i++)
+            for (var i = 0; i < splitPoly.Vertices.Count; i++)
             {
+                var a = i;
+                var b = i == splitPoly.Vertices.Count - 1 ? 0 : i + 1;
+                graphVertices.Add(splitPoly.Vertices[i]);
                 edges.Add(new List<(int from, int to)>());
+                edges[i].Add((a, b));
             }
 
-            // Where the segments are on the outside of the plane
-            // construct a half edge segment, otherwise skip constructing
-            // the segment. This will result in some vertex collections 
-            // that have zero edges.
-            foreach (var s in allSegments)
+            foreach (var result in results)
             {
-                var a = s.Start;
-                var b = s.End;
-                var ai = points.IndexOf(s.Start);
-                var bi = points.IndexOf(s.End);
-
-                if (splitDict.ContainsKey(a))
+                var skip = result.Count % 2 == 0 ? 2 : 1;
+                for (var j = 0; j < result.Count - 1; j += skip)
                 {
-                    // The split dictionary contains both a and b
-                    // it's because they're in the same plane.
-                    if (!splitDict.ContainsKey(b))
+                    // We look for the intersection result in the graph vertices
+                    // because this collection will now contain the splitpoly
+                    // vertices AND the non split vertices which are contained
+                    // in the polygon itself.
+                    var a = graphVertices.IndexOf(result[j]);
+                    if (a == -1)
                     {
-                        if (splitDict[a].Any(p =>
-                        {
-                            var d = b.DistanceTo(p);
-                            return d < 0;
-                        }))
-                        {
-                            continue;
-                        }
+                        // An intersection that does not happen on the original poly
+                        graphVertices.Add(result[j]);
+                        a = graphVertices.Count - 1;
+                        edges.Add(new List<(int from, int to)>());
                     }
+                    var b = graphVertices.IndexOf(result[j + 1]);
+                    if (b == -1)
+                    {
+                        graphVertices.Add(result[j + 1]);
+                        b = graphVertices.Count - 1;
+                        edges.Add(new List<(int from, int to)>());
+                    }
+                    edges[a].Add((a, b));
+                    edges[b].Add((b, a));
                 }
-                else if (splitDict.ContainsKey(b))
-                {
-                    if (!splitDict.ContainsKey(a))
-                    {
-                        if (splitDict[b].Any(p =>
-                        {
-                            var d = a.DistanceTo(p);
-                            return d < 0;
-                        }))
-                        {
-                            continue;
-                        }
-                    }
-                }
-                else
-                {
-                    // Segments that are not intersected by any of the planes
-                    // but are "behind" all the planes, should be discarded.
-                    var discard = 0;
-                    foreach (var t in trimPlanes)
-                    {
-                        var ad = a.DistanceTo(t);
-                        var bd = b.DistanceTo(t);
-
-                        if (ad.ApproximatelyEquals(0.0) && bd.ApproximatelyEquals(0.0))
-                        {
-                            discard = 0;
-                            break;
-                        }
-
-                        if (ad < -Vector3.EPSILON || bd < -Vector3.EPSILON)
-                        {
-                            discard++;
-                        }
-                    }
-                    if (discard > 0)
-                    {
-                        continue;
-                    }
-                }
-
-                edges[ai].Add((ai, bi));
             }
 
             var heg = new HalfEdgeGraph2d()
             {
-                Vertices = points,
+                Vertices = graphVertices,
                 EdgesPerVertex = edges
             };
 
-            return heg.Polygonize();
+            var polys = heg.Polygonize();
+            // for (var i = polys.Count - 1; i >= 0; i--)
+            // {
+            //     if (polys[i].Centroid().DistanceTo(plane) < -Vector3.EPSILON)
+            //     {
+            //         polys.RemoveAt(i);
+            //     }
+            // }
+            return polys;
         }
+
+        // public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        // {
+        //     var result = new List<Polygon>();
+        //     foreach (var p in polygons)
+        //     {
+        //         var trims = this.TrimmedTo(p);
+        //         if (trims == null)
+        //         {
+        //             continue;
+        //         }
+        //         result.AddRange(trims);
+        //     }
+
+        //     return result;
+        // }
+
+        /// <summary>
+        /// Trim the polygon with a collection of 3d polygons.
+        /// </summary>
+        /// <param name="polygons">A collection of trimming polygons.</param>
+        /// <returns>A new polygon trimmed by the specified polygons.</returns>
+        /// <exception cref="System.Exception">Thrown when one of the trimming planes is coplanar with the polygon's plane.</exception>
+        // public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        // {
+        //     var finalVertices = new List<Vector3>();
+        //     var splitPoly = new Polygon(this.Vertices);
+        //     var extraSegments = new List<Line>();
+
+        //     // The split dictionary stores split locations
+        //     // and the planes associated with the polygons
+        //     // that created those splits. In the case of a split
+        //     // located directly at the edge of the polygon, 
+        //     // multiple planes will be stored.
+        //     var splitDict = new Dictionary<Vector3, List<Plane>>();
+
+        //     var localPlane = this.Plane();
+
+        //     var trimPlanes = new List<Plane>();
+        //     foreach (var p in polygons)
+        //     {
+        //         var plane = p.Plane();
+
+        //         if (localPlane.IsCoplanar(plane))
+        //         {
+        //             throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
+        //         }
+
+        //         trimPlanes.Add(plane);
+
+        //         if (this.Intersects3d(p, out List<Vector3> result))
+        //         {
+        //             // Split the polygon with the intersection points.
+        //             foreach (var split in result)
+        //             {
+        //                 var splitIndex = splitPoly.Split(split);
+        //                 if (!splitDict.ContainsKey(split))
+        //                 {
+        //                     splitDict.Add(split, new List<Plane> { plane });
+        //                 }
+        //                 else
+        //                 {
+        //                     splitDict[split].Add(plane);
+        //                 }
+        //             }
+
+        //             // Add new segments which weave between the points.
+        //             for (var j = 0; j < result.Count - 1; j += 2)
+        //             {
+        //                 var l = new Line(result[j], result[j + 1]);
+        //                 extraSegments.Add(l);
+        //             }
+        //         }
+        //     }
+
+        //     var allSegments = splitPoly.Segments().ToList().Concat(extraSegments).ToArray();
+
+        //     var points = allSegments.SelectMany(s => new[] { s.Start, s.End }).Distinct().ToList();
+        //     var edges = new List<List<(int from, int to)>>();
+        //     for (var i = 0; i < points.Count; i++)
+        //     {
+        //         edges.Add(new List<(int from, int to)>());
+        //     }
+
+        //     // Where the segments are on the outside of the plane
+        //     // construct a half edge segment, otherwise skip constructing
+        //     // the segment. This will result in some vertex collections 
+        //     // that have zero edges.
+        //     foreach (var s in allSegments)
+        //     {
+        //         var a = s.Start;
+        //         var b = s.End;
+        //         var ai = points.IndexOf(s.Start);
+        //         var bi = points.IndexOf(s.End);
+
+        //         if (splitDict.ContainsKey(a))
+        //         {
+        //             // The split dictionary contains both a and b
+        //             // it's because they're in the same plane.
+        //             if (!splitDict.ContainsKey(b))
+        //             {
+        //                 if (splitDict[a].Any(p =>
+        //                 {
+        //                     var d = b.DistanceTo(p);
+        //                     return d < 0;
+        //                 }))
+        //                 {
+        //                     continue;
+        //                 }
+        //             }
+        //         }
+        //         else if (splitDict.ContainsKey(b))
+        //         {
+        //             if (!splitDict.ContainsKey(a))
+        //             {
+        //                 if (splitDict[b].Any(p =>
+        //                 {
+        //                     var d = a.DistanceTo(p);
+        //                     return d < 0;
+        //                 }))
+        //                 {
+        //                     continue;
+        //                 }
+        //             }
+        //         }
+        //         else
+        //         {
+        //             // Segments that are not intersected by any of the planes
+        //             // but are "behind" all the planes, should be discarded.
+        //             var discard = 0;
+        //             foreach (var t in trimPlanes)
+        //             {
+        //                 var ad = a.DistanceTo(t);
+        //                 var bd = b.DistanceTo(t);
+
+        //                 if (ad.ApproximatelyEquals(0.0) && bd.ApproximatelyEquals(0.0))
+        //                 {
+        //                     discard = 0;
+        //                     break;
+        //                 }
+
+        //                 if (ad < -Vector3.EPSILON || bd < -Vector3.EPSILON)
+        //                 {
+        //                     discard++;
+        //                 }
+        //             }
+        //             if (discard > 0)
+        //             {
+        //                 continue;
+        //             }
+        //         }
+
+        //         edges[ai].Add((ai, bi));
+        //     }
+
+        //     var heg = new HalfEdgeGraph2d()
+        //     {
+        //         Vertices = points,
+        //         EdgesPerVertex = edges
+        //     };
+
+        //     return heg.Polygonize();
+        // }
 
         /// <summary>
         /// Constructs the geometric difference between two sets of polygons.
