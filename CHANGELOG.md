@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.2
+
+### Added
+
+### Changed
+
+- Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+
+### Fixed
+
 ## 0.9.1
 
 ### Added
