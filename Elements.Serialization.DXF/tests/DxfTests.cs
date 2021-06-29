@@ -3,7 +3,7 @@ using System.IO;
 using Elements.Geometry;
 using Xunit;
 
-namespace Elements.DXF.Tests
+namespace Elements.Serialization.DXF.Tests
 {
     public class DxfTests
     {

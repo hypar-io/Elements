@@ -146,7 +146,7 @@ namespace Elements.Components
                 var displacementForVertex = definition.AnchorDisplacements[anchorIndex];
 
                 // transform from reference anchor to polyline vertex
-                var transform = new Transform(definition.OrientationGuide.OfVector(rule.AnchorDisplacements[i]));
+                var transform = new Transform(definition.OrientationGuide.OfPoint(rule.AnchorDisplacements[i]));
 
                 transform.Concatenate(new Transform(displacementForVertex));
 

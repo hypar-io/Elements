@@ -39,12 +39,40 @@ namespace Elements.Tests
         [Fact]
         public void Transform_OfPoint()
         {
-            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var o = new Vector3(1, 1, 0);
+            var t = new Transform(o, Vector3.XAxis, Vector3.YAxis.Negate());
             var v = new Vector3(0.5, 0.5, 0.0);
             var vt = t.OfPoint(v);
+            Assert.Equal(1.5, vt.X);
+            Assert.Equal(1.0, vt.Y);
+            Assert.Equal(0.5, vt.Z);
+        }
+
+        [Fact]
+        public void Transform_OfVector()
+        {
+            var o = new Vector3(1, 1, 0);
+            var t = new Transform(o, Vector3.XAxis, Vector3.YAxis.Negate());
+            var v = new Vector3(0.5, 0.5, 0.0);
+            var vt = t.OfVector(v);
             Assert.Equal(0.5, vt.X);
             Assert.Equal(0.0, vt.Y);
             Assert.Equal(0.5, vt.Z);
+        }
+
+        [Fact]
+        public void Transform_OfPlane()
+        {
+            var o = new Vector3(1, 1, 0);
+            var t = new Transform(o, Vector3.XAxis, Vector3.YAxis.Negate());
+            var p = new Plane( new Vector3(0.5, 0.5, 0.0), new Vector3(0, 0, 1) );
+            var pt = t.OfPlane(p);
+            Assert.Equal(1.5, pt.Origin.X);
+            Assert.Equal(1.0, pt.Origin.Y);
+            Assert.Equal(0.5, pt.Origin.Z);
+            Assert.Equal(0.0, pt.Normal.X);
+            Assert.Equal(-1.0, pt.Normal.Y);
+            Assert.Equal(0.0, pt.Normal.Z);
         }
 
         [Fact]

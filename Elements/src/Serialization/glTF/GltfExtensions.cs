@@ -1025,7 +1025,7 @@ namespace Elements.Serialization.glTF
                             {
                                 foreach (var edge in solidOp.Solid.Edges.Values)
                                 {
-                                    lines.AddRange(new[] { i.Transform.OfVector(edge.Left.Vertex.Point), i.Transform.OfVector(edge.Right.Vertex.Point) });
+                                    lines.AddRange(new[] { i.Transform.OfPoint(edge.Left.Vertex.Point), i.Transform.OfPoint(edge.Right.Vertex.Point) });
                                 }
                             }
                         }
