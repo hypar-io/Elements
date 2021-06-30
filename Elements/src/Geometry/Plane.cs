@@ -96,5 +96,30 @@ namespace Elements.Geometry
             var dot = Math.Abs(this.Normal.Dot(plane.Normal));
             return dot.ApproximatelyEquals(1) && this.Origin.DistanceTo(plane).ApproximatelyEquals(0);
         }
+
+        /// <summary>
+        /// Does this plane intersect the other two provided planes.
+        /// </summary>
+        /// <param name="a">The second plane.</param>
+        /// <param name="b">The third plane.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <returns>True if an intersection exists, otherwise false.</returns>
+        public bool Intersects(Plane a, Plane b, out Vector3 result)
+        {
+            var d1 = this.Origin.Dot(this.Normal);
+            var d2 = a.Origin.Dot(a.Normal);
+            var d3 = b.Origin.Dot(b.Normal);
+            var denom = (this.Normal.Cross(a.Normal)).Dot(b.Normal);
+            if (denom.ApproximatelyEquals(0))
+            {
+                // If any pair of planes is parallel,
+                // then there is no intersection.
+                result = default(Vector3);
+                return false;
+            }
+            var num = d1 * (a.Normal.Cross(b.Normal)) + d2 * (b.Normal.Cross(this.Normal)) + d3 * (this.Normal.Cross(a.Normal));
+            result = num / denom;
+            return true;
+        }
     }
 }

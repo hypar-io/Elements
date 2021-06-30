@@ -8,6 +8,7 @@
 - `Polygon.TrimmedTo(List<Polygon> polygons)`
 - `Vector3.>=`
 - `Vector3.<=`
+- `Plane.Intersects(Plane a, Plane b)`
 
 ## 0.9.1
 

@@ -1452,13 +1452,13 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new ModelCurve(new Line(splitter.Centroid(), splitter.Centroid() + splitter.Normal() * 1)));
             }
 
-            var result1 = bigPoly.TrimmedTo(splitters);
+            var result1 = bigPoly.TrimmedTo(splitters, out _, out _);
             foreach (var p in result1)
             {
                 this.Model.AddElement(new Panel(p, r.NextMaterial()));
             }
 
-            var result2 = bigPoly.TrimmedTo(splitters.Select(s => s.Reversed()).ToList());
+            var result2 = bigPoly.TrimmedTo(splitters.Select(s => s.Reversed()).ToList(), out _, out _);
             foreach (var p in result2)
             {
                 this.Model.AddElement(new Panel(p, r.NextMaterial()));
@@ -1487,7 +1487,7 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(p1));
             this.Model.AddElement(new ModelCurve(p2));
 
-            var trims = _peaks.TrimmedTo(new[] { p1, p2 });
+            var trims = _peaks.TrimmedTo(new[] { p1, p2 }, out _, out _);
             foreach (var l in trims)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
@@ -1495,7 +1495,7 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
-            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
             Assert.Equal(1, trims1.Count());
         }
 
@@ -1512,7 +1512,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(-1,3,1),
             });
 
-            var trims = _peaks.TrimmedTo(new[] { p1 });
+            var trims = _peaks.TrimmedTo(new[] { p1 }, out _, out _);
             foreach (var l in trims)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
@@ -1520,7 +1520,7 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
-            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
             Assert.Equal(2, trims1.Count());
         }
 
@@ -1537,7 +1537,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(-1,3,1),
             });
 
-            var trims = _peaks.TrimmedTo(new[] { p1 });
+            var trims = _peaks.TrimmedTo(new[] { p1 }, out _, out _);
             foreach (var l in trims)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
@@ -1545,7 +1545,7 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
-            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
             Assert.Equal(1, trims1.Count());
         }
 
@@ -1562,7 +1562,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(-1,2.5,1),
             });
 
-            var trims = _peaks.TrimmedTo(new[] { p1 });
+            var trims = _peaks.TrimmedTo(new[] { p1 }, out _, out _);
             foreach (var l in trims)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
@@ -1570,7 +1570,7 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
-            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
             Assert.Equal(2, trims1.Count());
         }
 
@@ -1587,7 +1587,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(-1,5,1),
             });
 
-            var trims = _peaks.TrimmedTo(new[] { p1 });
+            var trims = _peaks.TrimmedTo(new[] { p1 }, out _, out _);
             foreach (var l in trims)
             {
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
@@ -1595,7 +1595,7 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
-            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
             Assert.Equal(0, trims1.Count());
         }
 
@@ -1643,7 +1643,7 @@ namespace Elements.Geometry.Tests
             var star = Polygon.Star(5, 2, 5);
             Assert.Throws<Exception>(() =>
             {
-                star.TrimmedTo(new[] { hex });
+                star.TrimmedTo(new[] { hex }, out _, out _);
             });
         }
 
@@ -1684,8 +1684,8 @@ namespace Elements.Geometry.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var trim1 = star.TrimmedTo(trimPolys);
-            var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
+            var trim1 = star.TrimmedTo(trimPolys, out _, out _);
+            var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList(), out _, out _);
             sw.Stop();
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
 

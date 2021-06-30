@@ -251,7 +251,7 @@ namespace Elements.Geometry
         /// <param name="result">The points resulting from the intersection
         /// of the two polygons.</param>
         /// <returns>A collection of points sorted along the polygon's plane.</returns>
-        private bool Intersects3d(Polygon polygon, out List<Vector3> result)
+        private bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
         {
             var p = this.Plane();
             result = new List<Vector3>();
@@ -272,7 +272,10 @@ namespace Elements.Geometry
                 {
                     if (this.Contains3D(r))
                     {
-                        result.Add(r);
+                        if (!result.Contains(r))
+                        {
+                            result.Add(r);
+                        }
                     }
                 }
             }
@@ -285,18 +288,20 @@ namespace Elements.Geometry
                 {
                     if (polygon.Contains3D(r))
                     {
-                        result.Add(r);
+                        if (!result.Contains(r))
+                        {
+                            result.Add(r);
+                        }
                     }
                 }
             }
 
-            if (result.Count > 0)
+            if (sort)
             {
                 result.Sort(new DotComparer(d));
-                return true;
             }
 
-            return false;
+            return result.Count > 0;
         }
 
         private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
@@ -734,28 +739,84 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<Line> debugEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
             var edges = new List<List<(int from, int to, int? tag)>>();
 
             var splitPoly = new Polygon(this.Vertices);
-            var results = new List<List<Vector3>>();
+            var results = new List<Vector3>[polygons.Count];
+            var planes = new List<Plane>();
 
             foreach (var polygon in polygons)
             {
-                var plane = polygon.Plane();
+                planes.Add(polygon.Plane());
+            }
 
-                if (localPlane.IsCoplanar(plane))
+            for (var i = 0; i < polygons.Count; i++)
+            {
+                var polygon = polygons[i];
+
+                if (localPlane.IsCoplanar(planes[i]))
                 {
                     throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
                 }
 
-                if (this.Intersects3d(polygon, out List<Vector3> result))
+                // Add a results collection for each polygon. 
+                // This may or may not have results in it after processing.
+                results[i] = new List<Vector3>();
+
+                if (this.Intersects3d(polygon, out List<Vector3> result, false))
                 {
                     splitPoly.Split(result);
-                    results.Add(result);
+                    results[i].AddRange(result);
+                }
+
+                // Intersect this plane with all other planes.
+                // This handles the case where two trim polygons intersect
+                // or meet at a T.
+                for (var j = 0; j < polygons.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    var inner = polygons[j];
+
+                    // Do a three plane intersection amongst all the planes.
+                    if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
+                    {
+                        // Test containment in the current splitting polygon.
+                        if (polygon.Contains3D(xsect) && inner.Contains3D(xsect))
+                        {
+                            if (!results[i].Contains(xsect))
+                            {
+                                results[i].Add(xsect);
+                            }
+                        }
+
+                        // Test containment in the target polygon as well.
+                        // if (inner.Contains3D(xsect))
+                        // {
+                        //     if (!results[j].Contains(xsect))
+                        //     {
+                        //         results[j].Add(xsect);
+                        //     }
+                        // }
+                    }
+                }
+            }
+
+            // Sort all the intersection results across their planes
+            // so the lacing works across all polys.
+            for (var i = 0; i < polygons.Count; i++)
+            {
+                var polygon = polygons[i];
+                var d = this.Normal().Cross(planes[i].Normal).Unitized();
+                if (results[i].Count > 0)
+                {
+                    results[i].Sort(new DotComparer(d));
                 }
             }
 
@@ -803,10 +864,27 @@ namespace Elements.Geometry
                 EdgesPerVertex = edges
             };
 
+            debugEdges = new List<Line>();
+            foreach (var edgeSet in edges)
+            {
+                foreach (var e in edgeSet)
+                {
+                    var a = graphVertices[e.from];
+                    var b = graphVertices[e.to];
+                    var l = a.DistanceTo(b);
+                    var d = (b - a).Unitized();
+                    var offsetD = localPlane.Normal.Cross(d);
+                    var offsetL = (l - (l * .75)) / 2;
+                    debugEdges.Add(new Line(a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
+                }
+            }
+
             var polys = heg.Polygonize((tag) =>
             {
                 return tag.HasValue && tag == 1;
             });
+
+            intersections = results.SelectMany(t => t).ToList();
 
             return polys;
         }
