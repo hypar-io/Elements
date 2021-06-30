@@ -747,10 +747,28 @@ namespace Elements.Geometry
         /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
+        /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        {
+            return TrimmedToInternal(polygons, out _, out _);
+        }
+
+        /// <summary>
+        /// Trim the polygon with a collection of polygons that intersect it 
+        /// in 3d. Portions of the intersected polygon on the "outside" 
+        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Portions inside the trimming polygons will be discarded.
+        /// </summary>
+        /// <param name="polygons">The trimming polygons.</param>
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        {
+            return TrimmedToInternal(polygons, out intersections, out trimEdges);
+        }
+
+        private List<Polygon> TrimmedToInternal(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
