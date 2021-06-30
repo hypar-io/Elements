@@ -741,11 +741,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim this polygon to the provided polygons in 3d.
+        /// Trim the polygon with a collection of polygons that intersect it 
+        /// in 3d. Portions of the intersected polygon on the "outside" 
+        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
+        /// <param name="intersections">A collection of intersection locations.</param>
+        /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<Line> debugEdges)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
@@ -878,7 +883,7 @@ namespace Elements.Geometry
                 EdgesPerVertex = edges
             };
 
-            debugEdges = new List<Line>();
+            trimEdges = new List<(Vector3 from, Vector3 to)>();
             foreach (var edgeSet in edges)
             {
                 foreach (var e in edgeSet)
@@ -891,7 +896,7 @@ namespace Elements.Geometry
                     var offsetL = (l - (l * .75)) / 2;
                     if (!a.IsAlmostEqualTo(b))
                     {
-                        debugEdges.Add(new Line(a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
+                        trimEdges.Add((a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
                     }
                 }
             }
