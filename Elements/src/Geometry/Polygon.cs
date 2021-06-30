@@ -788,22 +788,15 @@ namespace Elements.Geometry
                     if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
                     {
                         // Test containment in the current splitting polygon.
-                        if (polygon.Contains3D(xsect) && inner.Contains3D(xsect))
+                        if (polygon.Contains3D(xsect)
+                            && inner.Contains3D(xsect)
+                            && this.Contains3D(xsect))
                         {
                             if (!results[i].Contains(xsect))
                             {
                                 results[i].Add(xsect);
                             }
                         }
-
-                        // Test containment in the target polygon as well.
-                        // if (inner.Contains3D(xsect))
-                        // {
-                        //     if (!results[j].Contains(xsect))
-                        //     {
-                        //         results[j].Add(xsect);
-                        //     }
-                        // }
                     }
                 }
             }
@@ -831,6 +824,10 @@ namespace Elements.Geometry
 
             foreach (var result in results)
             {
+                // If a polygon intersects with this polygon resulting in
+                // an even number of intersections, then this polygon is
+                // convex and we need to make multiple edges by skipping vertices
+                // because we're cutting across sections of the polygon.
                 var skip = result.Count % 2 == 0 ? 2 : 1;
                 for (var j = 0; j < result.Count - 1; j += skip)
                 {
