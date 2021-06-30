@@ -1595,8 +1595,9 @@ namespace Elements.Geometry.Tests
             }
             Assert.Equal(1, trims.Count());
 
+            // This will return the entire original polygon.
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() }, out _, out _);
-            Assert.Equal(0, trims1.Count());
+            Assert.Equal(1, trims1.Count());
         }
 
         [Fact]

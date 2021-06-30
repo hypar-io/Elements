@@ -246,11 +246,20 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Intersect this polygon with the provided polygon in 3d.
+        /// Unlike other methods that do 2d intersection, this method is able to 
+        /// calculate intersections in 3d by doing planar intersections and
+        /// 3D containment checks. If you are looking for 2d intersection, use the 
+        /// Polygon.Intersects(Plane plane, ...) method.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
         /// <param name="result">The points resulting from the intersection
         /// of the two polygons.</param>
-        /// <returns>A collection of points sorted along the polygon's plane.</returns>
+        /// <param name="sort">Should the resulting intersections be sorted along
+        /// the plane?</param>
+        /// <returns>True if this polygon intersect the provided polygon, otherwise false.
+        /// The result collection may have duplicate vertices where intersection 
+        /// with a vertex occurs as there is one intersection associated with each
+        /// edge attached to the vertex.</returns>
         private bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
         {
             var p = this.Plane();
@@ -266,32 +275,26 @@ namespace Elements.Geometry
 
             // Intersect the polygon against this polygon's plane.
             // Keep the points that lie within the polygon.
-            if (polygon.Intersects(p, out List<Vector3> results))
+            if (polygon.Intersects(p, out List<Vector3> results, false, false))
             {
                 foreach (var r in results)
                 {
                     if (this.Contains3D(r))
                     {
-                        if (!result.Contains(r))
-                        {
-                            result.Add(r);
-                        }
+                        result.Add(r);
                     }
                 }
             }
 
             // Intersect this polygon against the target polyon's plane.
             // Keep the points within the target polygon.
-            if (this.Intersects(targetP, out List<Vector3> results2))
+            if (this.Intersects(targetP, out List<Vector3> results2, false, false))
             {
                 foreach (var r in results2)
                 {
                     if (polygon.Contains3D(r))
                     {
-                        if (!result.Contains(r))
-                        {
-                            result.Add(r);
-                        }
+                        result.Add(r);
                     }
                 }
             }
@@ -329,9 +332,11 @@ namespace Elements.Geometry
         /// sorted along the plane.</param>
         /// <param name="distinct">Should the intersection results that
         /// are returned be distinct?</param>
+        /// <param name="sort">Should the intersection results be sorted
+        /// along the plane?</param>
         /// <returns>True if the plane intersects the polygon, 
         /// otherwise false.</returns>
-        public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true)
+        public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true, bool sort = true)
         {
             results = new List<Vector3>();
             var d = this.Normal().Cross(plane.Normal).Unitized();
@@ -353,13 +358,14 @@ namespace Elements.Geometry
                     }
                 }
             }
-            if (results.Count > 0)
+
+            if (sort)
             {
                 // Order the intersections along the direction.
                 results.Sort(new DotComparer(d));
-                return true;
             }
-            return false;
+
+            return results.Count > 0;
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
@@ -767,6 +773,9 @@ namespace Elements.Geometry
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
 
+                // We intersect but don't sort, because the three-plane check
+                // below may result in new intersections which will need to
+                // be sorted as well.
                 if (this.Intersects3d(polygon, out List<Vector3> result, false))
                 {
                     splitPoly.Split(result);
@@ -824,13 +833,21 @@ namespace Elements.Geometry
 
             foreach (var result in results)
             {
-                // If a polygon intersects with this polygon resulting in
-                // an even number of intersections, then this polygon is
-                // convex and we need to make multiple edges by skipping vertices
-                // because we're cutting across sections of the polygon.
-                var skip = result.Count % 2 == 0 ? 2 : 1;
-                for (var j = 0; j < result.Count - 1; j += skip)
+                // We skip by two because every set of results will represent
+                // intersections across the polygon. Either those intersections
+                // occur as a result of the intersecting edge entering or leaving
+                // the polygon (ex: cutting across two "peaks"), or a result of 
+                // the intersection occurring at a vertex (ex: cutting on a peak
+                // or a valley). In both cases, we need to skip the "outside"
+                // segments. 
+                for (var j = 0; j < result.Count - 1; j += 2)
                 {
+                    // Don't create zero-length edges.
+                    if (result[j].IsAlmostEqualTo(result[j + 1]))
+                    {
+                        continue;
+                    }
+
                     // We look for the intersection result in the graph vertices
                     // because this collection will now contain the splitpoly
                     // vertices AND the non split vertices which are contained
@@ -872,7 +889,10 @@ namespace Elements.Geometry
                     var d = (b - a).Unitized();
                     var offsetD = localPlane.Normal.Cross(d);
                     var offsetL = (l - (l * .75)) / 2;
-                    debugEdges.Add(new Line(a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
+                    if (!a.IsAlmostEqualTo(b))
+                    {
+                        debugEdges.Add(new Line(a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
+                    }
                 }
             }
 
