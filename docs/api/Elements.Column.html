@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Column
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -200,7 +200,7 @@
     animate();
   </script><h5 id="Elements_Column"><strong>Examples</strong></h5>
   <pre><code class="lang-csharp" name="Main">// Create a framing type.
-var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
 // Create a column.
 var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
@@ -263,6 +263,9 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>

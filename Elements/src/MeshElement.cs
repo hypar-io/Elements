@@ -21,7 +21,11 @@ namespace Elements
         /// <summary>
         /// The element's mesh.
         /// </summary>
-        public Mesh Mesh => this._mesh;
+        public Mesh Mesh
+        {
+            get { return this._mesh; }
+            set { this._mesh = value; }
+        }
 
         /// <summary>
         /// Construct an import mesh element.

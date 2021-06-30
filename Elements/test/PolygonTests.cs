@@ -5,13 +5,22 @@ using Xunit;
 using Xunit.Abstractions;
 using Newtonsoft.Json;
 using Elements.Tests;
-using Elements.Serialization.glTF;
 using System.IO;
+using System.Diagnostics;
 
 namespace Elements.Geometry.Tests
 {
     public class PolygonTests : ModelTest
     {
+        private const string _bigPoly = "{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-12.330319085473015,\"Y\":-12.608248581489981,\"Z\":0.0},{\"X\":19.35916170781505,\"Y\":-15.672958886892182,\"Z\":0.0},{\"X\":21.295342177562976,\"Y\":4.347384863139645,\"Z\":0.0},{\"X\":6.363400191236501,\"Y\":4.347384863139645,\"Z\":0.0},{\"X\":6.363400191236501,\"Y\":19.134320178583096,\"Z\":0.0},{\"X\":22.88039942030141,\"Y\":21.638839095895968,\"Z\":0.0},{\"X\":20.67861826061697,\"Y\":43.07898042004283,\"Z\":0.0},{\"X\":-6.526208021474245,\"Y\":35.050326680125984,\"Z\":0.0},{\"X\":-31.648970883272245,\"Y\":15.181167747161043,\"Z\":0.0}]}";
+        private const string _splitters = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":1.283510965111264,\"Y\":-16.672391732323188,\"Z\":-5.0},{\"X\":23.642056747347993,\"Y\":-2.1405882651190176,\"Z\":-5.0},{\"X\":23.642056747347993,\"Y\":-2.1405882651190176,\"Z\":5.0},{\"X\":1.283510965111264,\"Y\":-16.672391732323188,\"Z\":5.0}]}]";
+        private Polygon _peaks = new Polygon(new List<Vector3>(){
+                new Vector3(0,0,0),
+                new Vector3(5,0,0),
+                new Vector3(5,5,0),
+                new Vector3(2.5, 2.5, 0),
+                new Vector3(0,5,0)
+            });
         private readonly ITestOutputHelper _output;
 
         public PolygonTests(ITestOutputHelper output)
@@ -775,6 +784,152 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolygonSplitWithPolyline()
+        {
+            Name = "PolygonSplitWithPolyline";
+            var random = new Random(23);
+
+            // Simple Split
+            var polygon = Polygon.Rectangle(5, 5);
+            var polyline = new Polyline(new[] { new Vector3(-3, 0), new Vector3(0, 1), new Vector3(3, 0) });
+            var splitResults = polygon.Split(polyline);
+            Assert.Equal(2, splitResults.Count);
+
+            // Convex shape split
+            var convexPolygon = new Polygon(new[] {
+                new Vector3(-2.5,-2.5),
+                new Vector3(2.5,-2.5),
+                new Vector3(2.5,-1),
+                new Vector3(1,-1),
+                new Vector3(1,1),
+                new Vector3(2.5,1),
+                new Vector3(2.5,2.5),
+                new Vector3(-2.5,2.5)
+            });
+            var convexSplitPolyline = new Polyline(new[] {
+                new Vector3(1.5, -3),
+                new Vector3(1.5,3)
+            });
+
+            var splitResults2 = convexPolygon.Split(convexSplitPolyline);
+            Model.AddElements(splitResults2.Select(s => new Panel(s, random.NextMaterial())));
+            Assert.True(splitResults2.Count == 3);
+
+            // doesn't intersect, no change
+            var shiftedPolygon = convexPolygon.TransformedPolygon(new Transform(6, 0, 0));
+            var splitResults3 = shiftedPolygon.Split(convexSplitPolyline);
+            Assert.True(splitResults3.Count == 1);
+            Model.AddElements(splitResults3.Select(s => new Panel(s, random.NextMaterial())));
+
+            // totally contained, no change
+            var internalPl = new Polyline(new[] { new Vector3(6 - 2.5 + 0.5, -2), new Vector3(6 - 2.5 + 0.5, 2) });
+            Model.AddElement(internalPl);
+            var splitResults4 = shiftedPolygon.Split(internalPl);
+            Assert.True(splitResults4.Count == 1);
+
+            // split with pass through vertex
+            var cornerPg = new Polygon(new[] { new Vector3(0, 10), new Vector3(3, 10), new Vector3(3, 13), new Vector3(0, 13) });
+            var cornerPl = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(3, 13)
+            });
+            Model.AddElements(cornerPg, cornerPl);
+            var splitResults5 = cornerPg.Split(cornerPl);
+            Assert.True(splitResults5.Count == 2);
+            Model.AddElements(splitResults5.Select(s => new Panel(s, random.NextMaterial())));
+
+            // pass through incompletely, no change
+            var cornerPl2 = new Polyline(new[] {
+                new Vector3(-1, 9),
+                new Vector3(2, 11)
+            });
+
+            var splitResults6 = cornerPg.Split(cornerPl2);
+            Assert.True(splitResults6.Count == 1);
+
+            // overlap at edge, no change.ioU
+            var rect2 = Polygon.Ngon(5, 5).TransformedPolygon(new Transform(-6, -8, 0));
+            var splitCrv = rect2.Segments()[3];
+            var splitResults7 = rect2.Split(splitCrv.ToPolyline(1));
+            Assert.True(splitResults7.Count == 1);
+            Model.AddElements(splitResults7.Select(s => new Panel(s, random.NextMaterial())));
+
+
+            // fuzz test
+            var shifted = convexPolygon.TransformedPolygon(new Transform(12, 0, 0));
+            var collection = new List<Polygon> { shifted };
+            var bbox = new BBox3(shifted);
+            var rect = Polygon.Rectangle(bbox.Min, bbox.Max);
+            for (int i = 0; i < 20; i++)
+            {
+                var randomLine = new Polyline(new[] {
+                    rect.PointAt(random.NextDouble()),
+                    bbox.Min + new Vector3((bbox.Max.X - bbox.Min.X) * random.NextDouble(), (bbox.Max.Y - bbox.Min.Y) * random.NextDouble()),
+                    rect.PointAt(random.NextDouble()) });
+                collection = collection.SelectMany(c => c.Split(randomLine)).ToList();
+            }
+            Model.AddElements(collection.Select(c => new Panel(c, random.NextMaterial())));
+
+        }
+
+        [Fact]
+        public void NonXYSplit()
+        {
+            Name = nameof(NonXYSplit);
+            var shape = new Polygon(new[] {
+                        new Vector3(3,0,1),
+                        new Vector3(1,0,10),
+                        new Vector3(10,0,17),
+                        new Vector3(21,0,14),
+                        new Vector3(12,0,11),
+                        new Vector3(15,0,5),
+                        new Vector3(22,0,8),
+                        new Vector3(22,0,2),
+                        new Vector3(13,0,2),
+                        new Vector3(13,0,1)
+                        });
+            var polylines = new List<Polyline> {
+                        new Polyline(new [] {
+                        new Vector3(1,0,16),
+                        new Vector3(7,0,9),
+                        new Vector3(7,0,-1)
+                        }),
+                        new Polyline(new [] {
+                        new Vector3(-2,0,5),
+                        new Vector3(10,0,5),
+                        new Vector3(17,0,9),
+                        new Vector3(14,0,18)
+                        })
+                        };
+
+            var results = shape.Split(polylines);
+            Assert.True(results.Count == 5);
+            Assert.Equal(Math.Abs(shape.Area()), results.Sum(r => Math.Abs(r.Area())));
+            var rand = new Random(4);
+            Model.AddElements(results.Select(r => new Panel(r, rand.NextMaterial())));
+        }
+
+        [Fact]
+        public void ToTransformOrientation()
+        {
+            var polygon = new Polygon(new[] {
+                        new Vector3(3,0,1),
+                        new Vector3(1,0,10),
+                        new Vector3(10,0,17),
+                        new Vector3(21,0,14),
+                        new Vector3(12,0,11),
+                        new Vector3(15,0,5),
+                        new Vector3(22,0,8),
+                        new Vector3(22,0,2),
+                        new Vector3(13,0,2),
+                        new Vector3(13,0,1)
+                        });
+            var polygonNormal = polygon.Normal();
+            var transform = polygon.ToTransform();
+            Assert.Equal(1, transform.ZAxis.Dot(polygonNormal));
+        }
+
+        [Fact]
         public void DeserializesWithoutDiscriminator()
         {
             // We've received a Polygon and we know that we're receiving
@@ -1225,5 +1380,370 @@ namespace Elements.Geometry.Tests
 
             Assert.Throws<Exception>(() => circle.TransformSegment(t, 0));
         }
+
+        [Fact]
+        public void VerticalContainment()
+        {
+            var point = new Vector3(8.874555, 6.112945, 30);
+            var polygon = new Polygon(new List<Vector3>() {
+                new Vector3(11.37475, 8.56224, -3),
+                new Vector3(6.37436, 3.66365, -3),
+                new Vector3(6.37436, 3.66365, 0),
+                new Vector3(11.37475, 8.56224, 0)
+            });
+            var contains = polygon.Contains(point, out var type);
+            Assert.Equal(contains, false);
+        }
+
+        [Fact]
+        public void PolygonIsTrimmedWithPlane()
+        {
+            this.Name = nameof(PolygonIsTrimmedWithPlane);
+
+            var r = new Random();
+
+            // Trim above
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            // t.Rotate(Vector3.XAxis, 15);
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var trimmed = polygon.Trimmed(plane);
+            Assert.Equal<int>(1, trimmed.Count);
+            var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
+            this.Model.AddElement(new ModelCurve(polygon));
+            this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
+            this.Model.AddElements(panels);
+
+            // Trim below
+            var trimmedReverse = polygon.Trimmed(plane, true);
+            Assert.Equal<int>(2, trimmedReverse.Count);
+            var move = new Transform(0, 0, 0);
+            move.Rotate(Vector3.ZAxis, 15);
+            move.Move(new Vector3(8, 0, 0));
+            var panel2 = trimmedReverse.Select(t => new Panel(t, r.NextMaterial(), transform: move));
+            this.Model.AddElement(new ModelCurve(polygon, transform: move));
+            this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, transform: move)));
+            this.Model.AddElements(panel2);
+
+            // Trim through vertex
+            var vertexTrimPlane = new Plane(new Vector3(0, 0, polygon.Vertices[7].Z), Vector3.ZAxis);
+            var trimmedAtVertex = polygon.Trimmed(vertexTrimPlane, true);
+            Assert.Equal<int>(2, trimmedAtVertex.Count);
+            var move2 = new Transform(16, 0, 0);
+            var panel3 = trimmedAtVertex.Select(t => new Panel(t, r.NextMaterial(), transform: move2));
+            this.Model.AddElements(panel3);
+            this.Model.AddElements(trimmedAtVertex.Select(t => new ModelCurve(t, transform: move2)));
+            this.Model.AddElement(new ModelCurve(polygon, transform: move2));
+        }
+
+        [Fact]
+        public void CorrectWindingForTrims()
+        {
+            this.Name = nameof(CorrectWindingForTrims);
+
+            var r = new Random();
+
+            var bigPoly = JsonConvert.DeserializeObject<Polygon>(_bigPoly);
+            var splitters = JsonConvert.DeserializeObject<List<Polygon>>(_splitters);
+
+            foreach (var splitter in splitters)
+            {
+                this.Model.AddElement(new Panel(splitter, BuiltInMaterials.Mass));
+                this.Model.AddElement(new ModelCurve(new Line(splitter.Centroid(), splitter.Centroid() + splitter.Normal() * 1)));
+            }
+
+            var result1 = bigPoly.TrimmedTo(splitters);
+            foreach (var p in result1)
+            {
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+
+            var result2 = bigPoly.TrimmedTo(splitters.Select(s => s.Reversed()).ToList());
+            foreach (var p in result2)
+            {
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+        }
+
+        [Fact]
+        public void TrimsTwoPolygonsAcrossOnePeak()
+        {
+            this.Name = nameof(TrimsTwoPolygonsAcrossOnePeak);
+
+            var random = new Random();
+            var p1 = new Polygon(new List<Vector3>(){
+                new Vector3(2.5,3,-1),
+                new Vector3(4.5, 3.5, -1),
+                new Vector3(4.5, 3.5, 1),
+                new Vector3(2.5,3,1),
+            });
+            var p2 = new Polygon(new List<Vector3>(){
+                new Vector3(4.5,3.5,-1),
+                new Vector3(6, 3, -1),
+                new Vector3(6, 3, 1),
+                new Vector3(4.5,3.5,1),
+            });
+
+            this.Model.AddElement(new ModelCurve(p1));
+            this.Model.AddElement(new ModelCurve(p2));
+
+            var trims = _peaks.TrimmedTo(new[] { p1, p2 });
+            foreach (var l in trims)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+            Assert.Equal(1, trims.Count());
+
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            Assert.Equal(1, trims1.Count());
+        }
+
+        [Fact]
+        public void TrimsAcrossBothPeaks()
+        {
+            this.Name = nameof(TrimsAcrossBothPeaks);
+
+            var random = new Random();
+            var p1 = new Polygon(new List<Vector3>(){
+                new Vector3(-1,3,-1),
+                new Vector3(6, 3, -1),
+                new Vector3(6, 3, 1),
+                new Vector3(-1,3,1),
+            });
+
+            var trims = _peaks.TrimmedTo(new[] { p1 });
+            foreach (var l in trims)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+            Assert.Equal(1, trims.Count());
+
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            Assert.Equal(2, trims1.Count());
+        }
+
+        [Fact]
+        public void TrimsAcrossOnePeak()
+        {
+            this.Name = nameof(TrimsAcrossOnePeak);
+
+            var random = new Random();
+            var p1 = new Polygon(new List<Vector3>(){
+                new Vector3(-1,3,-1),
+                new Vector3(2.5, 3, -1),
+                new Vector3(2.5, 3, 1),
+                new Vector3(-1,3,1),
+            });
+
+            var trims = _peaks.TrimmedTo(new[] { p1 });
+            foreach (var l in trims)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+            Assert.Equal(1, trims.Count());
+
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            Assert.Equal(1, trims1.Count());
+        }
+
+        [Fact]
+        public void TrimsAtValley()
+        {
+            this.Name = nameof(TrimsAtValley);
+
+            var random = new Random();
+            var p1 = new Polygon(new List<Vector3>(){
+                new Vector3(-1,2.5,-1),
+                new Vector3(6, 2.5, -1),
+                new Vector3(6, 2.5, 1),
+                new Vector3(-1,2.5,1),
+            });
+
+            var trims = _peaks.TrimmedTo(new[] { p1 });
+            foreach (var l in trims)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+            Assert.Equal(1, trims.Count());
+
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            Assert.Equal(2, trims1.Count());
+        }
+
+        [Fact]
+        public void DoesNotTrimAtTopOfPeak()
+        {
+            this.Name = nameof(DoesNotTrimAtTopOfPeak);
+
+            var random = new Random();
+            var p1 = new Polygon(new List<Vector3>(){
+                new Vector3(-1,5,-1),
+                new Vector3(6, 5, -1),
+                new Vector3(6, 5, 1),
+                new Vector3(-1,5,1),
+            });
+
+            var trims = _peaks.TrimmedTo(new[] { p1 });
+            foreach (var l in trims)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+            Assert.Equal(1, trims.Count());
+
+            // This will return the entire original polygon.
+            var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
+            Assert.Equal(1, trims1.Count());
+        }
+
+        [Fact]
+        public void PlaneIntersectsThroughEdges()
+        {
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var intersects = polygon.Intersects(plane, out List<Vector3> results);
+            Assert.True(intersects);
+            Assert.Equal<int>(4, results.Count);
+        }
+
+        [Fact]
+        public void PlaneIntersectsAtCoincidentPoint()
+        {
+            // A plane coincident with the right-most point of the star.
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var verticalRightPlane = new Plane(new Vector3(5.0, 0, 0), Vector3.XAxis);
+            var intersectsRight = polygon.Intersects(verticalRightPlane, out List<Vector3> resultsRight);
+            Assert.True(intersectsRight);
+            Assert.Equal<int>(1, resultsRight.Count);
+        }
+
+        [Fact]
+        public void IntersectionResultsAreOrderedAlongPlane()
+        {
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
+            var intersects = polygon.Intersects(plane, out List<Vector3> results);
+            // Assert that results are ordered along the plane
+            for (var i = 1; i < results.Count; i++)
+            {
+                Assert.True(results[i].X > results[i - 1].X);
+            }
+        }
+
+        [Fact]
+        public void ThrowsExceptionForCoplanarTrimPolygons()
+        {
+            var hex = Polygon.Ngon(6, 3);
+            var star = Polygon.Star(5, 2, 5);
+            Assert.Throws<Exception>(() =>
+            {
+                star.TrimmedTo(new[] { hex });
+            });
+        }
+
+        [Fact]
+        public void PolygonContains3D()
+        {
+            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            Assert.True(rect.Contains3D(rect.Centroid(), true));
+
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            Assert.True(star.Contains3D(star.Centroid(), true));
+        }
+
+        [Fact]
+        public void PolygonIsTrimmedByPolygons()
+        {
+            this.Name = nameof(PolygonIsTrimmedByPolygons);
+            var random = new Random();
+
+            var hex = Polygon.Ngon(6, 3);
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
+            var segs = hex.Segments();
+            var trimPolys = new List<Polygon>();
+
+            for (var i = 0; i < segs.Count(); i++)
+            {
+                var s = segs[i];
+                var p = new Polygon(new[]{
+                    s.Start,
+                    s.End,
+                    s.End + new Vector3(0,0,2),
+                    s.Start + new Vector3(0,0,2)
+                });
+
+                this.Model.AddElement(new Panel(p, BuiltInMaterials.Mass));
+                trimPolys.Add(p);
+            }
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var trim1 = star.TrimmedTo(trimPolys);
+            var trim2 = star.TrimmedTo(trimPolys.Select(tp => tp.Reversed()).ToList());
+            sw.Stop();
+            _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
+
+            Assert.Equal(5, trim1.Count());
+            Assert.Equal(1, trim2.Count());
+
+            foreach (var l in trim1)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+            }
+            foreach (var l in trim2)
+            {
+                this.Model.AddElement(new Panel(l, random.NextMaterial()));
+                this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
+            }
+        }
+
+        [Fact]
+        public void PolygonSplitsAtNewPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(2.5, 0) });
+            Assert.Equal(5, rect.Vertices.Count());
+        }
+
+        [Fact]
+        public void PolygonDoesNotSplitAtExistingPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(2.5, 2.5) });
+            Assert.Equal(4, rect.Vertices.Count());
+        }
+
+        [Fact]
+        public void PolygonDoesNotSplitAtNonIntersectingPoint()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            rect.Split(new[] { new Vector3(1, 1) });
+            Assert.Equal(4, rect.Vertices.Count());
+        }
+
+        public void CollinearPointCanBeRemoved()
+        {
+            var points = new Vector3[6]{
+                new Vector3( 0, 0, 0),
+                new Vector3( 10,0,0),
+                new Vector3(20,0,0),
+                new Vector3( 20, 20, 0),
+                new Vector3( 10, 20, 0),
+                new Vector3( 0, 20 , 0)
+                };
+
+            var polygon = new Polygon(points);
+            polygon = polygon.CollinearPointsRemoved();
+            Assert.True(polygon.Vertices.Count == 4);
+        }
+
+
     }
 }

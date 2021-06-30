@@ -1,16 +1,146 @@
 # Changelog
 
+## 0.9.2
+
+### Added
+- `Polyline.Split(List<Vector3> point)`
+- `Polygon.Split(List<Vector3> point)`
+- `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Vector3.>=`
+- `Vector3.<=`
+- `Plane.Intersects(Plane a, Plane b)`
+
+## 0.9.1
+
+### Added
+
+- `Transform(Plane plane)`
+- `Polygon.Trimmed(Plane plane, bool flip)`
+- ~~`GetSolid()` method on GeometricElement that returns the Csg solid.~~
+- `ToMesh()` method on GeometricElement that return the mesh of a processed solid.
+- `Polygon.ToTransform()`
+- `Elements.Anaysis.AnalysisImage`
+- `Profile.CreateFromPolygons(IEnumerable<Polygon> polygons)`
+- `CellComplex`:
+  - `Cell.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Edge.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, double? completedRadius)`
+  - `Face.TraverseNeighbors(Vector3 target, bool? parallel, bool? includeSharedVertices, double? completedRadius)`
+- Dxf creation framework with first Dxf converter.
+- `new BBox3(Element element)`
+- `Bbox3.Corners()`
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)`
+- `Polygon.CollinearPointsRemoved()`
+
+### Changed
+
+- `AnalysisMesh` now handles single valued analysis.
+- `Polygon.Split()` can now handle polygons that are not in the XY plane.
+- Leave the discriminator property during deserialization. It will go to AdditionalProperties.
+- `Lamina` representations can now include voids/holes.
+
+### Fixed
+
+- Guard against missing transforms while generating CSGs.
+- Fixed a bug ([#585](https://github.com/hypar-io/Elements/issues/585)) where CSG Booleans for certain representations (especially laminae) would fail.
+- Guard against missing transforms while generating CSGs.
+- In rare cases a `Line.Intersect(Line)` call would fail if there were near-duplicate vertices, this is fixed.
+- `Grid1d.ClosestPosition` now does a better job finding points on polyline axes.
+- Code-generated constructors now get default arguments for inherited properties.
+- `IsDegenerate()` method was reversed.
+- Adding content elements that contain multiple nodes used to only add the first mesh, now it adds all the nodes in the referenced glb hierarchy.
+- `Transform.OfVector(Vector)` is not applying translation anymore as vector doesn't have a position by definition.
+
+## 0.9.0
+
+### Added
+
+- `Grid2d.IsOutside()`
+- `GraphicsBuffers`
+
+### Removed
+
+- `BuiltInMaterials.Dirt`
+- `BuiltInMaterials.Grass`
+
+### Changed
+
+- `Grid2d.IsTrimmed()` now takes an optional boolean parameter `treatFullyOutsideAsTrimmed`
+- `ConstructedSolid` serializes and deserializes correctly.
+- `Solid.AddFace(Polygon, Polygon[])` can take an optional third `mergeVerticesAndEdges` argument which will automatically reuse existing edges + vertices in the solid.
+- Adds optional `tolerance` parameter to `Line.ExtendTo(Polygon)`, `Line.ExtendTo(IEnumerable<Line>)`, `Vector3.IsParallelTo(Vector3)`.
+- `Mesh.GetBuffers` now returns a `GraphicsBuffers` object.
+- `Solid.Tessellate` now returns a `GraphicsBuffers` object.
+- `CsgExtensions.Tessellate` now returns a `GraphicsBuffers` object.
+
+### Fixed
+
+- Fixed a bug in `ConvexHull.FromPoints` when multiple X coordinates are equal.
+- Fixed a bug in `Grid2d(Polygon, Vector3, Vector3, Vector3)` where U or V directions skew slightly when they nearly parallel with a boundary edge.
+
+## 0.8.5
+
+### Added
+
+- `Elements.Spatial.CellComplex`
+- `Grid2d.ToModelCurves()`
+- Alpha release of `Hypar.Elements.Components`
+- `Polyline.OffsetOnSide`
+- `Ray.Intersects(Polygon)`
+- `Vector3.DistanceTo(Polygon)`
+- `(double Cut, double Fill) Topography.CutAndFill(Polygon perimeter, double topElevation, out Mesh cutVolume, out Mesh fillVolume, double batterAngle)`
+- `void Topography.Trim(Polygon perimeter)`
+
+### Changed
+
+- `ColorScale` no longer bands colors but returns smooth gradient interpolation. It additionally now supports a list of values that correspond with the provided colors, allowing intentionally skewed interpolation.
+- `Solids.Import` is now public.
+- `Polygon.Contains` was modified to better handle polygons that are not on the XY plane.
+
+### Fixed
+
 ## 0.8.4
 
 ### Added
+
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
 - `Elements.Light`
 - `Elements.PointLight`
 - `Elements.SpotLight`
+- `Identity.AddOverrideIdentity`
 - `Material.NormalTexture`
 - `Polygon.PointInternal()`
+- `Topography.DepthMesh`
+- `Topography.DepthBelowMinimumElevation`
+- `Topography.AbsoluteMinimumElevation`
+- `Material.RepeatTexture`
+- `BBox3.IsValid()`
+- `BBox3.IsDegenerate()`
+- `Polygon.Split(Polyline)`
+- `Polygon.Split(IEnumerable<Polyline> polylines)`
+- `Profile.Split(IEnumerable<Profile>, IEnumerable<Polyline> p)`
+- `Elements.Spatial.HalfEdgeGraph2d`
+  - `.Construct()`
+  - `.Polygonize()`
+- Release helper github action
 
 ### Changed
+
 - `Elements.DirectionalLight` now inherits from `Elements.Light`.
+- `Elements.ContentCatalog` now has a `ReferenceConfiguration` property.
+- `SHSProfile`
+- `SHSProfileFactory`
+- `RHSProfile`
+- `RHSProfileFactory`
+- `Spatial.WebMercatorProjection.GetTileSizeMeters` produces a much more accurate result and requires a latitude.
+- Adding glb elements to a model uses a cache rather than fetching the stream every time.
+- `ProfileServer` is now `ProfileFactory`
+- `WideFlangeProfileServer` is now `WideFlangeProfileFactory`
+- First alpha after minor release logic was fixed
+- `HSSPipeProfileServer` is now `HSSPipeProfileFactory`
+- TypeGeneratorTests weren't actually running.
+- `Profile.Split(IEnumerable<Profile>, Polyline p)` now uses improved logic
 
 ## 0.8.3
 

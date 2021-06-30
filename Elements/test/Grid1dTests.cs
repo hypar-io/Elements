@@ -15,7 +15,7 @@ namespace Elements.Tests
         {
             this.Name = "Elements_Spatial_Grid1d";
 
-            // <example>            
+            // <example>
             // Create a 1d Grid from a line
             var line = new Line(new Vector3(5, 0, 0), new Vector3(60, 0, 0));
             var grid = new Grid1d(line);
@@ -38,7 +38,7 @@ namespace Elements.Tests
 
             // Retrieve all bottom-level cells.
             // Note that grid.Cells gets the top-level cells only, and
-            // grid.GetCells() recursively gets the bottom-level individual cells. 
+            // grid.GetCells() recursively gets the bottom-level individual cells.
             var cells = grid.GetCells();
 
             // Get lines representing each cell
@@ -50,7 +50,7 @@ namespace Elements.Tests
             foreach (var wallLine in lines)
             {
                 var color = new Color(rand.NextDouble(), rand.NextDouble(), rand.NextDouble(), 1.0);
-                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color, 0, 0, false, null, false, Guid.NewGuid(), color.ToString())));
+                walls.Add(new StandardWall(wallLine, 0.1, 3.0, new Material(color.ToString(), color, 0, 0, null, false, false)));
             }
 
             // Create rectangles from top-level grid cells
@@ -88,6 +88,23 @@ namespace Elements.Tests
             Assert.Equal(1, grid[1].Domain.Length);
             grid.SplitAtPosition(8); // should do nothing but not throw an error
             Assert.Equal(5, grid.Cells.Count);
+        }
+
+        [Fact]
+        public void SplitAtPositionsInRightPlace()
+        {
+            var simpleLine = new Line(Vector3.Origin, new Vector3(10, 0, 0));
+            var lineGrid = new Grid1d(simpleLine);
+            var splitLocation = new Vector3(3, 0, 0);
+            lineGrid.SplitAtPoint(splitLocation);
+            Assert.True(lineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(splitLocation) < 0.01);
+
+            var polyline = new Polyline(new[] { Vector3.Origin, new Vector3(3, 5), new Vector3(6, 2), new Vector3(10, -3) });
+            var polylineGrid = new Grid1d(polyline);
+            var polylineSplitLocation = new Vector3(3, 5);
+            polylineGrid.SplitAtPoint(polylineSplitLocation);
+            Assert.True(polylineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(polylineSplitLocation) < 0.01);
+
         }
 
         [Fact]
@@ -268,6 +285,25 @@ namespace Elements.Tests
             {
                 Assert.Equal(pattern[i % pattern.Count].length, cells[i + 1].Domain.Length, 3);
                 Assert.Equal(pattern[i % pattern.Count].typename, cells[i + 1].Type);
+            }
+        }
+
+        [Fact]
+        public void DivideByPatternWithoutRemainder()
+        {
+            var grid = new Grid1d(6);
+            var pattern = new List<(string typename, double length)>
+            {
+                ("A", 2),
+                ("B", 1)
+            };
+            grid.DivideByPattern(pattern, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+            var cells = grid.GetCells();
+
+            for (int i = 0; i < cells.Count; i++)
+            {
+                Assert.Equal(pattern[i % pattern.Count].typename, cells[i].Type);
+                Assert.Equal(pattern[i % pattern.Count].length, cells[i].Domain.Length, 3);
             }
         }
 

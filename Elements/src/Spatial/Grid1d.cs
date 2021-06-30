@@ -394,6 +394,32 @@ namespace Elements.Spatial
             {
                 point = parent.toGrid.OfPoint(point);
             }
+            if (Curve is Polyline pl && pl.Segments().Count() > 1)
+            {
+                var minDist = Double.MaxValue;
+                Vector3 closestPoint = Vector3.Origin;
+                Line[] segments = pl.Segments();
+                int closestSegment = -1;
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    Line seg = segments[i];
+                    var cp = point.ClosestPointOn(seg);
+                    var dist = cp.DistanceTo(point);
+                    if (dist < minDist)
+                    {
+                        closestPoint = cp;
+                        minDist = dist;
+                        closestSegment = i;
+                    }
+                }
+                double curvePosition = 0.0;
+                for (int i = 0; i < closestSegment; i++)
+                {
+                    curvePosition += segments[i].Length();
+                }
+                curvePosition += segments[closestSegment].Start.DistanceTo(point);
+                return curvePosition;
+            }
             var A = Curve.PointAt(0);
             var B = Curve.PointAt(1);
             var C = point;
@@ -717,6 +743,11 @@ namespace Elements.Spatial
                 runningPosition += patternSegments[i].length;
                 SplitAtOffset(runningPosition);
             }
+            if (Cells == null && patternSegments.Count == 1)
+            {
+                Type = patternSegments[0].typeName;
+                return;
+            }
             for (int i = 0; i < patternSegments.Count; i++)
             {
                 var cellOffset = offset > 0 ? 1 : 0;
@@ -739,7 +770,7 @@ namespace Elements.Spatial
             {
                 var segmentToAdd = lengthPattern[i % lengthPattern.Count];
                 runningLength += segmentToAdd.length;
-                if (runningLength < Domain.Length)
+                if (runningLength <= Domain.Length)
                 {
                     patternSegments.Add(segmentToAdd);
 

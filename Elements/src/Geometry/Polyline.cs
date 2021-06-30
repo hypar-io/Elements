@@ -2,6 +2,7 @@ using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClipperLib;
 
 namespace Elements.Geometry
@@ -309,7 +310,7 @@ namespace Elements.Geometry
         /// Compute the Plane defined by the first three non-collinear vertices of the Polygon.
         /// </summary>
         /// <returns>A Plane.</returns>
-        public Plane Plane()
+        public virtual Plane Plane()
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
@@ -517,6 +518,189 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Offset this polyline by the specified amount, only on one side.
+        /// </summary>
+        /// <remarks>This blunts sharp corners to keep widths close to the target.</remarks>
+        /// <param name="offset">The amount to offset.</param>
+        /// <param name="flip">Offset on the opposite of the default side. The default is to draw on the +X side of a polyline that goes up the +Y axis.</param>
+        /// <returns>An array of polygons that are extruded from each segment of the polyline.</returns>
+        public Polygon[] OffsetOnSide(double offset, bool flip)
+        {
+            var polygons = new List<Polygon>();
+            if (this.Vertices.Count <= 1)
+            {
+                return polygons.ToArray();
+            }
+
+            var isCycle = this.Vertices.Count > 2 && this.Vertices[0].DistanceTo(this.Vertices.Last()) <= offset / 2;
+            var segments = this.Segments();
+
+            // Step through each point, collecting info on what its join will look like.
+            var joinInfo = new List<Vector3[]>();
+            for (var vertexIndex = 0; vertexIndex < this.Vertices.Count; vertexIndex++)
+            {
+                var vertex = this.Vertices[vertexIndex];
+
+                // Don't draw both the first and last point if treating as a cycle.
+                if (isCycle && vertexIndex == this.Vertices.Count - 1)
+                {
+                    continue;
+                }
+
+                Line previousSegment = null;
+                Line previousOffsetSegment = null;
+                if (vertexIndex - 1 >= 0 || isCycle)
+                {
+                    if (vertexIndex == 0)
+                    {
+                        previousSegment = new Line(this.Vertices[this.Vertices.Count - 2], vertex);
+                    }
+                    else
+                    {
+                        previousSegment = segments[vertexIndex - 1];
+                    }
+                    previousOffsetSegment = previousSegment.Offset(offset, flip);
+                }
+
+                Line nextSegment = null;
+                Line nextOffsetSegment = null;
+                if (vertexIndex + 1 < this.Vertices.Count || isCycle)
+                {
+                    if (vertexIndex + 1 == this.Vertices.Count)
+                    {
+                        nextSegment = new Line(vertex, this.Vertices[0]);
+                    }
+                    else
+                    {
+                        nextSegment = segments[vertexIndex];
+                    }
+                    nextOffsetSegment = nextSegment.Offset(offset, flip);
+                }
+
+                var joinPoints = new List<Vector3>();
+                if (previousOffsetSegment != null && nextOffsetSegment != null)
+                {
+                    // Find where the virtual edges would naturally intersect.
+                    var intersects = previousOffsetSegment.Intersects(nextOffsetSegment, out Vector3 offsetIntersection, true);
+
+                    // When the end of one of the thickened segments overlaps with the other one, the intersection point may be very far away.
+                    // Address this by either picking an intersection point on one of the thickened segments or adding a cap (which happens when offsetIntersection is null)
+                    if (intersects)
+                    {
+                        // Identify if the offset interection lands beyond the previous point or beyond the next point in the polyline.
+                        if (previousOffsetSegment.Start.DistanceTo(previousOffsetSegment.End) < previousOffsetSegment.End.DistanceTo(offsetIntersection) &&
+                            previousOffsetSegment.Start.DistanceTo(offsetIntersection) < previousOffsetSegment.End.DistanceTo(offsetIntersection))
+                        {
+                            // The edge at the end of the outgoing segment.
+                            var endOfNextSegment = new Line(nextOffsetSegment.End, nextSegment.End);
+                            if (previousOffsetSegment.Intersects(endOfNextSegment, out Vector3 endOfNextSegmentIntersection))
+                            {
+                                // If the virtual offset point of the next line segment is inside the previous segment, the incoming virtual edge should be inside the outgoing thickened segment.
+                                offsetIntersection = endOfNextSegmentIntersection;
+                            }
+                            else if (previousSegment.Intersects(endOfNextSegment, out _))
+                            {
+                                // If the next point is entirely inside the previous segment, add a cap since any accute angle would be too narrow.
+                                intersects = false;
+                            }
+                            else
+                            {
+                                previousOffsetSegment.Start.DistanceTo(nextOffsetSegment, out offsetIntersection);
+                            }
+                        }
+                        else if (nextOffsetSegment.Start.DistanceTo(nextOffsetSegment.End) < nextOffsetSegment.Start.DistanceTo(offsetIntersection) &&
+                            nextOffsetSegment.Start.DistanceTo(offsetIntersection) > nextOffsetSegment.End.DistanceTo(offsetIntersection))
+                        {
+                            // The edge at the end of the incoming segment.
+                            var endOfPreviousSegment = new Line(previousOffsetSegment.Start, previousSegment.Start);
+                            if (nextOffsetSegment.Intersects(endOfPreviousSegment, out Vector3 endOfPreviousSegmentIntersection))
+                            {
+                                // If the virtual offset point of the previous line segment is inside the next segment, the outgoing virtual edge should be inside the incoming thickened segment.
+                                offsetIntersection = endOfPreviousSegmentIntersection;
+                            }
+                            else if (nextSegment.Intersects(endOfPreviousSegment, out _))
+                            {
+                                // If the previous point is entirely inside the next segment, add a cap since any accute angle would be too narrow.
+                                intersects = false;
+                            }
+                            else
+                            {
+                                nextOffsetSegment.End.DistanceTo(previousOffsetSegment, out offsetIntersection);
+                            }
+                        }
+                    }
+
+                    var isAcuteExteriorAngle = false;
+                    if (intersects)
+                    {
+                        isAcuteExteriorAngle = nextOffsetSegment.Direction().Dot((offsetIntersection - vertex).Unitized()) < Math.Cos(Math.PI * -3 / 4);
+                    }
+
+                    // Tight joins should get a cap, to maintain minimum width.
+                    if (!intersects ||
+                        isAcuteExteriorAngle &&
+                        (previousOffsetSegment.End.DistanceTo(offsetIntersection) > offset ||
+                        nextOffsetSegment.Start.DistanceTo(offsetIntersection) > offset))
+                    {
+                        var offsetPoint1 = previousOffsetSegment.Direction() * offset + previousOffsetSegment.End;
+                        var offsetPoint2 = nextOffsetSegment.Direction() * (offset * -1) + nextOffsetSegment.Start;
+                        joinPoints.Add(offsetPoint1);
+                        if (offsetPoint1.DistanceTo(offsetPoint2) != 0)
+                        {
+                            joinPoints.Add(offsetPoint2);
+                        }
+                    }
+                    else
+                    {
+                        joinPoints.Add(offsetIntersection);
+                    }
+                }
+                else if (previousOffsetSegment != null)
+                {
+                    joinPoints.Add(previousOffsetSegment.End);
+                }
+                else if (nextOffsetSegment != null)
+                {
+                    joinPoints.Add(nextOffsetSegment.Start);
+                }
+                else
+                {
+                    continue;
+                }
+
+                joinPoints.Add(vertex);
+                joinInfo.Add(joinPoints.ToArray());
+            }
+
+            // Create a polygon for each point's join, connecting back to the end of the previous point's join.
+            for (var joinIndex = 0; joinIndex < joinInfo.Count; joinIndex++)
+            {
+                if (joinIndex == 0 && !isCycle)
+                {
+                    continue;
+                }
+
+                var joinPoints = joinInfo[joinIndex];
+                var previousJoinPoints = joinIndex > 0 ? joinInfo[joinIndex - 1] : joinInfo.Last();
+                var vertices = new List<Vector3>();
+                vertices.Add(previousJoinPoints.Last());
+                vertices.Add(previousJoinPoints[previousJoinPoints.Length - 2]);
+                vertices.AddRange(joinPoints);
+                var polygon = new Polygon(vertices);
+                if (polygon.IsClockWise())
+                {
+                    polygons.Add(polygon.Reversed());
+                }
+                else
+                {
+                    polygons.Add(polygon);
+                }
+            }
+
+            return polygons.ToArray();
+        }
+
+        /// <summary>
         /// Does this polyline equal the provided polyline?
         /// </summary>
         /// <param name="other"></param>
@@ -588,6 +772,52 @@ namespace Elements.Geometry
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Insert a point into the polyline if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="points">The points at which to split the polyline.</param>
+        /// <returns>The index of the new vertex.</returns>
+        public virtual void Split(IList<Vector3> points)
+        {
+            Split(points);
+        }
+
+        protected void Split(IList<Vector3> points, bool closed = false)
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var a = this.Vertices[i];
+                var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+
+                for (var j = points.Count - 1; j >= 0; j--)
+                {
+                    var point = points[j];
+
+                    if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                    {
+                        // The split point is coincident with a vertex.
+                        continue;
+                    }
+
+                    if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                    {
+                        if (i > this.Vertices.Count - 1)
+                        {
+                            this.Vertices.Add(point);
+                        }
+                        else
+                        {
+                            this.Vertices.Insert(i + 1, point);
+                        }
+
+                        break;
+                    }
+                }
+            }
+            return;
         }
     }
 

@@ -1,0 +1,120 @@
+{
+    "discriminator": "Elements.Panel",
+    "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+            {
+                "X": 9.21363,
+                "Y": 34.71703,
+                "Z": 0.0
+            },
+            {
+                "X": 16.04392,
+                "Y": 34.71703,
+                "Z": 0.0
+            },
+            {
+                "X": 16.04392,
+                "Y": 40.28862,
+                "Z": 0.0
+            },
+            {
+                "X": 7.59009,
+                "Y": 40.28862,
+                "Z": 0.0
+            },
+            {
+                "X": 7.59009,
+                "Y": 39.34084,
+                "Z": 0.0
+            },
+            {
+                "X": 9.21363,
+                "Y": 39.34084,
+                "Z": 0.0
+            }
+        ]
+    },
+    "Transform": {
+        "Matrix": {
+            "Components": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.2
+            ]
+        }
+    },
+    "Material": {
+        "discriminator": "Elements.Material",
+        "Color": {
+            "Red": 0.6417257863291194,
+            "Green": 0.5859009472587616,
+            "Blue": 0.4850621030130713,
+            "Alpha": 1.0
+        },
+        "SpecularFactor": 0.0,
+        "GlossinessFactor": 0.0,
+        "Unlit": true,
+        "DoubleSided": true,
+        "RepeatTexture": true,
+        "NormalTexture": null,
+        "Id": "bd864a2d-77b9-43ab-8914-3070806e9c57",
+        "Name": "R:0.64, G:0.59, B:0.49, A: 1.00"
+    },
+    "Representation": {
+        "SolidOperations": [
+            {
+                "discriminator": "Elements.Geometry.Solids.Lamina",
+                "Perimeter": {
+                    "discriminator": "Elements.Geometry.Polygon",
+                    "Vertices": [
+                        {
+                            "X": 9.21363,
+                            "Y": 34.71703,
+                            "Z": 0.0
+                        },
+                        {
+                            "X": 16.04392,
+                            "Y": 34.71703,
+                            "Z": 0.0
+                        },
+                        {
+                            "X": 16.04392,
+                            "Y": 40.28862,
+                            "Z": 0.0
+                        },
+                        {
+                            "X": 7.59009,
+                            "Y": 40.28862,
+                            "Z": 0.0
+                        },
+                        {
+                            "X": 7.59009,
+                            "Y": 39.34084,
+                            "Z": 0.0
+                        },
+                        {
+                            "X": 9.21363,
+                            "Y": 39.34084,
+                            "Z": 0.0
+                        }
+                    ]
+                },
+                "IsVoid": false,
+                "LocalTransform": null
+            }
+        ]
+    },
+    "IsElementDefinition": false,
+    "Id": "20b37e17-033c-493b-9eb9-174c5bdd59e2",
+    "Name": "39.59433420229999"
+}

@@ -9,6 +9,8 @@ namespace Elements.Tests
 {
     public class CsgTests : ModelTest
     {
+        private HSSPipeProfileFactory _profileFactory = new HSSPipeProfileFactory();
+
         [Fact]
         public void Csg()
         {
@@ -50,28 +52,25 @@ namespace Elements.Tests
         public void Difference()
         {
             this.Name = "CSG_Difference";
-            // var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
-            var profile = HSSPipeProfileServer.Instance.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
+            var profile = _profileFactory.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
 
             var path = new Arc(Vector3.Origin, 5, 0, 270);
-            var s1 = new Sweep(profile, path, 0, 0, 0, true);
-            var csg = s1.Solid.ToCsg();
+            var beam = new Beam(path, profile);
 
-            var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, false);
-            csg = csg.Substract(s2.Solid.ToCsg());
+            var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, true);
+            beam.Representation.SolidOperations.Add(s2);
 
             for (var i = 0.0; i < 1.0; i += 0.05)
             {
                 var pt = path.PointAt(i);
-                var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, false);
-                csg = csg.Substract(hole.Solid.ToCsg().Transform(new Transform(pt + new Vector3(0, 0, -2)).ToMatrix4x4()));
+                var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, true)
+                {
+                    LocalTransform = new Transform(pt + new Vector3(0, 0, -2))
+                };
+                beam.Representation.SolidOperations.Add(hole);
             }
 
-            var result = new Mesh();
-            csg.Tessellate(ref result);
-
-            var me2 = new MeshElement(result);
-            this.Model.AddElement(me2);
+            this.Model.AddElement(beam);
         }
     }
 }

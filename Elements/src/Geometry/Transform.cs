@@ -111,6 +111,12 @@ namespace Elements.Geometry
             ApplyRotationAndTranslation(rotation, z, origin);
         }
 
+        /// <summary>
+        /// Create a transform using the provided plane's origin and normal.
+        /// </summary>
+        /// <param name="plane">The plane used to orient the transform.</param>
+        public Transform(Plane plane) : this(plane.Origin, plane.Normal) { }
+
         private void ApplyRotationAndTranslation(double rotation, Vector3 axis, Vector3 translation)
         {
             if (rotation != 0.0)
@@ -162,7 +168,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform a point into the coordinate space defined by this transform.
+        /// Transform a vector into the coordinate space defined by this transform.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
@@ -172,15 +178,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Transform a vector into the coordinate space defined by this transform.
+        /// Transform a vector into the coordinate space defined by this transform ignoring the translation.
         /// </summary>
         /// <param name="vector">The vector to transform.</param>
         /// <returns>A new vector transformed by this transform.</returns>
         public Vector3 OfVector(Vector3 vector)
         {
-            // Construct a matrix that removes the translation.
-            var m = new Matrix(this.XAxis, this.YAxis, this.ZAxis, Vector3.Origin);
-            return vector * m;
+            return new Vector3(
+                vector.X * XAxis.X + vector.Y * YAxis.X + vector.Z * ZAxis.X,
+                vector.X * XAxis.Y + vector.Y * YAxis.Y + vector.Z * ZAxis.Y,
+                vector.X * XAxis.Z + vector.Y * YAxis.Z + vector.Z * ZAxis.Z
+            );
         }
 
         /// <summary>
@@ -237,10 +245,7 @@ namespace Elements.Geometry
         /// <returns>A new plane transformed by this transform.</returns>
         public Plane OfPlane(Plane plane)
         {
-            // The normal vector must be transformed in a way
-            // that considers only orientation and not position
-            var tempXform = new Transform(Vector3.Origin, this.XAxis, this.ZAxis);
-            return new Plane(OfPoint(plane.Origin), tempXform.OfVector(plane.Normal));
+            return new Plane(OfPoint(plane.Origin), OfVector(plane.Normal));
         }
 
         /// <summary>

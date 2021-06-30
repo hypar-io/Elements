@@ -7,6 +7,7 @@ using Elements;
 using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Spatial;
 using Elements.Validators;
 using Elements.Serialization.JSON;
 using System;
@@ -74,6 +75,15 @@ namespace Elements
                     RaisePropertyChanged();
                 }
             }
+        }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
         }
     
     

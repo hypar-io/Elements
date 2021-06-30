@@ -22,6 +22,12 @@ namespace Elements
 
         private double _maxElevation = double.NegativeInfinity;
 
+        private double _depthBelowMinimumElevation = 10;
+
+        private double? _absoluteMinimumElevation;
+
+        internal List<Vertex> _baseVerts = new List<Vertex>();
+
         /// <summary>
         /// The maximum elevation of the topography.
         /// </summary>
@@ -60,6 +66,40 @@ namespace Elements
         public double CellHeight { get; }
 
         /// <summary>
+        /// The depth of the the topography's mass below the topography's minimum elevation.
+        /// </summary>
+        /// <value></value>
+        public double DepthBelowMinimumElevation
+        {
+            get { return _depthBelowMinimumElevation; }
+            set
+            {
+                if (value != _depthBelowMinimumElevation)
+                {
+                    _depthBelowMinimumElevation = value < 1 ? 1.0 : value;
+                    RaisePropertyChanged("DepthBelowMinimumElevation");
+                }
+            }
+        }
+
+        /// <summary>
+        /// The absolute minimum elevation of the topography's mass.
+        /// </summary>
+        /// <value>If this value is not null, DepthBelowMinimumElevation will be ignored.</value>
+        public double? AbsoluteMinimumElevation
+        {
+            get { return _absoluteMinimumElevation; }
+            set
+            {
+                if (value != null && value != _absoluteMinimumElevation)
+                {
+                    _absoluteMinimumElevation = Math.Min(value.Value, MinElevation - 1);
+                    RaisePropertyChanged("AbsoluteMinimumElevation");
+                }
+            }
+        }
+
+        /// <summary>
         /// Create a topography.
         /// </summary>
         /// <param name="origin">The origin of the topography.</param>
@@ -82,17 +122,13 @@ namespace Elements
                                                      id == null ? Guid.NewGuid() : id,
                                                      name)
         {
-            this._mesh = new Mesh();
-
             this.Origin = origin;
             this.Elevations = elevations;
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
-            var mesh = GenerateMesh(elevations, origin, this.RowWidth, this.CellWidth, this.CellWidth);
-            this._mesh = mesh.Mesh;
-            this._minElevation = mesh.MinElevation;
-            this._maxElevation = mesh.MaxElevation;
+
+            ConstructMeshesAndRegisterPropertyChangeHandlers();
         }
 
         [JsonConstructor]
@@ -115,7 +151,38 @@ namespace Elements
             this.RowWidth = rowWidth;
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
-            var mesh = GenerateMesh(elevations, origin, rowWidth, cellWidth, cellHeight);
+
+            ConstructMeshesAndRegisterPropertyChangeHandlers();
+        }
+
+        internal void ConstructMeshesAndRegisterPropertyChangeHandlers()
+        {
+            GenerateMeshAndSetInternals();
+            double absoluteMinimumElevation = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            CreateSidesAndBottomMesh(this._mesh,
+                                     this.RowWidth,
+                                     absoluteMinimumElevation,
+                                     this.CellHeight,
+                                     this.CellWidth,
+                                     this.Origin);
+
+            this.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
+                {
+                    var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+                    MoveBaseVerts(minHeight);
+                }
+            };
+        }
+
+        private void GenerateMeshAndSetInternals()
+        {
+            var mesh = GenerateMesh(this.Elevations,
+                                    this.Origin,
+                                    this.RowWidth,
+                                    this.CellWidth,
+                                    this.CellWidth);
             this._mesh = mesh.Mesh;
             this._minElevation = mesh.MinElevation;
             this._maxElevation = mesh.MaxElevation;
@@ -132,6 +199,8 @@ namespace Elements
             var maxElevation = double.MinValue;
             var mesh = new Mesh();
             var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
+
+            var r = new Random();
 
             for (var y = 0; y < rowWidth; y++)
             {
@@ -155,7 +224,11 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el), uv: uv);
+                    // Add the tiniest amount of fuzz to avoid the 
+                    // triangles being identified as coplanar during
+                    // operations like CSG.
+                    var fuzz = r.NextDouble() * 0.0001;
+                    mesh.AddVertex(origin + new Vector3(x * cellWidth, y * cellHeight, el + fuzz), uv: uv);
 
                     if (y > 0 && x > 0)
                     {
@@ -178,6 +251,170 @@ namespace Elements
 
             mesh.ComputeNormals();
             return (mesh, maxElevation, minElevation);
+        }
+
+        private void CreateSidesAndBottomMesh(Mesh mesh,
+                                                     int rowWidth,
+                                                     double depth,
+                                                     double cellHeight,
+                                                     double cellWidth,
+                                                     Vector3 origin)
+        {
+            // Track the last created "low"
+            // point so that we can merge
+            // vertices in the side meshes.
+            Vertex lastL = null;
+            Vertex lastR = null;
+            Vertex lastT = null;
+            Vertex lastB = null;
+            (Vector3 U, Vector3 V) basisLeft = (default(Vector3), default(Vector3));
+            (Vector3 U, Vector3 V) basisRight = (default(Vector3), default(Vector3));
+            (Vector3 U, Vector3 V) basisTop = (default(Vector3), default(Vector3));
+            (Vector3 U, Vector3 V) basisBottom = (default(Vector3), default(Vector3));
+
+            this._baseVerts.Clear();
+
+            for (var u = 0; u < rowWidth - 1; u++)
+            {
+                if (u == 0)
+                {
+                    basisLeft = Vector3.XAxis.Negate().ComputeDefaultBasisVectors();
+                    basisRight = Vector3.XAxis.ComputeDefaultBasisVectors();
+                    basisTop = Vector3.YAxis.ComputeDefaultBasisVectors();
+                    basisBottom = Vector3.YAxis.Negate().ComputeDefaultBasisVectors();
+                }
+
+                // Left side
+                Vertex l1 = null;
+                var i1 = u * rowWidth;
+                var v1Existing = mesh.Vertices[i1];
+                var v1 = mesh.AddVertex(v1Existing.Position, normal: Vector3.XAxis.Negate());
+                if (lastL != null)
+                {
+                    l1 = lastL;
+                }
+                else
+                {
+                    var p = new Vector3(v1.Position.X, v1.Position.Y, depth);
+                    l1 = mesh.AddVertex(p);
+                    _baseVerts.Add(l1);
+                }
+
+                var i2 = i1 + rowWidth;
+                var v2Existing = mesh.Vertices[i2];
+                var v2 = mesh.AddVertex(v2Existing.Position);
+
+                var pl2 = new Vector3(v2.Position.X, v2.Position.Y, depth);
+                var l2 = mesh.AddVertex(pl2);
+                _baseVerts.Add(l2);
+                lastL = l2;
+
+                mesh.AddTriangle(l1, v1, v2);
+                mesh.AddTriangle(l2, l1, v2);
+
+                // Right side
+                Vertex l3 = null;
+                var i3 = u * (rowWidth) + (rowWidth - 1);
+                var v3Existing = mesh.Vertices[i3];
+                var v3 = mesh.AddVertex(v3Existing.Position, normal: Vector3.XAxis);
+
+                if (lastR != null)
+                {
+                    l3 = lastR;
+                }
+                else
+                {
+                    var p = new Vector3(v3.Position.X, v3.Position.Y, depth);
+                    l3 = mesh.AddVertex(p);
+                    _baseVerts.Add(l3);
+                }
+
+                var i4 = i3 + rowWidth;
+                var v4Existing = mesh.Vertices[i4];
+                var v4 = mesh.AddVertex(v4Existing.Position);
+                var pl4 = new Vector3(v4.Position.X, v4.Position.Y, depth);
+                var l4 = mesh.AddVertex(pl4);
+                _baseVerts.Add(l4);
+                lastR = l4;
+
+                mesh.AddTriangle(l3, v4, v3);
+                mesh.AddTriangle(l3, l4, v4);
+
+                // Top side
+                Vertex l5 = null;
+                var i5 = u;
+                var v5Existing = mesh.Vertices[i5];
+                var v5 = mesh.AddVertex(v5Existing.Position, normal: Vector3.YAxis);
+                if (lastT != null)
+                {
+                    l5 = lastT;
+                }
+                else
+                {
+                    var p = new Vector3(v5.Position.X, v5.Position.Y, depth);
+                    l5 = mesh.AddVertex(p);
+                    _baseVerts.Add(l5);
+                }
+
+                var i6 = i5 + 1;
+                var v6Existing = mesh.Vertices[i6];
+                var v6 = mesh.AddVertex(v6Existing.Position);
+                var pl6 = new Vector3(v6.Position.X, v6.Position.Y, depth);
+                var l6 = mesh.AddVertex(pl6);
+                _baseVerts.Add(l6);
+                lastT = l6;
+
+                mesh.AddTriangle(l5, v6, v5);
+                mesh.AddTriangle(l5, l6, v6);
+
+                // Bottom side
+                Vertex l7 = null;
+                var i7 = rowWidth * rowWidth - u - 1;
+                var v7Existing = mesh.Vertices[i7];
+                var v7 = mesh.AddVertex(v7Existing.Position, normal: Vector3.YAxis.Negate());
+
+                if (lastB != null)
+                {
+                    l7 = lastB;
+                }
+                else
+                {
+                    var p = new Vector3(v7.Position.X, v7.Position.Y, depth);
+                    l7 = mesh.AddVertex(p);
+                    _baseVerts.Add(l7);
+                }
+
+                var i8 = i7 - 1;
+                var v8Existing = mesh.Vertices[i8];
+                var v8 = mesh.AddVertex(v8Existing.Position);
+                var pl8 = new Vector3(v8.Position.X, v8.Position.Y, depth);
+                var l8 = mesh.AddVertex(pl8);
+                _baseVerts.Add(l8);
+                lastB = l8;
+
+                mesh.AddTriangle(l7, v8, v7);
+                mesh.AddTriangle(l7, l8, v8);
+            }
+
+            // Add the bottom
+            var bb1 = mesh.AddVertex(origin + new Vector3(0, 0, depth));
+            var bb2 = mesh.AddVertex(origin + new Vector3((rowWidth - 1) * cellWidth, 0, depth));
+            var bb3 = mesh.AddVertex(origin + new Vector3((rowWidth - 1) * cellWidth, (rowWidth - 1) * cellHeight, depth));
+            var bb4 = mesh.AddVertex(origin + new Vector3(0, (rowWidth - 1) * cellHeight, depth));
+
+            _baseVerts.AddRange(new[] { bb1, bb2, bb3, bb4 });
+
+            mesh.AddTriangle(bb1, bb3, bb2);
+            mesh.AddTriangle(bb1, bb4, bb3);
+
+            mesh.ComputeNormals();
+        }
+
+        private static UV ComputeUVForBasisAndPosition((Vector3 U, Vector3 V) basis, Vector3 p)
+        {
+            var u = basis.U.Dot(p);
+            var v = basis.V.Dot(p);
+            return new UV(u, v);
         }
 
         /// <summary>
@@ -220,8 +457,11 @@ namespace Elements
             for (var i = 0; i < e1.Length; i++)
             {
                 var pos = e1[i].Position.Average(e2[i].Position);
+                var normal = ((e1[i].Normal + e2[i].Normal) / 2).Unitized();
                 e1[i].Position = pos;
+                e1[i].Normal = normal;
                 e2[i].Position = pos;
+                e2[i].Normal = normal;
             }
         }
 
@@ -255,6 +495,154 @@ namespace Elements
                     return null;
             }
             return range.Select(i => this.Mesh.Vertices[start + i * increment]).ToArray();
+        }
+
+        /// <summary>
+        /// Trim the topography with the specified perimeter.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the trimmed topography.</param>
+        public void Trim(Polygon perimeter)
+        {
+            // This creates a tall trimming object which is extruded
+            // from the zero plane but then transformed in -Z by half its
+            // elevation to assure a trim through the object.
+
+            var topoCsg = this.Mesh.ToCsg();
+            var trim = new Extrude(perimeter, 200000, Vector3.ZAxis, false);
+            var t = new Transform(0, 0, -100000);
+            var trimCsg = trim._solid.ToCsg().Transform(t.ToMatrix4x4());
+            topoCsg = trimCsg.Intersect(topoCsg);
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            // We've trimmed the mesh. We now need to
+            // reset the min and max elevation.
+            SetBaseVerts();
+            SetMinAndMaxElevation();
+        }
+
+        /// <summary>
+        /// Cut a tunnel through a topography.
+        /// </summary>
+        /// <param name="path">The path of the tunnel.</param>
+        /// <param name="diameter">The diameter of the tunnel.</param>
+        public void Tunnel(Curve path, double diameter)
+        {
+            if (diameter < 0.0)
+            {
+                throw new ArgumentException("Diameter must be greater than 0.0.", "diameter");
+            }
+
+            var topoCsg = this.Mesh.ToCsg();
+
+            var profile = new Circle(diameter / 2).ToPolygon(20);
+            var sweep = new Sweep(profile, path, 0.0, 0.0, 0.0, false);
+            var tunnelCsg = sweep._solid.ToCsg();
+
+            topoCsg = topoCsg.Substract(tunnelCsg);
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            SetBaseVerts();
+            SetMinAndMaxElevation();
+        }
+
+        /// <summary>
+        /// Cut and or fill the topography with the specified perimeter to the specified elevation.
+        /// </summary>
+        /// <param name="perimeters">The perimeters of the cut and fill areas.</param>
+        /// <param name="elevation">The final elevation of the cut and fill.</param>
+        /// <param name="batterAngle">The angle of the battering surrounding the fill area in degrees.</param>
+        /// <param name="fills">Meshes representing the fill volume in the topography.</param>
+        /// <param name="cuts">Meshes representing the cut volume in the topography.</param>
+        /// <returns>The sum of all cut and fill volumes.</returns>
+        public (double CutVolume, double FillVolume) CutAndFill(IList<Polygon> perimeters, double elevation, out List<Mesh> cuts, out List<Mesh> fills, double batterAngle = 45.0)
+        {
+            if (this.AbsoluteMinimumElevation == null || elevation < this.AbsoluteMinimumElevation)
+            {
+                // Push the depth of the topography down past
+                // the required elevation.
+                this.AbsoluteMinimumElevation = elevation - 1;
+            }
+
+            if (batterAngle < 0.0)
+            {
+                throw new ArgumentException("The batter angle must be greater than 0.0", "batterAngle");
+            }
+
+            cuts = new List<Mesh>();
+            fills = new List<Mesh>();
+
+            var topoCsg = this.Mesh.ToCsg();
+            foreach (var p in perimeters)
+            {
+                topoCsg = CutAndFillInternal(topoCsg, elevation, p, cuts, fills, batterAngle);
+            }
+
+            var mesh = new Mesh();
+            topoCsg.Tessellate(ref mesh);
+            this.Mesh = mesh;
+
+            return (cuts.Sum(c => c.Volume()), fills.Sum(f => f.Volume()));
+        }
+
+        private Csg.Solid CutAndFillInternal(Csg.Solid topoCsg, double elevation, Polygon perimeter, List<Mesh> cuts, List<Mesh> fills, double batterAngle = 45.0)
+        {
+            // This check isn't perfect. Sites with topography may have
+            // areas where the elevation is lower, and areas where the elevation
+            // is higher.
+            if (elevation < this.MaxElevation)
+            {
+                // Cut
+                var cutSolid = new Extrude(perimeter, 100000, Vector3.ZAxis, false);
+                var t = new Transform(0, 0, elevation);
+                // Transform the cut volume to the elevation.
+                var cutCsg = cutSolid.Solid.ToCsg().Transform(t.ToMatrix4x4());
+
+                // Calculate the volume of the cut
+                // as the union of the two solids.
+                var cutXsect = topoCsg.Intersect(cutCsg);
+                var cut = new Mesh();
+                cutXsect.Tessellate(ref cut);
+                cuts.Add(cut);
+
+                topoCsg = topoCsg.Substract(cutCsg);
+            }
+
+            if (elevation > this.MinElevation)
+            {
+                // Fill
+                var height = elevation - this.MinElevation;
+
+                var fillSolid = new Extrude(perimeter, height, Vector3.ZAxis, false);
+                // Transform the fill volume down to the minimum elevation
+                // and fill up to the elevation.
+                var fillT = new Transform(0, 0, this.MinElevation);
+                var csgT = fillT.ToMatrix4x4();
+                var fillCsg = fillSolid.Solid.ToCsg().Transform(csgT);
+
+                var batterWidth = height * Math.Cos(Units.DegreesToRadians(batterAngle));
+                var batterProfile = new Polygon(new[]{
+                    Vector3.Origin,
+                    new Vector3(batterWidth, 0),
+                    new Vector3(0, height)
+                });
+
+                // Calculate the whole fill by adding the battering.
+                var batterSweep = new Sweep(batterProfile, perimeter, 0, 0, 0, false);
+                var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
+                fillCsg = fillCsg.Union(batterCsg);
+
+                var xsect = fillCsg.Substract(topoCsg);
+                var fill = new Mesh();
+                xsect.Tessellate(ref fill);
+                fills.Add(fill);
+                topoCsg = topoCsg.Union(fillCsg);
+            }
+
+            return topoCsg;
         }
 
         /// <summary>
@@ -451,6 +839,50 @@ namespace Elements
             }
 
             return output;
+        }
+
+        private void MoveBaseVerts(double newElevation)
+        {
+            foreach (var v in this._baseVerts)
+            {
+                v.Position = new Vector3(v.Position.X, v.Position.Y, newElevation);
+            }
+        }
+
+        private void SetBaseVerts()
+        {
+            var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            this._baseVerts.Clear();
+            foreach (var v in this.Mesh.Vertices)
+            {
+                if (v.Position.Z.ApproximatelyEquals(minHeight))
+                {
+                    this._baseVerts.Add(v);
+                }
+            }
+        }
+
+        private void SetMinAndMaxElevation()
+        {
+            // Ignore any vertices that have the depth of the sides.
+            var max = double.MinValue;
+            var min = double.MaxValue;
+            foreach (var v in this.Mesh.Vertices)
+            {
+                if (!_baseVerts.Contains(v))
+                {
+                    if (v.Position.Z > max)
+                    {
+                        max = v.Position.Z;
+                    }
+                    if (v.Position.Z < min)
+                    {
+                        min = v.Position.Z;
+                    }
+                }
+            }
+            this._minElevation = min;
+            this._maxElevation = max;
         }
 
         /// <summary>

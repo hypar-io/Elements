@@ -9,6 +9,25 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Validators
 {
+    public class ElementValidator : IValidator
+    {
+        public Type ValidatesType => typeof(Element);
+
+        public void PostConstruct(object obj)
+        {
+            var elem = (Element)obj;
+            if (elem.Id == default(Guid))
+            {
+                elem.Id = System.Guid.NewGuid();
+            }
+        }
+
+        public void PreConstruct(object[] args)
+        {
+            // Do nothing.
+        }
+    }
+
     public class GeometricElementValidator : IValidator
     {
         public Type ValidatesType => typeof(GeometricElement);
@@ -19,6 +38,10 @@ namespace Elements.Validators
             if (geom.Material == null)
             {
                 geom.Material = BuiltInMaterials.Default;
+            }
+            if (geom.Transform == null)
+            {
+                geom.Transform = new Transform();
             }
         }
 
@@ -147,14 +170,24 @@ namespace Elements.Validators
             var unlit = (bool)args[3];
             var texture = (string)args[4];
             var doubleSided = (bool)args[5];
-            var id = (Guid)args[6];
-            var name = (string)args[7];
+            var repeatTexture = (bool)args[6];
+            var normalTexture = (string)args[7];
+            var interpolateTexture = (bool)args[8];
+            var id = (Guid)args[9];
+            var name = (string)args[10];
 
             if (texture != null && !File.Exists(texture))
             {
                 // If the file doesn't exist, set the texture to null,
                 // so the material is still created.
                 texture = null;
+            }
+
+            if (normalTexture != null && !File.Exists(normalTexture))
+            {
+                // If the file doesn't exist, set the normalTexture to null,
+                // so the material is still created.
+                normalTexture = null;
             }
 
             if (specularFactor < 0.0 || glossinessFactor < 0.0)
@@ -314,7 +347,7 @@ namespace Elements.Validators
 
         private void UpdateGeometry(Lamina lamina)
         {
-            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter);
+            lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter, lamina.Voids);
             lamina._csg = lamina._solid.ToCsg();
         }
 
@@ -351,7 +384,7 @@ namespace Elements.Validators
         {
             if (obj is Polygon)
             {
-                // we don't need to validate twice — 
+                // we don't need to validate twice —
                 // the Polygon PostConstruct validator will handle all of this correctly.
                 return;
             }

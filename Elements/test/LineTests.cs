@@ -55,6 +55,26 @@ namespace Elements.Geometry.Tests
             {
                 Assert.True(result.Equals(plane.Origin));
             }
+
+            // Plane at line end.
+            var plane2 = new Plane(new Vector3(5.0, 0, 0), Vector3.XAxis);
+            var intersectsPlane2 = line.Intersects(plane2, out _);
+            Assert.True(intersectsPlane2);
+
+            // Plane almost at line end.
+            var plane4 = new Plane(new Vector3(4.99999, 0, 0), Vector3.XAxis);
+            var intersectsPlane4 = line.Intersects(plane4, out _);
+            Assert.True(intersectsPlane4);
+
+            // Plane at line start
+            var plane3 = new Plane(new Vector3(0.0, 0, 0), Vector3.XAxis);
+            var intersectsPlane3 = line.Intersects(plane3, out _);
+            Assert.True(intersectsPlane3);
+
+            // Plane almost at line start.
+            var plane5 = new Plane(new Vector3(0.00001, 0, 0), Vector3.XAxis);
+            var intersectsPlane5 = line.Intersects(plane5, out _);
+            Assert.True(intersectsPlane5);
         }
 
         [Fact]
@@ -189,6 +209,13 @@ namespace Elements.Geometry.Tests
             Assert.Equal(4.186147, lines[0].Length(), 2);
         }
 
+        [Fact]
+        public void LineIntersectAtEnd()
+        {
+            var line1 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":22.63192881973488,\"Y\":23.07673264883112,\"Z\":0.0},\"End\":{\"X\":26.239210000000003,\"Y\":32.009170000000005,\"Z\":0.0}}");
+            var line2 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":26.23921,\"Y\":32.00917,\"Z\":0.0},\"End\":{\"X\":24.47373,\"Y\":32.72215,\"Z\":0.0}}");
+            line1.Intersects(line2, out var intersection, false, true);
+        }
 
         [Fact]
         public void LineTrimWithPolygon()
@@ -302,7 +329,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(4, singleFurthestExtend.End.X);
 
             // If no intersections found, returns line with same endpoints
-            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1,1), new Vector3(2, 2)));
+            var noIntersection = line.ExtendTo(Polygon.Rectangle(new Vector3(1, 1), new Vector3(2, 2)));
 
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);

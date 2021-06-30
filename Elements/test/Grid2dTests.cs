@@ -38,7 +38,7 @@ namespace Elements.Tests
             var floor = new Floor(new Profile((Polygon)grid.GetCellGeometry()), 0.5, new Transform(0, 0, -0.51));
 
             // Create model curves from all subdivided cells of the grid
-            var modelCurves = grid.GetCells().Select(c => new ModelCurve(c.GetCellGeometry()));
+            var modelCurves = grid.ToModelCurves();
             // </example>
 
             Model.AddElement(floor);
@@ -77,20 +77,23 @@ namespace Elements.Tests
             var trimmedCells = grid.GetCells().Select(c =>
                 (TrimmedGeometry: c.GetTrimmedCellGeometry(),
                 BaseRect: c.GetCellGeometry(),
-                IsTrimmed: c.IsTrimmed()));
+                IsTrimmed: c.IsTrimmed(),
+                IsTrimmedButNotOutside: c.IsTrimmed(false)));
 
             foreach (var trimGeometry in trimmedCells)
             {
                 var trimGeo = trimGeometry.TrimmedGeometry.OfType<Polygon>();
-                var material = trimGeometry.IsTrimmed ? BuiltInMaterials.XAxis : BuiltInMaterials.ZAxis;
+                var material = trimGeometry.IsTrimmed ? (trimGeometry.IsTrimmedButNotOutside ? BuiltInMaterials.XAxis : BuiltInMaterials.YAxis) : BuiltInMaterials.ZAxis;
                 foreach (var t in trimGeo)
                 {
                     Model.AddElement(new ModelCurve(t));
-                    Model.AddElement(new Mass(t, 1, material, new Transform(0, 0, -1.001)));
+                    Model.AddElement(new Mass(t, 0.1, material, new Transform(0, 0, -1.001)));
                 }
+                Model.AddElement(new ModelCurve(trimGeometry.BaseRect, material, new Transform(0, 0, 1)));
             }
             Assert.Equal(87, trimmedCells.Count());
-            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmed));
+            Assert.Equal(18, trimmedCells.Count(c => c.IsTrimmedButNotOutside));
+            Assert.Equal(35, trimmedCells.Count(c => c.IsTrimmed));
         }
 
         [Fact]
@@ -345,7 +348,7 @@ namespace Elements.Tests
             Model.AddElements(new Circle(new Vector3(17, 15), 0.2));
             grid2[1, 1].U.DivideByCount(4);
             grid2[1, 1].SplitAtPoint(new Vector3(17, 15));
-            Model.AddElements(grid2.GetCells().SelectMany(c => c.GetTrimmedCellGeometry().Select(c2 => new ModelCurve(c2, BuiltInMaterials.XAxis))));
+            Model.AddElements(grid2.ToModelCurves(material: BuiltInMaterials.XAxis));
             Model.AddElement(shape);
             Assert.Equal(13, grid2.GetCells().Count);
         }
@@ -391,6 +394,43 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SkewedGridsWithNearlyParallelBoundary()
+        {
+            var transformStr = @"{
+                ""Matrix"": {
+                ""Components"": [
+                    0.9999947633971941,
+                    -0.009614940148020392,
+                    0,
+                    -10.992100150908389,
+                    -0.003236229007759388,
+                    -0.9999537753946179,
+                    0,
+                    17.971426034076142,
+                    0,
+                    0,
+                    1.0000000000000004,
+                    0
+                ]
+                }
+            }";
+            var transform = JsonConvert.DeserializeObject<Transform>(transformStr);
+            var origin = transform.Origin;
+            var uDirection = transform.XAxis;
+            var vDirection = transform.YAxis;
+            var boundary = new Polygon(new List<Vector3>()
+            {
+                new Vector3(-12.0362, -34.1879, 0.0000),
+                new Vector3(28.8939, -34.3204, 0.0000),
+                new Vector3(29.0811, 23.5186, 0.0000),
+                new Vector3(-11.8491, 23.6511, 0.0000)
+            });
+            var grid = new Grid2d(boundary, origin, uDirection, vDirection);
+            Assert.True(uDirection.Unitized().Equals((grid.U.Curve.PointAt(1) - grid.U.Curve.PointAt(0)).Unitized()));
+            Assert.True(vDirection.Unitized().Equals((grid.V.Curve.PointAt(1) - grid.V.Curve.PointAt(0)).Unitized()));
+        }
+
+        [Fact]
         public void CustomUVAndBounds()
         {
             var boundary = Polygon.Rectangle(new Vector3(), new Vector3(1, 1));
@@ -410,7 +450,7 @@ namespace Elements.Tests
                 // We gave it U and V coordinates that do not intersect with the bounds.
                 // We expect empty trimmed cells back.
                 var trimmed = cell.GetTrimmedCellGeometry();
-                Assert.Equal(0, trimmed.Count());
+                Assert.True(trimmed.Count() == 0);
             }
         }
     }

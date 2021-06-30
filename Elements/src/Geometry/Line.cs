@@ -157,7 +157,8 @@ namespace Elements.Geometry
             var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
             if (rayIntersects)
             {
-                if (infinite || t <= Length())
+                var l = Length();
+                if (infinite || t.ApproximatelyEquals(l) || t < l)
                 {
                     result = location;
                     return true;
@@ -462,7 +463,8 @@ namespace Elements.Geometry
         /// <param name="otherLines">The other lines to intersect with</param>
         /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
         /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
-        public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true, bool extendToFurthest = false)
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
             // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
@@ -472,9 +474,12 @@ namespace Elements.Geometry
             foreach (var segment in segments)
             {
                 bool pointAdded = false;
-                // special case for parallel + collinear lines
-                if (segment.Direction().IsParallelTo(testLine.Direction()) && // if the two lines are parallel
-                    (new[] { segment.End, testLine.Start, testLine.End }).AreCollinear())// and collinear
+                // Special case for parallel + collinear lines:
+                // ____   |__________
+                // We want to extend only to the first corner of the other lines,
+                // not all the way through to the other end
+                if (segment.Direction().IsParallelTo(testLine.Direction(), tolerance) && // if the two lines are parallel
+                    (new[] { segment.End, segment.Start, testLine.Start, testLine.End }).AreCollinear())// and collinear
                 {
                     if (!this.PointOnLine(segment.End, true))
                     {
@@ -558,9 +563,10 @@ namespace Elements.Geometry
         /// <param name="polygon">The polygon to intersect with</param>
         /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
         /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
-        public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false)
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
-            return ExtendTo(polygon.Segments(), bothSides, extendToFurthest);
+            return ExtendTo(polygon.Segments(), bothSides, extendToFurthest, tolerance);
         }
 
         /// <summary>

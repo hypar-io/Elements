@@ -7,6 +7,7 @@ using Elements;
 using Elements.GeoJSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Spatial;
 using Elements.Validators;
 using Elements.Serialization.JSON;
 using System;
@@ -24,18 +25,20 @@ namespace Elements.Geometry.Solids
     public partial class Lamina : SolidOperation, System.ComponentModel.INotifyPropertyChanged
     {
         private Polygon _perimeter;
+        private IList<Polygon> _voids;
     
         [Newtonsoft.Json.JsonConstructor]
-        public Lamina(Polygon @perimeter, bool @isVoid)
+        public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @perimeter, @isVoid});
+                validator.PreConstruct(new object[]{ @perimeter, @voids, @isVoid});
             }
         
             this.Perimeter = @perimeter;
+            this.Voids = @voids;
             
             if(validator != null)
             {
@@ -53,6 +56,20 @@ namespace Elements.Geometry.Solids
                 if (_perimeter != value)
                 {
                     _perimeter = value; 
+                    RaisePropertyChanged();
+                }
+            }
+        }
+    
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Polygon> Voids
+        {
+            get { return _voids; }
+            set 
+            {
+                if (_voids != value)
+                {
+                    _voids = value; 
                     RaisePropertyChanged();
                 }
             }

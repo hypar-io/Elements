@@ -96,12 +96,7 @@ namespace Elements.Geometry
             var transformFromElement = new Transform(element.Transform);
             transformFromElement.Invert();
             var transformToElement = new Transform(element.Transform);
-            var transformMinusTranslation = new Transform(transformFromElement);
-
-            // This transform ignores position so it can be used to transform the ray direction vector
-            transformMinusTranslation.Move(transformMinusTranslation.Origin.Negate());
-
-            var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformMinusTranslation.OfVector(Direction));
+            var transformedRay = new Ray(transformFromElement.OfPoint(Origin), transformFromElement.OfVector(Direction));
             //TODO: extend to handle voids when void solids in Representations are supported generally
             var intersects = false;
             foreach (var solidOp in element.Representation.SolidOperations.Where(e => !e.IsVoid))
@@ -130,7 +125,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this ray intersect with the provided Solid? 
+        /// Does this ray intersect with the provided Solid?
         /// </summary>
         /// <param name="solid">The Solid to intersect with.</param>
         /// <param name="result">The intersection result.</param>
@@ -169,12 +164,40 @@ namespace Elements.Geometry
                 var transformToPolygon = new Transform(plane.Origin, plane.Normal);
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfVector(intersection);
+                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
                 IEnumerable<Line> curveList = boundaryPolygon.Segments();
                 if (voids != null)
                 {
                     curveList = curveList.Union(voids.SelectMany(v => v.Segments()));
                 }
+                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
+
+                if (Polygon.Contains(curveList, transformedIntersection, out _))
+                {
+                    result = intersection;
+                    return true;
+                }
+            }
+            result = default(Vector3);
+            return false;
+        }
+
+        /// <summary>
+        /// Does this ray intersect the provided polygon area?
+        /// </summary>
+        /// <param name="polygon">The Polygon to intersect with.</param>
+        /// <param name="result">The intersection result.</param>
+        /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
+        public bool Intersects(Polygon polygon, out Vector3 result)
+        {
+            var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
+            if (Intersects(plane, out Vector3 intersection))
+            {
+                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
+                var transformFromPolygon = new Transform(transformToPolygon);
+                transformFromPolygon.Invert();
+                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
+                IEnumerable<Line> curveList = polygon.Segments();
                 curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
 
                 if (Polygon.Contains(curveList, transformedIntersection, out _))
@@ -238,7 +261,7 @@ namespace Elements.Geometry
         /// <param name="topo">The topography.</param>
         /// <param name="result">The location of intersection.</param>
         /// <returns>True if an intersection result occurs.
-        /// The type of intersection should be checked in the intersection result. 
+        /// The type of intersection should be checked in the intersection result.
         /// False if no intersection occurs.</returns>
         public bool Intersects(Topography topo, out Vector3 result)
         {
@@ -294,7 +317,14 @@ namespace Elements.Geometry
             var otherRay = new Ray(line.Start, line.Direction());
             if (Intersects(otherRay, out Vector3 rayResult))
             {
-                if ((rayResult - line.Start).Length() > line.Length())
+                // Quick out if the result is exactly at the 
+                // start or the end of the line.
+                if (rayResult.IsAlmostEqualTo(line.Start) || rayResult.IsAlmostEqualTo(line.End))
+                {
+                    result = rayResult;
+                    return true;
+                }
+                else if ((rayResult - line.Start).Length() > line.Length())
                 {
                     result = default(Vector3);
                     return false;

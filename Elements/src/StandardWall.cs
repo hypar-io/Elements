@@ -112,7 +112,7 @@ namespace Elements
             var yAxis = xAxis.Cross(Vector3.ZAxis.Negate());
             var wallTransform = new Transform(this.CenterLine.Start, xAxis, Vector3.ZAxis);
 
-            var m = wallTransform.OfVector(new Vector3(x, 0, y));
+            var m = wallTransform.OfPoint(new Vector3(x, 0, y));
             var openingTransform = new Transform(m, xAxis, xAxis.Cross(Vector3.ZAxis));
             return openingTransform;
         }

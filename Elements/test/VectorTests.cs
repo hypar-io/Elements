@@ -158,6 +158,17 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DistanceToPolygon()
+        {
+            var squareSize = 10;
+            var rect = Polygon.Rectangle(squareSize, squareSize);
+            Assert.Equal(new Vector3().DistanceTo(rect), 0);
+            Assert.Equal(new Vector3(-5, 0).DistanceTo(rect), 0);
+            Assert.Equal(new Vector3(10, 0).DistanceTo(rect), 5);
+            Assert.Equal(new Vector3(0, 0, 5).DistanceTo(rect), 5);
+        }
+
+        [Fact]
         public void AreCoplanar()
         {
             var a = Vector3.Origin;
@@ -190,8 +201,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void ToleranceInvariance() {
-            var polygon = new Polygon(new [] {
+        public void ToleranceInvariance()
+        {
+            var polygon = new Polygon(new[] {
                 new Vector3(0,0),
                 new Vector3(Vector3.EPSILON * 1.1, 0),
                 new Vector3(4, 0),
@@ -201,7 +213,7 @@ namespace Elements.Tests
             var rotation = new Transform();
             rotation.Rotate(Vector3.ZAxis, 45);
             var rotatedPolygon = polygon.TransformedPolygon(rotation);
-            // Should execute without exception. 
+            // Should execute without exception.
         }
 
         [Fact]
@@ -374,6 +386,18 @@ namespace Elements.Tests
                 var includes = profile.Contains(pt.Key, out _);
                 Assert.True(includes == pt.Value);
             }
+        }
+
+        [Fact]
+        public void Collinear()
+        {
+            Vector3 p0 = new Vector3( 0, 0, 0);
+            Vector3 p1 = new Vector3( 10, 10, 10);
+            Vector3 p2 = new Vector3( 20, 20, 20);
+            Vector3 p3 = new Vector3( 15, 5, 20);
+
+            Assert.True( Vector3.AreCollinear( p0, p1, p2 ) );
+            Assert.False( Vector3.AreCollinear( p0, p1, p3 ) );
         }
     }
 }

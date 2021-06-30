@@ -337,6 +337,37 @@ namespace Elements.Geometry
         {
             return this.DistanceTo(polyline, out _);
         }
+
+        /// <summary>
+        /// Find the shortest distance from this point to any point within the
+        /// polygon, and output the location of the closest point on that polygon.
+        /// </summary>
+        /// <param name="polygon">The polygon for computing the distance</param>
+        /// <param name="closestPoint">Point within the polygon that is closest to this point</param>
+        /// <returns></returns>
+        public double DistanceTo(Polygon polygon, out Vector3 closestPoint)
+        {
+            var pointOnPolygonPlane = this.Project(polygon.Plane());
+            if (polygon.Contains(pointOnPolygonPlane, out var containment))
+            {
+                closestPoint = pointOnPolygonPlane;
+                return this.DistanceTo(pointOnPolygonPlane);
+            }
+            else
+            {
+                return this.DistanceTo(new Polyline(polygon.Vertices), out closestPoint);
+            }
+        }
+
+        /// <summary>
+        /// Find the shortest distance from this point to any point within the polygon
+        /// </summary>
+        /// <param name="polygon">The polygon for computing the distance</param>
+        /// <returns></returns>
+        public double DistanceTo(Polygon polygon)
+        {
+            return this.DistanceTo(polygon, out _);
+        }
         #endregion
 
         /// <summary>
@@ -427,6 +458,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute whether all components of vector a are greater than or
+        /// equal to those of vector b.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are greater than or equal
+        /// to all of those of b, otherwise false.</returns>
+        public static bool operator >=(Vector3 a, Vector3 b)
+        {
+            return a.X >= b.X && a.Y >= b.Y && a.Z >= b.Z;
+        }
+
+        /// <summary>
         /// Compute whether all components of vector a are less than those of vector b.
         /// </summary>
         /// <param name="a">The first vector.</param>
@@ -435,6 +479,19 @@ namespace Elements.Geometry
         public static bool operator <(Vector3 a, Vector3 b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
+        }
+
+        /// <summary>
+        /// Compute whether all components of vector a are less than or
+        /// equal to those of vector b.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are less than or equal
+        /// to all of those of b, otherwise false.</returns>
+        public static bool operator <=(Vector3 a, Vector3 b)
+        {
+            return a.X <= b.X && a.Y <= b.Y && a.Z <= b.Z;
         }
 
         /// <summary>
@@ -461,11 +518,12 @@ namespace Elements.Geometry
         /// Determine whether this vector is parallel to v.
         /// </summary>
         /// <param name="v">The vector to compare to this vector.</param>
+        /// <param name="tolerance">The amount of tolerance in the parallel comparison.</param>
         /// <returns>True if the vectors are parallel, otherwise false.</returns>
-        public bool IsParallelTo(Vector3 v)
+        public bool IsParallelTo(Vector3 v, double tolerance = Vector3.EPSILON)
         {
             var result = Math.Abs(this.Unitized().Dot(v.Unitized()));
-            return result.ApproximatelyEquals(1);
+            return result.ApproximatelyEquals(1, tolerance);
         }
 
         /// <summary>
@@ -654,6 +712,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check whether three points are on the same line.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var ba = (b - a).Unitized();
+            var cb = (c - b).Unitized();
+
+            if (ba.IsZero() || cb.IsZero())
+                return true;
+
+            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel
@@ -667,7 +743,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Remove sequential duplicates from a list of points. 
+        /// Remove sequential duplicates from a list of points.
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
@@ -765,7 +841,7 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("Cannot test collinearity of an empty list");
             }
-            if (points.Count < 3)
+            if (points.Distinct(new Vector3Comparer()).Count() < 3)
             {
                 return true;
             }
@@ -881,6 +957,19 @@ namespace Elements.Geometry
                 c += 3;
             }
             return arr;
+        }
+    }
+
+    internal class Vector3Comparer : EqualityComparer<Vector3>
+    {
+        public override bool Equals(Vector3 x, Vector3 y)
+        {
+            return x.IsAlmostEqualTo(y);
+        }
+
+        public override int GetHashCode(Vector3 obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using System.IO;
+using System.Linq;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
@@ -7,16 +10,18 @@ using Elements.Serialization.glTF;
 
 namespace Elements.Benchmarks
 {
-    [SimpleJob(launchCount: 1, warmupCount: 10, targetCount: 30)]
+    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
     public class Csg
     {
+        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
+
         [Params(1, 10, 20)]
         public int Samples { get; set; }
 
         [Benchmark(Description = "Compute csg of beam.")]
         public void CSG()
         {
-            var profile = WideFlangeProfileServer.Instance.GetProfileByType(WideFlangeProfileType.W10x100);
+            var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
             var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 5));
             var beam = new Beam(line, profile, BuiltInMaterials.Steel);
@@ -37,11 +42,42 @@ namespace Elements.Benchmarks
         }
     }
 
+    [MemoryDiagnoser]
+    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
+    public class HSS
+    {
+        [Benchmark(Description = "Create all HSS beams.")]
+        public void CreateAllHSSBeams()
+        {
+            var x = 0.0;
+            var z = 0.0;
+            var hssFactory = new HSSPipeProfileFactory();
+            var profiles = hssFactory.AllProfiles().ToList();
+            var model = new Model();
+            foreach (var profile in profiles)
+            {
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var m = new Material(Guid.NewGuid().ToString(), color, 0.1f, 0.4f);
+                model.AddElement(m, false);
+                var beam = new Beam(line, profile, m);
+                model.AddElement(beam, false);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+            model.ToGlTF();
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<Csg>();
+            var summary = BenchmarkRunner.Run<HSS>();
         }
     }
 }

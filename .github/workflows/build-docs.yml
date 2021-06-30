@@ -1,0 +1,33 @@
+name: Build Docs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup docfx
+        run: choco install docfx -y
+      - name: Build docs
+        run: |
+          rm -r docs
+          dotnet test --filter Category=Examples
+          docfx ./doc/docfx.json -f
+      - name: Deploy Docs
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-1
+        run: |
+          aws s3 sync ./docs s3://${{ secrets.AWS_BUCKET }} --delete --exclude '*.js'
+          aws s3 sync ./docs s3://${{ secrets.AWS_BUCKET }} --delete --exclude '*' --include '*.js' --content-type 'text/javascript'
+          aws cloudfront create-invalidation --distribution-id E2PS0S8A6ZSOKE --paths "/*"
