@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.2
+
+### Added
+- `Polyline.Split(List<Vector3> point)`
+- `Polygon.Split(List<Vector3> point)`
+- `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Vector3.>=`
+- `Vector3.<=`
+- `Plane.Intersects(Plane a, Plane b)`
+
 ## 0.9.1
 
 ### Added
