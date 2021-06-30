@@ -284,6 +284,26 @@ namespace Elements.Tests
             Assert.True(bytes != null && bytes.Length > 3000);
             Model.AddElement(geoElem);
         }
+
+        [Fact]
+        public void ImplicitRepresentationOperator()
+        {
+            Name = nameof(ImplicitRepresentationOperator);
+            // implicitly convert single solid operation to a representation
+            var element = new GeometricElement(new Transform(), BuiltInMaterials.ZAxis, new Extrude(Polygon.Rectangle(5, 5), 1, Vector3.ZAxis, false), false, Guid.NewGuid(), null);
+            // params constructor for Representation
+            var element2 = new GeometricElement(
+                new Transform(),
+                BuiltInMaterials.XAxis,
+                new Representation(
+                    new Extrude(Polygon.Rectangle(7, 7), 1, Vector3.ZAxis, false),
+                    new Extrude(Polygon.Rectangle(6, 6), 2, Vector3.ZAxis, true)
+                ),
+                false,
+                Guid.NewGuid(),
+                null);
+            Model.AddElements(element, element2);
+        }
     }
 
 }

@@ -424,12 +424,9 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void UnionAll()
         {
-            var polygons = new List<Polygon> {
+            var result = Polygon.UnionAll(
                 Polygon.Rectangle(10, 10),
-                Polygon.Rectangle(10, 10).TransformedPolygon(new Transform(5,5,0))
-            };
-
-            var result = Polygon.UnionAll(polygons).First();
+                Polygon.Rectangle(10, 10).TransformedPolygon(new Transform(5, 5, 0))).First();
             Assert.Equal(175, result.Area());
         }
 
@@ -438,35 +435,25 @@ namespace Elements.Geometry.Tests
         {
             var p1 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(),
-                    new Vector3(4.0, 0.0),
-                    new Vector3(4.0, 4.0),
-                    new Vector3(0.0, 4.0)
-                }
+                (0, 0),
+                (4.0, 0.0),
+                (4.0, 4.0),
+                (0.0, 4.0)
             );
             var p2 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(3.0, 1.0),
-                    new Vector3(7.0, 1.0),
-                    new Vector3(7.0, 5.0),
-                    new Vector3(3.0, 5.0)
-                }
+                (3.0, 1.0),
+                (7.0, 1.0),
+                (7.0, 5.0),
+                (3.0, 5.0)
             );
             var p3 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(3.0, 2.0),
-                    new Vector3(8.0, 2.0),
-                    new Vector3(8.0, 3.0),
-                    new Vector3(3.0, 3.0)
-                }
+                (3.0, 2.0),
+                (8.0, 2.0),
+                (8.0, 3.0),
+                (3.0, 3.0)
             );
-            var ps = new List<Polygon> { p2, p3 };
 
             var vertices = p1.Union(p2).Vertices;
 
@@ -479,7 +466,7 @@ namespace Elements.Geometry.Tests
             Assert.Contains(vertices, p => p.IsAlmostEqualTo(3.0, 4.0));
             Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 4.0));
 
-            vertices = p1.Union(ps).Vertices;
+            vertices = p1.Union(p2, p3).Vertices;
 
             Assert.Contains(vertices, p => p.IsAlmostEqualTo(0.0, 0.0));
             Assert.Contains(vertices, p => p.IsAlmostEqualTo(4.0, 0.0));
@@ -782,25 +769,25 @@ namespace Elements.Geometry.Tests
 
             // Simple Split
             var polygon = Polygon.Rectangle(5, 5);
-            var polyline = new Polyline(new[] { new Vector3(-3, 0), new Vector3(0, 1), new Vector3(3, 0) });
+            var polyline = new Polyline((-3, 0), (0, 1), (3, 0));
             var splitResults = polygon.Split(polyline);
             Assert.Equal(2, splitResults.Count);
 
             // Convex shape split
-            var convexPolygon = new Polygon(new[] {
-                new Vector3(-2.5,-2.5),
-                new Vector3(2.5,-2.5),
-                new Vector3(2.5,-1),
-                new Vector3(1,-1),
-                new Vector3(1,1),
-                new Vector3(2.5,1),
-                new Vector3(2.5,2.5),
-                new Vector3(-2.5,2.5)
-            });
-            var convexSplitPolyline = new Polyline(new[] {
-                new Vector3(1.5, -3),
-                new Vector3(1.5,3)
-            });
+            var convexPolygon = new Polygon(
+                (-2.5, -2.5),
+                (2.5, -2.5),
+                (2.5, -1),
+                (1, -1),
+                (1, 1),
+                (2.5, 1),
+                (2.5, 2.5),
+                (-2.5, 2.5)
+            );
+            var convexSplitPolyline = new Polyline(
+                (1.5, -3),
+                (1.5, 3)
+            );
 
             var splitResults2 = convexPolygon.Split(convexSplitPolyline);
             Model.AddElements(splitResults2.Select(s => new Panel(s, random.NextMaterial())));
