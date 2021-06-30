@@ -838,14 +838,7 @@ namespace Elements.Geometry
 
             foreach (var result in results)
             {
-                // We skip by two because every set of results will represent
-                // intersections across the polygon. Either those intersections
-                // occur as a result of the intersecting edge entering or leaving
-                // the polygon (ex: cutting across two "peaks"), or a result of 
-                // the intersection occurring at a vertex (ex: cutting on a peak
-                // or a valley). In both cases, we need to skip the "outside"
-                // segments. 
-                for (var j = 0; j < result.Count - 1; j += 2)
+                for (var j = 0; j < result.Count - 1; j += 1)
                 {
                     // Don't create zero-length edges.
                     if (result[j].IsAlmostEqualTo(result[j + 1]))
