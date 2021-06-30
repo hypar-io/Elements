@@ -1,6 +1,5 @@
 using Elements.Analysis;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using IFC;
 using STEP;
 using System;
@@ -77,7 +76,17 @@ namespace Elements.Serialization.IFC
                                         Material material = null;
                                         if (!materials.ContainsKey(name))
                                         {
-                                            material = new Material(color, 0.4, 0.4, false, null, false, surfaceStyle.Id, surfaceStyle.Name);
+                                            material = new Material(color,
+                                                                    0.4,
+                                                                    0.4,
+                                                                    false,
+                                                                    null,
+                                                                    false,
+                                                                    true,
+                                                                    null,
+                                                                    true,
+                                                                    surfaceStyle.Id,
+                                                                    surfaceStyle.Name);
                                             materials.Add(material.Name, material);
                                         }
                                         else
