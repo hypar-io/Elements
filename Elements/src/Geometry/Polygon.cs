@@ -890,13 +890,9 @@ namespace Elements.Geometry
                 {
                     var a = graphVertices[e.from];
                     var b = graphVertices[e.to];
-                    var l = a.DistanceTo(b);
-                    var d = (b - a).Unitized();
-                    var offsetD = localPlane.Normal.Cross(d);
-                    var offsetL = (l - (l * .75)) / 2;
                     if (!a.IsAlmostEqualTo(b))
                     {
-                        trimEdges.Add((a + offsetD * 0.4 + d * offsetL, b + offsetD * 0.4 - d * offsetL));
+                        trimEdges.Add((a, b));
                     }
                 }
             }
