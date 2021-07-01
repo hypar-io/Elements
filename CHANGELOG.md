@@ -9,6 +9,10 @@
 - `Vector3.>=`
 - `Vector3.<=`
 - `Plane.Intersects(Plane a, Plane b)`
+- `GeometricElement.Openings`
+
+### Removed
+- `IHasOpenings`
 
 ## 0.9.1
 
