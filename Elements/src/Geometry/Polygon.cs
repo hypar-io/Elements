@@ -180,7 +180,7 @@ namespace Elements.Geometry
                 }
 
                 var graph = new HalfEdgeGraph2d();
-                graph.EdgesPerVertex = new List<List<(int from, int to)>>();
+                graph.EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
 
                 if (newVertices.Count > 0)
                 {
@@ -189,7 +189,7 @@ namespace Elements.Geometry
                     // Initialize the graph.
                     foreach (var v in newVertices)
                     {
-                        graph.EdgesPerVertex.Add(new List<(int from, int to)>());
+                        graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
 
                     for (var i = 0; i < newVertices.Count - 1; i++)
@@ -202,7 +202,7 @@ namespace Elements.Geometry
                         }
 
                         // Only add one edge around the outside of the shape.
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
 
                     for (var i = 0; i < intersections.Count - 1; i += 2)
@@ -214,7 +214,7 @@ namespace Elements.Geometry
                         var a = ClosestIndexOf(newVertices, intersections[i], i);
                         var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
 
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
 
                     if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
@@ -222,7 +222,7 @@ namespace Elements.Geometry
                         // Close the graph
                         var a = newVertices.Count - 1;
                         var b = 0;
-                        graph.EdgesPerVertex[a].Add((a, b));
+                        graph.EdgesPerVertex[a].Add((a, b, null));
                     }
                     return graph.Polygonize();
                 }
@@ -233,6 +233,78 @@ namespace Elements.Geometry
                 Console.WriteLine(ex.StackTrace);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Compute the plane of the Polygon.
+        /// </summary>
+        /// <returns>A Plane.</returns>
+        public override Plane Plane()
+        {
+            return new Plane(this.Vertices[0], this.Normal());
+        }
+
+        /// <summary>
+        /// Intersect this polygon with the provided polygon in 3d.
+        /// Unlike other methods that do 2d intersection, this method is able to 
+        /// calculate intersections in 3d by doing planar intersections and
+        /// 3D containment checks. If you are looking for 2d intersection, use the 
+        /// Polygon.Intersects(Plane plane, ...) method.
+        /// </summary>
+        /// <param name="polygon">The target polygon.</param>
+        /// <param name="result">The points resulting from the intersection
+        /// of the two polygons.</param>
+        /// <param name="sort">Should the resulting intersections be sorted along
+        /// the plane?</param>
+        /// <returns>True if this polygon intersect the provided polygon, otherwise false.
+        /// The result collection may have duplicate vertices where intersection 
+        /// with a vertex occurs as there is one intersection associated with each
+        /// edge attached to the vertex.</returns>
+        private bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
+        {
+            var p = this.Plane();
+            result = new List<Vector3>();
+            var targetP = polygon.Plane();
+
+            if (p.IsCoplanar(targetP))
+            {
+                return false;
+            }
+
+            var d = this.Normal().Cross(targetP.Normal).Unitized();
+
+            // Intersect the polygon against this polygon's plane.
+            // Keep the points that lie within the polygon.
+            if (polygon.Intersects(p, out List<Vector3> results, false, false))
+            {
+                foreach (var r in results)
+                {
+                    if (this.Contains3D(r))
+                    {
+                        result.Add(r);
+                    }
+                }
+            }
+
+            // Intersect this polygon against the target polyon's plane.
+            // Keep the points within the target polygon.
+            if (this.Intersects(targetP, out List<Vector3> results2, false, false))
+            {
+                foreach (var r in results2)
+                {
+                    if (polygon.Contains3D(r))
+                    {
+                        result.Add(r);
+                    }
+                }
+            }
+
+            if (sort)
+            {
+                result.Sort(new DotComparer(d));
+            }
+
+            return result.Count > 0;
         }
 
         private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
@@ -260,12 +332,14 @@ namespace Elements.Geometry
         /// sorted along the plane.</param>
         /// <param name="distinct">Should the intersection results that
         /// are returned be distinct?</param>
+        /// <param name="sort">Should the intersection results be sorted
+        /// along the plane?</param>
         /// <returns>True if the plane intersects the polygon, 
         /// otherwise false.</returns>
-        public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true)
+        public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true, bool sort = true)
         {
             results = new List<Vector3>();
-            var d = this.Plane().Normal.Cross(plane.Normal).Unitized();
+            var d = this.Normal().Cross(plane.Normal).Unitized();
 
             foreach (var s in this.Segments())
             {
@@ -284,13 +358,14 @@ namespace Elements.Geometry
                     }
                 }
             }
-            if (results.Count > 0)
+
+            if (sort)
             {
                 // Order the intersections along the direction.
                 results.Sort(new DotComparer(d));
-                return true;
             }
-            return false;
+
+            return results.Count > 0;
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
@@ -308,6 +383,54 @@ namespace Elements.Geometry
             var groundSegments = segments.Select(segment => segment.TransformedLine(transformToGround));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
+        }
+
+        /// <summary>
+        /// Does this polygon contain the specified point.
+        /// https://en.wikipedia.org/wiki/Point_in_polygon
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <param name="unique">Should intersections be unique?</param>
+        /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
+        internal bool Contains3D(Vector3 point, bool unique = false)
+        {
+            var p = this.Plane();
+
+            if (!point.DistanceTo(p).ApproximatelyEquals(0))
+            {
+                return false;
+            }
+
+            var t = new Transform(point, p.Normal);
+
+            // Intersect a randomly directed ray in the plane
+            // of the polygon and intersect with the polygon edges.
+            var ray = new Ray(point, t.XAxis);
+            var intersects = 0;
+            var xsects = new List<Vector3>();
+            foreach (var s in this.Segments())
+            {
+                var result = default(Vector3);
+                if (s.Start.IsAlmostEqualTo(point) ||
+                    s.End.IsAlmostEqualTo(point) ||
+                    ray.Intersects(s, out result))
+                {
+                    if (unique)
+                    {
+                        if (!xsects.Contains(result))
+                        {
+                            xsects.Add(result);
+                            intersects++;
+                        }
+                    }
+                    else
+                    {
+                        xsects.Add(result);
+                        intersects++;
+                    }
+                }
+            }
+            return intersects % 2 != 0;
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
@@ -604,6 +727,195 @@ namespace Elements.Geometry
             var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(new[] { thisInXY }, polylines.Select(p => p.TransformedPolyline(inverse)));
             // Find closed regions in that graph
             return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
+        }
+
+        /// <summary>
+        /// Insert a point into the polygon if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="points">The points at which to split the polygon.</param>
+        /// <returns>The index of the new vertex.</returns>
+        public override void Split(IList<Vector3> points)
+        {
+            Split(points, true);
+        }
+
+        /// <summary>
+        /// Trim the polygon with a collection of polygons that intersect it 
+        /// in 3d. Portions of the intersected polygon on the "outside" 
+        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Portions inside the trimming polygons will be discarded.
+        /// </summary>
+        /// <param name="polygons">The trimming polygons.</param>
+        /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        {
+            return TrimmedToInternal(polygons, out _, out _);
+        }
+
+        /// <summary>
+        /// Trim the polygon with a collection of polygons that intersect it 
+        /// in 3d. Portions of the intersected polygon on the "outside" 
+        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Portions inside the trimming polygons will be discarded.
+        /// </summary>
+        /// <param name="polygons">The trimming polygons.</param>
+        /// <param name="intersections">A collection of intersection locations.</param>
+        /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
+        /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        {
+            return TrimmedToInternal(polygons, out intersections, out trimEdges);
+        }
+
+        private List<Polygon> TrimmedToInternal(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        {
+            var localPlane = this.Plane();
+            var graphVertices = new List<Vector3>();
+            var edges = new List<List<(int from, int to, int? tag)>>();
+
+            var splitPoly = new Polygon(this.Vertices);
+            var results = new List<Vector3>[polygons.Count];
+            var planes = new List<Plane>();
+
+            foreach (var polygon in polygons)
+            {
+                planes.Add(polygon.Plane());
+            }
+
+            for (var i = 0; i < polygons.Count; i++)
+            {
+                var polygon = polygons[i];
+
+                if (localPlane.IsCoplanar(planes[i]))
+                {
+                    throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
+                }
+
+                // Add a results collection for each polygon. 
+                // This may or may not have results in it after processing.
+                results[i] = new List<Vector3>();
+
+                // We intersect but don't sort, because the three-plane check
+                // below may result in new intersections which will need to
+                // be sorted as well.
+                if (this.Intersects3d(polygon, out List<Vector3> result, false))
+                {
+                    splitPoly.Split(result);
+                    results[i].AddRange(result);
+                }
+
+                // Intersect this plane with all other planes.
+                // This handles the case where two trim polygons intersect
+                // or meet at a T.
+                for (var j = 0; j < polygons.Count; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    var inner = polygons[j];
+
+                    // Do a three plane intersection amongst all the planes.
+                    if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
+                    {
+                        // Test containment in the current splitting polygon.
+                        if (polygon.Contains3D(xsect)
+                            && inner.Contains3D(xsect)
+                            && this.Contains3D(xsect))
+                        {
+                            if (!results[i].Contains(xsect))
+                            {
+                                results[i].Add(xsect);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Sort all the intersection results across their planes
+            // so the lacing works across all polys.
+            for (var i = 0; i < polygons.Count; i++)
+            {
+                var polygon = polygons[i];
+                var d = this.Normal().Cross(planes[i].Normal).Unitized();
+                if (results[i].Count > 0)
+                {
+                    results[i].Sort(new DotComparer(d));
+                }
+            }
+
+            for (var i = 0; i < splitPoly.Vertices.Count; i++)
+            {
+                var a = i;
+                var b = i == splitPoly.Vertices.Count - 1 ? 0 : i + 1;
+                graphVertices.Add(splitPoly.Vertices[i]);
+                edges.Add(new List<(int from, int to, int? tag)>());
+                edges[i].Add((a, b, 0));
+            }
+
+            foreach (var result in results)
+            {
+                for (var j = 0; j < result.Count - 1; j += 1)
+                {
+                    // Don't create zero-length edges.
+                    if (result[j].IsAlmostEqualTo(result[j + 1]))
+                    {
+                        continue;
+                    }
+
+                    // We look for the intersection result in the graph vertices
+                    // because this collection will now contain the splitpoly
+                    // vertices AND the non split vertices which are contained
+                    // in the polygon itself.
+                    var a = graphVertices.IndexOf(result[j]);
+                    if (a == -1)
+                    {
+                        // An intersection that does not happen on the original poly
+                        graphVertices.Add(result[j]);
+                        a = graphVertices.Count - 1;
+                        edges.Add(new List<(int from, int to, int? tag)>());
+                    }
+                    var b = graphVertices.IndexOf(result[j + 1]);
+                    if (b == -1)
+                    {
+                        graphVertices.Add(result[j + 1]);
+                        b = graphVertices.Count - 1;
+                        edges.Add(new List<(int from, int to, int? tag)>());
+                    }
+                    edges[a].Add((a, b, 0));
+                    edges[b].Add((b, a, 1));
+                }
+            }
+
+            var heg = new HalfEdgeGraph2d()
+            {
+                Vertices = graphVertices,
+                EdgesPerVertex = edges
+            };
+
+            trimEdges = new List<(Vector3 from, Vector3 to)>();
+            foreach (var edgeSet in edges)
+            {
+                foreach (var e in edgeSet)
+                {
+                    var a = graphVertices[e.from];
+                    var b = graphVertices[e.to];
+                    if (!a.IsAlmostEqualTo(b))
+                    {
+                        trimEdges.Add((a, b));
+                    }
+                }
+            }
+
+            var polys = heg.Polygonize((tag) =>
+            {
+                return tag.HasValue && tag == 1;
+            });
+
+            intersections = results.SelectMany(t => t).ToList();
+
+            return polys;
         }
 
         /// <summary>
@@ -1342,6 +1654,7 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+
         /// <summary>
         /// Get the normal of each vertex on the polygon.
         /// </summary>

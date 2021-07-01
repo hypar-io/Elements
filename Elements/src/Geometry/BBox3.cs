@@ -264,5 +264,19 @@ namespace Elements.Geometry
                 Min.Y.ApproximatelyEquals(Max.Y) ||
                 Min.Z.ApproximatelyEquals(Max.Z);
         }
+
+        /// <summary>
+        /// Does this bounding box contain the provided point?
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <returns>True if the bounding box contains the point, otherwise false.</returns>
+        public bool Contains(Vector3 point)
+        {
+            if (point <= Max && point >= Min)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

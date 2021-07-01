@@ -53,7 +53,10 @@ namespace Elements.Geometry
                 var c = p.Vertices[2].Pos.ToElementsVector();
                 basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
 
-                if (p.Vertices.Count > 2 && p.Vertices.Count <= 4)
+                // Anything with 3 vertices is a triangle. Manually 
+                // tesselate triangles. For everything else, use 
+                // the tessellator.
+                if (p.Vertices.Count > 2 && p.Vertices.Count <= 3)
                 {
                     for (var i = 0; i < p.Vertices.Count; i++)
                     {
@@ -81,16 +84,8 @@ namespace Elements.Geometry
                     buffers.AddIndex(vertexIndices[0]);
                     buffers.AddIndex(vertexIndices[1]);
                     buffers.AddIndex(vertexIndices[2]);
-
-                    if (p.Vertices.Count == 4)
-                    {
-                        // Triangle 2
-                        buffers.AddIndex(vertexIndices[0]);
-                        buffers.AddIndex(vertexIndices[2]);
-                        buffers.AddIndex(vertexIndices[3]);
-                    }
                 }
-                else if (p.Vertices.Count > 4)
+                else if (p.Vertices.Count > 3)
                 {
                     var tess = new Tess();
                     tess.NoEmptyPolygons = true;

@@ -310,7 +310,7 @@ namespace Elements.Geometry
         /// Compute the Plane defined by the first three non-collinear vertices of the Polygon.
         /// </summary>
         /// <returns>A Plane.</returns>
-        public Plane Plane()
+        public virtual Plane Plane()
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
@@ -772,6 +772,52 @@ namespace Elements.Geometry
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Insert a point into the polyline if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="points">The points at which to split the polyline.</param>
+        /// <returns>The index of the new vertex.</returns>
+        public virtual void Split(IList<Vector3> points)
+        {
+            Split(points);
+        }
+
+        protected void Split(IList<Vector3> points, bool closed = false)
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var a = this.Vertices[i];
+                var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+
+                for (var j = points.Count - 1; j >= 0; j--)
+                {
+                    var point = points[j];
+
+                    if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                    {
+                        // The split point is coincident with a vertex.
+                        continue;
+                    }
+
+                    if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                    {
+                        if (i > this.Vertices.Count - 1)
+                        {
+                            this.Vertices.Add(point);
+                        }
+                        else
+                        {
+                            this.Vertices.Insert(i + 1, point);
+                        }
+
+                        break;
+                    }
+                }
+            }
+            return;
         }
     }
 
