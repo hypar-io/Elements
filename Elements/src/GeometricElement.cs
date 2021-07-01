@@ -90,6 +90,14 @@ namespace Elements
                                                       .Select(op => TransformedSolidOperation(op))
                                                       .ToArray();
 
+            if (this.Openings != null && this.Openings.Count > 0)
+            {
+                voids = voids.Concat(this.Openings.SelectMany(o => o.Representation.SolidOperations
+                                                      .Where(op => op.IsVoid == true)
+                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+            }
+
+            // TODO: Remove this when the IHasOpenings interface is removed.
             if (this is IHasOpenings)
             {
                 var openingContainer = (IHasOpenings)this;
@@ -97,6 +105,7 @@ namespace Elements
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
+            
             // Don't try CSG booleans if we only have one one solid.
             if (solids.Count() == 1)
             {
