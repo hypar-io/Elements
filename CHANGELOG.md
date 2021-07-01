@@ -3,6 +3,13 @@
 ## 0.9.2
 
 ### Added
+
+### Changed
+
+- Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+
+### Fixed
+
 - `Polyline.Split(List<Vector3> point)`
 - `Polygon.Split(List<Vector3> point)`
 - `Polygon.TrimmedTo(List<Polygon> polygons)`
