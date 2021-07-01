@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
-    public class Wall : GeometricElement, IHasOpenings
+    public class Wall : GeometricElement
     {
         /// <summary>
         /// The height of the wall.

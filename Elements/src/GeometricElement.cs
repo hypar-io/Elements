@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Elements.Interfaces;
 
 namespace Elements
 {
@@ -97,15 +96,6 @@ namespace Elements
                                                       .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
 
-            // TODO: Remove this when the IHasOpenings interface is removed.
-            if (this is IHasOpenings)
-            {
-                var openingContainer = (IHasOpenings)this;
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
-                                                      .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
-            }
-            
             // Don't try CSG booleans if we only have one one solid.
             if (solids.Count() == 1)
             {

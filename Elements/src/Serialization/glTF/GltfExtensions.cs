@@ -12,7 +12,6 @@ using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
-using Elements.Interfaces;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
