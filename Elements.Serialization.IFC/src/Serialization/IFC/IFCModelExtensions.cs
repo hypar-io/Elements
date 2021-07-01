@@ -47,6 +47,13 @@ namespace Elements.Serialization.IFC
             // Get a unique set of materials that are used for all 
             // styled items. While we're doing that we also build
             // a map of the items that are being styled and their materials.
+
+            // TODO: Some of our test models use IfcMaterialList, which is 
+            // deprecated in IFC4. In the AC-Smiley model, for example, the
+            // windows use a representation with a material list that has glass
+            // for the window and wood for the frame. I think styled items is 
+            // the modern way to do this, so we shouldn't support material lists.
+
             var styledItems = ifcModel.AllInstancesOfType<IfcStyledItem>();
             foreach (var styledItem in styledItems)
             {
@@ -164,7 +171,7 @@ namespace Elements.Serialization.IFC
                         }
 
                         // The cartesian transform needs to be applied 
-                        // before the element transormation because it
+                        // before the element transformation because it
                         // may contain scale and rotation.
                         var instanceTransform = new Transform(mapTransform);
                         instanceTransform.Concatenate(transform);
