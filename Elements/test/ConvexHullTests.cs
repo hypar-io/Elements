@@ -23,7 +23,7 @@ namespace Elements.Tests
                 new Vector3(51.8160, 6.0960, 45.7200)
             };
             var hull = ConvexHull.FromPoints(points);
-            Assert.Equal(hull.Segments().Length, 4);
+            Assert.Equal(4, hull.Segments().Length);
         }
     }
 }
