@@ -1392,7 +1392,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(11.37475, 8.56224, 0)
             });
             var contains = polygon.Contains(point, out var type);
-            Assert.Equal(contains, false);
+            Assert.False(contains);
         }
 
         [Fact]
@@ -1408,7 +1408,7 @@ namespace Elements.Geometry.Tests
             var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmed = polygon.Trimmed(plane);
-            Assert.Equal<int>(1, trimmed.Count);
+            Assert.Single(trimmed);
             var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
             this.Model.AddElement(new ModelCurve(polygon));
             this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
@@ -1493,10 +1493,10 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(1, trims.Count());
+            Assert.Single(trims);
 
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
-            Assert.Equal(1, trims1.Count());
+            Assert.Single(trims1);
         }
 
         [Fact]
@@ -1518,7 +1518,7 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(1, trims.Count());
+            Assert.Single(trims);
 
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
             Assert.Equal(2, trims1.Count());
@@ -1543,10 +1543,10 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(1, trims.Count());
+            Assert.Single(trims);
 
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
-            Assert.Equal(1, trims1.Count());
+            Assert.Single(trims1);
         }
 
         [Fact]
@@ -1568,7 +1568,7 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(1, trims.Count());
+            Assert.Single(trims);
 
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
             Assert.Equal(2, trims1.Count());
@@ -1593,11 +1593,11 @@ namespace Elements.Geometry.Tests
                 this.Model.AddElement(new Panel(l, random.NextMaterial()));
                 this.Model.AddElement(new ModelCurve(l, random.NextMaterial()));
             }
-            Assert.Equal(1, trims.Count());
+            Assert.Single(trims);
 
             // This will return the entire original polygon.
             var trims1 = _peaks.TrimmedTo(new[] { p1.Reversed() });
-            Assert.Equal(1, trims1.Count());
+            Assert.Single(trims1);
         }
 
         [Fact]
@@ -1620,7 +1620,7 @@ namespace Elements.Geometry.Tests
             var verticalRightPlane = new Plane(new Vector3(5.0, 0, 0), Vector3.XAxis);
             var intersectsRight = polygon.Intersects(verticalRightPlane, out List<Vector3> resultsRight);
             Assert.True(intersectsRight);
-            Assert.Equal<int>(1, resultsRight.Count);
+            Assert.Single(resultsRight);
         }
 
         [Fact]
@@ -1732,7 +1732,7 @@ namespace Elements.Geometry.Tests
             _output.WriteLine($"{sw.Elapsed.TotalMilliseconds}ms for trimming.");
 
             Assert.Equal(5, trim1.Count());
-            Assert.Equal(1, trim2.Count());
+            Assert.Single(trim2);
 
             foreach (var l in trim1)
             {
@@ -1769,6 +1769,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(4, rect.Vertices.Count());
         }
 
+        [Fact]
         public void CollinearPointCanBeRemoved()
         {
             var points = new Vector3[6]{
@@ -1782,9 +1783,7 @@ namespace Elements.Geometry.Tests
 
             var polygon = new Polygon(points);
             polygon = polygon.CollinearPointsRemoved();
-            Assert.True(polygon.Vertices.Count == 4);
+            Assert.Equal(4, polygon.Vertices.Count());
         }
-
-
     }
 }
