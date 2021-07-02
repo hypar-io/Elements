@@ -123,15 +123,42 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void BBoxToCurves() {
+        public void BBoxToCurves()
+        {
             Name = "BBoxToCurves";
             var star = Polygon.Star(10, 4, 5);
             var flatbbox = new BBox3(star.Vertices);
-            var bbox = new BBox3(new Vector3(4,2,5), new Vector3(10, 8, 14));
+            var bbox = new BBox3(new Vector3(4, 2, 5), new Vector3(10, 8, 14));
             var crvs = bbox.ToModelCurves();
             Model.AddElements(crvs);
             var flatCrvs = flatbbox.ToModelCurves();
             Model.AddElements(flatCrvs);
+        }
+
+        [Fact]
+        public void Arrow3d()
+        {
+            Name = nameof(Arrow3d);
+
+            new List<Vector3>() { Vector3.XAxis, Vector3.YAxis, Vector3.ZAxis }.ForEach((v) =>
+            {
+                var arrow = new Arrow3d(Vector3.Origin, v)
+                {
+                    Material = new Material(v.ToString(), new Color(v.X, v.Y, v.Z, 1.0))
+                };
+                Model.AddElement(arrow);
+            });
+
+            var a = Vector3.Origin;
+            var b = new Vector3(5, 0, 1);
+            var c = new Vector3(5, 5, 2);
+            var d = new Vector3(0, 5, 3);
+            var e = new Vector3(0, 0, 4);
+            var f = new Vector3(5, 0, 5);
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
+
+            var bezier = new Bezier(ctrlPts);
+            Model.AddElement(new Arrow3d(bezier, triangleCount: 6));
         }
     }
 }

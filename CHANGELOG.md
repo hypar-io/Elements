@@ -21,6 +21,7 @@
 - `Bbox3.Corners()`
 - `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)`
 - `Polygon.CollinearPointsRemoved()`
+- `Elements.Arrow3d`
 
 ### Changed
 
