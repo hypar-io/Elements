@@ -171,7 +171,7 @@ namespace Elements.Spatial
         /// <param name="predicate">A predicate used during the final step of polygonization to determine if edges are
         /// valid.</param>
         /// <param name="normal">The normal of the plane in which graph traversal for polygon construction will occur.
-        /// If no angle is provided, the +Z axis is used.</param>
+        /// If no normal is provided, the +Z axis is used.</param>
         /// <returns>A collection of polygons.</returns>
         public List<Polygon> Polygonize(Func<int?, bool> predicate = null, Vector3 normal = default(Vector3))
         {
