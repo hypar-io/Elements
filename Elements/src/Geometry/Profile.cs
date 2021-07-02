@@ -456,6 +456,26 @@ namespace Elements.Geometry
             return Profile.Split(profiles, new[] { splitLine }, tolerance);
         }
 
+        public static List<Profile> Offset(IEnumerable<Profile> profiles, double offsetDistance, double tolerance = Vector3.EPSILON)
+        {
+            var clipperScale = 1.0 / tolerance;
+            ClipperOffset clipper = new ClipperOffset();
+            foreach (var profile in profiles)
+            {
+                var subjectPolygons = new List<Polygon> { profile.Perimeter };
+                if (profile.Voids != null && profile.Voids.Count > 0)
+                {
+                    subjectPolygons.AddRange(profile.Voids);
+                }
+                var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+                clipper.AddPaths(clipperPaths, JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ref solution, offsetDistance * clipperScale);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
         /// <summary>
         /// Create a collection of profiles from a collection of polygons. Inner polygons will be treated as voids in alternating fashion.
         /// </summary>
