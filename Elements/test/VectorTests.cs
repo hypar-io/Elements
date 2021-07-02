@@ -391,13 +391,24 @@ namespace Elements.Tests
         [Fact]
         public void Collinear()
         {
-            Vector3 p0 = new Vector3( 0, 0, 0);
-            Vector3 p1 = new Vector3( 10, 10, 10);
-            Vector3 p2 = new Vector3( 20, 20, 20);
-            Vector3 p3 = new Vector3( 15, 5, 20);
+            Vector3 p0 = new Vector3(0, 0, 0);
+            Vector3 p1 = new Vector3(10, 10, 10);
+            Vector3 p2 = new Vector3(20, 20, 20);
+            Vector3 p3 = new Vector3(15, 5, 20);
 
-            Assert.True( Vector3.AreCollinear( p0, p1, p2 ) );
-            Assert.False( Vector3.AreCollinear( p0, p1, p3 ) );
+            Assert.True(Vector3.AreCollinear(p0, p1, p2));
+            Assert.False(Vector3.AreCollinear(p0, p1, p3));
+        }
+
+        [Fact]
+        public void TupleSyntax()
+        {
+            // Integer Tuples + params constructor
+            var polygon = new Polygon((0, 0), (10, 0), (10, 10));
+            Assert.Equal(50, polygon.Area());
+
+            // Mixed tuples + params constructor
+            var polyline = new Polyline((0, 0, 0), (0.5, 0), (1, 0.5));
         }
     }
 }
