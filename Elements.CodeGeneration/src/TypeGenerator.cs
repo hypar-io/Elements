@@ -354,7 +354,7 @@ namespace Elements.Generate
                 {
                     throw new Exception($"The specified schema, {uri}, can not be found at the path {path}.");
                 }
-                return await JsonSchema.FromJsonAsync(File.ReadAllText(path));
+                return await JsonSchema.FromJsonAsync(File.ReadAllText(path), Directory.GetCurrentDirectory() + "/");
             }
         }
 
