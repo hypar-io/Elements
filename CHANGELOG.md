@@ -16,6 +16,7 @@
 - `Vector3.>=`
 - `Vector3.<=`
 - `Plane.Intersects(Plane a, Plane b)`
+- [#616](https://github.com/hypar-io/Elements/issues/616) Code generation from local files now supplies a directory path to help resolve local references
 
 ## 0.9.1
 
