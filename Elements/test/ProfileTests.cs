@@ -346,27 +346,22 @@ namespace Elements.Tests
         public void ProfileOffset()
         {
             Name = nameof(ProfileOffset);
-            var modelJson = "{\"Transform\":{\"Matrix\":{\"Components\":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},\"Elements\":{\"6cbc787e-c851-4d10-a5d2-cbb736430913\":{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":36.18333,\"Y\":-15.61143,\"Z\":0.0},{\"X\":28.59568,\"Y\":-15.61143,\"Z\":0.0},{\"X\":28.59568,\"Y\":-22.65362,\"Z\":0.0},{\"X\":18.32058,\"Y\":-22.65362,\"Z\":0.0},{\"X\":18.32058,\"Y\":-15.61143,\"Z\":0.0},{\"X\":12.53298,\"Y\":-15.61143,\"Z\":0.0},{\"X\":12.53298,\"Y\":-42.82855,\"Z\":0.0},{\"X\":36.18333,\"Y\":-42.82855,\"Z\":0.0}]},\"Voids\":[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":29.0012,\"Y\":-42.64078,\"Z\":0.0},{\"X\":29.0012,\"Y\":-35.56971,\"Z\":0.0},{\"X\":36.07227,\"Y\":-35.56971,\"Z\":0.0},{\"X\":36.07227,\"Y\":-42.64078,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":12.88383,\"Y\":-42.68534,\"Z\":0.0},{\"X\":12.88383,\"Y\":-35.61427,\"Z\":0.0},{\"X\":19.9549,\"Y\":-35.61427,\"Z\":0.0},{\"X\":19.9549,\"Y\":-42.68534,\"Z\":0.0}]}],\"Id\":\"6cbc787e-c851-4d10-a5d2-cbb736430913\",\"Name\":null}}}";
-            var inputM = Model.FromJson(modelJson);
-            var currProfile = inputM.AllElementsOfType<Profile>().First();
-            Model.AddElements(currProfile.ToModelCurves(material: BuiltInMaterials.XAxis));
 
-            var offsetProfile = Elements.Geometry.Profile.Offset(new[] { currProfile }, -1).OrderBy(p => p.Area()).Last();
-            // output.Model.AddElements(offsetProfile.ToModelCurves());
-            var offsetOut = Elements.Geometry.Profile.Offset(new[] { offsetProfile }, 1).OrderBy(p => p.Area()).Last();
-            Model.AddElement(new Panel(offsetOut.Perimeter, BuiltInMaterials.XAxis));
-
-            // var profile = new Profile(Polygon.Rectangle((0, 0), (10, 10)), Polygon.Rectangle((0.1, 0.1), (5, 5)));
-            // Model.AddElements(profile.ToModelCurves(material: BuiltInMaterials.XAxis));
-            // var offset = Elements.Geometry.Profile.Offset(new[] { profile }, -0.5);
-            // Model.AddElements(offset.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.YAxis)));
-            // var offset2 = Elements.Geometry.Profile.Offset(new[] { profile }, 0.5);
-            // Model.AddElements(offset2.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.ZAxis)));
-
-            // var offsetProfile = Elements.Geometry.Profile.Offset(new[] { profile }, -1).OrderBy(p => p.Area()).Last();
-            // var offsetOut = Elements.Geometry.Profile.Offset(new[] { offsetProfile }, 1).OrderBy(p => p.Area()).Last();
-            // Model.AddElement(new Panel(offsetOut.Perimeter, BuiltInMaterials.XAxis));
-
+            var profile = new Profile(Polygon.Rectangle((0, 0), (10, 10)), Polygon.Rectangle((0.5, 0.5), (5, 5)));
+            Model.AddElements(profile.ToModelCurves(material: BuiltInMaterials.XAxis));
+            // offset in
+            var offset = Elements.Geometry.Profile.Offset(new[] { profile }, -0.5);
+            Assert.Equal(56, offset.Sum(o => o.Area()));
+            Model.AddElements(offset.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.YAxis)));
+            // offset out
+            var offset2 = Elements.Geometry.Profile.Offset(new[] { profile }, 1);
+            Assert.Equal(137.75, offset2.Sum(o => o.Area()), 3);
+            Model.AddElements(offset2.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.ZAxis)));
+            // offset in and back out again
+            var offsetProfiles = Elements.Geometry.Profile.Offset(new[] { profile }, -1);
+            var offsetOut = Elements.Geometry.Profile.Offset(offsetProfiles, 1);
+            Assert.Equal(75, offsetOut.Sum(o => o.Area()));
+            Model.AddElements(offsetOut.Select(p => new Panel(p.Perimeter, BuiltInMaterials.Void)));
         }
     }
 }
