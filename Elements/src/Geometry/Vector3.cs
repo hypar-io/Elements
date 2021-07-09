@@ -795,6 +795,42 @@ namespace Elements.Geometry
             return newList;
 
         }
+
+        /// <summary>
+        /// Automatically convert a tuple of three doubles into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y,Z) tuple of doubles.</param>
+        public static implicit operator Vector3((double X, double Y, double Z) vector)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of three ints into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y,Z) tuple of ints.</param>
+        public static implicit operator Vector3((int X, int Y, int Z) vector)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of two doubles into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y) tuple of doubles.</param>
+        public static implicit operator Vector3((double X, double Y) vector)
+        {
+            return new Vector3(vector.X, vector.Y);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of two ints into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y) tuple of ints.</param>
+        public static implicit operator Vector3((int X, int Y) vector)
+        {
+            return new Vector3(vector.X, vector.Y);
+        }
     }
 
     /// <summary>

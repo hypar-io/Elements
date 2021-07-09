@@ -399,5 +399,16 @@ namespace Elements.Tests
             Assert.True(Vector3.AreCollinear(p0, p1, p2));
             Assert.False(Vector3.AreCollinear(p0, p1, p3));
         }
+
+        [Fact]
+        public void TupleSyntax()
+        {
+            // Integer Tuples + params constructor
+            var polygon = new Polygon((0, 0), (10, 0), (10, 10));
+            Assert.Equal(50, polygon.Area());
+
+            // Mixed tuples + params constructor
+            var polyline = new Polyline((0, 0, 0), (0.5, 0), (1, 0.5));
+        }
     }
 }

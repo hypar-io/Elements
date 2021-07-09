@@ -32,6 +32,16 @@ namespace Elements.Geometry
         public static implicit operator Element(Polygon c) => new ModelCurve(c);
 
         /// <summary>
+        /// Construct a polygon from points. This is a convenience constructor
+        /// that can be used like this: `new Polygon((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices))
+        {
+
+        }
+
+        /// <summary>
         /// Construct a transformed copy of this Polygon.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
@@ -698,19 +708,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Split this polygon with an open polyline.
+        /// Split this polygon with one or more open polylines.
         /// </summary>
-        /// <param name="pl">The polyline with which to split.</param>
-        public List<Polygon> Split(Polyline pl)
+        /// <param name="polylines">The polylines with which to split.</param>
+        public List<Polygon> Split(params Polyline[] polylines)
         {
-            var plXform = this.ToTransform();
-            var inverse = new Transform(plXform);
-            inverse.Invert();
-            var thisInXY = this.TransformedPolygon(inverse);
-            // Construct a half-edge graph from the polygon and the polyline
-            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(thisInXY, pl.TransformedPolyline(inverse));
-            // Find closed regions in that graph
-            return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
+            return Split(polylines.ToList());
         }
 
         /// <summary>
@@ -944,6 +947,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric union of a set of polygons, using default
+        /// tolerance.
+        /// </summary>
+        /// <param name="polygons">The polygons to union</param>
+        /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
+        public static IList<Polygon> UnionAll(params Polygon[] polygons)
+        {
+            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, Vector3.EPSILON);
+        }
+
+        /// <summary>
         /// Constructs the geometric union of a set of polygons.
         /// </summary>
         /// <param name="polygons">The polygons to union</param>
@@ -1033,6 +1047,21 @@ namespace Elements.Geometry
                 polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
+        }
+
+        /// <summary>
+        /// Constructs the geometric difference between this Polygon and one or
+        /// more supplied Polygons, using the default tolerance.
+        /// </summary>
+        /// <param name="polygons">The intersecting Polygons.</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the Polygons do not intersect.
+        /// </returns>
+        public IList<Polygon> Difference(params Polygon[] polygons)
+        {
+            return Difference(polygons, Vector3.EPSILON);
         }
 
         /// <summary>
@@ -1161,6 +1190,20 @@ namespace Elements.Geometry
                 return null;
             }
             return solution.First().ToPolygon(tolerance);
+        }
+
+        /// <summary>
+        /// Constructs the geometric union between this Polygon and one or more
+        /// supplied polygons, using the default tolerance.
+        /// </summary>
+        /// <param name="polygons">The Polygons to be combined with this Polygon.</param>
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the complete list of Polygons.
+        /// </returns>
+        public Polygon Union(params Polygon[] polygons)
+        {
+            return Union(polygons, Vector3.EPSILON);
         }
 
         /// <summary>
