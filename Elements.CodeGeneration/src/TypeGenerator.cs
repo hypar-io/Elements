@@ -29,6 +29,15 @@ namespace Elements.Generate
             // Console.WriteLine(typeNameHint + ":" + schema.InheritedSchema ?? "none");
             if (schema.IsEnumeration || String.IsNullOrEmpty(schema.Title))
             {
+                if (typeNameHint == null)
+                {
+                    // Normally we will have either a schema Title or a type
+                    // name hint, which comes from the property name. This is a
+                    // last ditch save — NJSonSchema natively would call this "Anonymous."
+                    var identifier = $"UnknownType_{Guid.NewGuid().ToString().Replace("-", "").Substring(5)}";
+                    Console.WriteLine($"Encountered a schema with no Title property. This class will be called {identifier}. To fix this, add a Title to your schema.");
+                    return identifier;
+                }
                 return typeNameHint;
             }
             else
@@ -354,7 +363,7 @@ namespace Elements.Generate
                 {
                     throw new Exception($"The specified schema, {uri}, can not be found at the path {path}.");
                 }
-                return await JsonSchema.FromJsonAsync(File.ReadAllText(path));
+                return await JsonSchema.FromJsonAsync(File.ReadAllText(path), Directory.GetCurrentDirectory() + "/");
             }
         }
 
@@ -403,7 +412,14 @@ namespace Elements.Generate
             var typeFiles = new Dictionary<string, string>();
             // We still need this call to GenerateFile() even though we don't use the file's
             // text.  It is already a documented issue https://github.com/RicoSuter/NJsonSchema/issues/893
-            var file = generator.GenerateFile();
+            try
+            {
+                var file = generator.GenerateFile();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             var typeArtifacts = generator.GenerateTypes();
 
             foreach (var fileArtifact in typeArtifacts)

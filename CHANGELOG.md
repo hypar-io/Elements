@@ -32,6 +32,8 @@
 
 ### Fixed
 
+- [#616](https://github.com/hypar-io/Elements/issues/616) Code generation from local files now supplies a directory path to help resolve local references.
+
 ## 0.9.1
 
 ### Added
