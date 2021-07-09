@@ -135,5 +135,23 @@ namespace Elements.Geometry
         {
             return !a.Equals(b);
         }
+
+        /// <summary>
+        /// Automatically convert a tuple (R,G,B,A) to a color.
+        /// </summary>
+        /// <param name="color">An (R,G,B,A) tuple of doubles.</param>
+        public static implicit operator Color((double R, double G, double B, double A) color)
+        {
+            return new Color(color.R, color.G, color.B, color.A);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple (R,G,B) to a color.
+        /// </summary>
+        /// <param name="color">An (R,G,B) tuple of doubles.</param>
+        public static implicit operator Color((double R, double G, double B) color)
+        {
+            return new Color(color.R, color.G, color.B, 1.0);
+        }
     }
 }
