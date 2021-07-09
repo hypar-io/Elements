@@ -1659,6 +1659,47 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void EnclosingPlanesTrimToFormVolume()
+        {
+            this.Name = nameof(EnclosingPlanesTrimToFormVolume);
+
+            var bottomT = new Transform(new Vector3(0, 0, 1), Vector3.ZAxis);
+            var topT = new Transform(Vector3.Origin, Vector3.ZAxis.Negate());
+            topT.Rotate(Vector3.XAxis, 15.0);
+            topT.Move(new Vector3(0, 0, 3));
+            var t1 = new Transform(new Vector3(3, 0), Vector3.XAxis.Negate());
+            var t2 = new Transform(new Vector3(0, 3), Vector3.YAxis.Negate());
+            var t3 = new Transform(new Vector3(-3, 0), Vector3.XAxis);
+            var t4 = new Transform(new Vector3(0, -3), Vector3.YAxis);
+            var transforms = new[] { t1, t2, t3, t4, bottomT, topT };
+            var polys = new List<Polygon>();
+            foreach (var t in transforms)
+            {
+                var p = Polygon.Rectangle(10, 10).TransformedPolygon(t);
+                polys.Add(p);
+                this.Model.AddElement(new ModelCurve(p));
+            }
+            var r = new Random();
+            foreach (var p in polys)
+            {
+                var other = polys.Where(pp => pp != p).ToList();
+                var trimmed = p.TrimmedTo(other);
+
+                Assert.Single(trimmed);
+
+                var a = p.Area();
+                foreach (var t in trimmed)
+                {
+                    // These are naive checks to ensure that the trimmed
+                    // polygons don't look like the originals.
+                    Assert.NotEqual(t.Vertices, p.Vertices);
+                    Assert.NotEqual(a, t.Area());
+                    this.Model.AddElement(new Panel(t, r.NextMaterial()));
+                }
+            }
+        }
+
+        [Fact]
         public void PolygonIsTrimmedByPolygons()
         {
             this.Name = nameof(PolygonIsTrimmedByPolygons);

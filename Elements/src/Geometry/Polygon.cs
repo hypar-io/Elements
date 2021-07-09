@@ -911,7 +911,7 @@ namespace Elements.Geometry
             var polys = heg.Polygonize((tag) =>
             {
                 return tag.HasValue && tag == 1;
-            });
+            }, localPlane.Normal);
 
             intersections = results.SelectMany(t => t).ToList();
 
