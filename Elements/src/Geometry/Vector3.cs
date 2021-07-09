@@ -458,6 +458,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute whether all components of vector a are greater than or
+        /// equal to those of vector b.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are greater than or equal
+        /// to all of those of b, otherwise false.</returns>
+        public static bool operator >=(Vector3 a, Vector3 b)
+        {
+            return a.X >= b.X && a.Y >= b.Y && a.Z >= b.Z;
+        }
+
+        /// <summary>
         /// Compute whether all components of vector a are less than those of vector b.
         /// </summary>
         /// <param name="a">The first vector.</param>
@@ -466,6 +479,19 @@ namespace Elements.Geometry
         public static bool operator <(Vector3 a, Vector3 b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
+        }
+
+        /// <summary>
+        /// Compute whether all components of vector a are less than or
+        /// equal to those of vector b.
+        /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>True if all of a's components are less than or equal
+        /// to all of those of b, otherwise false.</returns>
+        public static bool operator <=(Vector3 a, Vector3 b)
+        {
+            return a.X <= b.X && a.Y <= b.Y && a.Z <= b.Z;
         }
 
         /// <summary>

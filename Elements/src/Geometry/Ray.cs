@@ -317,7 +317,14 @@ namespace Elements.Geometry
             var otherRay = new Ray(line.Start, line.Direction());
             if (Intersects(otherRay, out Vector3 rayResult))
             {
-                if ((rayResult - line.Start).Length() > line.Length())
+                // Quick out if the result is exactly at the 
+                // start or the end of the line.
+                if (rayResult.IsAlmostEqualTo(line.Start) || rayResult.IsAlmostEqualTo(line.End))
+                {
+                    result = rayResult;
+                    return true;
+                }
+                else if ((rayResult - line.Start).Length() > line.Length())
                 {
                     result = default(Vector3);
                     return false;

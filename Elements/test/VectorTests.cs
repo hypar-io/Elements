@@ -162,10 +162,10 @@ namespace Elements.Tests
         {
             var squareSize = 10;
             var rect = Polygon.Rectangle(squareSize, squareSize);
-            Assert.Equal(new Vector3().DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(-5, 0).DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(10, 0).DistanceTo(rect), 5);
-            Assert.Equal(new Vector3(0, 0, 5).DistanceTo(rect), 5);
+            Assert.Equal(0, new Vector3().DistanceTo(rect));
+            Assert.Equal(0, new Vector3(-5, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(10, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(0, 0, 5).DistanceTo(rect));
         }
 
         [Fact]
