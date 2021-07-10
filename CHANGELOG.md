@@ -4,6 +4,12 @@
 
 ### Added
 
+- `Polyline.Split(List<Vector3> point)`
+- `Polygon.Split(List<Vector3> point)`
+- `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Vector3.>=`
+- `Vector3.<=`
+- `Plane.Intersects(Plane a, Plane b)`
 - A handful of convenience operators and conversions:
   - implicit `(double X, double Y, double Z)` => `Vector3`
   - implicit `(double X, double Y)` => `Vector3`
@@ -19,6 +25,7 @@
   - `Polygon.UnionAll(params Polygon[] polygons)`
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
+- `Profile.Offset()`
 
 ### Changed
 
@@ -26,12 +33,7 @@
 
 ### Fixed
 
-- `Polyline.Split(List<Vector3> point)`
-- `Polygon.Split(List<Vector3> point)`
-- `Polygon.TrimmedTo(List<Polygon> polygons)`
-- `Vector3.>=`
-- `Vector3.<=`
-- `Plane.Intersects(Plane a, Plane b)`
+- [#616](https://github.com/hypar-io/Elements/issues/616) Code generation from local files now supplies a directory path to help resolve local references.
 
 ## 0.9.1
 
