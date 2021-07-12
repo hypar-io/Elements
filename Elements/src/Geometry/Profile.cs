@@ -456,7 +456,25 @@ namespace Elements.Geometry
             return Profile.Split(profiles, new[] { splitLine }, tolerance);
         }
 
-        public static List<Profile> Offset(IEnumerable<Profile> profiles, double offsetDistance, double tolerance = Vector3.EPSILON)
+        /// <summary>
+        /// Offset this profile by a given distance.
+        /// </summary>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns></returns>
+        public List<Profile> Offset(double distance, double tolerance = Vector3.EPSILON)
+        {
+            return Profile.Offset(new[] { this }, distance, tolerance);
+        }
+
+        /// <summary>
+        /// Offset profiles by a given distance.
+        /// </summary>
+        /// <param name="profiles">The profiles to offset.</param>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A collection of resulting profiles.</returns>
+        public static List<Profile> Offset(IEnumerable<Profile> profiles, double distance, double tolerance = Vector3.EPSILON)
         {
             var clipperScale = 1.0 / tolerance;
             ClipperOffset clipper = new ClipperOffset();
@@ -471,7 +489,7 @@ namespace Elements.Geometry
                 clipper.AddPaths(clipperPaths, JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
             }
             PolyTree solution = new PolyTree();
-            clipper.Execute(ref solution, offsetDistance * clipperScale);
+            clipper.Execute(ref solution, distance * clipperScale);
             var joinedProfiles = solution.ToProfiles(tolerance);
             return joinedProfiles;
         }
