@@ -162,10 +162,10 @@ namespace Elements.Tests
         {
             var squareSize = 10;
             var rect = Polygon.Rectangle(squareSize, squareSize);
-            Assert.Equal(new Vector3().DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(-5, 0).DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(10, 0).DistanceTo(rect), 5);
-            Assert.Equal(new Vector3(0, 0, 5).DistanceTo(rect), 5);
+            Assert.Equal(0, new Vector3().DistanceTo(rect));
+            Assert.Equal(0, new Vector3(-5, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(10, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(0, 0, 5).DistanceTo(rect));
         }
 
         [Fact]
@@ -391,13 +391,24 @@ namespace Elements.Tests
         [Fact]
         public void Collinear()
         {
-            Vector3 p0 = new Vector3( 0, 0, 0);
-            Vector3 p1 = new Vector3( 10, 10, 10);
-            Vector3 p2 = new Vector3( 20, 20, 20);
-            Vector3 p3 = new Vector3( 15, 5, 20);
+            Vector3 p0 = new Vector3(0, 0, 0);
+            Vector3 p1 = new Vector3(10, 10, 10);
+            Vector3 p2 = new Vector3(20, 20, 20);
+            Vector3 p3 = new Vector3(15, 5, 20);
 
-            Assert.True( Vector3.AreCollinear( p0, p1, p2 ) );
-            Assert.False( Vector3.AreCollinear( p0, p1, p3 ) );
+            Assert.True(Vector3.AreCollinear(p0, p1, p2));
+            Assert.False(Vector3.AreCollinear(p0, p1, p3));
+        }
+
+        [Fact]
+        public void TupleSyntax()
+        {
+            // Integer Tuples + params constructor
+            var polygon = new Polygon((0, 0), (10, 0), (10, 10));
+            Assert.Equal(50, polygon.Area());
+
+            // Mixed tuples + params constructor
+            var polyline = new Polyline((0, 0, 0), (0.5, 0), (1, 0.5));
         }
     }
 }

@@ -4,12 +4,6 @@
 
 ### Added
 
-### Changed
-
-- Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
-
-### Fixed
-
 - `Polyline.Split(List<Vector3> point)`
 - `Polygon.Split(List<Vector3> point)`
 - `Polygon.TrimmedTo(List<Polygon> polygons)`
@@ -20,6 +14,29 @@
 
 ### Removed
 - `IHasOpenings`
+- A handful of convenience operators and conversions:
+  - implicit `(double X, double Y, double Z)` => `Vector3`
+  - implicit `(double X, double Y)` => `Vector3`
+  - implicit `(int X, int Y, int Z)` => `Vector3`
+  - implicit `(int X, int Y)` => `Vector3`
+  - implicit `(double R, double G, double B, double A)` => `Color`
+  - implicit `(double R, double G, double B)` => `Color`
+  - `new Polygon(params Vector3[] vertices)`
+  - `new Polyline(params Vector3[] vertices)`
+  - implicit `SolidOperation` => `Representation`
+  - `new Representation(params SolidOperation[] solidOperations)`
+  - `Polygon.Split(params Polyline[] polylines)`
+  - `Polygon.UnionAll(params Polygon[] polygons)`
+  - `Polygon.Difference(params Polygon[] polygons)`
+  - `Polygon.Union(params Polygon[] polygons)`
+
+### Changed
+
+- Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+
+### Fixed
+
+- [#616](https://github.com/hypar-io/Elements/issues/616) Code generation from local files now supplies a directory path to help resolve local references.
 
 ## 0.9.1
 

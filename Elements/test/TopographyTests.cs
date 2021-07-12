@@ -363,7 +363,7 @@ namespace Elements.Tests
             var topo = CreateTestTopography();
             var polygon = (Polygon)Polygon.Rectangle(1, 1).Transformed(new Transform(new Vector3(5, 5)));
             var result = topo.CutAndFill(new[] { polygon }, 100, out List<Mesh> _, out List<Mesh> _);
-            Assert.Equal(result.FillVolume, 0);
+            Assert.Equal(0, result.FillVolume);
         }
 
         [Fact]
@@ -375,7 +375,7 @@ namespace Elements.Tests
             // The cut volume will never be exactly the same due to imprecision
             // introduced by the CSG operation. We round to 3 decimal places here
             // which is millimeter accuracy.
-            Assert.Equal(result.CutVolume, 1, 3);
+            Assert.Equal(1, result.CutVolume, 3);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)

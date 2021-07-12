@@ -182,7 +182,7 @@ namespace Elements.Tests
             var solid = Solid.SweepFace(outer, new[] { inner }, new Vector3(0.5, 0.5, 0.5), 5);
             var mesh = solid.ToMesh();
             var subtraction = mesh.ToCsg().Substract(solid.ToCsg());
-            Assert.Equal(0, subtraction.Polygons.Count);
+            Assert.Empty(subtraction.Polygons);
         }
 
         [Fact]
@@ -283,6 +283,26 @@ namespace Elements.Tests
             var bytes = model.ToGlTF();
             Assert.True(bytes != null && bytes.Length > 3000);
             Model.AddElement(geoElem);
+        }
+
+        [Fact]
+        public void ImplicitRepresentationOperator()
+        {
+            Name = nameof(ImplicitRepresentationOperator);
+            // implicitly convert single solid operation to a representation
+            var element = new GeometricElement(new Transform(), BuiltInMaterials.ZAxis, new Extrude(Polygon.Rectangle(5, 5), 1, Vector3.ZAxis, false), false, Guid.NewGuid(), null);
+            // params constructor for Representation
+            var element2 = new GeometricElement(
+                new Transform(),
+                BuiltInMaterials.XAxis,
+                new Representation(
+                    new Extrude(Polygon.Rectangle(7, 7), 1, Vector3.ZAxis, false),
+                    new Extrude(Polygon.Rectangle(6, 6), 2, Vector3.ZAxis, true)
+                ),
+                false,
+                Guid.NewGuid(),
+                null);
+            Model.AddElements(element, element2);
         }
     }
 
