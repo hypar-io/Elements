@@ -26,7 +26,7 @@ namespace Elements
     public partial class GeometricElement : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public GeometricElement(Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+        public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
