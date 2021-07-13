@@ -1,17 +1,16 @@
 using Elements.Serialization.DXF.Extensions;
-using netDxf.Entities;
+using IxMilia.Dxf.Entities;
 
 namespace Elements.Serialization.DXF
 {
     public class FloorToDXF : IRenderDxf
     {
-        public bool TryToCreateDxfEntity(Element element, DxfRenderContext context, out EntityObject perimeter)
+        public bool TryToCreateDxfEntity(Element element, DxfRenderContext context, out DxfEntity perimeter)
         {
             var floor = element as Floor;
 
-            perimeter = floor.Profile.Perimeter.ToDxf();
-            perimeter.Lineweight = netDxf.Lineweight.W20;
-
+            var polyline = floor.Profile.Perimeter.ToDxf();
+            perimeter = polyline;
             return true;
         }
     }

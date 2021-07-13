@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Elements;
+using IxMilia.Dxf;
 
 namespace Elements.Serialization.DXF
 {
@@ -26,7 +27,7 @@ namespace Elements.Serialization.DXF
         /// <param name="model">The model to render</param>
         public Stream Render(Model model)
         {
-            var doc = new netDxf.DxfDocument(netDxf.Header.DxfVersion.AutoCad2018);
+            var doc = new DxfFile();
             var context = new DxfRenderContext();
             context.Model = model;
 
@@ -38,7 +39,7 @@ namespace Elements.Serialization.DXF
                 }
                 if (converter.TryToCreateDxfEntity(element, context, out var entity))
                 {
-                    doc.AddEntity(entity);
+                    doc.Entities.Add(entity);
                 }
             }
 

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using dxf = netDxf.Entities;
+using IxMilia.Dxf;
+using IxMilia.Dxf.Entities;
 
 namespace Elements.Serialization.DXF.Extensions
 {
@@ -10,22 +11,24 @@ namespace Elements.Serialization.DXF.Extensions
     /// </summary>
     public static class ToDxfExtensions
     {
+
         /// <summary>
         /// Convert to a DXF Polyline entity.
         /// </summary>
-        public static dxf.Polyline ToDxf(this Polyline polyline)
+        public static DxfPolyline ToDxf(this Polyline polyline)
         {
-            IEnumerable<netDxf.Vector3> vertices = polyline.Vertices.Select(v => v.ToDxf());
-            var dxf = new dxf.Polyline(vertices, true);
+            IEnumerable<DxfVertex> vertices = polyline.Vertices.Select(v => v.ToDxf());
+            var dxf = new DxfPolyline(vertices);
+            dxf.IsClosed = polyline is Polygon;
             return dxf;
         }
 
         /// <summary>
         /// Convert to a DXF Vector3.
         /// </summary>
-        public static netDxf.Vector3 ToDxf(this Vector3 vector3)
+        public static DxfVertex ToDxf(this Vector3 vector3)
         {
-            return new netDxf.Vector3(vector3.X, vector3.Y, vector3.Z);
+            return new DxfVertex(new DxfPoint(vector3.X, vector3.Y, vector3.Z));
         }
     }
 }
