@@ -26,19 +26,20 @@ namespace Elements
     public partial class ContentElement : GeometricElement
     {
         [Newtonsoft.Json.JsonConstructor]
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
+        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, IList<Symbol> @symbols, Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>();
             if(validator != null)
             {
-                validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @transform, @material, @representation, @isElementDefinition, @id, @name});
+                validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @symbols, @transform, @material, @representation, @isElementDefinition, @id, @name});
             }
         
             this.GltfLocation = @gltfLocation;
             this.BoundingBox = @boundingBox;
             this.GltfScaleToMeters = @gltfScaleToMeters;
             this.SourceDirection = @sourceDirection;
+            this.Symbols = @symbols;
             
             if(validator != null)
             {
@@ -61,6 +62,10 @@ namespace Elements
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
         [Newtonsoft.Json.JsonProperty("SourceDirection", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 SourceDirection { get; set; }
+    
+        /// <summary>Alternate symbolic representations of the object.</summary>
+        [Newtonsoft.Json.JsonProperty("Symbols", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Symbol> Symbols { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
