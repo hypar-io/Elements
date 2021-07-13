@@ -1,11 +1,5 @@
 # Changelog
 
-## 0.9.3
-
-### Changed
-
-- Added `Symbols` property to `ContentElement`.
-
 ## 0.9.2
 
 ### Added
