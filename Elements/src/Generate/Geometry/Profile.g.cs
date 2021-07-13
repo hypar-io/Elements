@@ -25,7 +25,7 @@ namespace Elements.Geometry
     public partial class Profile : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<Profile>();

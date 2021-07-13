@@ -22,13 +22,6 @@
         "SourceDirection": {
             "description": "A vector indicating the direction the source object was originally facing.",
             "$ref": "https://raw.githubusercontent.com/hypar-io/Elements/master/Schemas/Geometry/Vector3.json"
-        },
-        "Symbols": {
-            "description": "Alternate symbolic representations of the object.",
-            "type": "array",
-            "items": {
-                "$ref": "https://prod-api.hypar.io/schemas/Symbol"
-            }
         }
     },
     "additionalProperties": true,

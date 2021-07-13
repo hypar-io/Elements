@@ -26,7 +26,7 @@ namespace Elements
     public partial class ContentCatalog : Element
     {
         [Newtonsoft.Json.JsonConstructor]
-        public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id = default, string @name = null)
+        public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id, string @name)
             : base(id, name)
         {
             var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>();
