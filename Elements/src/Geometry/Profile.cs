@@ -457,6 +457,44 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Offset this profile by a given distance.
+        /// </summary>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns></returns>
+        public List<Profile> Offset(double distance, double tolerance = Vector3.EPSILON)
+        {
+            return Profile.Offset(new[] { this }, distance, tolerance);
+        }
+
+        /// <summary>
+        /// Offset profiles by a given distance.
+        /// </summary>
+        /// <param name="profiles">The profiles to offset.</param>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A collection of resulting profiles.</returns>
+        public static List<Profile> Offset(IEnumerable<Profile> profiles, double distance, double tolerance = Vector3.EPSILON)
+        {
+            var clipperScale = 1.0 / tolerance;
+            ClipperOffset clipper = new ClipperOffset();
+            foreach (var profile in profiles)
+            {
+                var subjectPolygons = new List<Polygon> { profile.Perimeter };
+                if (profile.Voids != null && profile.Voids.Count > 0)
+                {
+                    subjectPolygons.AddRange(profile.Voids);
+                }
+                var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+                clipper.AddPaths(clipperPaths, JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ref solution, distance * clipperScale);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
         /// Create a collection of profiles from a collection of polygons. Inner polygons will be treated as voids in alternating fashion.
         /// </summary>
         /// <param name="polygons">The polygons to sort into profiles</param>

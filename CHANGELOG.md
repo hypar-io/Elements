@@ -31,6 +31,7 @@
   - `Polygon.UnionAll(params Polygon[] polygons)`
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
+- `Profile.Offset()`
 
 ### Changed
 
