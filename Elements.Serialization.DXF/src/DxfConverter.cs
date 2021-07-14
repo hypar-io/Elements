@@ -1,6 +1,9 @@
 
 using Elements;
 using Elements.Geometry;
+using Elements.Serialization.DXF.Extensions;
+using IxMilia.Dxf;
+using IxMilia.Dxf.Blocks;
 using IxMilia.Dxf.Entities;
 
 namespace Elements.Serialization.DXF
@@ -35,6 +38,7 @@ namespace Elements.Serialization.DXF
         /// The drawing range that is currently being modeled.
         /// </summary>
         public DrawingRange DrawingRange;
+
     }
 
     /// <summary>
@@ -43,8 +47,50 @@ namespace Elements.Serialization.DXF
     public interface IRenderDxf
     {
         /// <summary>
-        /// Create a netDxf Entity Object for a given Hypar Element.
+        /// Add a DXF entity to a document
         /// </summary>
-        bool TryToCreateDxfEntity(Element element, DxfRenderContext context, out DxfEntity entity);
+        void TryAddDxfEntity(DxfFile document, Element element, DxfRenderContext context);
+    }
+
+    public abstract class DxfConverter<T> : IRenderDxf where T : Element
+    {
+        public abstract void TryAddDxfEntity(DxfFile document, T element, DxfRenderContext context);
+
+        public void TryAddDxfEntity(DxfFile document, Element element, DxfRenderContext context)
+        {
+            this.TryAddDxfEntity(document, element as T, context);
+        }
+    }
+
+    public abstract class GeometricDxfConverter<T> : DxfConverter<T> where T : GeometricElement
+    {
+        public override void TryAddDxfEntity(DxfFile document, T element, DxfRenderContext context)
+        {
+            // TODO: handle context / drawing range / etc.
+            if (element.Representation == null)
+            {
+                return;
+            }
+            var entities = element.GetEntitiesFromRepresentation();
+            if (element.IsElementDefinition)
+            {
+                var block = new DxfBlock
+                {
+                    Name = element.GetBlockName(),
+                    BasePoint = new DxfPoint(0, 0, 0)
+                };
+                foreach (var e in entities)
+                {
+                    block.Entities.Add(e);
+                }
+                document.Blocks.Add(block);
+                document.BlockRecords.Add(new DxfBlockRecord(block.Name));
+                return;
+            }
+            foreach (var e in entities)
+            {
+                document.Entities.Add(e);
+            }
+        }
     }
 }

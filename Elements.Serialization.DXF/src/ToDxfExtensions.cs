@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using IxMilia.Dxf;
 using IxMilia.Dxf.Entities;
 
@@ -17,7 +18,7 @@ namespace Elements.Serialization.DXF.Extensions
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
-            IEnumerable<DxfVertex> vertices = polyline.Vertices.Select(v => v.ToDxf());
+            IEnumerable<DxfVertex> vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
             var dxf = new DxfPolyline(vertices);
             dxf.IsClosed = polyline is Polygon;
             return dxf;
@@ -26,9 +27,81 @@ namespace Elements.Serialization.DXF.Extensions
         /// <summary>
         /// Convert to a DXF Vector3.
         /// </summary>
-        public static DxfVertex ToDxf(this Vector3 vector3)
+        public static DxfVertex ToDxfVertex(this Vector3 vector3)
         {
             return new DxfVertex(new DxfPoint(vector3.X, vector3.Y, vector3.Z));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static string GetBlockName(this Element element)
+        {
+            return (element.Name == null ? $"{element.Name} - " : "") + element.Id;
+        }
+
+        public static List<DxfEntity> GetEntitiesFromRepresentation(this GeometricElement element)
+        {
+            var list = new List<DxfEntity>();
+            foreach (var solidOp in element.Representation.SolidOperations)
+            {
+                list.AddRange(solidOp.ToDxfEntities(element.Transform));
+            }
+            return list;
+        }
+
+        public static List<DxfEntity> ToDxfEntities(this SolidOperation solidOp, Transform transform)
+        {
+            var list = new List<DxfEntity>();
+            switch (solidOp)
+            {
+                case Extrude extrude:
+                    {
+                        var profile = extrude.Profile.Transformed(transform);
+                        list.AddRange(profile.ToDxfEntities());
+                        break;
+                    }
+                case Sweep sweep:
+                    {
+                        var profile = sweep.Profile.Transformed(sweep.Curve.TransformAt(sweep.StartSetback));
+                        list.AddRange(profile.ToDxfEntities());
+                        break;
+                    }
+                case Lamina lamina:
+                    {
+                        var profile = new Profile(lamina.Perimeter.TransformedPolygon(transform), lamina.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>());
+                        list.AddRange(profile.ToDxfEntities());
+                        break;
+                    }
+            }
+            return list;
+        }
+
+        public static List<DxfEntity> ToDxfEntities(this Profile profile)
+        {
+            var list = new List<DxfEntity>();
+            list.Add(profile.Perimeter.ToDxf());
+            list.AddRange(profile.Voids.Select(v => v.ToDxf()));
+            return list;
+        }
+
+        public static DxfPoint ToDxfPoint(this Vector3 vector)
+        {
+            return new DxfPoint(vector.X, vector.Y, vector.Z);
+        }
+
+        public static DxfPoint ToDxfPoint(this Transform transform, DxfRenderContext context)
+        {
+            // TODO: use the context to get correct orientation
+            return transform.Origin.ToDxfPoint();
+        }
+
+        public static double ToDxfAngle(this Transform transform, DxfRenderContext context)
+        {
+            // TODO: use the context to get correct orientation
+            return Vector3.XAxis.PlaneAngleTo(transform.XAxis);
         }
     }
 }
