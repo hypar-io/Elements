@@ -13,6 +13,9 @@ namespace Elements.Serialization.DXF
     /// </summary>
     public class ElementInstanceToDXF : DxfConverter<ElementInstance>
     {
+        /// <summary>
+        /// Add a DXF entity to the document for an element instance.
+        /// </summary>
         public override void TryAddDxfEntity(DxfFile document, ElementInstance elementInstance, DxfRenderContext context)
         {
             var insert = new DxfInsert

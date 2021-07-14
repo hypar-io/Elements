@@ -14,7 +14,7 @@ namespace Elements.Serialization.DXF.Extensions
     {
 
         /// <summary>
-        /// Convert to a DXF Polyline entity.
+        /// Convert a polyline to a DXF Polyline entity.
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
@@ -25,7 +25,7 @@ namespace Elements.Serialization.DXF.Extensions
         }
 
         /// <summary>
-        /// Convert to a DXF Vector3.
+        /// Convert a Vector3 to a DXF Vertex.
         /// </summary>
         public static DxfVertex ToDxfVertex(this Vector3 vector3)
         {
@@ -42,6 +42,11 @@ namespace Elements.Serialization.DXF.Extensions
             return (element.Name == null ? $"{element.Name} - " : "") + element.Id;
         }
 
+        /// <summary>
+        /// Get DXF entities from the Representation of a GeometricElement.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static List<DxfEntity> GetEntitiesFromRepresentation(this GeometricElement element)
         {
             var list = new List<DxfEntity>();
@@ -52,6 +57,12 @@ namespace Elements.Serialization.DXF.Extensions
             return list;
         }
 
+        /// <summary>
+        /// Get DXF entities from a SolidOperation.
+        /// </summary>
+        /// <param name="solidOp"></param>
+        /// <param name="transform"></param>
+        /// <returns></returns>
         public static List<DxfEntity> ToDxfEntities(this SolidOperation solidOp, Transform transform)
         {
             var list = new List<DxfEntity>();
@@ -79,6 +90,10 @@ namespace Elements.Serialization.DXF.Extensions
             return list;
         }
 
+        /// <summary>
+        /// Get DXF entities from a Profile.
+        /// </summary>
+        /// <param name="profile"></param>
         public static List<DxfEntity> ToDxfEntities(this Profile profile)
         {
             var list = new List<DxfEntity>();
@@ -86,11 +101,19 @@ namespace Elements.Serialization.DXF.Extensions
             list.AddRange(profile.Voids.Select(v => v.ToDxf()));
             return list;
         }
-
+        /// <summary>
+        /// Get a DXFPoint from a Vector3.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
         public static DxfPoint ToDxfPoint(this Vector3 vector)
         {
             return new DxfPoint(vector.X, vector.Y, vector.Z);
         }
+
+        /// <summary>
+        /// Get a DXFPoint from a transform.
+        /// </summary>
 
         public static DxfPoint ToDxfPoint(this Transform transform, DxfRenderContext context)
         {
@@ -98,6 +121,9 @@ namespace Elements.Serialization.DXF.Extensions
             return transform.Origin.ToDxfPoint();
         }
 
+        /// <summary>
+        /// Get a rotation angle from a transform.
+        /// </summary>
         public static double ToDxfAngle(this Transform transform, DxfRenderContext context)
         {
             // TODO: use the context to get correct orientation

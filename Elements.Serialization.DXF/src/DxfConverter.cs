@@ -27,6 +27,9 @@ namespace Elements.Serialization.DXF
         public double Depth;
     }
 
+    /// <summary>
+    /// Provides information about the model and the drawing configuration. 
+    /// </summary>
     public class DxfRenderContext
     {
         /// <summary>
@@ -42,7 +45,8 @@ namespace Elements.Serialization.DXF
     }
 
     /// <summary>
-    /// Interface used during ModelToDxf rendering.
+    /// A class that provides a mechanism for converting elements into DXF
+    /// should inherit this interface.
     /// </summary>
     public interface IRenderDxf
     {
@@ -52,18 +56,33 @@ namespace Elements.Serialization.DXF
         void TryAddDxfEntity(DxfFile document, Element element, DxfRenderContext context);
     }
 
+    /// <summary>
+    /// A generic implementation of the IRenderDxf interface.
+    /// </summary>
     public abstract class DxfConverter<T> : IRenderDxf where T : Element
     {
+        /// <summary>
+        /// Add a DXF entity to the document for an element.
+        /// </summary>
         public abstract void TryAddDxfEntity(DxfFile document, T element, DxfRenderContext context);
 
+        /// <summary>
+        /// Add a DXF entity to the document for an element.
+        /// </summary>
         public void TryAddDxfEntity(DxfFile document, Element element, DxfRenderContext context)
         {
             this.TryAddDxfEntity(document, element as T, context);
         }
     }
 
+    /// <summary>
+    /// A generic implementation of the IRenderDxf interface for any GeometricElement.
+    /// </summary>
     public abstract class GeometricDxfConverter<T> : DxfConverter<T> where T : GeometricElement
     {
+        /// <summary>
+        /// Add a DXF entity to the document for an element.
+        /// </summary>
         public override void TryAddDxfEntity(DxfFile document, T element, DxfRenderContext context)
         {
             // TODO: handle context / drawing range / etc.
