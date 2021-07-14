@@ -352,5 +352,7 @@ namespace Elements
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
         }
+
+        public ExportConfiguration ExportConfiguration { get; set; }
     }
 }

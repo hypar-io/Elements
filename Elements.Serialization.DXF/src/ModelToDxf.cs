@@ -42,7 +42,6 @@ namespace Elements.Serialization.DXF
 
             var stream = new MemoryStream();
             doc.Save(stream);
-
             return stream;
         }
     }
