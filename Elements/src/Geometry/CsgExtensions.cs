@@ -27,6 +27,15 @@ namespace Elements.Geometry
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid csg)
         {
+            return Tesselate(new[] { csg });
+        }
+
+        /// <summary>
+        /// Triangulate a collection of CSGs and pack the triangulated data into
+        /// buffers appropriate for use with gltf. 
+        /// </summary>
+        internal static GraphicsBuffers Tesselate(this Csg.Solid[] csgs)
+        {
             var buffers = new GraphicsBuffers();
 
             ushort iCursor = 0;
@@ -37,97 +46,98 @@ namespace Elements.Geometry
 
             // Setup the octree to fit around the csg.
             // This requires one expensive initialization.
-            var verts = csg.Polygons.SelectMany(p => p.Vertices).Select(v => v.Pos.ToElementsVector()).ToArray();
+            var verts = csgs.SelectMany(csg => csg.Polygons.SelectMany(p => p.Vertices).Select(v => v.Pos.ToElementsVector())).ToArray();
             var bounds = new BBox3(verts);
             var center = bounds.Center();
             var origin = new Point((float)center.X, (float)center.Y, (float)center.Z);
             var size = (float)bounds.Max.DistanceTo(bounds.Min);
             var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(size, origin, SEARCH_RADIUS);
-
-            foreach (var p in csg.Polygons)
+            foreach (var csg in csgs)
             {
-                var vertexIndices = new ushort[p.Vertices.Count];
-
-                var a = p.Vertices[0].Pos.ToElementsVector();
-                var b = p.Vertices[1].Pos.ToElementsVector();
-                var c = p.Vertices[2].Pos.ToElementsVector();
-                basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
-
-                // Anything with 3 vertices is a triangle. Manually 
-                // tesselate triangles. For everything else, use 
-                // the tessellator.
-                if (p.Vertices.Count > 2 && p.Vertices.Count <= 3)
+                foreach (var p in csg.Polygons)
                 {
-                    for (var i = 0; i < p.Vertices.Count; i++)
-                    {
-                        var v = p.Vertices[i];
+                    var vertexIndices = new ushort[p.Vertices.Count];
 
-                        var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
-                        var ep = v.Pos.ToElementsVector();
-                        if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
+                    var a = p.Vertices[0].Pos.ToElementsVector();
+                    var b = p.Vertices[1].Pos.ToElementsVector();
+                    var c = p.Vertices[2].Pos.ToElementsVector();
+                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
+
+                    // Anything with 3 vertices is a triangle. Manually 
+                    // tesselate triangles. For everything else, use 
+                    // the tessellator.
+                    if (p.Vertices.Count > 2 && p.Vertices.Count <= 3)
+                    {
+                        for (var i = 0; i < p.Vertices.Count; i++)
                         {
-                            vertexIndices[i] = vertexIndex;
+                            var v = p.Vertices[i];
+
+                            var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
+                            var ep = v.Pos.ToElementsVector();
+                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
+                            {
+                                vertexIndices[i] = vertexIndex;
+                                continue;
+                            }
+
+                            vertexIndices[i] = iCursor;
+                            iCursor++;
+
+                            var uu = basis.U.Dot(ep);
+                            var vv = basis.V.Dot(ep);
+                            buffers.AddVertex(ep, normal, new UV(uu, vv));
+
+                            octree.Add((ep, normal, vertexIndices[i]), op);
+                        }
+
+                        // First triangle
+                        buffers.AddIndex(vertexIndices[0]);
+                        buffers.AddIndex(vertexIndices[1]);
+                        buffers.AddIndex(vertexIndices[2]);
+                    }
+                    else if (p.Vertices.Count > 3)
+                    {
+                        var tess = new Tess();
+                        tess.NoEmptyPolygons = true;
+                        tess.AddContour(p.Vertices.ToContourVertices());
+
+                        tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
+
+                        if (tess.ElementCount == 0)
+                        {
                             continue;
                         }
 
-                        vertexIndices[i] = iCursor;
-                        iCursor++;
-
-                        var uu = basis.U.Dot(ep);
-                        var vv = basis.V.Dot(ep);
-                        buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                        octree.Add((ep, normal, vertexIndices[i]), op);
-                    }
-
-                    // First triangle
-                    buffers.AddIndex(vertexIndices[0]);
-                    buffers.AddIndex(vertexIndices[1]);
-                    buffers.AddIndex(vertexIndices[2]);
-                }
-                else if (p.Vertices.Count > 3)
-                {
-                    var tess = new Tess();
-                    tess.NoEmptyPolygons = true;
-                    tess.AddContour(p.Vertices.ToContourVertices());
-
-                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                    if (tess.ElementCount == 0)
-                    {
-                        continue;
-                    }
-
-                    for (var i = 0; i < tess.Vertices.Length; i++)
-                    {
-                        var v = tess.Vertices[i];
-                        var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
-                        var ep = v.Position.ToVector3();
-
-                        if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
+                        for (var i = 0; i < tess.Vertices.Length; i++)
                         {
-                            vertexIndices[i] = vertexIndex;
-                            continue;
+                            var v = tess.Vertices[i];
+                            var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
+                            var ep = v.Position.ToVector3();
+
+                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
+                            {
+                                vertexIndices[i] = vertexIndex;
+                                continue;
+                            }
+
+                            vertexIndices[i] = iCursor;
+                            iCursor++;
+
+                            var uu = basis.U.Dot(ep);
+                            var vv = basis.V.Dot(ep);
+                            buffers.AddVertex(ep, normal, new UV(uu, vv));
+
+                            octree.Add((ep, normal, vertexIndices[i]), op);
                         }
 
-                        vertexIndices[i] = iCursor;
-                        iCursor++;
-
-                        var uu = basis.U.Dot(ep);
-                        var vv = basis.V.Dot(ep);
-                        buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                        octree.Add((ep, normal, vertexIndices[i]), op);
-                    }
-
-                    for (var k = 0; k < tess.Elements.Length; k++)
-                    {
-                        var index = vertexIndices[tess.Elements[k]];
-                        buffers.AddIndex(index);
+                        for (var k = 0; k < tess.Elements.Length; k++)
+                        {
+                            var index = vertexIndices[tess.Elements[k]];
+                            buffers.AddIndex(index);
+                        }
                     }
                 }
             }
-
             return buffers;
         }
 

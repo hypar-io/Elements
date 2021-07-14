@@ -119,6 +119,23 @@ namespace Elements
             }
         }
 
+        internal Csg.Solid[] GetSolids(bool transformed = false)
+        {
+            var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
+                                                       .Select(op => TransformedSolidOperation(op))
+                                                       .ToArray();
+            if (Transform == null || transformed)
+            {
+                return solids;
+            }
+            else
+            {
+                var inverse = new Transform(Transform);
+                inverse.Invert();
+                return solids.Select(s => s.Transform(inverse.ToMatrix4x4())).ToArray();
+            }
+        }
+
         private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op)
         {
             if (Transform == null)

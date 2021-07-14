@@ -9,6 +9,7 @@
 ### Changed
 
 - Added `Symbols` property to `ContentElement`.
+- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
 
 ## 0.9.2
 
@@ -35,6 +36,7 @@
   - `Polygon.UnionAll(params Polygon[] polygons)`
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
+- `Profile.Offset()`
 
 ### Changed
 

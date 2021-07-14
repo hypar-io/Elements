@@ -1200,8 +1200,20 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            var csg = geometricElement.GetFinalCsgFromSolids();
-            var buffers = csg.Tessellate();
+            GraphicsBuffers buffers = null;
+            if (geometricElement.Representation.SkipCSGUnion)
+            {
+                // There's a special flag on Representation that allows you to
+                // skip CSG unions. In this case, we tesselate all solids
+                // individually, and do no booleaning. Voids are also ignored.
+                var solids = geometricElement.GetSolids();
+                buffers = solids.Tesselate();
+            }
+            else
+            {
+                var csg = geometricElement.GetFinalCsgFromSolids();
+                buffers = csg.Tessellate();
+            }
 
             if (buffers.Vertices.Count == 0)
             {
