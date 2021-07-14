@@ -5,6 +5,7 @@
 ### Changed
 
 - Added `Symbols` property to `ContentElement`.
+- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
 
 ## 0.9.2
 
