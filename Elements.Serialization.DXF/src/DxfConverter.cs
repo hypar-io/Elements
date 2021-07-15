@@ -1,7 +1,7 @@
-using netDxf;
-using netDxf.Entities;
+
 using Elements;
 using Elements.Geometry;
+using IxMilia.Dxf.Entities;
 
 namespace Elements.Serialization.DXF
 {
@@ -45,6 +45,6 @@ namespace Elements.Serialization.DXF
         /// <summary>
         /// Create a netDxf Entity Object for a given Hypar Element.
         /// </summary>
-        bool TryToCreateDxfEntity(Element element, DxfRenderContext context, out EntityObject entity);
+        bool TryToCreateDxfEntity(Element element, DxfRenderContext context, out DxfEntity entity);
     }
 }
