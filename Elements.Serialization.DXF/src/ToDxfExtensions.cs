@@ -18,7 +18,7 @@ namespace Elements.Serialization.DXF.Extensions
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
-            IEnumerable<DxfVertex> vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
+            var vertices = polyline.Vertices.Select(v => v.ToDxf());
             var dxf = new DxfPolyline(vertices);
             dxf.IsClosed = polyline is Polygon;
             return dxf;
