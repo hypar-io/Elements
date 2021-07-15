@@ -29,6 +29,21 @@ namespace Elements.Serialization.DXF.Tests
                 xform.Move((0, 3, 0));
                 model.AddElement(contentElement2.CreateInstance(xform, null));
             }
+            model.ExportConfiguration = new ExportConfiguration();
+            model.ExportConfiguration.Layers.AddRange(new[] {new ExportConfiguration.Layer
+            {
+                LayerName = "A-FLOOR",
+                LayerColor = Colors.Red,
+                Types = new List<string> { "Elements.Floor" }
+            },
+            new ExportConfiguration.Layer
+            {
+                LayerName = "I-FURN",
+                LayerColor = Colors.Orange,
+                Types = new List<string> { "Elements.ContentElement" }
+            }});
+
+
             var renderer = new DXF.ModelToDxf();
             var stream = renderer.Render(model);
             stream.Position = 0;

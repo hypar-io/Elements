@@ -25,6 +25,7 @@ namespace Elements.Serialization.DXF
                 Name = elementInstance.BaseDefinition.GetBlockName()
             };
             document.Entities.Add(insert);
+            AddElementToLayer(document, elementInstance.BaseDefinition, new[] { insert }, context);
         }
     }
 }

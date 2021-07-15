@@ -35,10 +35,12 @@ namespace Elements.Serialization.DXF
                 Name = blockName
             };
             doc.BlockRecords.Add(new DxfBlockRecord(blockName));
-            foreach (var p in polygons.Union(polylines))
+            var entities = new List<DxfEntity>(polygons.Union(polylines));
+            foreach (var p in entities)
             {
                 block.Entities.Add(p);
             }
+            AddElementToLayer(doc, contentElement, entities, context);
             doc.Blocks.Add(block);
             // if it's not being used as an element definition, 
             // add an instance of it to the drawing.
@@ -50,6 +52,7 @@ namespace Elements.Serialization.DXF
                     Location = contentElement.Transform.ToDxfPoint(context),
                 };
                 doc.Entities.Add(insert);
+                AddElementToLayer(doc, contentElement, new[] { insert }, context);
             }
         }
 

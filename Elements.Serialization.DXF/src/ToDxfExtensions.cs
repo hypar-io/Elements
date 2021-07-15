@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
@@ -30,6 +31,17 @@ namespace Elements.Serialization.DXF.Extensions
         public static DxfVertex ToDxfVertex(this Vector3 vector3)
         {
             return new DxfVertex(new DxfPoint(vector3.X, vector3.Y, vector3.Z));
+        }
+
+        /// <summary>
+        /// Convert an Elements Color to a DxfColor.
+        /// </summary>
+        public static DxfColor ToDxfColor(this Color color)
+        {
+            var r = (byte)Math.Round(color.Red * 255);
+            var g = (byte)Math.Round(color.Green * 255);
+            var b = (byte)Math.Round(color.Blue * 255);
+            return DxfColorHelpers.GetClosestDefaultIndexColor(r, g, b);
         }
 
         /// <summary>

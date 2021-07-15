@@ -11,6 +11,13 @@ namespace Elements
     public class ExportConfiguration
     {
         /// <summary>
+        /// Create a new ExportConfiguration
+        /// /// </summary>
+        public ExportConfiguration()
+        {
+            this.Layers = new List<Layer>();
+        }
+        /// <summary>
         /// The layer configurations for this model.
         /// </summary>
         /// <value></value>
@@ -55,6 +62,16 @@ namespace Elements
             /// </summary>
             /// <value></value>
             public List<string> Types { get; set; }
+        }
+
+        /// <summary>
+        /// Merge another export configuration into this one.
+        /// </summary>
+        /// <param name="other"></param>
+        public void Merge(ExportConfiguration other)
+        {
+            //TODO: handle resolving duplication
+            this.Layers.AddRange(other.Layers);
         }
     }
 }
