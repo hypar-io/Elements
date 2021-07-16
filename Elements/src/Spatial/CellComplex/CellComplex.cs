@@ -20,9 +20,9 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         public double Tolerance = Vector3.EPSILON;
 
-        private ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
+        internal ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        private ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
+        internal ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         private ulong _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
@@ -325,7 +325,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="idIfNew"></param>
         /// <param name="directedEdge"></param>
         /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists.</returns>
-        private Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
+        internal Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
         {
             var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
 
@@ -364,7 +364,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="idIfNew"></param>
         /// <param name="edge"></param>
         /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists.</returns>
-        private Boolean AddEdge(List<ulong> vertexIds, ulong idIfNew, out Edge edge)
+        internal Boolean AddEdge(List<ulong> vertexIds, ulong idIfNew, out Edge edge)
         {
             var hash = Edge.GetHash(vertexIds);
 
@@ -424,7 +424,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns>The created or existing Vertex or Orientation.</returns>
-        private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase<T>
+        internal T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase<T>
         {
             var newId = typeof(T) == typeof(Orientation) ? this._orientationId : this._vertexId;
             var dict = GetVertexOrOrientationDictionary<T>();
@@ -791,6 +791,60 @@ namespace Elements.Spatial.CellComplex
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Construct model elements to visualize the cell complex.
+        /// </summary>
+        /// <param name="debug">If true, vertices and edge directions will be visualized.</param>
+        /// <returns>A collection of elements.</returns>
+        public List<Element> ToModelElements(bool debug = false)
+        {
+            var elements = new List<Element>();
+            foreach (var f in this.GetFaces())
+            {
+                var v = f.GetVertices().Select(vert => vert.Value).ToList();
+                var p = new Polygon(v);
+                var panel = new Panel(p, BuiltInMaterials.Mass);
+                elements.Add(panel);
+            }
+
+            if (!debug)
+            {
+                return elements;
+            }
+
+            foreach (var v in this._vertices)
+            {
+                elements.Add(Draw.Marker(v.Value.Value, v.Key.ToString(), 0.2));
+            }
+
+            var offset = 1.0;
+            var r = new Random();
+            foreach (var f in this._faces)
+            {
+                var m = r.NextMaterial();
+                var vertices = f.Value.GetVertices();
+                var a = vertices[0].Value;
+                var b = vertices[1].Value;
+                var c = vertices[2].Value;
+                var v1 = (b - a).Unitized();
+                var v2 = (c - a).Unitized();
+                var n = v1.Cross(v2);
+
+                foreach (var deid in f.Value.DirectedEdgeIds)
+                {
+                    var de = this.GetDirectedEdge(deid);
+                    var a1 = GetVertex(de.StartVertexId).Value;
+                    var b1 = GetVertex(de.EndVertexId).Value;
+                    var d1 = (b1 - a1).Unitized();
+                    var od = d1.Cross(n).Negate();
+                    elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset + od * offset, b1 - d1 * offset + od * offset),
+                                                 m, 0.05, 0.3));
+                }
+            }
+
+            return elements;
         }
 
     }
