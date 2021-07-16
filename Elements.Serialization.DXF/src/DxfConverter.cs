@@ -44,6 +44,11 @@ namespace Elements.Serialization.DXF
         /// </summary>
         public DrawingRange DrawingRange;
 
+        /// <summary>
+        /// Configuration information containing layer mappings for element types.
+        /// </summary>
+        public MappingConfiguration MappingConfiguration { get; set; }
+
     }
 
     /// <summary>
@@ -82,7 +87,7 @@ namespace Elements.Serialization.DXF
         /// </summary>
         public void AddElementToLayer(DxfFile document, Element e, IEnumerable<DxfEntity> entities, DxfRenderContext context)
         {
-            var config = context.Model.ExportConfiguration;
+            var config = context.MappingConfiguration;
             if (config == null)
             {
                 // TODO: add a default configuration
@@ -97,6 +102,14 @@ namespace Elements.Serialization.DXF
             if (matchingLayer == null)
             {
                 var layer = new DxfLayer(layerConfigForElement.LayerName, layerConfigForElement.LayerColor.ToDxfColor());
+                if (layerConfigForElement.Lineweight != 0)
+                {
+                    // lineweight value is in 1/100ths of a millimeter
+                    layer.LineWeight = new DxfLineWeight
+                    {
+                        Value = (short)layerConfigForElement.Lineweight
+                    };
+                }
                 document.Layers.Add(layer);
                 matchingLayer = layer;
             }
@@ -106,7 +119,7 @@ namespace Elements.Serialization.DXF
             }
         }
 
-        private static ExportConfiguration.Layer FindLayerForElement(ExportConfiguration config, Element e)
+        private static MappingConfiguration.Layer FindLayerForElement(MappingConfiguration config, Element e)
         {
             var idMatch = config.Layers.FirstOrDefault(l => l.Ids.Contains(e.Id));
             return idMatch ?? config.Layers.FirstOrDefault(l => l.Types.Contains(e.GetType().FullName));

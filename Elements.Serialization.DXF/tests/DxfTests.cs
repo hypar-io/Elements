@@ -29,22 +29,23 @@ namespace Elements.Serialization.DXF.Tests
                 xform.Move((0, 3, 0));
                 model.AddElement(contentElement2.CreateInstance(xform, null));
             }
-            model.ExportConfiguration = new ExportConfiguration();
-            model.ExportConfiguration.Layers.AddRange(new[] {new ExportConfiguration.Layer
+            var mappingConfig = new MappingConfiguration();
+            mappingConfig.Layers.AddRange(new[] {new MappingConfiguration.Layer
             {
                 LayerName = "A-FLOOR",
                 LayerColor = Colors.Red,
+                Lineweight = 50,
                 Types = new List<string> { "Elements.Floor" }
             },
-            new ExportConfiguration.Layer
+            new MappingConfiguration.Layer
             {
                 LayerName = "I-FURN",
                 LayerColor = Colors.Orange,
                 Types = new List<string> { "Elements.ContentElement" }
             }});
 
-
             var renderer = new DXF.ModelToDxf();
+            renderer.SetMappingConfiguration(mappingConfig);
             var stream = renderer.Render(model);
             stream.Position = 0;
             var filePath = "../../../results/TestOutput.dxf";

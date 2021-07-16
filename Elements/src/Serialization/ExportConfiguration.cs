@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 
-namespace Elements
+namespace Elements.Serialization
 {
     /// <summary>
     /// Additional metadata to guide layer creation for various output
     /// formats, such as DXF. 
     /// </summary>
-    public class ExportConfiguration
+    public class MappingConfiguration
     {
         /// <summary>
-        /// Create a new ExportConfiguration
+        /// Create a new MappingConfiguration
         /// /// </summary>
-        public ExportConfiguration()
+        public MappingConfiguration()
         {
             this.Layers = new List<Layer>();
         }
@@ -47,9 +47,9 @@ namespace Elements
             public Color LayerColor { get; set; }
 
             /// <summary>
-            /// The linewight of the layer.
+            /// The linewight of the layer, in 1/100s of a millimeter.
             /// </summary>
-            public double Lineweight { get; set; }
+            public int Lineweight { get; set; }
 
             /// <summary>
             /// The IDs of specific elements to be included on this layer.
@@ -68,7 +68,7 @@ namespace Elements
         /// Merge another export configuration into this one.
         /// </summary>
         /// <param name="other"></param>
-        public void Merge(ExportConfiguration other)
+        public void Merge(MappingConfiguration other)
         {
             //TODO: handle resolving duplication
             this.Layers.AddRange(other.Layers);

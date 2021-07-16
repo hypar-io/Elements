@@ -181,10 +181,7 @@ namespace Elements
             {
                 exportModel.AddElement(kvp.Value);
             }
-            if (this.ExportConfiguration != null)
-            {
-                exportModel.ExportConfiguration = this.ExportConfiguration;
-            }
+
             exportModel.Transform = this.Transform;
             return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
                                                            indent ? Formatting.Indented : Formatting.None);
@@ -356,7 +353,5 @@ namespace Elements
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
         }
-
-        public ExportConfiguration ExportConfiguration { get; set; }
     }
 }

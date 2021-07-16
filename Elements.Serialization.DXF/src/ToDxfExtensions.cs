@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using IxMilia.Dxf;
@@ -19,7 +20,7 @@ namespace Elements.Serialization.DXF.Extensions
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
-            IEnumerable<DxfVertex> vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
+            var vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
             var dxf = new DxfPolyline(vertices);
             dxf.IsClosed = polyline is Polygon;
             return dxf;
@@ -31,6 +32,17 @@ namespace Elements.Serialization.DXF.Extensions
         public static DxfVertex ToDxfVertex(this Vector3 vector3)
         {
             return new DxfVertex(new DxfPoint(vector3.X, vector3.Y, vector3.Z));
+        }
+
+        /// <summary>
+        /// Convert a Vector3 to a DXF Lightweight Polyline Vertex.
+        /// </summary>
+        public static DxfLwPolylineVertex ToDxfLwPolylineVertex(this Vector3 vector3)
+        {
+            var vertex = new DxfLwPolylineVertex();
+            vertex.X = vector3.X;
+            vertex.Y = vector3.Y;
+            return vertex;
         }
 
         /// <summary>
@@ -51,7 +63,7 @@ namespace Elements.Serialization.DXF.Extensions
         /// <returns></returns>
         public static string GetBlockName(this Element element)
         {
-            return (element.Name == null ? $"{element.Name} - " : "") + element.Id;
+            return (element.Name != null ? $"{Regex.Replace(element.Name, @"[^A-Za-z0-9_-]", "")}_" : "") + element.Id;
         }
 
         /// <summary>

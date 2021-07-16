@@ -32,11 +32,11 @@ namespace Elements
                     var streamReader = new StreamReader(stream);
                     var json = streamReader.ReadToEnd();
                     var objects = JsonConvert.DeserializeObject<List<JObject>>(json);
-                    var _loadedTypes = typeof(Element).Assembly.GetTypes().ToList();
+                    var loadedTypes = typeof(Element).Assembly.GetTypes().ToList();
                     return objects.Select(obj =>
                     {
                         var discriminator = obj.Value<string>("discriminator");
-                        var matchingType = _loadedTypes.FirstOrDefault(t => t.FullName.Equals(discriminator));
+                        var matchingType = loadedTypes.FirstOrDefault(t => t.FullName.Equals(discriminator));
                         return obj.ToObject(matchingType);
                     });
                 }
