@@ -291,5 +291,42 @@ namespace Elements.Tests
                 this.Model.AddElement(new ModelCurve(edge.GetGeometry(), LineMaterial));
             }
         }
+
+        [Fact]
+        public void CellComplexSplitEdge()
+        {
+            this.Name = nameof(CellComplexSplitEdge);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            cp.AddCell(rect, 10, 0.0);
+
+            Assert.Equal(8, cp.GetVertices().Count);
+            Assert.Equal(12, cp.GetEdges().Count);
+            Assert.Equal(6, cp.GetFaces().Count);
+
+            foreach (var f in cp.GetFaces())
+            {
+                Assert.Equal(4, f.DirectedEdgeIds.Count);
+            }
+
+            foreach (var e in cp.GetEdges())
+            {
+                // if (e.DirectedEdges.Count != 2)
+                // {
+                //     throw new Exception($"Edge {e.Id} has {e.DirectedEdges.Count} edges, not 2.");
+                // }
+                //     // Assert.Equal(2, e.DirectedEdges.Count());
+
+                //     var edge = cp.GetEdge(e.Id);
+                //     var a = cp.GetVertex(edge.StartVertexId).Value;
+                //     var b = cp.GetVertex(edge.EndVertexId).Value;
+
+                //     if (!edge.TrySplit(a.Average(b), out List<Edge> result))
+                //     {
+                //         throw new Exception("Could not split.");
+                //     }
+            }
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
     }
 }
