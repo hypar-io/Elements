@@ -51,7 +51,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.GetDirectedEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
+            return this.Edges.Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Cell> GetCells()
         {
-            return this.GetFaces().Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
+            return this.Edges.Select(face => face.GetCells()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -91,15 +91,6 @@ namespace Elements.Spatial.CellComplex
         public Cell GetClosestCell(Vector3 point)
         {
             return Cell.GetClosest<Cell>(this.GetCells(), point);
-        }
-
-        /// <summary>
-        /// Get associated DirectedEdges.
-        /// </summary>
-        /// <returns></returns>
-        private List<DirectedEdge> GetDirectedEdges()
-        {
-            return this.GetEdges().Select(edge => edge.GetDirectedEdges()).SelectMany(x => x).Distinct().ToList();
         }
     }
 }

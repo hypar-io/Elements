@@ -12,9 +12,9 @@ namespace Elements.Spatial.CellComplex
     public class Face : ChildBase<Face, Polygon>, Interfaces.IHasNeighbors<Face, Polygon>
     {
         /// <summary>
-        /// Directed edge IDs.
+        /// Edge Ids.
         /// </summary>
-        public List<ulong> DirectedEdgeIds;
+        public List<ulong> EdgeIds;
 
         /// <summary>
         /// ID of U orientation.
@@ -40,12 +40,12 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this Face belongs to.</param>
         /// <param name="id">ID of this Face.</param>
-        /// <param name="directedEdges">List of the DirectedEdges that make up this Face.</param>
+        /// <param name="edges">List of the edges that make up this Face.</param>
         /// <param name="u">Optional but highly recommended intended U direction for the Face.</param>
         /// <param name="v">Optional but highly recommended intended V direction for the Face.</param>
-        internal Face(CellComplex cellComplex, ulong id, List<DirectedEdge> directedEdges, Orientation u = null, Orientation v = null) : base(id, cellComplex)
+        internal Face(CellComplex cellComplex, ulong id, List<Edge> edges, Orientation u = null, Orientation v = null) : base(id, cellComplex)
         {
-            this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
+            this.EdgeIds = edges.Select(ds => ds.Id).ToList();
             if (u != null)
             {
                 this._orientationUId = u.Id;
@@ -60,10 +60,10 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(ulong id, List<ulong> directedEdgeIds, ulong? _orientationUId = null, ulong? _orientationVId = null) : base(id, null)
+        internal Face(ulong id, List<ulong> edgeIds, ulong? _orientationUId = null, ulong? _orientationVId = null) : base(id, null)
         {
             this.Id = id;
-            this.DirectedEdgeIds = directedEdgeIds;
+            this.EdgeIds = edgeIds;
             this._orientationUId = _orientationUId;
             this._orientationVId = _orientationVId;
         }
@@ -89,25 +89,15 @@ namespace Elements.Spatial.CellComplex
 
         /// <summary>
         /// Face lookup hash is EdgeIds in ascending order.
-        /// We do not directly use the `DirectedEdgeIds` because they could wind differently on a shared face.
         /// </summary>
-        /// <param name="directedEdges"></param>
+        /// <param name="edges"></param>
         /// <returns></returns>
-        internal static string GetHash(List<DirectedEdge> directedEdges)
+        internal static string GetHash(List<Edge> edges)
         {
-            var sortedIds = directedEdges.Select(ds => ds.EdgeId).ToList();
+            var sortedIds = edges.Select(ds => ds.Id).ToList();
             sortedIds.Sort();
             var hash = String.Join(",", sortedIds);
             return hash;
-        }
-
-        /// <summary>
-        /// Get associated DirectedEdges.
-        /// </summary>
-        /// <returns></returns>
-        private List<DirectedEdge> GetDirectedEdges()
-        {
-            return this.DirectedEdgeIds.Select(dsId => CellComplex.GetDirectedEdge(dsId)).ToList();
         }
 
         /// <summary>
@@ -126,7 +116,10 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         private bool IsParallel(Face face)
         {
-            return face.GetNormal().Equals(this.GetNormal());
+            var n1 = face.GetNormal();
+            var n2 = this.GetNormal();
+            var dot = Math.Abs(n1.Dot(n2));
+            return dot == 1;
         }
 
         /// <summary>
@@ -141,10 +134,57 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get associated Vertices.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A collection of vertices wound according to their edges</returns>
         public List<Vertex> GetVertices()
         {
-            return this.GetDirectedEdges().Select(ds => this.CellComplex.GetVertex(ds.StartVertexId)).ToList();
+            var edges = this.GetEdges();
+            var test = new List<Edge>(edges);
+
+            // Create tip->tail edge loop
+            var vertices = new List<Vertex>();
+
+            Vertex current = null;
+            while (test.Count > 0)
+            {
+                var toRemove = new List<Edge>();
+                for (var j = test.Count - 1; j >= 0; j--)
+                {
+                    var edge = test[j];
+                    var a = this.CellComplex.GetVertex(edge.StartVertexId);
+                    var b = this.CellComplex.GetVertex(edge.EndVertexId);
+
+                    if (vertices.Count == 0)
+                    {
+                        vertices.Add(a);
+                        vertices.Add(b);
+                        current = b;
+                        test.Remove(edge);
+                        break;
+                    }
+                    else if (a.Value.IsAlmostEqualTo(current.Value))
+                    {
+                        if (!vertices.Contains(b))
+                        {
+                            vertices.Add(b);
+                        }
+                        current = b;
+                        test.Remove(edge);
+                        break;
+                    }
+                    else if (b.Value.IsAlmostEqualTo(current.Value))
+                    {
+                        if (!vertices.Contains(a))
+                        {
+                            vertices.Add(a);
+                        }
+                        current = a;
+                        test.Remove(edge);
+                        break;
+                    }
+                }
+            }
+
+            return vertices;
         }
 
         /// <summary>
@@ -153,7 +193,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Edge> GetEdges()
         {
-            return this.GetDirectedEdges().Select(ds => ds.GetEdge()).ToList();
+            return this.EdgeIds.Select(id => this.CellComplex.GetEdge(id)).ToList();
         }
 
         /// <summary>
@@ -200,7 +240,8 @@ namespace Elements.Spatial.CellComplex
         /// A neighbor is defined as a Face which shares any Edge.
         /// </summary>
         /// <returns></returns>
-        public List<Face> GetNeighbors() {
+        public List<Face> GetNeighbors()
+        {
             return this.GetNeighbors(false, false);
         }
 
@@ -248,7 +289,8 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Face GetClosestNeighbor(Vector3 target) {
+        public Face GetClosestNeighbor(Vector3 target)
+        {
             return this.GetClosestNeighbor(target, false, false);
         }
 
@@ -279,7 +321,8 @@ namespace Elements.Spatial.CellComplex
         /// <param name="target"></param>
         /// <param name="completedRadius"></param>
         /// <returns></returns>
-        public List<Face> TraverseNeighbors(Vector3 target, double completedRadius = 0) {
+        public List<Face> TraverseNeighbors(Vector3 target, double completedRadius = 0)
+        {
             return this.TraverseNeighbors(target, false, false, completedRadius);
         }
 

@@ -26,7 +26,7 @@ namespace Elements.Spatial.CellComplex
         protected EdgeBase(ulong id, CellComplex cellComplex) : base(id, cellComplex) { }
 
         /// <summary>
-        /// Get the geometry that represents this Edge or DirectedEdge.
+        /// Get the geometry that represents this Edge.
         /// </summary>
         /// <returns></returns>
         public override Line GetGeometry()

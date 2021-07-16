@@ -183,13 +183,13 @@ namespace Elements.Tests
                 var faceGeo2 = cellComplexDeserialized.GetFace(face.Id).GetGeometry();
                 this.Model.AddElement(new Panel(faceGeo1, DefaultPanelMaterial));
                 this.Model.AddElement(new Panel(faceGeo2, UMaterial, copyTransform));
-                Assert.True(faceGeo1.Area() == faceGeo2.Area());
+                Assert.Equal(Math.Abs(faceGeo1.Area()), Math.Abs(faceGeo2.Area()));
             }
 
             foreach (var vertex in vertices)
             {
                 var vertexCopy = cellComplexDeserialized.GetVertex(vertex.Id);
-                Assert.True(vertex.Name == vertexCopy.Name);
+                Assert.Equal(vertex.Name, vertexCopy.Name);
             }
         }
 
@@ -251,23 +251,23 @@ namespace Elements.Tests
             var curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * BIG_NUMBER;
             var curFaceTraversals = baseFace.TraverseNeighbors(curFaceTarget, true);
 
+            Assert.Equal(5, curFaceTraversals.Count);
+
             foreach (var face in curFaceTraversals)
             {
                 this.Model.AddElement(new Panel(face.GetGeometry(), UMaterial));
             }
 
-            Assert.True(curFaceTraversals.Count == 5);
-
             curFaceNeighbor = baseFace;
             curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * BIG_NUMBER;
             curFaceTraversals = curFaceNeighbor.TraverseNeighbors(curFaceTarget, true);
+
+            Assert.Equal(10, curFaceTraversals.Count);
 
             foreach (var face in curFaceTraversals)
             {
                 this.Model.AddElement(new Panel(face.GetGeometry(), VMaterial));
             }
-
-            Assert.True(curFaceTraversals.Count == 10);
         }
 
         [Fact]
@@ -304,28 +304,22 @@ namespace Elements.Tests
             Assert.Equal(12, cp.GetEdges().Count);
             Assert.Equal(6, cp.GetFaces().Count);
 
-            foreach (var f in cp.GetFaces())
-            {
-                Assert.Equal(4, f.DirectedEdgeIds.Count);
-            }
-
             foreach (var e in cp.GetEdges())
             {
-                // if (e.DirectedEdges.Count != 2)
-                // {
-                //     throw new Exception($"Edge {e.Id} has {e.DirectedEdges.Count} edges, not 2.");
-                // }
-                //     // Assert.Equal(2, e.DirectedEdges.Count());
+                var edge = cp.GetEdge(e.Id);
+                var a = cp.GetVertex(edge.StartVertexId).Value;
+                var b = cp.GetVertex(edge.EndVertexId).Value;
 
-                // var edge = cp.GetEdge(e.Id);
-                // var a = cp.GetVertex(edge.StartVertexId).Value;
-                // var b = cp.GetVertex(edge.EndVertexId).Value;
+                if (!edge.TrySplit(a.Average(b), out List<Edge> result))
+                {
+                    throw new Exception("Could not split.");
+                }
 
-                // if (!edge.TrySplit(a.Average(b), out List<Edge> result))
-                // {
-                //     throw new Exception("Could not split.");
-                // }
+                Assert.Equal(2, e.GetFaces().Count);
             }
+
+            Assert.Equal(24, cp.GetEdges().Count);
+
             this.Model.AddElements(cp.ToModelElements(true));
         }
     }

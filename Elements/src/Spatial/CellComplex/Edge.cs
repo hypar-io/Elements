@@ -8,16 +8,14 @@ namespace Elements.Spatial.CellComplex
 {
     /// <summary>
     /// A unique edge in a cell complex, regardless of directionality when it comes to face traversal.
-    /// Directional edges for this purpose are in associated DirectedEdges.
-    /// There is a maximum of two DirectedEdges per Edge.
     /// </summary>
     public class Edge : EdgeBase<Edge>, Interfaces.IHasNeighbors<Edge, Line>
     {
         /// <summary>
-        /// DirectedEdges that reference this Edge.
+        /// Faces that reference this Edge.
         /// </summary>
         [JsonIgnore]
-        internal HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
+        internal HashSet<Face> Faces = new HashSet<Face>();
 
         /// <summary>
         /// Represents a unique Edge within a CellComplex.
@@ -88,15 +86,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated Faces.
-        /// </summary>
-        /// <returns></returns>
-        public List<Face> GetFaces()
-        {
-            return this.GetDirectedEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
-        }
-
-        /// <summary>
         /// Get associated Cells
         /// </summary>
         /// <returns></returns>
@@ -155,12 +144,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges.
+        /// Get associated faces.
         /// </summary>
         /// <returns></returns>
-        internal List<DirectedEdge> GetDirectedEdges()
+        internal List<Face> GetFaces()
         {
-            return this.DirectedEdges.ToList();
+            return this.Faces.ToList();
         }
 
         /// <summary>
@@ -204,9 +193,8 @@ namespace Elements.Spatial.CellComplex
             // |                              |
             // |            face              |
             // |                              |
-            // -------------->----------------> <- Create new directed edges.
             // a-------------x----------------b <- Add a new vertex on edge at x.
-            // <-------------<----------------    Create a new edge xb
+            // |                              |    Create a new edge xb.
             // |                              |
             // |            face              |
             // |                              |
@@ -222,7 +210,6 @@ namespace Elements.Spatial.CellComplex
             // Create a new edge from the new vertex
             // to the existing end vertex.
             this.CellComplex.AddEdge(new List<ulong> { x.Id, this.EndVertexId }, this.CellComplex._edgeId, out Edge xb);
-            this.CellComplex._edgeId++;
 
             // Adjust this edge to point to the new vertex.
             this.EndVertexId = x.Id;
@@ -233,43 +220,10 @@ namespace Elements.Spatial.CellComplex
             // Add this edge to the b collection
             b.Edges.Add(xb);
 
-            // Repoint the existing directed edges.
-            // Create two new directed edges and insert them into the adjacent 
-            // face collections. 
-            foreach (var de in this.DirectedEdges)
+            // Add the new edge into the adjacent face collections.
+            foreach (var f in this.Faces)
             {
-                DirectedEdge newDirectedEdge = null;
-                if (de.StartVertexId == a.Id)
-                {
-                    de.EndVertexId = x.Id;
-
-                    this.CellComplex.AddDirectedEdge(xb, false, this.CellComplex._directedEdgeId, out newDirectedEdge);
-
-                    foreach (var f in de.GetFaces())
-                    {
-                        var idx = f.DirectedEdgeIds.IndexOf(de.Id);
-                        // Insert in loop after existing
-                        var nextIndex = idx == f.DirectedEdgeIds.Count - 1 ? 0 : idx + 1;
-                        f.DirectedEdgeIds.Insert(nextIndex, newDirectedEdge.Id);
-                        newDirectedEdge.Faces.Add(f);
-                    }
-                }
-                else if (de.EndVertexId == a.Id)
-                {
-                    de.StartVertexId = x.Id;
-
-                    this.CellComplex.AddDirectedEdge(xb, true, this.CellComplex._directedEdgeId, out newDirectedEdge);
-
-                    foreach (var f in de.GetFaces())
-                    {
-                        var idx = f.DirectedEdgeIds.IndexOf(de.Id);
-                        // Insert in loop before existing
-                        var prevIndex = idx == 0 ? f.DirectedEdgeIds.Count - 1 : idx - 1;
-                        f.DirectedEdgeIds.Insert(prevIndex, newDirectedEdge.Id);
-                        newDirectedEdge.Faces.Add(f);
-                    }
-                }
-                xb.DirectedEdges.Add(newDirectedEdge);
+                f.EdgeIds.Add(xb.Id);
             }
 
             return true;

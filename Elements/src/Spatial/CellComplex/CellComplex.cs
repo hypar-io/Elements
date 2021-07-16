@@ -22,8 +22,6 @@ namespace Elements.Spatial.CellComplex
 
         internal ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
-        internal ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
-
         private ulong _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         private ulong _faceId = 1; // we start at 1 because 0 is returned as default value from dicts
@@ -51,12 +49,6 @@ namespace Elements.Spatial.CellComplex
         private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
-        /// DirectedEdges by ID.
-        /// </summary>
-        [JsonProperty]
-        private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
-
-        /// <summary>
         /// Faces by ID.
         /// </summary>
         [JsonProperty]
@@ -77,9 +69,6 @@ namespace Elements.Spatial.CellComplex
         // See Edge.GetHash for how faces are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
-        // Same as edgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
-        private Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>> _directedEdgesLookup = new Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>>();
-
         // See Face.GetHash for how faces are identified as unique.
         private Dictionary<string, ulong> _facesLookup = new Dictionary<string, ulong>();
 
@@ -99,7 +88,6 @@ namespace Elements.Spatial.CellComplex
         /// <param name="_vertices"></param>
         /// <param name="_orientations"></param>
         /// <param name="_edges"></param>
-        /// <param name="_directedEdges"></param>
         /// <param name="_faces"></param>
         /// <param name="_cells"></param>
         /// <returns></returns>
@@ -110,7 +98,6 @@ namespace Elements.Spatial.CellComplex
             Dictionary<ulong, Vertex> _vertices,
             Dictionary<ulong, Vertex> _orientations,
             Dictionary<ulong, Edge> _edges,
-            Dictionary<ulong, DirectedEdge> _directedEdges,
             Dictionary<ulong, Face> _faces,
             Dictionary<ulong, Cell> _cells
         ) : base(id, name)
@@ -131,15 +118,6 @@ namespace Elements.Spatial.CellComplex
                 if (!this.AddEdge(new List<ulong>() { edge.StartVertexId, edge.EndVertexId }, edge.Id, out var addedEdge))
                 {
                     throw new Exception("Duplicate edge ID found");
-                }
-            }
-
-            foreach (var directedEdge in _directedEdges.Values)
-            {
-                var edge = this.GetEdge(directedEdge.EdgeId);
-                if (!this.AddDirectedEdge(edge, edge.StartVertexId == directedEdge.StartVertexId, directedEdge.Id, out var addedDirectedEdge))
-                {
-                    throw new Exception("Duplicate directed edge ID found");
                 }
             }
 
@@ -232,18 +210,16 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Add a DirectedEdge to the CellComplex.
+        /// Add a Edge to the CellComplex.
         /// </summary>
         /// <param name="line">Line with Start and End in the expected direction.</param>
-        /// <returns>The created DirectedEdge.</returns>
-        private DirectedEdge AddDirectedEdge(Line line)
+        /// <returns>The created edge.</returns>
+        private Edge AddEdge(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrOrientation<Vertex>(vertex)).ToList();
             this.AddEdge(vertices.Select(v => v.Id).ToList(), this._edgeId, out var edge);
-            var dirMatchesEdge = vertices[0].Id == edge.StartVertexId;
-            this.AddDirectedEdge(edge, dirMatchesEdge, this._directedEdgeId, out var directedEdge);
-            return directedEdge;
+            return edge;
         }
 
         /// <summary>
@@ -287,24 +263,24 @@ namespace Elements.Spatial.CellComplex
         private Boolean AddFace(Polygon polygon, ulong idIfNew, Orientation u, Orientation v, out Face face)
         {
             var lines = polygon.Segments();
-            var directedEdges = new List<DirectedEdge>();
+            var edges = new List<Edge>();
             foreach (var line in lines)
             {
-                directedEdges.Add(this.AddDirectedEdge(line));
+                edges.Add(this.AddEdge(line));
             }
 
-            var hash = Face.GetHash(directedEdges);
+            var hash = Face.GetHash(edges);
 
             if (!this._facesLookup.TryGetValue(hash, out var faceId))
             {
-                face = new Face(this, idIfNew, directedEdges, u, v);
+                face = new Face(this, idIfNew, edges, u, v);
                 faceId = face.Id;
                 this._facesLookup.Add(hash, faceId);
                 this._faces.Add(faceId, face);
 
-                foreach (var directedEdge in directedEdges)
+                foreach (var edge in edges)
                 {
-                    directedEdge.Faces.Add(face);
+                    edge.Faces.Add(face);
                 }
 
                 this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
@@ -313,46 +289,6 @@ namespace Elements.Spatial.CellComplex
             else
             {
                 this._faces.TryGetValue(faceId, out face);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// The lowest-level method to add a DirectedEdge: all other AddDirectedEdge methods will eventually call this one.
-        /// </summary>
-        /// <param name="edge"></param>
-        /// <param name="edgeTupleIsInOrder"></param>
-        /// <param name="idIfNew"></param>
-        /// <param name="directedEdge"></param>
-        /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists.</returns>
-        internal Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
-        {
-            var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
-
-            if (!this._directedEdgesLookup.TryGetValue(edgeTuple, out var directedEdgeDict))
-            {
-                directedEdgeDict = new Dictionary<bool, ulong>();
-                this._directedEdgesLookup.Add(edgeTuple, directedEdgeDict);
-            }
-
-            if (!directedEdgeDict.TryGetValue(edgeTupleIsInOrder, out var directedEdgeId))
-            {
-                directedEdge = new DirectedEdge(this, idIfNew, edge, edgeTupleIsInOrder);
-                directedEdgeId = directedEdge.Id;
-
-                directedEdgeDict.Add(edgeTupleIsInOrder, directedEdgeId);
-                this._directedEdges.Add(directedEdgeId, directedEdge);
-
-                edge.DirectedEdges.Add(directedEdge);
-
-                this._directedEdgeId = Math.Max(directedEdgeId + 1, this._directedEdgeId + 1);
-
-                return true;
-            }
-            else
-            {
-                this._directedEdges.TryGetValue(directedEdgeId, out directedEdge);
-
                 return false;
             }
         }
@@ -638,26 +574,6 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get a DirectedEdge by its ID.
-        /// </summary>
-        /// <param name="directedEdgeId"></param>
-        /// <returns></returns>
-        internal DirectedEdge GetDirectedEdge(ulong directedEdgeId)
-        {
-            this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
-            return directedEdge;
-        }
-
-        /// <summary>
-        /// Get all DirectedEdges.
-        /// </summary>
-        /// <returns></returns>
-        internal List<DirectedEdge> GetDirectedEdges()
-        {
-            return this._directedEdges.Values.ToList();
-        }
-
-        /// <summary>
         /// Get all vertices matching an X/Y coordinate, regardless of Z.
         /// </summary>
         /// <param name="x">X coordinate.</param>
@@ -821,36 +737,14 @@ namespace Elements.Spatial.CellComplex
 
             var offset = 1.0;
             var r = new Random();
-            foreach (var f in this._faces)
+
+            foreach (var e in this._edges)
             {
-                var m = r.NextMaterial();
-                var vertices = f.Value.GetVertices();
-                var a = vertices[0].Value;
-                var b = vertices[1].Value;
-                var i = 2;
-                var c = vertices[i].Value;
-                var v1 = (b - a).Unitized();
-                var v2 = (c - a).Unitized();
-
-                // Loop to find a non co-linear vector.
-                while (v2.Dot(v1) == 1.0)
-                {
-                    i++;
-                    c = vertices[i].Value;
-                    v2 = (c - a).Unitized();
-                }
-                var n = v1.Cross(v2);
-
-                foreach (var deid in f.Value.DirectedEdgeIds)
-                {
-                    var de = this.GetDirectedEdge(deid);
-                    var a1 = GetVertex(de.StartVertexId).Value;
-                    var b1 = GetVertex(de.EndVertexId).Value;
-                    var d1 = (b1 - a1).Unitized();
-                    var od = d1.Cross(n).Negate();
-                    elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset + od * offset, b1 - d1 * offset + od * offset),
-                                                 m, 0.05, 0.3));
-                }
+                var de = e.Value;
+                var a1 = GetVertex(de.StartVertexId).Value;
+                var b1 = GetVertex(de.EndVertexId).Value;
+                var d1 = (b1 - a1).Unitized();
+                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), BuiltInMaterials.ZAxis, 0.05, 0.3));
             }
 
             return elements;
