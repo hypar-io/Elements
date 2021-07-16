@@ -317,14 +317,14 @@ namespace Elements.Tests
                 // }
                 //     // Assert.Equal(2, e.DirectedEdges.Count());
 
-                //     var edge = cp.GetEdge(e.Id);
-                //     var a = cp.GetVertex(edge.StartVertexId).Value;
-                //     var b = cp.GetVertex(edge.EndVertexId).Value;
+                // var edge = cp.GetEdge(e.Id);
+                // var a = cp.GetVertex(edge.StartVertexId).Value;
+                // var b = cp.GetVertex(edge.EndVertexId).Value;
 
-                //     if (!edge.TrySplit(a.Average(b), out List<Edge> result))
-                //     {
-                //         throw new Exception("Could not split.");
-                //     }
+                // if (!edge.TrySplit(a.Average(b), out List<Edge> result))
+                // {
+                //     throw new Exception("Could not split.");
+                // }
             }
             this.Model.AddElements(cp.ToModelElements(true));
         }

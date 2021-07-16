@@ -9,6 +9,7 @@ namespace Elements
     public static class Draw
     {
         private static MeshElement _arrowDefinition;
+        private static Mesh _cone;
 
         /// <summary>
         /// A small cube marker.
@@ -47,44 +48,48 @@ namespace Elements
 
             if (arrowHeadAtStart)
             {
-                elements.Add(ArrowHead(t1.Origin, t1.ZAxis, arrowWidth, arrowLength));
+                elements.Add(ArrowHead(t1.Origin, t1.ZAxis, material, arrowWidth, arrowLength));
             }
 
             if (arrowHeadAtEnd)
             {
-                elements.Add(ArrowHead(t2.Origin, t2.ZAxis.Negate(), arrowWidth, arrowLength));
+                elements.Add(ArrowHead(t2.Origin, t2.ZAxis.Negate(), material, arrowWidth, arrowLength));
             }
             return elements;
         }
 
-        private static ElementInstance ArrowHead(Vector3 location,
+        private static MeshElement ArrowHead(Vector3 location,
                                                  Vector3 direction,
+                                                 Material material,
                                                  double coneWidth = 0.1,
                                                  double coneHeight = 0.3)
         {
-            if (_arrowDefinition == null)
+            if (_cone == null)
             {
-                var cone = new Mesh();
-                var vertices = new List<Vertex> {
-                    new Vertex(new Vector3(-coneWidth, -coneWidth)),
-                    new Vertex(new Vector3(coneWidth, -coneWidth)),
-                    new Vertex(new Vector3(coneWidth, coneWidth)),
-                    new Vertex(new Vector3(-coneWidth, coneWidth)),
-                    new Vertex(new Vector3(0, 0, coneHeight))
-                };
-                vertices.ForEach((v) => cone.AddVertex(v));
-                cone.AddTriangle(vertices[0], vertices[1], vertices[4]);
-                cone.AddTriangle(vertices[1], vertices[2], vertices[4]);
-                cone.AddTriangle(vertices[2], vertices[3], vertices[4]);
-                cone.AddTriangle(vertices[3], vertices[0], vertices[4]);
-                _arrowDefinition = new MeshElement(cone, BuiltInMaterials.ZAxis)
-                {
-                    IsElementDefinition = true
-                };
-                cone.ComputeNormals();
+                _cone = Cone(coneWidth, coneHeight);
             }
 
-            return _arrowDefinition.CreateInstance(new Transform(location, direction), null);
+            return new MeshElement(_cone, material, new Transform(location, direction));
+        }
+
+        private static Mesh Cone(double coneWidth, double coneHeight)
+        {
+            var cone = new Mesh();
+            var vertices = new List<Vertex> {
+                new Vertex(new Vector3(-coneWidth, -coneWidth)),
+                new Vertex(new Vector3(coneWidth, -coneWidth)),
+                new Vertex(new Vector3(coneWidth, coneWidth)),
+                new Vertex(new Vector3(-coneWidth, coneWidth)),
+                new Vertex(new Vector3(0, 0, coneHeight))
+            };
+            vertices.ForEach((v) => cone.AddVertex(v));
+            cone.AddTriangle(vertices[0], vertices[1], vertices[4]);
+            cone.AddTriangle(vertices[1], vertices[2], vertices[4]);
+            cone.AddTriangle(vertices[2], vertices[3], vertices[4]);
+            cone.AddTriangle(vertices[3], vertices[0], vertices[4]);
+            cone.ComputeNormals();
+
+            return cone;
         }
     }
 }

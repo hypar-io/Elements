@@ -201,13 +201,15 @@ namespace Elements.Spatial.CellComplex
                 return false;
             }
 
+            // |                              |
+            // |            face              |
+            // |                              |
             // -------------->----------------> <- Create new directed edges.
             // a-------------x----------------b <- Add a new vertex on edge at x.
             // <-------------<----------------    Create a new edge xb
-            // |                              ^
+            // |                              |
             // |            face              |
             // |                              |
-
 
             // Add a new vertex to the cell complex
             var x = this.CellComplex.AddVertexOrOrientation<Vertex>(point);
@@ -242,7 +244,6 @@ namespace Elements.Spatial.CellComplex
                     de.EndVertexId = x.Id;
 
                     this.CellComplex.AddDirectedEdge(xb, false, this.CellComplex._directedEdgeId, out newDirectedEdge);
-                    this.CellComplex._directedEdgeId++;
 
                     foreach (var f in de.GetFaces())
                     {
@@ -253,19 +254,18 @@ namespace Elements.Spatial.CellComplex
                         newDirectedEdge.Faces.Add(f);
                     }
                 }
-                else if (de.EndVertexId == b.Id)
+                else if (de.EndVertexId == a.Id)
                 {
                     de.StartVertexId = x.Id;
 
                     this.CellComplex.AddDirectedEdge(xb, true, this.CellComplex._directedEdgeId, out newDirectedEdge);
-                    this.CellComplex._directedEdgeId++;
 
                     foreach (var f in de.GetFaces())
                     {
                         var idx = f.DirectedEdgeIds.IndexOf(de.Id);
                         // Insert in loop before existing
-                        var nextIndex = idx == 0 ? f.DirectedEdgeIds.Count - 1 : idx - 1;
-                        f.DirectedEdgeIds.Insert(nextIndex, newDirectedEdge.Id);
+                        var prevIndex = idx == 0 ? f.DirectedEdgeIds.Count - 1 : idx - 1;
+                        f.DirectedEdgeIds.Insert(prevIndex, newDirectedEdge.Id);
                         newDirectedEdge.Faces.Add(f);
                     }
                 }

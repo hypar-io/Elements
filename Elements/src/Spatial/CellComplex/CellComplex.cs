@@ -827,9 +827,18 @@ namespace Elements.Spatial.CellComplex
                 var vertices = f.Value.GetVertices();
                 var a = vertices[0].Value;
                 var b = vertices[1].Value;
-                var c = vertices[2].Value;
+                var i = 2;
+                var c = vertices[i].Value;
                 var v1 = (b - a).Unitized();
                 var v2 = (c - a).Unitized();
+
+                // Loop to find a non co-linear vector.
+                while (v2.Dot(v1) == 1.0)
+                {
+                    i++;
+                    c = vertices[i].Value;
+                    v2 = (c - a).Unitized();
+                }
                 var n = v1.Cross(v2);
 
                 foreach (var deid in f.Value.DirectedEdgeIds)
