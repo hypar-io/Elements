@@ -725,14 +725,6 @@ namespace Elements.Spatial.CellComplex
                 var p = new Polygon(v);
                 var panel = new Panel(p, r.NextMaterial());
                 elements.Add(panel);
-
-                // var c = p.Centroid();
-                // foreach (var e in f.GetEdges())
-                // {
-                //     var a1 = GetVertex(e.StartVertexId).Value;
-                //     var b1 = GetVertex(e.EndVertexId).Value;
-                //     elements.Add(new ModelCurve(new Line(a1.Average(b1), c)));
-                // }
             }
 
             if (!debug)
@@ -742,7 +734,7 @@ namespace Elements.Spatial.CellComplex
 
             foreach (var v in this._vertices)
             {
-                elements.Add(Draw.Marker(v.Value.Value, v.Key.ToString(), 0.2));
+                elements.Add(Draw.Cube(v.Value.Value, v.Key.ToString(), BuiltInMaterials.YAxis, 0.2));
             }
 
             var offset = 1.0;

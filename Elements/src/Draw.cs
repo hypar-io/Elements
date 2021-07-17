@@ -11,27 +11,26 @@ namespace Elements
         private static Mesh _cone;
 
         /// <summary>
-        /// A small cube marker.
+        /// A small cube.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="label"></param>
-        /// <param name="size"></param>
-        /// <returns></returns>
-        public static Mass Marker(Vector3 location, string label, double size = 0.4)
+        /// <param name="location">The location of the center of the cube.</param>
+        /// <param name="label">A label on the cube.</param>
+        /// <param name="material">The cube's material.</param>
+        /// <param name="size">The size of the marker.</param>
+        public static Mass Cube(Vector3 location, string label, Material material, double size = 0.4)
         {
-            return new Mass(Polygon.Rectangle(size, size), size, BuiltInMaterials.YAxis, new Transform(location - new Vector3(0, 0, size / 2)), name: label);
+            return new Mass(Polygon.Rectangle(size, size), size, material, new Transform(location - new Vector3(0, 0, size / 2)), name: label);
         }
 
         /// <summary>
         /// An arrow along a curve.
         /// </summary>
-        /// <param name="curve"></param>
-        /// <param name="material"></param>
-        /// <param name="arrowWidth"></param>
-        /// <param name="arrowLength"></param>
-        /// <param name="arrowHeadAtStart"></param>
-        /// <param name="arrowHeadAtEnd"></param>
-        /// <returns></returns>
+        /// <param name="curve">The curve along which the arrows will be drawn.</param>
+        /// <param name="material">The material to apply to the curve and the arrow head.</param>
+        /// <param name="arrowWidth">The width of the arrow head.</param>
+        /// <param name="arrowLength">The length of the arrow head.</param>
+        /// <param name="arrowHeadAtStart">Should an arrow head be drawn at the start of the curve?</param>
+        /// <param name="arrowHeadAtEnd">Should an arrow head be drawn at the end of the curve?</param>
         public static List<Element> Arrow(Curve curve,
                                           Material material,
                                           double arrowWidth = 0.1,
