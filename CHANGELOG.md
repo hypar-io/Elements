@@ -9,6 +9,7 @@
 - `CellComplex.TrySplitFace(Face face, Polyline poly, out List<Face> faces)`
 - `Draw.Cube(Vector3 location, string label, Material material, double size = 0.4)`
 - `Draw.Arrow(Curve curve, Material material, double arrowWidth = 0.1, double arrowLength = 0.3, bool arrowHeadAtStart = false, bool arrowHeadAtEnd = true))`
+- Support for DXF from many basic elements.
 
 ### Changed
 
