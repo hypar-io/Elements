@@ -4,8 +4,9 @@
 
 ### Added
 
-- `Elements.Spatial.CellComplex.Face.TrySplit(Plane)`
-- `Elements.Spatial.CellComplex.Face.TrySplit(Vector3)`
+- `CellComplex.TrySplitEdge(Edge edge, Vector3 point, out Vertex vertex)`
+- `CellComplex.TrySplitEdge(Edge edge, Plane plane, out Vertex vertex)`
+- `CellComplex.TrySplitFace(Face face, Polyline poly, out List<Face> faces)`
 
 ### Changed
 
