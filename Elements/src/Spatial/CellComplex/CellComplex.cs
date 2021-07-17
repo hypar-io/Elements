@@ -721,8 +721,7 @@ namespace Elements.Spatial.CellComplex
             var r = new Random();
             foreach (var f in this.GetFaces())
             {
-                var v = f.GetVertices().Select(vert => vert.Value).ToList();
-                var p = new Polygon(v);
+                var p = f.GetGeometry();
                 var m = r.NextMaterial();
                 m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
                 var panel = new Panel(p, m);
@@ -801,7 +800,6 @@ namespace Elements.Spatial.CellComplex
             {
                 return false;
             }
-            var existingVertices = face.GetVertices();
 
             newVertices = new Dictionary<ulong, Vertex>();
 
@@ -847,7 +845,7 @@ namespace Elements.Spatial.CellComplex
             {
                 var f = this.AddFace(split);
                 faces.Add(f);
-                foreach (var v in f.GetVertices())
+                foreach (var v in f.GetVerticesUnordered())
                 {
                     if (!newVertices.ContainsKey(v.Id))
                     {
@@ -860,7 +858,6 @@ namespace Elements.Spatial.CellComplex
 
             return true;
         }
-
 
         /// <summary>
         /// Split the edge with a plane.
@@ -978,11 +975,16 @@ namespace Elements.Spatial.CellComplex
             var top = this.GetFace(cell.TopFaceId);
             // TODO: This height calculation assumes horizontal top and bottom
             // faces, which might not be the case in the future.
-            var height = top.GetVertices()[0].Value.Z - bottom.GetVertices()[0].Value.Z;
-            var topPoly = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, height)));
+            var height = top.GetCentroid().Z - bottom.GetCentroid().Z;
+            var topPoly = polygon.TransformedPolygon(new Transform(new Vector3(bottom.GetCentroid().Z, 0, height)));
             if (!this.TrySplitFace(top, topPoly, out List<Face> newTopFaces, out var newTopVertices))
             {
                 return false;
+            }
+
+            foreach (var v in newBottomVertices)
+            {
+                this.AddEdge(new Line(v.Value.Value, v.Value.Value + new Vector3(0, 0, height)));
             }
 
             faces = new List<Face>();

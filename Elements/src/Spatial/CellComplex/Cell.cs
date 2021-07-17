@@ -58,8 +58,7 @@ namespace Elements.Spatial.CellComplex
             if (bottomFace != null && topFace != null)
             {
                 var bottom = this.GetBottomFace().GetGeometry();
-                var top = this.GetTopFace().GetGeometry();
-                this._geometry = new Extrude(bottom, top.Centroid().Z - bottom.Centroid().Z, new Vector3(0, 0, 1), false);
+                this._geometry = new Extrude(bottom, topFace.GetCentroid().Z - bottomFace.GetCentroid().Z, new Vector3(0, 0, 1), false);
             }
             this.FaceIds = faces.Select(ds => ds.Id).ToList();
         }
@@ -170,7 +169,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Vertex> GetVertices(Vector3? point = null)
         {
-            return this.GetFaces().Select(f => f.GetVertices()).SelectMany(x => x).Distinct().ToList();
+            return this.GetFaces().Select(f => f.GetVerticesUnordered()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>

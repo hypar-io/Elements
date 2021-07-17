@@ -132,7 +132,36 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
+        /// Get the centroid of the face.
+        /// </summary>
+        internal Vector3 GetCentroid()
+        {
+            var vertices = GetVerticesUnordered().Select(v => v.Value).ToList();
+            var x = 0.0;
+            var y = 0.0;
+            var z = 0.0;
+            foreach (var pnt in vertices)
+            {
+                x += pnt.X;
+                y += pnt.Y;
+                z += pnt.Z;
+            }
+            return new Vector3(x / vertices.Count, y / vertices.Count, z / vertices.Count);
+        }
+
+        /// <summary>
+        /// Get associated vertices.
+        /// </summary>
+        /// <returns>A collection of vertices without specific ordering.</returns>
+        public List<Vertex> GetVerticesUnordered()
+        {
+            return this.GetEdges().SelectMany(e => new[] { this.CellComplex.GetVertex(e.StartVertexId), this.CellComplex.GetVertex(e.EndVertexId) }).Distinct().ToList();
+        }
+
+        /// <summary>
         /// Get associated Vertices.
+        /// This method parses adjacent edges into a loop. If winding is not
+        /// required, use GetVerticesUnordered.
         /// </summary>
         /// <returns>A collection of vertices wound according to their edges</returns>
         public List<Vertex> GetVertices()
@@ -203,7 +232,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public Vertex GetClosestVertex(Vector3 point)
         {
-            return Vertex.GetClosest<Vertex>(this.GetVertices(), point);
+            return Vertex.GetClosest<Vertex>(this.GetVerticesUnordered(), point);
         }
 
         /// <summary>
@@ -254,7 +283,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetNeighbors(bool parallel = false, bool includeSharedVertices = false)
         {
-            var groupedFaces = includeSharedVertices ? this.GetVertices().Select(v => v.GetFaces()).ToList() : this.GetEdges().Select(s => s.GetFaces()).ToList();
+            var groupedFaces = includeSharedVertices ? this.GetVerticesUnordered().Select(v => v.GetFaces()).ToList() : this.GetEdges().Select(s => s.GetFaces()).ToList();
             var faces = groupedFaces.SelectMany(x => x).Distinct().Where(f => f.Id != this.Id).ToList();
             if (parallel)
             {
