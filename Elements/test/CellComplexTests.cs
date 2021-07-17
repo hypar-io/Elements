@@ -339,6 +339,7 @@ namespace Elements.Tests
             var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
             var rect = Polygon.Rectangle(10, 10);
             cp.AddCell(rect, 10, 0.0);
+            cp.AddFace(rect);
 
             Assert.Equal(8, cp.GetVertices().Count);
             Assert.Equal(12, cp.GetEdges().Count);
@@ -352,26 +353,11 @@ namespace Elements.Tests
                 throw new Exception("A trim could not be found.");
             }
 
-            // foreach (var e in cp.GetEdges())
-            // {
-            //     var a = cp.GetVertex(e.StartVertexId);
-            //     var b = cp.GetVertex(e.EndVertexId);
-            //     this._output.WriteLine(a.Value.DistanceTo(b.Value).ToString());
-            // }
+            Assert.False(cp.HasDuplicateEdges());
 
             Assert.Equal(12, cp.GetVertices().Count);
             Assert.Equal(7, cp.GetFaces().Count);
-            // Assert.Equal(17, cp.GetEdges().Count);
-
-            // var unhookedEdgeCount = 0;
-            // foreach (var e in cp.GetEdges())
-            // {
-            //     if (e.Faces.Count <= 1)
-            //     {
-            //         unhookedEdgeCount++;
-            //     }
-            // }
-            // Assert.Equal(0, unhookedEdgeCount);
+            Assert.Equal(17, cp.GetEdges().Count);
 
             this.Model.AddElements(cp.ToModelElements(true));
         }

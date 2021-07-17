@@ -919,8 +919,12 @@ namespace Elements.Spatial.CellComplex
             // to the existing end vertex.
             this.AddEdge(new List<ulong> { x.Id, edge.EndVertexId }, this._edgeId, out Edge xb);
 
+            RemoveEdgeFromLookup(edge);
+
             // Adjust this edge to point to the new vertex.
             edge.EndVertexId = x.Id;
+
+            AddEdgeToLookup(edge);
 
             // Add the existing edge to the new vertex's collection.
             x.Edges.Add(edge);
@@ -937,6 +941,48 @@ namespace Elements.Spatial.CellComplex
 
             vertex = x;
             return true;
+        }
+
+        private void RemoveEdgeFromLookup(Edge edge)
+        {
+            var existingHash = Edge.GetHash(new List<ulong> { edge.StartVertexId, edge.EndVertexId });
+            this._edgesLookup.Remove(existingHash);
+            this._edges.Remove(edge.Id);
+        }
+
+        private void AddEdgeToLookup(Edge edge)
+        {
+            var newHash = Edge.GetHash(new List<ulong> { edge.StartVertexId, edge.EndVertexId });
+            this._edgesLookup[newHash] = edge.Id;
+            this._edges.Add(edge.Id, edge);
+        }
+
+        internal bool HasDuplicateEdges()
+        {
+            var edges = this.GetEdges();
+            foreach (var e in edges)
+            {
+                foreach (var e1 in edges)
+                {
+                    if (e == e1)
+                    {
+                        continue;
+                    }
+
+                    if (e1.StartVertexId == e.StartVertexId && e1.EndVertexId == e.EndVertexId)
+                    {
+                        Console.WriteLine($"Found duplicates {e.Id} and {e1.Id}");
+                        return true;
+                    }
+
+                    if (e1.StartVertexId == e.EndVertexId && e1.EndVertexId == e.StartVertexId)
+                    {
+                        Console.WriteLine($"Found duplicates {e.Id} and {e1.Id}");
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
     }
