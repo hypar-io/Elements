@@ -351,7 +351,7 @@ namespace Elements.Tests
             Assert.False(cp.HasDuplicateEdges());
 
             Assert.Equal(16, cp.GetVertices().Count);
-            Assert.Equal(8, cp.GetFaces().Count);
+            Assert.Equal(13, cp.GetFaces().Count);
             // Assert.Equal(22, cp.GetEdges().Count);
 
             this.Model.AddElements(cp.ToModelElements(true));
