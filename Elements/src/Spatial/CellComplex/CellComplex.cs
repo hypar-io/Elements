@@ -723,7 +723,9 @@ namespace Elements.Spatial.CellComplex
             {
                 var v = f.GetVertices().Select(vert => vert.Value).ToList();
                 var p = new Polygon(v);
-                var panel = new Panel(p, r.NextMaterial());
+                var m = r.NextMaterial();
+                m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
+                var panel = new Panel(p, m);
                 elements.Add(panel);
             }
 
@@ -787,20 +789,31 @@ namespace Elements.Spatial.CellComplex
         /// <param name="face">The face to split.</param>
         /// <param name="poly">The trimming polyline.</param>
         /// <param name="faces">A collection of faces resulting from the split.</param>
+        /// <param name="newVertices">A collection of new vertices created
+        /// by this operation.</param>
         /// <returns>True if a split occurred, otherwise false.</returns>
-        public bool TrySplitFace(Face face, Polyline poly, out List<Face> faces)
+        public bool TrySplitFace(Face face, Polyline poly, out List<Face> faces, out Dictionary<ulong, Vertex> newVertices)
         {
             faces = null;
+            newVertices = null;
+
             if (this.GetFace(face.Id) == null)
             {
                 return false;
             }
+            var existingVertices = face.GetVertices();
 
-            var newVertices = new List<Vertex>();
+            newVertices = new Dictionary<ulong, Vertex>();
 
             // Sweep through all segments and intersect to create
             // edges and vertices that will be used in the second
             // pass to create the split polygons.
+
+            // TODO: This is slow because we're doing intersections
+            // which are later computed by the polgon split operation
+            // as well. We do them here using TrySplitEdge because it
+            // correctly re-links faces. We should add face-relinking
+            // to the polygon split step.
             foreach (var e in this.GetEdges())
             {
                 var a = this.GetVertex(e.StartVertexId).Value;
@@ -812,7 +825,7 @@ namespace Elements.Spatial.CellComplex
                     {
                         if (TrySplitEdge(e, result, out Vertex vertex))
                         {
-                            newVertices.Add(vertex);
+                            newVertices.Add(vertex.Id, vertex);
                         }
                     }
                 }
@@ -834,6 +847,13 @@ namespace Elements.Spatial.CellComplex
             {
                 var f = this.AddFace(split);
                 faces.Add(f);
+                foreach (var v in f.GetVertices())
+                {
+                    if (!newVertices.ContainsKey(v.Id))
+                    {
+                        newVertices.Add(v.Id, v);
+                    }
+                }
             }
 
             this.RemoveFace(face);
@@ -932,6 +952,42 @@ namespace Elements.Spatial.CellComplex
             }
 
             vertex = x;
+            return true;
+        }
+
+        /// <summary>
+        /// Split a cell with a polygon.
+        /// </summary>
+        /// <param name="cell">The cell to split.</param>
+        /// <param name="polygon">The polygon which will split this cell.</param>
+        /// <param name="faces">The faces result from the split.</param>
+        /// <returns>True if the split was successful, or false if the polygon does
+        /// not split the cell.</returns>
+        public bool TrySplitCell(Cell cell, Polygon polygon, out List<Face> faces)
+        {
+            faces = null;
+
+            // The bottom face
+            var bottom = this.GetFace(cell.BottomFaceId);
+            if (!this.TrySplitFace(bottom, polygon, out List<Face> newBottomFaces, out var newBottomVertices))
+            {
+                return false;
+            }
+
+            // The top face
+            var top = this.GetFace(cell.TopFaceId);
+            // TODO: This height calculation assumes horizontal top and bottom
+            // faces, which might not be the case in the future.
+            var height = top.GetVertices()[0].Value.Z - bottom.GetVertices()[0].Value.Z;
+            var topPoly = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, height)));
+            if (!this.TrySplitFace(top, topPoly, out List<Face> newTopFaces, out var newTopVertices))
+            {
+                return false;
+            }
+
+            faces = new List<Face>();
+            faces.AddRange(newBottomFaces);
+            faces.AddRange(newTopFaces);
             return true;
         }
 

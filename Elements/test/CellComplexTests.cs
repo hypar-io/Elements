@@ -338,28 +338,23 @@ namespace Elements.Tests
             this.Name = nameof(CellComplexSplitFace);
             var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
             var rect = Polygon.Rectangle(10, 10);
-            cp.AddCell(rect, 10, 0.0);
+            var cell = cp.AddCell(rect, 10, 0.0);
             cp.AddFace(rect);
 
             Assert.Equal(8, cp.GetVertices().Count);
             Assert.Equal(12, cp.GetEdges().Count);
             Assert.Equal(6, cp.GetFaces().Count);
 
-            var f = cp.GetFaces()[0]; // The bottom face.
             var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
-
-            if (!cp.TrySplitFace(f, ngon, out List<Face> faces))
-            {
-                throw new Exception("A trim could not be found.");
-            }
+            cp.TrySplitCell(cell, ngon, out var newFaces);
 
             Assert.False(cp.HasDuplicateEdges());
 
-            Assert.Equal(12, cp.GetVertices().Count);
-            Assert.Equal(7, cp.GetFaces().Count);
-            Assert.Equal(17, cp.GetEdges().Count);
+            Assert.Equal(16, cp.GetVertices().Count);
+            Assert.Equal(8, cp.GetFaces().Count);
+            Assert.Equal(22, cp.GetEdges().Count);
 
-            this.Model.AddElements(cp.ToModelElements(true));
+            this.Model.AddElements(cp.ToModelElements());
         }
     }
 }
