@@ -352,9 +352,9 @@ namespace Elements.Tests
 
             Assert.Equal(16, cp.GetVertices().Count);
             Assert.Equal(13, cp.GetFaces().Count);
-            // Assert.Equal(22, cp.GetEdges().Count);
+            Assert.Equal(26, cp.GetEdges().Count);
 
-            this.Model.AddElements(cp.ToModelElements(true));
+            this.Model.AddElements(cp.ToModelElements(false));
         }
     }
 }
