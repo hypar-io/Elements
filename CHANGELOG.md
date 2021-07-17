@@ -2,10 +2,19 @@
 
 ## 0.9.3
 
+### Added
+
+- `Elements.Spatial.CellComplex.Face.TrySplit(Plane)`
+- `Elements.Spatial.CellComplex.Face.TrySplit(Vector3)`
+
 ### Changed
 
 - Added `Symbols` property to `ContentElement`.
 - Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
+
+### Removed
+
+- Removed `DirectedEdge` class.
 
 ## 0.9.2
 

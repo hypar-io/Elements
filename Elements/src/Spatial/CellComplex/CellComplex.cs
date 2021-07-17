@@ -203,7 +203,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="u">Orientation of U axis.</param>
         /// <param name="v">Orientation of V axis.</param>
         /// <returns>The created Face.</returns>
-        private Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
+        internal Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
         {
             this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
@@ -717,12 +717,22 @@ namespace Elements.Spatial.CellComplex
         public List<Element> ToModelElements(bool debug = false)
         {
             var elements = new List<Element>();
+
+            var r = new Random();
             foreach (var f in this.GetFaces())
             {
                 var v = f.GetVertices().Select(vert => vert.Value).ToList();
                 var p = new Polygon(v);
-                var panel = new Panel(p, BuiltInMaterials.Mass);
+                var panel = new Panel(p, r.NextMaterial());
                 elements.Add(panel);
+
+                // var c = p.Centroid();
+                // foreach (var e in f.GetEdges())
+                // {
+                //     var a1 = GetVertex(e.StartVertexId).Value;
+                //     var b1 = GetVertex(e.EndVertexId).Value;
+                //     elements.Add(new ModelCurve(new Line(a1.Average(b1), c)));
+                // }
             }
 
             if (!debug)
@@ -736,18 +746,197 @@ namespace Elements.Spatial.CellComplex
             }
 
             var offset = 1.0;
-            var r = new Random();
+
 
             foreach (var e in this._edges)
             {
+                var m = BuiltInMaterials.Default;
+                if (e.Value.Faces.Count == 1)
+                {
+                    m = BuiltInMaterials.XAxis;
+                }
+                else if (e.Value.Faces.Count == 2)
+                {
+                    m = BuiltInMaterials.YAxis;
+                }
+                else if (e.Value.Faces.Count > 2)
+                {
+                    m = BuiltInMaterials.ZAxis;
+                }
                 var de = e.Value;
                 var a1 = GetVertex(de.StartVertexId).Value;
                 var b1 = GetVertex(de.EndVertexId).Value;
                 var d1 = (b1 - a1).Unitized();
-                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), BuiltInMaterials.ZAxis, 0.05, 0.3));
+                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), e.Value.Faces.Count <= 1 ? BuiltInMaterials.XAxis : BuiltInMaterials.YAxis, 0.05, 0.3));
             }
 
             return elements;
+        }
+
+        /// <summary>
+        /// Remove a face from the cell complex.
+        /// </summary>
+        /// <param name="face">The face to remove.</param>
+        public void RemoveFace(Face face)
+        {
+            var edges = face.GetEdges();
+            var hash = Face.GetHash(edges);
+            foreach (var e in edges)
+            {
+                e.Faces.Remove(face);
+            }
+            this._facesLookup.Remove(hash);
+            this._faces.Remove(face.Id);
+        }
+
+        /// <summary>
+        /// Split the face with a polyline.
+        /// </summary>
+        /// <param name="face">The face to split.</param>
+        /// <param name="poly">The trimming polyline.</param>
+        /// <param name="faces">A collection of faces resulting from the split.</param>
+        /// <returns>True if a split occurred, otherwise false.</returns>
+        public bool TrySplitFace(Face face, Polyline poly, out List<Face> faces)
+        {
+            faces = null;
+            if (this.GetFace(face.Id) == null)
+            {
+                return false;
+            }
+
+            var newVertices = new List<Vertex>();
+
+            // Sweep through all segments and intersect to create
+            // edges and vertices that will be used in the second
+            // pass to create the split polygons.
+            foreach (var e in this.GetEdges())
+            {
+                var a = this.GetVertex(e.StartVertexId).Value;
+                var b = this.GetVertex(e.EndVertexId).Value;
+                var s = new Line(a, b);
+                foreach (var s1 in poly.Segments())
+                {
+                    if (s.Intersects(s1, out Vector3 result))
+                    {
+                        if (TrySplitEdge(e, result, out Vertex vertex))
+                        {
+                            newVertices.Add(vertex);
+                        }
+                    }
+                }
+            }
+
+            // There was no intersection
+            if (newVertices.Count == 0)
+            {
+                return false;
+            }
+
+            // Create a polygon and use a polyline split to split
+            // it into parts which will become new faces.
+            var p = face.GetGeometry();
+            var splitPolys = p.Split(new[] { poly });
+
+            faces = new List<Face>();
+            foreach (var split in splitPolys)
+            {
+                var f = this.AddFace(split);
+                faces.Add(f);
+            }
+
+            this.RemoveFace(face);
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// Split the edge with a plane.
+        /// </summary>
+        /// <param name="edge">The edge to split.</param>
+        /// <param name="plane">The plane which splits the edge.</param>
+        /// <param name="vertex">The vertex at the split.</param>
+        /// <returns>True if the split is successful, otherwise false.</returns>
+        public bool TrySplitEdge(Edge edge, Plane plane, out Vertex vertex)
+        {
+            if (edge.GetGeometry().Intersects(plane, out Vector3 result))
+            {
+                return TrySplitEdge(edge, result, out vertex);
+            }
+            vertex = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Split the edge with a point.
+        /// </summary>
+        /// <param name="edge">The edge to split.</param>
+        /// <param name="point">The point at which to split the edge.</param>
+        /// <param name="vertex">The vertex at the split.</param>
+        /// <returns>True if the split was successful, or false if the specified point
+        /// does not split the edge or the edge could not be split.</returns>
+        public bool TrySplitEdge(Edge edge, Vector3 point, out Vertex vertex)
+        {
+            vertex = null;
+
+            if (this.GetEdge(edge.Id) == null)
+            {
+                return false;
+            }
+
+            var a = this.GetVertex(edge.StartVertexId);
+            var b = this.GetVertex(edge.EndVertexId);
+
+            if (point.IsAlmostEqualTo(a.Value) || point.IsAlmostEqualTo(b.Value))
+            {
+                return false;
+            }
+
+            var l = new Line(a.Value, b.Value);
+            if (point.DistanceTo(l, out Vector3 closestPoint) > Vector3.EPSILON)
+            {
+                return false;
+            }
+
+            // |                              |
+            // |            face              |
+            // |                              |
+            // a-------------x----------------b <- Add a new vertex on edge at x.
+            // |                              |    Create a new edge xb.
+            // |                              |
+            // |            face              |
+            // |                              |
+
+            // Add a new vertex to the cell complex
+            var x = this.AddVertexOrOrientation<Vertex>(point);
+            var id1 = this.Id;
+            var id2 = x.Id;
+
+            // Remove this edge from the b collection
+            b.Edges.Remove(edge);
+
+            // Create a new edge from the new vertex
+            // to the existing end vertex.
+            this.AddEdge(new List<ulong> { x.Id, edge.EndVertexId }, this._edgeId, out Edge xb);
+
+            // Adjust this edge to point to the new vertex.
+            edge.EndVertexId = x.Id;
+
+            // Add the existing edge to the new vertex's collection.
+            x.Edges.Add(edge);
+
+            // Add this edge to the b collection
+            b.Edges.Add(xb);
+
+            // Add the new edge into the adjacent face collections.
+            foreach (var f in edge.Faces)
+            {
+                f.EdgeIds.Add(xb.Id);
+                xb.Faces.Add(f);
+            }
+
+            vertex = x;
+            return true;
         }
 
     }

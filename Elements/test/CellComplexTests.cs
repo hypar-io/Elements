@@ -5,6 +5,7 @@ using Elements.Spatial;
 using Elements.Spatial.CellComplex;
 using Xunit;
 using System.Linq;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -76,6 +77,14 @@ namespace Elements.Tests
             {
                 model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
             }
+        }
+
+        private readonly ITestOutputHelper _output;
+
+        public CellComplexTests(ITestOutputHelper output)
+        {
+            this._output = output;
+            this.GenerateIfc = false;
         }
 
         [Fact, Trait("Category", "Examples")]
@@ -310,7 +319,7 @@ namespace Elements.Tests
                 var a = cp.GetVertex(edge.StartVertexId).Value;
                 var b = cp.GetVertex(edge.EndVertexId).Value;
 
-                if (!edge.TrySplit(a.Average(b), out List<Edge> result))
+                if (!cp.TrySplitEdge(e, a.Average(b), out Elements.Spatial.CellComplex.Vertex result))
                 {
                     throw new Exception("Could not split.");
                 }
@@ -319,6 +328,50 @@ namespace Elements.Tests
             }
 
             Assert.Equal(24, cp.GetEdges().Count);
+
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void CellComplexSplitFace()
+        {
+            this.Name = nameof(CellComplexSplitFace);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            cp.AddCell(rect, 10, 0.0);
+
+            Assert.Equal(8, cp.GetVertices().Count);
+            Assert.Equal(12, cp.GetEdges().Count);
+            Assert.Equal(6, cp.GetFaces().Count);
+
+            var f = cp.GetFaces()[0]; // The bottom face.
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+
+            if (!cp.TrySplitFace(f, ngon, out List<Face> faces))
+            {
+                throw new Exception("A trim could not be found.");
+            }
+
+            // foreach (var e in cp.GetEdges())
+            // {
+            //     var a = cp.GetVertex(e.StartVertexId);
+            //     var b = cp.GetVertex(e.EndVertexId);
+            //     this._output.WriteLine(a.Value.DistanceTo(b.Value).ToString());
+            // }
+
+            Assert.Equal(12, cp.GetVertices().Count);
+            Assert.Equal(7, cp.GetFaces().Count);
+            // Assert.Equal(17, cp.GetEdges().Count);
+
+            // var unhookedEdgeCount = 0;
+            // foreach (var e in cp.GetEdges())
+            // {
+            //     if (e.Faces.Count <= 1)
+            //     {
+            //         unhookedEdgeCount++;
+            //     }
+            // }
+            // Assert.Equal(0, unhookedEdgeCount);
 
             this.Model.AddElements(cp.ToModelElements(true));
         }

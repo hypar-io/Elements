@@ -8,7 +8,6 @@ namespace Elements
     /// </summary>
     public static class Draw
     {
-        private static MeshElement _arrowDefinition;
         private static Mesh _cone;
 
         /// <summary>
