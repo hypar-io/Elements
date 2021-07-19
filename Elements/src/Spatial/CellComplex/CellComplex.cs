@@ -719,13 +719,16 @@ namespace Elements.Spatial.CellComplex
             var elements = new List<Element>();
 
             var r = new Random();
-            foreach (var f in this.GetFaces())
+            foreach (var c in this.GetCells())
             {
-                var p = f.GetGeometry();
                 var m = r.NextMaterial();
-                m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
-                var panel = new Panel(p, m);
-                elements.Add(panel);
+                foreach (var f in c.GetFaces())
+                {
+                    var p = f.GetGeometry();
+                    m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
+                    var panel = new Panel(p, m);
+                    elements.Add(panel);
+                }
             }
 
             if (!debug)
@@ -760,7 +763,7 @@ namespace Elements.Spatial.CellComplex
                 var a1 = GetVertex(de.StartVertexId).Value;
                 var b1 = GetVertex(de.EndVertexId).Value;
                 var d1 = (b1 - a1).Unitized();
-                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), e.Value.Faces.Count <= 1 ? BuiltInMaterials.XAxis : BuiltInMaterials.YAxis, 0.05, 0.3));
+                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), m, 0.05, 0.3));
             }
 
             return elements;
@@ -857,6 +860,8 @@ namespace Elements.Spatial.CellComplex
             var p = face.GetGeometry();
             var splitPolys = p.Split(new[] { poly });
 
+            this.RemoveFace(face);
+
             faces = new List<Face>();
             foreach (var split in splitPolys)
             {
@@ -875,8 +880,6 @@ namespace Elements.Spatial.CellComplex
                     }
                 }
             }
-
-            this.RemoveFace(face);
 
             return true;
         }
@@ -979,12 +982,14 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cell">The cell to split.</param>
         /// <param name="polygon">The polygon which will split this cell.</param>
-        /// <param name="faces">The faces result from the split.</param>
+        /// <param name="cells">The cells resulting from this split.</param>
         /// <returns>True if the split was successful, or false if the polygon does
         /// not split the cell.</returns>
-        public bool TrySplitCell(Cell cell, Polygon polygon, out List<Face> faces)
+        public bool TrySplitCell(Cell cell, Polygon polygon, out List<Cell> cells)
         {
-            faces = null;
+            cells = null;
+
+            var originalSideFaces = cell.GetFaces().Where(f => f.Id != cell.TopFaceId && f.Id != cell.BottomFaceId).ToList();
 
             // The bottom face
             var bottom = this.GetFace(cell.BottomFaceId);
@@ -1034,19 +1039,43 @@ namespace Elements.Spatial.CellComplex
                 }
             }
 
+            var newInternalFaces = new List<Face>();
             foreach (var internalEdge in newBottomInternalVertices.SelectMany(v => v.Value.GetEdges()).Distinct().ToList())
             {
                 var a = this.GetVertex(internalEdge.StartVertexId).Value;
                 var b = this.GetVertex(internalEdge.EndVertexId).Value;
                 var p = new Polygon(a, b, b + new Vector3(0, 0, height), a + new Vector3(0, 0, height));
                 var internalFace = this.AddFace(p);
-                newSideFaces.Add(internalFace);
+                newInternalFaces.Add(internalFace);
             }
 
-            faces = new List<Face>();
+            var faces = new List<Face>();
             faces.AddRange(newBottomFaces);
             faces.AddRange(newTopFaces);
             faces.AddRange(newSideFaces);
+            faces.AddRange(newInternalFaces);
+
+            newBottomFaces.SelectMany(f => f.GetVertices().SelectMany(v => v.GetFaces()));
+
+            this._cells.Remove(cell.Id);
+
+            cells = new List<Cell>();
+            for (var i = 0; i < newBottomFaces.Count; i++)
+            {
+                var bottomFace = newBottomFaces[i];
+                var topFace = newTopFaces[i];
+                var bottomEdges = bottomFace.GetEdges();
+                var requiredSideFaces = originalSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
+                var sideFaces = newSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
+                var cellFaces = sideFaces.Concat(newInternalFaces).Concat(new[] { bottomFace, topFace });
+                if (requiredSideFaces != null)
+                {
+                    cellFaces.Concat(requiredSideFaces);
+                }
+                this.AddCell(this._cellId, cellFaces.ToList(), bottomFace, topFace, out Cell newCell);
+                cells.Add(newCell);
+            }
+
             return true;
         }
 

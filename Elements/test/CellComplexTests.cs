@@ -338,23 +338,41 @@ namespace Elements.Tests
             this.Name = nameof(CellComplexSplitFace);
             var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
             var rect = Polygon.Rectangle(10, 10);
-            var cell = cp.AddCell(rect, 10, 0.0);
-            cp.AddFace(rect);
+            var face = cp.AddFace(rect);
 
-            Assert.Equal(8, cp.GetVertices().Count);
-            Assert.Equal(12, cp.GetEdges().Count);
-            Assert.Equal(6, cp.GetFaces().Count);
+            Assert.Equal(4, cp.GetVertices().Count);
+            Assert.Equal(4, cp.GetEdges().Count);
+            Assert.Equal(1, cp.GetFaces().Count);
 
             var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
-            cp.TrySplitCell(cell, ngon, out var newFaces);
+            cp.TrySplitFace(face, ngon, out var newFaces, out var newExternalVertices, out var newInternalVertices);
 
             Assert.False(cp.HasDuplicateEdges());
 
-            Assert.Equal(16, cp.GetVertices().Count);
-            Assert.Equal(13, cp.GetFaces().Count);
-            Assert.Equal(26, cp.GetEdges().Count);
+            Assert.Equal(8, cp.GetVertices().Count);
+            Assert.Equal(2, cp.GetFaces().Count);
+            Assert.Equal(9, cp.GetEdges().Count);
 
-            this.Model.AddElements(cp.ToModelElements(false));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void CellComplexSplitCell()
+        {
+            this.Name = nameof(CellComplexSplitCell);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var cell = cp.AddCell(rect, 10, 0.0);
+            Assert.Equal(1, cp.GetCells().Count);
+
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+            cp.TrySplitCell(cell, ngon, out var newCells);
+
+            Assert.False(cp.HasDuplicateEdges());
+
+            Assert.Equal(2, cp.GetCells().Count);
+
+            this.Model.AddElements(cp.ToModelElements(true));
         }
     }
 }
