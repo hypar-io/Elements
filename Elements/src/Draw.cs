@@ -21,7 +21,7 @@ namespace Elements
         private static string _labelsDirectory;
 
         /// <summary>
-        /// A small cube.
+        /// Draw a small cube.
         /// </summary>
         /// <param name="location">The location of the center of the cube.</param>
         /// <param name="label">A label on the cube.</param>
@@ -33,7 +33,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// An arrow along a curve.
+        /// Draw an arrow along a curve.
         /// </summary>
         /// <param name="curve">The curve along which the arrows will be drawn.</param>
         /// <param name="material">The material to apply to the curve and the arrow head.</param>
@@ -69,11 +69,11 @@ namespace Elements
         /// <summary>
         /// Draw text at the specified location.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="location"></param>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public static Element Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
+        /// <param name="text">The text to draw.</param>
+        /// <param name="location">The center point of a square mesh that will contain the text.</param>
+        /// <param name="direction">The facing direction of the text</param>
+        /// <param name="size">The side length of the square mesh that will contain the text.</param>
+        public static MeshElement Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
         {
             if (_font == null)
             {

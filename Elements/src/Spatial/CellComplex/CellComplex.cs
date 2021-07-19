@@ -768,7 +768,7 @@ namespace Elements.Spatial.CellComplex
                 var t = new Transform(a1 + d1 * a1.DistanceTo(b1) / 2, d1);
                 elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), m, 0.05, 0.3));
 
-                elements.Add(Draw.Text($"Edge:{e.Value.Id}", t.Origin, t.XAxis));
+                elements.Add(Draw.Text($"Edge:{e.Value.Id}\nFaces: {string.Join(",", e.Value.GetFaces().Select(f => f.Id.ToString()))}", t.Origin, t.XAxis));
             }
 
             return elements;
