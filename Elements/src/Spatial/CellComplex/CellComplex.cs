@@ -829,8 +829,9 @@ namespace Elements.Spatial.CellComplex
                 // TODO: This is slow because we're doing intersections
                 // which are later computed by the polgon split operation
                 // as well. We do them here using TrySplitEdge because it
-                // correctly re-links faces. We should add face-relinking
-                // to the polygon split step.
+                // correctly re-links faces. We should add a data parameter 
+                // to edges in a half edge graph, where we can store face
+                // connectivity information to allow face relinking.
                 foreach (var e in this.GetEdges())
                 {
                     var a = this.GetVertex(e.StartVertexId).Value;
@@ -1048,14 +1049,6 @@ namespace Elements.Spatial.CellComplex
                 var internalFace = this.AddFace(p);
                 newInternalFaces.Add(internalFace);
             }
-
-            var faces = new List<Face>();
-            faces.AddRange(newBottomFaces);
-            faces.AddRange(newTopFaces);
-            faces.AddRange(newSideFaces);
-            faces.AddRange(newInternalFaces);
-
-            newBottomFaces.SelectMany(f => f.GetVertices().SelectMany(v => v.GetFaces()));
 
             this._cells.Remove(cell.Id);
 
