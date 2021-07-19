@@ -302,10 +302,10 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CellComplexSplitEdge()
+        public void SplitEdgesMakesCorrectEdgesAndVertices()
         {
-            this.Name = nameof(CellComplexSplitEdge);
-            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            this.Name = nameof(SplitEdgesMakesCorrectEdgesAndVertices);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
             var rect = Polygon.Rectangle(10, 10);
             cp.AddCell(rect, 10, 0.0);
 
@@ -333,10 +333,10 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CellComplexSplitFace()
+        public void SplitFaceMakesCorrectFacesVerticesAndEdges()
         {
-            this.Name = nameof(CellComplexSplitFace);
-            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            this.Name = nameof(SplitFaceMakesCorrectFacesVerticesAndEdges);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
             var rect = Polygon.Rectangle(10, 10);
             var face = cp.AddFace(rect);
 
@@ -357,10 +357,10 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void CellComplexSplitCell()
+        public void SplitCellMakesCorrectNumberOfCells()
         {
-            this.Name = nameof(CellComplexSplitCell);
-            var cp = new CellComplex(Guid.NewGuid(), "SplitCellComplex");
+            this.Name = nameof(SplitCellMakesCorrectNumberOfCells);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
             var rect = Polygon.Rectangle(10, 10);
             var cell = cp.AddCell(rect, 10, 0.0);
             Assert.Equal(1, cp.GetCells().Count);
@@ -373,8 +373,6 @@ namespace Elements.Tests
             Assert.Equal(2, cp.GetCells().Count);
 
             this.Model.AddElements(cp.ToModelElements(true));
-
-            // this._output.WriteLine(cp.ToString());
         }
     }
 }

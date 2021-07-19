@@ -788,6 +788,19 @@ namespace Elements.Spatial.CellComplex
             }
             this._facesLookup.Remove(hash);
             this._faces.Remove(face.Id);
+
+            foreach (var c in face.GetCells())
+            {
+                c.FaceIds.Remove(face.Id);
+                if (c.BottomFaceId == face.Id)
+                {
+                    c.BottomFaceId = null;
+                }
+                else if (c.TopFaceId == face.Id)
+                {
+                    c.TopFaceId = null;
+                }
+            }
         }
 
         /// <summary>
@@ -1063,32 +1076,13 @@ namespace Elements.Spatial.CellComplex
                 var bottomFace = newBottomFaces[i];
                 var topFace = newTopFaces[i];
                 var bottomEdges = bottomFace.GetEdges();
-                var requiredSideFaces = new List<Face>();
-                foreach (var e in bottomEdges)
-                {
-                    var foundFaces = e.Faces.Where(f => originalSideFaces.Contains(f));
-                    if (foundFaces.Count() > 0)
-                    {
-                        requiredSideFaces.AddRange(foundFaces);
-                    }
-                }
-                // foreach (var f in originalSideFaces)
-                // {
-                //     foreach (var e in f.GetEdges())
-                //     {
-                //         if (bottomEdges.Contains(e))
-                //         {
-                //             requiredSideFaces.Add(f);
-                //         }
-                //     }
-                // }
-                // var requiredSideFaces = originalSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
-                var sideFaces = newSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
-                var cellFaces = sideFaces.Concat(newInternalFaces).Concat(new[] { bottomFace, topFace });
-                if (requiredSideFaces != null)
-                {
-                    cellFaces.Concat(requiredSideFaces);
-                }
+
+                // TODO: This is a hack to get only the vertical faces.
+                // in the future when non-vertical cell enclosures are supported
+                // this should be updated.
+                var sideFaces = bottomEdges.SelectMany(e => e.GetFaces().Where(f => f.GetNormal().IsHorizontal()));
+                var cellFaces = sideFaces.Concat(new[] { bottomFace, topFace }).Distinct();
+
                 this.AddCell(this._cellId, cellFaces.ToList(), bottomFace, topFace, out Cell newCell);
                 cells.Add(newCell);
             }

@@ -11,6 +11,8 @@ namespace Elements.Spatial.CellComplex
     /// </summary>
     public class Face : ChildBase<Face, Polygon>, Interfaces.IHasNeighbors<Face, Polygon>
     {
+        private Polygon _geometry;
+
         /// <summary>
         /// Edge Ids.
         /// </summary>
@@ -74,7 +76,19 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public override Polygon GetGeometry()
         {
-            return new Polygon(this.GetVertices().Select(v => v.Value).ToList());
+            if (_geometry == null)
+            {
+                UpdateGeometry();
+            }
+            return _geometry;
+        }
+
+        /// <summary>
+        /// Updates the cached version of a face's geometry.
+        /// </summary>
+        public void UpdateGeometry()
+        {
+            _geometry = new Polygon(this.GetVertices().Select(v => v.Value).ToList());
         }
 
         /// <summary>
@@ -104,7 +118,7 @@ namespace Elements.Spatial.CellComplex
         /// Get the normal vector for this Face.
         /// </summary>
         /// <returns></returns>
-        private Vector3 GetNormal()
+        internal Vector3 GetNormal()
         {
             return this.GetGeometry().Normal();
         }
