@@ -33,7 +33,6 @@ namespace Elements.Serialization
             /// </summary>
             public Layer()
             {
-                this.Ids = new List<Guid>();
             }
             /// <summary>
             /// The name of the layer.
@@ -50,12 +49,6 @@ namespace Elements.Serialization
             /// The linewight of the layer, in 1/100s of a millimeter.
             /// </summary>
             public int Lineweight { get; set; }
-
-            /// <summary>
-            /// The IDs of specific elements to be included on this layer.
-            /// </summary>
-            /// <value></value>
-            public List<Guid> Ids { get; set; }
 
             /// <summary>
             /// The type names (FullNames) of element types that should be mapped to this layer.

@@ -121,8 +121,7 @@ namespace Elements.Serialization.DXF
 
         private static MappingConfiguration.Layer FindLayerForElement(MappingConfiguration config, Element e)
         {
-            var idMatch = config.Layers.FirstOrDefault(l => l.Ids.Contains(e.Id));
-            return idMatch ?? config.Layers.FirstOrDefault(l => l.Types.Contains(e.GetType().FullName));
+            return config.Layers.FirstOrDefault(l => l.Types.Contains(e.GetType().FullName));
         }
     }
 
