@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+using System.Linq;
 using Elements;
 using Elements.Geometry;
 using Elements.Serialization.DXF.Extensions;
@@ -42,6 +44,11 @@ namespace Elements.Serialization.DXF
         /// </summary>
         public DrawingRange DrawingRange;
 
+        /// <summary>
+        /// Configuration information containing layer mappings for element types.
+        /// </summary>
+        public MappingConfiguration MappingConfiguration { get; set; }
+
     }
 
     /// <summary>
@@ -51,7 +58,7 @@ namespace Elements.Serialization.DXF
     public interface IRenderDxf
     {
         /// <summary>
-        /// Add a DXF entity to a document
+        /// Add a DXF entity to a document, along with any layers necesary.
         /// </summary>
         void TryAddDxfEntity(DxfFile document, Element element, DxfRenderContext context);
     }
@@ -73,6 +80,49 @@ namespace Elements.Serialization.DXF
         {
             this.TryAddDxfEntity(document, element as T, context);
         }
+
+        /// <summary>
+        /// Add the entities associated with a given element to the appropriate
+        /// layer, adding a new layer if necessary.
+        /// </summary>
+        public void AddElementToLayer(DxfFile document, Element e, IEnumerable<DxfEntity> entities, DxfRenderContext context)
+        {
+            var config = context.MappingConfiguration;
+            if (config == null)
+            {
+                // TODO: add a default configuration
+                return;
+            }
+            var layerConfigForElement = FindLayerForElement(config, e);
+            if (layerConfigForElement == null)
+            {
+                return;
+            }
+            var matchingLayer = document.Layers.FirstOrDefault((l) => l.Name == layerConfigForElement.LayerName);
+            if (matchingLayer == null)
+            {
+                var layer = new DxfLayer(layerConfigForElement.LayerName, layerConfigForElement.LayerColor.ToDxfColor());
+                if (layerConfigForElement.Lineweight != 0)
+                {
+                    // lineweight value is in 1/100ths of a millimeter
+                    layer.LineWeight = new DxfLineWeight
+                    {
+                        Value = (short)layerConfigForElement.Lineweight
+                    };
+                }
+                document.Layers.Add(layer);
+                matchingLayer = layer;
+            }
+            foreach (var entity in entities)
+            {
+                entity.Layer = matchingLayer.Name;
+            }
+        }
+
+        private static MappingConfiguration.Layer FindLayerForElement(MappingConfiguration config, Element e)
+        {
+            return config.Layers.FirstOrDefault(l => l.Types.Contains(e.GetType().FullName));
+        }
     }
 
     /// <summary>
@@ -91,6 +141,7 @@ namespace Elements.Serialization.DXF
                 return;
             }
             var entities = element.GetEntitiesFromRepresentation();
+
             if (element.IsElementDefinition)
             {
                 var block = new DxfBlock
@@ -110,6 +161,7 @@ namespace Elements.Serialization.DXF
             {
                 document.Entities.Add(e);
             }
+            AddElementToLayer(document, element, entities, context);
         }
     }
 }

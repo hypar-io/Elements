@@ -11,6 +11,16 @@ namespace Elements.Serialization.DXF
     /// </summary>
     public class ModelToDxf
     {
+        /// <summary>
+        /// Create a new instance of the renderer.
+        /// </summary>
+        public ModelToDxf()
+        {
+            context = new DxfRenderContext();
+        }
+
+        private DxfRenderContext context;
+
         private Dictionary<Type, IRenderDxf> _dxfCreators = new Dictionary<Type, IRenderDxf>
         {
             {typeof(ContentElement), new ContentElementToDXF()},
@@ -24,7 +34,6 @@ namespace Elements.Serialization.DXF
         public Stream Render(Model model)
         {
             var doc = new DxfFile();
-            var context = new DxfRenderContext();
             context.Model = model;
 
             foreach (var element in model.Elements.Values)
@@ -41,9 +50,16 @@ namespace Elements.Serialization.DXF
             }
 
             var stream = new MemoryStream();
+            doc.Header.Version = DxfAcadVersion.R2013;
             doc.Save(stream);
-
             return stream;
+        }
+        /// <summary>
+        /// Set the mapping configuration (layer settings, lineweights, etc) for this renderer.
+        /// </summary>
+        public void SetMappingConfiguration(MappingConfiguration config)
+        {
+            this.context.MappingConfiguration = config;
         }
     }
 }
