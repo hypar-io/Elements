@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Elements.Geometry;
 using Newtonsoft.Json;
 
@@ -728,6 +729,8 @@ namespace Elements.Spatial.CellComplex
                     m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
                     var panel = new Panel(p, m);
                     elements.Add(panel);
+
+                    elements.Add(Draw.Text($"Face:{f.Id}", p.PointInternal(), p.Normal(), 3));
                 }
             }
 
@@ -742,7 +745,6 @@ namespace Elements.Spatial.CellComplex
             }
 
             var offset = 1.0;
-
 
             foreach (var e in this._edges)
             {
@@ -763,7 +765,10 @@ namespace Elements.Spatial.CellComplex
                 var a1 = GetVertex(de.StartVertexId).Value;
                 var b1 = GetVertex(de.EndVertexId).Value;
                 var d1 = (b1 - a1).Unitized();
+                var t = new Transform(a1 + d1 * a1.DistanceTo(b1) / 2, d1);
                 elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), m, 0.05, 0.3));
+
+                elements.Add(Draw.Text($"Edge:{e.Value.Id}", t.Origin, t.XAxis));
             }
 
             return elements;
@@ -1058,7 +1063,26 @@ namespace Elements.Spatial.CellComplex
                 var bottomFace = newBottomFaces[i];
                 var topFace = newTopFaces[i];
                 var bottomEdges = bottomFace.GetEdges();
-                var requiredSideFaces = originalSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
+                var requiredSideFaces = new List<Face>();
+                foreach (var e in bottomEdges)
+                {
+                    var foundFaces = e.Faces.Where(f => originalSideFaces.Contains(f));
+                    if (foundFaces.Count() > 0)
+                    {
+                        requiredSideFaces.AddRange(foundFaces);
+                    }
+                }
+                // foreach (var f in originalSideFaces)
+                // {
+                //     foreach (var e in f.GetEdges())
+                //     {
+                //         if (bottomEdges.Contains(e))
+                //         {
+                //             requiredSideFaces.Add(f);
+                //         }
+                //     }
+                // }
+                // var requiredSideFaces = originalSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
                 var sideFaces = newSideFaces.Where(f => f.GetEdges().Any(e => bottomEdges.Contains(e)));
                 var cellFaces = sideFaces.Concat(newInternalFaces).Concat(new[] { bottomFace, topFace });
                 if (requiredSideFaces != null)
@@ -1112,6 +1136,28 @@ namespace Elements.Spatial.CellComplex
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// A string representation of the structure of the cell complex.
+        /// </summary>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var c in this.GetCells())
+            {
+                var faces = c.GetFaces();
+                sb.AppendLine($"Cell: {c.Id} ({faces.Count} faces)");
+                foreach (var f in faces)
+                {
+                    sb.AppendLine($"\tFace: {f.Id}");
+                    foreach (var e in f.GetEdges())
+                    {
+                        sb.AppendLine($"\t\tEdge: {e.Id},  Vertices: {e.StartVertexId} -> {e.EndVertexId}");
+                    }
+                }
+            }
+            return sb.ToString();
         }
 
     }

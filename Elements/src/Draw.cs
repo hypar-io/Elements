@@ -1,5 +1,13 @@
 using System.Collections.Generic;
 using Elements.Geometry;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.Fonts;
+using System;
+using System.Reflection;
+using System.IO;
 
 namespace Elements
 {
@@ -9,6 +17,8 @@ namespace Elements
     public static class Draw
     {
         private static Mesh _cone;
+        private static Font _font;
+        private static string _labelsDirectory;
 
         /// <summary>
         /// A small cube.
@@ -19,7 +29,7 @@ namespace Elements
         /// <param name="size">The size of the marker.</param>
         public static Mass Cube(Vector3 location, string label, Material material, double size = 0.4)
         {
-            return new Mass(Polygon.Rectangle(size, size), size, material, new Transform(location - new Vector3(0, 0, size / 2)), name: label);
+            return new Mass(Geometry.Polygon.Rectangle(size, size), size, material, new Transform(location - new Vector3(0, 0, size / 2)), name: label);
         }
 
         /// <summary>
@@ -54,6 +64,70 @@ namespace Elements
                 elements.Add(ArrowHead(t2.Origin, t2.ZAxis.Negate(), material, arrowWidth, arrowLength));
             }
             return elements;
+        }
+
+        /// <summary>
+        /// Draw text at the specified location.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="location"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
+        public static Element Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
+        {
+            if (_font == null)
+            {
+                FontCollection collection = new FontCollection();
+                FontFamily family = collection.Install("Fonts/Roboto-Medium.ttf");
+                _font = family.CreateFont(36);
+            }
+
+            if (_labelsDirectory == null)
+            {
+                var asmDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                _labelsDirectory = Path.Combine(asmDir, $"Labels");
+                if (!Directory.Exists(_labelsDirectory))
+                {
+                    Directory.CreateDirectory(_labelsDirectory);
+                }
+            }
+
+            var id = Guid.NewGuid();
+            MeshElement panel;
+            var width = 256;
+            var height = 256;
+
+            using (var image = new Image<Rgba32>(width, height))
+            {
+                var options = new DrawingOptions()
+                {
+                    TextOptions = new TextOptions()
+                    {
+                        ApplyKerning = true,
+                        TabWidth = 8,
+                        WrapTextWidth = width,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center
+                    }
+                };
+
+                image.Mutate(x => x.DrawText(options, text, _font, SixLabors.ImageSharp.Color.Black, new PointF(0, height / 2)));
+
+                var path = Path.Combine(_labelsDirectory, $"{id}.png");
+                image.SaveAsPng(path);
+
+                var m = new Material(id.ToString(), Elements.Geometry.Colors.White, 0.0, 0.0, texture: path, repeatTexture: false, unlit: true);
+                var mesh = new Mesh();
+                var a = mesh.AddVertex(new Vector3(-size / 2, size / 2), new UV(0, 1));
+                var b = mesh.AddVertex(new Vector3(-size / 2, -size / 2), new UV(0, 0));
+                var c = mesh.AddVertex(new Vector3(size / 2, -size / 2), new UV(1, 0));
+                var d = mesh.AddVertex(new Vector3(size / 2, size / 2), new UV(1, 1));
+                mesh.AddTriangle(a, b, c);
+                mesh.AddTriangle(a, c, d);
+                mesh.ComputeNormals();
+                panel = new MeshElement(mesh, m, new Transform(location, direction));
+            }
+            return panel;
         }
 
         private static MeshElement ArrowHead(Vector3 location,

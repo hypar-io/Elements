@@ -373,6 +373,8 @@ namespace Elements.Tests
             Assert.Equal(2, cp.GetCells().Count);
 
             this.Model.AddElements(cp.ToModelElements(true));
+
+            // this._output.WriteLine(cp.ToString());
         }
     }
 }
