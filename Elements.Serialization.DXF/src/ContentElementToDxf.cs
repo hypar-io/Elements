@@ -25,13 +25,19 @@ namespace Elements.Serialization.DXF
                 var chosenSymbol = pickSymbolByContext(contentElement, context);
                 if (chosenSymbol == null)
                 {
+                    Console.WriteLine($"Symbol for {contentElement.Id} was null");
                     // TODO: handle 
                     return;
                 }
                 // TODO: make all this handle await?
                 var geometry = chosenSymbol.GetGeometryAsync().GetAwaiter().GetResult();
-                var polygons = geometry.OfType<Polygon>().Select(p => p.ToDxf());
-                var polylines = geometry.OfType<Polyline>().Select(p => p.ToDxf());
+                if (geometry == null)
+                {
+                    Console.WriteLine($"Failed to get geometry for {contentElement.Id}");
+                    return;
+                }
+                var polygons = geometry.OfType<Polygon>().Select(p => p.ToDxf()).Where(e => e != null);
+                var polylines = geometry.OfType<Polyline>().Select(p => p.ToDxf()).Where(e => e != null);
                 var blockName = contentElement.GetBlockName();
                 var block = new DxfBlock
                 {

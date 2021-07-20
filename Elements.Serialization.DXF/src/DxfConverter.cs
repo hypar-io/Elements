@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements;
@@ -87,41 +88,69 @@ namespace Elements.Serialization.DXF
         /// </summary>
         public void AddElementToLayer(DxfFile document, Element e, IEnumerable<DxfEntity> entities, DxfRenderContext context)
         {
-            var config = context.MappingConfiguration;
-            if (config == null)
+            try
             {
-                // TODO: add a default configuration
-                return;
-            }
-            var layerConfigForElement = FindLayerForElement(config, e);
-            if (layerConfigForElement == null)
-            {
-                return;
-            }
-            var matchingLayer = document.Layers.FirstOrDefault((l) => l.Name == layerConfigForElement.LayerName);
-            if (matchingLayer == null)
-            {
-                var layer = new DxfLayer(layerConfigForElement.LayerName, layerConfigForElement.LayerColor.ToDxfColor());
-                if (layerConfigForElement.Lineweight != 0)
+                var config = context.MappingConfiguration;
+                if (config == null)
                 {
-                    // lineweight value is in 1/100ths of a millimeter
-                    layer.LineWeight = new DxfLineWeight
-                    {
-                        Value = (short)layerConfigForElement.Lineweight
-                    };
+                    // TODO: add a default configuration
+                    return;
                 }
-                document.Layers.Add(layer);
-                matchingLayer = layer;
+                var layerConfigForElement = FindLayerForElement(config, e);
+                if (layerConfigForElement == null)
+                {
+                    return;
+                }
+                var matchingLayer = document.Layers.FirstOrDefault((l) => l.Name == layerConfigForElement.LayerName);
+                if (matchingLayer == null)
+                {
+                    var layer = new DxfLayer(layerConfigForElement.LayerName, layerConfigForElement.LayerColor.ToDxfColor());
+                    if (layerConfigForElement.Lineweight != 0)
+                    {
+                        // lineweight value is in 1/100ths of a millimeter
+                        layer.LineWeight = new DxfLineWeight
+                        {
+                            Value = (short)layerConfigForElement.Lineweight
+                        };
+                    }
+                    document.Layers.Add(layer);
+                    matchingLayer = layer;
+                }
+                foreach (var entity in entities)
+                {
+                    entity.Layer = matchingLayer.Name;
+                    if (layerConfigForElement.ElementColorSetting == MappingConfiguration.ElementColorSetting.TryGetColorFromMaterial)
+                    {
+                        if (e is GeometricElement ge)
+                        {
+                            var materialColor = ge.Material.Color;
+                            var entityColor = materialColor.ToDxfColor();
+                            entity.Color = entityColor;
+                            entity.Color24Bit = materialColor.To24BitColor();
+                        }
+                    }
+                }
             }
-            foreach (var entity in entities)
+            catch (Exception ex)
             {
-                entity.Layer = matchingLayer.Name;
+                // TODO: Implement exception logging
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
         }
 
         private static MappingConfiguration.Layer FindLayerForElement(MappingConfiguration config, Element e)
         {
-            return config.Layers.FirstOrDefault(l => l.Types.Contains(e.GetType().FullName));
+            var discriminator = e.GetType().FullName;
+
+            // if we receive an element that isn't of a known type, it will be
+            // deserialized as a GeometricElement, so we have to dig into its
+            // AdditionalProperties to get its type.
+            if (e.AdditionalProperties.ContainsKey("discriminator"))
+            {
+                discriminator = e.AdditionalProperties["discriminator"] as string;
+            }
+            return config.Layers.FirstOrDefault(l => l.Types.Contains(discriminator));
         }
     }
 
