@@ -118,12 +118,22 @@ namespace Elements
 
                 var m = new Material(id.ToString(), Elements.Geometry.Colors.White, 0.0, 0.0, texture: path, repeatTexture: false, unlit: true);
                 var mesh = new Mesh();
-                var a = mesh.AddVertex(new Vector3(-size / 2, size / 2), new UV(0, 1));
-                var b = mesh.AddVertex(new Vector3(-size / 2, -size / 2), new UV(0, 0));
-                var c = mesh.AddVertex(new Vector3(size / 2, -size / 2), new UV(1, 0));
-                var d = mesh.AddVertex(new Vector3(size / 2, size / 2), new UV(1, 1));
+                var v1 = new Vector3(-size / 2, size / 2);
+                var v2 = new Vector3(-size / 2, -size / 2);
+                var v3 = new Vector3(size / 2, -size / 2);
+                var v4 = new Vector3(size / 2, size / 2);
+                var a = mesh.AddVertex(v1, new UV(0, 1));
+                var b = mesh.AddVertex(v2, new UV(0, 0));
+                var c = mesh.AddVertex(v3, new UV(1, 0));
+                var d = mesh.AddVertex(v4, new UV(1, 1));
+                var e = mesh.AddVertex(v4, new UV(0, 1));
+                var f = mesh.AddVertex(v3, new UV(0, 0));
+                var g = mesh.AddVertex(v2, new UV(1, 0));
+                var h = mesh.AddVertex(v1, new UV(1, 1));
                 mesh.AddTriangle(a, b, c);
                 mesh.AddTriangle(a, c, d);
+                mesh.AddTriangle(e, f, g);
+                mesh.AddTriangle(e, g, h);
                 mesh.ComputeNormals();
                 panel = new MeshElement(mesh, m, new Transform(location, direction));
             }
