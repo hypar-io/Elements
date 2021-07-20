@@ -38,14 +38,23 @@ namespace Elements.Serialization.DXF
 
             foreach (var element in model.Elements.Values)
             {
-                if (_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                try
                 {
-                    converter.TryAddDxfEntity(doc, element, context);
+                    if (_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                    {
+                        converter.TryAddDxfEntity(doc, element, context);
+                    }
+                    else if (element is GeometricElement geomElement)
+                    {
+                        // fall back to geometric converter
+                        new GeometricElementToDxf().TryAddDxfEntity(doc, geomElement, context);
+                    }
                 }
-                else if (element is GeometricElement geomElement)
+                catch (Exception e)
                 {
-                    // fall back to geometric converter
-                    new GeometricElementToDxf().TryAddDxfEntity(doc, geomElement, context);
+                    // TODO: Implement logging for exceptions
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
                 }
             }
 
