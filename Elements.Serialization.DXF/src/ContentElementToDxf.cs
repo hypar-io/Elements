@@ -62,7 +62,7 @@ namespace Elements.Serialization.DXF
             var drawingRangeTransform = context.DrawingRange?.Transform ?? new Transform();
             //TODO — pick an appropriate symbol based on the context orientation
 
-            var symbol = contentElement.Symbols.FirstOrDefault(s => s.CameraPosition == SymbolCameraPosition.Top);
+            var symbol = contentElement?.Symbols?.FirstOrDefault(s => s.CameraPosition == SymbolCameraPosition.Top);
             return symbol;
         }
     }
