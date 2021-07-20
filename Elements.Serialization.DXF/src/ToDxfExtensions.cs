@@ -20,6 +20,10 @@ namespace Elements.Serialization.DXF.Extensions
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
+            if (polyline == null || polyline.Vertices == null || polyline.Vertices.Count < 2)
+            {
+                return null;
+            }
             var vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
             var dxf = new DxfPolyline(vertices);
             dxf.IsClosed = polyline is Polygon;
@@ -54,6 +58,20 @@ namespace Elements.Serialization.DXF.Extensions
             var g = (byte)Math.Round(color.Green * 255);
             var b = (byte)Math.Round(color.Blue * 255);
             return DxfColorHelpers.GetClosestDefaultIndexColor(r, g, b);
+        }
+
+        /// <summary>
+        /// Convert an Elements color to a 24-bit integer.
+        /// </summary>
+        public static int To24BitColor(this Color color)
+        {
+            var r = (byte)Math.Round(color.Red * 255);
+            var g = (byte)Math.Round(color.Green * 255);
+            var b = (byte)Math.Round(color.Blue * 255);
+            int rgb = r;
+            rgb = (rgb << 8) + g;
+            rgb = (rgb << 8) + b;
+            return rgb;
         }
 
         /// <summary>
@@ -122,7 +140,10 @@ namespace Elements.Serialization.DXF.Extensions
         {
             var list = new List<DxfEntity>();
             list.Add(profile.Perimeter.ToDxf());
-            list.AddRange(profile.Voids.Select(v => v.ToDxf()));
+            if (profile.Voids != null)
+            {
+                list.AddRange(profile.Voids.Select(v => v.ToDxf()));
+            }
             return list;
         }
         /// <summary>

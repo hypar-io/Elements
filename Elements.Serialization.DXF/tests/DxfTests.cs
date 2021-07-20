@@ -61,10 +61,14 @@ namespace Elements.Serialization.DXF.Tests
         [Fact]
         public void DxfFromModel()
         {
-            var jsonPath = "../../../TestModels/TestModel.json";
+            var jsonPath = "../../../TestModels/TestModel2.json";
             var json = File.ReadAllText(jsonPath);
             var model = Model.FromJson(json);
             var renderer = new DXF.ModelToDxf();
+
+            var configJson = File.ReadAllText("../../../TestModels/cad-standard.json");
+            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<MappingConfiguration>(configJson);
+            renderer.SetMappingConfiguration(config);
             var stream = renderer.Render(model);
             stream.Position = 0;
             var filePath = "../../../results/FromJson.dxf";

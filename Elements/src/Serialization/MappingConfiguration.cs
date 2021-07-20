@@ -46,6 +46,11 @@ namespace Elements.Serialization
             public Color LayerColor { get; set; }
 
             /// <summary>
+            /// How items on this layer should have their colors determined.
+            /// </summary>
+            public ElementColorSetting ElementColorSetting { get; set; } = ElementColorSetting.ByLayer;
+
+            /// <summary>
             /// The linewight of the layer, in 1/100s of a millimeter.
             /// </summary>
             public int Lineweight { get; set; }
@@ -65,6 +70,21 @@ namespace Elements.Serialization
         {
             //TODO: handle resolving duplication
             this.Layers.AddRange(other.Layers);
+        }
+
+        /// <summary>
+        /// How an item on a layer should have its color determined.
+        /// </summary>
+        public enum ElementColorSetting
+        {
+            /// <summary>
+            /// Use the color of the item's layer (The default setting).
+            /// </summary>
+            ByLayer,
+            /// <summary>
+            /// Attempt to set the item's color based on its material.
+            /// </summary>
+            TryGetColorFromMaterial
         }
     }
 }
