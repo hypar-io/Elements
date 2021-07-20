@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 
 namespace Elements.Spatial.CellComplex
@@ -720,19 +721,36 @@ namespace Elements.Spatial.CellComplex
             var elements = new List<Element>();
 
             var r = new Random();
-            foreach (var c in this.GetCells())
-            {
-                var m = r.NextMaterial();
-                foreach (var f in c.GetFaces())
-                {
-                    var p = f.GetGeometry();
-                    m.Color = new Color(m.Color.Red, m.Color.Green, m.Color.Blue, 0.5);
-                    var panel = new Panel(p, m);
-                    elements.Add(panel);
 
-                    elements.Add(Draw.Text($"Face:{f.Id}", p.PointInternal(), p.Normal(), 3));
+            var cells = this.GetCells();
+            var mesh = new Mesh();
+            if (cells.Any())
+            {
+                foreach (var c in this.GetCells())
+                {
+                    // if (debug && c.BottomFaceId != null)
+                    // {
+                    //     elements.Add(Draw.Text($"Cell:{c.Id}", c.GetBottomFace().GetCentroid(), Vector3.ZAxis, 5));
+                    // }
+
+                    var color = r.NextColor();
+                    foreach (var f in c.GetFaces())
+                    {
+                        DrawFace(ref mesh, f, color, elements, debug);
+                    }
                 }
             }
+            else
+            {
+                foreach (var f in this.GetFaces())
+                {
+                    var color = r.NextColor();
+                    DrawFace(ref mesh, f, color, elements, debug);
+                }
+            }
+
+            mesh.ComputeNormals();
+            elements.Add(new MeshElement(mesh, new Material("Cells", new Color(1.0, 1.0, 1.0, 0.5), doubleSided: true, unlit: true)));
 
             if (!debug)
             {
@@ -741,10 +759,10 @@ namespace Elements.Spatial.CellComplex
 
             foreach (var v in this._vertices)
             {
-                elements.Add(Draw.Cube(v.Value.Value, v.Key.ToString(), BuiltInMaterials.YAxis, 0.2));
+                elements.Add(Draw.Cube(v.Value.Value, v.Key.ToString(), BuiltInMaterials.YAxis, 0.1));
             }
 
-            var offset = 1.0;
+            var offset = 0.5;
 
             foreach (var e in this._edges)
             {
@@ -766,12 +784,24 @@ namespace Elements.Spatial.CellComplex
                 var b1 = GetVertex(de.EndVertexId).Value;
                 var d1 = (b1 - a1).Unitized();
                 var t = new Transform(a1 + d1 * a1.DistanceTo(b1) / 2, d1);
-                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * offset, b1 - d1 * offset), m, 0.05, 0.3));
+                var o = a1.DistanceTo(b1) < 2 * offset ? 0.0 : offset;
+                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * o, b1 - d1 * o), m, 0.05, 0.3));
 
                 elements.Add(Draw.Text($"Edge:{e.Value.Id}\nFaces: {string.Join(",", e.Value.GetFaces().Select(f => f.Id.ToString()))}", t.Origin, t.XAxis));
             }
 
             return elements;
+        }
+
+        private void DrawFace(ref Mesh mesh, Face f, Color color, List<Element> elements, bool debug)
+        {
+            var p = f.GetGeometry();
+            Solid.TessellateInternal(p.ToContourVertexArray(), null, p.Normal(), ref mesh, color: color);
+
+            if (debug)
+            {
+                elements.Add(Draw.Text($"Face:{f.Id}", p.PointInternal(), p.Normal(), 3));
+            }
         }
 
         /// <summary>
@@ -850,15 +880,30 @@ namespace Elements.Spatial.CellComplex
                 // correctly re-links faces. We should add a data parameter 
                 // to edges in a half edge graph, where we can store face
                 // connectivity information to allow face relinking.
-                foreach (var e in this.GetEdges())
+                foreach (var e in face.GetEdges())
                 {
-                    var a = this.GetVertex(e.StartVertexId).Value;
-                    var b = this.GetVertex(e.EndVertexId).Value;
+                    var av = this.GetVertex(e.StartVertexId);
+                    var a = av.Value;
+                    var bv = this.GetVertex(e.EndVertexId);
+                    var b = bv.Value;
                     var s = new Line(a, b);
                     foreach (var s1 in poly.Segments())
                     {
                         if (s.Intersects(s1, out Vector3 result))
                         {
+                            // Check intersection coincidence with 
+                            // an existing vertex.
+                            if (result.IsAlmostEqualTo(a))
+                            {
+                                newExternalVertices.Add(av.Id, av);
+                                continue;
+                            }
+                            else if (result.IsAlmostEqualTo(b))
+                            {
+                                newExternalVertices.Add(bv.Id, bv);
+                                continue;
+                            }
+
                             if (TrySplitEdge(e, result, out Vertex vertex))
                             {
                                 newExternalVertices.Add(vertex.Id, vertex);
@@ -878,6 +923,16 @@ namespace Elements.Spatial.CellComplex
             // it into parts which will become new faces.
             var p = face.GetGeometry();
             var splitPolys = p.Split(new[] { poly });
+
+            // If we only get one polygon back, we can
+            // assume that the split resulted in the 
+            // original face.
+            if (splitPolys.Count <= 1)
+            {
+                newInternalVertices = null;
+                newExternalVertices = null;
+                return false;
+            }
 
             this.RemoveFace(face);
 
@@ -940,9 +995,15 @@ namespace Elements.Spatial.CellComplex
             var a = this.GetVertex(edge.StartVertexId);
             var b = this.GetVertex(edge.EndVertexId);
 
-            if (point.IsAlmostEqualTo(a.Value) || point.IsAlmostEqualTo(b.Value))
+            if (point.IsAlmostEqualTo(a.Value))
             {
-                return false;
+                vertex = a;
+                return true;
+            }
+            else if (point.IsAlmostEqualTo(b.Value))
+            {
+                vertex = b;
+                return true;
             }
 
             var l = new Line(a.Value, b.Value);
@@ -1008,10 +1069,16 @@ namespace Elements.Spatial.CellComplex
         {
             cells = null;
 
-            var originalSideFaces = cell.GetFaces().Where(f => f.Id != cell.TopFaceId && f.Id != cell.BottomFaceId).ToList();
-
             // The bottom face
             var bottom = this.GetFace(cell.BottomFaceId);
+            var bottomShape = bottom.GetGeometry();
+            var bottomC = bottomShape.Centroid();
+            polygon = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, bottomC.Z)));
+            if (bottomShape.Contains(polygon))
+            {
+                return false;
+            }
+
             if (!this.TrySplitFace(bottom,
                                    polygon,
                                    out List<Face> newBottomFaces,
@@ -1025,8 +1092,9 @@ namespace Elements.Spatial.CellComplex
             var top = this.GetFace(cell.TopFaceId);
             // TODO: This height calculation assumes horizontal top and bottom
             // faces, which might not be the case in the future.
-            var height = top.GetCentroid().Z - bottom.GetCentroid().Z;
-            var topPoly = polygon.TransformedPolygon(new Transform(new Vector3(bottom.GetCentroid().Z, 0, height)));
+            var topShape = top.GetGeometry();
+            var topC = topShape.Centroid();
+            var topPoly = polygon.TransformedPolygon(new Transform(0, 0, top.GetCentroid().Z));
             if (!this.TrySplitFace(top,
                                    topPoly,
                                    out List<Face> newTopFaces,
@@ -1042,7 +1110,7 @@ namespace Elements.Spatial.CellComplex
                 // Find the vertical faces associated with this vertex
                 // and split them with a polyline.
                 var sideFaceCandidates = v.Value.GetFaces().Where(f => !newBottomFaces.Contains(f));
-                var pline = new Polyline(new[] { v.Value.Value, v.Value.Value + new Vector3(0, 0, height) });
+                var pline = new Polyline(new[] { v.Value.Value + new Vector3(0, 0, bottomC.Z), v.Value.Value + new Vector3(0, 0, topC.Z) });
                 foreach (var sideFace in sideFaceCandidates)
                 {
                     if (!this.TrySplitFace(sideFace,
@@ -1063,7 +1131,7 @@ namespace Elements.Spatial.CellComplex
             {
                 var a = this.GetVertex(internalEdge.StartVertexId).Value;
                 var b = this.GetVertex(internalEdge.EndVertexId).Value;
-                var p = new Polygon(a, b, b + new Vector3(0, 0, height), a + new Vector3(0, 0, height));
+                var p = new Polygon(a, b, b + new Vector3(0, 0, topC.Z), a + new Vector3(0, 0, topC.Z));
                 var internalFace = this.AddFace(p);
                 newInternalFaces.Add(internalFace);
             }

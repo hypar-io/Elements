@@ -338,21 +338,36 @@ namespace Elements.Tests
             this.Name = nameof(SplitFaceMakesCorrectFacesVerticesAndEdges);
             var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
             var rect = Polygon.Rectangle(10, 10);
+            var rect1 = Polygon.Rectangle(new Vector3(5, -5), new Vector3(10, 5));
+            var rect2 = Polygon.Rectangle(new Vector3(-5, -15), new Vector3(5, -5));
+            var rect3 = Polygon.Rectangle(new Vector3(5, -15), new Vector3(10, -5));
+            var rect4 = Polygon.Rectangle(new Vector3(10, -15), new Vector3(20, -5));
             var face = cp.AddFace(rect);
+            var face1 = cp.AddFace(rect1);
+            var face2 = cp.AddFace(rect2);
+            var face3 = cp.AddFace(rect3);
+            var face4 = cp.AddFace(rect4);
 
-            Assert.Equal(4, cp.GetVertices().Count);
-            Assert.Equal(4, cp.GetEdges().Count);
-            Assert.Equal(1, cp.GetFaces().Count);
+            Assert.Equal(11, cp.GetVertices().Count);
+            Assert.Equal(15, cp.GetEdges().Count);
+            Assert.Equal(5, cp.GetFaces().Count);
 
-            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
-            cp.TrySplitFace(face, ngon, out var newFaces, out var newExternalVertices, out var newInternalVertices);
+            // var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+            var ngon = Polygon.Ngon(5, 4).TransformedPolyline(new Transform((3, -3)));
+            ngon.Vertices.Add(ngon.Vertices.First());
+
+            foreach (var f in cp.GetFaces())
+            {
+                cp.TrySplitFace(f, ngon, out var newFaces, out var newExternalVertices, out var newInternalVertices);
+            }
 
             Assert.False(cp.HasDuplicateEdges());
 
-            Assert.Equal(8, cp.GetVertices().Count);
-            Assert.Equal(2, cp.GetFaces().Count);
-            Assert.Equal(9, cp.GetEdges().Count);
+            Assert.Equal(20, cp.GetVertices().Count);
+            Assert.Equal(9, cp.GetFaces().Count);
+            Assert.Equal(28, cp.GetEdges().Count);
 
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
             this.Model.AddElements(cp.ToModelElements(true));
         }
 
@@ -371,6 +386,37 @@ namespace Elements.Tests
             Assert.False(cp.HasDuplicateEdges());
 
             Assert.Equal(2, cp.GetCells().Count);
+
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void SplitCellWorksAcrossALargerCellComplex()
+        {
+            this.Name = nameof(SplitCellWorksAcrossALargerCellComplex);
+
+            var cp = MakeASimpleCellComplex(numLevels: 1, uNumCells: 2, vNumCells: 2);
+
+            var ngon = Polygon.Ngon(8, 20).TransformedPolygon(new Transform(new Vector3(25, 25)));
+            foreach (var c in cp.GetCells())
+            {
+                _output.WriteLine($"Attempting split of cell {c.Id}");
+                if (c.BottomFaceId == null || c.TopFaceId == null)
+                {
+                    _output.WriteLine($"\tSkipping because the cell is invalidated.");
+                    continue;
+                }
+
+                if (cp.TrySplitCell(c, ngon, out List<Cell> newCells))
+                {
+                    _output.WriteLine($"\tNew Cells:");
+                    foreach (var newCell in newCells)
+                    {
+                        _output.WriteLine($"\t\t{newCell.Id}");
+                    }
+                }
+            }
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
 
             this.Model.AddElements(cp.ToModelElements(true));
         }
