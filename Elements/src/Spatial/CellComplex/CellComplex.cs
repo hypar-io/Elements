@@ -873,7 +873,7 @@ namespace Elements.Spatial.CellComplex
                 return false;
             }
 
-            var existingVertices = face.GetVertices();
+            var existingVertices = face.GetVerticesUnordered();
 
             newExternalVertices = new Dictionary<ulong, Vertex>();
             newInternalVertices = new Dictionary<ulong, Vertex>();
@@ -891,15 +891,45 @@ namespace Elements.Spatial.CellComplex
                 // to edges in a half edge graph, where we can store face
                 // connectivity information to allow face relinking.
                 var segments = poly.Segments();
-                foreach (var e in face.GetEdges())
+                for (var i = 0; i < segments.Length; i++)
                 {
-                    var av = this.GetVertex(e.StartVertexId);
-                    var a = av.Value;
-                    var bv = this.GetVertex(e.EndVertexId);
-                    var b = bv.Value;
-                    var s = new Line(a, b);
-                    foreach (var s1 in segments)
+                    var s1 = segments[i];
+
+                    // Loop over the edges here because the edge collection
+                    // will change from one loop to the next with edges
+                    // being split.
+                    // TODO: This has a large cost because we're allocating
+                    // a new list of edges for every segment.
+                    foreach (var e in face.GetEdges())
                     {
+                        var av = this.GetVertex(e.StartVertexId);
+                        var a = av.Value;
+                        var bv = this.GetVertex(e.EndVertexId);
+                        var b = bv.Value;
+                        var s = new Line(a, b);
+
+                        // Support the case of a segment that is along
+                        // another segment.
+                        if (s1.Start.DistanceTo(s).ApproximatelyEquals(0.0)
+                            && s1.End.DistanceTo(s).ApproximatelyEquals(0.0))
+                        {
+                            if (TrySplitEdge(e, s1.Start, out Vertex vertexStart))
+                            {
+                                if (!newExternalVertices.ContainsKey(vertexStart.Id))
+                                {
+                                    newExternalVertices.Add(vertexStart.Id, vertexStart);
+                                }
+                            }
+                            if (TrySplitEdge(e, s1.End, out Vertex vertexEnd))
+                            {
+                                if (!newExternalVertices.ContainsKey(vertexEnd.Id))
+                                {
+                                    newExternalVertices.Add(vertexEnd.Id, vertexEnd);
+                                }
+                            }
+                            continue;
+                        }
+
                         // If a polygon has been split before, the end
                         // points of the segments will be internal vertices.
                         if (s1.Start.IsAlmostEqualTo(a))
@@ -959,9 +989,10 @@ namespace Elements.Spatial.CellComplex
                 }
             }
 
-            // Create a polygon and use a polyline split to split
-            // it into parts which will become new faces.
             var p = face.GetGeometry();
+            // TODO: Build the half edge graph manually. We already
+            // know where all the split locations are. If a polygon is
+            // used as the splitter, we will be one edge short here.
             var splitPolys = p.Split(new[] { poly });
 
             // If we only get one polygon back, we can

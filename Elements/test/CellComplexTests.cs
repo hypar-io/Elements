@@ -411,8 +411,59 @@ namespace Elements.Tests
                 new Vector3(6,4)
             });
 
+            // This test is only to ensure that we don't throw.
+            // It creates a "bad" face that can't be visualized.
             cp.TrySplitFace(f, pline, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
             Assert.Equal(3, cp.GetFaces().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyAlignedAlongFaceEdgeSplitsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyAlignedAlongFaceEdgeSplitsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(-2.5, 0)));
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(2, cp.GetFaces().Count);
+            Assert.Equal(9, cp.GetEdges().Count);
+            Assert.Equal(8, cp.GetVertices().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyAlignedToCornerSplitsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyAlignedToCornerSplitsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(-2.5, -2.5)));
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(2, cp.GetFaces().Count);
+            Assert.Equal(8, cp.GetEdges().Count);
+            Assert.Equal(7, cp.GetVertices().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyCrossingTrimsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyCrossingTrimsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 20);
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            // TODO: Update this test to get 3 faces when we build 
+            // the half edge graph manually.
+            Assert.Equal(2, cp.GetFaces().Count);
+            this.Model.AddElement(new ModelCurve(split));
             this.Model.AddElements(cp.ToModelElements(true));
         }
 
