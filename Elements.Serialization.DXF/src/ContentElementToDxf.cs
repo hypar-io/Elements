@@ -21,12 +21,11 @@ namespace Elements.Serialization.DXF
         {
             try
             {
-
                 var chosenSymbol = pickSymbolByContext(contentElement, context);
                 if (chosenSymbol == null)
                 {
                     Console.WriteLine($"Symbol for {contentElement.Id} was null");
-                    // TODO: handle 
+                    chosenSymbol = generateSymbolFromBoundingBox(contentElement, context);
                     return;
                 }
                 // TODO: make all this handle await?
@@ -36,8 +35,14 @@ namespace Elements.Serialization.DXF
                     Console.WriteLine($"Failed to get geometry for {contentElement.Id}");
                     return;
                 }
-                var polygons = geometry.OfType<Polygon>().Select(p => p.ToDxf()).Where(e => e != null);
-                var polylines = geometry.OfType<Polyline>().Select(p => p.ToDxf()).Where(e => e != null);
+                var polygons = geometry.OfType<Polygon>().Select(p => p.ToDxf()).Where(e => e != null).ToList();
+                var polylines = geometry.OfType<Polyline>().Select(p => p.ToDxf()).Where(e => e != null).ToList();
+                var entities = new List<DxfEntity>(polygons.Union(polylines));
+                if (entities.Count() == 0)
+                {
+                    Console.WriteLine($"No entities for {contentElement.Id}");
+                    return;
+                }
                 var blockName = contentElement.GetBlockName();
                 var block = new DxfBlock
                 {
@@ -45,7 +50,7 @@ namespace Elements.Serialization.DXF
                     Name = blockName
                 };
                 doc.BlockRecords.Add(new DxfBlockRecord(blockName));
-                var entities = new List<DxfEntity>(polygons.Union(polylines));
+
                 foreach (var p in entities)
                 {
                     block.Entities.Add(p);
@@ -71,6 +76,16 @@ namespace Elements.Serialization.DXF
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
+        }
+
+        private Symbol generateSymbolFromBoundingBox(ContentElement contentElement, DxfRenderContext context)
+        {
+            var bbox = contentElement.BoundingBox;
+            var min = bbox.Min;
+            var max = bbox.Max;
+            var polygon = new Polygon((min.X, min.Y), (max.X, min.Y), (max.X, max.Y), (min.X, max.Y));
+            // TODO: handle context orientation
+            return new Symbol(new GeometryReference(null, new List<object> { polygon }), SymbolCameraPosition.Top);
         }
 
         private Symbol pickSymbolByContext(ContentElement contentElement, DxfRenderContext context)

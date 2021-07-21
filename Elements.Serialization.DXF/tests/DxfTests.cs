@@ -61,7 +61,7 @@ namespace Elements.Serialization.DXF.Tests
         [Fact]
         public void DxfFromModel()
         {
-            var jsonPath = "../../../TestModels/TestModel2.json";
+            var jsonPath = "../../../TestModels/TestModel3.json";
             var json = File.ReadAllText(jsonPath);
             var model = Model.FromJson(json);
             var renderer = new DXF.ModelToDxf();
