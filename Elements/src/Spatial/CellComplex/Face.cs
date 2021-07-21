@@ -191,7 +191,7 @@ namespace Elements.Spatial.CellComplex
             Vertex current = null;
             while (test.Count > 0)
             {
-                var toRemove = new List<Edge>();
+                var initial = test.Count;
                 for (var j = test.Count - 1; j >= 0; j--)
                 {
                     var edge = test[j];
@@ -206,7 +206,8 @@ namespace Elements.Spatial.CellComplex
                         test.Remove(edge);
                         break;
                     }
-                    else if (a.Value.IsAlmostEqualTo(current.Value))
+
+                    if (a.Value.IsAlmostEqualTo(current.Value))
                     {
                         if (!vertices.Contains(b))
                         {
@@ -226,6 +227,10 @@ namespace Elements.Spatial.CellComplex
                         test.Remove(edge);
                         break;
                     }
+                }
+                if (test.Count == initial)
+                {
+                    break;
                 }
             }
 

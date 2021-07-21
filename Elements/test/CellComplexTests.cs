@@ -398,6 +398,25 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SplittingAlmostOnEdgeResultsInThreeCells()
+        {
+            this.Name = nameof(SplittingAlmostOnEdgeResultsInThreeCells);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var pline = new Polyline(new[]{
+                new Vector3(-6, 4),
+                new Vector3(0,-5.00001),
+                new Vector3(6,4)
+            });
+
+            cp.TrySplitFace(f, pline, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(3, cp.GetFaces().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
         public void SplitCellMakesCorrectNumberOfCells()
         {
             this.Name = nameof(SplitCellMakesCorrectNumberOfCells);

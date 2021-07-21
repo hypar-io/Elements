@@ -75,6 +75,11 @@ namespace Elements
         /// <param name="size">The side length of the square mesh that will contain the text.</param>
         public static MeshElement Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
         {
+            if (direction.IsZero())
+            {
+                direction = Vector3.ZAxis;
+            }
+
             if (_font == null)
             {
                 FontCollection collection = new FontCollection();
