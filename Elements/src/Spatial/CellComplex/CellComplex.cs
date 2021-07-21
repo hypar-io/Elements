@@ -728,9 +728,10 @@ namespace Elements.Spatial.CellComplex
             {
                 foreach (var c in this.GetCells())
                 {
-                    // if (debug && c.BottomFaceId != null)
+                    // if (debug)
                     // {
-                    //     elements.Add(Draw.Text($"Cell:{c.Id}", c.GetBottomFace().GetCentroid(), Vector3.ZAxis, 5));
+                    //     var avg = c.GetVertices().Select(v => v.Value).ToList().Average();
+                    //     elements.Add(Draw.Text($"Cell:{c.Id}", avg, Vector3.ZAxis, 5));
                     // }
 
                     var color = r.NextColor();
@@ -763,6 +764,11 @@ namespace Elements.Spatial.CellComplex
             }
 
             var offset = 0.5;
+
+            foreach (var v in this._vertices)
+            {
+                elements.Add(Draw.Text($"Vertex:{v.Value.Id}\nFaces: {string.Join(",", v.Value.GetFaces().Select(f => f.Id.ToString()))}", v.Value.Value, Vector3.ZAxis));
+            }
 
             foreach (var e in this._edges)
             {
@@ -835,6 +841,9 @@ namespace Elements.Spatial.CellComplex
 
         /// <summary>
         /// Split the face with a polyline.
+        /// If the face is adjacent to the polyline, the method will 
+        /// return true and the vertex collection will correspond 
+        /// with the result if the polygon had been split.
         /// </summary>
         /// <param name="face">The face to split.</param>
         /// <param name="poly">The trimming polyline.</param>
@@ -846,7 +855,8 @@ namespace Elements.Spatial.CellComplex
         /// <param name="perimeterSplit">Should the perimeter be split initially?
         /// Set this value to false when you know that external split vertices on
         /// the target face have already been created.</param>
-        /// <returns>True if a split occurred, otherwise false.</returns>
+        /// <returns>True if a split occurred or the face is adjcent
+        /// to the splitting polyline, otherwise false.</returns>
         public bool TrySplitFace(Face face,
                                  Polyline poly,
                                  out List<Face> faces,
@@ -854,7 +864,7 @@ namespace Elements.Spatial.CellComplex
                                  out Dictionary<ulong, Vertex> newInternalVertices,
                                  bool perimeterSplit = true)
         {
-            faces = null;
+            faces = new List<Face>();
             newInternalVertices = null;
             newExternalVertices = null;
 
@@ -880,6 +890,7 @@ namespace Elements.Spatial.CellComplex
                 // correctly re-links faces. We should add a data parameter 
                 // to edges in a half edge graph, where we can store face
                 // connectivity information to allow face relinking.
+                var segments = poly.Segments();
                 foreach (var e in face.GetEdges())
                 {
                     var av = this.GetVertex(e.StartVertexId);
@@ -887,33 +898,62 @@ namespace Elements.Spatial.CellComplex
                     var bv = this.GetVertex(e.EndVertexId);
                     var b = bv.Value;
                     var s = new Line(a, b);
-                    foreach (var s1 in poly.Segments())
+                    foreach (var s1 in segments)
                     {
+                        // If a polygon has been split before, the end
+                        // points of the segments will be internal vertices.
+                        if (s1.Start.IsAlmostEqualTo(a))
+                        {
+                            if (!newInternalVertices.ContainsKey(av.Id))
+                            {
+                                newInternalVertices.Add(av.Id, av);
+                            }
+                            continue;
+                        }
+
+                        if (s1.End.IsAlmostEqualTo(b))
+                        {
+                            if (!newInternalVertices.ContainsKey(bv.Id))
+                            {
+                                newInternalVertices.Add(bv.Id, bv);
+                            }
+                            continue;
+                        }
+
                         if (s.Intersects(s1, out Vector3 result))
                         {
                             // Check intersection coincidence with 
                             // an existing vertex.
                             if (result.IsAlmostEqualTo(a))
                             {
-                                newExternalVertices.Add(av.Id, av);
-                                continue;
+                                if (!newExternalVertices.ContainsKey(av.Id))
+                                {
+                                    newExternalVertices.Add(av.Id, av);
+                                    continue;
+                                }
                             }
                             else if (result.IsAlmostEqualTo(b))
                             {
-                                newExternalVertices.Add(bv.Id, bv);
-                                continue;
+                                if (!newExternalVertices.ContainsKey(bv.Id))
+                                {
+                                    newExternalVertices.Add(bv.Id, bv);
+                                    continue;
+                                }
                             }
 
                             if (TrySplitEdge(e, result, out Vertex vertex))
                             {
-                                newExternalVertices.Add(vertex.Id, vertex);
+                                if (!newExternalVertices.ContainsKey(vertex.Id))
+                                {
+                                    newExternalVertices.Add(vertex.Id, vertex);
+                                }
                             }
                         }
                     }
                 }
 
                 // There was no intersection with the face's perimeter.
-                if (newExternalVertices.Count == 0)
+                if (newExternalVertices.Count == 0 && newInternalVertices.Count == 0)
                 {
                     return false;
                 }
@@ -927,35 +967,57 @@ namespace Elements.Spatial.CellComplex
             // If we only get one polygon back, we can
             // assume that the split resulted in the 
             // original face.
-            if (splitPolys.Count <= 1)
+            // Send back a result that looks as if the face
+            // was split, but using the existing vertices and faces.
+            if (splitPolys.Count == 1)
             {
-                newInternalVertices = null;
-                newExternalVertices = null;
-                return false;
-            }
+                faces.Add(face);
 
-            this.RemoveFace(face);
-
-            faces = new List<Face>();
-            foreach (var split in splitPolys)
-            {
-                var f = this.AddFace(split);
-                faces.Add(f);
-                foreach (var v in f.GetVerticesUnordered())
+                // External vertices are all those along an internal edge
+                // which are not also internal or located on the original.
+                var internals = newInternalVertices.Select(v => v.Value).ToList();
+                var externals = newInternalVertices.SelectMany(v => v.Value.GetEdges())
+                                                   .SelectMany(e => e.GetVertices())
+                                                   .Where(v => existingVertices.Contains(v))
+                                                   .Where(v => !internals.Contains(v));
+                foreach (var v in externals)
                 {
-                    // Avoid adding this if it's in the external collection
-                    // or in the original vertices
-                    if (!newExternalVertices.ContainsKey(v.Id) && !existingVertices.Contains(v))
+                    if (!newExternalVertices.ContainsKey(v.Id))
                     {
-                        if (!newInternalVertices.ContainsKey(v.Id))
-                        {
-                            newInternalVertices.Add(v.Id, v);
-                        }
+                        newExternalVertices.Add(v.Id, v);
                     }
                 }
+                return true;
             }
+            else
+            {
+                var faceCells = face.GetCells();
+                foreach (var split in splitPolys)
+                {
+                    var f = this.AddFace(split);
+                    faces.Add(f);
+                    foreach (var v in f.GetVerticesUnordered())
+                    {
+                        // Avoid adding this if it's in the external collection
+                        // or in the original vertices
+                        if (!newExternalVertices.ContainsKey(v.Id) && !existingVertices.Contains(v))
+                        {
+                            if (!newInternalVertices.ContainsKey(v.Id))
+                            {
+                                newInternalVertices.Add(v.Id, v);
+                            }
+                        }
+                    }
+                    foreach (var c in faceCells)
+                    {
+                        c.FaceIds.Add(f.Id);
+                    }
+                }
 
-            return true;
+                this.RemoveFace(face);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -1067,92 +1129,142 @@ namespace Elements.Spatial.CellComplex
         /// not split the cell.</returns>
         public bool TrySplitCell(Cell cell, Polygon polygon, out List<Cell> cells)
         {
-            cells = null;
+            cells = new List<Cell>();
 
-            // The bottom face
-            var bottom = this.GetFace(cell.BottomFaceId);
-            var bottomShape = bottom.GetGeometry();
-            var bottomC = bottomShape.Centroid();
-            polygon = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, bottomC.Z)));
-            if (bottomShape.Contains(polygon))
-            {
-                return false;
-            }
+            var nonVerticalFaceGroups = cell.GetNonVerticalFaces()
+                                       .GroupBy(f => f.GetCentroid().Z)
+                                       .OrderBy(g => g.Key)
+                                       .ToList();
 
-            if (!this.TrySplitFace(bottom,
-                                   polygon,
-                                   out List<Face> newBottomFaces,
-                                   out Dictionary<ulong, Vertex> newBottomExternalVertices,
-                                   out Dictionary<ulong, Vertex> newBottomInternalVertices))
-            {
-                return false;
-            }
+            var externalVertexGroups = new List<List<Vertex>>();
+            var internalVertexGroups = new List<List<Vertex>>();
+            var splitFaceGroups = new List<List<Face>>();
 
-            // The top face
-            var top = this.GetFace(cell.TopFaceId);
-            // TODO: This height calculation assumes horizontal top and bottom
-            // faces, which might not be the case in the future.
-            var topShape = top.GetGeometry();
-            var topC = topShape.Centroid();
-            var topPoly = polygon.TransformedPolygon(new Transform(0, 0, top.GetCentroid().Z));
-            if (!this.TrySplitFace(top,
-                                   topPoly,
-                                   out List<Face> newTopFaces,
-                                   out Dictionary<ulong, Vertex> newTopExternalVertices,
-                                   out Dictionary<ulong, Vertex> newTopInternalVertices))
+            foreach (var group in nonVerticalFaceGroups)
             {
-                return false;
-            }
-
-            var newSideFaces = new List<Face>();
-            foreach (var v in newBottomExternalVertices)
-            {
-                // Find the vertical faces associated with this vertex
-                // and split them with a polyline.
-                var sideFaceCandidates = v.Value.GetFaces().Where(f => !newBottomFaces.Contains(f));
-                var pline = new Polyline(new[] { v.Value.Value + new Vector3(0, 0, bottomC.Z), v.Value.Value + new Vector3(0, 0, topC.Z) });
-                foreach (var sideFace in sideFaceCandidates)
+                var trimPolygon = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, group.Key)));
+                var groupFaces = new List<Face>();
+                var externalVertices = new List<Vertex>();
+                var internalVertices = new List<Vertex>();
+                foreach (var face in group)
                 {
-                    if (!this.TrySplitFace(sideFace,
-                                          pline,
-                                          out List<Face> sideFaces,
-                                          out Dictionary<ulong, Vertex> newSideExternalVertices,
-                                          out Dictionary<ulong, Vertex> newSideInternalVertices,
-                                          false))
+                    if (!this.TrySplitFace(face,
+                                    trimPolygon,
+                                    out List<Face> faces,
+                                    out Dictionary<ulong, Vertex> exVertices,
+                                    out Dictionary<ulong, Vertex> inVertices))
                     {
                         continue;
                     }
-                    newSideFaces.AddRange(sideFaces);
+                    externalVertices.AddRange(exVertices.Values);
+                    internalVertices.AddRange(inVertices.Values);
+                    groupFaces.AddRange(faces);
+                }
+                splitFaceGroups.Add(groupFaces);
+                externalVertexGroups.Add(externalVertices.Distinct().ToList());
+                internalVertexGroups.Add(internalVertices.Distinct().ToList());
+            }
+
+            // The following transpose hack is based on the assumption
+            // that non-vertical face splitting, regardless of whether all the
+            // faces are parallel, will result in face "layers" where the faces
+            // align vertically from one to the next. By tranposing the data,
+            // we go from "layers" of faces to "columns" of faces, which notionally
+            // represent the bottom and top of the cell.
+            // When cells faces are highly skewed in relation to horizontal
+            // (i.e., almost vertical), the split ordering may differ and this
+            // might explode.
+            var faceGroups = splitFaceGroups.SelectMany(inner => inner.Select((item, index) => new { item, index }))
+                                            .GroupBy(i => i.index, i => i.item)
+                                            .Select(g => g.ToList())
+                                            .ToList();
+
+
+            // Split the external faces first, so that the second 
+            // pass which creates the internal faces, has new edges
+            // to find.
+            for (var i = 0; i < externalVertexGroups.Count - 1; i++)
+            {
+                var bottom = externalVertexGroups[i];
+                var top = externalVertexGroups[i + 1];
+                for (var j = 0; j < Math.Min(bottom.Count, top.Count); j++)
+                {
+                    var a = bottom[j];
+                    // var b = top[j];
+                    var b = top.First(v => v.Value.X.ApproximatelyEquals(a.Value.X) && v.Value.Y.ApproximatelyEquals(a.Value.Y));
+                    var candidateFaces = a.GetFaces().Intersect(b.GetFaces());
+                    var pline = new Polyline(new[] { a.Value, b.Value });
+                    foreach (var sideFace in candidateFaces)
+                    {
+                        if (!this.TrySplitFace(sideFace,
+                                              pline,
+                                              out List<Face> sideFaces,
+                                              out Dictionary<ulong, Vertex> newSideExternalVertices,
+                                              out Dictionary<ulong, Vertex> newSideInternalVertices,
+                                              false))
+                        {
+                            continue;
+                        }
+                    }
                 }
             }
 
-            var newInternalFaces = new List<Face>();
-            foreach (var internalEdge in newBottomInternalVertices.SelectMany(v => v.Value.GetEdges()).Distinct().ToList())
+            for (var i = 0; i < internalVertexGroups.Count - 1; i++)
             {
-                var a = this.GetVertex(internalEdge.StartVertexId).Value;
-                var b = this.GetVertex(internalEdge.EndVertexId).Value;
-                var p = new Polygon(a, b, b + new Vector3(0, 0, topC.Z), a + new Vector3(0, 0, topC.Z));
-                var internalFace = this.AddFace(p);
-                newInternalFaces.Add(internalFace);
+                var bottom = internalVertexGroups[i];
+                var top = internalVertexGroups[i + 1];
+                var bottomEdges = bottom.SelectMany(v => v.GetEdges()).Distinct().ToList();
+                var topEdges = top.SelectMany(v => v.GetEdges()).Distinct().ToList();
+                foreach (var internalEdge in bottomEdges)
+                {
+                    var a = this.GetVertex(internalEdge.StartVertexId).Value;
+                    var b = this.GetVertex(internalEdge.EndVertexId).Value;
+                    Polygon p = null;
+
+                    // Find the top edge that matches in direction.
+                    foreach (var topEdge in topEdges)
+                    {
+                        var c = this.GetVertex(topEdge.StartVertexId).Value;
+                        var d = this.GetVertex(topEdge.EndVertexId).Value;
+
+                        if (c.X.ApproximatelyEquals(a.X)
+                            && c.Y.ApproximatelyEquals(a.Y)
+                            && d.X.ApproximatelyEquals(b.X)
+                            && d.Y.ApproximatelyEquals(b.Y))
+                        {
+                            // forward
+                            p = new Polygon(a, b, d, c);
+                            break;
+                        }
+                        else if (c.X.ApproximatelyEquals(b.X)
+                            && c.Y.ApproximatelyEquals(b.Y)
+                            && d.X.ApproximatelyEquals(a.X)
+                            && d.Y.ApproximatelyEquals(a.Y))
+                        {
+                            //backward
+                            p = new Polygon(a, b, c, d);
+                            break;
+                        }
+                    }
+                    if (p != null)
+                    {
+                        this.AddFace(p);
+                    }
+                }
             }
 
-            this._cells.Remove(cell.Id);
-
-            cells = new List<Cell>();
-            for (var i = 0; i < newBottomFaces.Count; i++)
+            for (var i = 0; i < faceGroups.Count; i++)
             {
-                var bottomFace = newBottomFaces[i];
-                var topFace = newTopFaces[i];
-                var bottomEdges = bottomFace.GetEdges();
-
-                // TODO: This is a hack to get only the vertical faces.
-                // in the future when non-vertical cell enclosures are supported
-                // this should be updated.
-                var sideFaces = bottomEdges.SelectMany(e => e.GetFaces().Where(f => f.GetNormal().IsHorizontal()));
-                var cellFaces = sideFaces.Concat(new[] { bottomFace, topFace }).Distinct();
-
-                this.AddCell(this._cellId, cellFaces.ToList(), bottomFace, topFace, out Cell newCell);
+                var faceSet = faceGroups[i];
+                var bottom = faceSet[0];
+                var sideFaces = bottom.GetEdges().SelectMany(e => e.GetFaces().Where(f => f.GetNormal().IsHorizontal()));
+                this.AddCell(this._cellId, faceSet.Concat(sideFaces).ToList(), null, null, out Cell newCell);
                 cells.Add(newCell);
+            }
+
+            if (cells.Any())
+            {
+                this._cells.Remove(cell.Id);
             }
 
             return true;

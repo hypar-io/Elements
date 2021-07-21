@@ -71,9 +71,11 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the geometry for this Face.
+        /// Get the cached geometry for this face.
+        /// When edges and vertices are added, you must call UpdateGeometry()
+        /// to ensure that the cached geometry is correct.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A polygon.</returns>
         public override Polygon GetGeometry()
         {
             if (_geometry == null)

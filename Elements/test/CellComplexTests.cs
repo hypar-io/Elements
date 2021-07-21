@@ -372,6 +372,32 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ResplittingFaceResultsInVertices()
+        {
+            this.Name = nameof(ResplittingFaceResultsInVertices);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+            cp.TrySplitFace(f, ngon, out var newFaces, out _, out _);
+
+            Assert.Equal(2, newFaces.Count);
+
+            foreach (var face in newFaces)
+            {
+                cp.TrySplitFace(face, ngon, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+                Assert.NotEmpty(newExternalVertices);
+                Assert.NotEmpty(newInternalVertices);
+            }
+
+            Assert.False(cp.HasDuplicateEdges());
+
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
         public void SplitCellMakesCorrectNumberOfCells()
         {
             this.Name = nameof(SplitCellMakesCorrectNumberOfCells);
@@ -395,25 +421,20 @@ namespace Elements.Tests
         {
             this.Name = nameof(SplitCellWorksAcrossALargerCellComplex);
 
-            var cp = MakeASimpleCellComplex(numLevels: 1, uNumCells: 2, vNumCells: 2);
+            var cp = MakeASimpleCellComplex(numLevels: 3, uNumCells: 2, vNumCells: 2);
 
-            var ngon = Polygon.Ngon(8, 20).TransformedPolygon(new Transform(new Vector3(25, 25)));
+            var ngon = Polygon.Ngon(8, 15).TransformedPolygon(new Transform(new Vector3(16, 16)));
             foreach (var c in cp.GetCells())
             {
-                _output.WriteLine($"Attempting split of cell {c.Id}");
-                if (c.BottomFaceId == null || c.TopFaceId == null)
-                {
-                    _output.WriteLine($"\tSkipping because the cell is invalidated.");
-                    continue;
-                }
+                // _output.WriteLine($"Attempting split of cell {c.Id}");
 
                 if (cp.TrySplitCell(c, ngon, out List<Cell> newCells))
                 {
-                    _output.WriteLine($"\tNew Cells:");
-                    foreach (var newCell in newCells)
-                    {
-                        _output.WriteLine($"\t\t{newCell.Id}");
-                    }
+                    // _output.WriteLine($"\tNew Cells:");
+                    // foreach (var newCell in newCells)
+                    // {
+                    //     _output.WriteLine($"\t\t{newCell.Id}");
+                    // }
                 }
             }
             this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
