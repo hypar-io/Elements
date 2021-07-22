@@ -255,6 +255,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Intersect this polygon with the provided polygon in 2d.
+        /// </summary>
+        /// <param name="polygon">The target polygon.</param>
+        /// <param name="results">The points resulting from the intersection of
+        /// the two polygons.</param>
+        /// <returns>True if this polygon intersects the provided polygon,
+        /// otherwise false.</returns>
+        internal bool Intersects2d(Polygon polygon, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            foreach (var a in this.Segments())
+            {
+                foreach (var b in polygon.Segments())
+                {
+                    if (a.Intersects(b, out Vector3 result))
+                    {
+                        results.Add(result);
+                    }
+                }
+            }
+            return results.Count > 0;
+        }
+
+        /// <summary>
         /// Intersect this polygon with the provided polygon in 3d.
         /// Unlike other methods that do 2d intersection, this method is able to 
         /// calculate intersections in 3d by doing planar intersections and
