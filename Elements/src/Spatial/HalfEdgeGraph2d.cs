@@ -214,6 +214,7 @@ namespace Elements.Spatial
                     // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
                     var n = normal == default(Vector3) ? Vector3.ZAxis : normal;
                     var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+
                     possibleNextSegments.Remove(nextSegment);
                     currentSegment = nextSegment;
                 }
@@ -246,6 +247,11 @@ namespace Elements.Spatial
                         // in this case, we actually step backwards — to compare "the one before the first one we just removed" and
                         // "the one after the second one we just removed", which will now be adjacent in the list. 
                         i--;
+                        // if we are at the end of the list, we have to step backwards again, because we removed the last edge.
+                        if (i == validEdges.Count)
+                        {
+                            i--;
+                        }
                     }
                     else
                     {
@@ -272,7 +278,6 @@ namespace Elements.Spatial
                     newPolygons.Add(new Polygon(currentVertexList));
                 }
             }
-
             return newPolygons;
         }
     }
