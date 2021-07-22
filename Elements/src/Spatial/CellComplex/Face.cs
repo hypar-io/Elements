@@ -11,8 +11,6 @@ namespace Elements.Spatial.CellComplex
     /// </summary>
     public class Face : ChildBase<Face, Polygon>, Interfaces.IHasNeighbors<Face, Polygon>
     {
-        private Polygon _geometry;
-
         /// <summary>
         /// Edge Ids.
         /// </summary>
@@ -71,26 +69,14 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get the cached geometry for this face.
-        /// When edges and vertices are added, you must call UpdateGeometry()
-        /// to ensure that the cached geometry is correct.
+        /// Get the geometry for this face.
         /// </summary>
         /// <returns>A polygon.</returns>
         public override Polygon GetGeometry()
         {
-            if (_geometry == null)
-            {
-                UpdateGeometry();
-            }
-            return _geometry;
-        }
-
-        /// <summary>
-        /// Updates the cached version of a face's geometry.
-        /// </summary>
-        public void UpdateGeometry()
-        {
-            _geometry = new Polygon(this.GetVertices().Select(v => v.Value).ToList());
+            var p = new Polygon(this.GetVertices().Select(v => v.Value).ToList());
+            return p.IsClockWise() ? p.Reversed() : p;
+            // return 
         }
 
         /// <summary>
