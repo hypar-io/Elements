@@ -11,6 +11,16 @@ namespace Elements.Serialization.DXF
     /// </summary>
     public class ModelToDxf
     {
+        /// <summary>
+        /// Create a new instance of the renderer.
+        /// </summary>
+        public ModelToDxf()
+        {
+            context = new DxfRenderContext();
+        }
+
+        private DxfRenderContext context;
+
         private Dictionary<Type, IRenderDxf> _dxfCreators = new Dictionary<Type, IRenderDxf>
         {
             {typeof(ContentElement), new ContentElementToDXF()},
@@ -24,26 +34,41 @@ namespace Elements.Serialization.DXF
         public Stream Render(Model model)
         {
             var doc = new DxfFile();
-            var context = new DxfRenderContext();
             context.Model = model;
 
             foreach (var element in model.Elements.Values)
             {
-                if (_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                try
                 {
-                    converter.TryAddDxfEntity(doc, element, context);
+                    if (_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                    {
+                        converter.TryAddDxfEntity(doc, element, context);
+                    }
+                    else if (element is GeometricElement geomElement)
+                    {
+                        // fall back to geometric converter
+                        new GeometricElementToDxf().TryAddDxfEntity(doc, geomElement, context);
+                    }
                 }
-                else if (element is GeometricElement geomElement)
+                catch (Exception e)
                 {
-                    // fall back to geometric converter
-                    new GeometricElementToDxf().TryAddDxfEntity(doc, geomElement, context);
+                    // TODO: Implement logging for exceptions
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
                 }
             }
 
             var stream = new MemoryStream();
+            doc.Header.Version = DxfAcadVersion.R2013;
             doc.Save(stream);
-
             return stream;
+        }
+        /// <summary>
+        /// Set the mapping configuration (layer settings, lineweights, etc) for this renderer.
+        /// </summary>
+        public void SetMappingConfiguration(MappingConfiguration config)
+        {
+            this.context.MappingConfiguration = config;
         }
     }
 }

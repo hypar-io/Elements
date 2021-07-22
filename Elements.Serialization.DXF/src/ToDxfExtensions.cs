@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using IxMilia.Dxf;
@@ -18,6 +20,10 @@ namespace Elements.Serialization.DXF.Extensions
         /// </summary>
         public static DxfPolyline ToDxf(this Polyline polyline)
         {
+            if (polyline == null || polyline.Vertices == null || polyline.Vertices.Count < 2)
+            {
+                return null;
+            }
             var vertices = polyline.Vertices.Select(v => v.ToDxfVertex());
             var dxf = new DxfPolyline(vertices);
             dxf.IsClosed = polyline is Polygon;
@@ -33,13 +39,49 @@ namespace Elements.Serialization.DXF.Extensions
         }
 
         /// <summary>
+        /// Convert a Vector3 to a DXF Lightweight Polyline Vertex.
+        /// </summary>
+        public static DxfLwPolylineVertex ToDxfLwPolylineVertex(this Vector3 vector3)
+        {
+            var vertex = new DxfLwPolylineVertex();
+            vertex.X = vector3.X;
+            vertex.Y = vector3.Y;
+            return vertex;
+        }
+
+        /// <summary>
+        /// Convert an Elements Color to a DxfColor.
+        /// </summary>
+        public static DxfColor ToDxfColor(this Color color)
+        {
+            var r = (byte)Math.Round(color.Red * 255);
+            var g = (byte)Math.Round(color.Green * 255);
+            var b = (byte)Math.Round(color.Blue * 255);
+            return DxfColorHelpers.GetClosestDefaultIndexColor(r, g, b);
+        }
+
+        /// <summary>
+        /// Convert an Elements color to a 24-bit integer.
+        /// </summary>
+        public static int To24BitColor(this Color color)
+        {
+            var r = (byte)Math.Round(color.Red * 255);
+            var g = (byte)Math.Round(color.Green * 255);
+            var b = (byte)Math.Round(color.Blue * 255);
+            int rgb = r;
+            rgb = (rgb << 8) + g;
+            rgb = (rgb << 8) + b;
+            return rgb;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
         public static string GetBlockName(this Element element)
         {
-            return (element.Name == null ? $"{element.Name} - " : "") + element.Id;
+            return (element.Name != null ? $"{Regex.Replace(element.Name, @"[^A-Za-z0-9_-]", "")}_" : "") + element.Id;
         }
 
         /// <summary>
@@ -98,7 +140,10 @@ namespace Elements.Serialization.DXF.Extensions
         {
             var list = new List<DxfEntity>();
             list.Add(profile.Perimeter.ToDxf());
-            list.AddRange(profile.Voids.Select(v => v.ToDxf()));
+            if (profile.Voids != null)
+            {
+                list.AddRange(profile.Voids.Select(v => v.ToDxf()));
+            }
             return list;
         }
         /// <summary>

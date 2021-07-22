@@ -29,7 +29,23 @@ namespace Elements.Serialization.DXF.Tests
                 xform.Move((0, 3, 0));
                 model.AddElement(contentElement2.CreateInstance(xform, null));
             }
+            var mappingConfig = new MappingConfiguration();
+            mappingConfig.Layers.AddRange(new[] {new MappingConfiguration.Layer
+            {
+                LayerName = "A-FLOOR",
+                LayerColor = Colors.Red,
+                Lineweight = 50,
+                Types = new List<string> { "Elements.Floor" }
+            },
+            new MappingConfiguration.Layer
+            {
+                LayerName = "I-FURN",
+                LayerColor = Colors.Orange,
+                Types = new List<string> { "Elements.ContentElement" }
+            }});
+
             var renderer = new DXF.ModelToDxf();
+            renderer.SetMappingConfiguration(mappingConfig);
             var stream = renderer.Render(model);
             stream.Position = 0;
             var filePath = "../../../results/TestOutput.dxf";
@@ -45,10 +61,14 @@ namespace Elements.Serialization.DXF.Tests
         [Fact]
         public void DxfFromModel()
         {
-            var jsonPath = "../../../TestModels/TestModel.json";
+            var jsonPath = "../../../TestModels/TestModel3.json";
             var json = File.ReadAllText(jsonPath);
             var model = Model.FromJson(json);
             var renderer = new DXF.ModelToDxf();
+
+            var configJson = File.ReadAllText("../../../TestModels/cad-standard.json");
+            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<MappingConfiguration>(configJson);
+            renderer.SetMappingConfiguration(config);
             var stream = renderer.Render(model);
             stream.Position = 0;
             var filePath = "../../../results/FromJson.dxf";

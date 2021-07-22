@@ -24,7 +24,13 @@ namespace Elements.Serialization.DXF
                 Rotation = elementInstance.Transform.ToDxfAngle(context),
                 Name = elementInstance.BaseDefinition.GetBlockName()
             };
-            document.Entities.Add(insert);
+            // some blocks may not get created, due to missing symbols. Only
+            // insert if we find the block. 
+            if (document.Blocks.Any(b => b.Name == insert.Name))
+            {
+                document.Entities.Add(insert);
+                AddElementToLayer(document, elementInstance.BaseDefinition, new[] { insert }, context);
+            }
         }
     }
 }

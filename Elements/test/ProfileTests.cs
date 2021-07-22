@@ -3,6 +3,7 @@ using Elements.Geometry;
 using Xunit;
 using System.Linq;
 using System.Collections.Generic;
+using Elements.Spatial;
 
 namespace Elements.Tests
 {
@@ -362,6 +363,25 @@ namespace Elements.Tests
             var offsetOut = Elements.Geometry.Profile.Offset(offsetProfiles, 1);
             Assert.Equal(75, offsetOut.Sum(o => o.Area()));
             Model.AddElements(offsetOut.Select(p => new Panel(p.Perimeter, BuiltInMaterials.Void)));
+        }
+
+        [Fact]
+        public void PolygonCleanupIssue()
+        {
+            Name = nameof(PolygonCleanupIssue);
+            var rect = Polygon.Rectangle(10, 10);
+            var splitters = Polygon.Rectangle(4, 15).Segments().Select(s => s.ToPolyline(1));
+            Model.AddElements(rect);
+
+            var heg = HalfEdgeGraph2d.Construct(new[] { rect }, splitters);
+            var polygons = heg.Polygonize();
+            Assert.Equal(3, polygons.Count);
+            Assert.True(polygons.All(p => p.Segments().Count() == 4), "All polygons should be simple rectangles");
+            var rand = new Random();
+            foreach (var s in polygons)
+            {
+                Model.AddElement(new ModelCurve(s, rand.NextMaterial(), new Transform(0, 0, rand.NextDouble())));
+            }
         }
     }
 }
