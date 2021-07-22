@@ -179,21 +179,17 @@ namespace Elements.Spatial
             var vertices = this.Vertices;
             var newPolygons = new List<Polygon>();
 
-            var actions = new List<(string actionName, object segment)>();
-
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
             // and stop when you run out of edges. 
             // Guranteed to terminate because every loop step removes at least 1 edge, and
             // edges are never added.
-            actions.Add(("starting", null));
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
                 var currentEdgeList = new List<(int from, int to, int? tag)>();
                 // pick a starting point
                 var startingSet = edgesPerVertex.First(l => l.Count > 0);
                 var currentSegment = startingSet[0];
-                actions.Add(("picked a first segment", currentSegment));
                 startingSet.RemoveAt(0);
                 var initialFrom = currentSegment.from;
 
@@ -221,7 +217,6 @@ namespace Elements.Spatial
 
                     possibleNextSegments.Remove(nextSegment);
                     currentSegment = nextSegment;
-                    actions.Add(("selected next segment", currentSegment));
                 }
                 currentEdgeList.Add(currentSegment);
                 var currentVertexList = new List<Vector3>();
@@ -283,7 +278,6 @@ namespace Elements.Spatial
                     newPolygons.Add(new Polygon(currentVertexList));
                 }
             }
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(actions));
             return newPolygons;
         }
     }
