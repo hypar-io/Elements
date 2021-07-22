@@ -66,14 +66,18 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs.
         /// </summary>
-        /// <param name="vertexIds"></param>
-        /// <returns></returns>
-        internal static string GetHash(List<ulong> vertexIds)
+        /// <param name="vertexIds">A collection containing the vertices of the edge.</param>
+        internal static string GetHash(IList<ulong> vertexIds)
         {
             var sortedIds = vertexIds.ToList();
             sortedIds.Sort();
             var hash = String.Join(",", sortedIds);
             return hash;
+        }
+
+        internal static string GetHash(params ulong[] vertexIds)
+        {
+            return GetHash(vertexIds);
         }
 
         /// <summary>
