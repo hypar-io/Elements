@@ -5,6 +5,9 @@
 ### Added
 
 - Support for DXF from many basic elements.
+- `Draw.Text(string text, Vector3 location, Vector3 direction, double size = 1.0)`
+- `Draw.Arrow(Curve curve, Material material, double arrowWidth = 0.1, double arrowLength = 0.3, bool arrowHeadAtStart = false, bool arrowHeadAtEnd = true)`
+- `Cube(Vector3 location, string label, Material material, double size = 0.4)`
 
 ### Changed
 

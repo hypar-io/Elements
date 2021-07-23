@@ -73,7 +73,7 @@ namespace Elements
         /// <param name="location">The center point of a square mesh that will contain the text.</param>
         /// <param name="direction">The facing direction of the text</param>
         /// <param name="size">The side length of the square mesh that will contain the text.</param>
-        internal static MeshElement Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
+        public static MeshElement Text(string text, Vector3 location, Vector3 direction, double size = 1.0)
         {
             if (direction.IsZero())
             {
