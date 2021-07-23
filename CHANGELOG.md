@@ -6,7 +6,8 @@
 
 - Support for DXF from many basic elements.
 - `SetClassification`
-- `SetOperationsClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
+- `SetOperations.ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
+- `SetOperations.BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set, SetClassification shared)`
 - `RandomExtensions.NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)`
 
 ### Changed
