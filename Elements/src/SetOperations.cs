@@ -41,13 +41,13 @@ namespace Elements
         }
 
         private static void ClassifySet(Plane p,
-                                              System.Random r,
-                                              Polygon a,
-                                              Polygon b,
-                                              SetClassification insideClassification,
-                                              SetClassification outsideClassification,
-                                              List<(Vector3 from, Vector3 to, SetClassification classification)> classifications,
-                                              Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter)
+                                        System.Random r,
+                                        Polygon a,
+                                        Polygon b,
+                                        SetClassification insideClassification,
+                                        SetClassification outsideClassification,
+                                        List<(Vector3 from, Vector3 to, SetClassification classification)> classifications,
+                                        Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter)
         {
             // A tests
             for (var i = 0; i < a.Vertices.Count; i++)
