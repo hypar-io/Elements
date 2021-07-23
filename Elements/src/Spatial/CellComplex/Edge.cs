@@ -77,7 +77,10 @@ namespace Elements.Spatial.CellComplex
 
         internal static string GetHash(params ulong[] vertexIds)
         {
-            return GetHash(vertexIds);
+            var sortedIds = vertexIds.ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+            return hash;
         }
 
         /// <summary>
