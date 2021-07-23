@@ -27,6 +27,22 @@ namespace Elements
             var color = random.NextColor();
             return new Material(color.ToString(), color, 0.1, 0.3, null, unlit, true);
         }
+
+        /// <summary>
+        /// Generate a 
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="origin">The origin of the ray.</param>
+        /// <param name="normal">The normal of the plane in which the
+        /// resulting ray will lie.</param>
+        /// <returns>A ray pointing in a random direction, along
+        /// the plane.</returns>
+        public static Ray NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)
+        {
+            var v1 = new Vector3(random.NextDouble(), random.NextDouble(), random.NextDouble()).Unitized();
+            var d = v1.Cross(normal);
+            return new Ray(origin, d);
+        }
     }
 
 }
