@@ -262,16 +262,21 @@ namespace Elements.Geometry
         /// the two polygons.</param>
         /// <returns>True if this polygon intersects the provided polygon,
         /// otherwise false.</returns>
-        internal bool Intersects2d(Polygon polygon, out List<Vector3> results)
+        internal bool Intersects2d(Polygon polygon, out List<(Vector3 result, int aSegmentIndices, int bSegmentIndices)> results)
         {
-            results = new List<Vector3>();
-            foreach (var a in this.Segments())
+            var aSegs = this.Segments();
+            results = new List<(Vector3, int, int)>();
+
+            for (var i = 0; i < aSegs.Length; i++)
             {
-                foreach (var b in polygon.Segments())
+                var a = aSegs[i];
+                var bSegs = polygon.Segments();
+                for (var j = 0; j < bSegs.Length; j++)
                 {
+                    var b = bSegs[j];
                     if (a.Intersects(b, out Vector3 result))
                     {
-                        results.Add(result);
+                        results.Add((result, i, j));
                     }
                 }
             }
