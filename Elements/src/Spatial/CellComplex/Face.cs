@@ -94,7 +94,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="edges"></param>
         /// <returns></returns>
-        internal static string GetHash(List<Edge> edges)
+        internal static string GetHash(IList<Edge> edges)
         {
             var sortedIds = edges.Select(ds => ds.Id).ToList();
             sortedIds.Sort();
