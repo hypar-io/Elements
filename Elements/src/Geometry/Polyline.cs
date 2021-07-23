@@ -796,6 +796,11 @@ namespace Elements.Geometry
             Split(points);
         }
 
+        /// <summary>
+        /// Split a polyline at the provided points, by inserting new vertices.
+        /// </summary>
+        /// <param name="points">The points at which to split.</param>
+        /// <param name="closed">Should the polyline be considered closed?</param>
         protected void Split(IList<Vector3> points, bool closed = false)
         {
             for (var i = 0; i < this.Vertices.Count; i++)
