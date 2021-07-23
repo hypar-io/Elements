@@ -13,10 +13,11 @@ namespace Elements.Tests
             var a = Polygon.Rectangle(5, 5);
             var b = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform((2.5, 2.5)));
 
-            if (a.Intersects2d(b, out List<Vector3> results))
+            if (a.Intersects2d(b, out List<(Vector3 result, int, int)> results))
             {
-                a.Split(results);
-                b.Split(results);
+                var locations = results.Select(r => r.result).ToList();
+                a.Split(locations);
+                b.Split(locations);
             }
 
             Assert.Equal(6, a.Vertices.Count);
@@ -81,10 +82,11 @@ namespace Elements.Tests
             var a = Polygon.Rectangle(5, 5);
             var b = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform((2.5, 2.5)));
 
-            if (a.Intersects2d(b, out List<Vector3> results))
+            if (a.Intersects2d(b, out List<(Vector3 result, int, int)> results))
             {
-                a.Split(results);
-                b.Split(results);
+                var locations = results.Select(r => r.result).ToList();
+                a.Split(locations);
+                b.Split(locations);
             }
             var set = SetOperations.ClassifySegments2d(a, b, ((Vector3, Vector3, SetClassification classification) e) =>
             {
