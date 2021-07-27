@@ -109,7 +109,7 @@ namespace Elements.Geometry
         /// <param name="amount">The amount to thicken the line.</param>
         public Polygon Thicken(double amount)
         {
-            if (Start.Z != End.Z)
+            if (!Start.Z.ApproximatelyEquals(End.Z))
             {
                 throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
             }
