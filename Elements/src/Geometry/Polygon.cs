@@ -785,7 +785,7 @@ namespace Elements.Geometry
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons)
         {
-            return TrimmedToInternal(polygons, out _, out _);
+            return IntersectOneToMany(polygons, out _, out _);
         }
 
         /// <summary>
@@ -798,12 +798,16 @@ namespace Elements.Geometry
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons,
+                                       out List<Vector3> intersections,
+                                       out List<(Vector3 from, Vector3 to)> trimEdges)
         {
-            return TrimmedToInternal(polygons, out intersections, out trimEdges);
+            return IntersectOneToMany(polygons, out intersections, out trimEdges);
         }
 
-        private List<Polygon> TrimmedToInternal(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        private List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
+                                                 out List<Vector3> intersections,
+                                                 out List<(Vector3 from, Vector3 to)> trimEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
