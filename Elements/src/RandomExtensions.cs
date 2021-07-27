@@ -29,7 +29,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Generate a 
+        /// Generate a ray in a random direction in the specified plane.
         /// </summary>
         /// <param name="random"></param>
         /// <param name="origin">The origin of the ray.</param>
@@ -42,6 +42,18 @@ namespace Elements
             var v1 = new Vector3(random.NextDouble(), random.NextDouble(), random.NextDouble()).Unitized();
             var d = v1.Cross(normal);
             return new Ray(origin, d);
+        }
+
+        /// <summary>
+        /// Generate a ray in a random direction.
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="origin">The origin of the ray.</param>
+        /// <returns></returns>
+        public static Ray NextRay(this Random random, Vector3 origin)
+        {
+            var v1 = new Vector3(random.NextDouble(), random.NextDouble(), random.NextDouble()).Unitized();
+            return new Ray(origin, v1);
         }
     }
 
