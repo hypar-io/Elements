@@ -33,7 +33,20 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return this.ToString().GetHashCode();
+            return this.GetHashCode(EPSILON);
+        }
+
+        /// <summary>
+        /// Get the hash code for this vector using precision based rounding.
+        /// </summary>
+        public int GetHashCode(double precision)
+        {
+            var alt = 17;
+            var rounded = new Vector3(Math.Round(X / precision) * precision, Math.Round(Y / precision) * precision, Math.Round(Z / precision) * precision);
+            alt = alt * 23 + rounded.X.GetHashCode();
+            alt = alt * 23 + rounded.Y.GetHashCode();
+            alt = alt * 23 + rounded.Z.GetHashCode();
+            return alt;
         }
 
         /// <summary>
@@ -996,16 +1009,35 @@ namespace Elements.Geometry
         }
     }
 
-    internal class Vector3Comparer : EqualityComparer<Vector3>
+    /// <summary>
+    /// An equality comparer used for Dictionaries and HashSets.
+    /// It uses geometric properties for equality, and allows you to specify the tolerance.
+    /// </summary>
+    public class Vector3Comparer : EqualityComparer<Vector3>
     {
-        public override bool Equals(Vector3 x, Vector3 y)
+        private double _precision = Vector3.EPSILON;
+        /// <summary>
+        /// Construct a Vector3Comparer, specify a tolerance if you want something other than the default Vector3 tolerance.
+        /// </summary>
+        public Vector3Comparer(double precision = Vector3.EPSILON)
         {
-            return x.IsAlmostEqualTo(y);
+            _precision = precision;
         }
 
-        public override int GetHashCode(Vector3 obj)
+        /// <summary>
+        /// Are the two Vector3 geometrically equal within the tolerance.
+        /// </summary>
+        public override bool Equals(Vector3 x, Vector3 y)
         {
-            return obj.GetHashCode();
+            return x.IsAlmostEqualTo(y, _precision);
+        }
+
+        /// <summary>
+        /// Get a hashcode for the Vector3 object.
+        /// </summary>
+        public override int GetHashCode(Vector3 vector)
+        {
+            return vector.GetHashCode();
         }
     }
 }

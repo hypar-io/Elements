@@ -169,6 +169,16 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Equality()
+        {
+            var nearOrigin = new Vector3(1E-6, 1E-6, 1E-6);
+            Assert.Equal(nearOrigin, Vector3.Origin);
+
+            Assert.Equal(nearOrigin.GetHashCode(), Vector3.Origin.GetHashCode());
+            Assert.NotEqual(nearOrigin.GetHashCode(1E-10), Vector3.Origin.GetHashCode(1E-10));
+        }
+
+        [Fact]
         public void AreCoplanar()
         {
             var a = Vector3.Origin;
