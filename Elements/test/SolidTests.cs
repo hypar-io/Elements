@@ -304,6 +304,23 @@ namespace Elements.Tests
                 null);
             Model.AddElements(element, element2);
         }
+
+        [Fact]
+        public void Union()
+        {
+            this.Name = nameof(Union);
+            var r = new Transform();
+            var a = new Mass(Polygon.Rectangle(5, 5), 5);
+            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
+            // this.Model.AddElement(a);
+            // this.Model.AddElement(b);
+
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+            var s = SolidBoolean.Union(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
+            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
     }
 
 }
