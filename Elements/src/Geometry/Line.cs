@@ -137,13 +137,65 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the hash code for the line.
+        /// Are the two lines almost equal?
         /// </summary>
-        /// <returns></returns>
+        public bool IsAlmostEqualTo(Line other, bool directionIndependent, double tolerance = Vector3.EPSILON)
+        {
+            return (Start.IsAlmostEqualTo(other.Start, tolerance) && End.IsAlmostEqualTo(other.End, tolerance))
+                    || (directionIndependent
+                        && (Start.IsAlmostEqualTo(other.End, tolerance) && End.IsAlmostEqualTo(other.Start, tolerance)));
+        }
+
+        /// <summary>
+        /// Get the hash code for the line using default settings.
+        /// </summary>
         public override int GetHashCode()
         {
-            return new[] { this.Start, this.End }.GetHashCode();
+            return GetHashCode(false);
         }
+
+        /// <summary>
+        /// Get the hash code for the line allowing for geometric approximations.
+        /// </summary>
+        public int GetHashCode(bool directionIndependent, double tolerance = Vector3.EPSILON)
+        {
+            var obj = this;
+            // If the direction doesn't matter, then we always sort the end points by X, then Y, then Z to have a consistent basis for forming the hash code.
+            if (directionIndependent)
+            {
+                if (Start.X != End.X)
+                {
+                    if (Start.X > End.X)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else if (obj.Start.Y != obj.End.Y)
+                {
+                    if (obj.Start.Y > obj.End.Y)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else if (obj.Start.Z != obj.End.Z)
+                {
+                    if (obj.Start.Z > obj.End.Z)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid line, start and end are identical, cannot create hashcode");
+                }
+            }
+            int hash = 17;
+            hash = hash * 23 + obj.Start.Rounded(tolerance).GetHashCode();
+            hash = hash * 23 + obj.End.Rounded(tolerance).GetHashCode();
+            return hash;
+        }
+
+
 
         /// <summary>
         /// Intersect this line with the specified plane
@@ -780,66 +832,32 @@ namespace Elements.Geometry
     /// </summary>
     public class LineComparer : IEqualityComparer<Line>
     {
-        private double _precision = 5;
+        private double _tolerance = 5;
         private bool _directionIndependent = true;
 
         /// <summary>
-        /// Create a comparer setting wether this comparer cares about direction and also the precision.
+        /// Construct a comparer setting wether the direction matters and optionally the tolerance.
         /// </summary>
-        public LineComparer(bool directionIndependent = true, double precision = Vector3.EPSILON)
+        public LineComparer(bool directionIndependent, double tolerance = Vector3.EPSILON)
         {
-            _precision = precision;
+            _tolerance = tolerance;
             _directionIndependent = directionIndependent;
         }
 
         /// <summary>
-        /// Are the two lines equal according to the LineComparer settings.
+        /// Are the two lines equal according to the LineComparer settings?
         /// </summary>
-        public bool Equals(Line x, Line y)
+        public bool Equals(Line a, Line b)
         {
-            return (x.Start.IsAlmostEqualTo(y.Start, _precision) && x.End.IsAlmostEqualTo(y.End, _precision))
-                    || (_directionIndependent
-                        && (x.Start.IsAlmostEqualTo(y.End, _precision) && x.End.IsAlmostEqualTo(y.Start, _precision)));
+            return a.IsAlmostEqualTo(b, _directionIndependent, _tolerance);
         }
 
         /// <summary>
-        /// Retrieve a hashcode for this line that is consistent with the precision and direction dependance.
+        /// Retrieve a hashcode for this line that is consistent with the direction dependance and tolerance.
         /// </summary>
-        public int GetHashCode(Line obj)
+        public int GetHashCode(Line line)
         {
-            // If the direction doesn't matter, then we always sort the end points by X, then Y, then Z to have a consistent basis for forming the hash code.
-            if (_directionIndependent)
-            {
-                if (obj.Start.X != obj.End.X)
-                {
-                    if (obj.Start.X > obj.End.X)
-                    {
-                        obj = obj.Reversed();
-                    }
-                }
-                else if (obj.Start.Y != obj.End.Y)
-                {
-                    if (obj.Start.Y > obj.End.Y)
-                    {
-                        obj = obj.Reversed();
-                    }
-                }
-                else if (obj.Start.Z != obj.End.Z)
-                {
-                    if (obj.Start.Z > obj.End.Z)
-                    {
-                        obj = obj.Reversed();
-                    }
-                }
-                else
-                {
-                    throw new Exception("Invalid line, start and end are identical, cannot create hashcode");
-                }
-            }
-            int hash = 17;
-            hash = hash * 23 + obj.Start.Rounded(_precision).GetHashCode();
-            hash = hash * 23 + obj.End.Rounded(_precision).GetHashCode();
-            return hash;
+            return line.GetHashCode(_directionIndependent, _tolerance);
         }
     }
 }
