@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
 {
     public partial class Triangle
     {
-
         /// <summary>
         /// Create a triangle.
         /// </summary>
@@ -96,6 +97,71 @@ namespace Elements.Geometry
             }
             duplicate = default(Vector3);
             return false;
+        }
+
+
+        /// <summary>
+        /// Is the provided triangle approximately geometrically equal to this one?
+        /// </summary>
+        public bool IsAlmostEqualTo(Triangle other, bool rotationDependent = false, double precision = Vector3.EPSILON)
+        {
+            if (rotationDependent)
+            {
+                return this.Vertices[0].Position.IsAlmostEqualTo(other.Vertices[0].Position, precision)
+                        && this.Vertices[1].Position.IsAlmostEqualTo(other.Vertices[1].Position, precision)
+                        && this.Vertices[2].Position.IsAlmostEqualTo(other.Vertices[2].Position, precision);
+            }
+            else
+            {
+                var points = new HashSet<Vector3>(this.Vertices.Select(v => v.Position), new Vector3Comparer(precision));
+                var otherPoints = new HashSet<Vector3>(other.Vertices.Select(v => v.Position), new Vector3Comparer(precision));
+                return points.Except(otherPoints).Count() == 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Triangle comparer that will compare based only on the vertices, and allows for flexible geometry comparisons.
+    /// </summary>
+    public class TriangleComparer : IEqualityComparer<Triangle>
+    {
+        private bool _rotationDependent = false;
+        private double _tolerance = Vector3.EPSILON;
+
+        /// <summary>
+        /// Construct a comparer setting wether the vertex orientation matters, and optionally the tolerance.
+        /// </summary>
+        public TriangleComparer(bool rotationDependent, double tolerance = Vector3.EPSILON)
+        {
+            _rotationDependent = rotationDependent;
+            _tolerance = tolerance;
+        }
+
+        /// <summary>
+        /// Are the two triangles equal according to the comparer settings?
+        /// </summary>
+        public bool Equals(Triangle a, Triangle b)
+        {
+            return a.IsAlmostEqualTo(b, _rotationDependent, _tolerance);
+        }
+
+        /// <summary>
+        /// Retrieve a hashcode for this triangle that is consistent with the direction dependance and tolerance.
+        /// </summary>
+        public int GetHashCode(Triangle triangle)
+        {
+            var vertices = triangle.Vertices.ToList();
+            if (_rotationDependent)
+            {
+                vertices = triangle.Vertices.OrderBy(v => v.Position.X).ThenBy(v => v.Position.Y).ThenBy(v => v.Position.Z).ToList();
+            }
+
+            var alt = 17;
+            alt = alt * 23 + vertices[0].Position.GetHashCode(_tolerance);
+            alt = alt * 23 + vertices[1].Position.GetHashCode(_tolerance);
+            alt = alt * 23 + vertices[2].Position.GetHashCode(_tolerance);
+
+            return alt;
         }
     }
 }
