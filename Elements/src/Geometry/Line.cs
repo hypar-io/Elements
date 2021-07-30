@@ -139,10 +139,10 @@ namespace Elements.Geometry
         /// <summary>
         /// Are the two lines almost equal?
         /// </summary>
-        public bool IsAlmostEqualTo(Line other, bool directionIndependent, double tolerance = Vector3.EPSILON)
+        public bool IsAlmostEqualTo(Line other, bool directionDependent, double tolerance = Vector3.EPSILON)
         {
             return (Start.IsAlmostEqualTo(other.Start, tolerance) && End.IsAlmostEqualTo(other.End, tolerance))
-                    || (directionIndependent
+                    || (!directionDependent
                         && (Start.IsAlmostEqualTo(other.End, tolerance) && End.IsAlmostEqualTo(other.Start, tolerance)));
         }
 
@@ -151,17 +151,17 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return GetHashCode(false);
+            return GetHashCode(true);
         }
 
         /// <summary>
         /// Get the hash code for the line allowing for geometric approximations.
         /// </summary>
-        public int GetHashCode(bool directionIndependent, double tolerance = Vector3.EPSILON)
+        public int GetHashCode(bool directionDependent, double tolerance = Vector3.EPSILON)
         {
             var obj = this;
             // If the direction doesn't matter, then we always sort the end points by X, then Y, then Z to have a consistent basis for forming the hash code.
-            if (directionIndependent)
+            if (!directionDependent)
             {
                 if (Start.X != End.X)
                 {
@@ -833,15 +833,15 @@ namespace Elements.Geometry
     public class LineComparer : IEqualityComparer<Line>
     {
         private double _tolerance = 5;
-        private bool _directionIndependent = true;
+        private bool _directionDependent = true;
 
         /// <summary>
         /// Construct a comparer setting wether the direction matters and optionally the tolerance.
         /// </summary>
-        public LineComparer(bool directionIndependent, double tolerance = Vector3.EPSILON)
+        public LineComparer(bool directionDependant, double tolerance = Vector3.EPSILON)
         {
             _tolerance = tolerance;
-            _directionIndependent = directionIndependent;
+            _directionDependent = directionDependant;
         }
 
         /// <summary>
@@ -849,7 +849,7 @@ namespace Elements.Geometry
         /// </summary>
         public bool Equals(Line a, Line b)
         {
-            return a.IsAlmostEqualTo(b, _directionIndependent, _tolerance);
+            return a.IsAlmostEqualTo(b, _directionDependent, _tolerance);
         }
 
         /// <summary>
@@ -857,7 +857,7 @@ namespace Elements.Geometry
         /// </summary>
         public int GetHashCode(Line line)
         {
-            return line.GetHashCode(_directionIndependent, _tolerance);
+            return line.GetHashCode(_directionDependent, _tolerance);
         }
     }
 }

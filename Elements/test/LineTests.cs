@@ -41,12 +41,12 @@ namespace Elements.Geometry.Tests
             Assert.Equal(lineA, lineC);
             Assert.NotEqual(lineA, lineA.Reversed());
 
-            var standardComparer = new LineComparer();
+            var standardComparer = new LineComparer(false);
             Assert.NotEqual(lineA, lineB, standardComparer);
             Assert.Equal(lineA, lineC, standardComparer);
             Assert.Equal(lineA, lineA.Reversed(), standardComparer);
 
-            var pickyComparer = new LineComparer(false, 1E-7);
+            var pickyComparer = new LineComparer(true, 1E-7);
             Assert.NotEqual(lineA, lineB, pickyComparer);
             Assert.NotEqual(lineA, lineC, pickyComparer);
             Assert.NotEqual(lineA, lineA.Reversed(), pickyComparer);
