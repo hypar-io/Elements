@@ -53,6 +53,7 @@ namespace Elements.Geometry.Tests
 
             // Check that a line will succeed in creating identical hashcode even if the two endpoints are equidistant from origin
             var lineD = new Line(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+            Assert.Equal(lineD.Start.DistanceTo(Vector3.Origin), lineD.End.DistanceTo(Vector3.Origin));
             var h1 = comparer.GetHashCode(lineD);
             var h2 = comparer.GetHashCode(lineD.Reversed());
             Assert.Equal(h1, h2);
