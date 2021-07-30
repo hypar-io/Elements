@@ -42,7 +42,7 @@ namespace Elements.Geometry
         public int GetHashCode(double precision)
         {
             var alt = 17;
-            var rounded = new Vector3(Math.Round(X / precision) * precision, Math.Round(Y / precision) * precision, Math.Round(Z / precision) * precision);
+            var rounded = Rounded(precision);
             alt = alt * 23 + rounded.X.GetHashCode();
             alt = alt * 23 + rounded.Y.GetHashCode();
             alt = alt * 23 + rounded.Z.GetHashCode();
@@ -150,6 +150,14 @@ namespace Elements.Geometry
                 return this;
             }
             return new Vector3(X / length, Y / length, Z / length);
+        }
+
+        /// <summary>
+        /// Return the Vector3 with its values rounded to the default EPSILON or the provided precision.
+        /// </summary>
+        public Vector3 Rounded(double precision = EPSILON)
+        {
+            return new Vector3(Math.Round(X / precision) * precision, Math.Round(Y / precision) * precision, Math.Round(Z / precision) * precision);
         }
 
         /// <summary>

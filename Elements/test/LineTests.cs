@@ -30,6 +30,35 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Equality()
+        {
+            var p = new Vector3(1, 1, 1);
+            var lineA = new Line(Vector3.Origin, p);
+            var lineB = new Line(Vector3.Origin, p + new Vector3(1E-4, 1E-4, 1E-4));
+            var lineC = new Line(Vector3.Origin, p + new Vector3(1E-6, 1E-6, 1E-6));
+
+            Assert.NotEqual(lineA, lineB);
+            Assert.Equal(lineA, lineC);
+            Assert.NotEqual(lineA, lineA.Reversed());
+
+            var standardComparer = new LineComparer();
+            Assert.NotEqual(lineA, lineB, standardComparer);
+            Assert.Equal(lineA, lineC, standardComparer);
+            Assert.Equal(lineA, lineA.Reversed(), standardComparer);
+
+            var pickyComparer = new LineComparer(false, 1E-7);
+            Assert.NotEqual(lineA, lineB, pickyComparer);
+            Assert.NotEqual(lineA, lineC, pickyComparer);
+            Assert.NotEqual(lineA, lineA.Reversed(), pickyComparer);
+
+            // Check that a line will succeed in creating identical hashcode even if the two endpoints are equidistant from origin
+            var lineD = new Line(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
+            var h1 = standardComparer.GetHashCode(lineD);
+            var h2 = standardComparer.GetHashCode(lineD.Reversed());
+            Assert.Equal(h1, h2);
+        }
+
+        [Fact]
         public void Construct()
         {
             var a = new Vector3();

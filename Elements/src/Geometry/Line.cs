@@ -773,6 +773,73 @@ namespace Elements.Geometry
             Descending
         }
         #endregion
+    }
 
+    /// <summary>
+    /// Geometric line comparer for use in HashSets and Dictionaries.
+    /// </summary>
+    public class LineComparer : IEqualityComparer<Line>
+    {
+        private double _precision = 5;
+        private bool _directionIndependent = true;
+
+        /// <summary>
+        /// Create a comparer setting wether this comparer cares about direction and also the precision.
+        /// </summary>
+        public LineComparer(bool directionIndependent = true, double precision = Vector3.EPSILON)
+        {
+            _precision = precision;
+            _directionIndependent = directionIndependent;
+        }
+
+        /// <summary>
+        /// Are the two lines equal according to the LineComparer settings.
+        /// </summary>
+        public bool Equals(Line x, Line y)
+        {
+            return (x.Start.IsAlmostEqualTo(y.Start, _precision) && x.End.IsAlmostEqualTo(y.End, _precision))
+                    || (_directionIndependent
+                        && (x.Start.IsAlmostEqualTo(y.End, _precision) && x.End.IsAlmostEqualTo(y.Start, _precision)));
+        }
+
+        /// <summary>
+        /// Retrieve a hashcode for this line that is consistent with the precision and direction dependance.
+        /// </summary>
+        public int GetHashCode(Line obj)
+        {
+            // If the direction doesn't matter, then we always sort the end points by X, then Y, then Z to have a consistent basis for forming the hash code.
+            if (_directionIndependent)
+            {
+                if (obj.Start.X != obj.End.X)
+                {
+                    if (obj.Start.X > obj.End.X)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else if (obj.Start.Y != obj.End.Y)
+                {
+                    if (obj.Start.Y > obj.End.Y)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else if (obj.Start.Z != obj.End.Z)
+                {
+                    if (obj.Start.Z > obj.End.Z)
+                    {
+                        obj = obj.Reversed();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Invalid line, start and end are identical, cannot create hashcode");
+                }
+            }
+            int hash = 17;
+            hash = hash * 23 + obj.Start.Rounded(_precision).GetHashCode();
+            hash = hash * 23 + obj.End.Rounded(_precision).GetHashCode();
+            return hash;
+        }
     }
 }
