@@ -1,20 +1,8 @@
-# Changelog
-
-## 0.9.3
-
-### Added
-
-- Support for DXF from many basic elements.
-
-### Changed
-
-- Added `Symbols` property to `ContentElement`.
-- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
-
 ## 0.9.2
 
 ### Added
 
+- Support for DXF from many basic elements.
 - `Polyline.Split(List<Vector3> point)`
 - `Polygon.Split(List<Vector3> point)`
 - `Polygon.TrimmedTo(List<Polygon> polygons)`
@@ -41,6 +29,8 @@
 ### Changed
 
 - Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+- Added `Symbols` property to `ContentElement`.
+- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
 
 ### Fixed
 
