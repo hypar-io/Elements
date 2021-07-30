@@ -191,20 +191,9 @@ namespace Elements.Geometry
         public bool Intersects(Polygon polygon, out Vector3 result)
         {
             var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
-            if (Intersects(plane, out Vector3 intersection))
+            if (Intersects(plane, out result))
             {
-                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
-                var transformFromPolygon = new Transform(transformToPolygon);
-                transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<Line> curveList = polygon.Segments();
-                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
-
-                if (Polygon.Contains(curveList, transformedIntersection, out _))
-                {
-                    result = intersection;
-                    return true;
-                }
+                return polygon.Contains3D(result);
             }
             result = default(Vector3);
             return false;
