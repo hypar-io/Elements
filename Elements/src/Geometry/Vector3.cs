@@ -33,7 +33,7 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return this.GetHashCode(EPSILON);
+            return GetHashCode(EPSILON);
         }
 
         /// <summary>

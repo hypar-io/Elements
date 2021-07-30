@@ -25,12 +25,18 @@
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
 - `Profile.Offset()`
+- IEqualityComparer for line with corresponding tests.
+- IEqualityComparer for triangle with corresponding tests.
+- Line IsApproximatelyEqual and HashCode with optional tolerance.
+- Triangle IsApproximatelyEqual and HashCode with optional tolerance.
 
 ### Changed
 
 - Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
 - Added `Symbols` property to `ContentElement`.
 - Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
+- Improve speed of Vector3 hashing, and allow specifying tolerance.
+- Make Vector3Comparer public
 
 ### Fixed
 
