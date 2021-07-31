@@ -321,6 +321,40 @@ namespace Elements.Tests
             var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
             this.Model.AddElement(i);
         }
+
+        [Fact]
+        public void Difference()
+        {
+            this.Name = nameof(Difference);
+            var r = new Transform();
+            var a = new Mass(Polygon.Rectangle(5, 5), 5);
+            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+            var s = SolidBoolean.Difference(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
+
+            Assert.Equal(9, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void Intersection()
+        {
+            this.Name = nameof(Intersection);
+            var r = new Transform();
+            var a = new Mass(Polygon.Rectangle(5, 5), 5);
+            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+            var s = SolidBoolean.Intersection(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
+
+            Assert.Equal(6, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
     }
 
 }
