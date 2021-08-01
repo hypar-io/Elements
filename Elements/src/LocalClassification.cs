@@ -1,6 +1,6 @@
 namespace Elements
 {
-    internal enum LocalClassification
+    public enum LocalClassification
     {
         Outside, Inside
     }
