@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 
 namespace Elements.Spatial.CellComplex
@@ -20,9 +22,7 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         public double Tolerance = Vector3.EPSILON;
 
-        private ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
-
-        private ulong _directedEdgeId = 1; // we start at 1 because 0 is returned as default value from dicts
+        internal ulong _edgeId = 1; // we start at 1 because 0 is returned as default value from dicts
 
         private ulong _vertexId = 1; // we start at 1 because 0 is returned as default value from dicts
 
@@ -51,12 +51,6 @@ namespace Elements.Spatial.CellComplex
         private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
-        /// DirectedEdges by ID.
-        /// </summary>
-        [JsonProperty]
-        private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
-
-        /// <summary>
         /// Faces by ID.
         /// </summary>
         [JsonProperty]
@@ -77,9 +71,6 @@ namespace Elements.Spatial.CellComplex
         // See Edge.GetHash for how faces are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
-        // Same as edgesLookup, with an addition level of dictionary for whether lesserVertexId is the start point or not
-        private Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>> _directedEdgesLookup = new Dictionary<(ulong, ulong), Dictionary<Boolean, ulong>>();
-
         // See Face.GetHash for how faces are identified as unique.
         private Dictionary<string, ulong> _facesLookup = new Dictionary<string, ulong>();
 
@@ -99,7 +90,6 @@ namespace Elements.Spatial.CellComplex
         /// <param name="_vertices"></param>
         /// <param name="_orientations"></param>
         /// <param name="_edges"></param>
-        /// <param name="_directedEdges"></param>
         /// <param name="_faces"></param>
         /// <param name="_cells"></param>
         /// <returns></returns>
@@ -110,7 +100,6 @@ namespace Elements.Spatial.CellComplex
             Dictionary<ulong, Vertex> _vertices,
             Dictionary<ulong, Vertex> _orientations,
             Dictionary<ulong, Edge> _edges,
-            Dictionary<ulong, DirectedEdge> _directedEdges,
             Dictionary<ulong, Face> _faces,
             Dictionary<ulong, Cell> _cells
         ) : base(id, name)
@@ -128,18 +117,9 @@ namespace Elements.Spatial.CellComplex
 
             foreach (var edge in _edges.Values)
             {
-                if (!this.AddEdge(new List<ulong>() { edge.StartVertexId, edge.EndVertexId }, edge.Id, out var addedEdge))
+                if (!this.AddEdge(edge.Id, out var addedEdge, edge.StartVertexId, edge.EndVertexId))
                 {
                     throw new Exception("Duplicate edge ID found");
-                }
-            }
-
-            foreach (var directedEdge in _directedEdges.Values)
-            {
-                var edge = this.GetEdge(directedEdge.EdgeId);
-                if (!this.AddDirectedEdge(edge, edge.StartVertexId == directedEdge.StartVertexId, directedEdge.Id, out var addedDirectedEdge))
-                {
-                    throw new Exception("Duplicate directed edge ID found");
                 }
             }
 
@@ -225,25 +205,44 @@ namespace Elements.Spatial.CellComplex
         /// <param name="u">Orientation of U axis.</param>
         /// <param name="v">Orientation of V axis.</param>
         /// <returns>The created Face.</returns>
-        private Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
+        internal Face AddFace(Polygon polygon, Orientation u = null, Orientation v = null)
         {
             this.AddFace(polygon, this._faceId, u, v, out var face);
             return face;
         }
 
         /// <summary>
-        /// Add a DirectedEdge to the CellComplex.
+        /// Add an edge to the cell complex.
         /// </summary>
-        /// <param name="line">Line with Start and End in the expected direction.</param>
-        /// <returns>The created DirectedEdge.</returns>
-        private DirectedEdge AddDirectedEdge(Line line)
+        /// <param name="line">Line with start and end in the expected direction.</param>
+        /// <returns>A new edge, or null if an edge could not be created.</returns>
+        internal Edge AddEdge(Line line)
         {
             var points = new List<Vector3>() { line.Start, line.End };
             var vertices = points.Select(vertex => this.AddVertexOrOrientation<Vertex>(vertex)).ToList();
-            this.AddEdge(vertices.Select(v => v.Id).ToList(), this._edgeId, out var edge);
-            var dirMatchesEdge = vertices[0].Id == edge.StartVertexId;
-            this.AddDirectedEdge(edge, dirMatchesEdge, this._directedEdgeId, out var directedEdge);
-            return directedEdge;
+            if (this.AddEdge(vertices.Select(v => v.Id).ToList(), this._edgeId, out var edge))
+            {
+                return edge;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Add an edge to the cell complex.
+        /// </summary>
+        /// <param name="start">The start of the edge.</param>
+        /// <param name="end">The end of the edge.</param>
+        /// <returns>A new edge, or null if an edge could not be created.</returns>
+        private Edge AddEdge(Vector3 start, Vector3 end)
+        {
+            var v1 = this.AddVertexOrOrientation<Vertex>(start);
+            var v2 = this.AddVertexOrOrientation<Vertex>(end);
+
+            // TODO: This really should use the if(this.AddEdge...) pattern,
+            // but the internal method returns false if an edge exists, while
+            // also returning the edge.
+            this.AddEdge(this._edgeId, out var edge, v1.Id, v2.Id);
+            return edge;
         }
 
         /// <summary>
@@ -287,24 +286,26 @@ namespace Elements.Spatial.CellComplex
         private Boolean AddFace(Polygon polygon, ulong idIfNew, Orientation u, Orientation v, out Face face)
         {
             var lines = polygon.Segments();
-            var directedEdges = new List<DirectedEdge>();
-            foreach (var line in lines)
+            var edges = new List<Edge>();
+            for (var i = 0; i < polygon.Vertices.Count; i++)
             {
-                directedEdges.Add(this.AddDirectedEdge(line));
+                var a = polygon.Vertices[i];
+                var b = i == polygon.Vertices.Count - 1 ? polygon.Vertices[0] : polygon.Vertices[i + 1];
+                edges.Add(this.AddEdge(a, b));
             }
 
-            var hash = Face.GetHash(directedEdges);
+            var hash = Face.GetHash(edges);
 
             if (!this._facesLookup.TryGetValue(hash, out var faceId))
             {
-                face = new Face(this, idIfNew, directedEdges, u, v);
+                face = new Face(this, idIfNew, edges, u, v);
                 faceId = face.Id;
                 this._facesLookup.Add(hash, faceId);
                 this._faces.Add(faceId, face);
 
-                foreach (var directedEdge in directedEdges)
+                foreach (var edge in edges)
                 {
-                    directedEdge.Faces.Add(face);
+                    edge.Faces.Add(face);
                 }
 
                 this._faceId = Math.Max(idIfNew + 1, this._faceId + 1);
@@ -318,53 +319,13 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// The lowest-level method to add a DirectedEdge: all other AddDirectedEdge methods will eventually call this one.
-        /// </summary>
-        /// <param name="edge"></param>
-        /// <param name="edgeTupleIsInOrder"></param>
-        /// <param name="idIfNew"></param>
-        /// <param name="directedEdge"></param>
-        /// <returns>Whether the directedEdge was successfully added. Will be false if idIfNew already exists.</returns>
-        private Boolean AddDirectedEdge(Edge edge, Boolean edgeTupleIsInOrder, ulong idIfNew, out DirectedEdge directedEdge)
-        {
-            var edgeTuple = (edge.StartVertexId, edge.EndVertexId);
-
-            if (!this._directedEdgesLookup.TryGetValue(edgeTuple, out var directedEdgeDict))
-            {
-                directedEdgeDict = new Dictionary<bool, ulong>();
-                this._directedEdgesLookup.Add(edgeTuple, directedEdgeDict);
-            }
-
-            if (!directedEdgeDict.TryGetValue(edgeTupleIsInOrder, out var directedEdgeId))
-            {
-                directedEdge = new DirectedEdge(this, idIfNew, edge, edgeTupleIsInOrder);
-                directedEdgeId = directedEdge.Id;
-
-                directedEdgeDict.Add(edgeTupleIsInOrder, directedEdgeId);
-                this._directedEdges.Add(directedEdgeId, directedEdge);
-
-                edge.DirectedEdges.Add(directedEdge);
-
-                this._directedEdgeId = Math.Max(directedEdgeId + 1, this._directedEdgeId + 1);
-
-                return true;
-            }
-            else
-            {
-                this._directedEdges.TryGetValue(directedEdgeId, out directedEdge);
-
-                return false;
-            }
-        }
-
-        /// <summary>
         /// The lowest-level method to add an Edge: all other AddEdge methods will eventually call this one.
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <param name="idIfNew"></param>
         /// <param name="edge"></param>
         /// <returns>Whether the edge was successfully added. Will be false if idIfNew already exists.</returns>
-        private Boolean AddEdge(List<ulong> vertexIds, ulong idIfNew, out Edge edge)
+        internal Boolean AddEdge(IList<ulong> vertexIds, ulong idIfNew, out Edge edge)
         {
             var hash = Edge.GetHash(vertexIds);
 
@@ -388,6 +349,37 @@ namespace Elements.Spatial.CellComplex
                 this._edges.TryGetValue(edgeId, out edge);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Add an edge.
+        /// </summary>
+        /// <param name="edge">The new or existing edge.</param>
+        /// <param name="vertexIds">The vertex ids of the edge.</param>
+        /// <returns>True if an edge was added successfully, otherwise false.</returns>
+        internal Boolean AddEdge(out Edge edge, params ulong[] vertexIds)
+        {
+            if (AddEdge(vertexIds, this._edgeId, out edge))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Add an edge.
+        /// </summary>
+        /// <param name="id">The id of the edge.</param>
+        /// <param name="edge">The new or existing edge.</param>
+        /// <param name="vertexIds">The vertex ids of the edge.</param>
+        /// <returns>True if an edge was added successfully, otherwise false.</returns>
+        internal Boolean AddEdge(ulong id, out Edge edge, params ulong[] vertexIds)
+        {
+            if (AddEdge(vertexIds, id, out edge))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -424,7 +416,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="point">This represents the point in space if this is a Vertex, or the orientation vector if it is an Orientation.</param>
         /// <typeparam name="T">Vertex or Orientation.</typeparam>
         /// <returns>The created or existing Vertex or Orientation.</returns>
-        private T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase<T>
+        internal T AddVertexOrOrientation<T>(Vector3 point) where T : VertexBase<T>
         {
             var newId = typeof(T) == typeof(Orientation) ? this._orientationId : this._vertexId;
             var dict = GetVertexOrOrientationDictionary<T>();
@@ -536,12 +528,15 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get a Edge by its ID.
         /// </summary>
-        /// <param name="edgeId"></param>
-        /// <returns></returns>
+        /// <param name="edgeId">The id of the edge.</param>
+        /// <returns>An edge if one can be found, otherwise null.</returns>
         public Edge GetEdge(ulong edgeId)
         {
-            this._edges.TryGetValue(edgeId, out var edge);
-            return edge;
+            if (this._edges.TryGetValue(edgeId, out var edge))
+            {
+                return edge;
+            }
+            return null;
         }
 
         /// <summary>
@@ -556,16 +551,20 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get a Face by its ID.
         /// </summary>
-        /// <param name="faceId"></param>
-        /// <returns></returns>
+        /// <param name="faceId">The id of the face.</param>
+        /// <returns>A face if one can be found for the specified id,
+        /// otherwise null.</returns>
         public Face GetFace(ulong? faceId)
         {
             if (faceId == null)
             {
                 return null;
             }
-            this._faces.TryGetValue((ulong)faceId, out var face);
-            return face;
+            if (this._faces.TryGetValue((ulong)faceId, out var face))
+            {
+                return face;
+            }
+            return null;
         }
 
         /// <summary>
@@ -580,12 +579,15 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get a Cell by its ID.
         /// </summary>
-        /// <param name="cellId"></param>
-        /// <returns></returns>
+        /// <param name="cellId">The id of the cell.</param>
+        /// <returns>A cell if one exists for the specified id, otherwise null.</returns>
         public Cell GetCell(ulong cellId)
         {
-            this._cells.TryGetValue(cellId, out var cell);
-            return cell;
+            if (this._cells.TryGetValue(cellId, out var cell))
+            {
+                return cell;
+            }
+            return null;
         }
 
         /// <summary>
@@ -635,26 +637,6 @@ namespace Elements.Spatial.CellComplex
         public Cell GetClosestCell(Vector3 point)
         {
             return Cell.GetClosest<Cell>(this.GetCells(), point);
-        }
-
-        /// <summary>
-        /// Get a DirectedEdge by its ID.
-        /// </summary>
-        /// <param name="directedEdgeId"></param>
-        /// <returns></returns>
-        internal DirectedEdge GetDirectedEdge(ulong directedEdgeId)
-        {
-            this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
-            return directedEdge;
-        }
-
-        /// <summary>
-        /// Get all DirectedEdges.
-        /// </summary>
-        /// <returns></returns>
-        internal List<DirectedEdge> GetDirectedEdges()
-        {
-            return this._directedEdges.Values.ToList();
         }
 
         /// <summary>
@@ -791,6 +773,751 @@ namespace Elements.Spatial.CellComplex
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Construct model elements to visualize the cell complex.
+        /// </summary>
+        /// <param name="debug">If true, vertices and edge directions will be visualized.</param>
+        /// <returns>A collection of elements.</returns>
+        public List<Element> ToModelElements(bool debug = false)
+        {
+            var elements = new List<Element>();
+
+            var r = new Random();
+
+            var cells = this.GetCells();
+            var mesh = new Mesh();
+            if (cells.Any())
+            {
+                foreach (var c in this.GetCells())
+                {
+                    // if (debug)
+                    // {
+                    //     var avg = c.GetVertices().Select(v => v.Value).ToList().Average();
+                    //     elements.Add(Draw.Text($"Cell:{c.Id}", avg, Vector3.ZAxis, 5));
+                    // }
+
+                    var color = r.NextColor();
+                    foreach (var f in c.GetFaces())
+                    {
+                        DrawFace(ref mesh, f, color, elements, debug);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var f in this.GetFaces())
+                {
+                    var color = r.NextColor();
+                    DrawFace(ref mesh, f, color, elements, debug);
+                }
+            }
+
+            mesh.ComputeNormals();
+            elements.Add(new MeshElement(mesh, new Material("Cells", new Color(1.0, 1.0, 1.0, 0.5), doubleSided: true, unlit: true)));
+
+            if (!debug)
+            {
+                return elements;
+            }
+
+            foreach (var v in this._vertices)
+            {
+                elements.Add(Draw.Cube(v.Value.Value, v.Key.ToString(), BuiltInMaterials.YAxis, 0.1));
+            }
+
+            var offset = 0.5;
+
+            foreach (var v in this._vertices)
+            {
+                elements.Add(Draw.Text($"Vertex:{v.Value.Id}\nFaces: {string.Join(",", v.Value.GetFaces().Select(f => f.Id.ToString()))}", v.Value.Value, Vector3.ZAxis));
+            }
+
+            foreach (var e in this._edges)
+            {
+                var m = BuiltInMaterials.Default;
+                if (e.Value.Faces.Count == 1)
+                {
+                    m = BuiltInMaterials.XAxis;
+                }
+                else if (e.Value.Faces.Count == 2)
+                {
+                    m = BuiltInMaterials.YAxis;
+                }
+                else if (e.Value.Faces.Count > 2)
+                {
+                    m = BuiltInMaterials.ZAxis;
+                }
+                var de = e.Value;
+                var a1 = GetVertex(de.StartVertexId).Value;
+                var b1 = GetVertex(de.EndVertexId).Value;
+                var d1 = (b1 - a1).Unitized();
+                var t = new Transform(a1 + d1 * a1.DistanceTo(b1) / 2, d1);
+                var o = a1.DistanceTo(b1) < 2 * offset ? 0.0 : offset;
+                elements.AddRange(Draw.Arrow(new Line(a1 + d1 * o, b1 - d1 * o), m, 0.05, 0.3));
+
+                elements.Add(Draw.Text($"Edge:{e.Value.Id}\nFaces: {string.Join(",", e.Value.GetFaces().Select(f => f.Id.ToString()))}", t.Origin, t.XAxis));
+            }
+
+            return elements;
+        }
+
+        private void DrawFace(ref Mesh mesh, Face f, Color color, List<Element> elements, bool debug)
+        {
+            if (f == null)
+            {
+                return;
+            }
+            var p = f.GetGeometry();
+            Solid.TessellateInternal(p.ToContourVertexArray(), null, p.Normal(), ref mesh, color: color);
+
+            if (debug)
+            {
+                elements.Add(Draw.Text($"Face:{f.Id}", p.PointInternal(), p.Normal(), 3));
+            }
+        }
+
+        /// <summary>
+        /// Remove a face from the cell complex.
+        /// </summary>
+        /// <param name="face">The face to remove.</param>
+        public void RemoveFace(Face face)
+        {
+            var edges = face.GetEdges();
+            var hash = Face.GetHash(edges);
+            foreach (var e in edges)
+            {
+                e.Faces.Remove(face);
+            }
+
+            if (!this._facesLookup.Remove(hash))
+            {
+                // throw new Exception("The face could not be removed. The id was not found.");
+            }
+
+            this._faces.Remove(face.Id);
+
+            foreach (var c in face.GetCells())
+            {
+                c.FaceIds.Remove(face.Id);
+                if (c.BottomFaceId == face.Id)
+                {
+                    c.BottomFaceId = null;
+                }
+                else if (c.TopFaceId == face.Id)
+                {
+                    c.TopFaceId = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove an edge from the cell complex.
+        /// </summary>
+        /// <param name="edge">The edge to remove.</param>
+        public void RemoveEdge(Edge edge)
+        {
+            foreach (var f in edge.GetFaces())
+            {
+                f.EdgeIds.Remove(edge.Id);
+            }
+
+            foreach (var v in edge.GetVertices())
+            {
+                v.Edges.Remove(edge);
+            }
+
+            RemoveEdgeFromLookup(edge);
+        }
+
+        /// <summary>
+        /// Split the face with a polyline.
+        /// If the face is adjacent to the polyline, the method will 
+        /// return true and the vertex collection will correspond 
+        /// with the result if the polygon had been split.
+        /// </summary>
+        /// <param name="face">The face to split.</param>
+        /// <param name="poly">The trimming polyline.</param>
+        /// <param name="faces">A collection of faces resulting from the split.</param>
+        /// <param name="newExternalVertices">A collection of new vertices created
+        /// by this operation, which lie on the boundary of the original face.</param>
+        /// <param name="newInternalVertices">A collection of new vertices created 
+        /// by this operation, which are internal to the original face.</param>
+        /// Set this value to false when you know that external split vertices on
+        /// the target face have already been created.</param>
+        /// <returns>True if a split occurred or the face is adjcent
+        /// to the splitting polyline, otherwise false.</returns>
+        public bool TrySplitFace(Face face,
+                                 Polygon poly,
+                                 out List<Face> faces,
+                                 out Dictionary<ulong, Vertex> newExternalVertices,
+                                 out Dictionary<ulong, Vertex> newInternalVertices,
+                                 bool intersectPerimeter = true)
+        {
+            newExternalVertices = new Dictionary<ulong, Vertex>();
+            newInternalVertices = new Dictionary<ulong, Vertex>();
+
+            // TODO: Get rid of this conversion and intersect
+            // the edges directly. Directionality doesn't matter!
+            var a = face.GetGeometry();
+            var b = new Polygon(poly.Vertices);
+
+            var edges = face.GetEdges();
+            var originalFaceHash = Face.GetHash(edges);
+
+            // Non-destructive edge splitting.
+            if (a.Intersects2d(b, out List<(Vector3 result, int aSegmentIndex, int bSegmentIndex)> results, intersectPerimeter))
+            {
+                var groupedResults = results.GroupBy(r => r.aSegmentIndex).ToList();
+                foreach (var group in groupedResults)
+                {
+                    var segmentId = group.Key;
+
+                    var locations = group.Select(r => r.result).ToList();
+
+                    foreach (var result in group)
+                    {
+                        var from = a.Vertices[segmentId];
+                        var to = a.Vertices[segmentId == a.Vertices.Count - 1 ? 0 : segmentId + 1];
+
+                        var e = MatchEdge(edges, from, to);
+
+                        if (e != null)
+                        {
+                            var vertices = new List<Vertex>();
+                            var splitEdges = new List<Edge>();
+                            if (TrySplitEdge(e, locations, vertices, splitEdges))
+                            {
+                                foreach (var v in vertices)
+                                {
+                                    newExternalVertices.Add(v.Id, v);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Split the reference polygons for set building.
+                var allLocations = groupedResults.SelectMany(g => g.Select(r => r.result)).ToList();
+                a.Split(allLocations);
+                b.Split(allLocations);
+            }
+            else
+            {
+                faces = null;
+                newExternalVertices = null;
+                newInternalVertices = null;
+                return false;
+            }
+
+            var set = SetOperations.ClassifySegments2d(a, b, ((Vector3, Vector3, SetClassification classification) e) =>
+            {
+                // Keep only the segments that we care about.
+                return e.classification == SetClassification.AInsideB || e.classification == SetClassification.BInsideA || e.classification == SetClassification.AOutsideB;
+            });
+
+            var newInternalEdges = new List<Edge>();
+            // Classify the shared points and add new edges.
+            foreach (var e in set.Where(e => e.classification == SetClassification.BInsideA))
+            {
+                var from = this.AddVertexOrOrientation<Vertex>(e.from);
+                var to = this.AddVertexOrOrientation<Vertex>(e.to);
+
+                if (!newExternalVertices.ContainsKey(from.Id))
+                {
+                    if (!newInternalVertices.ContainsKey(from.Id))
+                    {
+                        newInternalVertices.Add(from.Id, from);
+                    }
+                }
+
+                if (!newExternalVertices.ContainsKey(to.Id))
+                {
+                    if (!newInternalVertices.ContainsKey(to.Id))
+                    {
+                        newInternalVertices.Add(to.Id, to);
+                    }
+                }
+
+                var newInternalEdge = AddEdge(e.from, e.to);
+                newInternalEdges.Add(newInternalEdge);
+            }
+
+            // Update the has because the edges have changed.
+            if (this._facesLookup.Remove(originalFaceHash))
+            {
+                this._facesLookup.Add(Face.GetHash(face.GetEdges()), face.Id);
+            }
+
+            // TODO: Investigate how we can skip polygonization.
+            var graph = SetOperations.BuildGraph(set, SetClassification.BInsideA);
+            var splitPolys = graph.Polygonize();
+
+            faces = new List<Face>();
+
+            // Update the edges for all the newly split edges.
+            edges = face.GetEdges().Concat(newInternalEdges).ToList();
+
+            var faceCells = face.GetCells();
+            foreach (var p in splitPolys)
+            {
+                // var f = this.AddFace(p);
+                var f = GetOrBuildFaceFromExistingEdges(p, edges);
+                faces.Add(f);
+
+                foreach (var c in faceCells)
+                {
+                    c.FaceIds.Add(f.Id);
+                }
+            }
+
+            this.RemoveFace(face);
+
+            return true;
+        }
+
+        private Face GetOrBuildFaceFromExistingEdges(Polygon p, List<Edge> existingEdges)
+        {
+            var faceEdges = new List<Edge>();
+            for (var i = 0; i < p.Vertices.Count; i++)
+            {
+                var v1 = p.Vertices[i];
+                var v2 = i == p.Vertices.Count - 1 ? p.Vertices[0] : p.Vertices[i + 1];
+                var e = MatchEdge(existingEdges, v1, v2);
+                faceEdges.Add(e);
+            }
+
+            var hash = Face.GetHash(faceEdges);
+
+            Face f;
+            if (this._facesLookup.ContainsKey(hash))
+            {
+                f = this.GetFace(this._facesLookup[hash]);
+            }
+            else
+            {
+                this._faceId++;
+                f = new Face(this, this._faceId, faceEdges);
+                this._facesLookup.Add(hash, f.Id);
+                this._faces.Add(f.Id, f);
+            }
+
+            foreach (var edge in faceEdges)
+            {
+                edge.Faces.Add(f);
+            }
+
+            return f;
+        }
+
+        private Edge MatchEdge(IList<Edge> edges, Vector3 from, Vector3 to)
+        {
+            return edges.FirstOrDefault(e =>
+            {
+                // Match an edge tip <-> tail
+                var eFrom = this.GetVertex(e.StartVertexId).Value;
+                var eTo = this.GetVertex(e.EndVertexId).Value;
+                return (eFrom == from && eTo == to) || (eTo == from && eFrom == to);
+            });
+        }
+
+        /// <summary>
+        /// Split the edge with a plane.
+        /// </summary>
+        /// <param name="edge">The edge to split.</param>
+        /// <param name="plane">The plane which splits the edge.</param>
+        /// <param name="vertex">The vertex at the split.</param>
+        /// <returns>True if the split is successful, otherwise false.</returns>
+        public bool TrySplitEdge(Edge edge, Plane plane, out Vertex vertex)
+        {
+            if (edge.GetGeometry().Intersects(plane, out Vector3 result))
+            {
+                return TrySplitEdge(edge, result, out vertex, out _);
+            }
+            vertex = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Recursively split an edge.
+        /// </summary>
+        /// <param name="edge">The edge to split.</param>
+        /// <param name="pts">The points at which the edge should be split.</param>
+        /// <param name="vertices">A collection of vertices containing all split locations.</param>
+        /// <param name="edges">A collection of edges containing all the edges.</param>
+        /// <returns>True if a split occurred, otherwise false.</returns>
+        public bool TrySplitEdge(Edge edge, IList<Vector3> pts, List<Vertex> vertices, List<Edge> edges)
+        {
+            var initial = vertices.Count;
+            foreach (var pt in pts)
+            {
+                if (TrySplitEdge(edge, pt, out Vertex newVertex, out Edge newEdge))
+                {
+                    vertices.Add(newVertex);
+                    if (edges.Count == 0)
+                    {
+                        edges.Add(edge);
+                    }
+                    edges.Add(newEdge);
+
+                    var testPts = new List<Vector3>(pts);
+                    testPts.Remove(pt);
+                    for (var i = edges.Count - 1; i >= 0; i--)
+                    {
+                        var e = edges[i];
+                        TrySplitEdge(e, testPts, vertices, edges);
+                    }
+                }
+            }
+            return vertices.Count > initial;
+        }
+
+        /// <summary>
+        /// Split the edge with a point.
+        /// </summary>
+        /// <param name="edge">The edge to split.</param>
+        /// <param name="point">The point at which to split the edge.</param>
+        /// <param name="vertex">The vertex at the split.</param>
+        /// <param name="newEdge">The edge that results from this split.</param>
+        /// <returns>True if the split was successful, or false if the specified point
+        /// does not split the edge or the edge could not be split.</returns>
+        public bool TrySplitEdge(Edge edge, Vector3 point, out Vertex vertex, out Edge newEdge)
+        {
+            vertex = null;
+            newEdge = null;
+
+            if (this.GetEdge(edge.Id) == null)
+            {
+                return false;
+            }
+
+            var a = this.GetVertex(edge.StartVertexId);
+            var b = this.GetVertex(edge.EndVertexId);
+
+            if (point.IsAlmostEqualTo(a.Value))
+            {
+                return false;
+            }
+            else if (point.IsAlmostEqualTo(b.Value))
+            {
+                return false;
+            }
+
+            var l = new Line(a.Value, b.Value);
+            if (point.DistanceTo(l, out Vector3 closestPoint) > Vector3.EPSILON)
+            {
+                return false;
+            }
+
+            // |                              |
+            // |            face              |
+            // |                              |
+            // a-------------x----------------b <- Add a new vertex on edge at x.
+            // |                              |    Create a new edge xb.
+            // |                              |
+            // |            face              |
+            // |                              |
+
+            // Add a new vertex to the cell complex
+            var x = this.AddVertexOrOrientation<Vertex>(point);
+            var id1 = this.Id;
+            var id2 = x.Id;
+
+            // Remove this edge from the b collection
+            b.Edges.Remove(edge);
+
+            // Create a new edge from the new vertex
+            // to the existing end vertex.
+            this.AddEdge(this._edgeId, out Edge xb, x.Id, edge.EndVertexId);
+
+            RemoveEdgeFromLookup(edge);
+
+            // Adjust this edge to point to the new vertex.
+            edge.EndVertexId = x.Id;
+
+            AddEdgeToLookup(edge);
+
+            // Add the existing edge to the new vertex's collection.
+            x.Edges.Add(edge);
+
+            // Add this edge to the b collection
+            b.Edges.Add(xb);
+
+            // Add the new edge into the adjacent face collections.
+            foreach (var f in edge.Faces)
+            {
+                f.EdgeIds.Add(xb.Id);
+                xb.Faces.Add(f);
+            }
+
+            newEdge = xb;
+            vertex = x;
+            return true;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public bool TrySplit(Polygon polygon)
+        {
+            var n = polygon.Normal();
+            var candidateFaces = this.GetFaces().Where(f => f.GetGeometry().Normal().IsParallelTo(n));
+            var newFaces = new List<Face>();
+            foreach (var f in candidateFaces)
+            {
+                var p = new Plane(f.GetCentroid(), n);
+                if (TrySplitFace(f, polygon.Project(p), out List<Face> faces, out _, out _))
+                {
+                    newFaces.AddRange(faces);
+                }
+            }
+            return newFaces.Count > 0;
+        }
+
+        /// <summary>
+        /// Split a cell with a polygon.
+        /// </summary>
+        /// <param name="cell">The cell to split.</param>
+        /// <param name="polygon">The polygon which will split this cell.</param>
+        /// <param name="cells">The cells resulting from this split.</param>
+        /// <returns>True if the split was successful, or false if the polygon does
+        /// not split the cell.</returns>
+        public bool TrySplitCell(Cell cell, Polygon polygon, out List<Cell> cells, out List<string> warnings)
+        {
+            cells = new List<Cell>();
+            warnings = new List<string>();
+
+            // For a projection of a polygon, we want all the faces
+            // that are not vertical, grouped by their elevation. For 
+            // most cases this will be a set of lower and upper faces
+            // which match, but in the future this may not be the case.
+            var nonVerticalFaceGroups = cell.GetNonVerticalFaces()
+                                       .GroupBy(f => f.GetCentroid().Z)
+                                       .OrderBy(g => g.Key)
+                                       .ToList();
+
+            var externalVertexGroups = new List<List<Vertex>>();
+            var internalVertexGroups = new List<List<Vertex>>();
+            var splitFaceGroups = new List<List<Face>>();
+
+            // What do we mean by "internal"(i) and "external" (e)
+            // vertices? External vertices are intersections with the
+            // existing face boundaries. Internal vertices are new vertices
+            // that are created from points of the 
+            //        i    i
+            //       / \   /\
+            //      /   \i/  \
+            //     /          \
+            // ---e------------e------ <- existing edge
+            //   /              \
+
+            foreach (var group in nonVerticalFaceGroups)
+            {
+                var trimPolygon = polygon.TransformedPolygon(new Transform(new Vector3(0, 0, group.Key)));
+                var groupFaces = new List<Face>();
+                var externalVertices = new List<Vertex>();
+                var internalVertices = new List<Vertex>();
+                foreach (var face in group)
+                {
+                    if (!this.TrySplitFace(face,
+                                    trimPolygon,
+                                    out List<Face> faces,
+                                    out Dictionary<ulong, Vertex> exVertices,
+                                    out Dictionary<ulong, Vertex> inVertices))
+                    {
+                        continue;
+                    }
+                    externalVertices.AddRange(exVertices.Values);
+                    internalVertices.AddRange(inVertices.Values);
+                    groupFaces.AddRange(faces);
+                }
+                splitFaceGroups.Add(groupFaces);
+                externalVertexGroups.Add(externalVertices.Distinct().ToList());
+                internalVertexGroups.Add(internalVertices.Distinct().ToList());
+            }
+
+            // The following transpose hack is based on the assumption
+            // that non-vertical face splitting, regardless of whether all the
+            // faces are parallel, will result in face "layers" where the faces
+            // align vertically from one to the next. By transposing the data,
+            // we go from "layers" of faces to "columns" of faces, which notionally
+            // represent the bottom and top of the cell.
+            // When cells faces are highly skewed in relation to horizontal
+            // (i.e., almost vertical), the split ordering may differ and this
+            // might explode.
+            var faceGroups = splitFaceGroups.SelectMany(inner => inner.Select((item, index) => new { item, index }))
+                                            .GroupBy(i => i.index, i => i.item)
+                                            .Select(g => g.ToList())
+                                            .ToList();
+
+
+            /*
+            // Split the external faces first, so that the second 
+            // pass which creates the internal faces, has new edges
+            // to find.
+            for (var i = 0; i < externalVertexGroups.Count - 1; i++)
+            {
+                var bottom = externalVertexGroups[i];
+                var top = externalVertexGroups[i + 1];
+                for (var j = 0; j < Math.Min(bottom.Count, top.Count); j++)
+                {
+                    var a = bottom[j];
+                    var b = top.First(v => v.Value.X.ApproximatelyEquals(a.Value.X) && v.Value.Y.ApproximatelyEquals(a.Value.Y));
+                    var candidateFaces = a.GetFaces().Intersect(b.GetFaces());
+                    var pline = new Polyline(new[] { a.Value, b.Value });
+                    foreach (var sideFace in candidateFaces)
+                    {
+                        if (!this.TrySplitFace(sideFace,
+                                              pline,
+                                              out List<Face> sideFaces,
+                                              out Dictionary<ulong, Vertex> newSideExternalVertices,
+                                              out Dictionary<ulong, Vertex> newSideInternalVertices,
+                                              false))
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < internalVertexGroups.Count - 1; i++)
+            {
+                var bottom = internalVertexGroups[i];
+                var top = internalVertexGroups[i + 1];
+
+                // Constrain bottom and top edges to edges contained in this cell.
+                var bottomEdges = bottom.SelectMany(v => v.GetEdges().Where(e => e.GetCells().Contains(cell))).Distinct().ToList();
+                var topEdges = top.SelectMany(v => v.GetEdges().Where(e => e.GetCells().Contains(cell))).Distinct().ToList();
+                foreach (var internalEdge in bottomEdges)
+                {
+                    var a = this.GetVertex(internalEdge.StartVertexId).Value;
+                    var b = this.GetVertex(internalEdge.EndVertexId).Value;
+                    Polygon p = null;
+
+                    // try
+                    // {
+                    // Find the top edge that matches in direction.
+                    foreach (var topEdge in topEdges)
+                    {
+                        var c = this.GetVertex(topEdge.StartVertexId).Value;
+                        var d = this.GetVertex(topEdge.EndVertexId).Value;
+
+                        if (c.X.ApproximatelyEquals(a.X)
+                            && c.Y.ApproximatelyEquals(a.Y)
+                            && d.X.ApproximatelyEquals(b.X)
+                            && d.Y.ApproximatelyEquals(b.Y))
+                        {
+                            // forward
+                            p = new Polygon(a, b, d, c);
+                            break;
+                        }
+                        else if (c.X.ApproximatelyEquals(b.X)
+                            && c.Y.ApproximatelyEquals(b.Y)
+                            && d.X.ApproximatelyEquals(a.X)
+                            && d.Y.ApproximatelyEquals(a.Y))
+                        {
+                            //backward
+                            p = new Polygon(a, b, c, d);
+                            break;
+                        }
+                    }
+                    if (p != null)
+                    {
+                        this.AddFace(p);
+                    }
+                    // }
+                    // catch
+                    // {
+                    //     Console.WriteLine("A face could not be created.");
+                    //     warnings.Add($"Failure to create internal face for edge {internalEdge.Id}");
+                    // }
+                }
+            }
+            */
+
+            for (var i = 0; i < faceGroups.Count; i++)
+            {
+                var faceSet = faceGroups[i];
+                var bottom = faceSet[0];
+                // var sideFaces = bottom.GetEdges().SelectMany(e => e.GetFaces().Where(f => f.GetNormal().IsHorizontal()));
+                // this.AddCell(this._cellId, faceSet.Concat(sideFaces).ToList(), null, null, out Cell newCell);
+                this.AddCell(this._cellId, faceSet.ToList(), null, null, out Cell newCell);
+                cells.Add(newCell);
+            }
+
+            if (cells.Any())
+            {
+                this._cells.Remove(cell.Id);
+            }
+
+            return true;
+        }
+
+        private void RemoveEdgeFromLookup(Edge edge)
+        {
+            var existingHash = Edge.GetHash(new[] { edge.StartVertexId, edge.EndVertexId });
+            this._edgesLookup.Remove(existingHash);
+            this._edges.Remove(edge.Id);
+        }
+
+        private void AddEdgeToLookup(Edge edge)
+        {
+            var newHash = Edge.GetHash(new[] { edge.StartVertexId, edge.EndVertexId });
+            this._edgesLookup[newHash] = edge.Id;
+            this._edges.Add(edge.Id, edge);
+        }
+
+        internal bool HasDuplicateEdges()
+        {
+            var edges = this.GetEdges();
+            foreach (var e in edges)
+            {
+                foreach (var e1 in edges)
+                {
+                    if (e == e1)
+                    {
+                        continue;
+                    }
+
+                    if (e1.StartVertexId == e.StartVertexId && e1.EndVertexId == e.EndVertexId)
+                    {
+                        Console.WriteLine($"Found duplicates {e.Id} and {e1.Id}");
+                        return true;
+                    }
+
+                    if (e1.StartVertexId == e.EndVertexId && e1.EndVertexId == e.StartVertexId)
+                    {
+                        Console.WriteLine($"Found duplicates {e.Id} and {e1.Id}");
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// A string representation of the structure of the cell complex.
+        /// </summary>
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var c in this.GetCells())
+            {
+                var faces = c.GetFaces();
+                sb.AppendLine($"Cell: {c.Id} ({faces.Count} faces)");
+                foreach (var f in faces)
+                {
+                    sb.AppendLine($"\tFace: {f.Id}");
+                    foreach (var e in f.GetEdges())
+                    {
+                        sb.AppendLine($"\t\tEdge: {e.Id},  Vertices: {e.StartVertexId} -> {e.EndVertexId}");
+                    }
+                }
+            }
+            return sb.ToString();
         }
 
     }

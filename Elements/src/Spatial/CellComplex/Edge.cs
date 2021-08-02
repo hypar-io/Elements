@@ -8,16 +8,14 @@ namespace Elements.Spatial.CellComplex
 {
     /// <summary>
     /// A unique edge in a cell complex, regardless of directionality when it comes to face traversal.
-    /// Directional edges for this purpose are in associated DirectedEdges.
-    /// There is a maximum of two DirectedEdges per Edge.
     /// </summary>
     public class Edge : EdgeBase<Edge>, Interfaces.IHasNeighbors<Edge, Line>
     {
         /// <summary>
-        /// DirectedEdges that reference this Edge.
+        /// Faces that reference this Edge.
         /// </summary>
         [JsonIgnore]
-        internal HashSet<DirectedEdge> DirectedEdges = new HashSet<DirectedEdge>();
+        internal HashSet<Face> Faces = new HashSet<Face>();
 
         /// <summary>
         /// Represents a unique Edge within a CellComplex.
@@ -68,9 +66,16 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs.
         /// </summary>
-        /// <param name="vertexIds"></param>
-        /// <returns></returns>
-        internal static string GetHash(List<ulong> vertexIds)
+        /// <param name="vertexIds">A collection containing the vertices of the edge.</param>
+        internal static string GetHash(IList<ulong> vertexIds)
+        {
+            var sortedIds = vertexIds.ToList();
+            sortedIds.Sort();
+            var hash = String.Join(",", sortedIds);
+            return hash;
+        }
+
+        internal static string GetHash(params ulong[] vertexIds)
         {
             var sortedIds = vertexIds.ToList();
             sortedIds.Sort();
@@ -85,15 +90,6 @@ namespace Elements.Spatial.CellComplex
         public List<Vertex> GetVertices()
         {
             return new List<Vertex>() { this.CellComplex.GetVertex(this.StartVertexId), this.CellComplex.GetVertex(this.EndVertexId) };
-        }
-
-        /// <summary>
-        /// Get associated Faces.
-        /// </summary>
-        /// <returns></returns>
-        public List<Face> GetFaces()
-        {
-            return this.GetDirectedEdges().Select(ds => ds.GetFaces()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -155,12 +151,12 @@ namespace Elements.Spatial.CellComplex
         }
 
         /// <summary>
-        /// Get associated DirectedEdges.
+        /// Get associated faces.
         /// </summary>
         /// <returns></returns>
-        internal List<DirectedEdge> GetDirectedEdges()
+        internal List<Face> GetFaces()
         {
-            return this.DirectedEdges.ToList();
+            return this.Faces.ToList();
         }
 
         /// <summary>

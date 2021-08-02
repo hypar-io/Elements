@@ -4,12 +4,24 @@
 
 ### Added
 
+- `CellComplex.TrySplitEdge(Edge edge, Vector3 point, out Vertex vertex)`
+- `CellComplex.TrySplitEdge(Edge edge, Plane plane, out Vertex vertex)`
+- `CellComplex.TrySplitFace(Face face, Polyline poly, out List<Face> faces)`
+- `CellComplex.TrySplitCell(Cell cell, Polygon polygon, out List<Cell> cells)`
+- `Elements.Spatial.CellComplex.Face.GetVerticesUnordered()`
+- `Draw.Cube(Vector3 location, string label, Material material, double size = 0.4)`
+- `Draw.Arrow(Curve curve, Material material, double arrowWidth = 0.1, double arrowLength = 0.3, bool arrowHeadAtStart = false, bool arrowHeadAtEnd = true))`
+- `Draw.Text(string text, Vector3 location, Vector3 direction, double size = 1.0)`
 - Support for DXF from many basic elements.
 
 ### Changed
 
 - Added `Symbols` property to `ContentElement`.
 - Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
+
+### Removed
+
+- Removed `DirectedEdge` class.
 
 ## 0.9.2
 

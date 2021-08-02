@@ -314,17 +314,31 @@ namespace Elements.Geometry
         /// <returns>True if the rays intersect, otherwise false.</returns>
         public bool Intersects(Line line, out Vector3 result)
         {
-            var otherRay = new Ray(line.Start, line.Direction());
+            return Intersects(line.Start, line.End, out result);
+        }
+
+        /// <summary>
+        /// Does this ray intersect a line segment defined by start and end?
+        /// </summary>
+        /// <param name="start">The start of the line segment.</param>
+        /// <param name="end">The end of the line segment.</param>
+        /// <param name="result">The location of the intersection.</param>
+        /// <returns>True if the ray intersects, otherwise false.</returns>
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        {
+            var d = (end - start).Unitized();
+            var l = start.DistanceTo(end);
+            var otherRay = new Ray(start, d);
             if (Intersects(otherRay, out Vector3 rayResult))
             {
                 // Quick out if the result is exactly at the 
                 // start or the end of the line.
-                if (rayResult.IsAlmostEqualTo(line.Start) || rayResult.IsAlmostEqualTo(line.End))
+                if (rayResult.IsAlmostEqualTo(start) || rayResult.IsAlmostEqualTo(end))
                 {
                     result = rayResult;
                     return true;
                 }
-                else if ((rayResult - line.Start).Length() > line.Length())
+                else if ((rayResult - start).Length() > l)
                 {
                     result = default(Vector3);
                     return false;

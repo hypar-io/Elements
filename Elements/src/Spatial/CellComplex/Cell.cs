@@ -17,6 +17,7 @@ namespace Elements.Spatial.CellComplex
         /// In the current implementation of CellComplex, this should always be set.
         /// This may not be the case in the future, if Cells are no longer constrained to vertical extrusions.
         /// </summary>
+        [Obsolete]
         public ulong? BottomFaceId = null;
 
         /// <summary>
@@ -24,6 +25,7 @@ namespace Elements.Spatial.CellComplex
         /// In the current implementation of CellComplex, this should always be set.
         /// This may not be the case in the future, if Cells are no longer constrained to vertical extrusions.
         /// </summary>
+        [Obsolete]
         public ulong? TopFaceId = null;
 
         /// <summary>
@@ -58,8 +60,7 @@ namespace Elements.Spatial.CellComplex
             if (bottomFace != null && topFace != null)
             {
                 var bottom = this.GetBottomFace().GetGeometry();
-                var top = this.GetTopFace().GetGeometry();
-                this._geometry = new Extrude(bottom, top.Centroid().Z - bottom.Centroid().Z, new Vector3(0, 0, 1), false);
+                this._geometry = new Extrude(bottom, topFace.GetCentroid().Z - bottomFace.GetCentroid().Z, new Vector3(0, 0, 1), false);
             }
             this.FaceIds = faces.Select(ds => ds.Id).ToList();
         }
@@ -67,12 +68,20 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Used for deserialization only!
         /// </summary>
-        [JsonConstructor]
         internal Cell(ulong id, List<ulong> faceIds, ulong? bottomFaceId, ulong? topFaceId) : base(id, null)
         {
             this.FaceIds = faceIds;
             this.BottomFaceId = bottomFaceId;
             this.TopFaceId = topFaceId;
+        }
+
+        /// <summary>
+        /// Used for deserialization only!
+        /// </summary>
+        [JsonConstructor]
+        internal Cell(ulong id, List<ulong> faceIds) : base(id, null)
+        {
+            this.FaceIds = faceIds;
         }
 
         /// <summary>
@@ -170,7 +179,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Vertex> GetVertices(Vector3? point = null)
         {
-            return this.GetFaces().Select(f => f.GetVertices()).SelectMany(x => x).Distinct().ToList();
+            return this.GetFaces().Select(f => f.GetVerticesUnordered()).SelectMany(x => x).Distinct().ToList();
         }
 
         /// <summary>
@@ -240,6 +249,27 @@ namespace Elements.Spatial.CellComplex
             var maxCount = this.CellComplex.GetCells().Count;
             Func<Cell, Cell> getNextNeighbor = (Cell curNeighbor) => (curNeighbor.GetClosestNeighbor(target));
             return Cell.TraverseNeighbors(this, maxCount, target, completedRadius, getNextNeighbor);
+        }
+
+        /// <summary>
+        /// Get all faces parallel to the provided vector.
+        /// </summary>
+        /// <param name="normal">The vector for comparison.</param>
+        /// <returns>A collection of faces whose normal is parallel
+        /// to the provided vector.</returns>
+        public List<Face> GetFacesParallelTo(Vector3 normal)
+        {
+            return this.GetFaces().Where(f => f.GetGeometry().Normal().IsParallelTo(normal)).ToList();
+        }
+
+        /// <summary>
+        /// Get all faces that are not vertical.
+        /// </summary>
+        /// <returns>A collection of faces whose normals are
+        /// not horizontal.</returns>
+        public List<Face> GetNonVerticalFaces()
+        {
+            return this.GetFaces().Where(f => !f.GetGeometry().Normal().IsHorizontal()).ToList();
         }
     }
 }

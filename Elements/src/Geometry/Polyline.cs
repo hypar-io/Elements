@@ -798,15 +798,17 @@ namespace Elements.Geometry
 
         protected void Split(IList<Vector3> points, bool closed = false)
         {
-            for (var i = 0; i < this.Vertices.Count; i++)
+            // Make a copy to split against.
+            var original = new Polygon(this.Vertices);
+
+            for (var j = points.Count - 1; j >= 0; j--)
             {
-                var a = this.Vertices[i];
-                var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                var point = points[j];
 
-                for (var j = points.Count - 1; j >= 0; j--)
+                for (var i = 0; i < this.Vertices.Count; i++)
                 {
-                    var point = points[j];
-
+                    var a = this.Vertices[i];
+                    var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                     if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
                     {
                         // The split point is coincident with a vertex.

@@ -110,6 +110,8 @@ docfx -f --serve
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
 - [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
+- [SixLabors.ImageSharp.Drawing](https://github.com/SixLabors/ImageSharp.Drawing)
+- [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
 - [Csg](https://github.com/praeclarum/Csg)
 - [NetOctree](https://github.com/mcserep/NetOctree)

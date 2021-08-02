@@ -5,6 +5,8 @@ using Elements.Spatial;
 using Elements.Spatial.CellComplex;
 using Xunit;
 using System.Linq;
+using Xunit.Abstractions;
+using Vertex = Elements.Spatial.CellComplex.Vertex;
 
 namespace Elements.Tests
 {
@@ -76,6 +78,14 @@ namespace Elements.Tests
             {
                 model.AddElement(new ModelCurve(edge.GetGeometry(), DefaultPanelMaterial));
             }
+        }
+
+        private readonly ITestOutputHelper _output;
+
+        public CellComplexTests(ITestOutputHelper output)
+        {
+            this._output = output;
+            this.GenerateIfc = false;
         }
 
         [Fact, Trait("Category", "Examples")]
@@ -183,13 +193,13 @@ namespace Elements.Tests
                 var faceGeo2 = cellComplexDeserialized.GetFace(face.Id).GetGeometry();
                 this.Model.AddElement(new Panel(faceGeo1, DefaultPanelMaterial));
                 this.Model.AddElement(new Panel(faceGeo2, UMaterial, copyTransform));
-                Assert.True(faceGeo1.Area() == faceGeo2.Area());
+                Assert.Equal(Math.Abs(faceGeo1.Area()), Math.Abs(faceGeo2.Area()), 5);
             }
 
             foreach (var vertex in vertices)
             {
                 var vertexCopy = cellComplexDeserialized.GetVertex(vertex.Id);
-                Assert.True(vertex.Name == vertexCopy.Name);
+                Assert.Equal(vertex.Name, vertexCopy.Name);
             }
         }
 
@@ -251,23 +261,23 @@ namespace Elements.Tests
             var curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().U.GetGeometry() * BIG_NUMBER;
             var curFaceTraversals = baseFace.TraverseNeighbors(curFaceTarget, true);
 
+            Assert.Equal(5, curFaceTraversals.Count);
+
             foreach (var face in curFaceTraversals)
             {
                 this.Model.AddElement(new Panel(face.GetGeometry(), UMaterial));
             }
 
-            Assert.True(curFaceTraversals.Count == 5);
-
             curFaceNeighbor = baseFace;
             curFaceTarget = curFaceNeighbor.GetGeometry().Centroid() + curFaceNeighbor.GetOrientation().V.GetGeometry() * BIG_NUMBER;
             curFaceTraversals = curFaceNeighbor.TraverseNeighbors(curFaceTarget, true);
+
+            Assert.Equal(10, curFaceTraversals.Count);
 
             foreach (var face in curFaceTraversals)
             {
                 this.Model.AddElement(new Panel(face.GetGeometry(), VMaterial));
             }
-
-            Assert.True(curFaceTraversals.Count == 10);
         }
 
         [Fact]
@@ -291,5 +301,323 @@ namespace Elements.Tests
                 this.Model.AddElement(new ModelCurve(edge.GetGeometry(), LineMaterial));
             }
         }
+
+        [Fact]
+        public void SplitEdgesMakesCorrectEdgesAndVertices()
+        {
+            this.Name = nameof(SplitEdgesMakesCorrectEdgesAndVertices);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            cp.AddCell(rect, 10, 0.0);
+
+            Assert.Equal(8, cp.GetVertices().Count);
+            Assert.Equal(12, cp.GetEdges().Count);
+            Assert.Equal(6, cp.GetFaces().Count);
+
+            foreach (var e in cp.GetEdges())
+            {
+                var edge = cp.GetEdge(e.Id);
+                var a = cp.GetVertex(edge.StartVertexId).Value;
+                var b = cp.GetVertex(edge.EndVertexId).Value;
+
+                if (!cp.TrySplitEdge(e, a.Average(b), out Elements.Spatial.CellComplex.Vertex result))
+                {
+                    throw new Exception("Could not split.");
+                }
+
+                Assert.Equal(2, e.GetFaces().Count);
+            }
+
+            Assert.Equal(24, cp.GetEdges().Count);
+
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void SplittingEdgeReconcilesHashes()
+        {
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+
+            var v1 = cp.AddVertexOrOrientation<Vertex>(new Vector3(0, 0, 0));
+            var v2 = cp.AddVertexOrOrientation<Vertex>(new Vector3(5, 0, 0));
+            if (cp.AddEdge(out Edge edge, v1.Id, v2.Id))
+            {
+                var e = cp.GetEdge(edge.Id);
+                Assert.NotNull(edge);
+
+                var existingHash = Edge.GetHash(e.StartVertexId, e.EndVertexId);
+
+                if (cp.TrySplitEdge(e, new Vector3(2.5, 0, 0), out Vertex vertex))
+                {
+                    var hash1 = Edge.GetHash(new[] { v1.Id, vertex.Id });
+                    var hash2 = Edge.GetHash(new[] { vertex.Id, v2.Id });
+                    Assert.NotEqual(existingHash, hash1);
+                    Assert.NotEqual(existingHash, hash2);
+                }
+            }
+        }
+
+        [Fact]
+        public void AddingVertexAtExistingVertexGetsOriginalVertex()
+        {
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var v1 = cp.AddVertexOrOrientation<Vertex>(new Vector3(5, 5, 5));
+            var v2 = cp.AddVertexOrOrientation<Vertex>(new Vector3(5, 5, 5));
+            Assert.Equal(v1.Id, v2.Id);
+        }
+
+        [Fact]
+        public void AddingEdgeOverExistingEdgeGetsOriginalEdge()
+        {
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var v1 = cp.AddVertexOrOrientation<Vertex>(new Vector3(5, 5, 5));
+            var v2 = cp.AddVertexOrOrientation<Vertex>(new Vector3(0, 0, 0));
+            cp.AddEdge(out Edge e1, v1.Id, v2.Id);
+            cp.AddEdge(out Edge e2, v1.Id, v2.Id);
+            Assert.Equal(e1.Id, e2.Id);
+        }
+
+        [Fact]
+        public void AddingReversedEdgeOverExistingEdgeGetsOriginalEdge()
+        {
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var v1 = cp.AddVertexOrOrientation<Vertex>(new Vector3(5, 5, 5));
+            var v2 = cp.AddVertexOrOrientation<Vertex>(new Vector3(0, 0, 0));
+            cp.AddEdge(out Edge e1, v1.Id, v2.Id);
+            cp.AddEdge(out Edge e2, v2.Id, v1.Id);
+            Assert.Equal(e1.Id, e2.Id);
+        }
+
+        [Fact]
+        public void SplitFaceMakesCorrectFacesVerticesAndEdges()
+        {
+            this.Name = nameof(SplitFaceMakesCorrectFacesVerticesAndEdges);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var rect1 = Polygon.Rectangle(new Vector3(5, -5), new Vector3(10, 5));
+            var rect2 = Polygon.Rectangle(new Vector3(-5, -15), new Vector3(5, -5));
+            var rect3 = Polygon.Rectangle(new Vector3(5, -15), new Vector3(10, -5));
+            var rect4 = Polygon.Rectangle(new Vector3(10, -15), new Vector3(20, -5));
+            var face = cp.AddFace(rect);
+            var face1 = cp.AddFace(rect1);
+            var face2 = cp.AddFace(rect2);
+            var face3 = cp.AddFace(rect3);
+            var face4 = cp.AddFace(rect4);
+
+            Assert.Equal(11, cp.GetVertices().Count);
+            Assert.Equal(15, cp.GetEdges().Count);
+            Assert.Equal(5, cp.GetFaces().Count);
+
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+
+            foreach (var f in cp.GetFaces())
+            {
+                cp.TrySplitFace(f, ngon, out var newFaces, out var newExternalVertices, out var newInternalVertices);
+            }
+
+            Assert.False(cp.HasDuplicateEdges());
+
+            // Assert.Equal(20, cp.GetVertices().Count);
+            // Assert.Equal(9, cp.GetFaces().Count);
+            // Assert.Equal(28, cp.GetEdges().Count);
+
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void ResplittingFaceResultsInVertices()
+        {
+            this.Name = nameof(ResplittingFaceResultsInVertices);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+            cp.TrySplitFace(f, ngon, out var newFaces, out _, out _);
+
+            Assert.Equal(2, newFaces.Count);
+
+            foreach (var face in newFaces)
+            {
+                cp.TrySplitFace(face, ngon, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+                Assert.NotEmpty(newExternalVertices);
+                Assert.NotEmpty(newInternalVertices);
+            }
+
+            Assert.False(cp.HasDuplicateEdges());
+
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void SplittingAlmostOnEdgeResultsInThreeCells()
+        {
+            this.Name = nameof(SplittingAlmostOnEdgeResultsInThreeCells);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var poly = new Polygon(new[]{
+                new Vector3(-6, 6),
+                new Vector3(-6, 4),
+                new Vector3(0,-5.00001),
+                new Vector3(6,4),
+                new Vector3(6,6)
+            });
+
+            // This test is only to ensure that we don't throw.
+            // It creates a "bad" face that can't be visualized.
+            cp.TrySplitFace(f, poly, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(3, cp.GetFaces().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyAlignedAlongFaceEdgeSplitsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyAlignedAlongFaceEdgeSplitsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(-2.5, 0)));
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(2, cp.GetFaces().Count);
+            Assert.Equal(9, cp.GetEdges().Count);
+            Assert.Equal(8, cp.GetVertices().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyAlignedToCornerSplitsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyAlignedToCornerSplitsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(-2.5, -2.5)));
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            Assert.Equal(2, cp.GetFaces().Count);
+            Assert.Equal(8, cp.GetEdges().Count);
+            Assert.Equal(7, cp.GetVertices().Count);
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimmingPolyCrossingTrimsCorrectly()
+        {
+            this.Name = nameof(TrimmingPolyCrossingTrimsCorrectly);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var f = cp.AddFace(rect);
+
+            var split = Polygon.Rectangle(5, 20);
+            cp.TrySplitFace(f, split, out var moreNewFaces, out var newExternalVertices, out var newInternalVertices);
+            // TODO: Update this test to get 3 faces when we build 
+            // the half edge graph manually.
+            Assert.Equal(3, cp.GetFaces().Count);
+            this.Model.AddElement(new ModelCurve(split));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void TrimminPolyCrossingTrimsCorrectlyPlanar()
+        {
+            var r = new Random();
+            this.Name = nameof(TrimminPolyCrossingTrimsCorrectlyPlanar);
+            var rect = Polygon.Rectangle(10, 10);
+            var split = Polygon.Rectangle(5, 20);
+            var heg = HalfEdgeGraph2d.Construct(rect, split);
+            foreach (var p in heg.Polygonize())
+            {
+                this.Model.AddElement(new ModelCurve(p));
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+        }
+
+        [Fact]
+        public void SplitCellMakesCorrectNumberOfCells()
+        {
+            this.Name = nameof(SplitCellMakesCorrectNumberOfCells);
+            var cp = new CellComplex(Guid.NewGuid(), "SplitComplex");
+            var rect = Polygon.Rectangle(10, 10);
+            var cell = cp.AddCell(rect, 10, 0.0);
+            Assert.Equal(1, cp.GetCells().Count);
+
+            var ngon = Polygon.Ngon(5, 4).TransformedPolygon(new Transform((3, -3)));
+            cp.TrySplitCell(cell, ngon, out var newCells, out _);
+
+            Assert.False(cp.HasDuplicateEdges());
+
+            Assert.Equal(2, cp.GetCells().Count);
+
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void SplitCellWorksAcrossALargerCellComplex()
+        {
+            this.Name = nameof(SplitCellWorksAcrossALargerCellComplex);
+
+            var cp = MakeASimpleCellComplex(numLevels: 3, uNumCells: 2, vNumCells: 2);
+
+            var ngon = Polygon.Ngon(8, 15).TransformedPolygon(new Transform(new Vector3(16, 16)));
+            foreach (var c in cp.GetCells())
+            {
+                // _output.WriteLine($"Attempting split of cell {c.Id}");
+
+                if (cp.TrySplitCell(c, ngon, out List<Cell> newCells, out _))
+                {
+                    // _output.WriteLine($"\tNew Cells:");
+                    // foreach (var newCell in newCells)
+                    // {
+                    //     _output.WriteLine($"\t\t{newCell.Id}");
+                    // }
+                }
+            }
+            this.Model.AddElement(new ModelCurve(new Polyline(ngon.Vertices)));
+
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        [Fact]
+        public void DrawCellsOnTopOfCells()
+        {
+            this.Name = nameof(DrawCellsOnTopOfCells);
+            var cp = MakeASimpleCellComplex(numLevels: 1, uNumCells: 3, vNumCells: 3);
+            var topFaces = cp.GetFaces().Where(f => f.GetGeometry().Normal().IsVertical() && f.GetCentroid().Z > 1.0);
+            var cells = cp.GetCells().GroupBy(c => c.GetVertices().Select(v => v.Value).ToList().Average().Z).OrderBy(g => g.Key);
+            var t = new Transform();
+            t.Rotate(20);
+            t.Move(new Vector3(15, 15));
+            var rect = Polygon.Rectangle(20, 15).TransformedPolygon(t);
+            foreach (var cell in cells.Last())
+            {
+                cp.TrySplitCell(cell, rect, out List<Cell> newCells, out List<string> warnings);
+                foreach (var warning in warnings)
+                {
+                    _output.WriteLine(warning);
+                }
+
+            }
+            this.Model.AddElement(new ModelCurve(new Polyline(rect.Vertices)));
+            this.Model.AddElements(cp.ToModelElements(true));
+        }
+
+        // [Fact]
+        // public void SplitCellWithLineGetsTwoCells()
+        // {
+        //     this.Name = nameof(DrawCellsOnTopOfCells);
+        //     var cp = new CellComplex();
+        //     var cell = cp.AddCell(Polygon.Rectangle(10, 10), 5, 0.0);
+
+        //     var line = new Line(new Vector3(-6, 4), new Vector3(6, -4));
+        //     cp.TrySplitCell(cell, line.ToPolyline());
+        //     this.Model.AddElement(new ModelCurve(new Polyline(rect.Vertices)));
+        //     this.Model.AddElements(cp.ToModelElements(true));
+        // }
     }
 }
