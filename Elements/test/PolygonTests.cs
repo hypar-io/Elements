@@ -1670,7 +1670,7 @@ namespace Elements.Geometry.Tests
             foreach (var p in polys)
             {
                 var other = polys.Where(pp => pp != p).ToList();
-                var trimmed = p.TrimmedTo(other);
+                var trimmed = p.TrimmedTo(other, LocalClassification.Outside);
 
                 Assert.Single(trimmed);
 
@@ -1771,6 +1771,28 @@ namespace Elements.Geometry.Tests
             var polygon = new Polygon(points);
             polygon = polygon.CollinearPointsRemoved();
             Assert.Equal(4, polygon.Vertices.Count());
+        }
+
+        [Fact]
+        public void OverlappedPolygonTrimsCorrectly()
+        {
+            this.Name = nameof(OverlappedPolygonTrimsCorrectly);
+            var r = new Transform();
+            r.Rotate(Vector3.XAxis, 90);
+            var p = Polygon.Rectangle(5, 5).TransformedPolygon(r);
+            var p1 = Polygon.Rectangle(5, 5).TransformedPolygon(r).TransformedPolygon(new Transform(2.5, 2.5, 2.5));
+            var polys = new List<Polygon>();
+            for (var i = 0; i < p1.Vertices.Count; i++)
+            {
+                var a = p1.Vertices[i];
+                var b = i == p1.Vertices.Count - 1 ? p1.Vertices[0] : p1.Vertices[i + 1];
+                var newP = new Polygon(new List<Vector3>(){
+                    a + new Vector3(0,-5,0), b + new Vector3(0,-5,0), b + new Vector3(0,5,0), a + new Vector3(0,5,0)
+                });
+                polys.Add(newP);
+            }
+            var trims = p.IntersectAndClassify(new Random(), polys, out _, out _);
+            Assert.Equal(2, trims.Count);
         }
     }
 }

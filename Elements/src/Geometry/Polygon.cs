@@ -328,7 +328,7 @@ namespace Elements.Geometry
                 }
             }
 
-            // Intersect this polygon against the target polyon's plane.
+            // Intersect this polygon against the target polygon's plane.
             // Keep the points within the target polygon.
             if (this.Intersects(targetP, out List<Vector3> results2, false, false))
             {
@@ -782,10 +782,13 @@ namespace Elements.Geometry
         /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
+        /// <param name="inOut">A classification indicating which trim area should be returned.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, LocalClassification inOut = LocalClassification.Outside)
         {
-            return IntersectOneToMany(polygons, out _, out _);
+            var r = new Random();
+            var polys = this.IntersectAndClassify(r, polygons, out _, out _);
+            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
         /// <summary>
@@ -797,21 +800,25 @@ namespace Elements.Geometry
         /// <param name="polygons">The trimming polygons.</param>
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
+        /// <param name="inOut">A classification indicating which trim area should be returned.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons,
                                        out List<Vector3> intersections,
-                                       out List<(Vector3 from, Vector3 to)> trimEdges)
+                                       out List<(Vector3 from, Vector3 to, int? index)> trimEdges,
+                                       LocalClassification inOut = LocalClassification.Outside)
         {
-            return IntersectOneToMany(polygons, out intersections, out trimEdges);
+            var r = new Random();
+            var polys = this.IntersectAndClassify(r, polygons, out intersections, out trimEdges);
+            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
         private List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
                                                  out List<Vector3> intersections,
-                                                 out List<(Vector3 from, Vector3 to)> trimEdges)
+                                                 out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
-            var edges = new List<List<(int from, int to, int? tag)>>();
+            var edges = new List<List<(int from, int to, int? index)>>();
 
             var splitPoly = new Polygon(this.Vertices);
             var results = new List<Vector3>[polygons.Count];
@@ -826,14 +833,15 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                if (localPlane.IsCoplanar(planes[i]))
-                {
-                    throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
-                }
-
                 // Add a results collection for each polygon. 
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
+
+                if (localPlane.IsCoplanar(planes[i]))
+                {
+                    continue;
+                    // throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
+                }
 
                 // We intersect but don't sort, because the three-plane check
                 // below may result in new intersections which will need to
@@ -889,12 +897,13 @@ namespace Elements.Geometry
                 var a = i;
                 var b = i == splitPoly.Vertices.Count - 1 ? 0 : i + 1;
                 graphVertices.Add(splitPoly.Vertices[i]);
-                edges.Add(new List<(int from, int to, int? tag)>());
-                edges[i].Add((a, b, 0));
+                edges.Add(new List<(int from, int to, int? index)>());
+                edges[i].Add((a, b, -1));
             }
 
-            foreach (var result in results)
+            for (var i = 0; i < results.Count(); i++)
             {
+                var result = results[i];
                 for (var j = 0; j < result.Count - 1; j += 1)
                 {
                     // Don't create zero-length edges.
@@ -913,17 +922,17 @@ namespace Elements.Geometry
                         // An intersection that does not happen on the original poly
                         graphVertices.Add(result[j]);
                         a = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to, int? tag)>());
+                        edges.Add(new List<(int from, int to, int? index)>());
                     }
                     var b = graphVertices.IndexOf(result[j + 1]);
                     if (b == -1)
                     {
                         graphVertices.Add(result[j + 1]);
                         b = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to, int? tag)>());
+                        edges.Add(new List<(int from, int to, int? index)>());
                     }
-                    edges[a].Add((a, b, 0));
-                    edges[b].Add((b, a, 1));
+                    edges[a].Add((a, b, i));
+                    edges[b].Add((b, a, i));
                 }
             }
 
@@ -933,7 +942,7 @@ namespace Elements.Geometry
                 EdgesPerVertex = edges
             };
 
-            trimEdges = new List<(Vector3 from, Vector3 to)>();
+            trimEdges = new List<(Vector3 from, Vector3 to, int? index)>();
             foreach (var edgeSet in edges)
             {
                 foreach (var e in edgeSet)
@@ -942,19 +951,66 @@ namespace Elements.Geometry
                     var b = graphVertices[e.to];
                     if (!a.IsAlmostEqualTo(b))
                     {
-                        trimEdges.Add((a, b));
+                        trimEdges.Add((a, b, e.index));
                     }
                 }
             }
 
-            var polys = heg.Polygonize((tag) =>
-            {
-                return tag.HasValue && tag == 1;
-            }, localPlane.Normal);
+            var polys = heg.Polygonize(null, localPlane.Normal);
 
             intersections = results.SelectMany(t => t).ToList();
 
             return polys;
+        }
+
+        internal List<(Polygon, LocalClassification)> IntersectAndClassify(Random r,
+                                                                          IList<Polygon> b,
+                                                                          out List<Vector3> intersections,
+                                                                          out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
+        {
+            var classifications = new List<(Polygon, LocalClassification)>();
+
+            var trimFaces = this.IntersectOneToMany(b, out intersections, out trimEdges);
+
+            if (trimFaces.Count == 1)
+            {
+                // If there's only one face, we ray cast to test
+                // for inclusion.
+                var tf = trimFaces[0];
+                var intersectionCount = 0;
+                var ray = r.NextRay(tf.Vertices[0]);
+                foreach (var bf in b)
+                {
+                    if (ray.Intersects(bf, out _))
+                    {
+                        intersectionCount++;
+                    }
+                }
+                classifications.Add((tf, intersectionCount % 2 == 0 ? LocalClassification.Outside : LocalClassification.Inside));
+            }
+            else
+            {
+                // If there's more than one face, we test to see if
+                // the face is "to the left" of one of the trimming polys.
+                var compareEdges = trimEdges.Where(e => e.index != -1).ToList();
+
+                var n = this.Normal();
+
+                foreach (var tf in trimFaces)
+                {
+                    var edges = tf.Edges().ToList();
+                    var compareEdge = compareEdges.First(e => edges.Contains((e.from, e.to)) || edges.Contains((e.to, e.from)));
+                    var trimPolyIndex = compareEdge.index.Value;
+                    var comparePoly = b[trimPolyIndex];
+                    var bn = comparePoly.Normal();
+                    var matchEdge = edges.First(e => (e.from == compareEdge.from && e.to == compareEdge.to) || (e.from == compareEdge.to && e.to == compareEdge.from));
+                    var d = (matchEdge.from - matchEdge.to).Unitized();
+                    var dot = bn.Dot(n.Cross(d));
+                    classifications.Add((tf, dot < 0.0 ? LocalClassification.Outside : LocalClassification.Inside));
+                }
+            }
+
+            return classifications;
         }
 
         /// <summary>
@@ -1732,6 +1788,17 @@ namespace Elements.Geometry
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
             return normal.Unitized();
+        }
+
+        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var from = this.Vertices[i];
+                var to = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                yield return (from, to);
+            }
         }
 
         /// <summary>
