@@ -11,7 +11,7 @@ namespace Elements
         /// <summary>
         /// Generate a new color with a random R, G, and B component. Useful for debugging purposes.
         /// </summary>
-        /// <param name="random">The `Random` object to generate from</param>
+        /// <param name="random">The `Random` object.</param>
         public static Color NextColor(this Random random)
         {
             return new Color(random.NextDouble(), random.NextDouble(), random.NextDouble(), 1);
@@ -20,7 +20,7 @@ namespace Elements
         /// <summary>
         /// Generate a new material with a random color assigned. Useful for debugging purposes.
         /// </summary>
-        /// <param name="random">The `Random` object to generate from</param>
+        /// <param name="random">The `Random` object.</param>
         /// <param name="unlit">Whether or not to treat the material as unlit.</param>
         public static Material NextMaterial(this Random random, bool unlit = true)
         {
@@ -31,7 +31,7 @@ namespace Elements
         /// <summary>
         /// Generate a ray in a random direction in the specified plane.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The `Random` object.</param>
         /// <param name="origin">The origin of the ray.</param>
         /// <param name="normal">The normal of the plane in which the
         /// resulting ray will lie.</param>
@@ -47,7 +47,7 @@ namespace Elements
         /// <summary>
         /// Generate a ray in a random direction.
         /// </summary>
-        /// <param name="random"></param>
+        /// <param name="random">The `Random` object.</param>
         /// <param name="origin">The origin of the ray.</param>
         /// <returns></returns>
         public static Ray NextRay(this Random random, Vector3 origin)
