@@ -126,7 +126,7 @@ namespace Elements
                                                  SetClassification shared)
         {
             var vertices = new List<Vector3>();
-            var epv = new List<List<(int from, int to, int? tag)>>();
+            var edgesPerVertex = new List<List<(int from, int to, int? tag)>>();
 
             // Fill vertex collection
             foreach (var edge in set)
@@ -134,25 +134,25 @@ namespace Elements
                 if (!vertices.Contains(edge.from))
                 {
                     vertices.Add(edge.from);
-                    epv.Add(new List<(int from, int to, int? tag)>());
+                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                 }
 
                 if (!vertices.Contains(edge.to))
                 {
                     vertices.Add(edge.to);
-                    epv.Add(new List<(int from, int to, int? tag)>());
+                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                 }
             }
 
             // Create edges
             foreach (var edge in set)
             {
-                var l = epv[vertices.IndexOf(edge.from)];
+                var l = edgesPerVertex[vertices.IndexOf(edge.from)];
                 l.Add((vertices.IndexOf(edge.from), vertices.IndexOf(edge.to), null));
 
                 if (edge.classification == shared)
                 {
-                    var l1 = epv[vertices.IndexOf(edge.to)];
+                    var l1 = edgesPerVertex[vertices.IndexOf(edge.to)];
                     l1.Add((vertices.IndexOf(edge.to), vertices.IndexOf(edge.from), null));
                 }
             }
@@ -160,7 +160,7 @@ namespace Elements
             var heg = new HalfEdgeGraph2d()
             {
                 Vertices = vertices,
-                EdgesPerVertex = epv
+                EdgesPerVertex = edgesPerVertex
             };
 
             return heg;
