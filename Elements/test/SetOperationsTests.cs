@@ -42,8 +42,8 @@ namespace Elements.Tests
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.AOutsideB).Count());
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.BOutsideA).Count());
 
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.AInsideB).Count());
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.BInsideA).Count());
+            Assert.Empty(set.Where(c => c.classification == SetClassification.AInsideB));
+            Assert.Empty(set.Where(c => c.classification == SetClassification.BInsideA));
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace Elements.Tests
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.AOutsideB).Count());
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.BOutsideA).Count());
 
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.AInsideB).Count());
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.BInsideA).Count());
+            Assert.Empty(set.Where(c => c.classification == SetClassification.AInsideB));
+            Assert.Empty(set.Where(c => c.classification == SetClassification.BInsideA));
         }
 
         [Fact]
@@ -72,8 +72,8 @@ namespace Elements.Tests
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.AOutsideB).Count());
             Assert.Equal(4, set.Where(c => c.classification == SetClassification.BOutsideA).Count());
 
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.AInsideB).Count());
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.BInsideA).Count());
+            Assert.Empty(set.Where(c => c.classification == SetClassification.AInsideB));
+            Assert.Empty(set.Where(c => c.classification == SetClassification.BInsideA));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Elements.Tests
                 return e.classification == SetClassification.AOutsideB || e.classification == SetClassification.BInsideA || e.classification == SetClassification.AInsideB;
             });
 
-            Assert.Equal(0, set.Where(c => c.classification == SetClassification.BOutsideA).Count());
+            Assert.Empty(set.Where(c => c.classification == SetClassification.BOutsideA));
 
             var graph = SetOperations.BuildGraph(set, SetClassification.BInsideA);
 
