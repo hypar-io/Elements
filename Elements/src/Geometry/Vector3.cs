@@ -33,7 +33,7 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return GetHashCode(double.MinValue);
+            return GetHashCode(0);
         }
 
         /// <summary>
@@ -162,6 +162,10 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Rounded(double precision = EPSILON)
         {
+            if (precision == 0)
+            {
+                return this;
+            }
             return new Vector3(Math.Round(X / precision) * precision, Math.Round(Y / precision) * precision, Math.Round(Z / precision) * precision);
         }
 

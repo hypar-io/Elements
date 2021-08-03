@@ -28,9 +28,19 @@ namespace Elements.Geometry.Tests
 
             this.Model.AddElement(new ModelCurve(l));
         }
+        [Fact]
+        public void Equality_SlightlyOffCenter_Failing()
+        {
+            // Test when lines are almost centered around origin
+            var line1 = new Line((-1.001, -1.001), (1, 1));
+            var line2 = new Line((-0.999, -0.999), (1, 1));
+            var hash1 = line1.GetHashCode(false, 0.0001);
+            var hash2 = line2.GetHashCode(false, 0.0001);
+            Assert.Equal(hash1, hash2);
+        }
 
         [Fact]
-        public void Equality()
+        public void EqualityComparers()
         {
             var p = new Vector3(1, 1, 1);
             var lineA = new Line(Vector3.Origin, p);
@@ -51,7 +61,7 @@ namespace Elements.Geometry.Tests
             Assert.NotEqual(lineA, lineC, pickyComparer);
             Assert.NotEqual(lineA, lineA.Reversed(), pickyComparer);
 
-            // Test slightly off sorting for direction dependance.
+            // Test slightly off axis sorting for direction dependance.
             var line1 = new Line((0, 0), (-0.000001, 3));
             var line2 = new Line((0, 0), (0, 3));
             var hash1 = line1.GetHashCode(false, 0.0001);

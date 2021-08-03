@@ -173,7 +173,7 @@ namespace Elements.Geometry
 
                 if (endValue < startValue)
                 {
-                    obj.Reversed();
+                    obj = obj.Reversed();
                 }
 
                 // If these values are equal then the sort will fail, so we sort the end points by X, then Y, then Z.
@@ -209,8 +209,10 @@ namespace Elements.Geometry
             unchecked
             {
                 int hash = 17;
-                hash = hash * 23 + obj.Start.Rounded(tolerance).GetHashCode();
-                hash = hash * 23 + obj.End.Rounded(tolerance).GetHashCode();
+                var s = obj.Start.GetHashCode(tolerance);
+                hash = hash * 23 + s;
+                var e = +obj.End.GetHashCode(tolerance);
+                hash = hash * 23 + e;
                 return hash;
             }
         }
