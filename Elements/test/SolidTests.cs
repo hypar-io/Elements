@@ -331,7 +331,6 @@ namespace Elements.Tests
             var a = new Mass(Polygon.Rectangle(5, 5), 5);
             var b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
 
-
             a.UpdateRepresentations();
             b.UpdateRepresentations();
 
