@@ -1,7 +1,17 @@
 namespace Elements
 {
+    /// <summary>
+    /// A local set classification.
+    /// </summary>
     public enum LocalClassification
     {
-        Outside, Inside
+        /// <summary>
+        /// Outside.
+        /// </summary>
+        Outside,
+        /// <summary>
+        /// Inside.
+        /// </summary>
+        Inside
     }
 }
