@@ -151,48 +151,68 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return GetHashCode(true);
+            return GetHashCode(true, double.MinValue);
         }
 
         /// <summary>
         /// Get the hash code for the line allowing for geometric approximations.
+        /// This HashCode is strictly speaking an imperfect implementation and should be used
+        /// with caution.  It may occasionally create two different HashCodes for two Lines
+        /// that are actually within the precision's value.
         /// </summary>
         public int GetHashCode(bool directionDependent, double tolerance = Vector3.EPSILON)
         {
             var obj = this;
-            // If the direction doesn't matter, then we always sort the end points by X, then Y, then Z to have a consistent basis for forming the hash code.
+
+            // If the direction doesn't matter, then we need to have a consistent method of sorting the endpoints to have a consistent basis for forming the hash code.
             if (!directionDependent)
             {
-                if (Start.X != End.X)
+                // First try a sort that is proportional to their distance from the origin.
+                var startValue = Math.Abs(Start.X) + Math.Abs(Start.Y) + Math.Abs(Start.Z);
+                var endValue = Math.Abs(End.X) + Math.Abs(End.Y) + Math.Abs(End.Z);
+
+                if (endValue < startValue)
                 {
-                    if (Start.X > End.X)
-                    {
-                        obj = obj.Reversed();
-                    }
+                    obj.Reversed();
                 }
-                else if (obj.Start.Y != obj.End.Y)
+
+                // If these values are equal then the sort will fail, so we sort the end points by X, then Y, then Z.
+                else if (endValue == startValue)
                 {
-                    if (obj.Start.Y > obj.End.Y)
+                    if (Start.X != End.X)
                     {
-                        obj = obj.Reversed();
+                        if (Start.X > End.X)
+                        {
+                            obj = obj.Reversed();
+                        }
                     }
-                }
-                else if (obj.Start.Z != obj.End.Z)
-                {
-                    if (obj.Start.Z > obj.End.Z)
+                    else if (obj.Start.Y != obj.End.Y)
                     {
-                        obj = obj.Reversed();
+                        if (obj.Start.Y > obj.End.Y)
+                        {
+                            obj = obj.Reversed();
+                        }
                     }
-                }
-                else
-                {
-                    throw new Exception("Invalid line, start and end are identical, cannot create hashcode");
+                    else if (obj.Start.Z != obj.End.Z)
+                    {
+                        if (obj.Start.Z > obj.End.Z)
+                        {
+                            obj = obj.Reversed();
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid line, start and end are identical, cannot create hashcode");
+                    }
                 }
             }
-            int hash = 17;
-            hash = hash * 23 + obj.Start.Rounded(tolerance).GetHashCode();
-            hash = hash * 23 + obj.End.Rounded(tolerance).GetHashCode();
-            return hash;
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + obj.Start.Rounded(tolerance).GetHashCode();
+                hash = hash * 23 + obj.End.Rounded(tolerance).GetHashCode();
+                return hash;
+            }
         }
 
 
@@ -829,6 +849,9 @@ namespace Elements.Geometry
 
     /// <summary>
     /// Geometric line comparer for use in HashSets and Dictionaries.
+    /// This comparer is strictly speaking an imperfect implementation of IEqualityComparer — and so should be used
+    /// with caution in collections and Linq methods. It may occasionally indicate that two lines are distinct when
+    /// they are within the specified tolerance of each other.
     /// </summary>
     public class LineComparer : IEqualityComparer<Line>
     {
@@ -836,7 +859,7 @@ namespace Elements.Geometry
         private bool _directionDependent = true;
 
         /// <summary>
-        /// Construct a comparer setting wether the direction matters and optionally the tolerance.
+        /// Construct a comparer setting whether the direction matters and optionally the tolerance.
         /// </summary>
         public LineComparer(bool directionDependant, double tolerance = Vector3.EPSILON)
         {

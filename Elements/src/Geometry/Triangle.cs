@@ -103,18 +103,18 @@ namespace Elements.Geometry
         /// <summary>
         /// Is the provided triangle approximately geometrically equal to this one?
         /// </summary>
-        public bool IsAlmostEqualTo(Triangle other, bool rotationDependent = false, double precision = Vector3.EPSILON)
+        public bool IsAlmostEqualTo(Triangle other, bool rotationDependent = false, double tolerance = Vector3.EPSILON)
         {
             if (rotationDependent)
             {
-                return this.Vertices[0].Position.IsAlmostEqualTo(other.Vertices[0].Position, precision)
-                        && this.Vertices[1].Position.IsAlmostEqualTo(other.Vertices[1].Position, precision)
-                        && this.Vertices[2].Position.IsAlmostEqualTo(other.Vertices[2].Position, precision);
+                return this.Vertices[0].Position.IsAlmostEqualTo(other.Vertices[0].Position, tolerance)
+                        && this.Vertices[1].Position.IsAlmostEqualTo(other.Vertices[1].Position, tolerance)
+                        && this.Vertices[2].Position.IsAlmostEqualTo(other.Vertices[2].Position, tolerance);
             }
             else
             {
-                var points = new HashSet<Vector3>(this.Vertices.Select(v => v.Position), new Vector3Comparer(precision));
-                var otherPoints = new HashSet<Vector3>(other.Vertices.Select(v => v.Position), new Vector3Comparer(precision));
+                var points = new HashSet<Vector3>(this.Vertices.Select(v => v.Position), new Vector3Comparer(tolerance));
+                var otherPoints = new HashSet<Vector3>(other.Vertices.Select(v => v.Position), new Vector3Comparer(tolerance));
                 return points.Except(otherPoints).Count() == 0;
             }
         }
@@ -122,6 +122,9 @@ namespace Elements.Geometry
 
     /// <summary>
     /// Triangle comparer that will compare based only on the vertices, and allows for flexible geometry comparisons.
+    /// This comparer is strictly speaking an imperfect implementation of IEqualityComparer — and so should be used
+    /// with caution in collections and Linq methods. It may occasionally indicate that two Triangles are distinct when
+    /// they are within the specified tolerance of each other.
     /// </summary>
     public class TriangleComparer : IEqualityComparer<Triangle>
     {
@@ -129,7 +132,7 @@ namespace Elements.Geometry
         private double _tolerance = Vector3.EPSILON;
 
         /// <summary>
-        /// Construct a comparer setting wether the vertex orientation matters, and optionally the tolerance.
+        /// Construct a comparer setting whether the vertex orientation matters, and optionally the tolerance.
         /// </summary>
         public TriangleComparer(bool rotationDependent, double tolerance = Vector3.EPSILON)
         {
@@ -151,17 +154,18 @@ namespace Elements.Geometry
         public int GetHashCode(Triangle triangle)
         {
             var vertices = triangle.Vertices.ToList();
-            if (_rotationDependent)
+            if (!_rotationDependent)
             {
-                vertices = triangle.Vertices.OrderBy(v => v.Position.X).ThenBy(v => v.Position.Y).ThenBy(v => v.Position.Z).ToList();
+                vertices = triangle.Vertices.OrderBy(v => Math.Abs(v.Position.X) + Math.Abs(v.Position.Y) + Math.Abs(v.Position.Z)).ToList();
             }
 
-            var alt = 17;
-            alt = alt * 23 + vertices[0].Position.GetHashCode(_tolerance);
-            alt = alt * 23 + vertices[1].Position.GetHashCode(_tolerance);
-            alt = alt * 23 + vertices[2].Position.GetHashCode(_tolerance);
-
-            return alt;
+            unchecked
+            {
+                var hash = 391 + vertices[0].Position.GetHashCode(_tolerance);
+                hash = hash * 23 + vertices[1].Position.GetHashCode(_tolerance);
+                hash = hash * 23 + vertices[2].Position.GetHashCode(_tolerance);
+                return hash;
+            }
         }
     }
 }

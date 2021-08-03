@@ -22,18 +22,18 @@ namespace Elements.Geometry.Tests
             var triangle = new Triangle(new[] { v0, v1, v2 }, Vector3.ZAxis);
             var triangleRotated = new Triangle(new[] { v1, v2, v0 }, Vector3.ZAxis);
 
-            var tASmallShift = new Triangle(new[] { v0, v1, v2BiggerShift }, Vector3.ZAxis);
-            var tATinyShift = new Triangle(new[] { v0, v1, v2SmallShift }, Vector3.ZAxis);
+            var triangleSmallShift = new Triangle(new[] { v0, v1, v2BiggerShift }, Vector3.ZAxis);
+            var triangleTinyShift = new Triangle(new[] { v0, v1, v2SmallShift }, Vector3.ZAxis);
 
             var comparer = new TriangleComparer(false);
             Assert.Equal(triangle, triangleRotated, comparer);
-            Assert.NotEqual(triangle, tASmallShift, comparer);
-            Assert.Equal(triangle, tATinyShift, comparer);
+            Assert.NotEqual(triangle, triangleSmallShift, comparer);
+            Assert.Equal(triangle, triangleTinyShift, comparer);
 
             var pickyComparer = new TriangleComparer(true, 1E-7);
             Assert.NotEqual(triangle, triangleRotated, pickyComparer);
-            Assert.NotEqual(triangle, tASmallShift);
-            Assert.NotEqual(triangle, tATinyShift);
+            Assert.NotEqual(triangle, triangleSmallShift);
+            Assert.NotEqual(triangle, triangleTinyShift);
 
             // Check that comparer can create identical hashcodes for vertices equidistant from origin.
             var v3 = new Vertex(new Vector3(-1, 1, 0));
@@ -45,6 +45,13 @@ namespace Elements.Geometry.Tests
             var h1 = comparer.GetHashCode(triangleSymmetric);
             var h2 = comparer.GetHashCode(triangleSymmetricFlipped);
             Assert.Equal(h1, h2);
+
+            // Check that comparer can create identical hashcodes for vertices where a line is slightly off axis.
+            var v2OffAxis = new Vertex(v2.Position + new Vector3(-1E-9, 0, 0), Vector3.ZAxis);
+            var triangleOffAxis = new Triangle(new[] { v1, v2OffAxis, v0 }, Vector3.ZAxis);
+            var h = comparer.GetHashCode(triangle);
+            var hOffAxis = comparer.GetHashCode(triangleOffAxis);
+            Assert.Equal(h, hOffAxis);
         }
     }
 }

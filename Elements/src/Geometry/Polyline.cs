@@ -802,7 +802,6 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="points">The points at which to split the polyline.</param>
         /// <param name="closed">Should the polyline be closed</param>
-        /// <returns>The index of the new vertex.</returns>
         protected void Split(IList<Vector3> points, bool closed = false)
         {
             for (var i = 0; i < this.Vertices.Count; i++)

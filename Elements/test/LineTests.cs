@@ -51,6 +51,13 @@ namespace Elements.Geometry.Tests
             Assert.NotEqual(lineA, lineC, pickyComparer);
             Assert.NotEqual(lineA, lineA.Reversed(), pickyComparer);
 
+            // Test slightly off sorting for direction dependance.
+            var line1 = new Line((0, 0), (-0.000001, 3));
+            var line2 = new Line((0, 0), (0, 3));
+            var hash1 = line1.GetHashCode(false, 0.0001);
+            var hash2 = line2.GetHashCode(false, 0.0001);
+            Assert.Equal(hash1, hash2);
+
             // Check that a line will succeed in creating identical hashcode even if the two endpoints are equidistant from origin
             var lineD = new Line(new Vector3(1, 0, 0), new Vector3(0, 1, 0));
             Assert.Equal(lineD.Start.DistanceTo(Vector3.Origin), lineD.End.DistanceTo(Vector3.Origin));

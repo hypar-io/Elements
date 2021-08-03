@@ -33,20 +33,25 @@ namespace Elements.Geometry
         /// </summary>
         public override int GetHashCode()
         {
-            return GetHashCode(EPSILON);
+            return GetHashCode(double.MinValue);
         }
 
         /// <summary>
         /// Get the hash code for this vector using precision based rounding.
+        /// This HashCode is strictly speaking an imperfect implementation and should be used
+        /// with caution.  It may occasionally create two different HashCodes for two Vector3s
+        /// that are actually within the precision's value.
         /// </summary>
         public int GetHashCode(double precision)
         {
-            var alt = 17;
-            var rounded = Rounded(precision);
-            alt = alt * 23 + rounded.X.GetHashCode();
-            alt = alt * 23 + rounded.Y.GetHashCode();
-            alt = alt * 23 + rounded.Z.GetHashCode();
-            return alt;
+            unchecked
+            {
+                var rounded = Rounded(precision);
+                var hash = 391 + rounded.X.GetHashCode();
+                hash = hash * 23 + rounded.Y.GetHashCode();
+                hash = hash * 23 + rounded.Z.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -1020,8 +1025,11 @@ namespace Elements.Geometry
     /// <summary>
     /// An equality comparer used for Dictionaries and HashSets.
     /// It uses geometric properties for equality, and allows you to specify the tolerance.
+    /// This comparer is strictly speaking an imperfect implementation of IEqualityComparer — and so should be used
+    /// with caution in collections and Linq methods. It may occasionally indicate that two Vector3 are distinct when
+    /// they are within the specified tolerance of each other.
     /// </summary>
-    public class Vector3Comparer : EqualityComparer<Vector3>
+    public class Vector3Comparer : IEqualityComparer<Vector3>
     {
         private double _precision = Vector3.EPSILON;
         /// <summary>
@@ -1035,7 +1043,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Are the two Vector3 geometrically equal within the tolerance.
         /// </summary>
-        public override bool Equals(Vector3 x, Vector3 y)
+        public bool Equals(Vector3 x, Vector3 y)
         {
             return x.IsAlmostEqualTo(y, _precision);
         }
@@ -1043,7 +1051,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a hashcode for the Vector3 object.
         /// </summary>
-        public override int GetHashCode(Vector3 vector)
+        public int GetHashCode(Vector3 vector)
         {
             return vector.GetHashCode();
         }
