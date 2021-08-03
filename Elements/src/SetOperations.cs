@@ -34,8 +34,9 @@ namespace Elements
     public static class SetOperations
     {
         /// <summary>
-        /// Classify a segment against a polygon by shooting a random
-        /// ray in the plane and counting the intersections.
+        /// Intersect all segments in each polygon against all segments
+        /// in the other polygon, splitting segments, and classify 
+        /// all the resulting segments.
         /// </summary>
         public static List<(Vector3 from, Vector3 to, SetClassification classification)> ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)
         {
