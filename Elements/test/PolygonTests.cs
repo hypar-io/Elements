@@ -1794,5 +1794,26 @@ namespace Elements.Geometry.Tests
             var trims = p.IntersectAndClassify(new Random(), polys, out _, out _);
             Assert.Equal(2, trims.Count);
         }
+
+        [Fact]
+        public void VerticalPolygonIntersectsHorizontalRoundPolygon()
+        {
+            // Test the intersection of of perpendicular planes
+            // where the plane of intersection of the first, cuts
+            // exactly through a point on the other.
+
+            this.Name = nameof(VerticalPolygonIntersectsHorizontalRoundPolygon);
+            var sqPoly = new Polygon(new[]{
+                new Vector3(-1, 1, -1), new Vector3(1, 1, -1), new Vector3(1, 1, 1), new Vector3(-1,1,1)});
+            var circlePoly = new Circle(new Vector3(1, 1), 2).ToPolygon();
+            sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
+            foreach (var r in results)
+            {
+                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+            }
+            Assert.Equal(2, results.Count);
+            this.Model.AddElement(new Panel(sqPoly));
+            this.Model.AddElement(new Panel(circlePoly));
+        }
     }
 }

@@ -327,13 +327,16 @@ namespace Elements.Tests
         {
             this.Name = nameof(Difference);
             var r = new Transform();
+            r.Move(2.5, 2.5, 2.5);
             var a = new Mass(Polygon.Rectangle(5, 5), 5);
-            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
+            var b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+
+            this.Model.AddElement(b);
             a.UpdateRepresentations();
             b.UpdateRepresentations();
             var s = SolidBoolean.Difference(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
 
-            Assert.Equal(9, s.Faces.Count);
+            Assert.Equal(13, s.Faces.Count);
 
             var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
             this.Model.AddElement(i);

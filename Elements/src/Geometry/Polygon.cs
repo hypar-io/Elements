@@ -302,7 +302,7 @@ namespace Elements.Geometry
         /// The result collection may have duplicate vertices where intersection 
         /// with a vertex occurs as there is one intersection associated with each
         /// edge attached to the vertex.</returns>
-        private bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
+        internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
         {
             var p = this.Plane();
             result = new List<Vector3>();
@@ -434,7 +434,7 @@ namespace Elements.Geometry
         /// <param name="point">The point to test.</param>
         /// <param name="unique">Should intersections be unique?</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = false)
+        internal bool Contains3D(Vector3 point, bool unique = true)
         {
             var p = this.Plane();
 
@@ -450,12 +450,12 @@ namespace Elements.Geometry
             var ray = new Ray(point, t.XAxis);
             var intersects = 0;
             var xsects = new List<Vector3>();
-            foreach (var s in this.Segments())
+            foreach (var e in this.Edges())
             {
                 var result = default(Vector3);
-                if (s.Start.IsAlmostEqualTo(point) ||
-                    s.End.IsAlmostEqualTo(point) ||
-                    ray.Intersects(s, out result))
+                if (e.from.IsAlmostEqualTo(point) ||
+                    e.to.IsAlmostEqualTo(point) ||
+                    ray.Intersects(e.from, e.to, out result))
                 {
                     if (unique)
                     {
@@ -1021,7 +1021,7 @@ namespace Elements.Geometry
                         var bn = comparePoly.Normal();
                         var d = (edge.from - edge.to).Unitized();
                         var dot = bn.Dot(n.Cross(d));
-                        if (dot < 0.0)
+                        if (dot <= 0.0)
                         {
                             outside++;
                         }
