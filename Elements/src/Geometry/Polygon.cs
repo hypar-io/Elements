@@ -990,8 +990,6 @@ namespace Elements.Geometry
             }
             else
             {
-                // If there's more than one face, we test to see if
-                // the face is "to the left" of one of the trimming polys.
                 var compareEdges = trimEdges.Where(e => e.index != -1).ToList();
 
                 var n = this.Normal();
