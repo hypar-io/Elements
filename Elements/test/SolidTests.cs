@@ -314,7 +314,7 @@ namespace Elements.Tests
             var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
             a.UpdateRepresentations();
             b.UpdateRepresentations();
-            var s = SolidBoolean.Union(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
+            var s = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
             Assert.Equal(12, s.Faces.Count);
 
@@ -331,14 +331,20 @@ namespace Elements.Tests
             var a = new Mass(Polygon.Rectangle(5, 5), 5);
             var b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
 
-            this.Model.AddElement(b);
+
             a.UpdateRepresentations();
             b.UpdateRepresentations();
-            var s = SolidBoolean.Difference(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
 
-            Assert.Equal(13, s.Faces.Count);
+            var rotate = new Transform();
+            rotate.Rotate(Vector3.XAxis, 15);
+            b.Representation.SolidOperations[0].LocalTransform = rotate;
 
-            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            var s = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            this.Model.AddElement(b);
+
+            Assert.Equal(15, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
             this.Model.AddElement(i);
         }
 
@@ -346,12 +352,12 @@ namespace Elements.Tests
         public void Intersection()
         {
             this.Name = nameof(Intersection);
-            var r = new Transform();
             var a = new Mass(Polygon.Rectangle(5, 5), 5);
             var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
             a.UpdateRepresentations();
             b.UpdateRepresentations();
-            var s = SolidBoolean.Intersection(a.Representation.SolidOperations[0].Solid, b.Representation.SolidOperations[0].Solid);
+
+            var s = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
             Assert.Equal(6, s.Faces.Count);
 

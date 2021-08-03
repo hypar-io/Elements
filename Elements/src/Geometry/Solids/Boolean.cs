@@ -4,17 +4,22 @@ using System.Linq;
 
 namespace Elements.Geometry.Solids
 {
+    /// <summary>
+    /// Boolean operations on solids.
+    /// </summary>
     public static class SolidBoolean
     {
         /// <summary>
         /// Compute the union of two solids.
         /// </summary>
         /// <param name="a"></param>
+        /// <param name="aTransform"></param>
         /// <param name="b"></param>
+        /// <param name="bTransform"></param>
         /// <returns></returns>
-        public static Solid Union(Solid a, Solid b)
+        public static Solid Union(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
-            var allFaces = Intersect(a, b);
+            var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB || o.Item2 == SetClassification.BOutsideA).Select(o => o.Item1))
@@ -26,14 +31,27 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>
-        /// Compute the difference of two solids.
+        /// Compute the union of two solid operations.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Solid Difference(Solid a, Solid b)
+        public static Solid Union(SolidOperation a, SolidOperation b)
         {
-            var allFaces = Intersect(a, b);
+            return Union(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
+        }
+
+        /// <summary>
+        /// Compute the difference of two solids.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="aTransform"></param>
+        /// <param name="b"></param>
+        /// <param name="bTransform"></param>
+        /// <returns></returns>
+        public static Solid Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)
+        {
+            var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB).Select(o => o.Item1))
@@ -50,14 +68,27 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>
-        /// Compute the intersection of two solids.
+        /// Compute the difference of two solid operations.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Solid Intersection(Solid a, Solid b)
+        public static Solid Difference(SolidOperation a, SolidOperation b)
         {
-            var allFaces = Intersect(a, b);
+            return Difference(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
+        }
+
+        /// <summary>
+        /// Compute the intersection of two solids.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="aTransform"></param>
+        /// <param name="b"></param>
+        /// <param name="bTransform"></param>
+        /// <returns></returns>
+        public static Solid Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)
+        {
+            var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AInsideB || o.Item2 == SetClassification.BInsideA).Select(o => o.Item1))
@@ -68,13 +99,24 @@ namespace Elements.Geometry.Solids
             return s;
         }
 
-        private static List<(Polygon, SetClassification)> Intersect(Solid a, Solid b)
+        /// <summary>
+        /// Compute the intersection of two solid operations.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Solid Intersection(SolidOperation a, SolidOperation b)
+        {
+            return Intersection(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
+        }
+
+        private static List<(Polygon, SetClassification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var r = new Random();
             var allFaces = new List<(Polygon, SetClassification)>();
 
-            var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon()).ToList();
-            var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon()).ToList();
+            var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(aTransform)).ToList();
+            var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(bTransform)).ToList();
 
             foreach (var af in aFaces)
             {
