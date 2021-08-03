@@ -371,5 +371,45 @@ namespace Elements.Geometry.Tests
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);
         }
+
+        [Fact]
+        public void ExtendWithMultipleIntersectionsAndMaxDistance()
+        {
+            Name = "ExtendWithMultipleIntersectionsAndMaxDistance";
+            var line = new Line(new Vector3(0, 0), new Vector3(1, 0));
+
+            var vertices = new List<Vector3>()
+                {
+                    new Vector3(-1, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, -1),
+                    new Vector3(4, -1),
+                    new Vector3(4, 2),
+                    new Vector3(-1, 2)
+                };
+
+            var polygon = new Polygon(vertices);
+
+            // Extends in both directions, and stops at earliest intersection.
+            var defaultExtend = line.ExtendTo(polygon, 10);
+
+            Assert.Equal(-1, defaultExtend.Start.X);
+            Assert.Equal(2, defaultExtend.End.X);
+
+            // Extends in both directions, and stops at earliest intersection.
+            // The distance from line points to polygon segments is greater than maxDistance, so the line must remain unchanged.
+            var extendWithMaxDistance = line.ExtendTo(polygon, 0.5);
+
+            Assert.Equal(line.Start.X, extendWithMaxDistance.Start.X);
+            Assert.Equal(line.End.X, extendWithMaxDistance.End.X);
+
+            // Extend both sides to furthest intersection, but no further than maxDistance.
+            var furthestExtend = line.ExtendTo(polygon, 2.5, true, true);
+
+            Assert.Equal(-1, furthestExtend.Start.X);
+            Assert.Equal(3, furthestExtend.End.X);
+        }
     }
 }
