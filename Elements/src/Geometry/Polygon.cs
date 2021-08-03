@@ -999,14 +999,46 @@ namespace Elements.Geometry
                 foreach (var tf in trimFaces)
                 {
                     var edges = tf.Edges().ToList();
-                    var compareEdge = compareEdges.First(e => edges.Contains((e.from, e.to)) || edges.Contains((e.to, e.from)));
-                    var trimPolyIndex = compareEdge.index.Value;
-                    var comparePoly = b[trimPolyIndex];
-                    var bn = comparePoly.Normal();
-                    var matchEdge = edges.First(e => (e.from == compareEdge.from && e.to == compareEdge.to) || (e.from == compareEdge.to && e.to == compareEdge.from));
-                    var d = (matchEdge.from - matchEdge.to).Unitized();
-                    var dot = bn.Dot(n.Cross(d));
-                    classifications.Add((tf, dot < 0.0 ? LocalClassification.Outside : LocalClassification.Inside));
+                    var inside = 0;
+                    var outside = 0;
+
+                    // Every edge needs to be checked against its trimming
+                    // poly to ensure that a face is "inside" or "outside" all
+                    // of the polys that trim the polygon.
+                    foreach (var edge in edges)
+                    {
+                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == edge.from && e.to == edge.to) || (e.from == edge.to && e.to == edge.from));
+
+                        // In the case where an edge is an edge of the original
+                        // polygon, and isn't trimmed by another polygon, there
+                        // will be no matching edge.
+                        if (compareEdge == default((Vector3, Vector3, int?)))
+                        {
+                            continue;
+                        }
+                        var trimPolyIndex = compareEdge.index.Value;
+                        var comparePoly = b[trimPolyIndex];
+                        var bn = comparePoly.Normal();
+                        var d = (edge.from - edge.to).Unitized();
+                        var dot = bn.Dot(n.Cross(d));
+                        if (dot < 0.0)
+                        {
+                            outside++;
+                        }
+                        else
+                        {
+                            inside++;
+                        }
+                    }
+
+                    if (outside > 0 && inside == 0)
+                    {
+                        classifications.Add((tf, LocalClassification.Outside));
+                    }
+                    else if (inside > 0 && outside == 0)
+                    {
+                        classifications.Add((tf, LocalClassification.Inside));
+                    }
                 }
             }
 
