@@ -24,7 +24,7 @@ namespace Elements.Geometry.Solids
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB || o.Item2 == SetClassification.BOutsideA).Select(o => o.Item1))
             {
-                s.AddFace(p);
+                s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
             return s;
@@ -56,12 +56,12 @@ namespace Elements.Geometry.Solids
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB).Select(o => o.Item1))
             {
-                s.AddFace(p);
+                s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.BInsideA).Select(o => o.Item1))
             {
-                s.AddFace(p.Reversed());
+                s.AddFace(p.Reversed(), mergeVerticesAndEdges: true);
             }
 
             return s;
@@ -93,7 +93,7 @@ namespace Elements.Geometry.Solids
             var s = new Solid();
             foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AInsideB || o.Item2 == SetClassification.BInsideA).Select(o => o.Item1))
             {
-                s.AddFace(p);
+                s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
             return s;
