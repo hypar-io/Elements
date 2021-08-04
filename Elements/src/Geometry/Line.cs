@@ -83,6 +83,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return TransformedLine(transform);
         }
 
@@ -92,6 +97,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Line TransformedLine(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
