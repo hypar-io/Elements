@@ -9,6 +9,15 @@
 - `SetOperations.ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
 - `SetOperations.BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set, SetClassification shared)`
 - `RandomExtensions.NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)`
+- `RandomExtensions.NextRay(this Random random, Vector3 origin)`
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `SetClassification`
+- `LocalClassification`
 
 ### Changed
 
