@@ -309,16 +309,14 @@ namespace Elements.Tests
         public void Union()
         {
             this.Name = nameof(Union);
-            var r = new Transform();
-            var a = new Mass(Polygon.Rectangle(5, 5), 5);
-            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
-            a.UpdateRepresentations();
-            b.UpdateRepresentations();
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
             var s = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
-            Assert.Equal(12, s.Faces.Count);
+            Assert.Equal(28, s.Faces.Count);
 
-            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
             this.Model.AddElement(i);
         }
 
@@ -326,20 +324,9 @@ namespace Elements.Tests
         public void Difference()
         {
             this.Name = nameof(Difference);
-            var r = new Transform();
-            r.Move(2.5, 2.5, 2.5);
-            var a = new Mass(Polygon.Rectangle(5, 5), 5);
-            var b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
 
-            a.UpdateRepresentations();
-            b.UpdateRepresentations();
-
-            var rotate = new Transform();
-            rotate.Rotate(Vector3.XAxis, 15);
-            b.Representation.SolidOperations[0].LocalTransform = rotate;
-
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
             var s = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
-            this.Model.AddElement(b);
 
             Assert.Equal(15, s.Faces.Count);
 
@@ -351,17 +338,47 @@ namespace Elements.Tests
         public void Intersection()
         {
             this.Name = nameof(Intersection);
-            var a = new Mass(Polygon.Rectangle(5, 5), 5);
-            var b = new Mass(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(2.5, 2.5, 2.5)), 5);
-            a.UpdateRepresentations();
-            b.UpdateRepresentations();
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
 
             var s = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
-            Assert.Equal(6, s.Faces.Count);
+            Assert.Equal(12, s.Faces.Count);
 
-            var i = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
             this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void AllBooleans()
+        {
+            this.Name = nameof(AllBooleans);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var s1 = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s2 = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s3 = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var i1 = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s1) }));
+            var i2 = new GeometricElement(new Transform(new Vector3(10, 0)), BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
+            var i3 = new GeometricElement(new Transform(new Vector3(20, 0)), BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
+
+            this.Model.AddElements(i1, i2, i3);
+        }
+
+        private static void CreateTestSolids(out GeometricElement a, out GeometricElement b)
+        {
+            var r = new Transform();
+            r.Move(2.5, 2.5, 2.5);
+            a = new Mass(Polygon.Rectangle(5, 5), 5);
+            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+
+            var rotate = new Transform();
+            rotate.Rotate(Vector3.XAxis, 15);
+            b.Representation.SolidOperations[0].LocalTransform = rotate;
         }
     }
 
