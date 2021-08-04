@@ -356,14 +356,31 @@ namespace Elements.Tests
 
             CreateTestSolids(out GeometricElement a, out GeometricElement b);
 
+            var t1 = new Transform(new Vector3(10, 0));
+            var t2 = new Transform(new Vector3(15, 0));
             var s1 = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
             var s2 = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
             var s3 = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
             var i1 = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s1) }));
-            var i2 = new GeometricElement(new Transform(new Vector3(10, 0)), BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
-            var i3 = new GeometricElement(new Transform(new Vector3(20, 0)), BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
+            var i2 = new GeometricElement(t1, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
+            var i3 = new GeometricElement(t2, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
 
+            this.Model.AddElements(DrawEdges(s1, null));
+            this.Model.AddElements(DrawEdges(s2, t1));
+            this.Model.AddElements(DrawEdges(s3, t2));
             this.Model.AddElements(i1, i2, i3);
+        }
+
+        private static List<ModelCurve> DrawEdges(Solid s, Transform t)
+        {
+            var modelCurves = new List<ModelCurve>();
+            foreach (var e in s.Edges)
+            {
+                var from = e.Value.Right.Vertex.Point;
+                var to = e.Value.Left.Vertex.Point;
+                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+            }
+            return modelCurves;
         }
 
         private static void CreateTestSolids(out GeometricElement a, out GeometricElement b)
