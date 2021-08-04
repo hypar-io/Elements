@@ -11,8 +11,8 @@ Hypar is a cloud platform for generating buildings that makes it easy to publish
 
 ## Signing up for Hypar
 
-To use the Hypar platform, you're going to need an account. 
-Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this. 
+To use the Hypar platform, you're going to need an account.
+Point your browser to <a href="https://hypar.io" target="_blank">https://hypar.io</a>, and you should see a page that looks like this.
 
 ![](./images/HyparLanding2020.11.16.png)
 
@@ -49,6 +49,10 @@ Click on the <u>Verify Email</u> link in the message and you should see a confir
 That's it! You now have a Hypar account. Time to start building some workflows or [authoring some functions](./Functions.md)! You might also explore these resources to get ideas for building a function, or learn more about the platform:
 - [Hypar's Discord live chat](https://discord.gg/Ts6mzXg). Lots of people should be there to answer questions or share ideas.
 - [Hypar's YouTube channel](https://www.youtube.com/c/hypar) has walkthrough videos and livestreams.
+
+### Access Plugins
+- [Hypar Plug-in for Rhino](https://www.notion.so/hyparaec/Hypar-Plug-in-for-Rhino-b0962866892b4e6aa3be249a01a31f79)
+
 
 <!--
 TODO: Labels can't be trivially added to masses right now.
@@ -102,7 +106,7 @@ Select **volume** and you should see the value appear in the graphic display on 
 
 ![](./images/HyparLabels3.png)
 
-Now you see why we specified the **UnitType** for the new property. Specifying the **UnitType** as **UnitType.Volume** tells Hypar to add **m3** to the displayed value to denote cubic meters. Internally Hypar maintains all values in metric units. Functions can calculate the conversion to Imperial units if required. 
+Now you see why we specified the **UnitType** for the new property. Specifying the **UnitType** as **UnitType.Volume** tells Hypar to add **m3** to the displayed value to denote cubic meters. Internally Hypar maintains all values in metric units. Functions can calculate the conversion to Imperial units if required.
 
 <div style="page-break-after: always;"></div>
 

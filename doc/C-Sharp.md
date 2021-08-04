@@ -35,7 +35,7 @@ Before getting started, there are a few things you'll need and some other things
   - Hypar uses the cross-platform dotnet framework created and maintained by Microsoft. The version number is important! There might be issues with earlier or later versions of .NET Core. **Be sure to download the SDK installer from the left-hand side, not the runtime.**
 
 ### Things you might want to know
-- It's helpful to review the [short conceptual overview of Hypar Elements, Functions, and Workflows](./index.md) before beginning this tutorial. 
+- It's helpful to review the [short conceptual overview of Hypar Elements, Functions, and Workflows](./index.md) before beginning this tutorial.
 - Basic familiarity with the **C#** programming language will help, but if you're not familiar with C# we'll do our best to walk you through making changes to the initial code you'll get by following the steps in this guide.
 - If you want to share your Hypar functions, you have to explicitly make your work public, so don't worry that perfect strangers are judging your work. They will, but only if **<u>you</u>** decide to make them public.
 - The procedures you'll use in this guide compile your code on your desktop and only upload the resulting binary file. No one at Hypar will examine your source code because we won't have it unless you make it public by some other means or if you send it to us so we can help you solve a problem.
@@ -80,7 +80,7 @@ Click **Next** to proceed to configuring your function's inputs. Click or drag t
 
 <img src="./images/wizard-step-2.png" width="60%">
 
-You can also select "Preview" to visualize how the inputs will look in the function. 
+You can also select "Preview" to visualize how the inputs will look in the function.
 
 Go on to the next step. We'll save the **Connections** section for another tutorial, so click **next** again so that **Step 4: Outputs** is highlighted at the top. Click the **+** to add a new output to report the box's volume, and configure it like so:
 
@@ -193,7 +193,7 @@ Now let's try out our function. Click **Insert** on Starter Function and **hide*
 
 <div style="page-break-after: always;"></div>
 
-<p style="font-size: 20px; font-weight: bold;">You've just run a web application that you created!</p> 
+<p style="font-size: 20px; font-weight: bold;">You've just run a web application that you created!</p>
 
 Click in the 3D view to zoom, pan, and rotate the result. Now click on Starter Function to open up its inputs. Try adjusting the sliders to see how the mass changes shape. Check the "**Sample Range**" checkbox under the height and width sliders. Then click the "**Alternatives**" button (<img src="./images/alternatives-btn.png" width="30px" />) on your workflow to see the options that have been generated.
 
@@ -301,13 +301,13 @@ This diagram summarizes the steps we've taken to edit and update our function:
 
 ## Sharing your function
 
-Your function always starts out private to you: only you can see and use it in a workflow. Once you're happy with your function, you can share it with the world! 
+Your function always starts out private to you: only you can see and use it in a workflow. Once you're happy with your function, you can share it with the world!
 
 Click the "About" link under your function name again, and this time navigate to the **Permissions** tab.
 
 ![](./images/permissions.png)
 
-Uncheck the **Private** checkbox to make your function public. You can also choose to share it in a more limited way, by sharing with specific email addresses or with a whole email domain (like `myfirm.com`). 
+Uncheck the **Private** checkbox to make your function public. You can also choose to share it in a more limited way, by sharing with specific email addresses or with a whole email domain (like `myfirm.com`).
 
 You may also want to add a thumbnail to your function so others can get a sense of what it does. To do this, go to the **Details** tab, click **Edit Function Details**, and drag-and-drop an image on the drop zone. Then click **Save Changes** to save the thumbnail.
 ![](./images/add-thumbnail.gif)
@@ -322,7 +322,7 @@ Return to your workflow, and remove your function from the workflow by clicking 
 Then go to the Hypar menu in the upper-right hand corner of the window, and select **Test a Local Function**
 <img src="./images/test-a-local-function.png" width="30%">
 
-Click the "Copy to clipboard" button under the command: 
+Click the "Copy to clipboard" button under the command:
 
 <img src="./images/copy-run-to-cb.gif" width="50%">
 
@@ -335,7 +335,7 @@ Wait until you see this message:
 ```
 Workflow update subscription acknowledgement received with id 518f1c6f-1b07-40e9-8461-fbc8fdbe3c06. Waiting for workspace updates...
 ```
-And then return to the workflow and click the "Ready" button. 
+And then return to the workflow and click the "Ready" button.
 <img src="./images/ready-btn.gif">
 
 Now, when you edit the inputs of the function, they're passed to your locally-running function, instead of being executed on the cloud.
@@ -346,7 +346,7 @@ The <code>hypar run</code> command we pasted earlier stays running continuously 
 </div>
 
 
-Let's make some changes to our code, with `hypar run` still running. We'll insert a void running through our mass. For this we'll need to create a smaller rectangle inside our first one, and create a profile from those two rectangles. First, we'll make the second rectangle: 
+Let's make some changes to our code, with `hypar run` still running. We'll insert a void running through our mass. For this we'll need to create a smaller rectangle inside our first one, and create a profile from those two rectangles. First, we'll make the second rectangle:
 ```csharp
 var innerRectangle = Polygon.Rectangle(input.Width * 0.5, input.Length * 0.5);
 ```
@@ -359,7 +359,7 @@ And then edit the line where we make the `Mass` to use our new profile:
 var mass = new Mass(profile, input.Height, material);
 ```
 
-The updated execute method should look like this: 
+The updated execute method should look like this:
 ```csharp
 public static StarterFunctionOutputs Execute(Dictionary<string, Model> inputModels, StarterFunctionInputs input)
         {
@@ -368,10 +368,10 @@ public static StarterFunctionOutputs Execute(Dictionary<string, Model> inputMode
 
             // create a rectangle
             var rectangle = Polygon.Rectangle(input.Width, input.Length);
-            
+
             // create an inner void rectangle
             var innerRectangle = Polygon.Rectangle(input.Width * 0.5, input.Length * 0.5);
-            
+
             // create a profile from the two rectangles
             var profile = new Profile(rectangle, innerRectangle);
 
@@ -391,22 +391,33 @@ public static StarterFunctionOutputs Execute(Dictionary<string, Model> inputMode
 As soon as you save your code, you should see the function results update in your workflow:
 ![](./images/mass-with-void.png)
 
-When you're happy with your local changes, hit ctrl+C in the terminal to stop `hypar run`. 
+When you're happy with your local changes, hit ctrl+C in the terminal to stop `hypar run`.
 
-Finally, publish your updated function with `hypar publish`. The next time you use it in a workflow, it will reflect the changes you made. Anyone you've shared your function with will also have access to the latest and greatest version you just published. 
+Finally, publish your updated function with `hypar publish`. The next time you use it in a workflow, it will reflect the changes you made. Anyone you've shared your function with will also have access to the latest and greatest version you just published.
 
 This diagram summarizes the steps we've taken to edit and test our function with live preview:
 
 ![](./images/EditLive.png)
 
-## What's next?
+## What's Next?
 
-Congratulations on creating your first Hypar function! There's more to learn, but you should start thinking about building a real, useful function. Here are a few tips for deciding what to make:
+Congratulations on creating your first Hypar function! There's more to learn, but you should start thinking about building a real, useful function.
+
+### Tips
+
+Here are a few tips for deciding what to make:
 
 - Solve one small problem. Hypar Functions are easy to compose. No single function needs to do too much on its own.
 - Take something you've done before and do it again on Hypar.
 - Scratch an itch. What do you hate doing manually? What would look cool? What would look silly?
 - You don't need to be original. Just get started. Feel free to make another version of something you've already seen.
+
+### Advanced Topics
+
+Hypar is under active development. The following docs are likely to change rapidly as we continue to improve our platform:
+- [Function Overrides](https://hyparaec.notion.site/Overrides-fe04730dcdef45c0a556e5d04953ab13): Let users override chosen element properties and utilize those case-by-case inputs in your function.
+
+### Additional Resources
 
 Here are some other good resources:
 - [Hypar CLI Reference](./Hypar-CLI-Reference.md)
