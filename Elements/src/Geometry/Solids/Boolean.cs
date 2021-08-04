@@ -7,7 +7,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// Boolean operations on solids.
     /// </summary>
-    public static class SolidBoolean
+    public partial class Solid
     {
         /// <summary>
         /// Compute the union of two solids.

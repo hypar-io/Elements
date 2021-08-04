@@ -312,7 +312,7 @@ namespace Elements.Tests
 
             CreateTestSolids(out GeometricElement a, out GeometricElement b);
 
-            var s = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
             Assert.Equal(28, s.Faces.Count);
 
@@ -326,7 +326,7 @@ namespace Elements.Tests
             this.Name = nameof(Difference);
 
             CreateTestSolids(out GeometricElement a, out GeometricElement b);
-            var s = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
             Assert.Equal(15, s.Faces.Count);
 
@@ -341,7 +341,7 @@ namespace Elements.Tests
 
             CreateTestSolids(out GeometricElement a, out GeometricElement b);
 
-            var s = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
 
             Assert.Equal(12, s.Faces.Count);
 
@@ -358,9 +358,9 @@ namespace Elements.Tests
 
             var t1 = new Transform(new Vector3(10, 0));
             var t2 = new Transform(new Vector3(15, 0));
-            var s1 = SolidBoolean.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
-            var s2 = SolidBoolean.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
-            var s3 = SolidBoolean.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s1 = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s2 = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s3 = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
             var i1 = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s1) }));
             var i2 = new GeometricElement(t1, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
             var i3 = new GeometricElement(t2, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
