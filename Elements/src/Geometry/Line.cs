@@ -109,7 +109,7 @@ namespace Elements.Geometry
         /// <param name="amount">The amount to thicken the line.</param>
         public Polygon Thicken(double amount)
         {
-            if (Start.Z != End.Z)
+            if (!Start.Z.ApproximatelyEquals(End.Z))
             {
                 throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
             }
@@ -466,6 +466,21 @@ namespace Elements.Geometry
         /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
         public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
+            return ExtendTo(otherLines, double.MaxValue, bothSides, extendToFurthest, tolerance);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with any other line, but no further than maxDistance.
+        /// If optional `extendToFurthest` is true, extends to furthest intersection with any other line, but no further than maxDistance.
+        /// If the distance to the intersection with the lines is greater than the maximum, the line will be returned unchanged.
+        /// </summary>
+        /// <param name="otherLines">The other lines to intersect with.</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(IEnumerable<Line> otherLines, double maxDistance, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
+        {
             // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
             var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
@@ -520,8 +535,8 @@ namespace Elements.Geometry
                 .Reverse().Cast<Vector3?>();
 
             (Vector3? Start, Vector3? End) startEndCandidates = extendToFurthest ?
-                (startCandidates.LastOrDefault(), endCandidates.LastOrDefault()) :
-                (startCandidates.FirstOrDefault(), endCandidates.FirstOrDefault());
+                (startCandidates.LastOrDefault(p => p.GetValueOrDefault().DistanceTo(start) < maxDistance), endCandidates.LastOrDefault(p => p.GetValueOrDefault().DistanceTo(end) < maxDistance)) :
+                (startCandidates.FirstOrDefault(p => p.GetValueOrDefault().DistanceTo(start) < maxDistance), endCandidates.FirstOrDefault(p => p.GetValueOrDefault().DistanceTo(end) < maxDistance));
 
             if (bothSides && startEndCandidates.Start != null)
             {
@@ -547,6 +562,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a polyline, but no further than maxDistance.
+        /// </summary>
+        /// <param name="polyline">The polyline to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Polyline polyline, double maxDistance, bool bothSides = true, bool extendToFurthest = false)
+        {
+            return ExtendTo(polyline.Segments(), maxDistance, bothSides, extendToFurthest);
+        }
+
+        /// <summary>
         /// Extend this line to its (nearest, by default) intersection with a profile.
         /// </summary>
         /// <param name="profile">The profile to intersect with</param>
@@ -555,6 +582,18 @@ namespace Elements.Geometry
         public Line ExtendTo(Profile profile, bool bothSides = true, bool extendToFurthest = false)
         {
             return ExtendTo(profile.Segments(), bothSides, extendToFurthest);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a profile, but no further than maxDistance.
+        /// </summary>
+        /// <param name="profile">The profile to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Profile profile, double maxDistance, bool bothSides = true, bool extendToFurthest = false)
+        {
+            return ExtendTo(profile.Segments(), maxDistance, bothSides, extendToFurthest);
         }
 
         /// <summary>
@@ -567,6 +606,19 @@ namespace Elements.Geometry
         public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
             return ExtendTo(polygon.Segments(), bothSides, extendToFurthest, tolerance);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a polygon, but no further than maxDistance.
+        /// </summary>
+        /// <param name="polygon">The polygon to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(Polygon polygon, double maxDistance, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
+        {
+            return ExtendTo(polygon.Segments(), maxDistance, bothSides, extendToFurthest, tolerance);
         }
 
         /// <summary>
