@@ -51,7 +51,7 @@ That's it! You now have a Hypar account. Time to start building some workflows o
 - [Hypar's YouTube channel](https://www.youtube.com/c/hypar) has walkthrough videos and livestreams.
 
 ### Access Plugins
-- [Hypar Plug-in for Rhino](https://www.notion.so/hyparaec/Hypar-Plug-in-for-Rhino-b0962866892b4e6aa3be249a01a31f79)
+- [Hypar Plug-in for Rhino](Doc.md?id=hyparPluginForRhino)
 
 
 <!--

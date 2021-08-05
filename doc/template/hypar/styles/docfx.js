@@ -24,6 +24,8 @@ $(function () {
   breakText();
   renderTabs();
 
+  handleExternals();
+
   window.refresh = function (article) {
     // Update markup result
     if (typeof article == 'undefined' || typeof article.content == 'undefined')
@@ -1134,5 +1136,28 @@ $(function () {
     // Exclude tabbed content case
     $('a:not([data-tab])').click(delegateAnchors);
     scrollToCurrent();
+  }
+
+  /**
+   * Show iframes if they are referenced in the `renderUrl` search param
+   */
+  function handleExternals() {
+    if (window.location.pathname !== '/Doc.html') { return }
+    var search = new URLSearchParams(window.location.search);
+    var id = search.get('id');
+    if (!id) { return; }
+
+    var proxiedUrl = '/notion-sync/synced/' + id + '.json'
+
+    // $.get(proxiedUrl)
+    //   .success(function (data) {
+    //     const page = JSON.parse(data);
+    //     const $page = $.parseHTML(page.html);
+    //     console.log(page, $page);
+    //     $('#external').append($page);
+    //   })
+    //   .fail(function (data) {
+    //     console.log('fail', data);
+    //   });
   }
 });

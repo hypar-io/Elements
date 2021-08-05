@@ -31,7 +31,8 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "images/**",
+          "notion-sync/**"
         ]
       },
       {
