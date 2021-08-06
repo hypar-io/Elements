@@ -14,10 +14,10 @@ namespace Elements
     public class ModelArrows : GeometricElement
     {
         /// <summary>
-        /// A collection of tuples specifying the origin and scale
+        /// A collection of tuples specifying the origin, scale, and color
         /// of the arrows.
         /// </summary>
-        public IList<(Vector3 origin, Vector3 direction, double scale)> Vectors { get; set; }
+        public IList<(Vector3 origin, Vector3 direction, double scale, Color? color)> Vectors { get; set; }
 
         /// <summary>
         /// Should an arrow head be drawn at the start?
@@ -42,31 +42,80 @@ namespace Elements
         /// <param name="arrowAtStart">Should an arrow head be drawn at the start?</param>
         /// <param name="arrowAtEnd">Should an arrow head be drawn at the end?</param>
         /// <param name="arrowAngle">The angle of the arrow head.</param>
-        /// <param name="material">The material. Specular and glossiness components will be ignored.</param>
-        /// <param name="transform">The model curve's transform.</param>
+        /// <param name="transform">The model arrows's transform.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
-        /// <param name="id">The id of the model curve.</param>
-        /// <param name="name">The name of the model curve.</param>
+        /// <param name="id">The id of the model arrows.</param>
+        /// <param name="name">The name of the model arrows.</param>
         [JsonConstructor]
-        public ModelArrows(IList<(Vector3, Vector3, double)> vectors = null,
+        public ModelArrows(IList<(Vector3, Vector3, double, Color? color)> vectors = null,
                            bool arrowAtStart = false,
                            bool arrowAtEnd = true,
                            double arrowAngle = 60.0,
-                           Material material = null,
                            Transform transform = null,
                            bool isElementDefinition = false,
                            Guid id = default(Guid),
                            string name = null) : base(transform != null ? transform : new Transform(),
-                                                     material != null ? material : BuiltInMaterials.Points,
+                                                     BuiltInMaterials.Default,
                                                      null,
                                                      isElementDefinition,
                                                      id != default(Guid) ? id : Guid.NewGuid(),
                                                      name)
         {
-            this.Vectors = vectors != null ? vectors : new List<(Vector3, Vector3, double)>();
+            this.Vectors = vectors != null ? vectors : new List<(Vector3, Vector3, double, Color?)>();
             this.ArrowAtEnd = arrowAtEnd;
             this.ArrowAtStart = arrowAtStart;
             this.ArrowAngle = arrowAngle;
+        }
+
+        internal GraphicsBuffers ToGraphicsBuffers()
+        {
+            var x = 0.1 * Math.Cos(Units.DegreesToRadians(-this.ArrowAngle));
+            var y = 0.1 * Math.Sin(Units.DegreesToRadians(-this.ArrowAngle));
+
+            var gb = new GraphicsBuffers();
+
+            for (var i = 0; i < this.Vectors.Count; i++)
+            {
+                var v = this.Vectors[i];
+                var start = v.origin;
+                var end = v.origin + v.direction * v.scale;
+                var up = v.direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
+                var tx = v.direction.Cross(up);
+                var ty = v.direction;
+                var tz = ty.Cross(tx);
+                var tr = new Transform(Vector3.Origin, tx, ty, tz);
+
+                var pts = new List<Vector3>() { v.origin, end };
+
+                if (this.ArrowAtStart)
+                {
+                    var arrow1 = tr.OfPoint(new Vector3(x, -y));
+                    var arrow2 = tr.OfPoint(new Vector3(-x, -y));
+
+                    pts.Add(start);
+                    pts.Add(start + arrow1);
+                    pts.Add(start);
+                    pts.Add(start + arrow2);
+                }
+                if (this.ArrowAtEnd)
+                {
+                    var arrow1 = tr.OfPoint(new Vector3(x, y));
+                    var arrow2 = tr.OfPoint(new Vector3(-x, y));
+                    pts.Add(end);
+                    pts.Add(end + arrow1);
+                    pts.Add(end);
+                    pts.Add(end + arrow2);
+                }
+
+                for (var j = 0; j < pts.Count; j++)
+                {
+                    var pt = pts[j];
+                    gb.AddVertex(pt, default(Vector3), default(UV), v.color.HasValue ? v.color : Colors.Red);
+                    gb.AddIndex((ushort)(i * pts.Count + j));
+                }
+            }
+
+            return gb;
         }
     }
 }

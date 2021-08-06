@@ -92,5 +92,26 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="c">The curve to convert.</param>
         public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
+
+        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        {
+            var gb = new GraphicsBuffers();
+
+            var vertices = this.RenderVertices();
+
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var v = vertices[i];
+                gb.AddVertex(v, default(Vector3), default(UV), null);
+
+                var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
+                if (write)
+                {
+                    gb.AddIndex((ushort)i);
+                    gb.AddIndex((ushort)(i + 1));
+                }
+            }
+            return gb;
+        }
     }
 }

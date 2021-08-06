@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Xunit;
@@ -17,22 +18,27 @@ namespace Elements.Tests.Examples
             this.Name = "Elements_ModelArrows";
 
             // <example>
-            // Create some point locations.
-            var vectors = new List<(Vector3, Vector3, double)>();
+            // Create some arrow locations.
+            var vectors = new List<(Vector3, Vector3, double, Color?)>();
+
             var target = new Vector3(15, 20);
-            for (var x = 0; x < 25; x++)
+            var squareSize = 25.0;
+            var maxDistance = Math.Sqrt(Math.Pow(squareSize, 2) + Math.Pow(squareSize, 2));
+            for (var x = 0.0; x < squareSize; x += 1.0)
             {
-                for (var y = 0; y < 25; y++)
+                for (var y = 0.0; y < squareSize; y += 1.0)
                 {
                     var l = new Vector3(x, y);
                     var d = (target - l).Unitized();
                     var distance = target.DistanceTo(l);
-                    vectors.Add((l, d, distance / 25));
+                    var r = distance / maxDistance;
+                    var c = new Color(x / squareSize, y / squareSize, 0.0, 1.0);
+                    vectors.Add((l, d, r, c));
                 }
             }
 
             // Create a model arrows object.
-            var modelArrows = new ModelArrows(vectors, true, true, material: BuiltInMaterials.ZAxis);
+            var modelArrows = new ModelArrows(vectors, false, true);
             // </example>
 
             this.Model.AddElement(modelArrows);
