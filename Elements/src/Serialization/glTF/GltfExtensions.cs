@@ -1048,6 +1048,15 @@ namespace Elements.Serialization.glTF
                 }
             }
 
+            if (e is ModelArrows)
+            {
+                var ma = (ModelArrows)e;
+                if (ma.Vectors.Count > 0)
+                {
+                    AddVectorArrows(GetNextId(), ma, gltf, materialIndexMap[ma.Material.Name], buffers, bufferViews, accessors, meshes, nodes, ma.Transform);
+                }
+            }
+
             if (e is ITessellate)
             {
                 var geo = (ITessellate)e;
@@ -1304,6 +1313,96 @@ namespace Elements.Serialization.glTF
             var bbox = new BBox3(vertices);
             gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
                             bbox.Max.ToArray(), 0, (ushort)(vertices.Count - 1), material, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, t);
+        }
+
+        private static void AddVectorArrows(long id,
+                                      ModelArrows ma,
+                                      Gltf gltf,
+                                      int material,
+                                      List<byte> buffer,
+                                      List<BufferView> bufferViews,
+                                      List<Accessor> accessors,
+                                      List<glTFLoader.Schema.Mesh> meshes,
+                                      List<glTFLoader.Schema.Node> nodes,
+                                      Transform t = null)
+        {
+            var floatSize = sizeof(float);
+            var ushortSize = sizeof(ushort);
+            var segments = 1;
+            if (ma.ArrowAtStart)
+            {
+                segments += 2;
+            }
+            if (ma.ArrowAtEnd)
+            {
+                segments += 2;
+            }
+            var vBuff = new byte[ma.Vectors.Count * segments * 2 * 3 * floatSize];
+            var indices = new byte[ma.Vectors.Count * segments * 2 * ushortSize];
+            var vi = 0;
+            var ii = 0;
+
+            var bbox = new BBox3();
+
+            var x = 0.1 * Math.Cos(Units.DegreesToRadians(-ma.ArrowAngle));
+            var y = 0.1 * Math.Sin(Units.DegreesToRadians(-ma.ArrowAngle));
+
+            for (var i = 0; i < ma.Vectors.Count; i++)
+            {
+                var v = ma.Vectors[i];
+                var start = v.origin;
+                var end = v.origin + v.direction * v.scale;
+                var up = v.direction.IsParallelTo(Vector3.ZAxis) ? Vector3.YAxis : Vector3.ZAxis;
+                var tx = v.direction.Cross(up);
+                var ty = v.direction;
+                var tz = ty.Cross(tx);
+                var tr = new Transform(Vector3.Origin, tx, ty, tz);
+
+                bbox.Extend(v.origin);
+                bbox.Extend(end);
+                var pts = new List<Vector3>() { v.origin, end };
+
+                if (ma.ArrowAtStart)
+                {
+                    var arrow1 = tr.OfPoint(new Vector3(x, -y));
+                    var arrow2 = tr.OfPoint(new Vector3(-x, -y));
+
+                    pts.Add(start);
+                    pts.Add(start + arrow1);
+                    pts.Add(start);
+                    pts.Add(start + arrow2);
+
+                    bbox.Extend(start + arrow1);
+                    bbox.Extend(start + arrow2);
+                }
+                if (ma.ArrowAtEnd)
+                {
+                    var arrow1 = tr.OfPoint(new Vector3(x, y));
+                    var arrow2 = tr.OfPoint(new Vector3(-x, y));
+                    pts.Add(end);
+                    pts.Add(end + arrow1);
+                    pts.Add(end);
+                    pts.Add(end + arrow2);
+
+                    bbox.Extend(end + arrow1);
+                    bbox.Extend(end + arrow2);
+                }
+
+                for (var j = 0; j < pts.Count; j++)
+                {
+                    var pt = pts[j];
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)pt.X), 0, vBuff, vi, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)pt.Y), 0, vBuff, vi + floatSize, floatSize);
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((float)pt.Z), 0, vBuff, vi + 2 * floatSize, floatSize);
+                    vi += 3 * floatSize;
+
+                    System.Buffer.BlockCopy(BitConverter.GetBytes((ushort)(i * pts.Count + j)), 0, indices, ii, ushortSize);
+                    ii += ushortSize;
+                }
+            }
+
+            gltf.AddLineLoop($"{id}_curve", buffer, bufferViews, accessors, vBuff, indices, bbox.Min.ToArray(),
+                            bbox.Max.ToArray(), 0, (ushort)(ma.Vectors.Count * segments * 2 - 1), material, MeshPrimitive.ModeEnum.LINES, meshes, nodes, t);
         }
     }
 }
