@@ -51,7 +51,7 @@ namespace Elements
         public ModelArrows(IList<(Vector3, Vector3, double)> vectors = null,
                            bool arrowAtStart = false,
                            bool arrowAtEnd = true,
-                           double arrowAngle = 45.0,
+                           double arrowAngle = 60.0,
                            Material material = null,
                            Transform transform = null,
                            bool isElementDefinition = false,
