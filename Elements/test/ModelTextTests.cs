@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Xunit;
@@ -17,16 +18,20 @@ namespace Elements.Tests
         {
             this.Name = "Elements_ModelText";
 
-            var squareSize = 25.0;
-
             // <example>
-            var texts = new List<(Vector3, Vector3, string)>();
-            var d = Vector3.YAxis.Negate();
+            var target = new Vector3(15, 20);
+            var squareSize = 25.0;
+            var maxDistance = Math.Sqrt(Math.Pow(squareSize, 2) + Math.Pow(squareSize, 2));
+
+            var texts = new List<(Vector3, Vector3, string, Color?)>();
+            var dir = Vector3.YAxis.Negate();
+
             for (var x = 0.0; x < squareSize; x += 1.0)
             {
                 for (var y = 0.0; y < squareSize; y += 1.0)
                 {
-                    texts.Add((new Vector3(x, y), d, $"[{x},{y}]"));
+                    var c = new Color(x / squareSize, y / squareSize, 0.0, 1.0);
+                    texts.Add((new Vector3(x, y), dir, $"[{x},{y}]", c));
                 }
             }
 

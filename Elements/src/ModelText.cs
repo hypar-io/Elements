@@ -47,9 +47,9 @@ namespace Elements
 
         /// <summary>
         /// A collection of text data objects which specify the location,
-        /// direction, and content of the text.
+        /// direction, content, and color of the text.
         /// </summary>
-        public IList<(Vector3 location, Vector3 direction, string text)> Texts { get; set; }
+        public IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> Texts { get; set; }
 
         /// <summary>
         /// The font size of the model text.
@@ -70,9 +70,11 @@ namespace Elements
         /// <param name="fontSize">The font size of the text.</param>
         /// <param name="scale">An additional scale to apply to the size of the text.
         /// Fonts will be drawn at the real world equivalent of 72 dpi at scale=1.0.</param>
-        public ModelText(IList<(Vector3 location, Vector3 direction, string text)> texts, FontSize fontSize, double scale = 1.0)
+        public ModelText(IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> texts,
+                         FontSize fontSize,
+                         double scale = 1.0)
         {
-            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 direction, string text)>();
+            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)>();
             this.FontSize = fontSize;
             this.Scale = scale;
 
@@ -80,7 +82,13 @@ namespace Elements
             GenerateTextureAtlas();
             GenerateMesh();
 
-            this.Material = new Material($"{Guid.NewGuid().ToString()}_texture_atlas", Elements.Geometry.Colors.White, 0.0, 0.0, texture: _texturePath, repeatTexture: false, unlit: true);
+            this.Material = new Material($"{Guid.NewGuid().ToString()}_texture_atlas",
+                                         Elements.Geometry.Colors.White,
+                                         0.0,
+                                         0.0,
+                                         texture: _texturePath,
+                                         repeatTexture: false,
+                                         unlit: true);
         }
 
         private void Initialize()
@@ -166,7 +174,8 @@ namespace Elements
                     // y = 0.0f;
                 }
 
-                image.Mutate(o => o.DrawText(_options, t.text, font, SixLabors.ImageSharp.Color.Black, new PointF(x, y)));
+                var color = t.color != null ? new SixLabors.ImageSharp.Color(new Rgba32((float)t.color.Value.Red, (float)t.color.Value.Green, (float)t.color.Value.Blue)) : SixLabors.ImageSharp.Color.Black;
+                image.Mutate(o => o.DrawText(_options, t.text, font, color, new PointF(x, y)));
 
                 var minU = (x / this._maxTextureSize);
                 var minV = 1 - (y / this._maxTextureSize);
