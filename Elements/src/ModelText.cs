@@ -33,6 +33,9 @@ namespace Elements
     /// <summary>
     /// A collection of text tags which are visible in 3D.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/ModelTextTests.cs?name=example)]
+    /// </example>
     public class ModelText : MeshElement
     {
         private static Font _font12;
