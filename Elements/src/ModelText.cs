@@ -85,7 +85,7 @@ namespace Elements
             GenerateTextureAtlas();
             GenerateMesh();
 
-            this.Material = new Material($"{Guid.NewGuid().ToString()}_texture_atlas",
+            this.Material = new Material($"{Guid.NewGuid()}_texture_atlas",
                                          Elements.Geometry.Colors.White,
                                          0.0,
                                          0.0,
