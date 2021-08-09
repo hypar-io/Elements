@@ -4,12 +4,10 @@
 
 ### Added
 
-- Support for DXF from many basic elements.
-
 ### Changed
 
-- Added `Symbols` property to `ContentElement`.
-- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
+### Fixed
+- Deduplicate catalog names during code generation.
 
 ## 0.9.2
 
@@ -37,10 +35,13 @@
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
 - `Profile.Offset()`
+- Support for DXF from many basic elements.
 
 ### Changed
 
 - Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+- Added `Symbols` property to `ContentElement`.
+- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
 
 ### Fixed
 
