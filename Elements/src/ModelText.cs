@@ -121,7 +121,6 @@ namespace Elements
             {
                 TextOptions = new TextOptions()
                 {
-                    // ApplyKerning = true,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
                     DpiX = _dpi,
