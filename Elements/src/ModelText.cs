@@ -107,8 +107,8 @@ namespace Elements
 
             if (_labelsDirectory == null)
             {
-                var asmDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                _labelsDirectory = Path.Combine(asmDir, $"Labels");
+                var tempDir = Path.GetTempPath();
+                _labelsDirectory = Path.Combine(tempDir, $"Labels");
                 if (!Directory.Exists(_labelsDirectory))
                 {
                     Directory.CreateDirectory(_labelsDirectory);
@@ -168,7 +168,7 @@ namespace Elements
                     throw new Exception("The model text could not be created. There is too much text. Try making multiple model texts.");
 
                     // TODO: Instead of throwing an exception, we could do the
-                    // user a favor and just start a new one. This makes the 
+                    // user a favor and just start a new texture. This makes the 
                     // element have multiple materials however and would need
                     // to be handled as a special case.
                 }
