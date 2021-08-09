@@ -98,8 +98,10 @@ namespace Elements
         {
             if (_font12 == null)
             {
-                FontCollection collection = new FontCollection();
-                FontFamily family = collection.Install("Fonts/Roboto-Medium.ttf");
+                var asmDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var fontPath = Path.Combine(asmDir, "Fonts/Roboto-Medium.ttf");
+                var collection = new FontCollection();
+                var family = collection.Install(fontPath);
                 _font12 = family.CreateFont(12);
                 _font24 = family.CreateFont(24);
                 _font36 = family.CreateFont(36);
