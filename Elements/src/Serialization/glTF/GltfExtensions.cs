@@ -435,7 +435,6 @@ namespace Elements.Serialization.glTF
 
             while (buffer.Count % 4 != 0)
             {
-                // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 
@@ -536,7 +535,6 @@ namespace Elements.Serialization.glTF
 
             while (buffer.Count % 4 != 0)
             {
-                // Console.WriteLine("Padding...");
                 buffer.Add(0);
             }
 
@@ -1066,7 +1064,7 @@ namespace Elements.Serialization.glTF
             if (e is ModelCurve)
             {
                 var mc = (ModelCurve)e;
-                var id = $"{GetNextId()}_curve";
+                var id = $"{e.Id.ToString()}_curve";
                 var gb = mc.ToGraphicsBuffers(true);
                 gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
             }
@@ -1076,7 +1074,7 @@ namespace Elements.Serialization.glTF
                 var mp = (ModelPoints)e;
                 if (mp.Locations.Count != 0)
                 {
-                    var id = $"{GetNextId()}_point";
+                    var id = $"{e.Id.ToString()}_point";
                     var gb = mp.ToGraphicsBuffers();
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Name], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
                 }
@@ -1087,7 +1085,7 @@ namespace Elements.Serialization.glTF
                 var ma = (ModelArrows)e;
                 if (ma.Vectors.Count > 0)
                 {
-                    var id = $"{GetNextId()}_arrow";
+                    var id = $"{e.Id.ToString()}_arrow";
                     var gb = ma.ToGraphicsBuffers();
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
                 }

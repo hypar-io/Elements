@@ -23,7 +23,7 @@ namespace Elements.Tests
             var squareSize = 25.0;
             var maxDistance = Math.Sqrt(Math.Pow(squareSize, 2) + Math.Pow(squareSize, 2));
 
-            var texts = new List<(Vector3, Vector3, string, Color?)>();
+            var texts = new List<(Vector3 location, Vector3 direction, string text, Color? color)>();
             var dir = Vector3.YAxis.Negate();
 
             for (var x = 0.0; x < squareSize; x += 1.0)
@@ -35,7 +35,7 @@ namespace Elements.Tests
                 }
             }
 
-            // Create a model arrows object.
+            // Create a model text object.
             var modelText = new ModelText(texts, FontSize.PT36, 5);
             // </example>
 

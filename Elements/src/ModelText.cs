@@ -75,7 +75,7 @@ namespace Elements
         /// Fonts will be drawn at the real world equivalent of 72 dpi at scale=1.0.</param>
         public ModelText(IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> texts,
                          FontSize fontSize,
-                         double scale = 1.0)
+                         double scale = 10.0)
         {
             this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)>();
             this.FontSize = fontSize;
@@ -166,15 +166,11 @@ namespace Elements
                 if (y + fontRectangle.Height > this._maxTextureSize)
                 {
                     throw new Exception("The model text could not be created. There is too much text. Try making multiple model texts.");
-                    // Start a new texture;
-                    // image.SaveAsPng(path);
-                    // image.Dispose();
 
-                    // image = new Image<Rgba32>(this._maxTextureSize, this._maxTextureSize);
-                    // path = Path.Combine(_labelsDirectory, $"{Guid.NewGuid()}.png");
-
-                    // x = 0.0f;
-                    // y = 0.0f;
+                    // TODO: Instead of throwing an exception, we could do the
+                    // user a favor and just start a new one. This makes the 
+                    // element have multiple materials however and would need
+                    // to be handled as a special case.
                 }
 
                 var color = t.color != null ? new SixLabors.ImageSharp.Color(new Rgba32((float)t.color.Value.Red, (float)t.color.Value.Green, (float)t.color.Value.Blue)) : SixLabors.ImageSharp.Color.Black;
@@ -220,10 +216,6 @@ namespace Elements
                 var uv2 = new UV(ta.min.U, ta.max.V);
                 var uv3 = new UV(ta.max.U, ta.max.V);
                 var uv4 = new UV(ta.max.U, ta.min.V);
-                // var uv1 = new UV(0, 0);
-                // var uv2 = new UV(0, 1);
-                // var uv3 = new UV(1, 1);
-                // var uv4 = new UV(1, 0);
 
                 var a = this.Mesh.AddVertex(v1, uv1);
                 var b = this.Mesh.AddVertex(v2, uv2);

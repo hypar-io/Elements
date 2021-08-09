@@ -19,7 +19,7 @@ namespace Elements.Tests.Examples
 
             // <example>
             // Create some arrow locations.
-            var vectors = new List<(Vector3, Vector3, double, Color?)>();
+            var vectors = new List<(Vector3 location, Vector3 direction, double magnitude, Color? color)>();
 
             var target = new Vector3(15, 20);
             var squareSize = 25.0;
