@@ -5,6 +5,8 @@
 ### Added
 
 - Support for DXF from many basic elements.
+- `ModelArrows`
+- `ModelText`
 
 ### Changed
 
