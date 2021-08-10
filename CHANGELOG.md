@@ -37,7 +37,13 @@
   - `Polygon.Difference(params Polygon[] polygons)`
   - `Polygon.Union(params Polygon[] polygons)`
 - `Profile.Offset()`
+- Overloads with `maxDistance` parameter for
+  - `Line.ExtendTo(IEnumerable<Line>)`
+  - `Line.ExtendTo(Polyline)`
+  - `Line.ExtendTo(Polygon)`
+  - `Line.ExtendTo(Profile)`
 - Support for DXF from many basic elements.
+
 
 ### Changed
 
