@@ -796,6 +796,12 @@ namespace Elements.Geometry
             Split(points);
         }
 
+        /// <summary>
+        /// Insert a point into the polyline if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="points">The points at which to split the polyline.</param>
+        /// <param name="closed">Is the polyline closed?</param>
         protected void Split(IList<Vector3> points, bool closed = false)
         {
             for (var i = 0; i < this.Vertices.Count; i++)

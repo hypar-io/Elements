@@ -4,6 +4,8 @@
 
 ### Added
 
+- `ModelArrows`
+- `ModelText`
 ### Changed
 
 ### Fixed
