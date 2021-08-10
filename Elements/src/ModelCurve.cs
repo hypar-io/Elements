@@ -44,6 +44,11 @@ namespace Elements
             this.Curve = curve;
             this.Material = material != null ? material : BuiltInMaterials.Edges;
         }
+
+        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        {
+            return this.Curve.ToGraphicsBuffers(lineLoop);
+        }
     }
 
     /// <summary>

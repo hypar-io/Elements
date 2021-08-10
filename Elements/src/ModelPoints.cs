@@ -42,5 +42,19 @@ namespace Elements
         {
             this.Locations = locations != null ? locations : new List<Vector3>();
         }
+
+        internal GraphicsBuffers ToGraphicsBuffers()
+        {
+            var gb = new GraphicsBuffers();
+
+            for (var i = 0; i < this.Locations.Count; i++)
+            {
+                var l = this.Locations[i];
+                gb.AddVertex(l, default(Vector3), default(UV), null);
+                gb.AddIndex((ushort)(i));
+            }
+
+            return gb;
+        }
     }
 }
