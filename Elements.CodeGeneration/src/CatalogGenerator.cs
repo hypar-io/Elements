@@ -59,6 +59,9 @@ namespace Elements.Generate
             {
                 catalog.UseReferenceOrientation();
             }
+
+            catalog = DeduplicateContentNames(catalog);
+
             var templateText = File.ReadAllText(CatalogTemplatePath);
             var template = DotLiquid.Template.Parse(templateText);
             var result = template.Render(Hash.FromAnonymousObject(new
@@ -72,6 +75,12 @@ namespace Elements.Generate
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
             }
             File.WriteAllText(path, result);
+        }
+
+        private static ContentCatalog DeduplicateContentNames(ContentCatalog catalog)
+        {
+            catalog.Content = catalog.Content.GroupBy(c => c.Name).Select(c => c.First()).ToList();
+            return catalog;
         }
 
         private static Func<object, object> GetElementInstanceToRender = (element) =>
