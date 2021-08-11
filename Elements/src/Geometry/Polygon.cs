@@ -96,7 +96,7 @@ namespace Elements.Geometry
         /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
         public bool Contains(Vector3 vector, out Containment containment)
         {
-            return Contains3D(Segments(), vector, out containment);
+            return Contains3D(Edges(), vector, out containment);
         }
 
         /// <summary>
@@ -379,18 +379,18 @@ namespace Elements.Geometry
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
-        internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
+        internal static bool Contains3D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
-            var vertices = segments.Select(segment => segment.Start).ToList();
+            var vertices = edges.Select(edge => edge.from).ToList();
             var is3D = vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains(segments, location, out containment);
+                return Contains(edges, location, out containment);
             }
             var transformTo3D = vertices.ToTransform();
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = segments.Select(segment => segment.TransformedLine(transformToGround));
+            var groundSegments = edges.Select(edge => (transformToGround.OfPoint(edge.from), transformToGround.OfPoint(edge.to)));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
         }
@@ -444,20 +444,20 @@ namespace Elements.Geometry
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains(IEnumerable<Line> segments, Vector3 location, out Containment containment)
+        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
             int windingNumber = 0;
 
-            foreach (var edge in segments)
+            foreach (var edge in edges)
             {
                 // check for coincidence with edge vertices
-                var toStart = location - edge.Start;
+                var toStart = location - edge.from;
                 if (toStart.IsZero())
                 {
                     containment = Containment.CoincidesAtVertex;
                     return true;
                 }
-                var toEnd = location - edge.End;
+                var toEnd = location - edge.to;
                 if (toEnd.IsZero())
                 {
                     containment = Containment.CoincidesAtVertex;
@@ -465,7 +465,7 @@ namespace Elements.Geometry
                 }
                 //along segment - check if perpendicular distance to segment is below tolerance and that point is between ends
                 var a = toStart.Length();
-                var b = toStart.Dot((edge.End - edge.Start).Unitized());
+                var b = toStart.Dot((edge.to - edge.from).Unitized());
                 if (a * a - b * b < Vector3.EPSILON * Vector3.EPSILON && toStart.Dot(toEnd) < 0)
                 {
                     containment = Containment.CoincidesAtEdge;
@@ -473,15 +473,15 @@ namespace Elements.Geometry
                 }
 
 
-                if (edge.AscendingRelativeTo(location) &&
-                    edge.LocationInRange(location, Line.Orientation.Ascending))
+                if (AscendingRelativeTo(location, edge) &&
+                    LocationInRange(location, Orientation.Ascending, edge))
                 {
-                    windingNumber += Wind(location, edge, Line.Position.Left);
+                    windingNumber += Wind(location, edge, Position.Left);
                 }
-                if (!edge.AscendingRelativeTo(location) &&
-                    edge.LocationInRange(location, Line.Orientation.Descending))
+                if (!AscendingRelativeTo(location, edge) &&
+                    LocationInRange(location, Orientation.Descending, edge))
                 {
-                    windingNumber -= Wind(location, edge, Line.Position.Right);
+                    windingNumber -= Wind(location, edge, Position.Right);
                 }
             }
 
@@ -490,10 +490,59 @@ namespace Elements.Geometry
             return result;
         }
 
-        private static int Wind(Vector3 location, Line edge, Line.Position position)
+        #region WindingNumberCalcs
+        private static int Wind(Vector3 location, (Vector3 from, Vector3 to) edge, Position position)
         {
-            return edge.RelativePositionOf(location) != position ? 0 : 1;
+            return RelativePositionOnEdge(location, edge) != position ? 0 : 1;
         }
+
+        private static Position RelativePositionOnEdge(Vector3 location, (Vector3 from, Vector3 to) edge)
+        {
+            double positionCalculation =
+                (edge.to.Y - edge.from.Y) * (location.X - edge.from.X) -
+                (location.Y - edge.from.Y) * (edge.to.X - edge.from.X);
+
+            if (positionCalculation > 0)
+            {
+                return Position.Left;
+            }
+
+            if (positionCalculation < 0)
+            {
+                return Position.Right;
+            }
+
+            return Position.Center;
+        }
+
+        private static bool AscendingRelativeTo(Vector3 location, (Vector3 from, Vector3 to) edge)
+        {
+            return edge.from.X <= location.X;
+        }
+
+        private static bool LocationInRange(Vector3 location, Orientation orientation, (Vector3 from, Vector3 to) edge)
+        {
+            if (orientation == Orientation.Ascending)
+            {
+                return edge.to.X > location.X;
+            }
+
+            return edge.to.X <= location.X;
+        }
+
+        private enum Position
+        {
+            Left,
+            Right,
+            Center
+        }
+
+        private enum Orientation
+        {
+            Ascending,
+            Descending
+        }
+        #endregion
 
 
         /// <summary>
@@ -1678,6 +1727,17 @@ namespace Elements.Geometry
             }
             segmentIndex = this.Vertices.Count - 1;
             return this.End;
+        }
+
+        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var from = this.Vertices[i];
+                var to = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                yield return (from, to);
+            }
         }
 
         /// <summary>
