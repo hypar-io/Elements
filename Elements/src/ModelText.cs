@@ -155,8 +155,16 @@ namespace Elements
 
             _texturePath = Path.Combine(_labelsDirectory, $"{Guid.NewGuid()}.png");
 
+            var textureLookup = new Dictionary<string, (UV min, UV max, FontRectangle fontRect)>();
+
             foreach (var t in this.Texts)
             {
+                if (textureLookup.ContainsKey(t.text))
+                {
+                    this._textureAtlas.Add(textureLookup[t.text]);
+                    continue;
+                }
+
                 var fontRectangle = TextMeasurer.Measure(t.text, renderOptions);
                 if (x + fontRectangle.Width > this._maxTextureSize)
                 {
@@ -182,7 +190,9 @@ namespace Elements
                 var maxU = ((x + fontRectangle.Width) / this._maxTextureSize);
                 var maxV = 1 - ((y + fontRectangle.Height) / this._maxTextureSize);
 
-                this._textureAtlas.Add((new UV(minU, minV), new UV(maxU, maxV), fontRectangle));
+                var textureData = (new UV(minU, minV), new UV(maxU, maxV), fontRectangle);
+                this._textureAtlas.Add(textureData);
+                textureLookup.Add(t.text, textureData);
 
                 x += fontRectangle.Width;
             }
