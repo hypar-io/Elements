@@ -1077,17 +1077,6 @@ namespace Elements.Serialization.glTF
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Name], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
                 }
             }
-
-            if (e is IVisualizeCurves3d)
-            {
-                var ma = (IVisualizeCurves3d)e;
-                var gb = ma.VisualizeCurves3d(false);
-                if (gb != null)
-                {
-                    var id = $"{e.Id}_arrow";
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
-                }
-            }
         }
 
         private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
