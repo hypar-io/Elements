@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -11,7 +12,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ModelPointsTests.cs?name=example)]
     /// </example>
-    public class ModelPoints : GeometricElement
+    public class ModelPoints : GeometricElement, IVisualizePoints3d
     {
         /// <summary>
         /// The locations of the points.
@@ -43,8 +44,16 @@ namespace Elements
             this.Locations = locations != null ? locations : new List<Vector3>();
         }
 
-        internal GraphicsBuffers ToGraphicsBuffers()
+        /// <summary>
+        /// Visualize these points in 3d.
+        /// </summary>
+        public GraphicsBuffers VisualizePoints3d()
         {
+            if (this.Locations.Count == 0)
+            {
+                return null;
+            }
+
             var gb = new GraphicsBuffers();
 
             for (var i = 0; i < this.Locations.Count; i++)

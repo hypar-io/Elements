@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Analysis
@@ -13,7 +12,7 @@ namespace Elements.Analysis
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/AnalysisMeshTests.cs?name=example)]
     /// </example>
-    public class AnalysisMesh : GeometricElement, ITessellate
+    public class AnalysisMesh : GeometricElement
     {
 
         /// <summary>
@@ -97,13 +96,11 @@ namespace Elements.Analysis
         }
 
         /// <summary>
-        /// Tessellate the analysis mesh.
+        /// Visualize this mesh in 3d.
         /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="transform"></param>
-        /// <param name="color"></param>
-        public virtual void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public override GraphicsBuffers Visualize3d()
         {
+            var mesh = new Mesh();
             var span = this._max - this._min;
 
             foreach (var result in this._results)
@@ -119,8 +116,8 @@ namespace Elements.Analysis
                 mesh.AddTriangle(v1, v2, v3);
                 mesh.AddTriangle(v3, v4, v1);
             }
-
             mesh.ComputeNormals();
+            return mesh.GetBuffers();
         }
 
         /// <summary>

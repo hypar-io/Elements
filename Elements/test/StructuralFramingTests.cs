@@ -262,13 +262,12 @@ namespace Elements.Tests
             var z = 0.0;
             var profile = _wideFlangeFactory.AllProfiles().First();
             var n = 100000;
-            var mesh = new Mesh();
             for (var i = 0; i < n; i++)
             {
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile, BuiltInMaterials.Steel);
                 beam.UpdateRepresentations();
-                beam.Representation.SolidOperations.First().Solid.Tessellate(ref mesh);
+                var mesh = beam.Representation.SolidOperations.First().Solid.Tessellate();
                 x += 2.0;
                 if (x > 20.0)
                 {

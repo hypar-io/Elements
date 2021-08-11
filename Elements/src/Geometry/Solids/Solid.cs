@@ -15,7 +15,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
-    public class Solid : ITessellate
+    public class Solid
     {
         private long _faceId;
         private long _edgeId = 10000;
@@ -405,19 +405,17 @@ namespace Elements.Geometry.Solids
         /// </summary>
         public Mesh ToMesh()
         {
-            var mesh = new Mesh();
-            this.Tessellate(ref mesh);
-            return mesh;
+            return this.Tessellate();
         }
 
         /// <summary>
         /// Triangulate this solid.
         /// </summary>
-        /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
         /// <param name="transform">An optional transform used to transform the generated vertex coordinates.</param>
         /// <param name="color">An optional color to apply to the vertex.</param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public Mesh Tessellate(Transform transform = null, Color color = default(Color))
         {
+            var mesh = new Mesh();
             foreach (var f in this.Faces.Values)
             {
                 var tess = new Tess();
@@ -470,15 +468,16 @@ namespace Elements.Geometry.Solids
                 }
                 mesh.AddMesh(faceMesh);
             }
+            mesh.ComputeNormals();
+
+            return mesh;
         }
-
-
 
         /// <summary>
         /// Triangulate this solid and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        public GraphicsBuffers Tessellate()
+        public GraphicsBuffers ToGraphicsBuffers()
         {
             var tessellations = new Tess[this.Faces.Count];
 

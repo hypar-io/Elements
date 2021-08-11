@@ -8,14 +8,13 @@ using glTFLoader.Schema;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Elements.Geometry.Solids;
-using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
-using Elements.Interfaces;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
+using Elements.Interfaces;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -635,11 +634,7 @@ namespace Elements.Serialization.glTF
                                               buffer,
                                               bufferViews);
 
-            var mesh = new Elements.Geometry.Mesh();
-            solid.Tessellate(ref mesh);
-            mesh.ComputeNormals();
-
-            var gbuffers = mesh.GetBuffers();
+            var gbuffers = solid.ToGraphicsBuffers();
 
             var accessors = new List<Accessor>();
 
@@ -1061,69 +1056,36 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is ModelCurve)
+            if (e is IVisualizeCurves3d)
             {
-                var mc = (ModelCurve)e;
-                var id = $"{e.Id}_curve";
-                var gb = mc.ToGraphicsBuffers(true);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
+                var mc = (IVisualizeCurves3d)e;
+                var gb = mc.VisualizeCurves3d(true);
+                if (gb != null)
+                {
+                    var id = $"{e.Id}_curve";
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
+                }
             }
 
-            if (e is ModelPoints)
+            if (e is IVisualizePoints3d)
             {
-                var mp = (ModelPoints)e;
-                if (mp.Locations.Count != 0)
+                var mp = (IVisualizePoints3d)e;
+                var gb = mp.VisualizePoints3d();
+                if (gb != null)
                 {
                     var id = $"{e.Id}_point";
-                    var gb = mp.ToGraphicsBuffers();
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Name], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
                 }
             }
 
-            if (e is ModelArrows)
+            if (e is IVisualizeCurves3d)
             {
-                var ma = (ModelArrows)e;
-                if (ma.Vectors.Count > 0)
+                var ma = (IVisualizeCurves3d)e;
+                var gb = ma.VisualizeCurves3d(false);
+                if (gb != null)
                 {
                     var id = $"{e.Id}_arrow";
-                    var gb = ma.ToGraphicsBuffers();
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
-                }
-            }
-
-            if (e is ITessellate)
-            {
-                var geo = (ITessellate)e;
-                var mesh = new Elements.Geometry.Mesh();
-                geo.Tessellate(ref mesh);
-                if (mesh == null)
-                {
-                    return;
-                }
-
-                var gbuffers = mesh.GetBuffers();
-
-                // TODO(Ian): Remove this cast to GeometricElement when we
-                // consolidate mesh under geometric representations.
-                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
-                                     buffer,
-                                     bufferViews,
-                                     accessors,
-                                     materialIndexMap[materialName],
-                                     gbuffers,
-                                     null,
-                                     meshes);
-
-                if (!meshElementMap.ContainsKey(e.Id))
-                {
-                    meshElementMap.Add(e.Id, new List<int>());
-                }
-                meshElementMap[e.Id].Add(meshId);
-
-                var geom = (GeometricElement)e;
-                if (!geom.IsElementDefinition)
-                {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
                 }
             }
         }
@@ -1178,7 +1140,7 @@ namespace Elements.Serialization.glTF
         private static int ProcessGeometricRepresentation(Element e,
                                                            ref Gltf gltf,
                                                            ref Dictionary<string, int> materialIndexMap,
-                                                           ref List<byte> buffers,
+                                                           ref List<byte> buffer,
                                                            List<BufferView> bufferViews,
                                                            List<Accessor> accessors,
                                                            List<glTFLoader.Schema.Mesh> meshes,
@@ -1201,76 +1163,32 @@ namespace Elements.Serialization.glTF
                 return -1;
             }
 
-            if (geometricElement.Representation != null)
+            var gb = geometricElement.Visualize3d();
+            if (gb == null)
             {
-                meshId = ProcessSolidsAsCSG(geometricElement,
-                                    e.Id.ToString(),
-                                    materialName,
-                                    ref gltf,
-                                    ref materialIndexMap,
-                                    ref buffers,
+                return -1;
+            };
+
+            meshId = gltf.AddTriangleMesh($"{e.Id}_mesh",
+                                    buffer,
                                     bufferViews,
                                     accessors,
-                                    meshes,
-                                    lines,
-                                    geometricElement.Transform);
-
-                // If the id == -1, the mesh is malformed.
-                // It may have no geometry.
-                if (meshId == -1)
-                {
-                    return -1;
-                }
-
-                if (!geometricElement.IsElementDefinition)
-                {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
-                }
-                return meshId;
-            }
-            return -1;
-        }
-
-        private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
-                                      string id,
-                                      string materialName,
-                                      ref Gltf gltf,
-                                      ref Dictionary<string, int> materials,
-                                      ref List<byte> buffer,
-                                      List<BufferView> bufferViews,
-                                      List<Accessor> accessors,
-                                      List<glTFLoader.Schema.Mesh> meshes,
-                                      List<Vector3> lines,
-                                      Transform t = null)
-        {
-            GraphicsBuffers buffers = null;
-            if (geometricElement.Representation.SkipCSGUnion)
-            {
-                // There's a special flag on Representation that allows you to
-                // skip CSG unions. In this case, we tesselate all solids
-                // individually, and do no booleaning. Voids are also ignored.
-                var solids = geometricElement.GetSolids();
-                buffers = solids.Tesselate();
-            }
-            else
-            {
-                var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate();
-            }
-
-            if (buffers.Vertices.Count == 0)
+                                    materialIndexMap[materialName],
+                                    gb,
+                                    null,
+                                    meshes);
+            // If the id == -1, the mesh is malformed.
+            // It may have no geometry.
+            if (meshId == -1)
             {
                 return -1;
             }
 
-            return gltf.AddTriangleMesh(id + "_mesh",
-                                        buffer,
-                                        bufferViews,
-                                        accessors,
-                                        materials[materialName],
-                                        buffers,
-                                        null,
-                                        meshes);
+            if (!geometricElement.IsElementDefinition)
+            {
+                NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
+            }
+            return meshId;
         }
     }
 }

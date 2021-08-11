@@ -5,7 +5,7 @@ using Elements.Interfaces;
 
 namespace Elements
 {
-    public partial class GeometricElement
+    public partial class GeometricElement : IVisualize3d
     {
         /// <summary>
         /// This method provides an opportunity for geometric elements
@@ -145,6 +145,33 @@ namespace Elements
             return op.LocalTransform != null
                         ? op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
                         : op._csg.Transform(Transform.ToMatrix4x4());
+        }
+
+        /// <summary>
+        /// Visualize this element in 3d.
+        /// </summary>
+        public virtual GraphicsBuffers Visualize3d()
+        {
+            if (this.Representation == null)
+            {
+                return null;
+            }
+
+            GraphicsBuffers buffers = null;
+            if (this.Representation.SkipCSGUnion)
+            {
+                // There's a special flag on Representation that allows you to
+                // skip CSG unions. In this case, we tesselate all solids
+                // individually, and do no booleaning. Voids are also ignored.
+                var solids = this.GetSolids();
+                buffers = solids.Tesselate();
+            }
+            else
+            {
+                var csg = this.GetFinalCsgFromSolids();
+                buffers = csg.Tessellate();
+            }
+            return buffers;
         }
     }
 }

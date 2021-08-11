@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -11,7 +12,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ModelArrowsTests.cs?name=example)]
     /// </example>
-    public class ModelArrows : GeometricElement
+    public class ModelArrows : GeometricElement, IVisualizeCurves3d
     {
         /// <summary>
         /// A collection of tuples specifying the origin, magnitude, and color
@@ -67,8 +68,16 @@ namespace Elements
             this.ArrowAngle = arrowAngle;
         }
 
-        internal GraphicsBuffers ToGraphicsBuffers()
+        /// <summary>
+        /// Visualize model arrows in 3d.
+        /// </summary>
+        public GraphicsBuffers VisualizeCurves3d(bool lineLoop)
         {
+            if (this.Vectors.Count == 0)
+            {
+                return null;
+            }
+
             var x = 0.1 * Math.Cos(Units.DegreesToRadians(-this.ArrowAngle));
             var y = 0.1 * Math.Sin(Units.DegreesToRadians(-this.ArrowAngle));
 

@@ -1,6 +1,6 @@
 using System;
 using Elements.Geometry;
-using Elements.Geometry.Interfaces;
+using Elements.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -11,7 +11,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/MeshElementTests.cs?name=example)]
     /// </example>
-    public class MeshElement : GeometricElement, ITessellate
+    public class MeshElement : GeometricElement, IVisualize3d
     {
         /// <summary>
         /// The mesh.
@@ -75,6 +75,14 @@ namespace Elements
         public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
         {
             mesh = this._mesh;
+        }
+
+        /// <summary>
+        /// Visualize this mesh in 3d.
+        /// </summary>
+        public override GraphicsBuffers Visualize3d()
+        {
+            return this._mesh.GetBuffers();
         }
     }
 }
