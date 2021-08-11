@@ -67,17 +67,6 @@ namespace Elements
         }
 
         /// <summary>
-        /// Tessellate the element.
-        /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="transform"></param>
-        /// <param name="color"></param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
-        {
-            mesh = this._mesh;
-        }
-
-        /// <summary>
         /// Visualize this mesh in 3d.
         /// </summary>
         public override GraphicsBuffers Visualize3d()
