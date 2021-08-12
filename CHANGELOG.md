@@ -7,6 +7,7 @@
 - `ModelArrows`
 - `ModelText`
 ### Changed
+- Use `TryGetValue` on JObject during model serialization istead of `Contains`
 
 ### Fixed
 - Deduplicate catalog names during code generation.
