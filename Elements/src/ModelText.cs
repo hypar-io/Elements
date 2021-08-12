@@ -155,13 +155,19 @@ namespace Elements
 
             _texturePath = Path.Combine(_labelsDirectory, $"{Guid.NewGuid()}.png");
 
-            var textureLookup = new Dictionary<string, (UV min, UV max, FontRectangle fontRect)>();
+            var textureLookup = new Dictionary<int, (UV min, UV max, FontRectangle fontRect)>();
 
             foreach (var t in this.Texts)
             {
-                if (textureLookup.ContainsKey(t.text))
+                // TODO: Investigate why System.HashCode isn't available.
+                // https://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers/16651358#16651358
+                int hash = 23;
+                hash = hash * 31 + t.text.GetHashCode();
+                hash = hash * 31 + t.color.GetHashCode();
+
+                if (textureLookup.ContainsKey(hash))
                 {
-                    this._textureAtlas.Add(textureLookup[t.text]);
+                    this._textureAtlas.Add(textureLookup[hash]);
                     continue;
                 }
 
@@ -192,7 +198,7 @@ namespace Elements
 
                 var textureData = (new UV(minU, minV), new UV(maxU, maxV), fontRectangle);
                 this._textureAtlas.Add(textureData);
-                textureLookup.Add(t.text, textureData);
+                textureLookup.Add(hash, textureData);
 
                 x += fontRectangle.Width;
             }
