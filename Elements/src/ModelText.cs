@@ -27,7 +27,19 @@ namespace Elements
         /// <summary>
         /// 36 pt
         /// </summary>
-        PT36 = 36
+        PT36 = 36,
+        /// <summary>
+        /// 48 pt
+        /// </summary>
+        PT48 = 48,
+        /// <summary>
+        /// 60 pt
+        /// </summary>
+        PT60 = 60,
+        /// <summary>
+        /// 72 pt
+        /// </summary>
+        PT72 = 72
     }
 
     /// <summary>
@@ -41,6 +53,9 @@ namespace Elements
         private static Font _font12;
         private static Font _font24;
         private static Font _font36;
+        private static Font _font48;
+        private static Font _font60;
+        private static Font _font72;
         private static string _labelsDirectory;
         private int _dpi = 72;
         private int _maxTextureSize = 2048;
@@ -105,6 +120,9 @@ namespace Elements
                 _font12 = family.CreateFont(12);
                 _font24 = family.CreateFont(24);
                 _font36 = family.CreateFont(36);
+                _font48 = family.CreateFont(48);
+                _font60 = family.CreateFont(60);
+                _font72 = family.CreateFont(72);
             }
 
             if (_labelsDirectory == null)
@@ -142,6 +160,15 @@ namespace Elements
                     break;
                 case FontSize.PT36:
                     font = _font36;
+                    break;
+                case FontSize.PT48:
+                    font = _font48;
+                    break;
+                case FontSize.PT60:
+                    font = _font60;
+                    break;
+                case FontSize.PT72:
+                    font = _font72;
                     break;
             }
             var renderOptions = new RendererOptions(font, _dpi);
