@@ -617,10 +617,13 @@ namespace Elements.Geometry.Solids
         private List<Vector3> IntersectLoop(Loop loop, Plane p)
         {
             var edgeResults = new List<Vector3>();
-            foreach (var e in loop.Edges)
+            var v = loop.Edges.Select(e => e.Vertex).ToList();
+            for (var i = 0; i < v.Count(); i++)
             {
-                var start = e.Edge.Left.Vertex.Point;
-                var end = e.Edge.Right.Vertex.Point;
+                var a = v[i];
+                var b = i == v.Count - 1 ? v[0] : v[i + 1];
+                var start = a.Point;
+                var end = b.Point;
                 if (Line.Intersects(p, start, end, out Vector3 xsect))
                 {
                     if (!edgeResults.Contains(xsect))
@@ -629,6 +632,7 @@ namespace Elements.Geometry.Solids
                     }
                 }
             }
+
             return edgeResults;
         }
 
