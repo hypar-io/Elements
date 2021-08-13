@@ -165,12 +165,12 @@ namespace Elements.Geometry
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
                 var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<Line> curveList = boundaryPolygon.Segments();
+                IEnumerable<(Vector3 from, Vector3 to)> curveList = boundaryPolygon.Edges();
                 if (voids != null)
                 {
-                    curveList = curveList.Union(voids.SelectMany(v => v.Segments()));
+                    curveList = curveList.Union(voids.SelectMany(v => v.Edges()));
                 }
-                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
+                curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
 
                 if (Polygon.Contains(curveList, transformedIntersection, out _))
                 {
@@ -197,8 +197,8 @@ namespace Elements.Geometry
                 var transformFromPolygon = new Transform(transformToPolygon);
                 transformFromPolygon.Invert();
                 var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<Line> curveList = polygon.Segments();
-                curveList = curveList.Select(l => l.TransformedLine(transformFromPolygon));
+                IEnumerable<(Vector3 from, Vector3 to)> curveList = polygon.Edges();
+                curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
 
                 if (Polygon.Contains(curveList, transformedIntersection, out _))
                 {
