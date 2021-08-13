@@ -6,6 +6,8 @@
 
 - `ModelArrows`
 - `ModelText`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
+
 ### Changed
 
 ### Fixed
