@@ -347,6 +347,71 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SolidIntersectsPlaneAtFaceReturningFaceLoop()
+        {
+            this.Name = nameof(SolidIntersectsPlaneAtFaceReturningFaceLoop);
+
+            var r = new Random();
+            var profile = Polygon.Rectangle(5, 5);
+            var extrude = new Extrude(profile, 5, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(0, -2.5, 2.5), Vector3.YAxis.Negate());
+            Assert.True(extrude.Solid.Intersects(plane, out List<Polygon> result));
+
+            Assert.Single(result);
+            var p = result[0];
+            Assert.Equal(4, p.Vertices.Count);
+
+            this.Model.AddElement(new Panel(p, r.NextMaterial()));
+
+            var rep = new Representation(new List<SolidOperation>() { extrude });
+            var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
+            this.Model.AddElement(solidElement);
+        }
+
+        [Fact]
+        public void SolidIntersectsPlaneAtVertexWithNoResult()
+        {
+            var profile = Polygon.Rectangle(5, 5);
+            var extrude = new Extrude(profile, 5, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(2.5, 2.5, 5.0), new Vector3(0.5, 0.5, 0.5));
+            Assert.False(extrude.Solid.Intersects(plane, out List<Polygon> result));
+        }
+
+        [Fact]
+        public void SolidIntersectsPlaneAtEdgeWithNoResult()
+        {
+            var profile = Polygon.Rectangle(5, 5);
+            var extrude = new Extrude(profile, 5, Vector3.ZAxis, false);
+            var plane = new Plane(new Vector3(2.5, 2.5, 0.0), new Vector3(0.5, 0.5, 0.0));
+            Assert.False(extrude.Solid.Intersects(plane, out List<Polygon> result));
+        }
+
+        [Fact]
+        public void SolidIntersectPlaneTwice()
+        {
+            this.Name = nameof(SolidIntersectPlaneTwice);
+            var r = new Random();
+            var l = Polygon.L(5, 5, 1);
+            var profile = new Profile(l, l.Offset(-0.1).Reversed());
+
+            var arc = new Arc(Vector3.Origin, 5, 0, 180);
+            var sweep = new Sweep(profile, arc, 0, 0, 0, false);
+            var plane = new Plane(Vector3.Origin, Vector3.YAxis.Negate());
+            Assert.True(sweep.Solid.Intersects(plane, out List<Polygon> result));
+
+            Assert.Equal(4, result.Count);
+            foreach (var p in result)
+            {
+                Assert.Equal(6, p.Vertices.Count);
+                this.Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+
+            var rep = new Representation(new List<SolidOperation>() { sweep });
+            var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
+            this.Model.AddElement(solidElement);
+        }
+
+        [Fact]
         public void SolidPlaneIntersection2()
         {
             var debugCases = new[] {
