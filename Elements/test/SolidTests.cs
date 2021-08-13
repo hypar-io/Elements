@@ -327,6 +327,7 @@ namespace Elements.Tests
                 {
                     if (result.Count > 1)
                     {
+                        Assert.Equal(2, result.Count);
                         var cutProfile = new Profile(result[0], result.Skip(1).ToArray());
                         var lam = new Lamina(cutProfile, false);
                         var cutRep = new Representation(new List<SolidOperation>() { lam });
@@ -334,6 +335,7 @@ namespace Elements.Tests
                     }
                     else
                     {
+                        Assert.Single(result);
                         this.Model.AddElement(new Panel(result[0], r.NextMaterial()));
                     }
                 }
