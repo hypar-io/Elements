@@ -345,6 +345,30 @@ namespace Elements.Tests
             var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
             this.Model.AddElement(solidElement);
         }
+
+        [Fact]
+        public void SolidPlaneIntersection2()
+        {
+            var debugCases = new[] {
+                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-1.json",
+                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json"
+            };
+            foreach (var c in debugCases)
+            {
+                var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(c), new[] { new SolidConverter() });
+                foreach (var solid in di.Solid)
+                {
+                    solid.Intersects(di.Plane, out var results);
+                }
+            }
+        }
+
+        private class DebugInfo
+        {
+            public List<Solid> Solid { get; set; }
+            public Plane Plane { get; set; }
+            public string Exception { get; set; }
+        }
     }
 
 }
