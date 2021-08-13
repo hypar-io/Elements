@@ -592,9 +592,7 @@ namespace Elements.Geometry.Solids
                         graphEdges.Add(new List<(int from, int to, int? tag)>());
                     }
                     var e1 = (a, b, 0);
-                    // var e2 = (b, a, 0);
                     if (!graphEdges[a].Contains(e1)) graphEdges[a].Add(e1);
-                    // if (!graphEdges[b].Contains(e2)) graphEdges[b].Add(e2);
                 }
             }
 
