@@ -304,6 +304,45 @@ namespace Elements.Tests
                 null);
             Model.AddElements(element, element2);
         }
+
+        [Fact]
+        public void SolidIntersectsWithPlane()
+        {
+            this.Name = nameof(SolidIntersectsWithPlane);
+            var n = 4;
+            var outer = Polygon.Ngon(n, 2);
+            var inner = Polygon.Ngon(n, 1.75).Reversed();
+            var profile = new Profile(outer, new[] { inner });
+            var sweep = new Extrude(profile, 5, Vector3.ZAxis, false);
+
+            var plane1 = new Plane(new Vector3(0, 0, 1), new Vector3(0.5, 0.5, 0.5));
+            var plane2 = new Plane(new Vector3(0, 0, 2), new Vector3(0.1, 0, 1));
+            var plane3 = new Plane(new Vector3(0, 0, 5), Vector3.ZAxis);
+
+            Plane[] planes = new Plane[] { plane1, plane2, plane3 };
+            var r = new Random();
+            foreach (var plane in planes)
+            {
+                if (sweep.Solid.Intersects(plane, out List<Polygon> result))
+                {
+                    if (result.Count > 1)
+                    {
+                        var cutProfile = new Profile(result[0], result.Skip(1).ToArray());
+                        var lam = new Lamina(cutProfile, false);
+                        var cutRep = new Representation(new List<SolidOperation>() { lam });
+                        this.Model.AddElement(new GeometricElement(representation: cutRep, material: r.NextMaterial()));
+                    }
+                    else
+                    {
+                        this.Model.AddElement(new Panel(result[0], r.NextMaterial()));
+                    }
+                }
+            }
+
+            var rep = new Representation(new List<SolidOperation>() { sweep });
+            var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
+            this.Model.AddElement(solidElement);
+        }
     }
 
 }

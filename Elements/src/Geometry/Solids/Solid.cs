@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
+using Elements.Spatial;
 using LibTessDotNet.Double;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -535,6 +536,100 @@ namespace Elements.Geometry.Solids
             }
 
             return buffers;
+        }
+
+        /// <summary>
+        /// Intersect this solid with the provided plane.
+        /// </summary>
+        /// <param name="p">The plane of intersection.</param>
+        /// <param name="result">A collection of polygons resulting
+        /// from the intersection or null if there was no intersection.</param>
+        /// <returns>True if an intersection occurred, otherwise false.</returns>
+        public bool Intersects(Plane p, out List<Polygon> result)
+        {
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+            foreach (var f in this.Faces)
+            {
+                var edgeResults = new List<Vector3>();
+
+                edgeResults.AddRange(IntersectLoop(f.Value.Outer, p));
+
+                if (f.Value.Inner != null)
+                {
+                    foreach (var inner in f.Value.Inner)
+                    {
+                        edgeResults.AddRange(IntersectLoop(inner, p));
+                    }
+                }
+
+                var d = p.Normal.Cross(f.Value.Plane().Normal).Unitized();
+                edgeResults.Sort(new DotComparer(d));
+
+                // Draw segments through the results and add to the 
+                // half edge graph.
+                for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                {
+                    // Don't create zero-length edges.
+                    if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
+                    {
+                        continue;
+                    }
+
+                    var a = graphVertices.IndexOf(edgeResults[j]);
+                    if (a == -1)
+                    {
+                        graphVertices.Add(edgeResults[j]);
+                        a = graphVertices.Count - 1;
+                        graphEdges.Add(new List<(int from, int to, int? tag)>());
+                    }
+                    var b = graphVertices.IndexOf(edgeResults[j + 1]);
+                    if (b == -1)
+                    {
+                        graphVertices.Add(edgeResults[j + 1]);
+                        b = graphVertices.Count - 1;
+                        graphEdges.Add(new List<(int from, int to, int? tag)>());
+                    }
+                    var e1 = (a, b, 0);
+                    // var e2 = (b, a, 0);
+                    if (!graphEdges[a].Contains(e1)) graphEdges[a].Add(e1);
+                    // if (!graphEdges[b].Contains(e2)) graphEdges[b].Add(e2);
+                }
+            }
+
+            var heg = new HalfEdgeGraph2d()
+            {
+                Vertices = graphVertices,
+                EdgesPerVertex = graphEdges
+            };
+
+            var polys = heg.Polygonize();
+            if (polys == null || polys.Count == 0)
+            {
+                result = null;
+                return false;
+            }
+            result = polys;
+            return true;
+        }
+
+        private List<Vector3> IntersectLoop(Loop loop, Plane p)
+        {
+            var edgeResults = new List<Vector3>();
+            foreach (var e in loop.Edges)
+            {
+                var start = e.Edge.Left.Vertex.Point;
+                var end = e.Edge.Right.Vertex.Point;
+                if (Line.Intersects(p, start, end, out Vector3 xsect))
+                {
+                    if (!edgeResults.Contains(xsect))
+                    {
+                        edgeResults.Add(xsect);
+                    }
+                }
+            }
+            return edgeResults;
         }
 
         /// <summary>
