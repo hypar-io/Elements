@@ -52,7 +52,7 @@ namespace Elements
         /// A collection of text data objects which specify the location,
         /// direction, content, and color of the text.
         /// </summary>
-        public IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> Texts { get; set; }
+        public IList<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)> Texts { get; set; }
 
         /// <summary>
         /// The font size of the model text.
@@ -73,11 +73,11 @@ namespace Elements
         /// <param name="fontSize">The font size of the text.</param>
         /// <param name="scale">An additional scale to apply to the size of the text.
         /// Fonts will be drawn at the real world equivalent of 72 dpi at scale=1.0.</param>
-        public ModelText(IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> texts,
+        public ModelText(IList<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)> texts,
                          FontSize fontSize,
                          double scale = 10.0)
         {
-            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)>();
+            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)>();
             this.FontSize = fontSize;
             this.Scale = scale;
 
@@ -216,13 +216,13 @@ namespace Elements
             {
                 var t = this.Texts[i];
 
-                var td = t.direction.IsZero() ? Vector3.ZAxis : t.direction;
+                var td = t.facingDirection.IsZero() ? Vector3.ZAxis : t.facingDirection;
                 var ta = this._textureAtlas[i];
 
                 var sizeX = Units.InchesToMeters(ta.fontRect.Width / _dpi);
                 var sizeY = Units.InchesToMeters(ta.fontRect.Height / _dpi);
 
-                var tx = new Transform(t.location, td);
+                var tx = new Transform(t.location, t.lineDirection, td);
 
                 var v1 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, sizeY * this.Scale / 2));
                 var v2 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, -sizeY * this.Scale / 2));

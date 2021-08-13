@@ -23,7 +23,7 @@ namespace Elements.Tests
             var squareSize = 25.0;
             var maxDistance = Math.Sqrt(Math.Pow(squareSize, 2) + Math.Pow(squareSize, 2));
 
-            var texts = new List<(Vector3 location, Vector3 direction, string text, Color? color)>();
+            var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
             var dir = Vector3.YAxis.Negate();
 
             for (var x = 0.0; x < squareSize; x += 1.0)
@@ -31,7 +31,7 @@ namespace Elements.Tests
                 for (var y = 0.0; y < squareSize; y += 1.0)
                 {
                     var c = new Color(x / squareSize, y / squareSize, 0.0, 1.0);
-                    texts.Add((new Vector3(x, y), dir, $"[{x},{y}]", c));
+                    texts.Add((new Vector3(x, y), dir, Vector3.XAxis, $"[{x},{y}]", c));
                 }
             }
 
