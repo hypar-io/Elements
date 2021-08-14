@@ -308,6 +308,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is the inverse of this transform.
+        /// </summary>
+        public Transform Inverse()
+        {
+            return new Transform(this.Matrix.Inverse());
+        }
+
+        /// <summary>
         /// Apply a translation to the transform.
         /// </summary>
         /// <param name="translation">The translation to apply.</param>
