@@ -6,10 +6,13 @@
 
 - `ModelArrows`
 - `ModelText`
+
 ### Changed
 
 ### Fixed
+
 - Deduplicate catalog names during code generation.
+- Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
 
 ## 0.9.2
 
@@ -43,7 +46,6 @@
   - `Line.ExtendTo(Polygon)`
   - `Line.ExtendTo(Profile)`
 - Support for DXF from many basic elements.
-
 
 ### Changed
 
