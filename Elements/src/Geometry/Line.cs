@@ -200,8 +200,22 @@ namespace Elements.Geometry
         /// false if the lines have coincident vertices or do not intersect.</returns>
         public bool Intersects2D(Line l)
         {
-            var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
-            var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
+            return Intersects2d(Start, End, l.Start, l.End);
+        }
+
+        /// <summary>
+        /// Does the first line intersect with the second line line in 2D?
+        /// </summary>
+        /// <param name="start1">Start point of the first line</param>
+        /// <param name="end1">End point of the first line</param>
+        /// <param name="start2">Start point of the second line</param>
+        /// <param name="end2">End point of the second line</param>
+        /// <returns>Return true if the lines intersect,
+        /// false if the lines have coincident vertices or do not intersect.</returns>
+        public static bool Intersects2d(Vector3 start1, Vector3 end1, Vector3 start2, Vector3 end2)
+        {
+            var a = Vector3.CCW(start1, end1, start2) * Vector3.CCW(start1, end1, end2);
+            var b = Vector3.CCW(start2, end2, start1) * Vector3.CCW(start2, end2, end1);
             if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
             if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
@@ -285,7 +299,7 @@ namespace Elements.Geometry
             return false;
         }
 
-        private bool IsAlmostZero(double a)
+        private static bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;
         }
