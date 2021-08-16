@@ -1013,6 +1013,25 @@ namespace Elements.Geometry
             }
             return gb;
         }
+
+        /// <summary>
+        /// Calculate the normal of the plane containing a set of points.
+        /// </summary>
+        /// <param name="points">The points in the plane.</param>
+        /// <returns>The normal of the plane containing the points.</returns>
+        internal static Vector3 Normal(this IList<Vector3> points)
+        {
+            var normal = new Vector3();
+            for (int i = 0; i < points.Count; i++)
+            {
+                var p0 = points[i];
+                var p1 = points[(i + 1) % points.Count];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Unitized();
+        }
     }
 
     internal class Vector3Comparer : EqualityComparer<Vector3>
