@@ -208,6 +208,12 @@ namespace Elements.Validators
 
         public void PostConstruct(object obj)
         {
+            var p = (Plane)obj;
+            if (!p.Normal.IsUnitized())
+            {
+                p.Normal = p.Normal.Unitized();
+            }
+
             return;
         }
 
