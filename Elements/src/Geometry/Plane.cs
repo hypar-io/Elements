@@ -93,8 +93,7 @@ namespace Elements.Geometry
         /// <returns>True if the plane is coplanar, otherwise false.</returns>
         public bool IsCoplanar(Plane plane)
         {
-            var dot = Math.Abs(this.Normal.Dot(plane.Normal));
-            return dot.ApproximatelyEquals(1) && this.Origin.DistanceTo(plane).ApproximatelyEquals(0);
+            return this.Normal.Cross(plane.Normal).IsZero();
         }
 
         /// <summary>
