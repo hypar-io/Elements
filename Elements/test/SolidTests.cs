@@ -421,21 +421,20 @@ namespace Elements.Tests
             this.Name = name;
 
             var r = new Random();
-            var t = new Transform();
 
             var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(path), new[] { new SolidConverter() });
             foreach (var solid in di.Solid)
             {
+                Assert.True(di.Plane.Normal.IsUnitized());
                 Assert.True(solid.Intersects(di.Plane, out var results));
+
                 foreach (var p in results)
                 {
-                    this.Model.AddElement(new Panel(p, r.NextMaterial(), t));
+                    this.Model.AddElement(new Panel(p, r.NextMaterial()));
                 }
                 var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(solid, false) });
-                var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass, transform: t);
+                var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
                 this.Model.AddElement(solidElement);
-                t = new Transform(t);
-                t.Move(new Vector3(60, 0, 0));
             }
         }
 
