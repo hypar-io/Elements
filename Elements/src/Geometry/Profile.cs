@@ -317,12 +317,12 @@ namespace Elements.Geometry
         /// <returns>True if the point is within the profile.</returns>
         public bool Contains(Vector3 point, out Containment containment)
         {
-            IEnumerable<Line> allLines = Perimeter.Segments();
+            IEnumerable<(Vector3 from, Vector3 to)> allEdges = Perimeter.Edges();
             if (Voids != null)
             {
-                allLines = allLines.Union(Voids.SelectMany(v => v.Segments()));
+                allEdges = allEdges.Union(Voids.SelectMany(v => v.Edges()));
             }
-            return Polygon.Contains(allLines, point, out containment);
+            return Polygon.Contains(allEdges, point, out containment);
         }
 
         /// <summary>

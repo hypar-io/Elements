@@ -65,7 +65,7 @@ namespace Elements.Tests
         {
             var o = new Vector3(1, 1, 0);
             var t = new Transform(o, Vector3.XAxis, Vector3.YAxis.Negate());
-            var p = new Plane( new Vector3(0.5, 0.5, 0.0), new Vector3(0, 0, 1) );
+            var p = new Plane(new Vector3(0.5, 0.5, 0.0), new Vector3(0, 0, 1));
             var pt = t.OfPlane(p);
             Assert.Equal(1.5, pt.Origin.X);
             Assert.Equal(1.0, pt.Origin.Y);
@@ -89,6 +89,20 @@ namespace Elements.Tests
             inverted.Invert();
 
             Assert.Equal(transform, inverted);
+        }
+
+        [Fact]
+        public void Transform_Inverse()
+        {
+            var polygon = Polygon.Rectangle(3, 5);
+            var transform = new Transform((4, 3), 72);
+            var pgonTransformed = polygon.TransformedPolygon(transform);
+            var pgonTransformedBack = pgonTransformed.TransformedPolygon(transform.Inverse());
+            for (int i = 0; i < pgonTransformedBack.Vertices.Count; i++)
+            {
+                var vertex = pgonTransformedBack.Vertices[i];
+                Assert.True(vertex.IsAlmostEqualTo(polygon.Vertices[i]));
+            }
         }
 
 
