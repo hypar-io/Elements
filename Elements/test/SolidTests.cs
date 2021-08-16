@@ -414,16 +414,31 @@ namespace Elements.Tests
         [Fact]
         public void SolidPlaneIntersection2()
         {
+            this.Name = nameof(SolidPlaneIntersection2);
+
             var debugCases = new[] {
                     "../../../models/Geometry/SolidPlaneIntersection/debug-case-1.json",
-                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json"
+                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json",
+                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-3.json"
             };
+
+            var r = new Random();
+            var t = new Transform();
             foreach (var c in debugCases)
             {
                 var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(c), new[] { new SolidConverter() });
                 foreach (var solid in di.Solid)
                 {
-                    solid.Intersects(di.Plane, out var results);
+                    Assert.True(solid.Intersects(di.Plane, out var results));
+                    foreach (var p in results)
+                    {
+                        this.Model.AddElement(new Panel(p, r.NextMaterial(), t));
+                    }
+                    var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(solid, false) });
+                    var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass, transform: t);
+                    this.Model.AddElement(solidElement);
+                    t = new Transform(t);
+                    t.Move(new Vector3(60, 0, 0));
                 }
             }
         }
