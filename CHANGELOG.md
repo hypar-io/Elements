@@ -8,10 +8,12 @@
 - `ModelText`
 - `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
+- `Transform.Inverse()`
 
 ### Changed
 
 ### Fixed
+
 - Deduplicate catalog names during code generation.
 
 ## 0.9.2
@@ -46,7 +48,6 @@
   - `Line.ExtendTo(Polygon)`
   - `Line.ExtendTo(Profile)`
 - Support for DXF from many basic elements.
-
 
 ### Changed
 
