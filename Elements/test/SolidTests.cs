@@ -22,6 +22,7 @@ namespace Elements.Tests
         public SolidTests(ITestOutputHelper output)
         {
             this.output = output;
+            this.GenerateIfc = false;
 
             if (!Directory.Exists("models"))
             {
@@ -411,35 +412,30 @@ namespace Elements.Tests
             this.Model.AddElement(solidElement);
         }
 
-        [Fact]
-        public void SolidPlaneIntersection2()
+        [Theory]
+        [InlineData("SolidIntersectionTest1", "../../../models/Geometry/SolidPlaneIntersection/debug-case-1.json")]
+        [InlineData("SolidIntersectionTest2", "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json")]
+        [InlineData("SolidIntersectionTest3", "../../../models/Geometry/SolidPlaneIntersection/debug-case-3.json")]
+        public void SolidPlaneIntersectionTests(string name, string path)
         {
-            this.Name = nameof(SolidPlaneIntersection2);
-
-            var debugCases = new[] {
-                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-1.json",
-                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json",
-                    "../../../models/Geometry/SolidPlaneIntersection/debug-case-3.json"
-            };
+            this.Name = name;
 
             var r = new Random();
             var t = new Transform();
-            foreach (var c in debugCases)
+
+            var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(path), new[] { new SolidConverter() });
+            foreach (var solid in di.Solid)
             {
-                var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(c), new[] { new SolidConverter() });
-                foreach (var solid in di.Solid)
+                Assert.True(solid.Intersects(di.Plane, out var results));
+                foreach (var p in results)
                 {
-                    Assert.True(solid.Intersects(di.Plane, out var results));
-                    foreach (var p in results)
-                    {
-                        this.Model.AddElement(new Panel(p, r.NextMaterial(), t));
-                    }
-                    var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(solid, false) });
-                    var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass, transform: t);
-                    this.Model.AddElement(solidElement);
-                    t = new Transform(t);
-                    t.Move(new Vector3(60, 0, 0));
+                    this.Model.AddElement(new Panel(p, r.NextMaterial(), t));
                 }
+                var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(solid, false) });
+                var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass, transform: t);
+                this.Model.AddElement(solidElement);
+                t = new Transform(t);
+                t.Move(new Vector3(60, 0, 0));
             }
         }
 
