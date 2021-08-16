@@ -92,12 +92,12 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void Transform_Inverse()
+        public void Transform_Inverted()
         {
             var polygon = Polygon.Rectangle(3, 5);
             var transform = new Transform((4, 3), 72);
             var pgonTransformed = polygon.TransformedPolygon(transform);
-            var pgonTransformedBack = pgonTransformed.TransformedPolygon(transform.Inverse());
+            var pgonTransformedBack = pgonTransformed.TransformedPolygon(transform.Inverted());
             for (int i = 0; i < pgonTransformedBack.Vertices.Count; i++)
             {
                 var vertex = pgonTransformedBack.Vertices[i];

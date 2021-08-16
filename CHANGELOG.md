@@ -8,7 +8,7 @@
 - `ModelText`
 - `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
-- `Transform.Inverse()`
+- `Transform.Inverted()`
 
 ### Changed
 

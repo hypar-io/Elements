@@ -437,7 +437,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute the inverse of the matrix.
         /// </summary>
-        public Matrix Inverse()
+        public Matrix Inverted()
         {
             var det = Determinant();
             if (Math.Abs(det) < 0.000001)
@@ -465,6 +465,15 @@ namespace Elements.Geometry
             m.tz = -(tx * m.m13 + ty * m.m23 + tz * m.m33);
 
             return m;
+        }
+
+        /// <summary>
+        /// Compute the inverse of the matrix.
+        /// </summary>
+        [Obsolete("Use Matrix.Inverted() instead.")]
+        public Matrix Inverse()
+        {
+            return Inverted();
         }
 
         /// <summary>
