@@ -164,10 +164,25 @@ namespace Elements.Geometry
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
         public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
-            var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
+            return Intersects(p, this.Start, this.End, out result, infinite);
+        }
+
+        /// <summary>
+        /// Intersect a segment defined by two points with a plane.
+        /// </summary>
+        /// <param name="p">The plane.</param>
+        /// <param name="start">The start of the segment.</param>
+        /// <param name="end">The end of the segment.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <param name="infinite">Whether the segment should instead be considered infinite.</param>
+        /// <returns>True if an intersection is found, otherwise false.</returns>
+        public static bool Intersects(Plane p, Vector3 start, Vector3 end, out Vector3 result, bool infinite = false)
+        {
+            var d = (end - start).Unitized();
+            var rayIntersects = new Ray(start, d).Intersects(p, out Vector3 location, out double t);
             if (rayIntersects)
             {
-                var l = Length();
+                var l = start.DistanceTo(end);
                 if (infinite || t.ApproximatelyEquals(l) || t < l)
                 {
                     result = location;
@@ -176,7 +191,7 @@ namespace Elements.Geometry
             }
             else if (infinite)
             {
-                var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
+                var rayIntersectsBackwards = new Ray(end, d.Negate()).Intersects(p, out Vector3 location2, out double t2);
                 if (rayIntersectsBackwards)
                 {
                     result = location2;
@@ -786,55 +801,5 @@ namespace Elements.Geometry
         {
             return new[] { this.Start, this.End };
         }
-
-        #region WindingNumberCalcs
-        internal Position RelativePositionOf(Vector3 location)
-        {
-            double positionCalculation =
-                (End.Y - Start.Y) * (location.X - Start.X) -
-                (location.Y - Start.Y) * (End.X - Start.X);
-
-            if (positionCalculation > 0)
-            {
-                return Position.Left;
-            }
-
-            if (positionCalculation < 0)
-            {
-                return Position.Right;
-            }
-
-            return Position.Center;
-        }
-
-        internal bool AscendingRelativeTo(Vector3 location)
-        {
-            return Start.X <= location.X;
-        }
-
-        internal bool LocationInRange(Vector3 location, Orientation orientation)
-        {
-            if (orientation == Orientation.Ascending)
-            {
-                return End.X > location.X;
-            }
-
-            return End.X <= location.X;
-        }
-
-        internal enum Position
-        {
-            Left,
-            Right,
-            Center
-        }
-
-        internal enum Orientation
-        {
-            Ascending,
-            Descending
-        }
-        #endregion
-
     }
 }
