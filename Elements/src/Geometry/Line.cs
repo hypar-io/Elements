@@ -204,7 +204,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does the first line intersect with the second line line in 2D?
+        /// Does the first line intersect with the second line in 2D?
         /// </summary>
         /// <param name="start1">Start point of the first line</param>
         /// <param name="end1">End point of the first line</param>
