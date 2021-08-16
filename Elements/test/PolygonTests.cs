@@ -188,6 +188,8 @@ namespace Elements.Geometry.Tests
         {
             var v1 = new Vector3();
             var v2 = new Vector3(7.5, 7.5);
+
+            // A big square
             var p1 = new Polygon
             (
                 new[]
@@ -198,6 +200,8 @@ namespace Elements.Geometry.Tests
                 new Vector3(0.0, 20.0)
                 }
             );
+
+            // A smaller shape inside p1 that shares a corner with it.
             var p2 = new Polygon
             (
                 new[]
@@ -208,6 +212,8 @@ namespace Elements.Geometry.Tests
                 new Vector3(5.0, 10.0)
                 }
             );
+
+            // A smaller square in the center of p1.
             var p3 = new Polygon
             (
                 new[]
@@ -218,13 +224,30 @@ namespace Elements.Geometry.Tests
                 new Vector3(5.0, 10.0)
                 }
             );
+
+            // A shape that fully matches p1, but has one extra point inside p1. Covers() needs special code for this case).
+            var p4 = new Polygon
+            (
+                new[]
+                {
+                new Vector3(0.0, 0.0),
+                new Vector3(20.0, 0.0),
+                new Vector3(20.0, 20.0),
+                new Vector3(10.0, 10),
+                new Vector3(0.0, 20.0)
+                }
+            );
+
             Assert.True(p1.Covers(v1));
             Assert.True(p1.Covers(p2.Reversed()));
+            Assert.True(p1.Covers(p1));
+            Assert.True(p1.Covers(p2));
+            Assert.True(p1.Covers(p3));
             Assert.True(p3.Covers(v2));
             Assert.False(p3.Covers(v1));
-            Assert.True(p1.Covers(p3));
-            Assert.True(p1.Covers(p2));
             Assert.False(p3.Covers(p1));
+            Assert.False(p4.Covers(p1));
+            Assert.True(p1.Covers(p4));
         }
 
         [Fact]
