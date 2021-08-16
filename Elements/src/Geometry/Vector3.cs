@@ -140,6 +140,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Is this vector of unit length?
+        /// </summary>
+        /// <returns>True if the vector is of unit length, otherwise false.</returns>
+        public bool IsUnitized()
+        {
+            return this.Length().ApproximatelyEquals(1.0);
+        }
+
+        /// <summary>
         /// Compute the cross product of this vector and v.
         /// </summary>
         /// <param name="v">The vector with which to compute the cross product.</param>
@@ -1019,7 +1028,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="points">The points in the plane.</param>
         /// <returns>The normal of the plane containing the points.</returns>
-        internal static Vector3 Normal(this IList<Vector3> points)
+        internal static Vector3 NormalFromPlanarWoundPoints(this IList<Vector3> points)
         {
             var normal = new Vector3();
             for (int i = 0; i < points.Count; i++)
