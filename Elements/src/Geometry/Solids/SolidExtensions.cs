@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry.Solids
@@ -14,7 +15,7 @@ namespace Elements.Geometry.Solids
         internal static ContourVertex[] ToContourVertexArray(this Loop loop, Face face)
         {
             var contour = new List<ContourVertex>();
-            foreach(var edge in loop.Edges)
+            foreach (var edge in loop.Edges)
             {
                 var cv = new ContourVertex();
                 cv.Position = new Vec3 { X = edge.Vertex.Point.X, Y = edge.Vertex.Point.Y, Z = edge.Vertex.Point.Z };
@@ -26,7 +27,7 @@ namespace Elements.Geometry.Solids
         internal static Edge[] GetLinkedEdges(this Loop loop)
         {
             var edges = new List<Edge>();
-            foreach(var he in loop.Edges)
+            foreach (var he in loop.Edges)
             {
                 edges.Add(he.Edge);
             }
@@ -35,11 +36,8 @@ namespace Elements.Geometry.Solids
 
         internal static Plane Plane(this Face f)
         {
-            var edges = f.Outer.Edges;
-            var a = edges[0].Vertex.Point;
-            var b = edges[1].Vertex.Point;
-            var c = edges[2].Vertex.Point;
-            return new Plane(a, b, c);
+            var v = f.Outer.Edges.Select(e => e.Vertex.Point).ToList();
+            return new Plane(v[0], v.NormalFromPlanarWoundPoints());
         }
     }
 }

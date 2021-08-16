@@ -154,22 +154,22 @@ namespace Elements.Geometry
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
         public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
-            return Line.Intersects(Start, End, p, out result, infinite);
+            return Intersects(p, this.Start, this.End, out result, infinite);
         }
 
         /// <summary>
-        /// Intersect a line with the specified plane
+        /// Intersect a segment defined by two points with a plane.
         /// </summary>
-        /// <param name="start">The start point of the line.</param>
-        /// <param name="end">The end point of the line.</param>
         /// <param name="p">The plane.</param>
+        /// <param name="start">The start of the segment.</param>
+        /// <param name="end">The end of the segment.</param>
         /// <param name="result">The location of intersection.</param>
-        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
-        /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
-        public static bool Intersects(Vector3 start, Vector3 end, Plane p, out Vector3 result, bool infinite = false)
+        /// <param name="infinite">Whether the segment should instead be considered infinite.</param>
+        /// <returns>True if an intersection is found, otherwise false.</returns>
+        public static bool Intersects(Plane p, Vector3 start, Vector3 end, out Vector3 result, bool infinite = false)
         {
-            var direction = Direction(start, end);
-            var rayIntersects = new Ray(start, direction).Intersects(p, out Vector3 location, out double t);
+            var d = (end - start).Unitized();
+            var rayIntersects = new Ray(start, d).Intersects(p, out Vector3 location, out double t);
             if (rayIntersects)
             {
                 var l = start.DistanceTo(end);
@@ -181,7 +181,7 @@ namespace Elements.Geometry
             }
             else if (infinite)
             {
-                var rayIntersectsBackwards = new Ray(end, direction.Negate()).Intersects(p, out Vector3 location2, out double t2);
+                var rayIntersectsBackwards = new Ray(end, d.Negate()).Intersects(p, out Vector3 location2, out double t2);
                 if (rayIntersectsBackwards)
                 {
                     result = location2;
@@ -286,7 +286,7 @@ namespace Elements.Geometry
             // construct a plane
             var normal = direction2.Cross(plane.Normal);
             Plane intersectionPlane = new Plane(start2, normal);
-            if (Intersects(start1, end1, intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
+            if (Intersects(intersectionPlane, start1, end1, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
             {
                 if (infinite || (PointOnLine(planeIntersectionResult, start2, end2, includeEnds) && PointOnLine(planeIntersectionResult, start1, end1, includeEnds)))
                 {
