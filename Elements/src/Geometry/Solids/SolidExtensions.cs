@@ -37,7 +37,7 @@ namespace Elements.Geometry.Solids
         internal static Plane Plane(this Face f)
         {
             var v = f.Outer.Edges.Select(e => e.Vertex.Point).ToList();
-            return new Plane(v[0], v.Normal());
+            return new Plane(v[0], v.NormalFromPlanarWoundPoints());
         }
     }
 }
