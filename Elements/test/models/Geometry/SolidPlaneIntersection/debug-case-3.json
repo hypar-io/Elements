@@ -1,0 +1,412 @@
+{
+    "Solid": [
+        {
+            "type": "elements.geometry.solids.solid",
+            "vertices": [
+                {
+                    "id": 100000,
+                    "x": 42.246505773750755,
+                    "y": 52.169272887596,
+                    "z": 0.0
+                },
+                {
+                    "id": 100001,
+                    "x": 59.52485890416793,
+                    "y": 52.169272887596,
+                    "z": 0.0
+                },
+                {
+                    "id": 100002,
+                    "x": 55.786116385571184,
+                    "y": 58.68108438034021,
+                    "z": 0.0
+                },
+                {
+                    "id": 100003,
+                    "x": 68.82209518950515,
+                    "y": 57.99459940731279,
+                    "z": 0.0
+                },
+                {
+                    "id": 100004,
+                    "x": 62.26077139722092,
+                    "y": 52.169272887596,
+                    "z": 0.0
+                },
+                {
+                    "id": 100005,
+                    "x": 72.15124624123484,
+                    "y": 53.3120127779968,
+                    "z": 0.0
+                },
+                {
+                    "id": 100006,
+                    "x": 72.15124624123484,
+                    "y": 7.637547078464806,
+                    "z": 0.0
+                },
+                {
+                    "id": 100007,
+                    "x": 42.246505773750755,
+                    "y": 7.637547078464806,
+                    "z": 0.0
+                },
+                {
+                    "id": 100008,
+                    "x": 42.246505773750755,
+                    "y": 52.169272887596,
+                    "z": 10.0
+                },
+                {
+                    "id": 100009,
+                    "x": 59.52485890416793,
+                    "y": 52.169272887596,
+                    "z": 10.0
+                },
+                {
+                    "id": 100010,
+                    "x": 55.786116385571184,
+                    "y": 58.68108438034021,
+                    "z": 10.0
+                },
+                {
+                    "id": 100011,
+                    "x": 68.82209518950515,
+                    "y": 57.99459940731279,
+                    "z": 10.0
+                },
+                {
+                    "id": 100012,
+                    "x": 62.26077139722092,
+                    "y": 52.169272887596,
+                    "z": 10.0
+                },
+                {
+                    "id": 100013,
+                    "x": 72.15124624123484,
+                    "y": 53.3120127779968,
+                    "z": 10.0
+                },
+                {
+                    "id": 100014,
+                    "x": 72.15124624123484,
+                    "y": 7.637547078464806,
+                    "z": 10.0
+                },
+                {
+                    "id": 100015,
+                    "x": 42.246505773750755,
+                    "y": 7.637547078464806,
+                    "z": 10.0
+                }
+            ],
+            "faces": [
+                {
+                    "id": 0,
+                    "outer": [
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10000,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10001,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10002,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10003,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10004,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10005,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10006,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10007,
+                            "edge_side": "left"
+                        }
+                    ],
+                    "inner": []
+                },
+                {
+                    "id": 1,
+                    "outer": [
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10000,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10008,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10016,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10009,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "outer": [
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10001,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10009,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10017,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10010,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "outer": [
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10002,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10010,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10018,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10011,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "outer": [
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10003,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10011,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10019,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10012,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "outer": [
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10004,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10012,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10020,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10013,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "outer": [
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10005,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10013,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10021,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10014,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "outer": [
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10006,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10014,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10022,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10015,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 8,
+                    "outer": [
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10007,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10015,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10023,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10008,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "outer": [
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10023,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10022,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10021,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10020,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10019,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10018,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10017,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10016,
+                            "edge_side": "right"
+                        }
+                    ],
+                    "inner": []
+                }
+            ]
+        }
+    ],
+    "Plane": {
+        "Origin": {
+            "X": 73.3279549937009,
+            "Y": 23.674585366059862,
+            "Z": 1.0
+        },
+        "Normal": {
+            "X": -27.56613411658539,
+            "Y": 28.49468752153614,
+            "Z": 0.0
+        }
+    },
+    "Exception": "Object reference not set to an instance of an object."
+}

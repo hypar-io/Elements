@@ -1746,16 +1746,7 @@ namespace Elements.Geometry
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
         public Vector3 Normal()
         {
-            var normal = new Vector3();
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                var p0 = Vertices[i];
-                var p1 = Vertices[(i + 1) % Vertices.Count];
-                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
-                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
-                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
-            }
-            return normal.Unitized();
+            return this.Vertices.NormalFromPlanarWoundPoints();
         }
 
         /// <summary>
