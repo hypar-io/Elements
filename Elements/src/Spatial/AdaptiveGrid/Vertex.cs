@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
+    /// <summary>
+    /// A unique vertex in a adaptive grid.
+    /// Class is forked from CellComplex.Vertex.
+    /// </summary>
     public class Vertex
     {
         public Vector3 Point { get; set; }
@@ -21,17 +25,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// All Edges connected to this Vertex.
         /// </summary>
         [JsonIgnore]
-        internal HashSet<Edge> Edges = new HashSet<Edge>();
+        public HashSet<Edge> Edges = new HashSet<Edge>();
 
         internal Vertex(AdaptiveGrid adaptiveGrid, ulong id, Vector3 point)
         {
             Id = id;
             AdaptiveGrid = adaptiveGrid;
-            Point = point;
-        }
-
-        public Vertex(Vector3 point)
-        {
             Point = point;
         }
 

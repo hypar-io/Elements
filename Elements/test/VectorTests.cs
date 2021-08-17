@@ -189,6 +189,23 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AreCoplanar_FourPoints()
+        {
+            var a = new Vector3(1, 1, 0);
+            var b = new Vector3(3, 0, 2);
+            var c = new Vector3(1, 5, 0);
+            var cross = (b - a).Cross(c - a).Unitized();
+            var expected = Math.Sqrt(2) / 2;
+            Assert.Equal(cross, new Vector3(-expected, 0, expected));
+            var d = new Vector3(-1 + 1e-7, -10, -2 - 1e-7);
+            Assert.True(Vector3.AreCoplanar(a, b, c, d));
+            b = c + cross.Cross(d - a) * 1.5;
+            Assert.True(Vector3.AreCoplanar(a, b, c, d));
+            d = new Vector3(4, 4, 4);
+            Assert.False(Vector3.AreCoplanar(a, b, c, d));
+        }
+
+        [Fact]
         public void CCW()
         {
             var a = new Vector3();

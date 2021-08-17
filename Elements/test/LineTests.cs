@@ -334,5 +334,40 @@ namespace Elements.Geometry.Tests
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);
         }
+
+        [Fact]
+        public void IntersectsBox()
+        {
+            BBox3 box = new BBox3(new Vector3(0, 0, 0), new Vector3(10, 10, 10));
+
+            //1. Line goes inside 
+            Line l = new Line(new Vector3(-5, -5, 5), new Vector3(5, 5, 5));
+            l.Intersects(box, out var results, infinite: false);
+            Assert.True(results.Count == 1);
+            Assert.Equal(results[0], new Vector3(0, 0, 5));
+            l.Intersects(box, out results, infinite: true);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[1], new Vector3(10, 10, 5));
+
+            //2. Line goes though. Intersections are ordered in line direction
+            l = new Line(new Vector3(1, 1, 15), new Vector3(1, 1, -5));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[0], new Vector3(1, 1, 10));
+            Assert.Equal(results[1], new Vector3(1, 1, 0));
+
+            //3. Line touches corner of box as it goes by
+            l = new Line(new Vector3(-10, 10, 3), new Vector3(-5, 5, 3));
+            l.Intersects(box, out results, infinite: true);
+            Assert.True(results.Count == 1);
+            Assert.Equal(results[0], new Vector3(0, 0, 3));
+
+            //4. Line overlaps with box side
+            l = new Line(new Vector3(-5, 0, 4), new Vector3(15, 0, 8));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[0], new Vector3(0, 0, 5));
+            Assert.Equal(results[1], new Vector3(10, 0, 7));
+        }
     }
 }

@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
+    /// <summary>
+    /// A graph like edge-vertex structure with planar spaces connected by vertical edges
+    /// </summary>
     public class AdaptiveGrid
     {
         #region Private fields
@@ -26,11 +29,25 @@ namespace Elements.Spatial.AdaptiveGrid
         [JsonProperty]
         private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
-        // See Edge.GetHash for how faces are identified as unique.
+        // See Edge.GetHash for how edges are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
         // Vertex lookup by x, y, z coordinate.
         private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+
+        #endregion
+
+        #region Private enums
+
+        /// <summary>
+        /// Convenient way to store information if some number is smaller, larger or inside a number range.
+        /// </summary>
+        private enum PointOrientation
+        {
+            Low,
+            Inside,
+            Hi
+        }
 
         #endregion
 
@@ -42,14 +59,26 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         public double Tolerance { get; set; } = Vector3.EPSILON;
 
+        /// <summary>
+        /// Minimum step size, below which, graph is not subdivided.
+        /// </summary>
         public double MinimumResolution { get; set; }
 
+        /// <summary>
+        /// Transformation with which planar spaces are aligned
+        /// </summary>
         public Transform Transform { get; set; }
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Create a AdaptiveGrid.
+        /// </summary>
+        /// <param name="minimumResolution">Minimum step between vertices in U or V direction.</param>
+        /// <param name="transform">Transformation, grid is aligned with.</param>
+        /// <returns></returns>
         public AdaptiveGrid(double minimumResolution, Transform transform)
         {
             MinimumResolution = minimumResolution;
@@ -60,6 +89,13 @@ namespace Elements.Spatial.AdaptiveGrid
 
         #region Public logic
 
+        /// <summary>
+        /// Add graph section using bounding box, divided with step in each direction.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="bBox">Box which region is populated with graph.</param>
+        /// <param name="stepSize">Step, graph is populated with.</param>
         public void AddFromBbox(BBox3 bBox, double stepSize)
         {
             var height = bBox.Max.Z - bBox.Min.Z;
@@ -73,6 +109,14 @@ namespace Elements.Spatial.AdaptiveGrid
             AddFromExtrude(boundary, Vector3.ZAxis, height, stepSize);
         }
 
+        /// <summary>
+        /// Add graph section using bounding box, divided by a set of key points. 
+        /// Key points don't respect "MinimumResolution" at the moment.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="bBox">Box which region is populated with graph.</param>
+        /// <param name="keyPoints">Set of 3D points, region is split with.</param>
         public void AddFromBbox(BBox3 bBox, List<Vector3> keyPoints)
         {
             var height = bBox.Max.Z - bBox.Min.Z;
@@ -86,47 +130,94 @@ namespace Elements.Spatial.AdaptiveGrid
             AddFromExtrude(boundary, Vector3.ZAxis, height, keyPoints);
         }
 
+        /// <summary>
+        /// Add graph section using polygon, extruded in given direction.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="boundingPolygon">Base polygon</param>
+        /// <param name="extrusionAxis">Extrusion direction</param>
+        /// <param name="height">Height of polygon extrusion</param>
+        /// <param name="stepSize">Step with which region is divided in each direction</param>
         public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double height, double stepSize)
         {
+            if (stepSize < MinimumResolution)
+            {
+                return;
+            }
+
             var gridZ = new Grid1d(height);
             var sacrificialPanels = (gridZ.Domain.Length % stepSize < MinimumResolution) ? 1 : 0;
             gridZ.DivideByFixedLength(stepSize, sacrificialPanels: sacrificialPanels);
+            var edgesBefore = GetEdges();
 
             var zCells = gridZ.GetCells();
             for (var i = 0; i < zCells.Count; i++)
             {
                 var elevationVector = zCells[i].Domain.Min * extrusionAxis;
                 var transformedPolygonBottom = boundingPolygon.TransformedPolygon(new Transform(elevationVector));
-                var addedEdges = AddFromPolygon(transformedPolygonBottom, stepSize);
+                var grid = CreateGridFromPolygon(transformedPolygonBottom);
+                SplitGrid(grid, stepSize);
+                SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+                var addedEdges = AddFromGrid(grid, edgesBefore);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
-                    var transformedPolygonTop = boundingPolygon.TransformedPolygon(new Transform(zCells[i].Domain.Max * extrusionAxis));
-                    AddFromPolygon(transformedPolygonTop, stepSize);
+                    var transformedPolygonTop = boundingPolygon.TransformedPolygon(
+                        new Transform(zCells[i].Domain.Max * extrusionAxis));
+                    grid = CreateGridFromPolygon(transformedPolygonTop);
+                    SplitGrid(grid, stepSize);
+                    SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+                    AddFromGrid(grid, edgesBefore);
                 }
             }
         }
 
+        /// <summary>
+        /// Add graph section using polygon, extruded in given direction.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="boundingPolygon">Base polygon</param>
+        /// <param name="extrusionAxis">Extrusion direction</param>
+        /// <param name="height">Height of polygon extrusion</param>
+        /// <param name="keyPoints">Set of 3D points, region is split with.</param>
         public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double height, List<Vector3> keyPoints)
         {
             var gridZ = new Grid1d(new Line(boundingPolygon.Start, boundingPolygon.Start + height * extrusionAxis));
             gridZ.SplitAtPoints(keyPoints);
+            var edgesBefore = GetEdges();
 
             var zCells = gridZ.GetCells();
             for (var i = 0; i < zCells.Count; i++)
             {
                 var elevationVector = zCells[i].Domain.Min * extrusionAxis;
                 var transformedPolygonBottom = boundingPolygon.TransformedPolygon(new Transform(elevationVector));
-                var addedEdges = AddFromPolygon(transformedPolygonBottom, keyPoints);
+                var grid = CreateGridFromPolygon(transformedPolygonBottom);
+                SplitGrid(grid, keyPoints);
+                SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+                var addedEdges = AddFromGrid(grid, edgesBefore);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
-                    var transformedPolygonTop = boundingPolygon.TransformedPolygon(new Transform(zCells[i].Domain.Max * extrusionAxis));
-                    AddFromPolygon(transformedPolygonTop, keyPoints);
+                    var transformedPolygonTop = boundingPolygon.TransformedPolygon(
+                        new Transform(zCells[i].Domain.Max * extrusionAxis));
+                    grid = CreateGridFromPolygon(transformedPolygonTop);
+                    SplitGrid(grid, keyPoints);
+                    SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+                    AddFromGrid(grid, edgesBefore);
                 }
             }
         }
 
+        /// <summary>
+        /// Add single planar region to the graph section using polygon.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="boundingPolygon">Base polygon</param>
+        /// <param name="stepSize">Step with which region is divided in each direction</param>
+        /// <returns></returns>
         public HashSet<Edge> AddFromPolygon(Polygon boundingPolygon, double stepSize)
         {
             if (stepSize < MinimumResolution)
@@ -134,61 +225,241 @@ namespace Elements.Spatial.AdaptiveGrid
                 return new HashSet<Edge>();
             }
 
+            var edgesBefore = GetEdges();
             var grid = CreateGridFromPolygon(boundingPolygon);
-            SplitGridAtIntersectionPoints(boundingPolygon, grid);
-
-            var sacrificialPanelsU = (grid.U.Domain.Length % stepSize < MinimumResolution) ? 1 : 0;
-            var sacrificialPanelsV = (grid.V.Domain.Length % stepSize < MinimumResolution) ? 1 : 0;
-            grid.U.DivideByFixedLength(stepSize, sacrificialPanels: sacrificialPanelsU);
-            grid.V.DivideByFixedLength(stepSize, sacrificialPanels: sacrificialPanelsV);
-            return AddFromGrid(grid);
+            SplitGrid(grid, stepSize);
+            SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+            return AddFromGrid(grid, edgesBefore);
         }
 
-        public HashSet<Edge> AddFromPolygon(Polygon boundingPolygon, List<Vector3> keyPoints)
+        /// <summary>
+        /// Add single planar region to the graph section using polygon.
+        /// If edges of new section are intersecting with edges of other existing regions - 
+        /// two regions are connected.
+        /// </summary>
+        /// <param name="boundingPolygon">Base polygon</param>
+        /// <param name="keyPoints">Set of 3D points, region is split with.</param>
+        /// <returns></returns>
+        public HashSet<Edge> AddFromPolygon(Polygon boundingPolygon, IEnumerable<Vector3> keyPoints)
         {
             var grid = CreateGridFromPolygon(boundingPolygon);
-            SplitGridAtIntersectionPoints(boundingPolygon, grid);
-
-            grid.U.SplitAtPoints(keyPoints);
-            grid.V.SplitAtPoints(keyPoints);
-            return AddFromGrid(grid);
+            var edgesBefore = GetEdges();
+            SplitGrid(grid, keyPoints);
+            SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+            return AddFromGrid(grid, edgesBefore);
         }
 
-        public HashSet<Edge> AddFromGrid(Grid2d grid)
+        /// <summary>
+        /// Intersect the box with existent edges and cut any portion of the edge, or whole edge,
+        /// that is inside the box. Note that no new connections are created afterwards.
+        /// </summary>
+        /// <param name="box">Boding box to subtract</param>
+        public void SubtractBox(BBox3 box)
         {
-            var cells = grid.GetCells();
-            var addedEdges = new HashSet<Edge>();
-            foreach (var cell in cells)
+            List<Edge> edgesToDelete = new List<Edge>();
+            foreach (var edge in GetEdges())
             {
-                foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
+                var start = GetVertex(edge.StartId);
+                var end = GetVertex(edge.EndId);
+                PointOrientation startZ = Orientation(start.Point.Z, box.Min.Z, box.Max.Z);
+                PointOrientation endZ = Orientation(end.Point.Z, box.Min.Z, box.Max.Z);
+                if( startZ == endZ && startZ != PointOrientation.Inside)
+                    continue;
+
+                PointOrientation startX = Orientation(start.Point.X, box.Min.X, box.Max.X);
+                PointOrientation startY = Orientation(start.Point.Y, box.Min.Y, box.Max.Y);
+                PointOrientation endX = Orientation(end.Point.X, box.Min.X, box.Max.X);
+                PointOrientation endY = Orientation(end.Point.Y, box.Min.Y, box.Max.Y);
+
+                if ((startX == endX && startX != PointOrientation.Inside) ||
+                    (startY == endY && startY != PointOrientation.Inside))
+                    continue;
+
+
+                if ((startZ == PointOrientation.Inside && endZ == PointOrientation.Inside) &&
+                    (startX == PointOrientation.Inside && endX == PointOrientation.Inside) &&
+                    (startY == PointOrientation.Inside && endY == PointOrientation.Inside))
                 {
-                    var polygon = (Polygon)cellGeometry;
-                    foreach (var segment in polygon.Segments())
+                    edgesToDelete.Add(edge);
+                }
+                else
+                {
+                    var edgeLine = edge.GetGeometry();
+                    List<Vector3> intersections;
+                    edgeLine.Intersects(box, out intersections);
+                    // Intersections are sorted from the start point.
+                    if( intersections.Count == 1 )
                     {
-                        var edges = AddEdge(segment);
-                        edges.ForEach(e => addedEdges.Add(e));
+                        //Need to find which end is inside the box. 
+                        //If none - we just touched the corner
+                        if( box.Contains( edgeLine.Start ))
+                        {
+                            var v = AddVertex(intersections[0]);
+                            if (edge.EndId != v.Id)
+                            {
+                                AddEdge(v.Id, edge.EndId);
+                                edgesToDelete.Add(edge);
+                            }
+                        }
+                        else if( box.Contains( edgeLine.End ))
+                        {
+                            var v = AddVertex(intersections[0]);
+                            if (edge.StartId != v.Id)
+                            {
+                                AddEdge(edge.StartId, v.Id);
+                                edgesToDelete.Add(edge);
+                            }
+                        }
+                    }
+                    if( intersections.Count == 2 )
+                    {
+                        var v0 = AddVertex(intersections[0]);
+                        var v1 = AddVertex(intersections[1]); 
+                        if( edge.StartId != v0.Id)
+                        {
+                            AddEdge(edge.StartId, v0.Id);   
+                        }
+                        if( edge.EndId != v1.Id)
+                        {
+                            AddEdge(v1.Id, edge.EndId);
+                        }
+                        edgesToDelete.Add(edge);
                     }
                 }
             }
 
-            return addedEdges;
+            foreach (var e in edgesToDelete)
+            {
+                DeleteEdge(e);
+            }
         }
 
-        public List<Edge> AddEdge(Line edgeLine)
+        /// <summary>
+        /// Get a Vertex by its ID.
+        /// </summary>
+        /// <param name="vertexId"></param>
+        /// <returns></returns>
+        public Vertex GetVertex(ulong vertexId)
+        {
+            this._vertices.TryGetValue(vertexId, out var vertex);
+            return vertex;
+        }
+
+        /// <summary>
+        /// Get all Vertices.
+        /// </summary>
+        /// <returns></returns>
+        public List<Vertex> GetVertices()
+        {
+             return this._vertices.Values.ToList();
+        }
+
+        /// <summary>
+        /// Get all Edges.
+        /// </summary>
+        /// <returns></returns>
+        public List<Edge> GetEdges()
+        {
+            return this._edges.Values.ToList();
+        }
+
+        /// <summary>
+        /// Whether a vertex location already exists in the AdaptiveGrid.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="id">The ID of the Vertex, if a match is found.</param>
+        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
+        /// <returns></returns>
+        public bool VertexExists(Vector3 point, out ulong id, double? fuzzyFactor = null)
+        {
+            var zDict = GetAddressParent(_verticesLookup, point, fuzzyFactor: fuzzyFactor);
+            if (zDict == null)
+            {
+                id = 0;
+                return false;
+            }
+            return TryGetValue(zDict, point.Z, out id, fuzzyFactor);
+        }
+
+        #endregion
+
+        #region Private logic
+
+        private Vertex AddVertex(Vector3 point)
+        {
+            if (!VertexExists(point, out var id, Tolerance))
+            {
+                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
+                id = this._vertexId;
+                var vertex = new Vertex(this, id, point);
+                zDict[point.Z] = id;
+                _vertices[id] = vertex;
+                this._vertexId++;
+            }
+
+            return GetVertex(id);
+        }
+
+        private void DeleteVertex(ulong id)
+        {
+            var vertex = _vertices[id];
+            _vertices.Remove(id);
+            var zDict = GetAddressParent(_verticesLookup, vertex.Point, fuzzyFactor: Tolerance);
+            if (zDict == null)
+            {
+                return;
+            }
+            zDict.Remove(vertex.Point.Z);
+
+            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance);
+            if (zDict.Count == 0)
+            {
+                yzDict.Remove(vertex.Point.Y);
+            }
+            if (yzDict.Count == 0)
+            {
+                _verticesLookup.Remove(vertex.Point.X);
+            }
+        }
+
+        private List<Edge> AddEdge(ulong startId, ulong endId, IEnumerable<Edge> edgesToIntersect)
         {
             var addedEdges = new List<Edge>();
-            var startVertex = AddVertex(edgeLine.Start);
-            var endVertex = AddVertex(edgeLine.End);
+            var startVertex = GetVertex(startId);
+            var endVertex = GetVertex(endId);
+            var sp = startVertex.Point;
+            var ep = endVertex.Point;
+            Vector3 min = new Vector3();
+            Vector3 max = new Vector3();
+            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
+            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
+            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
 
-            var newEdgeLine = new Line(startVertex.Point, endVertex.Point);
             var intersectionPoints = new List<Vector3>();
-            foreach (var edge in GetEdges())
+            foreach (var edge in edgesToIntersect)
             {
-                var oldEdgeLine = edge.GetGeometry();
-                if (!new List<Vector3> { oldEdgeLine.Start, oldEdgeLine.End, newEdgeLine.Start, newEdgeLine.End }.AreCoplanar())
+                var edgeV0 = GetVertex(edge.StartId);
+                var edgeV1 = GetVertex(edge.EndId);
+
+                PointOrientation startZ = Orientation(edgeV0.Point.Z, min.Z, max.Z);
+                PointOrientation endZ = Orientation(edgeV1.Point.Z, min.Z, max.Z);
+                if (startZ == endZ && startZ != PointOrientation.Inside)
+                    continue;
+
+                PointOrientation startX = Orientation(edgeV0.Point.X, min.X, max.X);
+                PointOrientation startY = Orientation(edgeV0.Point.Y, min.Y, max.Y);
+                PointOrientation endX = Orientation(edgeV1.Point.X, min.X, max.X);
+                PointOrientation endY = Orientation(edgeV1.Point.Y, min.Y, max.Y);
+
+                if ((startX == endX && startX != PointOrientation.Inside) ||
+                    (startY == endY && startY != PointOrientation.Inside) ||
+                    !Vector3.AreCoplanar(sp, ep, edgeV0.Point, edgeV1.Point))
                 {
                     continue;
                 }
+
+                var newEdgeLine = new Line(sp, ep);
+                var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
                 if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint))
                 {
                     intersectionPoints.Add(intersectionPoint);
@@ -265,9 +536,9 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             if (intersectionPoints.Any())
             {
-                intersectionPoints = intersectionPoints.OrderBy(p => p.DistanceTo(newEdgeLine.Start)).ToList();
-                intersectionPoints.Insert(0, newEdgeLine.Start);
-                intersectionPoints.Add(newEdgeLine.End);
+                intersectionPoints = intersectionPoints.OrderBy(p => p.DistanceTo(startVertex.Point)).ToList();
+                intersectionPoints.Insert(0, startVertex.Point);
+                intersectionPoints.Add(endVertex.Point);
                 intersectionPoints = intersectionPoints.Distinct().ToList();
                 for (var i = 0; i < intersectionPoints.Count - 1; i++)
                 {
@@ -282,94 +553,6 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             return addedEdges;
-        }
-
-        /// <summary>
-        /// Get a Vertex by its ID.
-        /// </summary>
-        /// <param name="vertexId"></param>
-        /// <returns></returns>
-        public Vertex GetVertex(ulong vertexId)
-        {
-            this._vertices.TryGetValue(vertexId, out var vertex);
-            return vertex;
-        }
-
-        /// <summary>
-        /// Get all Vertices.
-        /// </summary>
-        /// <returns></returns>
-        public List<Vertex> GetVertices()
-        {
-            return this._vertices.Values.ToList();
-        }
-
-        /// <summary>
-        /// Get all Edges.
-        /// </summary>
-        /// <returns></returns>
-        public List<Edge> GetEdges()
-        {
-            return this._edges.Values.ToList();
-        }
-
-        /// <summary>
-        /// Whether a vertex location already exists in the AdaptiveGrid.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="id">The ID of the Vertex, if a match is found.</param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns></returns>
-        public bool VertexExists(Vector3 point, out ulong id, double? fuzzyFactor = null)
-        {
-            var zDict = GetAddressParent(_verticesLookup, point, fuzzyFactor: fuzzyFactor);
-            if (zDict == null)
-            {
-                id = 0;
-                return false;
-            }
-            return TryGetValue(zDict, point.Z, out id, fuzzyFactor);
-        }
-
-        #endregion
-
-        #region Private logic
-
-        private Vertex AddVertex(Vector3 point)
-        {
-            if (!VertexExists(point, out var id, Tolerance))
-            {
-                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
-                id = this._vertexId;
-                var vertex = new Vertex(this, id, point);
-                zDict[point.Z] = id;
-                _vertices[id] = vertex;
-                this._vertexId++;
-            }
-
-            return GetVertex(id);
-        }
-
-        private void DeleteVertex(ulong id)
-        {
-            var vertex = _vertices[id];
-            _vertices.Remove(id);
-            var zDict = GetAddressParent(_verticesLookup, vertex.Point, fuzzyFactor: Tolerance);
-            if (zDict == null)
-            {
-                return;
-            }
-            zDict.Remove(vertex.Point.Z);
-
-            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance);
-            if (zDict.Count == 0)
-            {
-                yzDict.Remove(vertex.Point.Y);
-            }
-            if (yzDict.Count == 0)
-            {
-                _verticesLookup.Remove(vertex.Point.X);
-            }
         }
 
         private Edge AddEdge(ulong vertexId1, ulong vertexId2)
@@ -430,14 +613,17 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 primaryAxisDirection = Transform.ZAxis - Transform.ZAxis.Dot(boundingPolygonPlane.Normal) * boundingPolygonPlane.Normal;
             }
-            return new Grid2d(boundingPolygon, new Transform(boundingPolygon.Vertices.FirstOrDefault(), primaryAxisDirection, boundingPolygon.Normal()));
+            var grid = new Grid2d(boundingPolygon, new Transform(boundingPolygon.Vertices.FirstOrDefault(),
+                primaryAxisDirection, boundingPolygon.Normal()));
+            return grid;
+
         }
 
-        private void SplitGridAtIntersectionPoints(Polygon boundingPolygon, Grid2d grid)
+        private void SplitGridAtIntersectionPoints(Polygon boundingPolygon, Grid2d grid, IEnumerable<Edge> edgesToIntersect)
         {
             var boundingPolygonPlane = boundingPolygon.Plane();
             var intersectionPoints = new List<Vector3>();
-            foreach (var edge in GetEdges())
+            foreach (var edge in edgesToIntersect)
             {
                 if (edge.GetGeometry().Intersects(boundingPolygonPlane, out var intersectionPoint)
                     && boundingPolygon.Contains(intersectionPoint))
@@ -449,14 +635,76 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(intersectionPoints);
         }
 
+        private void SplitGrid(Grid2d grid, double step)
+        {
+            var sacrificialPanelsU = (grid.U.Domain.Length % step < MinimumResolution) ? 1 : 0;
+            var sacrificialPanelsV = (grid.V.Domain.Length % step < MinimumResolution) ? 1 : 0;
+            grid.U.DivideByFixedLength(step, sacrificialPanels: sacrificialPanelsU);
+            grid.V.DivideByFixedLength(step, sacrificialPanels: sacrificialPanelsV);
+        }
+
+        private void SplitGrid(Grid2d grid, IEnumerable<Vector3> keyPoints)
+        {
+            grid.U.SplitAtPoints(keyPoints);
+            grid.V.SplitAtPoints(keyPoints);
+        }
+
+        private HashSet<Edge> AddFromGrid(Grid2d grid, IEnumerable<Edge> edgesToIntersect)
+        {
+            var cells = grid.GetCells();
+            var addedEdges = new HashSet<Edge>();
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+
+            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) => {
+                var v0 = AddVertex(start);
+                var v1 = AddVertex(end);
+                if (v0 != v1)
+                {
+                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
+                    edgeCandidates.Add(pair);
+                }
+            };
+
+            foreach (var cell in cells)
+            {
+                foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
+                {
+                    var polygon = (Polygon)cellGeometry;
+                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
+                    {
+                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
+                    }
+                    add(polygon.Vertices.Last(), polygon.Vertices.First());
+                }
+            }
+
+            foreach (var edge in edgeCandidates)
+            {
+                var edges = AddEdge(edge.Item1, edge.Item2, edgesToIntersect);
+                edges.ForEach(e => addedEdges.Add(e));
+            }
+
+            return addedEdges;
+        }
+
         private void AddVerticalEdges(Vector3 extrusionAxis, double height, HashSet<Edge> addedEdges)
         {
             foreach (var bottomVertex in addedEdges.SelectMany(e => e.GetVertices()).Distinct())
             {
                 var heightVector = height * extrusionAxis;
-                var topPoint = bottomVertex.Point + heightVector;
-                AddEdge(new Line(bottomVertex.Point, topPoint));
+                var topVertex = AddVertex(bottomVertex.Point + heightVector);
+                AddEdge(bottomVertex.Id, topVertex.Id);
             }
+        }
+
+        private PointOrientation Orientation(double x, double start, double end)
+        {
+            PointOrientation po = PointOrientation.Inside;
+            if (x < start)
+                po = PointOrientation.Low;
+            else if (x > end)
+                po = PointOrientation.Hi;
+            return po;
         }
 
         /// <summary>

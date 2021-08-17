@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
+    /// <summary>
+    /// A unique edge in a adaptive grid, connecting two vertices. Don't have a particular direction.
+    /// Class is forked from CellComplex.Edge.
+    /// </summary>
     public class Edge
     {
         /// <summary>
@@ -45,6 +49,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Get the unique hash for an Edge with list (of length 2) of its unordered vertex IDs.
+        /// NOTE: this function is a copy of CellComplex.Edge.GetHash
         /// </summary>
         /// <param name="vertexIds"></param>
         /// <returns></returns>
@@ -58,6 +63,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Sets the StartVertexId and EndVertexId so that start vertex always has a smaller ID than end vertex.
+        /// NOTE: this function is a copy of CellComplex.Edge.SetVerticesFromIds
         /// </summary>
         /// <param name="id1">One of the two applicable vertex IDs.</param>
         /// <param name="id2">The other applicable vertex IDs.</param>
@@ -81,7 +87,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return new List<Vertex>() { this.AdaptiveGrid.GetVertex(this.StartId), this.AdaptiveGrid.GetVertex(this.EndId) };
+            return new List<Vertex>() {
+                this.AdaptiveGrid.GetVertex(this.StartId),
+                this.AdaptiveGrid.GetVertex(this.EndId)
+            };
         }
 
         /// <summary>

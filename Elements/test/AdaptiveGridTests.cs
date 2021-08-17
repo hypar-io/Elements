@@ -75,5 +75,20 @@ namespace Elements.Tests
                 Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
             }
         }
+
+        [Fact]
+        public void AdaptiveGridSubtractBox()
+        {
+            var adaptiveGrid = new AdaptiveGrid(0, new Transform());
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, 0.5);
+            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 5), out _));
+            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 4.9), out _));
+
+            var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
+            adaptiveGrid.SubtractBox(box);
+            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 5), out _));
+            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 4.9), out _));
+        }
     }
 }

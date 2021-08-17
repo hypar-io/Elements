@@ -730,6 +730,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are four provided points on the same plane?
+        /// </summary>
+        public static bool AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            var ab = b - a;
+            var ac = c - a;
+            var cd = d - a;
+            var tp = ab.TripleProduct(ac, cd);
+            return Math.Abs(tp) < EPSILON;
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel

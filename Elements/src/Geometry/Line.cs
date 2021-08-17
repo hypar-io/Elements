@@ -252,6 +252,93 @@ namespace Elements.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Does this line touches or intersects the provided box in 3D?
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="results"></param>
+        /// <param name="infinite">Treat the line as infinite?</param>
+        /// <returns>True if the line touches or intersects the  box at least at one point, false otherwise.</returns>
+        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)
+        {
+            var d = End - Start;
+            results = new List<Vector3>();
+
+            // Solving the t parameter on line were it intersects planes of box in different coordinates.
+            // If vector has no change in particular coordinate - just skip it as infinity.
+            var t0x = double.NegativeInfinity;
+            var t1x = double.PositiveInfinity;
+            if (Math.Abs(d.X) > 1e-6)
+            {
+                t0x = (box.Min.X - Start.X) / d.X;
+                t1x = (box.Max.X - Start.X) / d.X;
+                // Line can reach min plane of box before reaching max.
+                if (t1x < t0x)
+                {
+                    (t0x, t1x) = (t1x, t0x);
+                }
+            }
+
+            var t0y = double.NegativeInfinity;
+            var t1y = double.PositiveInfinity;
+            if (Math.Abs(d.Y) > 1e-6)
+            {
+                t0y = (box.Min.Y - Start.Y) / d.Y;
+                t1y = (box.Max.Y - Start.Y) / d.Y;
+                if (t1y < t0y)
+                {
+                    (t0y, t1y) = (t1y, t0y);
+                }
+            }
+
+            // If max hit of one coordinate is smaller then min hit of other - line hits planes outside the box.
+            // In other words line just goes by.
+            if (t0x > t1y || t0y > t1x)
+            {
+                return false;
+            }
+
+            var tMin = Math.Max(t0x, t0y);
+            var tMax = Math.Min(t1x, t1y);
+
+            if (Math.Abs(d.Z) > 1e-6)
+            {
+                var t0z = (box.Min.Z - Start.Z) / d.Z;
+                var t1z = (box.Max.Z - Start.Z) / d.Z;
+
+                if (t1z < t0z)
+                {
+                    (t0z, t1z) = (t1z, t0z);
+                }
+
+                if (t0z > tMax || t1z < tMin)
+                {
+                    return false;
+                }
+
+                tMin = Math.Max(t0z, tMin);
+                tMax = Math.Min(t1z, tMax);
+            }
+
+            if (tMin == double.NegativeInfinity || tMin == double.PositiveInfinity)
+            {
+                return false;
+            }
+
+            // Check if found parameters are within normalized line range.
+            if (infinite || (tMin >= 0 && tMin <= 1))
+            {
+                results.Add(Start + d * tMin);
+            }
+
+            if (Math.Abs(tMax - tMin) > 1e-6 && (infinite || (tMax >= 0 && tMax <= 1)))
+            {
+                results.Add(Start + d * tMax);
+            }
+
+            return results.Any();
+        }
+
         private bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;
