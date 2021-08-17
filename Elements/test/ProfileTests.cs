@@ -3,6 +3,7 @@ using Elements.Geometry;
 using Xunit;
 using System.Linq;
 using System.Collections.Generic;
+using Elements.Spatial;
 
 namespace Elements.Tests
 {
@@ -340,6 +341,47 @@ namespace Elements.Tests
             var random = new Random();
             Model.AddElements(splitResults.Select(s => new Floor(s, 0.1, new Transform(0, 0, random.NextDouble()), random.NextMaterial())));
             Assert.Equal(4, splitResults.Count);
+        }
+
+        [Fact]
+        public void ProfileOffset()
+        {
+            Name = nameof(ProfileOffset);
+
+            var profile = new Profile(Polygon.Rectangle((0, 0), (10, 10)), Polygon.Rectangle((0.5, 0.5), (5, 5)));
+            Model.AddElements(profile.ToModelCurves(material: BuiltInMaterials.XAxis));
+            // offset in
+            var offset = Elements.Geometry.Profile.Offset(new[] { profile }, -0.5);
+            Assert.Equal(56, offset.Sum(o => o.Area()));
+            Model.AddElements(offset.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.YAxis)));
+            // offset out
+            var offset2 = Elements.Geometry.Profile.Offset(new[] { profile }, 1);
+            Assert.Equal(137.75, offset2.Sum(o => o.Area()), 3);
+            Model.AddElements(offset2.SelectMany(o => o.ToModelCurves(material: BuiltInMaterials.ZAxis)));
+            // offset in and back out again
+            var offsetProfiles = Elements.Geometry.Profile.Offset(new[] { profile }, -1);
+            var offsetOut = Elements.Geometry.Profile.Offset(offsetProfiles, 1);
+            Assert.Equal(75, offsetOut.Sum(o => o.Area()));
+            Model.AddElements(offsetOut.Select(p => new Panel(p.Perimeter, BuiltInMaterials.Void)));
+        }
+
+        [Fact]
+        public void PolygonCleanupIssue()
+        {
+            Name = nameof(PolygonCleanupIssue);
+            var rect = Polygon.Rectangle(10, 10);
+            var splitters = Polygon.Rectangle(4, 15).Segments().Select(s => s.ToPolyline(1));
+            Model.AddElements(rect);
+
+            var heg = HalfEdgeGraph2d.Construct(new[] { rect }, splitters);
+            var polygons = heg.Polygonize();
+            Assert.Equal(3, polygons.Count);
+            Assert.True(polygons.All(p => p.Segments().Count() == 4), "All polygons should be simple rectangles");
+            var rand = new Random();
+            foreach (var s in polygons)
+            {
+                Model.AddElement(new ModelCurve(s, rand.NextMaterial(), new Transform(0, 0, rand.NextDouble())));
+            }
         }
     }
 }

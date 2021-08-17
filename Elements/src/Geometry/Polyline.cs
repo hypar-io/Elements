@@ -15,6 +15,17 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polyline : ICurve, IEquatable<Polyline>
     {
+
+        /// <summary>
+        /// Construct a polyline from points. This is a convenience constructor
+        /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="vertices">The vertices of the polyline.</param>
+        public Polyline(params Vector3[] vertices) : this(new List<Vector3>(vertices))
+        {
+
+        }
+
         /// <summary>
         /// Calculate the length of the polygon.
         /// </summary>
@@ -785,6 +796,12 @@ namespace Elements.Geometry
             Split(points);
         }
 
+        /// <summary>
+        /// Insert a point into the polyline if it lies along one
+        /// of the polyline's segments.
+        /// </summary>
+        /// <param name="points">The points at which to split the polyline.</param>
+        /// <param name="closed">Is the polyline closed?</param>
         protected void Split(IList<Vector3> points, bool closed = false)
         {
             for (var i = 0; i < this.Vertices.Count; i++)

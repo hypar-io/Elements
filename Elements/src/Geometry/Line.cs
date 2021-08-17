@@ -109,7 +109,7 @@ namespace Elements.Geometry
         /// <param name="amount">The amount to thicken the line.</param>
         public Polygon Thicken(double amount)
         {
-            if (Start.Z != End.Z)
+            if (!Start.Z.ApproximatelyEquals(End.Z))
             {
                 throw new Exception("The line could not be thickened. Only lines with their start and end at the same elevation can be thickened.");
             }
@@ -154,10 +154,25 @@ namespace Elements.Geometry
         /// <returns>True if the line intersects the plane, false if no intersection occurs.</returns>
         public bool Intersects(Plane p, out Vector3 result, bool infinite = false)
         {
-            var rayIntersects = new Ray(Start, Direction()).Intersects(p, out Vector3 location, out double t);
+            return Intersects(p, this.Start, this.End, out result, infinite);
+        }
+
+        /// <summary>
+        /// Intersect a segment defined by two points with a plane.
+        /// </summary>
+        /// <param name="p">The plane.</param>
+        /// <param name="start">The start of the segment.</param>
+        /// <param name="end">The end of the segment.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <param name="infinite">Whether the segment should instead be considered infinite.</param>
+        /// <returns>True if an intersection is found, otherwise false.</returns>
+        public static bool Intersects(Plane p, Vector3 start, Vector3 end, out Vector3 result, bool infinite = false)
+        {
+            var d = (end - start).Unitized();
+            var rayIntersects = new Ray(start, d).Intersects(p, out Vector3 location, out double t);
             if (rayIntersects)
             {
-                var l = Length();
+                var l = start.DistanceTo(end);
                 if (infinite || t.ApproximatelyEquals(l) || t < l)
                 {
                     result = location;
@@ -166,7 +181,7 @@ namespace Elements.Geometry
             }
             else if (infinite)
             {
-                var rayIntersectsBackwards = new Ray(End, Direction().Negate()).Intersects(p, out Vector3 location2, out double t2);
+                var rayIntersectsBackwards = new Ray(end, d.Negate()).Intersects(p, out Vector3 location2, out double t2);
                 if (rayIntersectsBackwards)
                 {
                     result = location2;
@@ -185,8 +200,22 @@ namespace Elements.Geometry
         /// false if the lines have coincident vertices or do not intersect.</returns>
         public bool Intersects2D(Line l)
         {
-            var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
-            var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
+            return Intersects2d(Start, End, l.Start, l.End);
+        }
+
+        /// <summary>
+        /// Does the first line intersect with the second line in 2D?
+        /// </summary>
+        /// <param name="start1">Start point of the first line</param>
+        /// <param name="end1">End point of the first line</param>
+        /// <param name="start2">Start point of the second line</param>
+        /// <param name="end2">End point of the second line</param>
+        /// <returns>Return true if the lines intersect,
+        /// false if the lines have coincident vertices or do not intersect.</returns>
+        public static bool Intersects2d(Vector3 start1, Vector3 end1, Vector3 start2, Vector3 end2)
+        {
+            var a = Vector3.CCW(start1, end1, start2) * Vector3.CCW(start1, end1, end2);
+            var b = Vector3.CCW(start2, end2, start1) * Vector3.CCW(start2, end2, end1);
             if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
             if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
@@ -202,8 +231,26 @@ namespace Elements.Geometry
         /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
         public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)
         {
+            return Line.Intersects(this.Start, this.End, l.Start, l.End, out result, infinite, includeEnds);
+        }
+
+        /// <summary>
+        /// Do two lines intersect in 3d?
+        /// </summary>
+        /// <param name="start1">Start point of the first line</param>
+        /// <param name="end1">End point of the first line</param>
+        /// <param name="start2">Start point of the second line</param>
+        /// <param name="end2">End point of the second line</param>
+        /// <param name="result"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="includeEnds">If the end of one line lies exactly on the other, count it as an intersection?</param>
+        /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
+        public static bool Intersects(Vector3 start1, Vector3 end1, Vector3 start2, Vector3 end2, out Vector3 result, bool infinite = false, bool includeEnds = false)
+        {
             // check if two lines are parallel
-            if (Direction().IsParallelTo(l.Direction()))
+            var direction1 = Direction(start1, end1);
+            var direction2 = Direction(start2, end2);
+            if (direction1.IsParallelTo(direction2))
             {
                 result = default(Vector3);
                 return false;
@@ -211,16 +258,16 @@ namespace Elements.Geometry
             // construct a plane through this line and the start or end of the other line
             Plane plane;
             Vector3 testpoint;
-            if (!(new[] { Start, End, l.Start }).AreCollinear())
+            if (!(new[] { start1, end1, start2 }).AreCollinear())
             {
-                plane = new Plane(Start, End, l.Start);
-                testpoint = l.End;
+                plane = new Plane(start1, end1, start2);
+                testpoint = end2;
 
             } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
-            else if (!(new[] { Start, End, l.End }).AreCollinear())
+            else if (!(new[] { start1, end1, end2 }).AreCollinear())
             {
-                plane = new Plane(Start, End, l.End);
-                testpoint = l.Start;
+                plane = new Plane(start1, end1, end2);
+                testpoint = start2;
             }
             else // they're collinear (this shouldn't occur since it should be caught by the parallel test)
             {
@@ -237,11 +284,11 @@ namespace Elements.Geometry
 
             // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
             // construct a plane
-            var normal = l.Direction().Cross(plane.Normal);
-            Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
+            var normal = direction2.Cross(plane.Normal);
+            Plane intersectionPlane = new Plane(start2, normal);
+            if (Intersects(intersectionPlane, start1, end1, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
             {
-                if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
+                if (infinite || (PointOnLine(planeIntersectionResult, start2, end2, includeEnds) && PointOnLine(planeIntersectionResult, start1, end1, includeEnds)))
                 {
                     result = planeIntersectionResult;
                     return true;
@@ -339,7 +386,7 @@ namespace Elements.Geometry
             return results.Any();
         }
 
-        private bool IsAlmostZero(double a)
+        private static bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;
         }
@@ -365,7 +412,17 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Direction()
         {
-            return (this.End - this.Start).Unitized();
+            return Direction(Start, End);
+        }
+
+        /// <summary>
+        /// A normalized vector representing the direction of a line, represented by a start and end point.
+        /// <param name="start">The start point of the line.</param>
+        /// <param name="end">The end point of the line.</param>
+        /// </summary>
+        public static Vector3 Direction(Vector3 start, Vector3 end)
+        {
+            return (end - start).Unitized();
         }
 
         /// <summary>
@@ -375,11 +432,23 @@ namespace Elements.Geometry
         /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(Start) < Vector3.EPSILON || point.DistanceTo(End) < Vector3.EPSILON))
+            return Line.PointOnLine(point, Start, End, includeEnds);
+        }
+
+        /// <summary>
+        /// Test if a point lies within a given line segment
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <param name="start">The start point of the line segment.</param>
+        /// <param name="end">The end point of the line segment.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
+        {
+            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
             {
                 return true;
             }
-            return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
+            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
         /// <summary>
@@ -553,6 +622,21 @@ namespace Elements.Geometry
         /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
         public Line ExtendTo(IEnumerable<Line> otherLines, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
+            return ExtendTo(otherLines, double.MaxValue, bothSides, extendToFurthest, tolerance);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with any other line, but no further than maxDistance.
+        /// If optional `extendToFurthest` is true, extends to furthest intersection with any other line, but no further than maxDistance.
+        /// If the distance to the intersection with the lines is greater than the maximum, the line will be returned unchanged.
+        /// </summary>
+        /// <param name="otherLines">The other lines to intersect with.</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(IEnumerable<Line> otherLines, double maxDistance, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
+        {
             // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
             var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
@@ -607,8 +691,8 @@ namespace Elements.Geometry
                 .Reverse().Cast<Vector3?>();
 
             (Vector3? Start, Vector3? End) startEndCandidates = extendToFurthest ?
-                (startCandidates.LastOrDefault(), endCandidates.LastOrDefault()) :
-                (startCandidates.FirstOrDefault(), endCandidates.FirstOrDefault());
+                (startCandidates.LastOrDefault(p => p.GetValueOrDefault().DistanceTo(start) < maxDistance), endCandidates.LastOrDefault(p => p.GetValueOrDefault().DistanceTo(end) < maxDistance)) :
+                (startCandidates.FirstOrDefault(p => p.GetValueOrDefault().DistanceTo(start) < maxDistance), endCandidates.FirstOrDefault(p => p.GetValueOrDefault().DistanceTo(end) < maxDistance));
 
             if (bothSides && startEndCandidates.Start != null)
             {
@@ -634,6 +718,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a polyline, but no further than maxDistance.
+        /// </summary>
+        /// <param name="polyline">The polyline to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Polyline polyline, double maxDistance, bool bothSides = true, bool extendToFurthest = false)
+        {
+            return ExtendTo(polyline.Segments(), maxDistance, bothSides, extendToFurthest);
+        }
+
+        /// <summary>
         /// Extend this line to its (nearest, by default) intersection with a profile.
         /// </summary>
         /// <param name="profile">The profile to intersect with</param>
@@ -642,6 +738,18 @@ namespace Elements.Geometry
         public Line ExtendTo(Profile profile, bool bothSides = true, bool extendToFurthest = false)
         {
             return ExtendTo(profile.Segments(), bothSides, extendToFurthest);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a profile, but no further than maxDistance.
+        /// </summary>
+        /// <param name="profile">The profile to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        public Line ExtendTo(Profile profile, double maxDistance, bool bothSides = true, bool extendToFurthest = false)
+        {
+            return ExtendTo(profile.Segments(), maxDistance, bothSides, extendToFurthest);
         }
 
         /// <summary>
@@ -654,6 +762,19 @@ namespace Elements.Geometry
         public Line ExtendTo(Polygon polygon, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
         {
             return ExtendTo(polygon.Segments(), bothSides, extendToFurthest, tolerance);
+        }
+
+        /// <summary>
+        /// Extend this line to its (nearest, by default) intersection with a polygon, but no further than maxDistance.
+        /// </summary>
+        /// <param name="polygon">The polygon to intersect with</param>
+        /// <param name="maxDistance">Maximum extension distance.</param>
+        /// <param name="bothSides">Optional — if false, will only extend in the line's direction; if true will extend in both directions.</param>
+        /// <param name="extendToFurthest">Optional — if true, will extend line as far as it will go, rather than stopping at the closest intersection.</param>
+        /// <param name="tolerance">Optional — The amount of tolerance to include in the extension method.</param>
+        public Line ExtendTo(Polygon polygon, double maxDistance, bool bothSides = true, bool extendToFurthest = false, double tolerance = Vector3.EPSILON)
+        {
+            return ExtendTo(polygon.Segments(), maxDistance, bothSides, extendToFurthest, tolerance);
         }
 
         /// <summary>
@@ -811,55 +932,5 @@ namespace Elements.Geometry
         {
             return new[] { this.Start, this.End };
         }
-
-        #region WindingNumberCalcs
-        internal Position RelativePositionOf(Vector3 location)
-        {
-            double positionCalculation =
-                (End.Y - Start.Y) * (location.X - Start.X) -
-                (location.Y - Start.Y) * (End.X - Start.X);
-
-            if (positionCalculation > 0)
-            {
-                return Position.Left;
-            }
-
-            if (positionCalculation < 0)
-            {
-                return Position.Right;
-            }
-
-            return Position.Center;
-        }
-
-        internal bool AscendingRelativeTo(Vector3 location)
-        {
-            return Start.X <= location.X;
-        }
-
-        internal bool LocationInRange(Vector3 location, Orientation orientation)
-        {
-            if (orientation == Orientation.Ascending)
-            {
-                return End.X > location.X;
-            }
-
-            return End.X <= location.X;
-        }
-
-        internal enum Position
-        {
-            Left,
-            Right,
-            Center
-        }
-
-        internal enum Orientation
-        {
-            Ascending,
-            Descending
-        }
-        #endregion
-
     }
 }

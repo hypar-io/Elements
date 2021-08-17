@@ -129,14 +129,24 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        public Vector3 Unitized()
+        /// <param name="tolerance">The amount of tolerance in the zero length comparison.</param>
+        public Vector3 Unitized(double tolerance = Vector3.EPSILON)
         {
             var length = Length();
-            if (length == 0)
+            if (length.ApproximatelyEquals(0, tolerance))
             {
                 return this;
             }
             return new Vector3(X / length, Y / length, Z / length);
+        }
+
+        /// <summary>
+        /// Is this vector of unit length?
+        /// </summary>
+        /// <returns>True if the vector is of unit length, otherwise false.</returns>
+        public bool IsUnitized()
+        {
+            return this.Length().ApproximatelyEquals(1.0);
         }
 
         /// <summary>
@@ -807,6 +817,42 @@ namespace Elements.Geometry
             return newList;
 
         }
+
+        /// <summary>
+        /// Automatically convert a tuple of three doubles into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y,Z) tuple of doubles.</param>
+        public static implicit operator Vector3((double X, double Y, double Z) vector)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of three ints into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y,Z) tuple of ints.</param>
+        public static implicit operator Vector3((int X, int Y, int Z) vector)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of two doubles into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y) tuple of doubles.</param>
+        public static implicit operator Vector3((double X, double Y) vector)
+        {
+            return new Vector3(vector.X, vector.Y);
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of two ints into a Vector3.
+        /// </summary>
+        /// <param name="vector">An (X,Y) tuple of ints.</param>
+        public static implicit operator Vector3((int X, int Y) vector)
+        {
+            return new Vector3(vector.X, vector.Y);
+        }
     }
 
     /// <summary>
@@ -969,6 +1015,44 @@ namespace Elements.Geometry
                 c += 3;
             }
             return arr;
+        }
+
+        internal static GraphicsBuffers ToGraphicsBuffers(this IList<Vector3> vertices, bool lineLoop)
+        {
+            var gb = new GraphicsBuffers();
+
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var v = vertices[i];
+                gb.AddVertex(v, default(Vector3), default(UV), null);
+
+                var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
+                if (write)
+                {
+                    gb.AddIndex((ushort)i);
+                    gb.AddIndex((ushort)(i + 1));
+                }
+            }
+            return gb;
+        }
+
+        /// <summary>
+        /// Calculate the normal of the plane containing a set of points.
+        /// </summary>
+        /// <param name="points">The points in the plane.</param>
+        /// <returns>The normal of the plane containing the points.</returns>
+        internal static Vector3 NormalFromPlanarWoundPoints(this IList<Vector3> points)
+        {
+            var normal = new Vector3();
+            for (int i = 0; i < points.Count; i++)
+            {
+                var p0 = points[i];
+                var p1 = points[(i + 1) % points.Count];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Unitized(0);
         }
     }
 

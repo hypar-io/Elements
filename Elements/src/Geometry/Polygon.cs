@@ -32,6 +32,16 @@ namespace Elements.Geometry
         public static implicit operator Element(Polygon c) => new ModelCurve(c);
 
         /// <summary>
+        /// Construct a polygon from points. This is a convenience constructor
+        /// that can be used like this: `new Polygon((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices))
+        {
+
+        }
+
+        /// <summary>
         /// Construct a transformed copy of this Polygon.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
@@ -86,7 +96,7 @@ namespace Elements.Geometry
         /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
         public bool Contains(Vector3 vector, out Containment containment)
         {
-            return Contains3D(Segments(), vector, out containment);
+            return Contains3D(Edges(), vector, out containment);
         }
 
         /// <summary>
@@ -369,18 +379,18 @@ namespace Elements.Geometry
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
-        internal static bool Contains3D(IEnumerable<Line> segments, Vector3 location, out Containment containment)
+        internal static bool Contains3D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
-            var vertices = segments.Select(segment => segment.Start).ToList();
+            var vertices = edges.Select(edge => edge.from).ToList();
             var is3D = vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains(segments, location, out containment);
+                return Contains(edges, location, out containment);
             }
             var transformTo3D = vertices.ToTransform();
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = segments.Select(segment => segment.TransformedLine(transformToGround));
+            var groundSegments = edges.Select(edge => (transformToGround.OfPoint(edge.from), transformToGround.OfPoint(edge.to)));
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
         }
@@ -434,20 +444,20 @@ namespace Elements.Geometry
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains(IEnumerable<Line> segments, Vector3 location, out Containment containment)
+        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
             int windingNumber = 0;
 
-            foreach (var edge in segments)
+            foreach (var edge in edges)
             {
                 // check for coincidence with edge vertices
-                var toStart = location - edge.Start;
+                var toStart = location - edge.from;
                 if (toStart.IsZero())
                 {
                     containment = Containment.CoincidesAtVertex;
                     return true;
                 }
-                var toEnd = location - edge.End;
+                var toEnd = location - edge.to;
                 if (toEnd.IsZero())
                 {
                     containment = Containment.CoincidesAtVertex;
@@ -455,7 +465,7 @@ namespace Elements.Geometry
                 }
                 //along segment - check if perpendicular distance to segment is below tolerance and that point is between ends
                 var a = toStart.Length();
-                var b = toStart.Dot((edge.End - edge.Start).Unitized());
+                var b = toStart.Dot((edge.to - edge.from).Unitized());
                 if (a * a - b * b < Vector3.EPSILON * Vector3.EPSILON && toStart.Dot(toEnd) < 0)
                 {
                     containment = Containment.CoincidesAtEdge;
@@ -463,15 +473,15 @@ namespace Elements.Geometry
                 }
 
 
-                if (edge.AscendingRelativeTo(location) &&
-                    edge.LocationInRange(location, Line.Orientation.Ascending))
+                if (AscendingRelativeTo(location, edge) &&
+                    LocationInRange(location, Orientation.Ascending, edge))
                 {
-                    windingNumber += Wind(location, edge, Line.Position.Left);
+                    windingNumber += Wind(location, edge, Position.Left);
                 }
-                if (!edge.AscendingRelativeTo(location) &&
-                    edge.LocationInRange(location, Line.Orientation.Descending))
+                if (!AscendingRelativeTo(location, edge) &&
+                    LocationInRange(location, Orientation.Descending, edge))
                 {
-                    windingNumber -= Wind(location, edge, Line.Position.Right);
+                    windingNumber -= Wind(location, edge, Position.Right);
                 }
             }
 
@@ -480,10 +490,59 @@ namespace Elements.Geometry
             return result;
         }
 
-        private static int Wind(Vector3 location, Line edge, Line.Position position)
+        #region WindingNumberCalcs
+        private static int Wind(Vector3 location, (Vector3 from, Vector3 to) edge, Position position)
         {
-            return edge.RelativePositionOf(location) != position ? 0 : 1;
+            return RelativePositionOnEdge(location, edge) != position ? 0 : 1;
         }
+
+        private static Position RelativePositionOnEdge(Vector3 location, (Vector3 from, Vector3 to) edge)
+        {
+            double positionCalculation =
+                (edge.to.Y - edge.from.Y) * (location.X - edge.from.X) -
+                (location.Y - edge.from.Y) * (edge.to.X - edge.from.X);
+
+            if (positionCalculation > 0)
+            {
+                return Position.Left;
+            }
+
+            if (positionCalculation < 0)
+            {
+                return Position.Right;
+            }
+
+            return Position.Center;
+        }
+
+        private static bool AscendingRelativeTo(Vector3 location, (Vector3 from, Vector3 to) edge)
+        {
+            return edge.from.X <= location.X;
+        }
+
+        private static bool LocationInRange(Vector3 location, Orientation orientation, (Vector3 from, Vector3 to) edge)
+        {
+            if (orientation == Orientation.Ascending)
+            {
+                return edge.to.X > location.X;
+            }
+
+            return edge.to.X <= location.X;
+        }
+
+        private enum Position
+        {
+            Left,
+            Right,
+            Center
+        }
+
+        private enum Orientation
+        {
+            Ascending,
+            Descending
+        }
+        #endregion
 
 
         /// <summary>
@@ -555,7 +614,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if every vertex of the supplied Polygon is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if any vertex of the supplied Polygon is outside this Polygon, or if the supplied Polygon is null.
+        /// Returns true if every edge of the provided polygon is on or within this polygon when compared on a shared plane. Returns false if any edge of the supplied Polygon is outside this Polygon, or if the supplied Polygon is null.
         /// </returns>
         public bool Covers(Polygon polygon)
         {
@@ -563,20 +622,55 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            if (this.IsClockWise() != polygon.IsClockWise())
+
+            // If an edge crosses without being fully overlapping, the polygon is only partially covered.
+            foreach (var edge1 in Edges())
             {
-                polygon = polygon.Reversed();
+                foreach (var edge2 in polygon.Edges())
+                {
+                    var direction1 = Line.Direction(edge1.from, edge1.to);
+                    var direction2 = Line.Direction(edge2.from, edge2.to);
+                    if (Line.Intersects2d(edge1.from, edge1.to, edge2.from, edge2.to) &&
+                        !direction1.IsParallelTo(direction2) &&
+                        !direction1.IsParallelTo(direction2.Negate()))
+                    {
+                        return false;
+                    }
+                }
             }
-            var clipper = new Clipper();
-            var solution = new List<List<IntPoint>>();
-            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
-            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
-            clipper.Execute(ClipType.ctUnion, solution);
-            if (solution.Count != 1)
+
+            var allInside = true;
+            foreach (var vertex in polygon.Vertices)
             {
-                return false;
+                Contains(Edges(), vertex, out Containment containment);
+                if (containment == Containment.Outside)
+                {
+                    return false;
+                }
+                if (containment != Containment.Inside)
+                {
+                    allInside = false;
+                }
             }
-            return Math.Abs(solution.First().ToPolygon().Area() - this.ToClipperPath().ToPolygon().Area()) <= 0.0001;
+
+            // If all vertices of the polygon are inside this polygon then there is full coverage since no edges cross.
+            if (allInside)
+            {
+                return true;
+            }
+
+            // If some edges are partially shared (!allInside) then we must still make sure that none of this.Vertices are inside the given polygon.
+            // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
+            foreach (var vertex in Vertices)
+            {
+                Contains(polygon.Edges(), vertex, out Containment containment);
+                if (containment == Containment.Inside)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -698,19 +792,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Split this polygon with an open polyline.
+        /// Split this polygon with one or more open polylines.
         /// </summary>
-        /// <param name="pl">The polyline with which to split.</param>
-        public List<Polygon> Split(Polyline pl)
+        /// <param name="polylines">The polylines with which to split.</param>
+        public List<Polygon> Split(params Polyline[] polylines)
         {
-            var plXform = this.ToTransform();
-            var inverse = new Transform(plXform);
-            inverse.Invert();
-            var thisInXY = this.TransformedPolygon(inverse);
-            // Construct a half-edge graph from the polygon and the polyline
-            var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(thisInXY, pl.TransformedPolyline(inverse));
-            // Find closed regions in that graph
-            return graph.Polygonize().Select(p => p.TransformedPolygon(plXform)).ToList();
+            return Split(polylines.ToList());
         }
 
         /// <summary>
@@ -944,6 +1031,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Constructs the geometric union of a set of polygons, using default
+        /// tolerance.
+        /// </summary>
+        /// <param name="polygons">The polygons to union</param>
+        /// <returns>Returns a list of Polygons representing the union of all polygons.</returns>
+        public static IList<Polygon> UnionAll(params Polygon[] polygons)
+        {
+            return BooleanTwoSets(polygons, new List<Polygon>(), BooleanMode.Union, VoidTreatment.IgnoreInternalVoids, Vector3.EPSILON);
+        }
+
+        /// <summary>
         /// Constructs the geometric union of a set of polygons.
         /// </summary>
         /// <param name="polygons">The polygons to union</param>
@@ -1033,6 +1131,21 @@ namespace Elements.Geometry
                 polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
             }
             return polygons;
+        }
+
+        /// <summary>
+        /// Constructs the geometric difference between this Polygon and one or
+        /// more supplied Polygons, using the default tolerance.
+        /// </summary>
+        /// <param name="polygons">The intersecting Polygons.</param>
+        /// <returns>
+        /// Returns a list of Polygons representing the subtraction of the supplied Polygons from this Polygon.
+        /// Returns null if the area of this Polygon is entirely subtracted.
+        /// Returns a list containing a representation of the perimeter of this Polygon if the Polygons do not intersect.
+        /// </returns>
+        public IList<Polygon> Difference(params Polygon[] polygons)
+        {
+            return Difference(polygons, Vector3.EPSILON);
         }
 
         /// <summary>
@@ -1161,6 +1274,20 @@ namespace Elements.Geometry
                 return null;
             }
             return solution.First().ToPolygon(tolerance);
+        }
+
+        /// <summary>
+        /// Constructs the geometric union between this Polygon and one or more
+        /// supplied polygons, using the default tolerance.
+        /// </summary>
+        /// <param name="polygons">The Polygons to be combined with this Polygon.</param>
+        /// <returns>
+        /// Returns a single Polygon from a successful union.
+        /// Returns null if a union cannot be performed on the complete list of Polygons.
+        /// </returns>
+        public Polygon Union(params Polygon[] polygons)
+        {
+            return Union(polygons, Vector3.EPSILON);
         }
 
         /// <summary>
@@ -1637,22 +1764,24 @@ namespace Elements.Geometry
             return this.End;
         }
 
+        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var from = this.Vertices[i];
+                var to = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                yield return (from, to);
+            }
+        }
+
         /// <summary>
         /// The normal of this polygon, according to Newell's Method.
         /// </summary>
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
         public Vector3 Normal()
         {
-            var normal = new Vector3();
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                var p0 = Vertices[i];
-                var p1 = Vertices[(i + 1) % Vertices.Count];
-                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
-                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
-                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
-            }
-            return normal.Unitized();
+            return this.Vertices.NormalFromPlanarWoundPoints();
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace Elements
         private static Material _wood = new Material("wood", new Color(224f / 255f, 206f / 255f, 155f / 255f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("f6fa27a7-dbe1-4bcf-823c-3d6d3c34876d"));
         private static Material _black = new Material("black", new Color(0.0f, 0.0f, 0.0f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("7298d643-9049-4a2b-960d-ae775b50fd80"));
         private static Material _edges = new Material("edges", new Color(0.1f, 0.1f, 0.1f, 1.0f), 0.0f, 0.0f, null, true, false, id: Guid.Parse("d0c7a361-f32f-4fae-bd39-c1abc56b4b6f"));
-        private static Material _points = new Material("points", new Color(1.0f, 1.0f, 0.0f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("9f4c28e7-a140-4b4a-85f5-3551d468e921"));
+        private static Material _points = new Material("points", new Color(1.0f, 0.0f, 0.0f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("9f4c28e7-a140-4b4a-85f5-3551d468e921"));
         private static Material _topography = new Material("topography", new Color(0.59f, 0.59f, 0.39f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("ab838896-b7ef-43a2-afac-f3294153b3db"));
         private static Material _edgesHighlighted = new Material("edge_highlighted", new Color(1.0f, 1.0f, 0.0f, 1.0f), 0.0f, 0.0f, null, false, false, id: Guid.Parse("43bbbd67-bb4d-4f66-a69b-40b5ae772db6"));
         private static Material _void = new Material("void", new Color(Colors.Lime.Red, Colors.Lime.Green, Colors.Lime.Blue, 0.1f), 0.1f, 0.1f, null, false, false, id: Guid.Parse("f616193d-6cca-42bc-b0d8-ccdc4f457693"));

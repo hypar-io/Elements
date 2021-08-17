@@ -1,0 +1,882 @@
+{
+    "Solid": [
+        {
+            "type": "elements.geometry.solids.solid",
+            "vertices": [
+                {
+                    "id": 100000,
+                    "x": -6.6874,
+                    "y": -31.47775,
+                    "z": 0.0
+                },
+                {
+                    "id": 100001,
+                    "x": -14.28699,
+                    "y": -12.97785,
+                    "z": 0.0
+                },
+                {
+                    "id": 100002,
+                    "x": 0.45052,
+                    "y": -6.92381,
+                    "z": 0.0
+                },
+                {
+                    "id": 100003,
+                    "x": -14.57804,
+                    "y": 4.63545,
+                    "z": 0.0
+                },
+                {
+                    "id": 100004,
+                    "x": -6.49577,
+                    "y": 27.21946,
+                    "z": 0.0
+                },
+                {
+                    "id": 100005,
+                    "x": 7.31891,
+                    "y": 22.27552,
+                    "z": 0.0
+                },
+                {
+                    "id": 100006,
+                    "x": 10.48359,
+                    "y": 36.71602,
+                    "z": 0.0
+                },
+                {
+                    "id": 100007,
+                    "x": -2.70096,
+                    "y": 47.31902,
+                    "z": 0.0
+                },
+                {
+                    "id": 100008,
+                    "x": -28.59165,
+                    "y": 41.62295,
+                    "z": 0.0
+                },
+                {
+                    "id": 100009,
+                    "x": -32.88897,
+                    "y": 61.15582,
+                    "z": 0.0
+                },
+                {
+                    "id": 100010,
+                    "x": 2.36321,
+                    "y": 68.91146,
+                    "z": 0.0
+                },
+                {
+                    "id": 100011,
+                    "x": 32.67223,
+                    "y": 44.53698,
+                    "z": 0.0
+                },
+                {
+                    "id": 100012,
+                    "x": 23.93045,
+                    "y": 4.64809,
+                    "z": 0.0
+                },
+                {
+                    "id": 100013,
+                    "x": 27.12541,
+                    "y": 6.79665,
+                    "z": 0.0
+                },
+                {
+                    "id": 100014,
+                    "x": 38.28617,
+                    "y": -9.79965,
+                    "z": 0.0
+                },
+                {
+                    "id": 100015,
+                    "x": 20.09466,
+                    "y": -22.03317,
+                    "z": 0.0
+                },
+                {
+                    "id": 100016,
+                    "x": 18.37333,
+                    "y": -20.7092,
+                    "z": 0.0
+                },
+                {
+                    "id": 100017,
+                    "x": 18.25921,
+                    "y": -21.22991,
+                    "z": 0.0
+                },
+                {
+                    "id": 100018,
+                    "x": -6.6874,
+                    "y": -31.47775,
+                    "z": 20.0
+                },
+                {
+                    "id": 100019,
+                    "x": -14.28699,
+                    "y": -12.97785,
+                    "z": 20.0
+                },
+                {
+                    "id": 100020,
+                    "x": 0.45052,
+                    "y": -6.92381,
+                    "z": 20.0
+                },
+                {
+                    "id": 100021,
+                    "x": -14.57804,
+                    "y": 4.63545,
+                    "z": 20.0
+                },
+                {
+                    "id": 100022,
+                    "x": -6.49577,
+                    "y": 27.21946,
+                    "z": 20.0
+                },
+                {
+                    "id": 100023,
+                    "x": 7.31891,
+                    "y": 22.27552,
+                    "z": 20.0
+                },
+                {
+                    "id": 100024,
+                    "x": 10.48359,
+                    "y": 36.71602,
+                    "z": 20.0
+                },
+                {
+                    "id": 100025,
+                    "x": -2.70096,
+                    "y": 47.31902,
+                    "z": 20.0
+                },
+                {
+                    "id": 100026,
+                    "x": -28.59165,
+                    "y": 41.62295,
+                    "z": 20.0
+                },
+                {
+                    "id": 100027,
+                    "x": -32.88897,
+                    "y": 61.15582,
+                    "z": 20.0
+                },
+                {
+                    "id": 100028,
+                    "x": 2.36321,
+                    "y": 68.91146,
+                    "z": 20.0
+                },
+                {
+                    "id": 100029,
+                    "x": 32.67223,
+                    "y": 44.53698,
+                    "z": 20.0
+                },
+                {
+                    "id": 100030,
+                    "x": 23.93045,
+                    "y": 4.64809,
+                    "z": 20.0
+                },
+                {
+                    "id": 100031,
+                    "x": 27.12541,
+                    "y": 6.79665,
+                    "z": 20.0
+                },
+                {
+                    "id": 100032,
+                    "x": 38.28617,
+                    "y": -9.79965,
+                    "z": 20.0
+                },
+                {
+                    "id": 100033,
+                    "x": 20.09466,
+                    "y": -22.03317,
+                    "z": 20.0
+                },
+                {
+                    "id": 100034,
+                    "x": 18.37333,
+                    "y": -20.7092,
+                    "z": 20.0
+                },
+                {
+                    "id": 100035,
+                    "x": 18.25921,
+                    "y": -21.22991,
+                    "z": 20.0
+                }
+            ],
+            "faces": [
+                {
+                    "id": 0,
+                    "outer": [
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10000,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10001,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10002,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10003,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10004,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10005,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10006,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10007,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10008,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10009,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10010,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10011,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10012,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10013,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10014,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10015,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100016,
+                            "edge_id": 10016,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100017,
+                            "edge_id": 10017,
+                            "edge_side": "left"
+                        }
+                    ],
+                    "inner": []
+                },
+                {
+                    "id": 1,
+                    "outer": [
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10000,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10018,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100018,
+                            "edge_id": 10036,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100019,
+                            "edge_id": 10019,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "outer": [
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10001,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100001,
+                            "edge_id": 10019,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100019,
+                            "edge_id": 10037,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100020,
+                            "edge_id": 10020,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "outer": [
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10002,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100002,
+                            "edge_id": 10020,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100020,
+                            "edge_id": 10038,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100021,
+                            "edge_id": 10021,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "outer": [
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10003,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100003,
+                            "edge_id": 10021,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100021,
+                            "edge_id": 10039,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100022,
+                            "edge_id": 10022,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 5,
+                    "outer": [
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10004,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100004,
+                            "edge_id": 10022,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100022,
+                            "edge_id": 10040,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100023,
+                            "edge_id": 10023,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 6,
+                    "outer": [
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10005,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100005,
+                            "edge_id": 10023,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100023,
+                            "edge_id": 10041,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100024,
+                            "edge_id": 10024,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "outer": [
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10006,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100006,
+                            "edge_id": 10024,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100024,
+                            "edge_id": 10042,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100025,
+                            "edge_id": 10025,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 8,
+                    "outer": [
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10007,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100007,
+                            "edge_id": 10025,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100025,
+                            "edge_id": 10043,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100026,
+                            "edge_id": 10026,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "outer": [
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10008,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100008,
+                            "edge_id": 10026,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100026,
+                            "edge_id": 10044,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100027,
+                            "edge_id": 10027,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 10,
+                    "outer": [
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10009,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100009,
+                            "edge_id": 10027,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100027,
+                            "edge_id": 10045,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100028,
+                            "edge_id": 10028,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 11,
+                    "outer": [
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10010,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100010,
+                            "edge_id": 10028,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100028,
+                            "edge_id": 10046,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100029,
+                            "edge_id": 10029,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 12,
+                    "outer": [
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10011,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100011,
+                            "edge_id": 10029,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100029,
+                            "edge_id": 10047,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100030,
+                            "edge_id": 10030,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 13,
+                    "outer": [
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10012,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100012,
+                            "edge_id": 10030,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100030,
+                            "edge_id": 10048,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100031,
+                            "edge_id": 10031,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 14,
+                    "outer": [
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10013,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100013,
+                            "edge_id": 10031,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100031,
+                            "edge_id": 10049,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100032,
+                            "edge_id": 10032,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 15,
+                    "outer": [
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10014,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100014,
+                            "edge_id": 10032,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100032,
+                            "edge_id": 10050,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100033,
+                            "edge_id": 10033,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 16,
+                    "outer": [
+                        {
+                            "vertex_id": 100016,
+                            "edge_id": 10015,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100015,
+                            "edge_id": 10033,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100033,
+                            "edge_id": 10051,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100034,
+                            "edge_id": 10034,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 17,
+                    "outer": [
+                        {
+                            "vertex_id": 100017,
+                            "edge_id": 10016,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100016,
+                            "edge_id": 10034,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100034,
+                            "edge_id": 10052,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100035,
+                            "edge_id": 10035,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 18,
+                    "outer": [
+                        {
+                            "vertex_id": 100000,
+                            "edge_id": 10017,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100017,
+                            "edge_id": 10035,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100035,
+                            "edge_id": 10053,
+                            "edge_side": "left"
+                        },
+                        {
+                            "vertex_id": 100018,
+                            "edge_id": 10018,
+                            "edge_side": "right"
+                        }
+                    ]
+                },
+                {
+                    "id": 19,
+                    "outer": [
+                        {
+                            "vertex_id": 100018,
+                            "edge_id": 10053,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100035,
+                            "edge_id": 10052,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100034,
+                            "edge_id": 10051,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100033,
+                            "edge_id": 10050,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100032,
+                            "edge_id": 10049,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100031,
+                            "edge_id": 10048,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100030,
+                            "edge_id": 10047,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100029,
+                            "edge_id": 10046,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100028,
+                            "edge_id": 10045,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100027,
+                            "edge_id": 10044,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100026,
+                            "edge_id": 10043,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100025,
+                            "edge_id": 10042,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100024,
+                            "edge_id": 10041,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100023,
+                            "edge_id": 10040,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100022,
+                            "edge_id": 10039,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100021,
+                            "edge_id": 10038,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100020,
+                            "edge_id": 10037,
+                            "edge_side": "right"
+                        },
+                        {
+                            "vertex_id": 100019,
+                            "edge_id": 10036,
+                            "edge_side": "right"
+                        }
+                    ],
+                    "inner": []
+                }
+            ]
+        }
+    ],
+    "Plane": {
+        "Origin": {
+            "X": -14.28699,
+            "Y": -12.97785,
+            "Z": 3.3306690738754696E-15
+        },
+        "Normal": {
+            "X": 7.220451774577658,
+            "Y": 4.291007382833062,
+            "Z": -4.440892098500626E-15
+        }
+    },
+    "Exception": "Something went wrong building polygons from split results. Unable to proceed."
+}

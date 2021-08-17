@@ -75,6 +75,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A transformed copy of this profile.
+        /// </summary>
+        /// <param name="transform">The transform.</param>
+        public Profile Transformed(Transform transform)
+        {
+            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>());
+        }
+
+        /// <summary>
         /// Construct a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
@@ -308,12 +317,12 @@ namespace Elements.Geometry
         /// <returns>True if the point is within the profile.</returns>
         public bool Contains(Vector3 point, out Containment containment)
         {
-            IEnumerable<Line> allLines = Perimeter.Segments();
+            IEnumerable<(Vector3 from, Vector3 to)> allEdges = Perimeter.Edges();
             if (Voids != null)
             {
-                allLines = allLines.Union(Voids.SelectMany(v => v.Segments()));
+                allEdges = allEdges.Union(Voids.SelectMany(v => v.Edges()));
             }
-            return Polygon.Contains(allLines, point, out containment);
+            return Polygon.Contains(allEdges, point, out containment);
         }
 
         /// <summary>
@@ -454,6 +463,44 @@ namespace Elements.Geometry
         public static List<Profile> Split(IEnumerable<Profile> profiles, Polyline splitLine, double tolerance = Vector3.EPSILON)
         {
             return Profile.Split(profiles, new[] { splitLine }, tolerance);
+        }
+
+        /// <summary>
+        /// Offset this profile by a given distance.
+        /// </summary>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns></returns>
+        public List<Profile> Offset(double distance, double tolerance = Vector3.EPSILON)
+        {
+            return Profile.Offset(new[] { this }, distance, tolerance);
+        }
+
+        /// <summary>
+        /// Offset profiles by a given distance.
+        /// </summary>
+        /// <param name="profiles">The profiles to offset.</param>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A collection of resulting profiles.</returns>
+        public static List<Profile> Offset(IEnumerable<Profile> profiles, double distance, double tolerance = Vector3.EPSILON)
+        {
+            var clipperScale = 1.0 / tolerance;
+            ClipperOffset clipper = new ClipperOffset();
+            foreach (var profile in profiles)
+            {
+                var subjectPolygons = new List<Polygon> { profile.Perimeter };
+                if (profile.Voids != null && profile.Voids.Count > 0)
+                {
+                    subjectPolygons.AddRange(profile.Voids);
+                }
+                var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+                clipper.AddPaths(clipperPaths, JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ref solution, distance * clipperScale);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
         }
 
         /// <summary>
