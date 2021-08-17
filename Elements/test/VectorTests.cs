@@ -401,6 +401,25 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CollinearWithCoincidentPoints()
+        {
+            Vector3 p0 = new Vector3(13.770340049720485, 2.8262770874797756);
+            Vector3 p1 = new Vector3(14.68227083781888, -2.387949898514293);
+            Vector3 p2 = new Vector3(14.682270837818884, -2.3879498985142926);
+            Vector3 p3 = new Vector3(11.069392253545676, 18.26972418936262);
+
+            Vector3 p4 = new Vector3(0, 0);
+            Vector3 p5 = new Vector3(1, 0);
+            Vector3 p6 = new Vector3(1, 0.000000000001);
+            Vector3 p7 = new Vector3(2, 0);
+
+            Assert.True(p1.IsAlmostEqualTo(p2));
+            Assert.True(new[] { p0, p1, p2, p3 }.AreCollinear());
+            Assert.True(p5.IsAlmostEqualTo(p6));
+            Assert.True(new[] { p4, p5, p6, p7 }.AreCollinear());
+        }
+
+        [Fact]
         public void TupleSyntax()
         {
             // Integer Tuples + params constructor
