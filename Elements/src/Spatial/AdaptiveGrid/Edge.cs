@@ -22,6 +22,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         public ulong EndId;
 
+        /// <summary>
+        /// The AdaptiveGrid that this Vertex belongs to.
+        /// </summary>
         public AdaptiveGrid AdaptiveGrid { get; private set; }
 
         /// <summary>
@@ -37,11 +40,17 @@ namespace Elements.Spatial.AdaptiveGrid
             this.SetVerticesFromIds(vertexId1, vertexId2);
         }
 
+        /// <summary>
+        /// Used to handle comparisons for when we make HashSets of this type.
+        /// </summary>
         public override bool Equals(object obj)
         {
             return obj is Edge edge && StartId.Equals(edge.StartId) && EndId.Equals(edge.EndId);
         }
 
+        /// <summary>
+        /// Used to return a unique identifier for when we make HashSets of this type.
+        /// </summary>
         public override int GetHashCode()
         {
             return GetHash(new List<ulong> { StartId, EndId }).GetHashCode();

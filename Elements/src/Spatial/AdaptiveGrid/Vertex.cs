@@ -12,12 +12,18 @@ namespace Elements.Spatial.AdaptiveGrid
     /// </summary>
     public class Vertex
     {
+        /// <summary>
+        /// Position of this Vertex in 3D space
+        /// </summary>
         public Vector3 Point { get; set; }
 
+        /// <summary>
+        /// The AdaptiveGrid that this Vertex belongs to.
+        /// </summary>
         public AdaptiveGrid AdaptiveGrid { get; private set; }
 
         /// <summary>
-        /// ID of this child.
+        /// ID of this Vertex.
         /// </summary>
         public ulong Id { get; internal set; }
 
@@ -34,12 +40,19 @@ namespace Elements.Spatial.AdaptiveGrid
             Point = point;
         }
 
+        /// <summary>
+        /// Used to handle comparisons for when we make HashSets of this type.
+        /// </summary>
         public override bool Equals(object obj)
         {
             return obj is Vertex vertex &&
                    Point.Equals(vertex.Point);
         }
 
+        /// <summary>
+        /// Used to return a unique identifier for when we make HashSets of this type.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return -1396796455 + Point.GetHashCode();
