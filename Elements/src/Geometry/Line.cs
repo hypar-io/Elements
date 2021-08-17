@@ -200,8 +200,22 @@ namespace Elements.Geometry
         /// false if the lines have coincident vertices or do not intersect.</returns>
         public bool Intersects2D(Line l)
         {
-            var a = Vector3.CCW(this.Start, this.End, l.Start) * Vector3.CCW(this.Start, this.End, l.End);
-            var b = Vector3.CCW(l.Start, l.End, this.Start) * Vector3.CCW(l.Start, l.End, this.End);
+            return Intersects2d(Start, End, l.Start, l.End);
+        }
+
+        /// <summary>
+        /// Does the first line intersect with the second line in 2D?
+        /// </summary>
+        /// <param name="start1">Start point of the first line</param>
+        /// <param name="end1">End point of the first line</param>
+        /// <param name="start2">Start point of the second line</param>
+        /// <param name="end2">End point of the second line</param>
+        /// <returns>Return true if the lines intersect,
+        /// false if the lines have coincident vertices or do not intersect.</returns>
+        public static bool Intersects2d(Vector3 start1, Vector3 end1, Vector3 start2, Vector3 end2)
+        {
+            var a = Vector3.CCW(start1, end1, start2) * Vector3.CCW(start1, end1, end2);
+            var b = Vector3.CCW(start2, end2, start1) * Vector3.CCW(start2, end2, end1);
             if (IsAlmostZero(a) || a > Vector3.EPSILON) return false;
             if (IsAlmostZero(b) || b > Vector3.EPSILON) return false;
             return true;
@@ -217,8 +231,26 @@ namespace Elements.Geometry
         /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
         public bool Intersects(Line l, out Vector3 result, bool infinite = false, bool includeEnds = false)
         {
+            return Line.Intersects(this.Start, this.End, l.Start, l.End, out result, infinite, includeEnds);
+        }
+
+        /// <summary>
+        /// Do two lines intersect in 3d?
+        /// </summary>
+        /// <param name="start1">Start point of the first line</param>
+        /// <param name="end1">End point of the first line</param>
+        /// <param name="start2">Start point of the second line</param>
+        /// <param name="end2">End point of the second line</param>
+        /// <param name="result"></param>
+        /// <param name="infinite">Treat the lines as infinite?</param>
+        /// <param name="includeEnds">If the end of one line lies exactly on the other, count it as an intersection?</param>
+        /// <returns>True if the lines intersect, false if they are fully collinear or do not intersect.</returns>
+        public static bool Intersects(Vector3 start1, Vector3 end1, Vector3 start2, Vector3 end2, out Vector3 result, bool infinite = false, bool includeEnds = false)
+        {
             // check if two lines are parallel
-            if (Direction().IsParallelTo(l.Direction()))
+            var direction1 = Direction(start1, end1);
+            var direction2 = Direction(start2, end2);
+            if (direction1.IsParallelTo(direction2))
             {
                 result = default(Vector3);
                 return false;
@@ -226,16 +258,16 @@ namespace Elements.Geometry
             // construct a plane through this line and the start or end of the other line
             Plane plane;
             Vector3 testpoint;
-            if (!(new[] { Start, End, l.Start }).AreCollinear())
+            if (!(new[] { start1, end1, start2 }).AreCollinear())
             {
-                plane = new Plane(Start, End, l.Start);
-                testpoint = l.End;
+                plane = new Plane(start1, end1, start2);
+                testpoint = end2;
 
             } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
-            else if (!(new[] { Start, End, l.End }).AreCollinear())
+            else if (!(new[] { start1, end1, end2 }).AreCollinear())
             {
-                plane = new Plane(Start, End, l.End);
-                testpoint = l.Start;
+                plane = new Plane(start1, end1, end2);
+                testpoint = start2;
             }
             else // they're collinear (this shouldn't occur since it should be caught by the parallel test)
             {
@@ -252,11 +284,11 @@ namespace Elements.Geometry
 
             // at this point they're not parallel, and they lie in the same plane, so we know they intersect, we just don't know where.
             // construct a plane
-            var normal = l.Direction().Cross(plane.Normal);
-            Plane intersectionPlane = new Plane(l.Start, normal);
-            if (Intersects(intersectionPlane, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
+            var normal = direction2.Cross(plane.Normal);
+            Plane intersectionPlane = new Plane(start2, normal);
+            if (Intersects(intersectionPlane, start1, end1, out Vector3 planeIntersectionResult, true)) // does the line intersect the plane?
             {
-                if (infinite || (l.PointOnLine(planeIntersectionResult, includeEnds) && PointOnLine(planeIntersectionResult, includeEnds)))
+                if (infinite || (PointOnLine(planeIntersectionResult, start2, end2, includeEnds) && PointOnLine(planeIntersectionResult, start1, end1, includeEnds)))
                 {
                     result = planeIntersectionResult;
                     return true;
@@ -267,7 +299,7 @@ namespace Elements.Geometry
             return false;
         }
 
-        private bool IsAlmostZero(double a)
+        private static bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;
         }
@@ -293,7 +325,17 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Direction()
         {
-            return (this.End - this.Start).Unitized();
+            return Direction(Start, End);
+        }
+
+        /// <summary>
+        /// A normalized vector representing the direction of a line, represented by a start and end point.
+        /// <param name="start">The start point of the line.</param>
+        /// <param name="end">The end point of the line.</param>
+        /// </summary>
+        public static Vector3 Direction(Vector3 start, Vector3 end)
+        {
+            return (end - start).Unitized();
         }
 
         /// <summary>
@@ -303,11 +345,23 @@ namespace Elements.Geometry
         /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(Start) < Vector3.EPSILON || point.DistanceTo(End) < Vector3.EPSILON))
+            return Line.PointOnLine(point, Start, End, includeEnds);
+        }
+
+        /// <summary>
+        /// Test if a point lies within a given line segment
+        /// </summary>
+        /// <param name="point">The point to test.</param>
+        /// <param name="start">The start point of the line segment.</param>
+        /// <param name="end">The end point of the line segment.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
+        {
+            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
             {
                 return true;
             }
-            return (Start - point).Unitized().Dot((End - point).Unitized()) < (Vector3.EPSILON - 1);
+            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
         }
 
         /// <summary>

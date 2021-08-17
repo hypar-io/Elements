@@ -304,15 +304,15 @@ namespace Elements.Geometry
         /// </summary>
         public void Invert()
         {
-            this.Matrix = this.Matrix.Inverse();
+            this.Matrix = this.Matrix.Inverted();
         }
 
         /// <summary>
         /// Return a new transform which is the inverse of this transform.
         /// </summary>
-        public Transform Inverse()
+        public Transform Inverted()
         {
-            return new Transform(this.Matrix.Inverse());
+            return new Transform(this.Matrix.Inverted());
         }
 
         /// <summary>
