@@ -58,16 +58,16 @@ namespace Elements.Geometry
                 {
                     var vertexIndices = new ushort[p.Vertices.Count];
 
-                    var a = p.Vertices[0].Pos.ToElementsVector();
-                    var b = p.Vertices[1].Pos.ToElementsVector();
-                    var c = p.Vertices[2].Pos.ToElementsVector();
-                    basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
-
                     // Anything with 3 vertices is a triangle. Manually 
                     // tesselate triangles. For everything else, use 
                     // the tessellator.
-                    if (p.Vertices.Count > 2 && p.Vertices.Count <= 3)
+                    if (p.Vertices.Count == 3)
                     {
+                        var a = p.Vertices[0].Pos.ToElementsVector();
+                        var b = p.Vertices[1].Pos.ToElementsVector();
+                        var c = p.Vertices[2].Pos.ToElementsVector();
+                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
+
                         for (var i = 0; i < p.Vertices.Count; i++)
                         {
                             var v = p.Vertices[i];
@@ -107,6 +107,14 @@ namespace Elements.Geometry
                         {
                             continue;
                         }
+                        // We pick the first triangle from the tesselator,
+                        // instead of the first three vertices, which are not guaranteed to be
+                        // wound correctly.
+                        var a = tess.Vertices[tess.Elements[0]].ToElementsVector();
+                        var b = tess.Vertices[tess.Elements[1]].ToElementsVector();
+                        var c = tess.Vertices[tess.Elements[2]].ToElementsVector();
+
+                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
 
                         for (var i = 0; i < tess.Vertices.Length; i++)
                         {
@@ -387,6 +395,11 @@ namespace Elements.Geometry
         private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
         {
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
+        }
+
+        private static Vector3 ToElementsVector(this ContourVertex v)
+        {
+            return new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
         }
 
         private static ContourVertex[] ToContourVertices(this List<Csg.Vertex> vertices)
