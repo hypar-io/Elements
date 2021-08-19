@@ -275,10 +275,16 @@ namespace Elements.Spatial.AdaptiveGrid
                     (startY == endY && startY != PointOrientation.Inside))
                     continue;
 
+                bool startInside = startZ == PointOrientation.Inside &&
+                                   startX == PointOrientation.Inside &&
+                                   startY == PointOrientation.Inside;
 
-                if ((startZ == PointOrientation.Inside && endZ == PointOrientation.Inside) &&
-                    (startX == PointOrientation.Inside && endX == PointOrientation.Inside) &&
-                    (startY == PointOrientation.Inside && endY == PointOrientation.Inside))
+                bool endInside = endZ == PointOrientation.Inside &&
+                                 endX == PointOrientation.Inside &&
+                                 endY == PointOrientation.Inside;
+
+
+                if (startInside && endInside)
                 {
                     edgesToDelete.Add(edge);
                 }
@@ -292,23 +298,23 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         //Need to find which end is inside the box. 
                         //If none - we just touched the corner
-                        if( box.Contains( edgeLine.Start ))
-                        {
-                            var v = AddVertex(intersections[0]);
-                            if (edge.StartId != v.Id)
-                            {
-                                AddEdge(v.Id, edge.EndId);
-                                edgesToDelete.Add(edge);
-                            }
-                        }
-                        else if( box.Contains( edgeLine.End ))
+                        if (startInside)
                         {
                             var v = AddVertex(intersections[0]);
                             if (edge.EndId != v.Id)
                             {
-                                AddEdge(edge.StartId, v.Id);
-                                edgesToDelete.Add(edge);
+                                AddEdge(v.Id, edge.EndId);
                             }
+                            edgesToDelete.Add(edge);
+                        }
+                        else if (endInside)
+                        {
+                            var v = AddVertex(intersections[0]);
+                            if (edge.StartId != v.Id)
+                            {
+                                AddEdge(edge.StartId, v.Id);
+                            }
+                            edgesToDelete.Add(edge);
                         }
                     }
                     if( intersections.Count == 2 )

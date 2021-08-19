@@ -87,8 +87,8 @@ namespace Elements.Tests
 
             var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
             adaptiveGrid.SubtractBox(box);
-            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 5), out _));
-            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 4.9), out _));
+            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 5, 1), out _));
+            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 4.9, 1), out _));
         }
     }
 }
