@@ -5,6 +5,7 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -78,7 +79,8 @@ namespace Elements.Tests
         public void TessellatorProducesCorrectVertexNormals()
         {
             Name = nameof(TessellatorProducesCorrectVertexNormals);
-            var shape = new Polygon((-1, 0.5), (0, 0.5), (0, 0), (1, 0), (1, 1), (0, 1));
+            var shape = new Polygon((4.96243, 50.58403), (5.78472, 50.58403), (5.78472, 65.83403), (-7.05727, 65.83403), (-7.05727, 50.57403), (4.96243, 50.57403));
+
             var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
