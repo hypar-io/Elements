@@ -4,6 +4,7 @@ using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using System;
 using Xunit;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -71,6 +72,51 @@ namespace Elements.Tests
             }
 
             this.Model.AddElement(beam);
+        }
+
+        [Fact]
+        public void TessellatorProducesCorrectVertexNormals()
+        {
+            Name = nameof(TessellatorProducesCorrectVertexNormals);
+            var shape = new Polygon((-1, 0.5), (0, 0.5), (0, 0), (1, 0), (1, 1), (0, 1));
+            var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
+            Model.AddElement(geoElem);
+            var solid = geoElem.GetFinalCsgFromSolids();
+            var mgb = new MockGraphicsBuffer();
+            var arrows = new ModelArrows();
+            CsgExtensions.Tessellate(new Csg.Solid[] { solid }, mgb);
+            for (int i = 0; i < mgb.Indices.Count; i += 3)
+            {
+                var a = mgb.Indices[i];
+                var b = mgb.Indices[i + 1];
+                var c = mgb.Indices[i + 2];
+                var verts = new[] { mgb.Vertices[a], mgb.Vertices[b], mgb.Vertices[c] };
+                verts.ToList().ForEach((v) =>
+                {
+                    arrows.Vectors.Add((v.position, v.normal, 0.2, Colors.Blue));
+                });
+                var triangle = new Polygon(verts.Select(v => v.position).ToList());
+                var normal = verts[0].normal;
+                Assert.True(triangle.Normal().Dot(normal.Unitized()) > 0, "The vertex normals are pointing in the opposite direction as their triangles' winding should suggest");
+                Model.AddElement(triangle.TransformedPolygon(new Transform(normal * 0.2)));
+            }
+            Model.AddElement(arrows);
+        }
+
+        private class MockGraphicsBuffer : IGraphicsBuffers
+        {
+            public List<ushort> Indices { get; set; } = new List<ushort>();
+
+            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal)>();
+            public void AddIndex(ushort index)
+            {
+                Indices.Add(index);
+            }
+
+            public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
+            {
+                Vertices.Add((position, normal));
+            }
         }
     }
 }

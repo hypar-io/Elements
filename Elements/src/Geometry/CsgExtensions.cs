@@ -27,17 +27,27 @@ namespace Elements.Geometry
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid csg)
         {
-            return Tesselate(new[] { csg });
+            return Tessellate(new[] { csg });
         }
 
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// buffers appropriate for use with gltf. 
         /// </summary>
-        internal static GraphicsBuffers Tesselate(this Csg.Solid[] csgs)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs)
         {
             var buffers = new GraphicsBuffers();
 
+            Tessellate(csgs, buffers);
+            return buffers;
+        }
+
+        /// <summary>
+        /// Triangulate a collection of CSGs and pack the triangulated data into
+        /// a supplied buffers object. 
+        /// </summary>
+        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers)
+        {
             ushort iCursor = 0;
 
             (Vector3 U, Vector3 V) basis;
@@ -59,7 +69,7 @@ namespace Elements.Geometry
                     var vertexIndices = new ushort[p.Vertices.Count];
 
                     // Anything with 3 vertices is a triangle. Manually 
-                    // tesselate triangles. For everything else, use 
+                    // tessellate triangles. For everything else, use 
                     // the tessellator.
                     if (p.Vertices.Count == 3)
                     {
@@ -146,7 +156,6 @@ namespace Elements.Geometry
                     }
                 }
             }
-            return buffers;
         }
 
         private static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)
@@ -304,7 +313,7 @@ namespace Elements.Geometry
 
             if (p.Vertices.Count == 3)
             {
-                // Don't tesselate unless we need to.
+                // Don't tessellate unless we need to.
 
                 var a = p.Vertices[0];
                 var b = p.Vertices[1];
@@ -321,7 +330,7 @@ namespace Elements.Geometry
             }
             else if (p.Vertices.Count == 4)
             {
-                // Don't tesselate unless we need to.
+                // Don't tessellate unless we need to.
 
                 var a = p.Vertices[0];
                 var b = p.Vertices[1];
