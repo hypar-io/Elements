@@ -68,7 +68,7 @@ namespace Elements
 
             // TODO: This is really expensive. This should be removed
             // when all internal types have been updated to not create elements
-            // during UpdateRepresentation. This is now possible because 
+            // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
             if (element is GeometricElement)
             {
@@ -351,6 +351,24 @@ namespace Elements
         {
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
+        }
+
+        /// <summary>
+        /// Get all elements of a certain type from a specific model name in a dictionary of models.
+        /// </summary>
+        /// <param name="models">Dictionary of models keyed by string</param>
+        /// <param name="modelName">The name of the model</param>
+        /// <typeparam name="T">The type of element we want to retrieve</typeparam>
+        /// <returns></returns>
+        public static List<T> GetItemsOfType<T>(Dictionary<string, Model> models, string modelName)
+        {
+            var elements = new List<T>();
+            models.TryGetValue(modelName, out var model);
+            if (model != null)
+            {
+                elements.AddRange(model.AllElementsOfType<T>());
+            }
+            return elements;
         }
     }
 }
