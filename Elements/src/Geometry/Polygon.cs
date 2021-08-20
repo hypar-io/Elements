@@ -1,5 +1,5 @@
 using ClipperLib;
-using Elements.Geometry.Interfaces;
+using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
 using System;
