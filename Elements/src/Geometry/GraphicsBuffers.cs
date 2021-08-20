@@ -1,13 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Elements.Geometry
 {
     /// <summary>
+    /// A generic container for graphics data. This is broken out primarily to facilitate
+    /// simpler testing of graphics buffers.
+    /// </summary>
+    internal interface IGraphicsBuffers
+    {
+        /// <summary>
+        /// Add a vertex to the graphics buffers.
+        /// </summary>
+        /// <param name="position">The position of the vertex.</param>
+        /// <param name="normal">The normal of the vertex.</param>
+        /// <param name="uv">The UV of the vertex.</param>
+        /// <param name="color">The vertex color.</param>
+        void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null);
+
+        /// <summary>
+        /// Add an index to the graphics buffers.
+        /// </summary>
+        /// <param name="index">The index to add.</param>
+        void AddIndex(ushort index);
+    }
+
+    /// <summary>
     /// A container for graphics data.
     /// The buffers used in this class align with webgl requirements.
     /// </summary>
-    public class GraphicsBuffers
+    public class GraphicsBuffers : IGraphicsBuffers
     {
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
