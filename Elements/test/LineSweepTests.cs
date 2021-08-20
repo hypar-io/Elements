@@ -64,16 +64,16 @@ namespace Elements.Tests
 
             var lines = new[] { a, b, c };
 
-            var tree = new BinaryTree<Line>(new LineSweepSegmentComparer());
+            var tree = new BinaryTree<int>(new LineSweepSegmentComparer(lines));
 
-            foreach (var line in lines)
+            for (var i = 0; i < lines.Length; i++)
             {
-                tree.Add(line);
+                tree.Add(i);
             }
 
-            tree.FindPredecessorSuccessor(a, out Node<Line> pre, out Node<Line> suc);
-            Assert.Equal(b, pre.Data);
-            Assert.Equal(c, suc.Data);
+            tree.FindPredecessorSuccessor(0, out Node<int> pre, out Node<int> suc);
+            Assert.Equal(b, lines[pre.Data]);
+            Assert.Equal(c, lines[suc.Data]);
         }
 
         [Fact]
@@ -92,16 +92,12 @@ namespace Elements.Tests
             lines.Add(b);
             lines.Add(c);
 
-            var pts = LineSweep.FromSegments(lines);
+            var pts = lines.Intersections();
 
-            foreach (var pt in pts)
-            {
-                this.Model.AddElement(new ModelCurve(Polygon.Rectangle(0.01, 0.01).TransformedPolygon(new Transform(pt))));
-            }
-            foreach (var line in lines)
-            {
-                this.Model.AddElement(new ModelCurve(line));
-            }
+            var r = new Random();
+
+            var arrows = DrawArrows(pts, r);
+            this.Model.AddElement(arrows);
         }
 
         [Fact]
@@ -110,7 +106,7 @@ namespace Elements.Tests
             this.Name = nameof(MultipleLinesIntersect);
 
             var r = new Random();
-            var scale = 5.0;
+            var scale = 15;
 
             var lines = new List<Line>();
             for (var i = 0; i < 100; i++)
@@ -122,19 +118,35 @@ namespace Elements.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var pts = LineSweep.FromSegments(lines);
+            var pts = lines.Intersections();
             sw.Stop();
-            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.Count} intersections.");
+            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.SelectMany(p => p.Value).Count()} intersections.");
 
-            foreach (var pt in pts)
+            var arrows = DrawArrows(pts, r);
+            this.Model.AddElement(arrows);
+        }
+
+        private static ModelArrows DrawArrows(Dictionary<int, List<Vector3>> pts, Random r)
+        {
+            var arrowData = new List<(Vector3 origin, Vector3 direction, double scale, Color? color)>();
+
+            foreach (var ptSet in pts)
             {
-                this.Model.AddElement(new ModelCurve(Polygon.Rectangle(0.01, 0.01).TransformedPolygon(new Transform(pt))));
-            }
-            foreach (var line in lines)
-            {
-                this.Model.AddElement(new ModelCurve(line));
+                var color = r.NextColor();
+                for (var i = 0; i < ptSet.Value.Count - 1; i++)
+                {
+                    var v1 = ptSet.Value[i];
+                    var v2 = ptSet.Value[i + 1];
+                    var l = v1.DistanceTo(v2);
+                    if (l < Vector3.EPSILON)
+                    {
+                        continue;
+                    }
+                    arrowData.Add((v1, (v2 - v1).Unitized(), l, color));
+                }
             }
 
+            return new ModelArrows(arrowData, arrowAngle: 75);
         }
     }
 }
