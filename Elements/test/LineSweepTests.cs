@@ -53,12 +53,6 @@ namespace Elements.Tests
             tree.FindPredecessorSuccessor(1, out pre, out suc);
             Assert.Null(pre);
             Assert.Equal(2, suc.Data);
-
-            tree.FindPredecessorSuccessors(3, out List<Node<int>> pres, out List<Node<int>> succs);
-
-            _output.WriteLine(string.Join(',', pres.Select(p => p.Data)));
-            _output.WriteLine(string.Join(',', succs.Select(s => s.Data)));
-
         }
 
         [Fact]
@@ -90,12 +84,13 @@ namespace Elements.Tests
             var ngon = Polygon.Ngon(4, 1);
             var lines = new List<Line>(ngon.Segments());
 
-            // var a = new Line(new Vector3(-2, 0.1), new Vector3(2, 0.1));
+            // Lines with coincident left-most points, and a vertical line.
+            var a = new Line(new Vector3(-2, 0.1), new Vector3(2, 0.1));
             var b = new Line(new Vector3(-0.1, -2), new Vector3(-0.1, 2));
-            // var c = new Line(new Vector3(-2, -0.1), new Vector3(2, -0.1));
-            // lines.Add(a);
+            var c = new Line(new Vector3(-2, -0.1), new Vector3(2, -0.1));
+            lines.Add(a);
             lines.Add(b);
-            // lines.Add(c);
+            lines.Add(c);
 
             var pts = LineSweep.FromSegments(lines);
 

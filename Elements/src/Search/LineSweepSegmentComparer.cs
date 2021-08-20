@@ -19,6 +19,20 @@ namespace Elements.Search
             var xLeft = x.Start.X <= x.End.X ? x.Start : x.End;
             var yLeft = y.Start.X <= y.End.X ? y.Start : y.End;
 
+            if (xLeft == yLeft)
+            {
+                // The left-most points of the lines are equal, but the lines
+                // themselves are not neccessarily equal. Use the opposite end
+                // point for the comparison.
+                if (yLeft == y.Start)
+                {
+                    yLeft = y.End;
+                }
+                else
+                {
+                    yLeft = y.Start;
+                }
+            }
             if (xLeft.Y > yLeft.Y)
             {
                 return -1;
