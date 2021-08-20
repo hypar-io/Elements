@@ -307,6 +307,98 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Union()
+        {
+            this.Name = nameof(Union);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var s = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(28, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void Difference()
+        {
+            this.Name = nameof(Difference);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+            var s = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(15, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void Intersection()
+        {
+            this.Name = nameof(Intersection);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var s = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(12, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void AllBooleans()
+        {
+            this.Name = nameof(AllBooleans);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var t1 = new Transform(new Vector3(10, 0));
+            var t2 = new Transform(new Vector3(15, 0));
+            var s1 = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s2 = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s3 = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var i1 = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s1) }));
+            var i2 = new GeometricElement(t1, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
+            var i3 = new GeometricElement(t2, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
+
+            this.Model.AddElements(DrawEdges(s1, null));
+            this.Model.AddElements(DrawEdges(s2, t1));
+            this.Model.AddElements(DrawEdges(s3, t2));
+            this.Model.AddElements(i1, i2, i3);
+        }
+
+        private static List<ModelCurve> DrawEdges(Solid s, Transform t)
+        {
+            var modelCurves = new List<ModelCurve>();
+            foreach (var e in s.Edges)
+            {
+                var from = e.Value.Right.Vertex.Point;
+                var to = e.Value.Left.Vertex.Point;
+                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+            }
+            return modelCurves;
+        }
+
+        private static void CreateTestSolids(out GeometricElement a, out GeometricElement b)
+        {
+            var r = new Transform();
+            r.Move(2.5, 2.5, 2.5);
+            a = new Mass(Polygon.Rectangle(5, 5), 5);
+            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+
+            var rotate = new Transform();
+            rotate.Rotate(Vector3.XAxis, 15);
+            b.Representation.SolidOperations[0].LocalTransform = rotate;
+        }
+
         public void SolidIntersectsWithPlane()
         {
             this.Name = nameof(SolidIntersectsWithPlane);

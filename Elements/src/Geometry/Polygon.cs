@@ -47,6 +47,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Polygon TransformedPolygon(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             var transformed = new Vector3[this.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
             {
@@ -62,6 +67,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return TransformedPolygon(transform);
         }
 
@@ -255,6 +265,38 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Intersect this polygon with the provided polygon in 2d.
+        /// </summary>
+        /// <param name="polygon">The target polygon.</param>
+        /// <param name="results">The points resulting from the intersection of
+        /// the two polygons.</param>
+        /// <param name="includeEnds">Should intersection with segment ends be included?</param>
+        /// <returns>True if this polygon intersects the provided polygon,
+        /// otherwise false.</returns>
+        internal bool Intersects2d(Polygon polygon,
+                                   out List<(Vector3 result, int aSegmentIndices, int bSegmentIndices)> results,
+                                   bool includeEnds = false)
+        {
+            var aSegs = this.Segments();
+            results = new List<(Vector3, int, int)>();
+
+            for (var i = 0; i < aSegs.Length; i++)
+            {
+                var a = aSegs[i];
+                var bSegs = polygon.Segments();
+                for (var j = 0; j < bSegs.Length; j++)
+                {
+                    var b = bSegs[j];
+                    if (a.Intersects(b, out Vector3 result, includeEnds: includeEnds))
+                    {
+                        results.Add((result, i, j));
+                    }
+                }
+            }
+            return results.Count > 0;
+        }
+
+        /// <summary>
         /// Intersect this polygon with the provided polygon in 3d.
         /// Unlike other methods that do 2d intersection, this method is able to 
         /// calculate intersections in 3d by doing planar intersections and
@@ -270,7 +312,7 @@ namespace Elements.Geometry
         /// The result collection may have duplicate vertices where intersection 
         /// with a vertex occurs as there is one intersection associated with each
         /// edge attached to the vertex.</returns>
-        private bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
+        internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
         {
             var p = this.Plane();
             result = new List<Vector3>();
@@ -296,7 +338,7 @@ namespace Elements.Geometry
                 }
             }
 
-            // Intersect this polygon against the target polyon's plane.
+            // Intersect this polygon against the target polygon's plane.
             // Keep the points within the target polygon.
             if (this.Intersects(targetP, out List<Vector3> results2, false, false))
             {
@@ -402,7 +444,7 @@ namespace Elements.Geometry
         /// <param name="point">The point to test.</param>
         /// <param name="unique">Should intersections be unique?</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = false)
+        internal bool Contains3D(Vector3 point, bool unique = true)
         {
             var p = this.Plane();
 
@@ -418,12 +460,12 @@ namespace Elements.Geometry
             var ray = new Ray(point, t.XAxis);
             var intersects = 0;
             var xsects = new List<Vector3>();
-            foreach (var s in this.Segments())
+            foreach (var e in this.Edges())
             {
                 var result = default(Vector3);
-                if (s.Start.IsAlmostEqualTo(point) ||
-                    s.End.IsAlmostEqualTo(point) ||
-                    ray.Intersects(s, out result))
+                if (e.from.IsAlmostEqualTo(point) ||
+                    e.to.IsAlmostEqualTo(point) ||
+                    ray.Intersects(e.from, e.to, out result))
                 {
                     if (unique)
                     {
@@ -834,10 +876,13 @@ namespace Elements.Geometry
         /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
+        /// <param name="inOut">A classification indicating which trim area should be returned.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons, LocalClassification inOut = LocalClassification.Outside)
         {
-            return TrimmedToInternal(polygons, out _, out _);
+            var r = new Random();
+            var polys = this.IntersectAndClassify(r, polygons, out _, out _);
+            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
         /// <summary>
@@ -849,17 +894,25 @@ namespace Elements.Geometry
         /// <param name="polygons">The trimming polygons.</param>
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of vertex pairs representing all edges in the timming graph.</param>
+        /// <param name="inOut">A classification indicating which trim area should be returned.</param>
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
-        public List<Polygon> TrimmedTo(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        public List<Polygon> TrimmedTo(IList<Polygon> polygons,
+                                       out List<Vector3> intersections,
+                                       out List<(Vector3 from, Vector3 to, int? index)> trimEdges,
+                                       LocalClassification inOut = LocalClassification.Outside)
         {
-            return TrimmedToInternal(polygons, out intersections, out trimEdges);
+            var r = new Random();
+            var polys = this.IntersectAndClassify(r, polygons, out intersections, out trimEdges);
+            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
-        private List<Polygon> TrimmedToInternal(IList<Polygon> polygons, out List<Vector3> intersections, out List<(Vector3 from, Vector3 to)> trimEdges)
+        private List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
+                                                 out List<Vector3> intersections,
+                                                 out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
         {
             var localPlane = this.Plane();
             var graphVertices = new List<Vector3>();
-            var edges = new List<List<(int from, int to, int? tag)>>();
+            var edges = new List<List<(int from, int to, int? index)>>();
 
             var splitPoly = new Polygon(this.Vertices);
             var results = new List<Vector3>[polygons.Count];
@@ -874,14 +927,15 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                if (localPlane.IsCoplanar(planes[i]))
-                {
-                    throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
-                }
-
                 // Add a results collection for each polygon. 
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
+
+                if (localPlane.IsCoplanar(planes[i]))
+                {
+                    continue;
+                    // throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
+                }
 
                 // We intersect but don't sort, because the three-plane check
                 // below may result in new intersections which will need to
@@ -937,12 +991,13 @@ namespace Elements.Geometry
                 var a = i;
                 var b = i == splitPoly.Vertices.Count - 1 ? 0 : i + 1;
                 graphVertices.Add(splitPoly.Vertices[i]);
-                edges.Add(new List<(int from, int to, int? tag)>());
-                edges[i].Add((a, b, 0));
+                edges.Add(new List<(int from, int to, int? index)>());
+                edges[i].Add((a, b, -1));
             }
 
-            foreach (var result in results)
+            for (var i = 0; i < results.Count(); i++)
             {
+                var result = results[i];
                 for (var j = 0; j < result.Count - 1; j += 1)
                 {
                     // Don't create zero-length edges.
@@ -961,17 +1016,17 @@ namespace Elements.Geometry
                         // An intersection that does not happen on the original poly
                         graphVertices.Add(result[j]);
                         a = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to, int? tag)>());
+                        edges.Add(new List<(int from, int to, int? index)>());
                     }
                     var b = graphVertices.IndexOf(result[j + 1]);
                     if (b == -1)
                     {
                         graphVertices.Add(result[j + 1]);
                         b = graphVertices.Count - 1;
-                        edges.Add(new List<(int from, int to, int? tag)>());
+                        edges.Add(new List<(int from, int to, int? index)>());
                     }
-                    edges[a].Add((a, b, 0));
-                    edges[b].Add((b, a, 1));
+                    edges[a].Add((a, b, i));
+                    edges[b].Add((b, a, i));
                 }
             }
 
@@ -981,7 +1036,7 @@ namespace Elements.Geometry
                 EdgesPerVertex = edges
             };
 
-            trimEdges = new List<(Vector3 from, Vector3 to)>();
+            trimEdges = new List<(Vector3 from, Vector3 to, int? index)>();
             foreach (var edgeSet in edges)
             {
                 foreach (var e in edgeSet)
@@ -990,19 +1045,96 @@ namespace Elements.Geometry
                     var b = graphVertices[e.to];
                     if (!a.IsAlmostEqualTo(b))
                     {
-                        trimEdges.Add((a, b));
+                        trimEdges.Add((a, b, e.index));
                     }
                 }
             }
 
-            var polys = heg.Polygonize((tag) =>
-            {
-                return tag.HasValue && tag == 1;
-            }, localPlane.Normal);
+            var polys = heg.Polygonize(null, localPlane.Normal);
 
             intersections = results.SelectMany(t => t).ToList();
 
             return polys;
+        }
+
+        internal List<(Polygon, LocalClassification)> IntersectAndClassify(Random r,
+                                                                          IList<Polygon> b,
+                                                                          out List<Vector3> intersections,
+                                                                          out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
+        {
+            var classifications = new List<(Polygon, LocalClassification)>();
+
+            var trimFaces = this.IntersectOneToMany(b, out intersections, out trimEdges);
+
+            if (trimFaces.Count == 1)
+            {
+                // If there's only one face, we ray cast to test
+                // for inclusion.
+                var tf = trimFaces[0];
+                var intersectionCount = 0;
+                var ray = r.NextRay(tf.Vertices[0]);
+                foreach (var bf in b)
+                {
+                    if (ray.Intersects(bf, out _))
+                    {
+                        intersectionCount++;
+                    }
+                }
+                classifications.Add((tf, intersectionCount % 2 == 0 ? LocalClassification.Outside : LocalClassification.Inside));
+            }
+            else
+            {
+                var compareEdges = trimEdges.Where(e => e.index != -1).ToList();
+
+                var n = this.Normal();
+
+                foreach (var tf in trimFaces)
+                {
+                    var edges = tf.Edges().ToList();
+                    var inside = 0;
+                    var outside = 0;
+
+                    // Every edge needs to be checked against its trimming
+                    // poly to ensure that a face is "inside" or "outside" all
+                    // of the polys that trim the polygon.
+                    foreach (var edge in edges)
+                    {
+                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == edge.from && e.to == edge.to) || (e.from == edge.to && e.to == edge.from));
+
+                        // In the case where an edge is an edge of the original
+                        // polygon, and isn't trimmed by another polygon, there
+                        // will be no matching edge.
+                        if (compareEdge == default((Vector3, Vector3, int?)))
+                        {
+                            continue;
+                        }
+                        var trimPolyIndex = compareEdge.index.Value;
+                        var comparePoly = b[trimPolyIndex];
+                        var bn = comparePoly.Normal();
+                        var d = (edge.from - edge.to).Unitized();
+                        var dot = bn.Dot(n.Cross(d));
+                        if (dot <= 0.0)
+                        {
+                            outside++;
+                        }
+                        else
+                        {
+                            inside++;
+                        }
+                    }
+
+                    if (outside > 0 && inside == 0)
+                    {
+                        classifications.Add((tf, LocalClassification.Outside));
+                    }
+                    else if (inside > 0 && outside == 0)
+                    {
+                        classifications.Add((tf, LocalClassification.Inside));
+                    }
+                }
+            }
+
+            return classifications;
         }
 
         /// <summary>

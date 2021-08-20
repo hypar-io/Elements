@@ -172,6 +172,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Polyline TransformedPolyline(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             var transformed = new Vector3[this.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
             {
@@ -187,6 +192,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return TransformedPolyline(transform);
         }
 
