@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
+using Elements.Validators;
 using Xunit;
 
 namespace Elements.Tests
@@ -29,5 +32,39 @@ namespace Elements.Tests
             l1Extrude.Solid.Tessellate(ref l1Mesh);
             Assert.Equal((l.Area() + l1.Area()) * 5, l1Mesh.Volume(), 5);
         }
+        [Fact]
+        public void ReadMeshSerializedAsNull()
+        {
+            var json = @"
+            {
+  ""Mesh"": null,
+}
+            ";
+            Newtonsoft.Json.JsonConvert.DeserializeObject<InputsWithMesh>(json, new[] { new MeshConverter() });
+        }
+
+        public class InputsWithMesh
+        {
+            [Newtonsoft.Json.JsonConstructor]
+            public InputsWithMesh(Mesh @mesh, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey)
+            {
+                var validator = Validator.Instance.GetFirstValidatorForType<InputsWithMesh>();
+                if (validator != null)
+                {
+                    validator.PreConstruct(new object[] { @mesh });
+                }
+
+                this.Mesh = @mesh;
+
+                if (validator != null)
+                {
+                    validator.PostConstruct(this);
+                }
+            }
+
+            [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            public Mesh Mesh { get; set; }
+        }
     }
+
 }

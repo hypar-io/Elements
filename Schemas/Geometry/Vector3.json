@@ -5,10 +5,7 @@
     "x-namespace": "Elements.Geometry",
     "x-struct": true,
     "description": "A 3D vector.",
-    "type": [
-        "object",
-        "null"
-    ],
+    "type": "object",
     "required": [
         "X",
         "Y",
