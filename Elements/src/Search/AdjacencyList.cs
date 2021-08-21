@@ -63,8 +63,7 @@ namespace Elements.Search
         /// <summary>
         /// Get the list of connected edges to the specified index.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
+        /// <param name="index"></param>
         public LinkedList<(int id, T data)> this[int index]
         {
             get
