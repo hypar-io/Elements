@@ -136,13 +136,12 @@ namespace Elements.Search
 
             for (var i = 0; i < adj.GetNumberOfVertices(); i++)
             {
-                var c = r.NextColor();
                 var start = pts[i];
                 foreach (var end in adj[i])
                 {
                     var d = (pts[end.id] - start).Unitized();
                     var l = pts[end.id].DistanceTo(start);
-                    arrowData.Add((start, d, l, c));
+                    arrowData.Add((start, d, l, Colors.Red));
                 }
             }
 
