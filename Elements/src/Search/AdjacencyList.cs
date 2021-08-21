@@ -7,6 +7,8 @@ namespace Elements.Search
 {
     /// <summary>
     /// An generic adjacency list.
+    /// Stores an undirected graph of connected nodes which reference
+    /// data of type T.
     /// </summary>
     /// <typeparam name="T">The type of data referenced by the 'nodes' of the 
     /// adjacency list.</typeparam>
