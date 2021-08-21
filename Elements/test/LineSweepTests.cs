@@ -1,5 +1,5 @@
-using Elements.Search;
 using Elements.Geometry;
+using Elements.Search;
 using Xunit;
 using System;
 using System.Collections.Generic;
@@ -37,46 +37,6 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void BinaryTreeInts()
-        {
-            var ints = new[] { 1, 7, 5, 3, 4, 6, 2 };
-            var tree = new BinaryTree<int>(new IntComparer());
-            foreach (var i in ints)
-            {
-                tree.Add(i);
-            }
-
-            tree.FindPredecessorSuccessor(7, out Node<int> pre, out Node<int> suc);
-            Assert.Equal(6, pre.Data);
-            Assert.Null(suc);
-
-            tree.FindPredecessorSuccessor(1, out pre, out suc);
-            Assert.Null(pre);
-            Assert.Equal(2, suc.Data);
-        }
-
-        [Fact]
-        public void BinaryTreeLines()
-        {
-            var b = new Line(new Vector3(0.1, 1, 0), new Vector3(6, 1, 0));
-            var a = new Line(new Vector3(0, 0, 0), new Vector3(5, 0, 0));
-            var c = new Line(new Vector3(0.2, -1, 0), new Vector3(7, 0.2));
-
-            var lines = new[] { a, b, c };
-
-            var tree = new BinaryTree<int>(new LineSweepSegmentComparer(lines));
-
-            for (var i = 0; i < lines.Length; i++)
-            {
-                tree.Add(i);
-            }
-
-            tree.FindPredecessorSuccessor(0, out Node<int> pre, out Node<int> suc);
-            Assert.Equal(b, lines[pre.Data]);
-            Assert.Equal(c, lines[suc.Data]);
-        }
-
-        [Fact]
         public void LineSweepSucceedsWithCoincidentPoints()
         {
             this.Name = nameof(LineSweepSucceedsWithCoincidentPoints);
@@ -93,10 +53,10 @@ namespace Elements.Tests
             lines.Add(c);
 
             var pts = lines.Intersections();
+            var adj = pts.AdjacencyList();
 
-            var r = new Random();
-
-            var arrows = DrawArrows(pts, r);
+            var ptsUnique = pts.SelectMany(p => p.Value).Distinct().ToList();
+            var arrows = adj.ToModelArrows(ptsUnique, Colors.Red);
             this.Model.AddElement(arrows);
         }
 
@@ -121,8 +81,16 @@ namespace Elements.Tests
             var pts = lines.Intersections();
             sw.Stop();
             _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.SelectMany(p => p.Value).Count()} intersections.");
+            sw.Reset();
 
-            var arrows = DrawArrows(pts, r);
+            sw.Start();
+            var adj = pts.AdjacencyList();
+            sw.Stop();
+            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for generating adjacency list.");
+            sw.Reset();
+
+            var ptsUnique = pts.SelectMany(p => p.Value).Distinct().ToList();
+            var arrows = adj.ToModelArrows(ptsUnique, Colors.Red);
             this.Model.AddElement(arrows);
         }
 

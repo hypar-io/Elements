@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace Elements.Search
 {
     /// <summary>
-    /// Binary search tree.
-    /// Adapted from http://csharpexamples.com/c-binary-search-tree-implementation/.
+    /// A binary search tree.
+    /// A custom comparer can be used to provide the addition logic for the tree.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of data referenced by the tree's nodes.</typeparam>
     public class BinaryTree<T>
     {
         private IComparer<T> _comparer;
@@ -25,7 +25,7 @@ namespace Elements.Search
         /// <summary>
         /// The root of the tree.
         /// </summary>
-        public Node<T> Root { get; set; }
+        public BinaryTreeNode<T> Root { get; set; }
 
         /// <summary>
         /// Find the predecessor and successor values in the tree.
@@ -33,7 +33,7 @@ namespace Elements.Search
         /// <param name="data">The </param>
         /// <param name="predecessor"></param>
         /// <param name="successor"></param>
-        public void FindPredecessorSuccessor(T data, out Node<T> predecessor, out Node<T> successor)
+        public void FindPredecessorSuccessor(T data, out BinaryTreeNode<T> predecessor, out BinaryTreeNode<T> successor)
         {
             var root = this.Root;
             predecessor = null;
@@ -82,12 +82,12 @@ namespace Elements.Search
         /// <param name="data">The value around which to search.</param>
         /// <param name="predecessors">A collection of predecessor values.</param>
         /// <param name="successors">A collection of successor values.</param>
-        public void FindPredecessorSuccessors(T data, out List<Node<T>> predecessors, out List<Node<T>> successors)
+        public void FindPredecessorSuccessors(T data, out List<BinaryTreeNode<T>> predecessors, out List<BinaryTreeNode<T>> successors)
         {
-            predecessors = new List<Node<T>>();
-            successors = new List<Node<T>>();
+            predecessors = new List<BinaryTreeNode<T>>();
+            successors = new List<BinaryTreeNode<T>>();
 
-            FindPredecessorSuccessor(data, out Node<T> predecessor, out Node<T> successor);
+            FindPredecessorSuccessor(data, out BinaryTreeNode<T> predecessor, out BinaryTreeNode<T> successor);
 
             while (predecessor != null)
             {
@@ -109,7 +109,7 @@ namespace Elements.Search
         /// <returns>True if the value was added successfully, otherwise false.</returns>
         public bool Add(T value)
         {
-            Node<T> before = null;
+            BinaryTreeNode<T> before = null;
             var after = this.Root;
 
             while (after != null)
@@ -131,7 +131,7 @@ namespace Elements.Search
                 }
             }
 
-            Node<T> newNode = new Node<T>();
+            BinaryTreeNode<T> newNode = new BinaryTreeNode<T>();
             newNode.Data = value;
 
             if (this.Root == null)
@@ -160,7 +160,7 @@ namespace Elements.Search
         /// </summary>
         /// <param name="value">The value to find.</param>
         /// <returns>The node containing the value.</returns>
-        public Node<T> Find(T value)
+        public BinaryTreeNode<T> Find(T value)
         {
             return this.Find(value, this.Root);
         }
@@ -174,7 +174,7 @@ namespace Elements.Search
             this.Root = Remove(this.Root, value);
         }
 
-        private Node<T> Remove(Node<T> parent, T key)
+        private BinaryTreeNode<T> Remove(BinaryTreeNode<T> parent, T key)
         {
             if (parent == null) return parent;
 
@@ -205,7 +205,7 @@ namespace Elements.Search
             return parent;
         }
 
-        private T MinValue(Node<T> node)
+        private T MinValue(BinaryTreeNode<T> node)
         {
             T minv = node.Data;
 
@@ -218,7 +218,7 @@ namespace Elements.Search
             return minv;
         }
 
-        private Node<T> Find(T value, Node<T> parent)
+        private BinaryTreeNode<T> Find(T value, BinaryTreeNode<T> parent)
         {
             if (parent != null)
             {
@@ -248,7 +248,7 @@ namespace Elements.Search
             return this.GetTreeDepth(this.Root);
         }
 
-        private int GetTreeDepth(Node<T> parent)
+        private int GetTreeDepth(BinaryTreeNode<T> parent)
         {
             return parent == null ? 0 : Math.Max(GetTreeDepth(parent.Left), GetTreeDepth(parent.Right)) + 1;
         }

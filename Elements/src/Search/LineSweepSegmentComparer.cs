@@ -7,7 +7,7 @@ namespace Elements.Search
     /// Comparer used during line sweeps to sort segments by the Y value of
     /// their left-most point.
     /// </summary>
-    public class LineSweepSegmentComparer : IComparer<int>
+    internal class LineSweepSegmentComparer : IComparer<int>
     {
         private IList<Line> _segments;
 

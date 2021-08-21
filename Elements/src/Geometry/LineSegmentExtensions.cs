@@ -30,6 +30,10 @@ namespace Elements.Geometry
                 };
             }).GroupBy(x => x.Item1).Select(g =>
             {
+                // TODO: Is there a way to make this faster?
+                // We're grouping by coordinate which is SLOW and is 
+                // only neccessary in the case where we have coincident points.
+
                 // Group by the event coordinate as lines may share start 
                 // or end points.
                 return new LineSweepEvent(g.Key, g.Select(e => (e.i, e.Item3)).ToList());
@@ -65,9 +69,11 @@ namespace Elements.Geometry
 
                     if (sd.isLeftMostPoint)
                     {
+                        results[sd.segmentId].Add(e.Point);
+
                         if (tree.Add(sd.segmentId))
                         {
-                            tree.FindPredecessorSuccessors(sd.segmentId, out List<Node<int>> pres, out List<Node<int>> sucs);
+                            tree.FindPredecessorSuccessors(sd.segmentId, out List<BinaryTreeNode<int>> pres, out List<BinaryTreeNode<int>> sucs);
 
                             foreach (var pre in pres)
                             {
@@ -90,7 +96,7 @@ namespace Elements.Geometry
                     }
                     else
                     {
-                        tree.FindPredecessorSuccessor(sd.segmentId, out Node<int> pre, out Node<int> suc);
+                        tree.FindPredecessorSuccessor(sd.segmentId, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
                         if (pre != null && suc != null)
                         {
                             if (segments[pre.Data].Intersects(segments[suc.Data], out Vector3 result))
@@ -100,18 +106,41 @@ namespace Elements.Geometry
                             }
                         }
 
+                        results[sd.segmentId].Add(e.Point);
+
                         tree.Remove(sd.segmentId);
                     }
                 }
             }
 
-            foreach (var r in results)
-            {
-                r.Value.Sort(new DotComparer(segments[r.Key].Direction()));
-            }
-
             return results;
         }
 
+        /// <summary>
+        /// Build an adjacency graph from ordered collections of points.
+        /// Points do not need to be unique, but the 
+        /// </summary>
+        /// <param name="points">An ordered collection of points representing 
+        /// a contiguous sequence of line segments. 
+        /// e.g., [A,B,C,D] gives A->B, B->C, C->D</param>
+        /// <returns>An adjacency list containing connected points.</returns>
+        public static AdjacencyList<Vector3> AdjacencyList(this Dictionary<int, List<Vector3>> points)
+        {
+            var ptLookup = points.SelectMany(p => p.Value).Distinct().ToList();
+            var adj = new AdjacencyList<Vector3>(ptLookup.Count);
+
+            foreach (var ptSet in points)
+            {
+                for (var i = 0; i < ptSet.Value.Count - 1; i++)
+                {
+                    var a = ptLookup.IndexOf(ptSet.Value[i]);
+                    var b = ptLookup.IndexOf(ptSet.Value[i + 1]);
+                    adj.AddEdgeAtEnd(a, b, ptLookup[a]);
+                    adj.AddEdgeAtEnd(b, a, ptLookup[b]);
+                }
+            }
+
+            return adj;
+        }
     }
 }

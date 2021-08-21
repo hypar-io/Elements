@@ -41,7 +41,7 @@ namespace Elements.Tests
                 tree.Add(i);
             }
 
-            tree.FindPredecessorSuccessor(7, out Node<int> pre, out Node<int> suc);
+            tree.FindPredecessorSuccessor(7, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
             Assert.Equal(6, pre.Data);
             Assert.Null(suc);
 
@@ -66,7 +66,7 @@ namespace Elements.Tests
                 tree.Add(i);
             }
 
-            tree.FindPredecessorSuccessor(0, out Node<int> pre, out Node<int> suc);
+            tree.FindPredecessorSuccessor(0, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
             Assert.Equal(b, lines[pre.Data]);
             Assert.Equal(c, lines[suc.Data]);
         }

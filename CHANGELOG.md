@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.4
+- `LineSegmentExtensions.Intersect(this IList<Line> lines)`
+- `Elements.Search.BinaryTree<T>`
+- `Elements.Search.BinaryTreeNode<T>`
+
 ## 0.9.3
 
 ### Added
