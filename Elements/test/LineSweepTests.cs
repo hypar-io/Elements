@@ -96,7 +96,7 @@ namespace Elements.Tests
             var scale = 15;
 
             var lines = new List<Line>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var start = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);
                 var end = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);
