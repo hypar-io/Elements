@@ -20,6 +20,7 @@
 ### Fixed
 
 - Deduplicate catalog names during code generation.
+- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
 
 ## 0.9.2
 
