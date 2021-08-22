@@ -19,16 +19,16 @@ namespace Elements.Geometry
 
         public int Compare((Vector3, int) x, (Vector3, int) y)
         {
-            var a = _v.Dot(x.Item1);
-            var b = _v.Dot(y.Item1);
+            var a = _v.DistanceTo(x.Item1);
+            var b = _v.DistanceTo(y.Item1);
 
             if (a > b)
             {
-                return -1;
+                return 1;
             }
             else if (a < b)
             {
-                return 1;
+                return -1;
             }
             return 0;
         }
@@ -43,9 +43,10 @@ namespace Elements.Geometry
         /// Find all intersections of the provided collection of lines.
         /// </summary>
         /// <param name="segments">A collection of line segments.</param>
-        /// <param name="adjacencyList"></param>
-        /// <returns>A dictionary of intersection point collections
-        /// keyed by the index of the line segment in the provided collection.</returns>
+        /// <param name="adjacencyList">An adjacency list which describes the
+        /// connectivity of the intersection points, keyed by the index of the
+        /// intersection in the result.</param>
+        /// <returns>A collection of unique intersection points.</returns>
         public static List<Vector3> Intersections(this IList<Line> segments, out AdjacencyList adjacencyList)
         {
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
@@ -82,12 +83,10 @@ namespace Elements.Geometry
             // will be used to find an existing point if one exists.
             var intersections = new List<Vector3>();
 
-            // A dictionary to track last intersection node index
-            // along all curves.
-            var segmentIndices = new Dictionary<int, int>();
+            var segmentIntersections = new Dictionary<int, List<(Vector3 location, int segmentId)>>();
             for (var i = 0; i < segments.Count; i++)
             {
-                segmentIndices.Add(i, -1);
+                segmentIntersections.Add(i, new List<(Vector3 location, int segmentId)>());
             }
 
             foreach (var e in events)
@@ -98,22 +97,18 @@ namespace Elements.Geometry
 
                     if (sd.isLeftMostPoint)
                     {
-                        AddVertexAtSegmentStart(e.Point, sd.segmentId, intersections, adjacencyList, segmentIndices);
+                        segmentIntersections[sd.segmentId].Add((e.Point, sd.segmentId));
 
                         if (tree.Add(sd.segmentId))
                         {
                             tree.FindPredecessorSuccessors(sd.segmentId, out List<BinaryTreeNode<int>> pres, out List<BinaryTreeNode<int>> sucs);
 
-                            // Intersect lines above and below and sort the 
-                            // results so that when we add graph information
-                            // the graph edges flow in the direction of the segment.
-                            var localIntersections = new List<(Vector3 location, int segmentId)>();
-
                             foreach (var pre in pres)
                             {
                                 if (s.Intersects(segments[pre.Data], out Vector3 result))
                                 {
-                                    localIntersections.Add((result, pre.Data));
+                                    segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
+                                    segmentIntersections[pre.Data].Add((result, pre.Data));
                                 }
                             }
 
@@ -121,21 +116,10 @@ namespace Elements.Geometry
                             {
                                 if (s.Intersects(segments[suc.Data], out Vector3 result))
                                 {
-                                    localIntersections.Add((result, suc.Data));
+                                    segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
+                                    segmentIntersections[suc.Data].Add((result, suc.Data));
                                 }
                             }
-
-                            localIntersections.Sort(new EventComparer(Vector3.XAxis));
-                            foreach (var x in localIntersections)
-                            {
-                                AddVertexAtIntersection(x.location,
-                                                        intersections,
-                                                        adjacencyList,
-                                                        segmentIndices,
-                                                        sd.segmentId,
-                                                        x.segmentId);
-                            }
-
                         }
                     }
                     else
@@ -145,111 +129,57 @@ namespace Elements.Geometry
                         {
                             if (segments[pre.Data].Intersects(segments[suc.Data], out Vector3 result))
                             {
-                                AddVertexAtIntersection(result,
-                                                                   intersections,
-                                                                   adjacencyList,
-                                                                   segmentIndices,
-                                                                   pre.Data,
-                                                                   suc.Data);
+                                segmentIntersections[pre.Data].Add(((result, pre.Data)));
+                                segmentIntersections[suc.Data].Add(((result, suc.Data)));
                             }
                         }
                         tree.Remove(sd.segmentId);
-                        AddVertexAtSegmentEnd(e.Point, sd.segmentId, adjacencyList, intersections, segmentIndices);
+                        segmentIntersections[sd.segmentId].Add((e.Point, sd.segmentId));
                     }
+                }
+            }
+
+            // Loop over all segment intersection data, sorting the 
+            // data by distance from the segment's start point, and
+            // creating new vertices and edges as necessary.
+            foreach (var segmentData in segmentIntersections)
+            {
+                segmentIntersections[segmentData.Key].Sort(new EventComparer(segments[segmentData.Key].Start));
+                var prevIndex = -1;
+                foreach (var x in segmentIntersections[segmentData.Key])
+                {
+                    prevIndex = AddVertexAtEvent(x.location,
+                                                 intersections,
+                                                 adjacencyList,
+                                                 prevIndex);
                 }
             }
 
             return intersections;
         }
 
-        private static void AddVertexAtSegmentStart(Vector3 location, int segmentId, List<Vector3> intersections, AdjacencyList adj, Dictionary<int, int> segmentIndices)
-        {
-            var newIndex = intersections.IndexOf(location);
-            if (newIndex == -1)
-            {
-                newIndex = adj.AddVertex();
-                intersections.Add(location);
-            }
-            segmentIndices[segmentId] = newIndex;
-        }
-
-        private static void AddVertexAtSegmentEnd(Vector3 location, int segmentId, AdjacencyList adj, List<Vector3> intersections, Dictionary<int, int> segmentIndices)
-        {
-            var newIndex = intersections.IndexOf(location);
-            if (newIndex == -1)
-            {
-                newIndex = adj.AddVertex();
-                intersections.Add(location);
-            }
-
-            var oldIndex = segmentIndices[segmentId];
-            if (oldIndex != -1)
-            {
-                adj.AddEdgeAtEnd(oldIndex, newIndex);
-            }
-            segmentIndices[segmentId] = newIndex;
-        }
-
-        private static void AddVertexAtIntersection(Vector3 location,
-                                                  List<Vector3> intersections,
-                                                  AdjacencyList adj,
-                                                  Dictionary<int, int> segmentIndices,
-                                                  params int[] connectTo)
+        private static int AddVertexAtEvent(Vector3 location,
+                                             List<Vector3> allIntersections,
+                                             AdjacencyList adj,
+                                             int previousIndex)
         {
             // Find an existing intersection location, 
             // or create a new one.
-            var newIndex = intersections.IndexOf(location);
+            var newIndex = allIntersections.IndexOf(location);
             if (newIndex == -1)
             {
                 newIndex = adj.AddVertex();
-                intersections.Add(location);
+                allIntersections.Add(location);
             }
 
-            foreach (var i in connectTo)
+            if (previousIndex == -1)
             {
-                if (segmentIndices[i] != -1)
-                {
-                    var lastIndex = segmentIndices[i];
-                    adj.AddEdgeAtEnd(lastIndex, newIndex);
-                }
-
-                // Point the intersection map for the segment
-                // to the new index.
-                segmentIndices[i] = newIndex;
+                return newIndex;
             }
+
+            adj.AddEdgeAtEnd(previousIndex, newIndex);
+            adj.AddEdgeAtEnd(newIndex, previousIndex);
+            return newIndex;
         }
-
-        /// <summary>
-        /// Build an adjacency graph from ordered collections of points.
-        /// Points do not need to be unique, but the 
-        /// </summary>
-        /// <param name="points">An ordered collection of points representing 
-        /// a contiguous sequence of line segments. 
-        /// e.g., [A,B,C,D] gives A->B, B->C, C->D</param>
-        /// <returns>An adjacency list containing connected points.</returns>
-        // public static AdjacencyList AdjacencyList(this Dictionary<int, List<Vector3>> points)
-        // {
-        //     var ptLookup = points.SelectMany(p => p.Value).Distinct().ToList();
-        //     var adj = new AdjacencyList<Vector3>(ptLookup.Count);
-
-        //     foreach (var ptSet in points)
-        //     {
-        //         for (var i = 0; i < ptSet.Value.Count - 1; i++)
-        //         {
-        //             var a = ptLookup.IndexOf(ptSet.Value[i]);
-        //             var b = ptLookup.IndexOf(ptSet.Value[i + 1]);
-        //             if (!adj[a].Contains((b, ptLookup[a])))
-        //             {
-        //                 adj.AddEdgeAtEnd(a, b, ptLookup[a]);
-        //             }
-        //             if (!adj[b].Contains((a, ptLookup[b])))
-        //             {
-        //                 adj.AddEdgeAtEnd(b, a, ptLookup[b]);
-        //             }
-        //         }
-        //     }
-
-        //     return adj;
-        // }
     }
 }

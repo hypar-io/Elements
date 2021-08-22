@@ -37,6 +37,29 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CrossingLines()
+        {
+            this.Name = nameof(CrossingLines);
+
+            // Lines with coincident left-most points, and a vertical line.
+            var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
+            var b = new Line(new Vector3(0, -2), new Vector3(0, 2));
+
+            var pts = new[] { a, b }.Intersections(out AdjacencyList adj);
+            var arrows = adj.ToModelArrows(pts, Colors.Red);
+            this.Model.AddElement(arrows);
+
+            var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+            for (var i = 0; i < pts.Count; i++)
+            {
+                textData.Add((pts[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', adj[i])}", Colors.Black));
+            }
+            this.Model.AddElement(new ModelText(textData, FontSize.PT12, 15));
+
+            Assert.Equal(5, pts.Count);
+        }
+
+        [Fact]
         public void LineSweepSucceedsWithCoincidentPoints()
         {
             this.Name = nameof(LineSweepSucceedsWithCoincidentPoints);
@@ -55,6 +78,13 @@ namespace Elements.Tests
             var pts = lines.Intersections(out AdjacencyList adj);
             var arrows = adj.ToModelArrows(pts, Colors.Red);
             this.Model.AddElement(arrows);
+
+            var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+            for (var i = 0; i < pts.Count; i++)
+            {
+                textData.Add((pts[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', adj[i])}", Colors.Black));
+            }
+            this.Model.AddElement(new ModelText(textData, FontSize.PT12, 15));
         }
 
         [Fact]
@@ -66,7 +96,7 @@ namespace Elements.Tests
             var scale = 15;
 
             var lines = new List<Line>();
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 20; i++)
             {
                 var start = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);
                 var end = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);
