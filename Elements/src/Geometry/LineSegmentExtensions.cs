@@ -53,22 +53,13 @@ namespace Elements.Geometry
 
             foreach (var e in events)
             {
-                if (e.Segments.Count > 1)
-                {
-                    foreach (var sd in e.Segments)
-                    {
-                        // A beginning or end where multiple
-                        // lines meet.
-                        results[sd.segmentId].Add(e.Point);
-                    }
-                }
-
                 foreach (var sd in e.Segments)
                 {
                     var s = segments[sd.segmentId];
 
                     if (sd.isLeftMostPoint)
                     {
+                        // Add the start point of the segment.
                         results[sd.segmentId].Add(e.Point);
 
                         if (tree.Add(sd.segmentId))
@@ -105,12 +96,17 @@ namespace Elements.Geometry
                                 results[suc.Data].Add(result);
                             }
                         }
-
-                        results[sd.segmentId].Add(e.Point);
-
                         tree.Remove(sd.segmentId);
                     }
+
+                    // Add the end point of the segment.
+                    results[sd.segmentId].Add(e.Point);
                 }
+            }
+
+            foreach (var ptset in results)
+            {
+                ptset.Value.Sort(new DotComparer(segments[ptset.Key].Direction()));
             }
 
             return results;
@@ -135,8 +131,14 @@ namespace Elements.Geometry
                 {
                     var a = ptLookup.IndexOf(ptSet.Value[i]);
                     var b = ptLookup.IndexOf(ptSet.Value[i + 1]);
-                    adj.AddEdgeAtEnd(a, b, ptLookup[a]);
-                    adj.AddEdgeAtEnd(b, a, ptLookup[b]);
+                    if (!adj[a].Contains((b, ptLookup[a])))
+                    {
+                        adj.AddEdgeAtEnd(a, b, ptLookup[a]);
+                    }
+                    if (!adj[b].Contains((a, ptLookup[b])))
+                    {
+                        adj.AddEdgeAtEnd(b, a, ptLookup[b]);
+                    }
                 }
             }
 
