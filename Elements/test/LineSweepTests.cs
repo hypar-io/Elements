@@ -52,11 +52,8 @@ namespace Elements.Tests
             lines.Add(b);
             lines.Add(c);
 
-            var pts = lines.Intersections();
-            var adj = pts.AdjacencyList();
-
-            var ptsUnique = pts.SelectMany(p => p.Value).Distinct().ToList();
-            var arrows = adj.ToModelArrows(ptsUnique, Colors.Red);
+            var pts = lines.Intersections(out AdjacencyList adj);
+            var arrows = adj.ToModelArrows(pts, Colors.Red);
             this.Model.AddElement(arrows);
         }
 
@@ -78,19 +75,12 @@ namespace Elements.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var pts = lines.Intersections();
+            var pts = lines.Intersections(out AdjacencyList adj);
             sw.Stop();
-            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.SelectMany(p => p.Value).Count()} intersections.");
+            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.Count()} intersections.");
             sw.Reset();
 
-            sw.Start();
-            var adj = pts.AdjacencyList();
-            sw.Stop();
-            _output.WriteLine($"{sw.ElapsedMilliseconds}ms for generating adjacency list.");
-            sw.Reset();
-
-            var ptsUnique = pts.SelectMany(p => p.Value).Distinct().ToList();
-            var arrows = adj.ToModelArrows(ptsUnique, Colors.Red);
+            var arrows = adj.ToModelArrows(pts, Colors.Red);
             this.Model.AddElement(arrows);
         }
 

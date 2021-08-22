@@ -6,28 +6,44 @@ using Elements.Geometry;
 namespace Elements.Search
 {
     /// <summary>
-    /// An generic adjacency list.
-    /// Stores an undirected graph of connected nodes which reference
-    /// data of type T.
+    /// An adjacency list.
+    /// Stores an undirected graph of connected.
     /// </summary>
-    /// <typeparam name="T">The type of data referenced by the 'nodes' of the 
-    /// adjacency list.</typeparam>
-    public class AdjacencyList<T>
+    public class AdjacencyList
     {
-        LinkedList<(int id, T data)>[] _adjacencyList;
+        List<LinkedList<int>> _adjacencyList;
 
         /// <summary>
-        /// Create an adjacency list.
+        /// Create an adjacency list with the size of the provided collection.
         /// </summary>
         /// <param name="length">The length of the list.</param>
         public AdjacencyList(int length)
         {
-            _adjacencyList = new LinkedList<(int id, T data)>[length];
+            _adjacencyList = new List<LinkedList<int>>(length);
 
-            for (int i = 0; i < _adjacencyList.Length; ++i)
+            for (int i = 0; i < _adjacencyList.Count; ++i)
             {
-                _adjacencyList[i] = new LinkedList<(int id, T data)>();
+                _adjacencyList[i] = new LinkedList<int>();
             }
+        }
+
+        /// <summary>
+        /// Create an adjacency list with no items.
+        /// </summary>
+        public AdjacencyList()
+        {
+            _adjacencyList = new List<LinkedList<int>>();
+        }
+
+        /// <summary>
+        /// Add a vertex.
+        /// </summary>
+        /// <returns>The index of the vertex.</returns>
+        public int AddVertex()
+        {
+            _adjacencyList.Add(new LinkedList<int>());
+            var index = _adjacencyList.Count - 1;
+            return index;
         }
 
         /// <summary>
@@ -36,10 +52,9 @@ namespace Elements.Search
         /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
-        /// <param name="data">The data stored on the edge.</param>
-        public void AddEdgeAtEnd(int start, int end, T data)
+        public void AddEdgeAtEnd(int start, int end)
         {
-            _adjacencyList[start].AddLast((end, data));
+            _adjacencyList[start].AddLast(end);
         }
 
         /// <summary>
@@ -48,10 +63,9 @@ namespace Elements.Search
         /// </summary>
         /// <param name="start">The start of the edge.</param>
         /// <param name="end">The end of the edge.</param>
-        /// <param name="data">The data stored on the edge.</param>
-        public void AddEdgeAtBeginning(int start, int end, T data)
+        public void AddEdgeAtBeginning(int start, int end)
         {
-            _adjacencyList[start].AddFirst((end, data));
+            _adjacencyList[start].AddFirst(end);
         }
 
         /// <summary>
@@ -59,20 +73,18 @@ namespace Elements.Search
         /// </summary>
         public int GetNumberOfVertices()
         {
-            return _adjacencyList.Length;
+            return _adjacencyList.Count;
         }
 
         /// <summary>
         /// Get the list of connected edges to the specified index.
         /// </summary>
         /// <param name="index"></param>
-        public LinkedList<(int id, T data)> this[int index]
+        public LinkedList<int> this[int index]
         {
             get
             {
-                LinkedList<(int id, T data)> edgeList
-                               = new LinkedList<(int id, T data)>(_adjacencyList[index]);
-
+                var edgeList = new LinkedList<int>(_adjacencyList[index]);
                 return edgeList;
             }
         }
@@ -87,13 +99,13 @@ namespace Elements.Search
 
             var sb = new StringBuilder();
 
-            foreach (LinkedList<(int id, T element)> list in _adjacencyList)
+            foreach (LinkedList<int> list in _adjacencyList)
             {
                 sb.Append("[" + i + "] -> ");
 
-                foreach ((int id, T element) edge in list)
+                foreach (var edge in list)
                 {
-                    sb.Append($"{edge.Item1} -> ");
+                    sb.Append($"{edge} -> ");
                 }
 
                 ++i;
@@ -107,13 +119,10 @@ namespace Elements.Search
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="element"></param>
         /// <returns></returns>
-        public bool TryRemoveEdge(int start, int end, T element)
+        public bool TryRemoveEdge(int start, int end)
         {
-            (int vertex, T element) edge = (end, element);
-
-            return _adjacencyList[start].Remove(edge);
+            return _adjacencyList[start].Remove(end);
         }
     }
 
@@ -129,7 +138,7 @@ namespace Elements.Search
         /// <param name="pts"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public static ModelArrows ToModelArrows(this AdjacencyList<Vector3> adj, IList<Vector3> pts, Color? color)
+        public static ModelArrows ToModelArrows(this AdjacencyList adj, IList<Vector3> pts, Color? color)
         {
             var r = new Random();
 
@@ -140,9 +149,9 @@ namespace Elements.Search
                 var start = pts[i];
                 foreach (var end in adj[i])
                 {
-                    var d = (pts[end.id] - start).Unitized();
-                    var l = pts[end.id].DistanceTo(start);
-                    arrowData.Add((start, d, l, Colors.Red));
+                    var d = (pts[end] - start).Unitized();
+                    var l = pts[end].DistanceTo(start);
+                    arrowData.Add((start, d, l, color));
                 }
             }
 
