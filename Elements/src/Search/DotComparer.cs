@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using Elements.Geometry;
 
-namespace Elements.Geometry
+namespace Elements.Search
 {
     /// <summary>
     /// A comparer used to order collections of vectors
     /// according to their "sameness" with the provided vector.
+    /// Often used to order points along a vector.
     /// </summary>
     internal class DotComparer : IComparer<Vector3>
     {

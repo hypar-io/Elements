@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
+using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
 
