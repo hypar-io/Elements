@@ -60,11 +60,6 @@ namespace Elements.Spatial.AdaptiveGrid
         public double Tolerance { get; set; } = Vector3.EPSILON;
 
         /// <summary>
-        /// Minimum step size, below which, graph is not subdivided.
-        /// </summary>
-        public double MinimumResolution { get; set; }
-
-        /// <summary>
         /// Transformation with which planar spaces are aligned
         /// </summary>
         public Transform Transform { get; set; }
@@ -79,35 +74,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="minimumResolution">Minimum step between vertices in U or V direction.</param>
         /// <param name="transform">Transformation, grid is aligned with.</param>
         /// <returns></returns>
-        public AdaptiveGrid(double minimumResolution, Transform transform)
+        public AdaptiveGrid(Transform transform)
         {
-            MinimumResolution = minimumResolution;
             Transform = transform;
         }
 
         #endregion
 
         #region Public logic
-
-        /// <summary>
-        /// Add graph section using bounding box, divided with step in each direction.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
-        /// </summary>
-        /// <param name="bBox">Box which region is populated with graph.</param>
-        /// <param name="stepSize">Step, graph is populated with.</param>
-        public void AddFromBbox(BBox3 bBox, double stepSize)
-        {
-            var height = bBox.Max.Z - bBox.Min.Z;
-            var boundary = new Polygon(new List<Vector3>
-            {
-                new Vector3(bBox.Min.X, bBox.Min.Y),
-                new Vector3(bBox.Min.X, bBox.Max.Y),
-                new Vector3(bBox.Max.X, bBox.Max.Y),
-                new Vector3(bBox.Max.X, bBox.Min.Y)
-            }).TransformedPolygon(new Transform(new Vector3(0, 0, bBox.Min.Z)));
-            AddFromExtrude(boundary, Vector3.ZAxis, height, stepSize);
-        }
 
         /// <summary>
         /// Add graph section using bounding box, divided by a set of key points. 
@@ -137,54 +111,11 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="boundingPolygon">Base polygon</param>
         /// <param name="extrusionAxis">Extrusion direction</param>
-        /// <param name="height">Height of polygon extrusion</param>
-        /// <param name="stepSize">Step with which region is divided in each direction</param>
-        public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double height, double stepSize)
-        {
-            if (stepSize < MinimumResolution)
-            {
-                return;
-            }
-
-            var gridZ = new Grid1d(height);
-            var sacrificialPanels = (gridZ.Domain.Length % stepSize < MinimumResolution) ? 1 : 0;
-            gridZ.DivideByFixedLength(stepSize, sacrificialPanels: sacrificialPanels);
-            var edgesBefore = GetEdges();
-
-            var zCells = gridZ.GetCells();
-            for (var i = 0; i < zCells.Count; i++)
-            {
-                var elevationVector = zCells[i].Domain.Min * extrusionAxis;
-                var transformedPolygonBottom = boundingPolygon.TransformedPolygon(new Transform(elevationVector));
-                var grid = CreateGridFromPolygon(transformedPolygonBottom);
-                SplitGrid(grid, stepSize);
-                SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                var addedEdges = AddFromGrid(grid, edgesBefore);
-                AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
-                if (i == zCells.Count - 1)
-                {
-                    var transformedPolygonTop = boundingPolygon.TransformedPolygon(
-                        new Transform(zCells[i].Domain.Max * extrusionAxis));
-                    grid = CreateGridFromPolygon(transformedPolygonTop);
-                    SplitGrid(grid, stepSize);
-                    SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                    AddFromGrid(grid, edgesBefore);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Add graph section using polygon, extruded in given direction.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
-        /// </summary>
-        /// <param name="boundingPolygon">Base polygon</param>
-        /// <param name="extrusionAxis">Extrusion direction</param>
-        /// <param name="height">Height of polygon extrusion</param>
+        /// <param name="distance">Height of polygon extrusion</param>
         /// <param name="keyPoints">Set of 3D points, region is split with.</param>
-        public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double height, List<Vector3> keyPoints)
+        public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double distance, List<Vector3> keyPoints)
         {
-            var gridZ = new Grid1d(new Line(boundingPolygon.Start, boundingPolygon.Start + height * extrusionAxis));
+            var gridZ = new Grid1d(new Line(boundingPolygon.Start, boundingPolygon.Start + distance * extrusionAxis));
             gridZ.SplitAtPoints(keyPoints);
             var edgesBefore = GetEdges();
 
@@ -208,28 +139,6 @@ namespace Elements.Spatial.AdaptiveGrid
                     AddFromGrid(grid, edgesBefore);
                 }
             }
-        }
-
-        /// <summary>
-        /// Add single planar region to the graph section using polygon.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
-        /// </summary>
-        /// <param name="boundingPolygon">Base polygon</param>
-        /// <param name="stepSize">Step with which region is divided in each direction</param>
-        /// <returns></returns>
-        public HashSet<Edge> AddFromPolygon(Polygon boundingPolygon, double stepSize)
-        {
-            if (stepSize < MinimumResolution)
-            {
-                return new HashSet<Edge>();
-            }
-
-            var edgesBefore = GetEdges();
-            var grid = CreateGridFromPolygon(boundingPolygon);
-            SplitGrid(grid, stepSize);
-            SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-            return AddFromGrid(grid, edgesBefore);
         }
 
         /// <summary>
@@ -374,17 +283,17 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="point"></param>
         /// <param name="id">The ID of the Vertex, if a match is found.</param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
+        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns></returns>
-        public bool VertexExists(Vector3 point, out ulong id, double? fuzzyFactor = null)
+        public bool VertexExists(Vector3 point, out ulong id, double? tolerance = null)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, fuzzyFactor: fuzzyFactor);
+            var zDict = GetAddressParent(_verticesLookup, point, tolerance: tolerance);
             if (zDict == null)
             {
                 id = 0;
                 return false;
             }
-            return TryGetValue(zDict, point.Z, out id, fuzzyFactor);
+            return TryGetValue(zDict, point.Z, out id, tolerance);
         }
 
         #endregion
@@ -410,7 +319,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
-            var zDict = GetAddressParent(_verticesLookup, vertex.Point, fuzzyFactor: Tolerance);
+            var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance);
             if (zDict == null)
             {
                 return;
@@ -641,14 +550,6 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(intersectionPoints);
         }
 
-        private void SplitGrid(Grid2d grid, double step)
-        {
-            var sacrificialPanelsU = (grid.U.Domain.Length % step < MinimumResolution) ? 1 : 0;
-            var sacrificialPanelsV = (grid.V.Domain.Length % step < MinimumResolution) ? 1 : 0;
-            grid.U.DivideByFixedLength(step, sacrificialPanels: sacrificialPanelsU);
-            grid.V.DivideByFixedLength(step, sacrificialPanels: sacrificialPanelsV);
-        }
-
         private void SplitGrid(Grid2d grid, IEnumerable<Vector3> keyPoints)
         {
             grid.U.SplitAtPoints(keyPoints);
@@ -729,20 +630,20 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="dict"></param>
         /// <param name="key">Number to search for.</param>
         /// <param name="value">Value if match was found.</param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search for the key.</param>
+        /// <param name="tolerance">Amount of tolerance in the search for the key.</param>
         /// <typeparam name="T">The type of the dictionary values.</typeparam>
         /// <returns>Whether a match was found.</returns>
-        private static bool TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, double? fuzzyFactor = null)
+        private static bool TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, double? tolerance = null)
         {
             if (dict.TryGetValue(key, out value))
             {
                 return true;
             }
-            if (fuzzyFactor != null)
+            if (tolerance != null)
             {
                 foreach (var curKey in dict.Keys)
                 {
-                    if (Math.Abs(curKey - key) <= fuzzyFactor)
+                    if (Math.Abs(curKey - key) <= tolerance)
                     {
                         value = dict[curKey];
                         return true;
@@ -758,11 +659,11 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="dict"></param>
         /// <param name="point"></param>
         /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
-        /// <param name="fuzzyFactor">Amount of tolerance in the search against each component of the coordinate.</param>
+        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
-        private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, bool addAddressIfNonExistent = false, double? fuzzyFactor = null)
+        private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, bool addAddressIfNonExistent = false, double? tolerance = null)
         {
-            if (!TryGetValue(dict, point.X, out var yzDict, fuzzyFactor))
+            if (!TryGetValue(dict, point.X, out var yzDict, tolerance))
             {
                 if (addAddressIfNonExistent)
                 {
@@ -775,7 +676,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            if (!TryGetValue(yzDict, point.Y, out var zDict, fuzzyFactor))
+            if (!TryGetValue(yzDict, point.Y, out var zDict, tolerance))
             {
                 if (addAddressIfNonExistent)
                 {

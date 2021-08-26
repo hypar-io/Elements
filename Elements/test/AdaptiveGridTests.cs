@@ -11,29 +11,14 @@ using Xunit;
 namespace Elements.Tests
 {
     public class AdaptiveGridTests : ModelTest
-    {
-        [Fact]
-        public void AdaptiveGridWithFixedStepSizeExample()
-        {
-            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridWithFixedStepSize";
-            var random = new Random();
-
-            var adaptiveGrid = new AdaptiveGrid(0, new Transform());
-            var transform = new Transform(new Vector3(10, 5, 3));
-            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(10, 5).TransformedPolygon(transform), 5);
-            foreach (var edge in adaptiveGrid.GetEdges())
-            {
-                Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
-            }
-        }
-        
+    {      
         [Fact]
         public void AdaptiveGridPolygonKeyPointsExample()
         {
             this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints";
             var random = new Random();
 
-            var adaptiveGrid = new AdaptiveGrid(0, new Transform());
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
             var points = new List<Vector3>()
             {
                 new Vector3(-6, -4),
@@ -42,7 +27,8 @@ namespace Elements.Tests
                 new Vector3(1, 4.5),
                 new Vector3(6, 3),
             };
-            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
+            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(
+                new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
 
             foreach (var edge in adaptiveGrid.GetEdges())
             {
@@ -57,7 +43,7 @@ namespace Elements.Tests
             this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints";
             var random = new Random();
 
-            var adaptiveGrid = new AdaptiveGrid(0, new Transform());
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
             var points = new List<Vector3>()
             {
                 new Vector3(-6, -4),
@@ -67,8 +53,24 @@ namespace Elements.Tests
                 new Vector3(6, 3, -2),
             };
             adaptiveGrid.AddFromBbox(new BBox3(new Vector3(-7.5, -5, -3), new Vector3(10, 10, 3)), points);
-            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(new Vector3(-10, -5), new Vector3(15, 10)).TransformedPolygon(new Transform(new Vector3(0, 0, 3))), 2);
-            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(new Vector3(-10, -5), new Vector3(15, 10)).TransformedPolygon(new Transform(new Vector3(0, 0, 2))), 2);
+
+            points = new List<Vector3>()
+            {
+                new Vector3(-6, -4, 3),
+                new Vector3(-2, 0, 3),
+                new Vector3(0, 4, 3),
+                new Vector3(2, 6, 3)
+            };
+            var rectangle = Polygon.Rectangle(new Vector3(-10, -5), new Vector3(15, 10));
+            adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 3))), points);
+            points = new List<Vector3>()
+            {
+                new Vector3(-6, -4, 2),
+                new Vector3(-2, 0, 2),
+                new Vector3(0, 4, 2),
+                new Vector3(2, 6, 2)
+            };
+            adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
 
             foreach (var edge in adaptiveGrid.GetEdges())
             {
@@ -79,9 +81,15 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridSubtractBox()
         {
-            var adaptiveGrid = new AdaptiveGrid(0, new Transform());
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
-            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, 0.5);
+
+            var points = new List<Vector3>();
+            for (int i = 1; i < 10; i++)
+            {
+                points.Add(new Vector3(i, i, 1));
+            }
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
             Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 5), out _));
             Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 4.9), out _));
 
