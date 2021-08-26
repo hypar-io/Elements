@@ -16,6 +16,7 @@ using Elements.Interfaces;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
+using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -421,6 +422,9 @@ namespace Elements.Serialization.glTF
                                             int? parent_index,
                                             List<glTFLoader.Schema.Mesh> meshes)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
 
@@ -509,6 +513,9 @@ namespace Elements.Serialization.glTF
 
             // Add mesh to gltf
             meshes.Add(m);
+
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for writing mesh to gltf.");
 
             return meshes.Count - 1;
         }
@@ -1243,6 +1250,9 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             GraphicsBuffers buffers = null;
             if (geometricElement.Representation.SkipCSGUnion)
             {
@@ -1262,6 +1272,9 @@ namespace Elements.Serialization.glTF
             {
                 return -1;
             }
+
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for generating element geometry for gltf.");
 
             return gltf.AddTriangleMesh(id + "_mesh",
                                         buffer,
