@@ -736,7 +736,11 @@ namespace Elements.Serialization.glTF
         {
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
-            var buffer = new List<byte>();
+            // var floatSize = sizeof(float);
+            // Console.WriteLine(floatSize);
+            // int size = (2 * floatSize + 3 * floatSize + 3 * floatSize + 4 * floatSize) * ushort.MaxValue * 1000;
+            // Console.WriteLine(size);
+            var buffer = new List<byte>(ushort.MaxValue);
             allBuffers = new List<byte[]> { Array.Empty<byte>() };
 
             var gltf = new Gltf();
