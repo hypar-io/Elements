@@ -52,16 +52,6 @@ namespace Elements.Geometry
 
             (Vector3 U, Vector3 V) basis;
 
-            const float SEARCH_RADIUS = 0.001f;
-
-            // Setup the octree to fit around the csg.
-            // This requires one expensive initialization.
-            var verts = csgs.SelectMany(csg => csg.Polygons.SelectMany(p => p.Vertices).Select(v => v.Pos.ToElementsVector())).ToArray();
-            var bounds = new BBox3(verts);
-            var center = bounds.Center();
-            var origin = new Point((float)center.X, (float)center.Y, (float)center.Z);
-            var size = (float)bounds.Max.DistanceTo(bounds.Min);
-            var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(size, origin, SEARCH_RADIUS);
             foreach (var csg in csgs)
             {
                 foreach (var p in csg.Polygons)
@@ -81,23 +71,12 @@ namespace Elements.Geometry
                         for (var i = 0; i < p.Vertices.Count; i++)
                         {
                             var v = p.Vertices[i];
-
-                            var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
-                            var ep = v.Pos.ToElementsVector();
-                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
-                            {
-                                vertexIndices[i] = vertexIndex;
-                                continue;
-                            }
-
                             vertexIndices[i] = iCursor;
                             iCursor++;
 
-                            var uu = basis.U.Dot(ep);
-                            var vv = basis.V.Dot(ep);
-                            buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                            octree.Add((ep, normal, vertexIndices[i]), op);
+                            var uu = basis.U.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
+                            var vv = basis.V.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
+                            buffers.AddVertex(v.Pos.X, v.Pos.Y, v.Pos.Z, normal.X, normal.Y, normal.Z, uu, vv);
                         }
 
                         // First triangle
@@ -129,23 +108,12 @@ namespace Elements.Geometry
                         for (var i = 0; i < tess.Vertices.Length; i++)
                         {
                             var v = tess.Vertices[i];
-                            var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
-                            var ep = v.Position.ToVector3();
-
-                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
-                            {
-                                vertexIndices[i] = vertexIndex;
-                                continue;
-                            }
-
                             vertexIndices[i] = iCursor;
                             iCursor++;
 
-                            var uu = basis.U.Dot(ep);
-                            var vv = basis.V.Dot(ep);
-                            buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                            octree.Add((ep, normal, vertexIndices[i]), op);
+                            var uu = basis.U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
+                            var vv = basis.V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
+                            buffers.AddVertex(v.Position.X, v.Position.Y, v.Position.Z, normal.X, normal.Y, normal.Z, uu, vv);
                         }
 
                         for (var k = 0; k < tess.Elements.Length; k++)
