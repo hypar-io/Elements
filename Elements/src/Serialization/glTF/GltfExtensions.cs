@@ -422,9 +422,6 @@ namespace Elements.Serialization.glTF
                                             int? parent_index,
                                             List<glTFLoader.Schema.Mesh> meshes)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
 
@@ -513,9 +510,6 @@ namespace Elements.Serialization.glTF
 
             // Add mesh to gltf
             meshes.Add(m);
-
-            sw.Stop();
-            Console.WriteLine($"{sw.Elapsed} for writing mesh to gltf.");
 
             return meshes.Count - 1;
         }
@@ -736,11 +730,7 @@ namespace Elements.Serialization.glTF
         {
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
-            // var floatSize = sizeof(float);
-            // Console.WriteLine(floatSize);
-            // int size = (2 * floatSize + 3 * floatSize + 3 * floatSize + 4 * floatSize) * ushort.MaxValue * 1000;
-            // Console.WriteLine(size);
-            var buffer = new List<byte>(ushort.MaxValue);
+            var buffer = new List<byte>();
             allBuffers = new List<byte[]> { Array.Empty<byte>() };
 
             var gltf = new Gltf();
@@ -1254,9 +1244,6 @@ namespace Elements.Serialization.glTF
                                       List<Vector3> lines,
                                       Transform t = null)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             GraphicsBuffers buffers = null;
             if (geometricElement.Representation.SkipCSGUnion)
             {
@@ -1276,9 +1263,6 @@ namespace Elements.Serialization.glTF
             {
                 return -1;
             }
-
-            sw.Stop();
-            Console.WriteLine($"{sw.Elapsed} for generating element geometry for gltf.");
 
             return gltf.AddTriangleMesh(id + "_mesh",
                                         buffer,
