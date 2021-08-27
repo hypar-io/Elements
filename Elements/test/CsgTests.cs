@@ -119,6 +119,11 @@ namespace Elements.Tests
             {
                 Vertices.Add((position, normal));
             }
+
+            public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
+            {
+                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+            }
         }
     }
 }
