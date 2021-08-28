@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>Hypar.Elements.CodeGeneration</AssemblyName>
         <PackageTitle>Hypar Elements Code Generation</PackageTitle>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
