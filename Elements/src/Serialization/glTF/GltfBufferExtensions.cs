@@ -75,7 +75,7 @@ namespace Elements.Serialization.glTF
                 }
                 fullBuffer.AddRange(buff);
             }
-            var onlyBuffer = new Buffer();
+            var onlyBuffer = new glTFLoader.Schema.Buffer();
             onlyBuffer.ByteLength = fullBuffer.Count;
             gltf.Buffers = new[] { onlyBuffer };
             return fullBuffer.ToArray(fullBuffer.Count);

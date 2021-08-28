@@ -540,7 +540,7 @@ namespace Elements
             var sweep = new Sweep(profile, path, 0.0, 0.0, 0.0, false);
             var tunnelCsg = sweep._solid.ToCsg();
 
-            topoCsg = topoCsg.Substract(tunnelCsg);
+            topoCsg = topoCsg.Subtract(tunnelCsg);
             var mesh = new Mesh();
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
@@ -608,7 +608,7 @@ namespace Elements
                 cutXsect.Tessellate(ref cut);
                 cuts.Add(cut);
 
-                topoCsg = topoCsg.Substract(cutCsg);
+                topoCsg = topoCsg.Subtract(cutCsg);
             }
 
             if (elevation > this.MinElevation)
@@ -635,7 +635,7 @@ namespace Elements
                 var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
                 fillCsg = fillCsg.Union(batterCsg);
 
-                var xsect = fillCsg.Substract(topoCsg);
+                var xsect = fillCsg.Subtract(topoCsg);
                 var fill = new Mesh();
                 xsect.Tessellate(ref fill);
                 fills.Add(fill);

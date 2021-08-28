@@ -102,7 +102,7 @@ namespace Elements
             }
             if (voids.Count() > 0)
             {
-                csg = csg.Substract(voids);
+                csg = csg.Subtract(voids);
             }
 
             if (Transform == null || transformed)

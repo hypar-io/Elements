@@ -18,7 +18,7 @@ namespace Elements.Serialization.glTF
     internal static class GltfMergingUtils
     {
         public static List<int> AddAllMeshesFromFromGlb(Stream glbStream,
-                                        List<Buffer> buffers,
+                                        List<glTFLoader.Schema.Buffer> buffers,
                                         List<byte[]> bufferByteArrays,
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
