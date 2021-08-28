@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
-using Octree;
 
 namespace Elements.Geometry
 {
@@ -25,20 +24,20 @@ namespace Elements.Geometry
         /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid csg)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid csg, bool mergeVertices = false)
         {
-            return Tessellate(new[] { csg });
+            return Tessellate(new[] { csg }, mergeVertices);
         }
 
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// buffers appropriate for use with gltf. 
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs, bool mergeVertices = false)
         {
             var buffers = new GraphicsBuffers();
 
-            Tessellate(csgs, buffers);
+            Tessellate(csgs, buffers, mergeVertices);
             return buffers;
         }
 
@@ -46,22 +45,11 @@ namespace Elements.Geometry
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers)
+        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers, bool mergeVertices = false)
         {
-            ushort iCursor = 0;
-
             (Vector3 U, Vector3 V) basis;
 
-            const float SEARCH_RADIUS = 0.001f;
-
-            // Setup the octree to fit around the csg.
-            // This requires one expensive initialization.
-            var verts = csgs.SelectMany(csg => csg.Polygons.SelectMany(p => p.Vertices).Select(v => v.Pos.ToElementsVector())).ToArray();
-            var bounds = new BBox3(verts);
-            var center = bounds.Center();
-            var origin = new Point((float)center.X, (float)center.Y, (float)center.Z);
-            var size = (float)bounds.Max.DistanceTo(bounds.Min);
-            var octree = new PointOctree<(Vector3 position, Vector3 normal, ushort index)>(size, origin, SEARCH_RADIUS);
+            var allVertices = new List<(Vector3, Vector3, UV)>();
             foreach (var csg in csgs)
             {
                 foreach (var p in csg.Polygons)
@@ -76,28 +64,22 @@ namespace Elements.Geometry
                         var a = p.Vertices[0].Pos.ToElementsVector();
                         var b = p.Vertices[1].Pos.ToElementsVector();
                         var c = p.Vertices[2].Pos.ToElementsVector();
-                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
+                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
 
                         for (var i = 0; i < p.Vertices.Count; i++)
                         {
                             var v = p.Vertices[i];
-
-                            var op = new Point((float)v.Pos.X, (float)v.Pos.Y, (float)v.Pos.Z);
-                            var ep = v.Pos.ToElementsVector();
-                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
-                            {
-                                vertexIndices[i] = vertexIndex;
-                                continue;
-                            }
-
-                            vertexIndices[i] = iCursor;
-                            iCursor++;
-
-                            var uu = basis.U.Dot(ep);
-                            var vv = basis.V.Dot(ep);
-                            buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                            octree.Add((ep, normal, vertexIndices[i]), op);
+                            var uu = basis.U.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
+                            var vv = basis.V.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
+                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Pos.X,
+                                                                         v.Pos.Y,
+                                                                         v.Pos.Z,
+                                                                         n.X,
+                                                                         n.Y,
+                                                                         n.Z,
+                                                                         uu,
+                                                                         vv,
+                                                                         allVertices, mergeVertices);
                         }
 
                         // First triangle
@@ -124,28 +106,24 @@ namespace Elements.Geometry
                         var b = tess.Vertices[tess.Elements[1]].ToElementsVector();
                         var c = tess.Vertices[tess.Elements[2]].ToElementsVector();
 
-                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 normal);
+                        basis = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
 
                         for (var i = 0; i < tess.Vertices.Length; i++)
                         {
                             var v = tess.Vertices[i];
-                            var op = new Point((float)v.Position.X, (float)v.Position.Y, (float)v.Position.Z);
-                            var ep = v.Position.ToVector3();
+                            var uu = basis.U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
+                            var vv = basis.V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
 
-                            if (TryGetExistingVertex(op, ep, octree, normal, SEARCH_RADIUS, out ushort vertexIndex))
-                            {
-                                vertexIndices[i] = vertexIndex;
-                                continue;
-                            }
+                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Position.X,
+                                                                         v.Position.Y,
+                                                                         v.Position.Z,
+                                                                         n.X,
+                                                                         n.Y,
+                                                                         n.Z,
+                                                                         uu,
+                                                                         vv,
+                                                                         allVertices, mergeVertices);
 
-                            vertexIndices[i] = iCursor;
-                            iCursor++;
-
-                            var uu = basis.U.Dot(ep);
-                            var vv = basis.V.Dot(ep);
-                            buffers.AddVertex(ep, normal, new UV(uu, vv));
-
-                            octree.Add((ep, normal, vertexIndices[i]), op);
                         }
 
                         for (var k = 0; k < tess.Elements.Length; k++)
@@ -155,6 +133,11 @@ namespace Elements.Geometry
                         }
                     }
                 }
+            }
+
+            foreach (var v in allVertices)
+            {
+                buffers.AddVertex(v.Item1, v.Item2, v.Item3);
             }
         }
 
@@ -166,30 +149,26 @@ namespace Elements.Geometry
             return basis;
         }
 
-        private static bool TryGetExistingVertex(Point op,
-                                                 Vector3 ep,
-                                                 PointOctree<(Vector3 position, Vector3 normal, ushort index)> octree,
-                                                 Vector3 n,
-                                                 float searchRadius,
-                                                 out ushort vertexIndex
-                                                 )
+        private static int GetOrCreateVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v,
+                                                 List<(Vector3 position, Vector3 normal, UV uv)> pts, bool mergeVertices)
         {
-            var search = octree.GetNearby(op, searchRadius);
+            var n = new Vector3(nx, ny, nz);
+            var pt = new Vector3(x, y, z);
 
-            vertexIndex = 0;
-
-            foreach (var existing in search)
+            if (mergeVertices)
             {
-                var angle = existing.normal.AngleTo(n);
-
-                if (angle < 45.0)
+                var index = pts.FindIndex(p =>
                 {
-                    vertexIndex = existing.index;
-                    return true;
+                    return p.position.IsAlmostEqualTo(pt) && p.normal.AngleTo(n) < 45.0;
+                });
+                if (index != -1)
+                {
+                    return index;
                 }
             }
 
-            return false;
+            pts.Add((pt, n, new UV(u, v)));
+            return pts.Count - 1;
         }
 
         internal static Csg.Matrix4x4 ToMatrix4x4(this Transform transform)
