@@ -28,19 +28,19 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public BBox3(Vector3 @min, Vector3 @max)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<BBox3>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @min, @max});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<BBox3>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @min, @max});
+            // }
         
             this.Min = @min;
             this.Max = @max;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The minimum extent of the bounding box.</summary>

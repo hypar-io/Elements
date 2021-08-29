@@ -28,19 +28,19 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public GeometryReference(string @geometryUrl, IList<object> @internalGeometry)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<GeometryReference>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @geometryUrl, @internalGeometry});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<GeometryReference>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @geometryUrl, @internalGeometry});
+            // }
         
             this.GeometryUrl = @geometryUrl;
             this.InternalGeometry = @internalGeometry;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The URL where the referenced geometry is hosted</summary>

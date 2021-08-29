@@ -28,18 +28,18 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices)
             : base()
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Polyline>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @vertices});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Polyline>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @vertices});
+            // }
         
             this.Vertices = @vertices;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The vertices of the polygon.</summary>

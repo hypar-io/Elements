@@ -32,20 +32,29 @@ namespace Elements.Geometry.Solids
         public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
             : base(isVoid)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Extrude>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @profile, @height, @direction, @isVoid});
+            // }
         
             this.Profile = @profile;
             this.Height = @height;
             this.Direction = @direction;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
+
+            this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
+            UpdateGeometry();
+        }
+
+        private void UpdateGeometry()
+        {
+            this._solid = Kernel.Instance.CreateExtrude(this.Profile, this.Height, this.Direction);
+            this._csg = this._solid.ToCsg();
         }
     
         /// <summary>The id of the profile to extrude.</summary>

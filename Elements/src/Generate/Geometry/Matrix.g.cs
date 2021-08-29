@@ -27,18 +27,18 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Matrix(IList<double> @components)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Matrix>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @components});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Matrix>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @components});
+            // }
         
             this.Components = @components;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The components of the matrix.</summary>

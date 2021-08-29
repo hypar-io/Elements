@@ -28,19 +28,19 @@ namespace Elements.Geometry
         public Line(Vector3 @start, Vector3 @end)
             : base()
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Line>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @start, @end});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Line>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @start, @end});
+            // }
         
             this.Start = @start;
             this.End = @end;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The start of the line.</summary>

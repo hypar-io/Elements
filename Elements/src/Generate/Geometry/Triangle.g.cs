@@ -27,19 +27,19 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Triangle(IList<Vertex> @vertices, Vector3 @normal)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Triangle>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @vertices, @normal});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Triangle>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @vertices, @normal});
+            // }
         
             this.Vertices = @vertices;
             this.Normal = @normal;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The triangle's vertices.</summary>

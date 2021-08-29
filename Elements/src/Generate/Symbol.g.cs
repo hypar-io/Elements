@@ -28,19 +28,19 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public Symbol(GeometryReference @geometry, SymbolCameraPosition @cameraPosition)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Symbol>();
-            if (validator != null)
-            {
-                validator.PreConstruct(new object[] { @geometry, @cameraPosition });
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Symbol>();
+            // if (validator != null)
+            // {
+            //     validator.PreConstruct(new object[] { @geometry, @cameraPosition });
+            // }
 
             this.Geometry = @geometry;
             this.CameraPosition = @cameraPosition;
 
-            if (validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if (validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
 
         [Newtonsoft.Json.JsonProperty("Geometry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

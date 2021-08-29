@@ -27,18 +27,18 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Transform(Matrix @matrix)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Transform>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @matrix});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Transform>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @matrix});
+            // }
         
             this.Matrix = @matrix;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The transform's matrix.</summary>

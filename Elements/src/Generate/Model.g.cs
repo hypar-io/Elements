@@ -27,20 +27,20 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Model>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @origin, @transform, @elements});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Model>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @origin, @transform, @elements});
+            // }
         
             this.Origin = @origin;
             this.Transform = @transform;
             this.Elements = @elements;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The origin of the model.</summary>

@@ -27,11 +27,11 @@ namespace Elements
         public WallByProfile(Profile @profile, double @thickness, Line @centerline, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<WallByProfile>();
-            if (validator != null)
-            {
-                validator.PreConstruct(new object[] { @profile, @thickness, @centerline, @transform, @material, @representation, @isElementDefinition, @id, @name });
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<WallByProfile>();
+            // if (validator != null)
+            // {
+            //     validator.PreConstruct(new object[] { @profile, @thickness, @centerline, @transform, @material, @representation, @isElementDefinition, @id, @name });
+            // }
 
             this.Profile = @profile;
             this.Thickness = @thickness;

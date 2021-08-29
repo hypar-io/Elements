@@ -28,17 +28,17 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Curve()
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Curve>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ });
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Curve>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ });
+            // }
         
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
     

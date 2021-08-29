@@ -28,11 +28,11 @@ namespace Elements
         public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, bool @repeatTexture, string @normalTexture, bool @interpolateTexture, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Material>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @repeatTexture, @normalTexture, @interpolateTexture, @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Material>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @color, @specularFactor, @glossinessFactor, @unlit, @texture, @doubleSided, @repeatTexture, @normalTexture, @interpolateTexture, @id, @name});
+            // }
         
             this.Color = @color;
             this.SpecularFactor = @specularFactor;
@@ -44,10 +44,10 @@ namespace Elements
             this.NormalTexture = @normalTexture;
             this.InterpolateTexture = @interpolateTexture;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The material's color.</summary>

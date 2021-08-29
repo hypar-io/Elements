@@ -29,21 +29,21 @@ namespace Elements
         public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @transform, @material, @representation, @isElementDefinition, @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<GeometricElement>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @transform, @material, @representation, @isElementDefinition, @id, @name});
+            // }
         
             this.Transform = @transform;
             this.Material = @material;
             this.Representation = @representation;
             this.IsElementDefinition = @isElementDefinition;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The element's transform.</summary>

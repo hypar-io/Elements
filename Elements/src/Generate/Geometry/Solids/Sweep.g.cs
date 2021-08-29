@@ -34,11 +34,11 @@ namespace Elements.Geometry.Solids
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @profileRotation, @isVoid});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Sweep>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @profile, @curve, @startSetback, @endSetback, @profileRotation, @isVoid});
+            // }
         
             this.Profile = @profile;
             this.Curve = @curve;
@@ -46,10 +46,21 @@ namespace Elements.Geometry.Solids
             this.EndSetback = @endSetback;
             this.ProfileRotation = @profileRotation;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
+
+            this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
+            UpdateGeometry();
+        }
+
+        private void UpdateGeometry()
+        {
+            var profileTrans = new Transform();
+            profileTrans.Rotate(profileTrans.ZAxis, this.ProfileRotation);
+            this._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(this.Profile), this.Curve, this.StartSetback, this.EndSetback);
+            this._csg = this._solid.ToCsg();
         }
     
         /// <summary>The id of the profile to be swept along the curve.</summary>

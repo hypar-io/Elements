@@ -31,19 +31,19 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public Element(System.Guid @id, string @name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Element>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Element>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @id, @name});
+            // }
         
             this.Id = @id;
             this.Name = @name;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>A unique id.</summary>

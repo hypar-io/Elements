@@ -29,11 +29,11 @@ namespace Elements
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, IList<Symbol> @symbols, Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @symbols, @transform, @material, @representation, @isElementDefinition, @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<ContentElement>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, @symbols, @transform, @material, @representation, @isElementDefinition, @id, @name});
+            // }
         
             this.GltfLocation = @gltfLocation;
             this.BoundingBox = @boundingBox;
@@ -41,10 +41,10 @@ namespace Elements
             this.SourceDirection = @sourceDirection;
             this.Symbols = @symbols;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The URI of the gltf for this element.</summary>

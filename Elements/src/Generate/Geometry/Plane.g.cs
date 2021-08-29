@@ -27,19 +27,19 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Plane(Vector3 @origin, Vector3 @normal)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Plane>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @origin, @normal});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Plane>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @origin, @normal});
+            // }
         
             this.Origin = @origin;
             this.Normal = @normal;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The origin of the plane.</summary>

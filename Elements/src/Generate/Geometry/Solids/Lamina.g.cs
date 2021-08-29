@@ -31,19 +31,28 @@ namespace Elements.Geometry.Solids
         public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @perimeter, @voids, @isVoid});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Lamina>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @perimeter, @voids, @isVoid});
+            // }
         
             this.Perimeter = @perimeter;
             this.Voids = @voids;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
+
+            this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
+            UpdateGeometry();
+        }
+
+        private void UpdateGeometry()
+        {
+            this._solid = Kernel.Instance.CreateLamina(this.Perimeter, this.Voids);
+            this._csg = this._solid.ToCsg();
         }
     
         /// <summary>The perimeter.</summary>

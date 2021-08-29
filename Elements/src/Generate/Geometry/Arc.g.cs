@@ -28,21 +28,21 @@ namespace Elements.Geometry
         public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle)
             : base()
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Arc>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @center, @radius, @startAngle, @endAngle});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Arc>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @center, @radius, @startAngle, @endAngle});
+            // }
         
             this.Center = @center;
             this.Radius = @radius;
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The center of the arc.</summary>

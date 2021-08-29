@@ -29,19 +29,19 @@ namespace Elements
         public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @content, @referenceConfiguration, @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<ContentCatalog>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @content, @referenceConfiguration, @id, @name});
+            // }
         
             this.Content = @content;
             this.ReferenceConfiguration = @referenceConfiguration;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The content elements in this catalog.</summary>

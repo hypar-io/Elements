@@ -27,19 +27,19 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public UV(double @u, double @v)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<UV>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @u, @v});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<UV>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @u, @v});
+            // }
         
             this.U = @u;
             this.V = @v;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>The U coordinate.</summary>

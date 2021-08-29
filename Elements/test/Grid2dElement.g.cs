@@ -29,18 +29,18 @@ namespace Elements
         public Grid2dElement(Grid2d @grid, System.Guid @id, string @name)
             : base(id, name)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Grid2dElement>();
-            if(validator != null)
-            {
-                validator.PreConstruct(new object[]{ @grid, @id, @name});
-            }
+            // var validator = Validator.Instance.GetFirstValidatorForType<Grid2dElement>();
+            // if(validator != null)
+            // {
+            //     validator.PreConstruct(new object[]{ @grid, @id, @name});
+            // }
         
             this.Grid = @grid;
             
-            if(validator != null)
-            {
-                validator.PostConstruct(this);
-            }
+            // if(validator != null)
+            // {
+            //     validator.PostConstruct(this);
+            // }
         }
     
         /// <summary>contains a grid</summary>
