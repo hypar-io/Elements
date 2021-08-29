@@ -1,9 +1,9 @@
 using Microsoft.JSInterop;
-using Elements;
 using Elements.Geometry;
-using Elements.Validators;
 using Elements.Serialization.glTF;
+using Elements.Validators;
 using System.Diagnostics;
+using Elements.Geometry.Profiles;
 
 namespace Elements.Wasm
 {
@@ -13,17 +13,49 @@ namespace Elements.Wasm
         public static void Test()
         {
             Validator.DisableValidationOnConstruction = true;
-            Console.WriteLine("Here you are!");
+
+            var sw = new Stopwatch();
+            sw.Start();
+            var x = 0.0;
+            var z = 0.0;
+            var hssFactory = new HSSPipeProfileFactory();
+            var profiles = hssFactory.AllProfiles().ToList();
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for constructing all profiles.");
+            sw.Reset();
+
+            sw.Start();
             var model = new Model();
-            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
-            var beam = new Beam(line, Polygon.Rectangle(0.1, 0.1));
-            model.AddElement(beam);
-            Console.WriteLine($"Wrote model with {model.Elements.Count()} elements.");
+            model.AddElement(BuiltInMaterials.Steel, false);
+            foreach (var profile in profiles)
+            {
+                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var beam = new Beam(line, profile);
+                model.AddElement(profile, false);
+                model.AddElement(beam, false);
+                x += 2.0;
+                if (x > 20.0)
+                {
+                    z += 2.0;
+                    x = 0.0;
+                }
+            }
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for creating all HSS members.");
+            sw.Reset();
+            
+            sw.Start();
+            model.ToGlTF(false, false);
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for writing to gltf.");
         }
 
         [JSInvokable]
         public static Task<Byte[]> ModelToBytes(string modelJson)
         {
+            Validator.DisableValidationOnConstruction = true;
+            
             var sw = new Stopwatch();
             sw.Start();
             var model = Model.FromJson(modelJson, out List<string> errors);
