@@ -15,38 +15,64 @@ namespace Elements.Wasm
             Validator.DisableValidationOnConstruction = true;
 
             var sw = new Stopwatch();
-            sw.Start();
-            var x = 0.0;
-            var z = 0.0;
-            var hssFactory = new HSSPipeProfileFactory();
-            var profiles = hssFactory.AllProfiles().ToList();
-            sw.Stop();
-            Console.WriteLine($"{sw.Elapsed} for constructing all profiles.");
-            sw.Reset();
+            // sw.Start();
+            // var x = 0.0;
+            // var z = 0.0;
+            // var hssFactory = new HSSPipeProfileFactory();
+            // var profiles = hssFactory.AllProfiles().ToList();
+            // sw.Stop();
+            // Console.WriteLine($"{sw.Elapsed} for constructing all profiles.");
+            // sw.Reset();
 
             sw.Start();
             var model = new Model();
-            model.AddElement(BuiltInMaterials.Steel, false);
-            foreach (var profile in profiles)
+
+            // model.AddElement(BuiltInMaterials.Steel, false);
+            // foreach (var profile in profiles)
+            // {
+            //     var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+            //     var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+            //     var beam = new Beam(line, profile);
+            //     model.AddElement(profile, false);
+            //     model.AddElement(beam, false);
+            //     x += 2.0;
+            //     if (x > 20.0)
+            //     {
+            //         z += 2.0;
+            //         x = 0.0;
+            //     }
+            // }
+
+            var total = 10;
+            for(var x=0; x<10; x++)
             {
-                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
-                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var beam = new Beam(line, profile);
-                model.AddElement(profile, false);
-                model.AddElement(beam, false);
-                x += 2.0;
-                if (x > 20.0)
+                for(var y=0; y<10; y++)
                 {
-                    z += 2.0;
-                    x = 0.0;
+                    for(var z=0;z<10; z++)
+                    {
+                        var mass = new Mass(Polygon.Rectangle(0.01 + x/total, 0.01 + y/total), 0.01 + z/total);
+                        model.AddElement(mass);
+                    }
                 }
             }
             sw.Stop();
-            Console.WriteLine($"{sw.Elapsed} for creating all HSS members.");
+            Console.WriteLine($"{sw.Elapsed} for creating all elements.");
+            sw.Reset();
+
+            sw.Start();
+            var json = model.ToJson();
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for serializing to JSON.");
+            sw.Reset();
+
+            sw.Start();
+            var newModel = Model.FromJson(json);
+            sw.Stop();
+            Console.WriteLine($"{sw.Elapsed} for deserializing JSON to Model.");
             sw.Reset();
             
             sw.Start();
-            model.ToGlTF(false, false);
+            newModel.ToGlTF(false, false);
             sw.Stop();
             Console.WriteLine($"{sw.Elapsed} for writing to gltf.");
         }
@@ -55,7 +81,7 @@ namespace Elements.Wasm
         public static Task<Byte[]> ModelToBytes(string modelJson)
         {
             Validator.DisableValidationOnConstruction = true;
-            
+
             var sw = new Stopwatch();
             sw.Start();
             var model = Model.FromJson(modelJson, out List<string> errors);

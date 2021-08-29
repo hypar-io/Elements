@@ -86,6 +86,35 @@ namespace Elements.Benchmarks
             _model.ToGlTF(false, true);
         }
     }
+    
+    [MemoryDiagnoser]
+    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
+    public class WasmComparison
+    {
+        private Model _model;
+        public WasmComparison()
+        {
+            var total = 10;
+            _model = new Model();
+            for(var x=0; x<10; x++)
+            {
+                for(var y=0; y<10; y++)
+                {
+                    for(var z=0;z<10; z++)
+                    {
+                        var mass = new Mass(Polygon.Rectangle(0.01 + x/total, 0.01 + y/total), 0.01 + z/total);
+                        _model.AddElement(mass);
+                    }
+                }
+            }
+        }
+        
+        [Benchmark(Description = "Write all cubes to glb.")]
+        public void WriteModelToGlb()
+        {
+            _model.ToGlTF();
+        }
+    }
 
     public class Program
     {
@@ -93,6 +122,7 @@ namespace Elements.Benchmarks
         {
             BenchmarkRunner.Run<HSS>();
             BenchmarkRunner.Run<CsgBenchmarks>();
+            BenchmarkRunner.Run<WasmComparison>();
         }
     }
 }
