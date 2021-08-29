@@ -89,7 +89,7 @@ namespace Elements.Serialization.glTF
             {
                 return null;
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             byte[] bytes;
             using (var ms = new MemoryStream())
@@ -114,7 +114,7 @@ namespace Elements.Serialization.glTF
             {
                 return "";
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
             string b64;
             using (var ms = new MemoryStream())
             using (var writer = new BinaryWriter(ms))
@@ -706,7 +706,7 @@ namespace Elements.Serialization.glTF
             }
 
             //TODO handle initializing multiple gltf buffers at once.
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
             gltf.SaveBinaryModel(mergedBuffer, path);
             return true;
         }

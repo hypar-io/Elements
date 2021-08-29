@@ -53,15 +53,16 @@ namespace Elements.Serialization.glTF
             return bufferByteArrays;
         }
 
-        internal static byte[] CombineBufferAndFixRefs(this Gltf gltf, byte[][] buffers)
+        internal static byte[] CombineBufferAndFixRefs(this Gltf gltf, List<byte[]> buffers)
         {
             if (buffers.All(b => b.Length == 0))
             {
                 return new byte[0];
             }
 
-            var fullBuffer = new List<byte>();
-            for (int i = 0; i < buffers.Length; i++)
+            var fullBuffer = new byte[buffers.Sum(b => b.Length)];
+            var offset = 0;
+            for (int i = 0; i < buffers.Count; i++)
             {
                 var buff = buffers[i];
                 if (i > 0)
@@ -70,15 +71,20 @@ namespace Elements.Serialization.glTF
                     foreach (var buffView in referringViews)
                     {
                         buffView.Buffer = 0;
-                        buffView.ByteOffset = buffView.ByteOffset + fullBuffer.Count;
+                        buffView.ByteOffset = buffView.ByteOffset + offset;
                     }
                 }
-                fullBuffer.AddRange(buff);
+
+                for (var j = 0; j < buff.Count(); j++)
+                {
+                    fullBuffer[offset + j] = buff[j];
+                }
+                offset += buff.Count();
             }
             var onlyBuffer = new glTFLoader.Schema.Buffer();
-            onlyBuffer.ByteLength = fullBuffer.Count;
+            onlyBuffer.ByteLength = fullBuffer.Length;
             gltf.Buffers = new[] { onlyBuffer };
-            return fullBuffer.ToArray(fullBuffer.Count);
+            return fullBuffer;
         }
     }
 }
