@@ -90,13 +90,13 @@ namespace Elements.Tests
                 points.Add(new Vector3(i, i, 1));
             }
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
-            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 5), out _));
-            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 4.9), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9), out _));
 
             var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
             adaptiveGrid.SubtractBox(box);
-            Assert.False(adaptiveGrid.VertexExists(new Vector3(5, 5, 1), out _));
-            Assert.True(adaptiveGrid.VertexExists(new Vector3(5, 4.9, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
         }
     }
 }

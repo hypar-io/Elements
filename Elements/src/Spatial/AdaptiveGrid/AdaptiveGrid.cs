@@ -285,7 +285,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="id">The ID of the Vertex, if a match is found.</param>
         /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns></returns>
-        public bool VertexExists(Vector3 point, out ulong id, double? tolerance = null)
+        public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = null)
         {
             var zDict = GetAddressParent(_verticesLookup, point, tolerance: tolerance);
             if (zDict == null)
@@ -302,7 +302,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private Vertex AddVertex(Vector3 point)
         {
-            if (!VertexExists(point, out var id, Tolerance))
+            if (!TryGetVertexIndex(point, out var id, Tolerance))
             {
                 var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
                 id = this._vertexId;
