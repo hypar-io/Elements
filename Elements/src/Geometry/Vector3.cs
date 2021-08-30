@@ -129,10 +129,11 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        public Vector3 Unitized()
+        /// <param name="tolerance">The amount of tolerance in the zero length comparison.</param>
+        public Vector3 Unitized(double tolerance = Vector3.EPSILON)
         {
             var length = Length();
-            if (length == 0)
+            if (length.ApproximatelyEquals(0, tolerance))
             {
                 return this;
             }
@@ -739,6 +740,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are four provided points on the same plane?
+        /// </summary>
+        public static bool AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            var ab = b - a;
+            var ac = c - a;
+            var cd = d - a;
+            var tp = ab.TripleProduct(ac, cd);
+            return Math.Abs(tp) < EPSILON;
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel
@@ -1039,7 +1052,7 @@ namespace Elements.Geometry
                 normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
-            return normal.Unitized();
+            return normal.Unitized(0);
         }
     }
 
