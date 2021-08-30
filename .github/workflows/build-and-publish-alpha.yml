@@ -20,7 +20,7 @@ jobs:
       - name: Get previous tag.
         id: version
         run: |
-          lastTag=`git tag -l --sort=-creatordate --format='%(refname:short)' | head -n 1`
+          lastTag=`git tag -l '[!v]*' --sort=-version:refname | head -n 1`
           echo "::set-output name=tag::$lastTag"
       - name: Bump if alpha.
         id: bump-with-alpha
