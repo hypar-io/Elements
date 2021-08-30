@@ -14,6 +14,9 @@
 - `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
 - `Transform.Inverted()`
+- `AdaptiveGrid`
+- `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
+- `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
 
 ### Changed
 
