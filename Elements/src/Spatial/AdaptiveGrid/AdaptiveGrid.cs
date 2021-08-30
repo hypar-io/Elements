@@ -170,11 +170,15 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var start = GetVertex(edge.StartId);
                 var end = GetVertex(edge.EndId);
-                PointOrientation startZ = OrientationTolerance(start.Point.Z, box.Min.Z, box.Max.Z);
-                PointOrientation endZ = OrientationTolerance(end.Point.Z, box.Min.Z, box.Max.Z);
+                PointOrientation startZ = Orientation(start.Point.Z, box.Min.Z, box.Max.Z);
+                PointOrientation endZ = Orientation(end.Point.Z, box.Min.Z, box.Max.Z);
                 if( startZ == endZ && startZ != PointOrientation.Inside)
                     continue;
 
+                //Z coordinates and X/Y are treated differently.
+                //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
+                //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
+                //This is because we don't want travel under or over obstacles on elevation where they start/end.
                 PointOrientation startX = OrientationTolerance(start.Point.X, box.Min.X, box.Max.X);
                 PointOrientation startY = OrientationTolerance(start.Point.Y, box.Min.Y, box.Max.Y);
                 PointOrientation endX = OrientationTolerance(end.Point.X, box.Min.X, box.Max.X);
