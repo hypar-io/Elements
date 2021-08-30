@@ -48,7 +48,7 @@ namespace Elements
                 var intersections = 0;
                 var v1 = a.Vertices[i];
                 var v2 = i == a.Vertices.Count - 1 ? a.Vertices[0] : a.Vertices[i + 1];
-                var ray = r.NextRayInPlane(v1.Average(v2), p.Normal);
+                var ray = GetTestRay(v1.Average(v2), p.Normal);
 
                 // B tests
                 for (var j = 0; j < b.Vertices.Count; j++)
@@ -91,6 +91,13 @@ namespace Elements
                     }
                 }
             }
+        }
+
+        private static Ray GetTestRay(Vector3 origin, Vector3 normal)
+        {
+            var v1 = normal.IsAlmostEqualTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis;
+            var d = v1.Cross(normal);
+            return new Ray(origin, d);
         }
 
         /// <summary>
