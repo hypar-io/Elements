@@ -147,7 +147,7 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    if (jObject.ContainsKey(_discriminator))
+                    if (jObject.TryGetValue(_discriminator, out _))
                     {
                         jObject[_discriminator] = value.GetType().FullName;
                     }

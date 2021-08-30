@@ -1247,10 +1247,10 @@ namespace Elements.Serialization.glTF
             if (geometricElement.Representation.SkipCSGUnion)
             {
                 // There's a special flag on Representation that allows you to
-                // skip CSG unions. In this case, we tesselate all solids
+                // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
                 var solids = geometricElement.GetSolids();
-                buffers = solids.Tesselate();
+                buffers = solids.Tessellate();
             }
             else
             {

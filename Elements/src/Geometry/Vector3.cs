@@ -129,14 +129,24 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        public Vector3 Unitized()
+        /// <param name="tolerance">The amount of tolerance in the zero length comparison.</param>
+        public Vector3 Unitized(double tolerance = Vector3.EPSILON)
         {
             var length = Length();
-            if (length == 0)
+            if (length.ApproximatelyEquals(0, tolerance))
             {
                 return this;
             }
             return new Vector3(X / length, Y / length, Z / length);
+        }
+
+        /// <summary>
+        /// Is this vector of unit length?
+        /// </summary>
+        /// <returns>True if the vector is of unit length, otherwise false.</returns>
+        public bool IsUnitized()
+        {
+            return this.Length().ApproximatelyEquals(1.0);
         }
 
         /// <summary>
@@ -730,6 +740,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are four provided points on the same plane?
+        /// </summary>
+        public static bool AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        {
+            var ab = b - a;
+            var ac = c - a;
+            var cd = d - a;
+            var tp = ab.TripleProduct(ac, cd);
+            return Math.Abs(tp) < EPSILON;
+        }
+
+        /// <summary>
         /// Compute basis vectors for this vector.
         /// By default, the cross product of the world Z axis and this vector
         /// are used to compute the U direction. If this vector is parallel
@@ -1012,6 +1034,25 @@ namespace Elements.Geometry
                 }
             }
             return gb;
+        }
+
+        /// <summary>
+        /// Calculate the normal of the plane containing a set of points.
+        /// </summary>
+        /// <param name="points">The points in the plane.</param>
+        /// <returns>The normal of the plane containing the points.</returns>
+        internal static Vector3 NormalFromPlanarWoundPoints(this IList<Vector3> points)
+        {
+            var normal = new Vector3();
+            for (int i = 0; i < points.Count; i++)
+            {
+                var p0 = points[i];
+                var p1 = points[(i + 1) % points.Count];
+                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
+                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
+                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
+            }
+            return normal.Unitized(0);
         }
     }
 
