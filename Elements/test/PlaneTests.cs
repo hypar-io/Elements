@@ -1,6 +1,5 @@
 using Xunit;
 using Elements.Geometry;
-using System;
 
 namespace Elements.Tests
 {

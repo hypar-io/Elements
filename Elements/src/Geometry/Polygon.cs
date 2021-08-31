@@ -614,7 +614,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The Polygon to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if every vertex of the supplied Polygon is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if any vertex of the supplied Polygon is outside this Polygon, or if the supplied Polygon is null.
+        /// Returns true if every edge of the provided polygon is on or within this polygon when compared on a shared plane. Returns false if any edge of the supplied Polygon is outside this Polygon, or if the supplied Polygon is null.
         /// </returns>
         public bool Covers(Polygon polygon)
         {
@@ -622,20 +622,55 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            if (this.IsClockWise() != polygon.IsClockWise())
+
+            // If an edge crosses without being fully overlapping, the polygon is only partially covered.
+            foreach (var edge1 in Edges())
             {
-                polygon = polygon.Reversed();
+                foreach (var edge2 in polygon.Edges())
+                {
+                    var direction1 = Line.Direction(edge1.from, edge1.to);
+                    var direction2 = Line.Direction(edge2.from, edge2.to);
+                    if (Line.Intersects2d(edge1.from, edge1.to, edge2.from, edge2.to) &&
+                        !direction1.IsParallelTo(direction2) &&
+                        !direction1.IsParallelTo(direction2.Negate()))
+                    {
+                        return false;
+                    }
+                }
             }
-            var clipper = new Clipper();
-            var solution = new List<List<IntPoint>>();
-            clipper.AddPath(this.ToClipperPath(), PolyType.ptSubject, true);
-            clipper.AddPath(polygon.ToClipperPath(), PolyType.ptClip, true);
-            clipper.Execute(ClipType.ctUnion, solution);
-            if (solution.Count != 1)
+
+            var allInside = true;
+            foreach (var vertex in polygon.Vertices)
             {
-                return false;
+                Contains(Edges(), vertex, out Containment containment);
+                if (containment == Containment.Outside)
+                {
+                    return false;
+                }
+                if (containment != Containment.Inside)
+                {
+                    allInside = false;
+                }
             }
-            return Math.Abs(solution.First().ToPolygon().Area() - this.ToClipperPath().ToPolygon().Area()) <= 0.0001;
+
+            // If all vertices of the polygon are inside this polygon then there is full coverage since no edges cross.
+            if (allInside)
+            {
+                return true;
+            }
+
+            // If some edges are partially shared (!allInside) then we must still make sure that none of this.Vertices are inside the given polygon.
+            // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
+            foreach (var vertex in Vertices)
+            {
+                Contains(polygon.Edges(), vertex, out Containment containment);
+                if (containment == Containment.Inside)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -1746,16 +1781,7 @@ namespace Elements.Geometry
         /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
         public Vector3 Normal()
         {
-            var normal = new Vector3();
-            for (int i = 0; i < Vertices.Count; i++)
-            {
-                var p0 = Vertices[i];
-                var p1 = Vertices[(i + 1) % Vertices.Count];
-                normal.X += (p0.Y - p1.Y) * (p0.Z + p1.Z);
-                normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
-                normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
-            }
-            return normal.Unitized();
+            return this.Vertices.NormalFromPlanarWoundPoints();
         }
 
         /// <summary>

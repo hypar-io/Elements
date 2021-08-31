@@ -27,7 +27,19 @@ namespace Elements
         /// <summary>
         /// 36 pt
         /// </summary>
-        PT36 = 36
+        PT36 = 36,
+        /// <summary>
+        /// 48 pt
+        /// </summary>
+        PT48 = 48,
+        /// <summary>
+        /// 60 pt
+        /// </summary>
+        PT60 = 60,
+        /// <summary>
+        /// 72 pt
+        /// </summary>
+        PT72 = 72
     }
 
     /// <summary>
@@ -41,6 +53,9 @@ namespace Elements
         private static Font _font12;
         private static Font _font24;
         private static Font _font36;
+        private static Font _font48;
+        private static Font _font60;
+        private static Font _font72;
         private static string _labelsDirectory;
         private int _dpi = 72;
         private int _maxTextureSize = 2048;
@@ -52,7 +67,7 @@ namespace Elements
         /// A collection of text data objects which specify the location,
         /// direction, content, and color of the text.
         /// </summary>
-        public IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> Texts { get; set; }
+        public IList<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)> Texts { get; set; }
 
         /// <summary>
         /// The font size of the model text.
@@ -73,11 +88,11 @@ namespace Elements
         /// <param name="fontSize">The font size of the text.</param>
         /// <param name="scale">An additional scale to apply to the size of the text.
         /// Fonts will be drawn at the real world equivalent of 72 dpi at scale=1.0.</param>
-        public ModelText(IList<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)> texts,
+        public ModelText(IList<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)> texts,
                          FontSize fontSize,
                          double scale = 10.0)
         {
-            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 direction, string text, Geometry.Color? color)>();
+            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)>();
             this.FontSize = fontSize;
             this.Scale = scale;
 
@@ -105,6 +120,9 @@ namespace Elements
                 _font12 = family.CreateFont(12);
                 _font24 = family.CreateFont(24);
                 _font36 = family.CreateFont(36);
+                _font48 = family.CreateFont(48);
+                _font60 = family.CreateFont(60);
+                _font72 = family.CreateFont(72);
             }
 
             if (_labelsDirectory == null)
@@ -143,6 +161,15 @@ namespace Elements
                 case FontSize.PT36:
                     font = _font36;
                     break;
+                case FontSize.PT48:
+                    font = _font48;
+                    break;
+                case FontSize.PT60:
+                    font = _font60;
+                    break;
+                case FontSize.PT72:
+                    font = _font72;
+                    break;
             }
             var renderOptions = new RendererOptions(font, _dpi);
 
@@ -155,8 +182,22 @@ namespace Elements
 
             _texturePath = Path.Combine(_labelsDirectory, $"{Guid.NewGuid()}.png");
 
+            var textureLookup = new Dictionary<int, (UV min, UV max, FontRectangle fontRect)>();
+
             foreach (var t in this.Texts)
             {
+                // TODO: Investigate why System.HashCode isn't available.
+                // https://stackoverflow.com/questions/892618/create-a-hashcode-of-two-numbers/16651358#16651358
+                int hash = 23;
+                hash = hash * 31 + t.text.GetHashCode();
+                hash = hash * 31 + t.color.GetHashCode();
+
+                if (textureLookup.ContainsKey(hash))
+                {
+                    this._textureAtlas.Add(textureLookup[hash]);
+                    continue;
+                }
+
                 var fontRectangle = TextMeasurer.Measure(t.text, renderOptions);
                 if (x + fontRectangle.Width > this._maxTextureSize)
                 {
@@ -182,7 +223,9 @@ namespace Elements
                 var maxU = ((x + fontRectangle.Width) / this._maxTextureSize);
                 var maxV = 1 - ((y + fontRectangle.Height) / this._maxTextureSize);
 
-                this._textureAtlas.Add((new UV(minU, minV), new UV(maxU, maxV), fontRectangle));
+                var textureData = (new UV(minU, minV), new UV(maxU, maxV), fontRectangle);
+                this._textureAtlas.Add(textureData);
+                textureLookup.Add(hash, textureData);
 
                 x += fontRectangle.Width;
             }
@@ -200,13 +243,13 @@ namespace Elements
             {
                 var t = this.Texts[i];
 
-                var td = t.direction.IsZero() ? Vector3.ZAxis : t.direction;
+                var td = t.facingDirection.IsZero() ? Vector3.ZAxis : t.facingDirection;
                 var ta = this._textureAtlas[i];
 
                 var sizeX = Units.InchesToMeters(ta.fontRect.Width / _dpi);
                 var sizeY = Units.InchesToMeters(ta.fontRect.Height / _dpi);
 
-                var tx = new Transform(t.location, td);
+                var tx = new Transform(t.location, t.lineDirection, td);
 
                 var v1 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, sizeY * this.Scale / 2));
                 var v2 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, -sizeY * this.Scale / 2));

@@ -88,6 +88,7 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Is this plane coplanar with the provided plane?
+        /// This method assumes that both planes have unit length normals.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <returns>True if the plane is coplanar, otherwise false.</returns>

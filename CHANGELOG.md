@@ -6,13 +6,22 @@
 
 - `ModelArrows`
 - `ModelText`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
+- `Vector3.IsUnitized()`
+- `Transform.Inverted()`
+- `AdaptiveGrid`
+- `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
+- `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
 
 ### Changed
 
 ### Fixed
 
 - Deduplicate catalog names during code generation.
-- Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
+  <<<<<<< HEAD
+- # Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
+- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
+  > > > > > > > 3a8c28c8c385007084e1160636a595d7faaaab55
 
 ## 0.9.2
 
