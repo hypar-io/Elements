@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Search;
@@ -42,23 +43,29 @@ namespace Elements.Geometry
         /// <summary>
         /// Find all intersections of the provided collection of lines.
         /// </summary>
-        /// <param name="segments">A collection of line segments.</param>
+        /// <param name="items">A collection of items from which intersectable
+        /// segments will be derived.</param>
+        /// <param name="getSegment">A delegate for determining the intersectable
+        /// segment for each item.</param>
         /// <param name="adjacencyList">An adjacency list which describes the
         /// connectivity of the intersection points, keyed by the index of the
         /// intersection in the result.</param>
         /// <returns>A collection of unique intersection points.</returns>
-        public static List<Vector3> Intersections(this IList<Line> segments, out AdjacencyList adjacencyList)
+        public static List<Vector3> Intersections<T>(this IList<T> items,
+                                                     Func<T, Line> getSegment,
+                                                     out AdjacencyList<T> adjacencyList)
         {
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
 
             // Sort left-most points left to right according 
             // to their X coordinate.
-            var events = segments.SelectMany((s, i) =>
+            var events = items.SelectMany((item, i) =>
             {
+                var s = getSegment(item);
                 var leftMost = s.Start.X < s.End.X ? s.Start : s.End;
                 return new[]{
-                    (s.Start, i, s.Start == leftMost),
-                    (s.End, i, s.End == leftMost)
+                    (s.Start, i, s.Start == leftMost, item),
+                    (s.End, i, s.End == leftMost, item)
                 };
             }).GroupBy(x => x.Item1).Select(g =>
             {
@@ -68,23 +75,25 @@ namespace Elements.Geometry
 
                 // Group by the event coordinate as lines may share start 
                 // or end points.
-                return new LineSweepEvent(g.Key, g.Select(e => (e.i, e.Item3)).ToList());
+                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.i, e.Item3, e.item)).ToList());
             }).ToList();
 
             events.Sort();
+
+            var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
             // Create a binary tree to contain all segments ordered by their
             // left most point's Y coordinate
             var tree = new BinaryTree<int>(new LineSweepSegmentComparer(segments));
 
-            adjacencyList = new AdjacencyList();
+            adjacencyList = new AdjacencyList<T>();
 
             // A collection containing all intersection points, which
             // will be used to find an existing point if one exists.
             var intersections = new List<Vector3>();
 
             var segmentIntersections = new Dictionary<int, List<(Vector3 location, int segmentId)>>();
-            for (var i = 0; i < segments.Count; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
                 segmentIntersections.Add(i, new List<(Vector3 location, int segmentId)>());
             }
@@ -105,7 +114,7 @@ namespace Elements.Geometry
 
                             foreach (var pre in pres)
                             {
-                                if (s.Intersects(segments[pre.Data], out Vector3 result))
+                                if (s.Intersects(segments[pre.Data], out Vector3 result, includeEnds: true))
                                 {
                                     segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
                                     segmentIntersections[pre.Data].Add((result, pre.Data));
@@ -114,7 +123,7 @@ namespace Elements.Geometry
 
                             foreach (var suc in sucs)
                             {
-                                if (s.Intersects(segments[suc.Data], out Vector3 result))
+                                if (s.Intersects(segments[suc.Data], out Vector3 result, includeEnds: true))
                                 {
                                     segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
                                     segmentIntersections[suc.Data].Add((result, suc.Data));
@@ -127,7 +136,7 @@ namespace Elements.Geometry
                         tree.FindPredecessorSuccessor(sd.segmentId, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
                         if (pre != null && suc != null)
                         {
-                            if (segments[pre.Data].Intersects(segments[suc.Data], out Vector3 result))
+                            if (segments[pre.Data].Intersects(segments[suc.Data], out Vector3 result, includeEnds: true))
                             {
                                 segmentIntersections[pre.Data].Add(((result, pre.Data)));
                                 segmentIntersections[suc.Data].Add(((result, suc.Data)));
@@ -151,6 +160,7 @@ namespace Elements.Geometry
                     prevIndex = AddVertexAtEvent(x.location,
                                                  intersections,
                                                  adjacencyList,
+                                                 items[x.segmentId],
                                                  prevIndex);
                 }
             }
@@ -158,9 +168,10 @@ namespace Elements.Geometry
             return intersections;
         }
 
-        private static int AddVertexAtEvent(Vector3 location,
+        private static int AddVertexAtEvent<T>(Vector3 location,
                                              List<Vector3> allIntersections,
-                                             AdjacencyList adj,
+                                             AdjacencyList<T> adj,
+                                             T data,
                                              int previousIndex)
         {
             // Find an existing intersection location, 
@@ -177,8 +188,14 @@ namespace Elements.Geometry
                 return newIndex;
             }
 
-            adj.AddEdgeAtEnd(previousIndex, newIndex);
-            adj.AddEdgeAtEnd(newIndex, previousIndex);
+            // TODO: Figure out why this would ever happen.
+            if (newIndex == previousIndex)
+            {
+                return newIndex;
+            }
+
+            adj.AddEdgeAtEnd(previousIndex, newIndex, data);
+            adj.AddEdgeAtEnd(newIndex, previousIndex, data);
             return newIndex;
         }
     }

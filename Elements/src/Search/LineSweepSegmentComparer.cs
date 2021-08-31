@@ -39,24 +39,43 @@ namespace Elements.Search
                 // The left-most points of the lines are equal, but the lines
                 // themselves are not neccessarily equal. Use the opposite end
                 // point for the comparison.
-                if (yLeft == y.Start)
+                // if (yLeft == y.Start)
+                // {
+                //     yLeft = y.End;
+                // }
+                // else
+                // {
+                //     yLeft = y.Start;
+                // }
+
+                var bb1 = new BBox3();
+                bb1.Extend(x.Start);
+                bb1.Extend(x.End);
+                var bb2 = new BBox3();
+                bb2.Extend(y.Start);
+                bb2.Extend(y.End);
+                if (bb1.Max.Y > bb2.Max.Y)
                 {
-                    yLeft = y.End;
+                    return -1;
                 }
-                else
+                else if (bb1.Max.Y < bb2.Max.Y)
                 {
-                    yLeft = y.Start;
+                    return 1;
                 }
+                return 0;
             }
-            if (xLeft.Y > yLeft.Y)
+            else
             {
-                return -1;
+                if (xLeft.Y > yLeft.Y)
+                {
+                    return -1;
+                }
+                else if (xLeft.Y < yLeft.Y)
+                {
+                    return 1;
+                }
+                return 0;
             }
-            else if (xLeft.Y < yLeft.Y)
-            {
-                return 1;
-            }
-            return 0;
         }
     }
 }

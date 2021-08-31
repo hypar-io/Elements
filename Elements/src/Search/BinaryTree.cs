@@ -41,8 +41,6 @@ namespace Elements.Search
 
             while (root != null)
             {
-                var compare = _comparer.Compare(root.Data, data);
-
                 if (root.Data.Equals(data))
                 {
                     if (root.Right != null)
@@ -63,15 +61,19 @@ namespace Elements.Search
                     }
                     return;
                 }
-                else if (compare < 0)
-                {
-                    predecessor = root;
-                    root = root.Right;
-                }
                 else
                 {
-                    successor = root;
-                    root = root.Left;
+                    var compare = _comparer.Compare(root.Data, data);
+                    if (compare < 0)
+                    {
+                        predecessor = root;
+                        root = root.Right;
+                    }
+                    else
+                    {
+                        successor = root;
+                        root = root.Left;
+                    }
                 }
             }
         }
