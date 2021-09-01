@@ -6,21 +6,25 @@ namespace Elements.Search
     /// <summary>
     /// A comparer used to order collections of vectors
     /// according to their "sameness" with the provided vector.
-    /// Often used to order points along a vector.
     /// </summary>
-    internal class DotComparer : IComparer<Vector3>
+    public class DirectionComparer : IComparer<Vector3>
     {
         private Vector3 _v;
 
         /// <summary>
-        /// Construct a dot comparer.
+        /// Construct a direction comparer.
         /// </summary>
         /// <param name="v">The vector against which to compare.</param>
-        public DotComparer(Vector3 v)
+        public DirectionComparer(Vector3 v)
         {
             this._v = v;
         }
 
+        /// <summary>
+        /// Compare two vectors.
+        /// </summary>
+        /// <param name="x">The first vector.</param>
+        /// <param name="y">The second vector.</param>
         public int Compare(Vector3 x, Vector3 y)
         {
             var a = _v.Dot(x);

@@ -575,9 +575,8 @@ namespace Elements.Geometry.Solids
                     }
                 }
 
-
                 var d = facePlane.Normal.Cross(p.Normal).Unitized();
-                edgeResults.Sort(new DotComparer(d));
+                edgeResults.Sort(new DirectionComparer(d));
 
                 // Draw segments through the results and add to the 
                 // half edge graph.

@@ -87,7 +87,7 @@ namespace Elements.Tests
 
             var lines = new[] { a, b, c };
 
-            var tree = new BinaryTree<int>(new LineSweepSegmentComparer(lines));
+            var tree = new BinaryTree<int>(new LeftMostPointComparer(lines));
 
             for (var i = 0; i < lines.Length; i++)
             {

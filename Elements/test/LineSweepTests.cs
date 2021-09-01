@@ -12,22 +12,6 @@ namespace Elements.Tests
 {
     public class LineSweepTests : ModelTest
     {
-        private class IntComparer : IComparer<int>
-        {
-            public int Compare(int x, int y)
-            {
-                if (x < y)
-                {
-                    return -1;
-                }
-                else if (x > y)
-                {
-                    return 1;
-                }
-                return 0;
-            }
-        }
-
         private readonly ITestOutputHelper _output;
 
         public LineSweepTests(ITestOutputHelper output)

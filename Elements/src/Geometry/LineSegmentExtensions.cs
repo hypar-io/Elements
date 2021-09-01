@@ -5,36 +5,6 @@ using Elements.Search;
 
 namespace Elements.Geometry
 {
-    internal class EventComparer : IComparer<(Vector3, int)>
-    {
-        private Vector3 _v;
-
-        /// <summary>
-        /// Construct an event comparer.
-        /// </summary>
-        /// <param name="v">The vector against which to compare.</param>
-        public EventComparer(Vector3 v)
-        {
-            this._v = v;
-        }
-
-        public int Compare((Vector3, int) x, (Vector3, int) y)
-        {
-            var a = _v.DistanceTo(x.Item1);
-            var b = _v.DistanceTo(y.Item1);
-
-            if (a > b)
-            {
-                return 1;
-            }
-            else if (a < b)
-            {
-                return -1;
-            }
-            return 0;
-        }
-    }
-
     /// <summary>
     /// Line segment extension methods.
     /// </summary>
@@ -84,7 +54,7 @@ namespace Elements.Geometry
 
             // Create a binary tree to contain all segments ordered by their
             // left most point's Y coordinate
-            var tree = new BinaryTree<int>(new LineSweepSegmentComparer(segments));
+            var tree = new BinaryTree<int>(new LeftMostPointComparer(segments));
 
             adjacencyList = new AdjacencyList<T>();
 
@@ -153,7 +123,7 @@ namespace Elements.Geometry
             // creating new vertices and edges as necessary.
             foreach (var segmentData in segmentIntersections)
             {
-                segmentIntersections[segmentData.Key].Sort(new EventComparer(segments[segmentData.Key].Start));
+                segmentIntersections[segmentData.Key].Sort(new DistanceComparer(segments[segmentData.Key].Start));
                 var prevIndex = -1;
                 foreach (var x in segmentIntersections[segmentData.Key])
                 {

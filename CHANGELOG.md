@@ -5,6 +5,8 @@
 - `Elements.Search.BinaryTree<T>`
 - `Elements.Search.BinaryTreeNode<T>`
 - `Elements.Search.AdjacencyList<T>`
+- `Elements.Search.DistanceComparer`
+- `Elements.Search.DirectionComparer`
 
 ## 0.9.3
 
