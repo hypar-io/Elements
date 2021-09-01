@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.4
+
+### Added
+
+- `Model.GetItemsOfType<T>(Dictionary<string, Model> models, string modelName)`
+
+### Changed
+
+### Fixed
+
 ## 0.9.3
 
 ### Added
