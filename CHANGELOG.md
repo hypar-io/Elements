@@ -4,6 +4,7 @@
 - `LineSegmentExtensions.Intersections(this IList<Line> lines)`
 - `Elements.Search.BinaryTree<T>`
 - `Elements.Search.BinaryTreeNode<T>`
+- `Elements.Search.AdjacencyList<T>`
 
 ## 0.9.3
 
