@@ -71,15 +71,11 @@ namespace Elements.Geometry
                             var v = p.Vertices[i];
                             var uu = basis.U.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
                             var vv = basis.V.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
-                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Pos.X,
-                                                                         v.Pos.Y,
-                                                                         v.Pos.Z,
-                                                                         n.X,
-                                                                         n.Y,
-                                                                         n.Z,
-                                                                         uu,
-                                                                         vv,
-                                                                         allVertices, mergeVertices);
+                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Pos.X, v.Pos.Y, v.Pos.Z),
+                                                                         (n.X, n.Y, n.Z),
+                                                                         (uu, vv),
+                                                                         allVertices,
+                                                                         mergeVertices);
                         }
 
                         // First triangle
@@ -114,15 +110,11 @@ namespace Elements.Geometry
                             var uu = basis.U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
                             var vv = basis.V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
 
-                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Position.X,
-                                                                         v.Position.Y,
-                                                                         v.Position.Z,
-                                                                         n.X,
-                                                                         n.Y,
-                                                                         n.Z,
-                                                                         uu,
-                                                                         vv,
-                                                                         allVertices, mergeVertices);
+                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Position.X, v.Position.Y, v.Position.Z),
+                                                                         (n.X, n.Y, n.Z),
+                                                                         (uu, vv),
+                                                                         allVertices,
+                                                                         mergeVertices);
 
                         }
 
@@ -149,17 +141,17 @@ namespace Elements.Geometry
             return basis;
         }
 
-        private static int GetOrCreateVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v,
-                                                 List<(Vector3 position, Vector3 normal, UV uv)> pts, bool mergeVertices)
+        private static int GetOrCreateVertex((double x, double y, double z) position,
+                                             (double nx, double ny, double nz) normal,
+                                             (double u, double v) uv,
+                                             List<(Vector3 position, Vector3 normal, UV uv)> pts,
+                                             bool mergeVertices)
         {
-            var n = new Vector3(nx, ny, nz);
-            var pt = new Vector3(x, y, z);
-
             if (mergeVertices)
             {
                 var index = pts.FindIndex(p =>
                 {
-                    return p.position.IsAlmostEqualTo(pt) && p.normal.AngleTo(n) < 45.0;
+                    return p.position.IsAlmostEqualTo(position) && p.normal.AngleTo(normal) < 45.0;
                 });
                 if (index != -1)
                 {
@@ -167,7 +159,7 @@ namespace Elements.Geometry
                 }
             }
 
-            pts.Add((pt, n, new UV(u, v)));
+            pts.Add((position, normal, uv));
             return pts.Count - 1;
         }
 
