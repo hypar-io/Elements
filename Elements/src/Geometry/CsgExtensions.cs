@@ -142,16 +142,19 @@ namespace Elements.Geometry
         }
 
         private static int GetOrCreateVertex((double x, double y, double z) position,
-                                             (double nx, double ny, double nz) normal,
+                                             (double x, double y, double z) normal,
                                              (double u, double v) uv,
                                              List<(Vector3 position, Vector3 normal, UV uv)> pts,
                                              bool mergeVertices)
         {
+            var pt = new Vector3(position.x, position.y, position.z);
+            var n = new Vector3(normal.x, normal.y, normal.z);
+
             if (mergeVertices)
             {
                 var index = pts.FindIndex(p =>
                 {
-                    return p.position.IsAlmostEqualTo(position) && p.normal.AngleTo(normal) < 45.0;
+                    return p.position.IsAlmostEqualTo(pt) && p.normal.AngleTo(n) < 45.0;
                 });
                 if (index != -1)
                 {
@@ -159,7 +162,7 @@ namespace Elements.Geometry
                 }
             }
 
-            pts.Add((position, normal, uv));
+            pts.Add((pt, n, uv));
             return pts.Count - 1;
         }
 
