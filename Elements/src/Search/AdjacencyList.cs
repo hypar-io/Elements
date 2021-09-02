@@ -5,7 +5,7 @@ using System.Text;
 namespace Elements.Search
 {
     /// <summary>
-    /// An undirected graph of connected node referencing data of type T.
+    /// An undirected graph of connected items of type T.
     /// </summary>
     internal class AdjacencyList<T>
     {
