@@ -278,12 +278,13 @@ namespace Elements.Geometry
                                    bool includeEnds = false)
         {
             var aSegs = this.Segments();
+            var bSegs = polygon.Segments();
+
             results = new List<(Vector3, int, int)>();
 
             for (var i = 0; i < aSegs.Length; i++)
             {
                 var a = aSegs[i];
-                var bSegs = polygon.Segments();
                 for (var j = 0; j < bSegs.Length; j++)
                 {
                     var b = bSegs[j];
@@ -880,8 +881,7 @@ namespace Elements.Geometry
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons, LocalClassification inOut = LocalClassification.Outside)
         {
-            var r = new Random();
-            var polys = this.IntersectAndClassify(r, polygons, out _, out _);
+            var polys = this.IntersectAndClassify(polygons, out _, out _);
             return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
@@ -901,8 +901,7 @@ namespace Elements.Geometry
                                        out List<(Vector3 from, Vector3 to, int? index)> trimEdges,
                                        LocalClassification inOut = LocalClassification.Outside)
         {
-            var r = new Random();
-            var polys = this.IntersectAndClassify(r, polygons, out intersections, out trimEdges);
+            var polys = this.IntersectAndClassify(polygons, out intersections, out trimEdges);
             return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
         }
 
@@ -934,7 +933,6 @@ namespace Elements.Geometry
                 if (localPlane.IsCoplanar(planes[i]))
                 {
                     continue;
-                    // throw new Exception("The trim could not be completed. One of the trimming planes was coplanar with the polygon being trimmed.");
                 }
 
                 // We intersect but don't sort, because the three-plane check
@@ -1057,8 +1055,7 @@ namespace Elements.Geometry
             return polys;
         }
 
-        internal List<(Polygon, LocalClassification)> IntersectAndClassify(Random r,
-                                                                          IList<Polygon> b,
+        internal List<(Polygon, LocalClassification)> IntersectAndClassify(IList<Polygon> b,
                                                                           out List<Vector3> intersections,
                                                                           out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
         {
@@ -1072,7 +1069,7 @@ namespace Elements.Geometry
                 // for inclusion.
                 var tf = trimFaces[0];
                 var intersectionCount = 0;
-                var ray = r.NextRay(tf.Vertices[0]);
+                var ray = Ray.GetTestRay(tf.Vertices[0], tf.Normal());
                 foreach (var bf in b)
                 {
                     if (ray.Intersects(bf, out _))

@@ -351,5 +351,12 @@ namespace Elements.Geometry
         {
             return this.Origin.Equals(other.Origin) && this.Direction.Equals(other.Direction);
         }
+
+        internal static Ray GetTestRay(Vector3 origin, Vector3 normal)
+        {
+            var v1 = normal.IsAlmostEqualTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis;
+            var d = v1.Cross(normal);
+            return new Ray(origin, d);
+        }
     }
 }

@@ -112,7 +112,6 @@ namespace Elements.Geometry.Solids
 
         private static List<(Polygon, SetClassification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
-            var r = new Random();
             var allFaces = new List<(Polygon, SetClassification)>();
 
             var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(aTransform)).ToList();
@@ -120,7 +119,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var af in aFaces)
             {
-                var classification = af.IntersectAndClassify(r, bFaces, out _, out _);
+                var classification = af.IntersectAndClassify(bFaces, out _, out _);
                 foreach (var c in classification)
                 {
                     allFaces.Add((c.Item1, c.Item2 == LocalClassification.Outside ? SetClassification.AOutsideB : SetClassification.AInsideB));
@@ -129,7 +128,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bFaces)
             {
-                var classification = bf.IntersectAndClassify(r, aFaces, out _, out _);
+                var classification = bf.IntersectAndClassify(aFaces, out _, out _);
                 foreach (var c in classification)
                 {
                     allFaces.Add((c.Item1, c.Item2 == LocalClassification.Outside ? SetClassification.BOutsideA : SetClassification.BInsideA));

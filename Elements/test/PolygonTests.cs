@@ -1814,7 +1814,7 @@ namespace Elements.Geometry.Tests
                 });
                 polys.Add(newP);
             }
-            var trims = p.IntersectAndClassify(new Random(), polys, out _, out _);
+            var trims = p.IntersectAndClassify(polys, out _, out _);
             Assert.Equal(2, trims.Count);
         }
 
