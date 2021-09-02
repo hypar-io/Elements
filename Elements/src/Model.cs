@@ -352,7 +352,10 @@ namespace Elements
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
         }
+    }
 
+    public static class ModelExtensions
+    {
         /// <summary>
         /// Get all elements of a certain type from a specific model name in a dictionary of models.
         /// </summary>
@@ -360,7 +363,7 @@ namespace Elements
         /// <param name="modelName">The name of the model</param>
         /// <typeparam name="T">The type of element we want to retrieve</typeparam>
         /// <returns></returns>
-        public static List<T> GetItemsOfType<T>(Dictionary<string, Model> models, string modelName)
+        public static List<T> AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
         {
             var elements = new List<T>();
             models.TryGetValue(modelName, out var model);

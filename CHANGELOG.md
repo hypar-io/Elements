@@ -4,7 +4,7 @@
 
 ### Added
 
-- `Model.GetItemsOfType<T>(Dictionary<string, Model> models, string modelName)`
+- `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 
 ### Changed
 
