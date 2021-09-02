@@ -177,6 +177,9 @@ namespace Elements.Search
                                     segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
                                     segmentIntersections[pre.Data].Add((result, pre.Data));
 
+                                    // TODO: Come up with a better solution for
+                                    // storing only the intersection points without
+                                    // needing Contains(). 
                                     if (!allIntersectionLocations.Contains(result))
                                     {
                                         allIntersectionLocations.Add(result);
