@@ -69,9 +69,8 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Constructors
 
         /// <summary>
-        /// Create a AdaptiveGrid.
+        /// Create an AdaptiveGrid.
         /// </summary>
-        /// <param name="minimumResolution">Minimum step between vertices in U or V direction.</param>
         /// <param name="transform">Transformation, grid is aligned with.</param>
         /// <returns></returns>
         public AdaptiveGrid(Transform transform)
@@ -172,7 +171,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var end = GetVertex(edge.EndId);
                 PointOrientation startZ = Orientation(start.Point.Z, box.Min.Z, box.Max.Z);
                 PointOrientation endZ = Orientation(end.Point.Z, box.Min.Z, box.Max.Z);
-                if( startZ == endZ && startZ != PointOrientation.Inside)
+                if (startZ == endZ && startZ != PointOrientation.Inside)
                     continue;
 
                 //Z coordinates and X/Y are treated differently.
@@ -207,7 +206,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     List<Vector3> intersections;
                     edgeLine.Intersects(box, out intersections);
                     // Intersections are sorted from the start point.
-                    if( intersections.Count == 1 )
+                    if (intersections.Count == 1)
                     {
                         //Need to find which end is inside the box. 
                         //If none - we just touched the corner
@@ -230,15 +229,15 @@ namespace Elements.Spatial.AdaptiveGrid
                             edgesToDelete.Add(edge);
                         }
                     }
-                    if( intersections.Count == 2 )
+                    if (intersections.Count == 2)
                     {
                         var v0 = AddVertex(intersections[0]);
-                        var v1 = AddVertex(intersections[1]); 
-                        if( edge.StartId != v0.Id)
+                        var v1 = AddVertex(intersections[1]);
+                        if (edge.StartId != v0.Id)
                         {
-                            AddEdge(edge.StartId, v0.Id);   
+                            AddEdge(edge.StartId, v0.Id);
                         }
-                        if( edge.EndId != v1.Id)
+                        if (edge.EndId != v1.Id)
                         {
                             AddEdge(v1.Id, edge.EndId);
                         }
@@ -270,7 +269,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-             return this._vertices.Values.ToList();
+            return this._vertices.Values.ToList();
         }
 
         /// <summary>
@@ -566,7 +565,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var addedEdges = new HashSet<Edge>();
             var edgeCandidates = new HashSet<(ulong, ulong)>();
 
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) => {
+            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+            {
                 var v0 = AddVertex(start);
                 var v1 = AddVertex(end);
                 if (v0 != v1)
@@ -611,7 +611,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private PointOrientation OrientationTolerance(double x, double start, double end)
         {
             PointOrientation po = PointOrientation.Inside;
-            if (x - start < Tolerance )
+            if (x - start < Tolerance)
                 po = PointOrientation.Low;
             else if (x - end > -Tolerance)
                 po = PointOrientation.Hi;
