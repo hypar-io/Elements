@@ -5,8 +5,7 @@ using System.Text;
 namespace Elements.Search
 {
     /// <summary>
-    /// An adjacency list.
-    /// Stores an undirected graph of connected nodes.
+    /// An undirected graph of connected nodes.
     /// </summary>
     internal class AdjacencyList<T>
     {
