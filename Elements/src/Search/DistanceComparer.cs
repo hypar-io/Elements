@@ -7,7 +7,7 @@ namespace Elements.Search
     /// A comparer used to order collections of points based on
     /// their distance from a provided point.
     /// </summary>
-    public class DistanceComparer : IComparer<(Vector3, int)>
+    public class DistanceComparer : IComparer<Vector3>
     {
         private Vector3 _v;
 
@@ -25,10 +25,10 @@ namespace Elements.Search
         /// </summary>
         /// <param name="x">The first point.</param>
         /// <param name="y">The second point.</param>
-        public int Compare((Vector3, int) x, (Vector3, int) y)
+        public int Compare(Vector3 x, Vector3 y)
         {
-            var a = _v.DistanceTo(x.Item1);
-            var b = _v.DistanceTo(y.Item1);
+            var a = _v.DistanceTo(x);
+            var b = _v.DistanceTo(y);
 
             if (a > b)
             {

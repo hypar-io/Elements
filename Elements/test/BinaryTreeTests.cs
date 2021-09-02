@@ -87,16 +87,16 @@ namespace Elements.Tests
 
             var lines = new[] { a, b, c };
 
-            var tree = new BinaryTree<int>(new LeftMostPointComparer(lines));
+            var tree = new BinaryTree<Line>(new LeftMostPointComparer());
 
             for (var i = 0; i < lines.Length; i++)
             {
-                tree.Add(i);
+                tree.Add(lines[i]);
             }
 
-            tree.FindPredecessorSuccessor(0, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
-            Assert.Equal(b, lines[pre.Data]);
-            Assert.Equal(c, lines[suc.Data]);
+            tree.FindPredecessorSuccessor(lines[0], out BinaryTreeNode<Line> pre, out BinaryTreeNode<Line> suc);
+            Assert.Equal(b, pre.Data);
+            Assert.Equal(c, suc.Data);
         }
     }
 }

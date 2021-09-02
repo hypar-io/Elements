@@ -146,12 +146,15 @@ namespace Elements.Search
 
             // Create a binary tree to contain all segments ordered by their
             // left most point's Y coordinate
-            var tree = new BinaryTree<int>(new LeftMostPointComparer(segments));
+            var tree = new BinaryTree<Line>(new LeftMostPointComparer());
 
-            var segmentIntersections = new Dictionary<int, List<(Vector3 location, int segmentId)>>();
+            var segmentIntersections = new Dictionary<Line, List<Vector3>>();
             for (var i = 0; i < items.Count; i++)
             {
-                segmentIntersections.Add(i, new List<(Vector3 location, int segmentId)>());
+                if (!segmentIntersections.ContainsKey(segments[i]))
+                {
+                    segmentIntersections.Add(segments[i], new List<Vector3>());
+                }
             }
 
             allIntersectionLocations = new List<Vector3>();
@@ -164,18 +167,18 @@ namespace Elements.Search
 
                     if (sd.isLeftMostPoint)
                     {
-                        segmentIntersections[sd.segmentId].Add((e.Point, sd.segmentId));
+                        segmentIntersections[sd.data].Add(e.Point);
 
-                        if (tree.Add(sd.segmentId))
+                        if (tree.Add(sd.data))
                         {
-                            tree.FindPredecessorSuccessors(sd.segmentId, out List<BinaryTreeNode<int>> pres, out List<BinaryTreeNode<int>> sucs);
+                            tree.FindPredecessorSuccessors(sd.data, out List<BinaryTreeNode<Line>> pres, out List<BinaryTreeNode<Line>> sucs);
 
                             foreach (var pre in pres)
                             {
-                                if (s.Intersects(segments[pre.Data], out Vector3 result, includeEnds: true))
+                                if (s.Intersects(pre.Data, out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
-                                    segmentIntersections[pre.Data].Add((result, pre.Data));
+                                    segmentIntersections[sd.data].Add(result);
+                                    segmentIntersections[pre.Data].Add(result);
 
                                     // TODO: Come up with a better solution for
                                     // storing only the intersection points without
@@ -189,10 +192,10 @@ namespace Elements.Search
 
                             foreach (var suc in sucs)
                             {
-                                if (s.Intersects(segments[suc.Data], out Vector3 result, includeEnds: true))
+                                if (s.Intersects(suc.Data, out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.segmentId].Add((result, sd.segmentId));
-                                    segmentIntersections[suc.Data].Add((result, suc.Data));
+                                    segmentIntersections[sd.data].Add(result);
+                                    segmentIntersections[suc.Data].Add(result);
 
                                     if (!allIntersectionLocations.Contains(result))
                                     {
@@ -204,21 +207,21 @@ namespace Elements.Search
                     }
                     else
                     {
-                        tree.FindPredecessorSuccessor(sd.segmentId, out BinaryTreeNode<int> pre, out BinaryTreeNode<int> suc);
+                        tree.FindPredecessorSuccessor(sd.data, out BinaryTreeNode<Line> pre, out BinaryTreeNode<Line> suc);
                         if (pre != null && suc != null)
                         {
-                            if (segments[pre.Data].Intersects(segments[suc.Data], out Vector3 result, includeEnds: true))
+                            if (pre.Data.Intersects(suc.Data, out Vector3 result, includeEnds: true))
                             {
-                                segmentIntersections[pre.Data].Add(((result, pre.Data)));
-                                segmentIntersections[suc.Data].Add(((result, suc.Data)));
+                                segmentIntersections[pre.Data].Add(result);
+                                segmentIntersections[suc.Data].Add(result);
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
                                 }
                             }
                         }
-                        tree.Remove(sd.segmentId);
-                        segmentIntersections[sd.segmentId].Add((e.Point, sd.segmentId));
+                        tree.Remove(sd.data);
+                        segmentIntersections[sd.data].Add(e.Point);
                     }
                 }
             }
@@ -233,7 +236,8 @@ namespace Elements.Search
             var adjacencyList = new AdjacencyList<Line>();
             foreach (var segmentData in segmentIntersections)
             {
-                segmentIntersections[segmentData.Key].Sort(new DistanceComparer(segments[segmentData.Key].Start));
+                var line = segmentData.Key;
+                segmentIntersections[segmentData.Key].Sort(new DistanceComparer(line.Start));
                 var prevIndex = -1;
                 var count = segmentIntersections[segmentData.Key].Count;
                 for (var i = 0; i < count; i++)
@@ -242,10 +246,10 @@ namespace Elements.Search
 
                     // We only add points as intersections if they're not at
                     // the start or end 
-                    prevIndex = AddVertexAtEvent(x.location,
+                    prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
-                                                 segments[x.segmentId],
+                                                 line,
                                                  prevIndex,
                                                  twoWayEdges);
                 }

@@ -7,32 +7,17 @@ namespace Elements.Search
     /// Comparer used during line sweeps to sort segments by the Y value of
     /// their left-most point.
     /// </summary>
-    internal class LeftMostPointComparer : IComparer<int>
+    internal class LeftMostPointComparer : IComparer<Line>
     {
-        private IList<Line> _segments;
-
-        /// <summary>
-        /// Create a line sweep segment comparer.
-        /// </summary>
-        /// <param name="segments">A collection of segments which will
-        /// be referenced by their indices internally.</param>
-        public LeftMostPointComparer(IList<Line> segments)
-        {
-            _segments = segments;
-        }
-
         /// <summary>
         /// Compare two lines.
         /// </summary>
         /// <param name="a">The index of the first line.</param>
         /// <param name="b">The index of the second line.</param>
-        public int Compare(int a, int b)
+        public int Compare(Line a, Line b)
         {
-            var x = _segments[a];
-            var y = _segments[b];
-
-            var xLeft = x.Start.X <= x.End.X ? x.Start : x.End;
-            var yLeft = y.Start.X <= y.End.X ? y.Start : y.End;
+            var xLeft = a.Start.X <= a.End.X ? a.Start : a.End;
+            var yLeft = b.Start.X <= b.End.X ? b.Start : b.End;
 
             if (xLeft == yLeft)
             {
@@ -40,11 +25,11 @@ namespace Elements.Search
                 // themselves are not neccessarily equal. Use the lines' 
                 // bounding boxes to get the max points.
                 var bb1 = new BBox3();
-                bb1.Extend(x.Start);
-                bb1.Extend(x.End);
+                bb1.Extend(a.Start);
+                bb1.Extend(a.End);
                 var bb2 = new BBox3();
-                bb2.Extend(y.Start);
-                bb2.Extend(y.End);
+                bb2.Extend(b.Start);
+                bb2.Extend(b.End);
                 if (bb1.Max.Y > bb2.Max.Y)
                 {
                     return -1;
