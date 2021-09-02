@@ -1,17 +1,18 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Elements.Geometry;
 
 namespace Elements.Search
 {
     /// <summary>
     /// An adjacency list.
-    /// Stores an undirected graph of connected.
+    /// Stores an undirected graph of connected nodes.
     /// </summary>
-    public class AdjacencyList<T>
+    internal class AdjacencyList<T>
     {
-        List<LinkedList<(int, T)>> _adjacencyList;
+        List<LinkedList<(int, T)>> _nodes;
 
         /// <summary>
         /// Create an adjacency list with the size of the provided collection.
@@ -19,11 +20,11 @@ namespace Elements.Search
         /// <param name="length">The length of the list.</param>
         public AdjacencyList(int length)
         {
-            _adjacencyList = new List<LinkedList<(int, T)>>(length);
+            _nodes = new List<LinkedList<(int, T)>>(length);
 
-            for (int i = 0; i < _adjacencyList.Count; ++i)
+            for (int i = 0; i < _nodes.Count; ++i)
             {
-                _adjacencyList[i] = new LinkedList<(int, T)>();
+                _nodes[i] = new LinkedList<(int, T)>();
             }
         }
 
@@ -32,7 +33,7 @@ namespace Elements.Search
         /// </summary>
         public AdjacencyList()
         {
-            _adjacencyList = new List<LinkedList<(int, T)>>();
+            _nodes = new List<LinkedList<(int, T)>>();
         }
 
         /// <summary>
@@ -41,8 +42,8 @@ namespace Elements.Search
         /// <returns>The index of the vertex.</returns>
         public int AddVertex()
         {
-            _adjacencyList.Add(new LinkedList<(int, T)>());
-            var index = _adjacencyList.Count - 1;
+            _nodes.Add(new LinkedList<(int, T)>());
+            var index = _nodes.Count - 1;
             return index;
         }
 
@@ -59,9 +60,9 @@ namespace Elements.Search
             {
                 throw new Exception("What the fuck happened here?");
             }
-            if (!_adjacencyList[start].Contains((end, data)))
+            if (!_nodes[start].Contains((end, data)))
             {
-                _adjacencyList[start].AddLast((end, data));
+                _nodes[start].AddLast((end, data));
             }
         }
 
@@ -74,7 +75,7 @@ namespace Elements.Search
         /// <param name="data">The data associated with the edge.</param>
         public void AddEdgeAtBeginning(int start, int end, T data)
         {
-            _adjacencyList[start].AddFirst((end, data));
+            _nodes[start].AddFirst((end, data));
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace Elements.Search
         /// </summary>
         public int GetNumberOfVertices()
         {
-            return _adjacencyList.Count;
+            return _nodes.Count;
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace Elements.Search
         {
             get
             {
-                var edgeList = new LinkedList<(int, T)>(_adjacencyList[index]);
+                var edgeList = new LinkedList<(int, T)>(_nodes[index]);
                 return edgeList;
             }
         }
@@ -108,7 +109,7 @@ namespace Elements.Search
 
             var sb = new StringBuilder();
 
-            foreach (LinkedList<(int, T)> list in _adjacencyList)
+            foreach (LinkedList<(int, T)> list in _nodes)
             {
                 sb.Append("[" + i + "] -> ");
 
@@ -132,40 +133,51 @@ namespace Elements.Search
         /// <returns>True if the edge could be removed, otherwise false.</returns>
         public bool TryRemoveEdge(int start, int end, T data)
         {
-            return _adjacencyList[start].Remove((end, data));
+            return _nodes[start].Remove((end, data));
         }
-    }
 
-    /// <summary>
-    /// Adjacency list extensions.
-    /// </summary>
-    public static class AdjacencyListExtensions
-    {
         /// <summary>
-        /// Draw the adjacency list.
+        /// Get leaf nodes.
         /// </summary>
-        /// <param name="adj"></param>
-        /// <param name="pts"></param>
-        /// <param name="color"></param>
         /// <returns></returns>
-        public static ModelArrows ToModelArrows<T>(this AdjacencyList<T> adj, IList<Vector3> pts, Color? color)
+        public List<int> Leaves()
         {
-            var r = new Random();
-
-            var arrowData = new List<(Vector3 origin, Vector3 direction, double scale, Color? color)>();
-
-            for (var i = 0; i < adj.GetNumberOfVertices(); i++)
+            var result = new List<int>();
+            for (var i = 0; i < this._nodes.Count; i++)
             {
-                var start = pts[i];
-                foreach (var end in adj[i])
+                if (IsLeaf(i))
                 {
-                    var d = (pts[end.Item1] - start).Unitized();
-                    var l = pts[end.Item1].DistanceTo(start);
-                    arrowData.Add((start, d, l, color));
+                    result.Add(i);
                 }
             }
+            return result;
+        }
 
-            return new ModelArrows(arrowData, arrowAngle: 75);
+        /// <summary>
+        /// Get all branch nodes.
+        /// </summary>
+        /// <returns></returns>
+        public List<int> Branches()
+        {
+            var result = new List<int>();
+            for (var i = 0; i < this._nodes.Count; i++)
+            {
+                if (!IsLeaf(i))
+                {
+                    result.Add(i);
+                }
+            }
+            return result;
+        }
+
+        private bool IsLeaf(int i)
+        {
+            return this._nodes[i].Count == 0;
+        }
+
+        public int NodeCount()
+        {
+            return this._nodes.Count;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Elements.Search
     /// A generic binary tree node.
     /// </summary>
     /// <typeparam name="T">The type of the data referenced by the node.</typeparam>
-    public class BinaryTreeNode<T>
+    internal class BinaryTreeNode<T>
     {
         /// <summary>
         /// The left child.

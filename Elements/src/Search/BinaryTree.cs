@@ -8,7 +8,7 @@ namespace Elements.Search
     /// A custom comparer can be used to provide the addition logic for the tree.
     /// </summary>
     /// <typeparam name="T">The type of data referenced by the tree's nodes.</typeparam>
-    public class BinaryTree<T>
+    internal class BinaryTree<T>
     {
         private IComparer<T> _comparer;
 

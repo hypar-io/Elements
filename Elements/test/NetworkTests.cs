@@ -10,15 +10,39 @@ using System.IO;
 
 namespace Elements.Tests
 {
-    public class LineSweepTests : ModelTest
+    public class NetworkTests : ModelTest
     {
         private readonly ITestOutputHelper _output;
 
-        public LineSweepTests(ITestOutputHelper output)
+        public NetworkTests(ITestOutputHelper output)
         {
             this._output = output;
             this.GenerateIfc = false;
             this.GenerateJson = false;
+        }
+
+        [Fact]
+        public void BranchNodes()
+        {
+            var network = new Network<object>();
+            var a = network.AddVertex();
+            var b = network.AddVertex();
+            var c = network.AddVertex();
+            network.AddEdgeOneWay(a, b, null);
+            network.AddEdgeOneWay(b, c, null);
+            Assert.Equal(2, network.BranchNodes().Count);
+        }
+
+        [Fact]
+        public void LeafNodes()
+        {
+            var network = new Network<object>();
+            var a = network.AddVertex();
+            var b = network.AddVertex();
+            var c = network.AddVertex();
+            network.AddEdgeOneWay(a, b, null);
+            network.AddEdgeOneWay(b, c, null);
+            Assert.Equal(1, network.LeafNodes().Count);
         }
 
         [Fact]
@@ -30,18 +54,18 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(0, -2), new Vector3(0, 2));
 
-            var pts = new[] { a, b }.Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            var arrows = adj.ToModelArrows(pts, Colors.Red);
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b }, (l) => { return l; }, out List<Vector3> allNodeLocations, out _);
+            var arrows = network.ToModelArrows(allNodeLocations, Colors.Red);
             this.Model.AddElement(arrows);
 
             var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
-            for (var i = 0; i < pts.Count; i++)
+            for (var i = 0; i < allNodeLocations.Count; i++)
             {
-                textData.Add((pts[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', adj[i].Select(x => x.Item1))}", Colors.Black));
+                textData.Add((allNodeLocations[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', network.EdgesAt(i).Select(x => x.Item1))}", Colors.Black));
             }
             this.Model.AddElement(new ModelText(textData, FontSize.PT24));
 
-            Assert.Equal(5, pts.Count);
+            Assert.Equal(5, allNodeLocations.Count);
         }
 
         [Fact]
@@ -49,8 +73,8 @@ namespace Elements.Tests
         {
             var a = new Line(new Vector3(-2, 0, 1), new Vector3(2, 0, 1));
             var b = new Line(new Vector3(0, -2, 1), new Vector3(0, 2, 1));
-            var pts = new[] { a, b }.Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(5, pts.Count);
+            var pts = new[] { a, b }.Intersections();
+            Assert.Equal(1, pts.Count);
         }
 
         [Fact]
@@ -58,8 +82,8 @@ namespace Elements.Tests
         {
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = a;
-            var pts = new[] { a, b }.Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(2, pts.Count);
+            var pts = new[] { a, b }.Intersections();
+            Assert.Equal(0, pts.Count);
         }
 
         [Fact]
@@ -67,8 +91,8 @@ namespace Elements.Tests
         {
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(2, 0), new Vector3(-2, 0));
-            var pts = new[] { a, b }.Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(2, pts.Count);
+            var pts = new[] { a, b }.Intersections();
+            Assert.Equal(0, pts.Count);
         }
 
         [Fact]
@@ -76,8 +100,8 @@ namespace Elements.Tests
         {
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(-1, 0), new Vector3(1, 0)); ;
-            var pts = new[] { a, b }.Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(4, pts.Count);
+            var pts = new[] { a, b }.Intersections();
+            Assert.Equal(0, pts.Count);
         }
 
         [Fact]
@@ -96,16 +120,16 @@ namespace Elements.Tests
             lines.Add(b);
             lines.Add(c);
 
-            var pts = lines.Intersections((line) => { return line; }, out AdjacencyList<Line> adj);
-            var arrows = adj.ToModelArrows(pts, Colors.Red);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out List<Vector3> allNodeLocations, out _);
+            var arrows = network.ToModelArrows(allNodeLocations, Colors.Red);
             this.Model.AddElement(arrows);
 
-            Assert.Equal(18, pts.Count);
+            Assert.Equal(18, allNodeLocations.Count);
 
             var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
-            for (var i = 0; i < pts.Count; i++)
+            for (var i = 0; i < allNodeLocations.Count; i++)
             {
-                textData.Add((pts[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', adj[i].Select(x => x.Item1))}", Colors.Black));
+                textData.Add((allNodeLocations[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', network.EdgesAt(i).Select(x => x.Item1))}", Colors.Black));
             }
             this.Model.AddElement(new ModelText(textData, FontSize.PT24));
         }
@@ -121,8 +145,8 @@ namespace Elements.Tests
             var b = new Line(new Vector3(-0.1, -2), new Vector3(-0.1, 2));
             lines.Add(b);
 
-            var pts = lines.Intersections((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(7, pts.Count);
+            var pts = lines.Intersections();
+            Assert.Equal(3, pts.Count);
         }
 
         [Fact]
@@ -143,12 +167,13 @@ namespace Elements.Tests
 
             var sw = new Stopwatch();
             sw.Start();
-            var pts = lines.Intersections((line) => { return line; }, out AdjacencyList<Line> adj);
+            var pts = lines.Intersections();
             sw.Stop();
             _output.WriteLine($"{sw.ElapsedMilliseconds}ms for finding {pts.Count()} intersections.");
             sw.Reset();
 
-            var arrows = adj.ToModelArrows(pts, Colors.Red);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out List<Vector3> allNodeLocations, out _);
+            var arrows = network.ToModelArrows(allNodeLocations, Colors.Red);
             this.Model.AddElement(arrows);
         }
 
@@ -163,8 +188,11 @@ namespace Elements.Tests
             var wallGroups = model.AllElementsOfType<WallByProfile>().GroupBy(w => w.Centerline.Start.Z);
             foreach (var group in wallGroups)
             {
-                var pts = group.Distinct().ToList().Intersections<WallByProfile>((wall) => { return wall.Centerline; }, out AdjacencyList<WallByProfile> adj);
-                this.Model.AddElement(adj.ToModelArrows(pts, Colors.Black));
+                var network = Network<WallByProfile>.FromSegmentableItems(group.ToList(),
+                                                                          (wall) => { return wall.Centerline; },
+                                                                          out List<Vector3> allNodeLocations,
+                                                                          out _);
+                this.Model.AddElement(network.ToModelArrows(allNodeLocations, Colors.Black));
             }
         }
 
@@ -172,8 +200,8 @@ namespace Elements.Tests
         public void PerpendicularLines()
         {
             var p = Polygon.Rectangle(5, 5);
-            var pts = p.Segments().Intersections<Line>((line) => { return line; }, out AdjacencyList<Line> adj);
-            Assert.Equal(4, pts.Count);
+            var pts = p.Segments().Intersections();
+            Assert.Equal(1, pts.Count);
         }
     }
 }
