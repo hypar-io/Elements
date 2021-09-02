@@ -222,23 +222,24 @@ namespace Elements.Search
 
         private BinaryTreeNode<T> Find(T value, BinaryTreeNode<T> parent)
         {
-            if (parent != null)
+            if (parent == null)
             {
-                var compare = _comparer.Compare(value, parent.Data);
-                if (compare == 0)
-                {
-                    return parent;
-                }
-                if (compare < 0)
-                {
-                    return Find(value, parent.Left);
-                }
-                else
-                {
-                    return Find(value, parent.Right);
-                }
+                return null;
             }
-            return null;
+
+            var compare = _comparer.Compare(value, parent.Data);
+            if (compare == 0)
+            {
+                return parent;
+            }
+            if (compare < 0)
+            {
+                return Find(value, parent.Left);
+            }
+            else
+            {
+                return Find(value, parent.Right);
+            }
         }
 
         /// <summary>

@@ -50,7 +50,6 @@ namespace Elements.Tests
         {
             this.Name = nameof(CrossingLines);
 
-            // Lines with coincident left-most points, and a vertical line.
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(0, -2), new Vector3(0, 2));
 
