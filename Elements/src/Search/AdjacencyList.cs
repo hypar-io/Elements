@@ -20,7 +20,7 @@ namespace Elements.Search
         {
             _nodes = new List<LinkedList<(int, T)>>(length);
 
-            for (int i = 0; i < _nodes.Count; ++i)
+            for (int i = 0; i < _nodes.Count; i++)
             {
                 _nodes[i] = new LinkedList<(int, T)>();
             }
@@ -116,7 +116,7 @@ namespace Elements.Search
                     sb.Append($"{edge.Item1} -> ");
                 }
 
-                ++i;
+                i++;
                 sb.AppendLine();
             }
             return sb.ToString();
