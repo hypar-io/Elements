@@ -66,10 +66,14 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("The current normal vector cannot be of length 0");
             }
-            if (normalVectorOfFrame.Unitized() != Vector3.ZAxis
-                && normalVectorOfFrame.Unitized().Negate() != Vector3.ZAxis)
+            if (normalVectorOfFrame.Unitized() == Vector3.ZAxis
+                 || normalVectorOfFrame.Unitized().Negate() == Vector3.ZAxis)
             {
-
+                var tPoints = points.Select(p => new Vector3(p.X, p.Y));
+                return FromPoints(tPoints);
+            }
+            else
+            {
                 var transform = new Transform();
                 transform.Rotate(normalVectorOfFrame.Cross(Vector3.ZAxis).Unitized(), normalVectorOfFrame.AngleTo(Vector3.ZAxis));
                 var tPoints = points.Select(p => transform.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
@@ -83,18 +87,6 @@ namespace Elements.Geometry
 
                 return threeDHull.TransformedPolygon(new Transform().Moved(movement));
             }
-            else if (
-                 normalVectorOfFrame.Unitized() == Vector3.ZAxis
-                 || normalVectorOfFrame.Unitized().Negate() == Vector3.ZAxis)
-            {
-                var tPoints = points.Select(p => new Vector3(p.X, p.Y));
-                return FromPoints(tPoints);
-            }
-            else
-            {
-                return FromPoints(points);
-            }
-
         }
 
         /// <summary>
