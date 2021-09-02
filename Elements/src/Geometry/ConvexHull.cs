@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// Calculate a polygon from the 2d convex hull of a collection of points.
         /// Adapted from https://rosettacode.org/wiki/Convex_hull#C.23
         /// </summary>
-        /// <param name="points">A collection of points</param>
+        /// <param name="points">a collection of points</param>
         /// <returns>A polygon representing the convex hull of the provided points.</returns>
         public static Polygon FromPoints(IEnumerable<Vector3> points)
         {
@@ -50,6 +50,51 @@ namespace Elements.Geometry
 
             hullPoints.RemoveAt(hullPoints.Count - 1);
             return new Polygon(hullPoints);
+        }
+
+        /// <summary>
+        /// Get the 2D polygon convex hull of the points, allowing the points
+        /// to be 3D and finding the polygon that frames those points when
+        /// looking in the direction of the provided normal vector.
+        /// </summary>
+        /// <param name="points">A collection of points</param>
+        /// <param name="normalVectorOfFrame">The direction of the frames perspective.</param>
+        /// <returns>The polygonal frame that will encompass the points, roughly centered on the points themselves.</returns>
+        public static Polygon Frame3DPoints(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)
+        {
+            if (normalVectorOfFrame.Length().ApproximatelyEquals(0))
+            {
+                throw new ArgumentException("The current normal vector cannot be of length 0");
+            }
+            if (normalVectorOfFrame.Unitized() != Vector3.ZAxis
+                && normalVectorOfFrame.Unitized().Negate() != Vector3.ZAxis)
+            {
+
+                var transform = new Transform();
+                transform.Rotate(normalVectorOfFrame.Cross(Vector3.ZAxis).Unitized(), normalVectorOfFrame.AngleTo(Vector3.ZAxis));
+                var tPoints = points.Select(p => transform.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
+
+                var twoDHull = FromPoints(tPoints);
+
+                var threeDHull = twoDHull.TransformedPolygon(transform.Inverted());
+                var center = points.Average();
+                var planPoint = center.Project(threeDHull.Plane());
+                var movement = center - planPoint;
+
+                return threeDHull.TransformedPolygon(new Transform().Moved(movement));
+            }
+            else if (
+                 normalVectorOfFrame.Unitized() == Vector3.ZAxis
+                 || normalVectorOfFrame.Unitized().Negate() == Vector3.ZAxis)
+            {
+                var tPoints = points.Select(p => new Vector3(p.X, p.Y));
+                return FromPoints(tPoints);
+            }
+            else
+            {
+                return FromPoints(points);
+            }
+
         }
 
         /// <summary>
