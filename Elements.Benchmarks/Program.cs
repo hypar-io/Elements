@@ -6,11 +6,11 @@ using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using Elements.Serialization.glTF;
+using Elements.Validators;
 
 namespace Elements.Benchmarks
 {
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
     public class CsgBenchmarks
     {
         private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
@@ -47,10 +47,16 @@ namespace Elements.Benchmarks
     }
 
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
     public class HSS
     {
         Model _model;
+        string _json;
+
+        [Params(true, false)]
+        public bool SkipValidation { get; set; }
+
+        [Params(true, false)]
+        public bool Merge { get; set; }
 
         public HSS()
         {
@@ -72,18 +78,41 @@ namespace Elements.Benchmarks
                     x = 0.0;
                 }
             }
+
+            _json = _model.ToJson();
         }
 
-        [Benchmark(Description = "Draw all beams without merge.")]
-        public void DrawAllBeamsWithoutMerge()
+        [Benchmark(Description = "Draw all beams.")]
+        public void DrawAllBeams()
         {
-            _model.ToGlTF(false, false);
+            _model.ToGlTF(false, this.Merge);
         }
 
-        [Benchmark(Description = "Draw all beams with merge.")]
-        public void DrawAllBeamsWithMerge()
+        [Benchmark(Description = "Serialize")]
+        public void SerializeToJSON()
         {
-            _model.ToGlTF(false, true);
+            _model.ToJson();
+        }
+
+        [IterationSetup]
+        public void Setup()
+        {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
+        }
+
+        [IterationCleanup]
+        public void Cleanup()
+        {
+            Validator.DisableValidationOnConstruction = false;
+        }
+
+        [Benchmark(Description = "Deserialize from JSON.")]
+        public void DeserializeFromJSON()
+        {
+            Model.FromJson(_json);
         }
     }
 
@@ -91,8 +120,7 @@ namespace Elements.Benchmarks
     {
         public static void Main(string[] args)
         {
-            BenchmarkRunner.Run<HSS>();
-            BenchmarkRunner.Run<CsgBenchmarks>();
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
         }
     }
 }
