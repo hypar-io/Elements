@@ -39,20 +39,20 @@ namespace Elements.Tests
 
             var flatHull = ConvexHull.FromPoints(L.Vertices);
 
-            var jitteredHull = ConvexHull.Frame3DPoints(jitteredVertices, Vector3.ZAxis);
+            var jitteredHull = ConvexHull.FromPointsInPlane(jitteredVertices, Vector3.ZAxis);
             Assert.True(jitteredHull.IsAlmostEqualTo(flatHull), "Jittered flat hull doesn't match original hull.");
 
             // Simple transform allows simple polygon comparison for Assert.
             var simpleTransform = new Transform(Vector3.Origin, new Vector3(1, 0, 0).Unitized(), 0);
             var liftedPoints = jitteredVertices.Select(p => simpleTransform.OfPoint(p));
-            var liftedHull = ConvexHull.Frame3DPoints(liftedPoints, Vector3.XAxis);
+            var liftedHull = ConvexHull.FromPointsInPlane(liftedPoints, Vector3.XAxis);
             Assert.True(liftedHull.IsAlmostEqualTo(flatHull.TransformedPolygon(simpleTransform)), "The lifted hull doesn't match the transformed flat hull.");
 
             // Complex transform can be used for visual inspection of the resulting frame.
             var complexTransform = new Transform(Vector3.Origin, new Vector3(1, 2, 0).Unitized(), 0);
             var complexLiftedPoints = jitteredVertices.Select(p => complexTransform.OfPoint(p));
-            var complexLiftedHull = ConvexHull.Frame3DPoints(complexLiftedPoints, Vector3.XAxis);
-            var complexliftedHull2 = ConvexHull.Frame3DPoints(complexLiftedPoints, new Vector3(1, 1, 0)); ;
+            var complexLiftedHull = ConvexHull.FromPointsInPlane(complexLiftedPoints, Vector3.XAxis);
+            var complexliftedHull2 = ConvexHull.FromPointsInPlane(complexLiftedPoints, new Vector3(1, 1, 0)); ;
 
             this.Model.AddElement(L);
             this.Model.AddElement(new ModelCurve(flatHull, new Material("aqua", Colors.Aqua)));

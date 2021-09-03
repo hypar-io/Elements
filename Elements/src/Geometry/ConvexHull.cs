@@ -56,23 +56,23 @@ namespace Elements.Geometry
         /// Compute the 2D convex hull of a set of 3D points in a plane.
         /// </summary>
         /// <param name="points">A collection of points</param>
-        /// <param name="normalVectorOfFrame">The normal direction of the plane in which to compute the hull.</param>
+        /// <param name="planeNormal">The normal direction of the plane in which to compute the hull.</param>
         /// <returns>A polygon representing the convex hull, projected along the normal vector to the average depth of the provided points.</returns>
-        public static Polygon Frame3DPoints(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)
+        public static Polygon FromPointsInPlane(IEnumerable<Vector3> points, Vector3 planeNormal)
         {
-            if (normalVectorOfFrame.Length().ApproximatelyEquals(0))
+            if (planeNormal.Length().ApproximatelyEquals(0))
             {
                 throw new ArgumentException("The current normal vector cannot be of length 0");
             }
-            if (normalVectorOfFrame.Unitized() == Vector3.ZAxis
-                 || normalVectorOfFrame.Unitized().Negate() == Vector3.ZAxis)
+            if (planeNormal.Unitized() == Vector3.ZAxis
+                 || planeNormal.Unitized().Negate() == Vector3.ZAxis)
             {
                 return FromPoints(points);
             }
             else
             {
                 var center3D = points.Average();
-                var toOrientation = new Transform(center3D, normalVectorOfFrame);
+                var toOrientation = new Transform(center3D, planeNormal);
                 var fromOrientation = toOrientation.Inverted();
                 var tPoints = points.Select(p => fromOrientation.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
                 var twoDHull = FromPoints(tPoints);
