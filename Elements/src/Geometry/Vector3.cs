@@ -163,13 +163,42 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute the cross product of this vector and a vector composed
+        /// of the provided components.
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="z">Z</param>
+        public Vector3 Cross(double x, double y, double z)
+        {
+            var xx = Y * z - Z * y;
+            var yy = Z * x - X * z;
+            var zz = X * y - Y * x;
+
+            return new Vector3(xx, yy, zz);
+        }
+
+        /// <summary>
         /// Compute the dot product of this vector and v.
         /// </summary>
         /// <param name="v">The vector with which to compute the dot product.</param>
-        /// <returns>The dot product.</returns>
+        /// <returns>A value between 1 and -1.</returns>
         public double Dot(Vector3 v)
         {
             return v.X * this.X + v.Y * this.Y + v.Z * this.Z;
+        }
+
+        /// <summary>
+        /// Compute the dot product of this vector and a vector composed
+        /// of the provided components.
+        /// </summary>
+        /// <param name="x">X</param>
+        /// <param name="y">Y</param>
+        /// <param name="z">Z</param>
+        /// <returns>A value between 1 and -1.</returns>
+        public double Dot(double x, double y, double z)
+        {
+            return x * this.X + y * this.Y + z * this.Z;
         }
 
         /// <summary>
