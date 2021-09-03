@@ -530,6 +530,44 @@ namespace Elements.Tests
             }
         }
 
+        [Fact]
+        public void CoplanarSolidFacesUnionCorrectly()
+        {
+            this.Name = nameof(CoplanarSolidFacesUnionCorrectly);
+
+            var s1 = new Solid();
+            s1.AddFace(Polygon.Rectangle(2, 2));
+            var s2 = new Solid();
+            s2.AddFace(Polygon.Rectangle(2, 2).TransformedPolygon(new Transform(new Vector3(1, 1))));
+            var result = Solid.Union(s1, null, s2, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+            this.Model.AddElements(DrawEdges(result, null));
+
+            Assert.Equal(1, result.Faces.Count);
+
+            var t = new Transform(new Vector3(5, 0));
+            var result1 = Solid.Difference(s1, t, s2, t);
+            var rep1 = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement1 = new GeometricElement(representation: rep1);
+            this.Model.AddElement(solidElement1);
+            this.Model.AddElements(DrawEdges(result1, null));
+
+            Assert.Equal(1, result1.Faces.Count);
+
+            var t1 = new Transform(new Vector3(10, 0));
+            var result2 = Solid.Intersection(s1, t1, s2, t1);
+            var rep2 = new Representation(new List<SolidOperation>() { new ConstructedSolid(result2) });
+            var solidElement2 = new GeometricElement(representation: rep2);
+            this.Model.AddElement(solidElement2);
+            this.Model.AddElements(DrawEdges(result2, null));
+
+            Assert.Equal(1, result2.Faces.Count);
+
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }

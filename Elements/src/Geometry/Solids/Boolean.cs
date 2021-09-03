@@ -27,6 +27,15 @@ namespace Elements.Geometry.Solids
                 s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
+            var result = MergeCoplanarFaces(allFaces, Union);
+            if (result != null)
+            {
+                foreach (var p in result)
+                {
+                    s.AddFace(p, mergeVerticesAndEdges: true);
+                }
+            }
+
             return s;
         }
 
@@ -64,6 +73,15 @@ namespace Elements.Geometry.Solids
                 s.AddFace(p.Reversed(), mergeVerticesAndEdges: true);
             }
 
+            var result = MergeCoplanarFaces(allFaces, Difference);
+            if (result != null)
+            {
+                foreach (var p in result)
+                {
+                    s.AddFace(p, mergeVerticesAndEdges: true);
+                }
+            }
+
             return s;
         }
 
@@ -96,6 +114,15 @@ namespace Elements.Geometry.Solids
                 s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
+            var result = MergeCoplanarFaces(allFaces, Intersect);
+            if (result != null)
+            {
+                foreach (var p in result)
+                {
+                    s.AddFace(p, mergeVerticesAndEdges: true);
+                }
+            }
+
             return s;
         }
 
@@ -114,28 +141,96 @@ namespace Elements.Geometry.Solids
         {
             var allFaces = new List<(Polygon, SetClassification)>();
 
+            // TODO: Don't create polygons. Operate on the loops and edges directly.
             var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(aTransform)).ToList();
             var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(bTransform)).ToList();
 
             foreach (var af in aFaces)
             {
-                var classification = af.IntersectAndClassify(bFaces, out _, out _);
-                foreach (var c in classification)
-                {
-                    allFaces.Add((c.Item1, c.Item2 == LocalClassification.Outside ? SetClassification.AOutsideB : SetClassification.AInsideB));
-                }
+                var classifications = af.IntersectAndClassify(bFaces,
+                                                              out _,
+                                                              out _,
+                                                              SetClassification.AOutsideB,
+                                                              SetClassification.AInsideB,
+                                                              SetClassification.ACoplanarB);
+                allFaces.AddRange(classifications);
             }
 
             foreach (var bf in bFaces)
             {
-                var classification = bf.IntersectAndClassify(aFaces, out _, out _);
-                foreach (var c in classification)
-                {
-                    allFaces.Add((c.Item1, c.Item2 == LocalClassification.Outside ? SetClassification.BOutsideA : SetClassification.BInsideA));
-                }
+                var classifications = bf.IntersectAndClassify(aFaces,
+                                                              out _,
+                                                              out _,
+                                                              SetClassification.BOutsideA,
+                                                              SetClassification.BInsideA,
+                                                              SetClassification.BCoplanarA);
+                allFaces.AddRange(classifications);
             }
 
             return allFaces;
+        }
+
+        private static List<Polygon> MergeCoplanarFaces(List<(Polygon, SetClassification)> allFaces,
+                                                        Func<Polygon, Polygon, List<Polygon>> merge)
+        {
+            var aCoplanar = allFaces.Where(f => f.Item2 == SetClassification.ACoplanarB).GroupBy(x => x.Item1.Normal());
+            var bCoplanar = allFaces.Where(f => f.Item2 == SetClassification.BCoplanarA).GroupBy(x => x.Item1.Normal());
+
+            foreach (var aCoplanarFaceSet in aCoplanar)
+            {
+                foreach (var aFace in aCoplanarFaceSet)
+                {
+                    var bCoplanarFaceSet = bCoplanar.FirstOrDefault(x => x.Key == aCoplanarFaceSet.Key);
+
+                    if (bCoplanarFaceSet != null)
+                    {
+                        foreach (var bFace in bCoplanarFaceSet)
+                        {
+                            return merge(aFace.Item1, bFace.Item1);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private static List<Polygon> Union(Polygon a, Polygon b)
+        {
+            var segments = SetOperations.ClassifySegments2d(a, b, ((Vector3, Vector3, SetClassification classification) e) =>
+                                            {
+                                                return e.classification == SetClassification.AOutsideB || e.classification == SetClassification.BOutsideA;
+                                            });
+            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            return graph.Polygonize();
+        }
+
+        private static List<Polygon> Difference(Polygon a, Polygon b)
+        {
+            var segments = SetOperations.ClassifySegments2d(a, b, ((Vector3, Vector3, SetClassification classification) e) =>
+                                            {
+                                                return e.classification == SetClassification.AOutsideB || e.classification == SetClassification.BInsideA;
+                                            });
+            for (var i = 0; i < segments.Count; i++)
+            {
+                if (segments[i].classification == SetClassification.BInsideA)
+                {
+                    // Flip b inside a segments so that we get a graph
+                    // that is correctly wound.
+                    segments[i] = (segments[i].to, segments[i].from, SetClassification.BInsideA);
+                }
+            }
+            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            return graph.Polygonize();
+        }
+
+        private static List<Polygon> Intersect(Polygon a, Polygon b)
+        {
+            var segments = SetOperations.ClassifySegments2d(a, b, ((Vector3, Vector3, SetClassification classification) e) =>
+                                            {
+                                                return e.classification == SetClassification.AInsideB || e.classification == SetClassification.BInsideA;
+                                            });
+            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            return graph.Polygonize();
         }
     }
 }

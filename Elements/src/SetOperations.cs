@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Spatial;
 
 namespace Elements
@@ -15,7 +16,9 @@ namespace Elements
         /// in the other polygon, splitting segments, and classify 
         /// all the resulting segments.
         /// </summary>
-        public static List<(Vector3 from, Vector3 to, SetClassification classification)> ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)
+        public static List<(Vector3 from, Vector3 to, SetClassification classification)> ClassifySegments2d(Polygon a,
+                                                                                                            Polygon b,
+                                                                                                            Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)
         {
             var ap = a.Plane();
             var bp = b.Plane();
@@ -24,7 +27,7 @@ namespace Elements
                 throw new System.Exception("Set classification failed. The polygons are not coplanar.");
             }
 
-            var classifications = new List<(Vector3 from, Vector3 Topography, SetClassification classification)>();
+            var classifications = new List<(Vector3 from, Vector3 to, SetClassification classification)>();
 
             ClassifySet(ap, a, b, Elements.SetClassification.AInsideB, Elements.SetClassification.AOutsideB, classifications, filter);
             ClassifySet(ap, b, a, Elements.SetClassification.BInsideA, Elements.SetClassification.BOutsideA, classifications, filter);
@@ -40,13 +43,14 @@ namespace Elements
                                         List<(Vector3 from, Vector3 to, SetClassification classification)> classifications,
                                         Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter)
         {
+            var r = new Random();
             // A tests
             for (var i = 0; i < a.Vertices.Count; i++)
             {
                 var intersections = 0;
                 var v1 = a.Vertices[i];
                 var v2 = i == a.Vertices.Count - 1 ? a.Vertices[0] : a.Vertices[i + 1];
-                var ray = Ray.GetTestRay(v1.Average(v2), p.Normal);
+                var ray = r.NextRayInPlane(v1.Average(v2), p.Normal);
 
                 // B tests
                 for (var j = 0; j < b.Vertices.Count; j++)
@@ -100,42 +104,30 @@ namespace Elements
         public static HalfEdgeGraph2d BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set,
                                                  SetClassification shared)
         {
-            var vertices = new List<Vector3>();
-            var edgesPerVertex = new List<List<(int from, int to, int? tag)>>();
-
-            // Fill vertex collection
-            foreach (var edge in set)
-            {
-                if (!vertices.Contains(edge.from))
-                {
-                    vertices.Add(edge.from);
-                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
-                }
-
-                if (!vertices.Contains(edge.to))
-                {
-                    vertices.Add(edge.to);
-                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
-                }
-            }
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
 
             // Create edges
             foreach (var edge in set)
             {
-                var l = edgesPerVertex[vertices.IndexOf(edge.from)];
-                l.Add((vertices.IndexOf(edge.from), vertices.IndexOf(edge.to), null));
-
-                if (edge.classification == shared)
+                var a = Solid.FindOrCreateGraphVertex(edge.from, graphVertices, graphEdges);
+                var b = Solid.FindOrCreateGraphVertex(edge.to, graphVertices, graphEdges);
+                var e1 = (a, b, 0);
+                var e2 = (b, a, 0);
+                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
                 {
-                    var l1 = edgesPerVertex[vertices.IndexOf(edge.to)];
-                    l1.Add((vertices.IndexOf(edge.to), vertices.IndexOf(edge.from), null));
+                    continue;
+                }
+                else
+                {
+                    graphEdges[a].Add(e1);
                 }
             }
 
             var heg = new HalfEdgeGraph2d()
             {
-                Vertices = vertices,
-                EdgesPerVertex = edgesPerVertex
+                Vertices = graphVertices,
+                EdgesPerVertex = graphEdges
             };
 
             return heg;

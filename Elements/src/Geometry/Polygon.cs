@@ -881,8 +881,21 @@ namespace Elements.Geometry
         /// <returns>A collection of polygons resulting from the trim or null if no trim occurred.</returns>
         public List<Polygon> TrimmedTo(IList<Polygon> polygons, LocalClassification inOut = LocalClassification.Outside)
         {
-            var polys = this.IntersectAndClassify(polygons, out _, out _);
-            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
+            var polys = this.IntersectAndClassify(polygons,
+                                                  out _,
+                                                  out _);
+            return polys.Where(p =>
+            {
+                switch (inOut)
+                {
+                    case LocalClassification.Outside:
+                        return p.Item2 == SetClassification.AOutsideB;
+                    case LocalClassification.Inside:
+                        return p.Item2 == SetClassification.AInsideB;
+                    default:
+                        return false;
+                }
+            }).Select(p => p.Item1).ToList();
         }
 
         /// <summary>
@@ -901,8 +914,21 @@ namespace Elements.Geometry
                                        out List<(Vector3 from, Vector3 to, int? index)> trimEdges,
                                        LocalClassification inOut = LocalClassification.Outside)
         {
-            var polys = this.IntersectAndClassify(polygons, out intersections, out trimEdges);
-            return polys.Where(p => p.Item2 == inOut).Select(p => p.Item1).ToList();
+            var polys = this.IntersectAndClassify(polygons,
+                                                  out intersections,
+                                                  out trimEdges);
+            return polys.Where(p =>
+            {
+                switch (inOut)
+                {
+                    case LocalClassification.Outside:
+                        return p.Item2 == SetClassification.AOutsideB;
+                    case LocalClassification.Inside:
+                        return p.Item2 == SetClassification.AInsideB;
+                    default:
+                        return false;
+                }
+            }).Select(p => p.Item1).ToList();
         }
 
         private List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
@@ -932,40 +958,50 @@ namespace Elements.Geometry
 
                 if (localPlane.IsCoplanar(planes[i]))
                 {
-                    continue;
-                }
-
-                // We intersect but don't sort, because the three-plane check
-                // below may result in new intersections which will need to
-                // be sorted as well.
-                if (this.Intersects3d(polygon, out List<Vector3> result, false))
-                {
-                    splitPoly.Split(result);
-                    results[i].AddRange(result);
-                }
-
-                // Intersect this plane with all other planes.
-                // This handles the case where two trim polygons intersect
-                // or meet at a T.
-                for (var j = 0; j < polygons.Count; j++)
-                {
-                    if (i == j)
+                    if (this.Intersects2d(polygon, out List<(Vector3 result, int aSegumentIndices, int bSegmentIndices)> planarIntersectionResults, false))
                     {
-                        continue;
+                        // Split the polygon so that we have extra vertices,
+                        // but don't add results. We don't want to insert edges
+                        // because boolean operations on the coplanar faces will
+                        // happen later.
+                        var result = planarIntersectionResults.Select(r => r.result).ToList();
+                        splitPoly.Split(result);
                     }
-                    var inner = polygons[j];
-
-                    // Do a three plane intersection amongst all the planes.
-                    if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
+                }
+                else
+                {
+                    // We intersect but don't sort, because the three-plane check
+                    // below may result in new intersections which will need to
+                    // be sorted as well.
+                    if (this.Intersects3d(polygon, out List<Vector3> result, false))
                     {
-                        // Test containment in the current splitting polygon.
-                        if (polygon.Contains3D(xsect)
-                            && inner.Contains3D(xsect)
-                            && this.Contains3D(xsect))
+                        splitPoly.Split(result);
+                        results[i].AddRange(result);
+                    }
+
+                    // Intersect this plane with all other planes.
+                    // This handles the case where two trim polygons intersect
+                    // or meet at a T.
+                    for (var j = 0; j < polygons.Count; j++)
+                    {
+                        if (i == j)
                         {
-                            if (!results[i].Contains(xsect))
+                            continue;
+                        }
+                        var inner = polygons[j];
+
+                        // Do a three plane intersection amongst all the planes.
+                        if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
+                        {
+                            // Test containment in the current splitting polygon.
+                            if (polygon.Contains3D(xsect)
+                                && inner.Contains3D(xsect)
+                                && this.Contains3D(xsect))
                             {
-                                results[i].Add(xsect);
+                                if (!results[i].Contains(xsect))
+                                {
+                                    results[i].Add(xsect);
+                                }
                             }
                         }
                     }
@@ -977,7 +1013,7 @@ namespace Elements.Geometry
             for (var i = 0; i < polygons.Count; i++)
             {
                 var polygon = polygons[i];
-                var d = this.Normal().Cross(planes[i].Normal).Unitized();
+                var d = localPlane.Normal.Cross(planes[i].Normal).Unitized();
                 if (results[i].Count > 0)
                 {
                     results[i].Sort(new DotComparer(d));
@@ -1055,48 +1091,71 @@ namespace Elements.Geometry
             return polys;
         }
 
-        internal List<(Polygon, LocalClassification)> IntersectAndClassify(IList<Polygon> b,
-                                                                          out List<Vector3> intersections,
-                                                                          out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trimPolygons">A collection of polygons to trim against.</param>
+        /// <param name="outsideClassification">The outside classification.</param>
+        /// <param name="insideClassification">The inside classification.</param>
+        /// <param name="coplanarClassification">The coplanar classification.</param>
+        /// <param name="intersections">A collection of intersection locations.</param>
+        /// <param name="trimEdges">A collection of trim edge data.</param>
+        /// <returns>A collection of polygons and their local classification.</returns>
+        internal List<(Polygon, SetClassification)> IntersectAndClassify(IList<Polygon> trimPolygons,
+                                                                         out List<Vector3> intersections,
+                                                                         out List<(Vector3 from, Vector3 to, int? parentPolygonIndex)> trimEdges,
+                                                                         SetClassification outsideClassification = SetClassification.AOutsideB,
+                                                                         SetClassification insideClassification = SetClassification.AInsideB,
+                                                                         SetClassification coplanarClassification = SetClassification.ACoplanarB)
         {
-            var classifications = new List<(Polygon, LocalClassification)>();
+            var classifications = new List<(Polygon, SetClassification)>();
 
-            var trimFaces = this.IntersectOneToMany(b, out intersections, out trimEdges);
+            var splitFaces = this.IntersectOneToMany(trimPolygons, out intersections, out trimEdges);
 
-            if (trimFaces.Count == 1)
+            if (splitFaces.Count == 1)
             {
                 // If there's only one face, we ray cast to test
                 // for inclusion.
-                var tf = trimFaces[0];
+                var splitFace = splitFaces[0];
+                var splitFacePlane = splitFace.Plane();
                 var intersectionCount = 0;
-                var ray = Ray.GetTestRay(tf.Vertices[0], tf.Normal());
-                foreach (var bf in b)
+                var ray = Ray.GetTestRayInPlane(splitFace.Vertices[0], splitFace.Normal());
+                foreach (var trimPoly in trimPolygons)
                 {
-                    if (ray.Intersects(bf, out _))
+                    if (splitFacePlane.IsCoplanar(trimPoly.Plane()))
+                    {
+                        classifications.Add((splitFace, coplanarClassification));
+                        return classifications;
+                    }
+
+                    if (ray.Intersects(trimPoly, out _))
                     {
                         intersectionCount++;
                     }
                 }
-                classifications.Add((tf, intersectionCount % 2 == 0 ? LocalClassification.Outside : LocalClassification.Inside));
+                classifications.Add((splitFace, intersectionCount % 2 == 0 ? outsideClassification : insideClassification));
             }
             else
             {
-                var compareEdges = trimEdges.Where(e => e.index != -1).ToList();
+                var compareEdges = trimEdges.Where(e => e.parentPolygonIndex != -1).ToList();
 
                 var n = this.Normal();
 
-                foreach (var tf in trimFaces)
+                foreach (var splitFace in splitFaces)
                 {
-                    var edges = tf.Edges().ToList();
+                    var splitFaceEdges = splitFace.Edges();
                     var inside = 0;
                     var outside = 0;
 
                     // Every edge needs to be checked against its trimming
                     // poly to ensure that a face is "inside" or "outside" all
                     // of the polys that trim the polygon.
-                    foreach (var edge in edges)
+                    foreach (var splitFaceEdge in splitFaceEdges)
                     {
-                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == edge.from && e.to == edge.to) || (e.from == edge.to && e.to == edge.from));
+                        // Find the matching trim edge.
+                        // TODO: Find a way to organize this data so that we
+                        // don't have to do a comparison.
+                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == splitFaceEdge.from && e.to == splitFaceEdge.to) || (e.from == splitFaceEdge.to && e.to == splitFaceEdge.from));
 
                         // In the case where an edge is an edge of the original
                         // polygon, and isn't trimmed by another polygon, there
@@ -1105,28 +1164,38 @@ namespace Elements.Geometry
                         {
                             continue;
                         }
-                        var trimPolyIndex = compareEdge.index.Value;
-                        var comparePoly = b[trimPolyIndex];
-                        var bn = comparePoly.Normal();
-                        var d = (edge.from - edge.to).Unitized();
-                        var dot = bn.Dot(n.Cross(d));
-                        if (dot <= 0.0)
+                        var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
+                        var trimPoly = trimPolygons[trimPolyIndex];
+                        var bn = trimPoly.Normal();
+
+                        // Don't classify if the faces are coplanar.
+                        if (bn.IsAlmostEqualTo(n))
                         {
-                            outside++;
+                            classifications.Add((splitFace, coplanarClassification));
+                            break;
                         }
                         else
                         {
-                            inside++;
+                            var d = (splitFaceEdge.from - splitFaceEdge.to).Unitized();
+                            var dot = bn.Dot(n.Cross(d));
+                            if (dot <= 0.0)
+                            {
+                                outside++;
+                            }
+                            else
+                            {
+                                inside++;
+                            }
                         }
                     }
 
                     if (outside > 0 && inside == 0)
                     {
-                        classifications.Add((tf, LocalClassification.Outside));
+                        classifications.Add((splitFace, outsideClassification));
                     }
                     else if (inside > 0 && outside == 0)
                     {
-                        classifications.Add((tf, LocalClassification.Inside));
+                        classifications.Add((splitFace, insideClassification));
                     }
                 }
             }

@@ -6,20 +6,32 @@ namespace Elements
     public enum SetClassification
     {
         /// <summary>
-        /// A segments inside B.
+        /// A segments inside B
         /// </summary>
         AInsideB,
         /// <summary>
-        /// A segments outside B.
+        /// A segments outside B
         /// </summary>
         AOutsideB,
         /// <summary>
-        /// B segments inside A.
+        /// B segments inside A
         /// </summary>
         BInsideA,
         /// <summary>
-        /// B segments outside A.
+        /// B segments outside A
         /// </summary>
-        BOutsideA
+        BOutsideA,
+        /// <summary>
+        /// A coplanar with B
+        /// </summary>
+        ACoplanarB,
+        /// <summary>
+        /// B coplanar with A
+        /// </summary>
+        BCoplanarA,
+        /// <summary>
+        /// None
+        /// </summary>
+        None,
     }
 }

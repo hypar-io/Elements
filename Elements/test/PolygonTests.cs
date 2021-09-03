@@ -1814,7 +1814,11 @@ namespace Elements.Geometry.Tests
                 });
                 polys.Add(newP);
             }
-            var trims = p.IntersectAndClassify(polys, out _, out _);
+            var trims = p.IntersectAndClassify(polys,
+                                               out _,
+                                               out _,
+                                               SetClassification.AOutsideB,
+                                               SetClassification.AInsideB);
             Assert.Equal(2, trims.Count);
         }
 

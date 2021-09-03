@@ -638,7 +638,7 @@ namespace Elements.Geometry.Solids
             }
         }
 
-        private int FindOrCreateGraphVertex(Vector3 v, List<Vector3> vertices, List<List<(int from, int to, int? tag)>> edges)
+        internal static int FindOrCreateGraphVertex(Vector3 v, List<Vector3> vertices, List<List<(int from, int to, int? tag)>> edges)
         {
             var a = vertices.IndexOf(v);
             if (a == -1)
