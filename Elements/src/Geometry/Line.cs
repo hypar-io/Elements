@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,35 @@ namespace Elements.Geometry
     /// </example>
     public partial class Line : Curve, IEquatable<Line>
     {
+        /// <summary>The start of the line.</summary>
+        [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Start { get; set; }
+
+        /// <summary>The end of the line.</summary>
+        [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 End { get; set; }
+
+        /// <summary>
+        /// Create a line.
+        /// </summary>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Line(Vector3 @start, Vector3 @end)
+            : base()
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (start.IsAlmostEqualTo(end))
+                {
+                    throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
+                }
+            }
+
+            this.Start = @start;
+            this.End = @end;
+        }
+
         /// <summary>
         /// Calculate the length of the line.
         /// </summary>

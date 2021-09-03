@@ -3,8 +3,24 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Geometry
 {
-    public partial class Representation
+    /// <summary>The representation of an element.</summary>
+    public class Representation
     {
+        /// <summary>A collection of solid operations.</summary>
+        [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
+
+        /// <summary>
+        /// Construct a representation.
+        /// </summary>
+        /// <param name="solidOperations">A collection of solid operations.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Representation(IList<SolidOperation> @solidOperations)
+        {
+            this.SolidOperations = @solidOperations;
+        }
+
         /// <summary>
         /// Construct a Representation from SolidOperations. This is a convenience constructor
         /// that can be used like this: `new Representation(new Extrude(...))`

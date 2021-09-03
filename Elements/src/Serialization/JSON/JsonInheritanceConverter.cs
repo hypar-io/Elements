@@ -2,14 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";

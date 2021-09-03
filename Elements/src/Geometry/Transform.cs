@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A right-handed coordinate with +z up.
+    /// A right-handed coordinate system with +Z up.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/TransformTests.cs?name=example)]
@@ -35,6 +35,21 @@ namespace Elements.Geometry
         /// </summary>
         [JsonIgnore]
         public Vector3 ZAxis => this.Matrix.ZAxis;
+
+        /// <summary>The transform's matrix.</summary>
+        [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Matrix Matrix { get; set; } = new Matrix();
+
+        /// <summary>
+        /// Construct a transform.
+        /// </summary>
+        /// <param name="matrix"></param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Transform(Matrix @matrix)
+        {
+            this.Matrix = @matrix;
+        }
 
         /// <summary>
         /// Create the identity transform.

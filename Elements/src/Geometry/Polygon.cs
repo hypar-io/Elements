@@ -1,6 +1,7 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
+using Elements.Validators;
 using LibTessDotNet.Double;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,28 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Polygon(IList<Vector3> @vertices) : base(vertices)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (!vertices.AreCoplanar())
+                {
+                    throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+                }
+
+                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
+                var segments = Polygon.SegmentsInternal(this.Vertices);
+                Polyline.CheckSegmentLengthAndThrow(segments);
+                var t = this.Vertices.ToTransform();
+                Polyline.CheckSelfIntersectionAndThrow(t, segments);
+            }
+        }
+
         /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>

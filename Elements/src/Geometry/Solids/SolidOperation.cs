@@ -1,4 +1,3 @@
-using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
@@ -6,7 +5,8 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// The base class for all operations which create solids.
     /// </summary>
-    public abstract partial class SolidOperation
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public abstract class SolidOperation
     {
         internal Solid _solid;
 
@@ -24,6 +24,36 @@ namespace Elements.Geometry.Solids
         public Solid Solid
         {
             get { return _solid; }
+        }
+
+        /// <summary>Is the solid operation a void operation?</summary>
+        [Newtonsoft.Json.JsonProperty("IsVoid", Required = Newtonsoft.Json.Required.Always)]
+        public bool IsVoid { get; set; } = false;
+
+        /// <summary>
+        /// Construct a solid operation.
+        /// </summary>
+        /// <param name="isVoid"></param>
+        [Newtonsoft.Json.JsonConstructor]
+        public SolidOperation(bool @isVoid)
+        {
+            this.IsVoid = @isVoid;
+        }
+
+        /// <summary>
+        /// An event raised when a property is changed.
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Raise a property change event.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        protected virtual void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -6,8 +6,34 @@ namespace Elements.Geometry
     /// <summary>
     /// An axis-aligned bounding box.
     /// </summary>
-    public partial struct BBox3
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public struct BBox3
     {
+        /// <summary>The minimum extent of the bounding box.</summary>
+        [Newtonsoft.Json.JsonProperty("Min", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Vector3 Min { get; set; }
+
+        /// <summary>The maximum extent of the bounding box.</summary>
+        [Newtonsoft.Json.JsonProperty("Max", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Vector3 Max { get; set; }
+
+        /// <summary>
+        /// Create a bounding box.
+        /// </summary>
+        /// <param name="min">The minimum point.</param>
+        /// <param name="max">The maximum point.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public BBox3(Vector3 @min, Vector3 @max)
+        {
+            if (min.X == max.X || min.Y == max.Y)
+            {
+                throw new System.ArgumentException("The bounding box will have zero volume, please ensure that the Min and Max don't have any identical vertex values.");
+            }
+
+            this.Min = @min;
+            this.Max = @max;
+        }
+
         /// <summary>
         /// Construct a bounding box from an array of points.
         /// </summary>
