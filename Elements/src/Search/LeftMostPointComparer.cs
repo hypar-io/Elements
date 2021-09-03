@@ -16,10 +16,10 @@ namespace Elements.Search
         /// <param name="b">The index of the second line.</param>
         public int Compare(Line a, Line b)
         {
-            var xLeft = a.Start.X <= a.End.X ? a.Start : a.End;
-            var yLeft = b.Start.X <= b.End.X ? b.Start : b.End;
+            var aLeft = a.Start.X <= a.End.X ? a.Start : a.End;
+            var bLeft = b.Start.X <= b.End.X ? b.Start : b.End;
 
-            if (xLeft == yLeft)
+            if (aLeft == bLeft)
             {
                 // The left-most points of the lines are equal, but the lines
                 // themselves are not neccessarily equal. Use the lines' 
@@ -42,11 +42,11 @@ namespace Elements.Search
             }
             else
             {
-                if (xLeft.Y > yLeft.Y)
+                if (aLeft.Y > bLeft.Y)
                 {
                     return -1;
                 }
-                else if (xLeft.Y < yLeft.Y)
+                else if (aLeft.Y < bLeft.Y)
                 {
                     return 1;
                 }
