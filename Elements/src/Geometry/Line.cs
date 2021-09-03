@@ -146,6 +146,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are the two lines almost equal?
+        /// </summary>
+        public bool IsAlmostEqualTo(Line other, bool directionDependent, double tolerance = Vector3.EPSILON)
+        {
+            return (Start.IsAlmostEqualTo(other.Start, tolerance) && End.IsAlmostEqualTo(other.End, tolerance))
+                    || (!directionDependent
+                        && (Start.IsAlmostEqualTo(other.End, tolerance) && End.IsAlmostEqualTo(other.Start, tolerance)));
+        }
+
+        /// <summary>
         /// Intersect this line with the specified plane
         /// </summary>
         /// <param name="p">The plane.</param>
@@ -378,7 +388,7 @@ namespace Elements.Geometry
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > Vector3.EPSILON && 
+            if (Math.Abs(tMax - tMin) > Vector3.EPSILON &&
                 (infinite || (tMax > -Vector3.EPSILON && tMax < 1 + Vector3.EPSILON)))
             {
                 results.Add(Start + d * tMax);
