@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.4
+- `LineSegmentExtensions.Intersections(this IList<Line> lines)`
+- `Elements.Search.DistanceComparer`
+- `Elements.Search.DirectionComparer`
+- `Elements.Search.Network<T>`
+
 ## 0.9.3
 
 ### Added
@@ -26,6 +32,7 @@
 - `AdaptiveGrid`
 - `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
 - `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
+- `ConvexHull.FromPointsInPlane(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)`
 
 ### Changed
 

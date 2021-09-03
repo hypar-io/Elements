@@ -1,5 +1,5 @@
 using ClipperLib;
-using Elements.Geometry.Interfaces;
+using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
 using System;
@@ -354,7 +354,7 @@ namespace Elements.Geometry
 
             if (sort)
             {
-                result.Sort(new DotComparer(d));
+                result.Sort(new DirectionComparer(d));
             }
 
             return result.Count > 0;
@@ -415,7 +415,7 @@ namespace Elements.Geometry
             if (sort)
             {
                 // Order the intersections along the direction.
-                results.Sort(new DotComparer(d));
+                results.Sort(new DirectionComparer(d));
             }
 
             return results.Count > 0;
@@ -1016,7 +1016,7 @@ namespace Elements.Geometry
                 var d = localPlane.Normal.Cross(planes[i].Normal).Unitized();
                 if (results[i].Count > 0)
                 {
-                    results[i].Sort(new DotComparer(d));
+                    results[i].Sort(new DirectionComparer(d));
                 }
             }
 
