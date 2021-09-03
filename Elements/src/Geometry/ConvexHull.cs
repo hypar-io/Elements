@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// Calculate a polygon from the 2d convex hull of a collection of points.
         /// Adapted from https://rosettacode.org/wiki/Convex_hull#C.23
         /// </summary>
-        /// <param name="points">a collection of points</param>
+        /// <param name="points">A collection of points</param>
         /// <returns>A polygon representing the convex hull of the provided points.</returns>
         public static Polygon FromPoints(IEnumerable<Vector3> points)
         {
@@ -21,7 +21,7 @@ namespace Elements.Geometry
             {
                 return null;
             }
-            var pointsSorted = points.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
+            var pointsSorted = points.Select(p => new Vector3(p.X, p.Y)).OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
             List<Vector3> hullPoints = new List<Vector3>();
 
             Func<Vector3, Vector3, Vector3, bool> Ccw = (Vector3 a, Vector3 b, Vector3 c) => ((b.X - a.X) * (c.Y - a.Y)) > ((b.Y - a.Y) * (c.X - a.X));
@@ -53,13 +53,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the 2D polygon convex hull of the points, allowing the points
-        /// to be 3D and finding the polygon that frames those points when
-        /// looking in the direction of the provided normal vector.
+        /// Compute the 2D convex hull of a set of 3D points in a plane.
         /// </summary>
         /// <param name="points">A collection of points</param>
-        /// <param name="normalVectorOfFrame">The direction of the frames perspective.</param>
-        /// <returns>The polygonal frame that will encompass the points, roughly centered on the points themselves.</returns>
+        /// <param name="normalVectorOfFrame">The normal direction of the plane in which to compute the hull.</param>
+        /// <returns>A polygon representing the convex hull, projected along the normal vector to the average depth of the provided points.</returns>
         public static Polygon Frame3DPoints(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)
         {
             if (normalVectorOfFrame.Length().ApproximatelyEquals(0))
@@ -69,8 +67,7 @@ namespace Elements.Geometry
             if (normalVectorOfFrame.Unitized() == Vector3.ZAxis
                  || normalVectorOfFrame.Unitized().Negate() == Vector3.ZAxis)
             {
-                var tPoints = points.Select(p => new Vector3(p.X, p.Y));
-                return FromPoints(tPoints);
+                return FromPoints(points);
             }
             else
             {
