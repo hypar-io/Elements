@@ -74,18 +74,12 @@ namespace Elements.Geometry
             }
             else
             {
-                var transform = new Transform();
-                transform.Rotate(normalVectorOfFrame.Cross(Vector3.ZAxis).Unitized(), normalVectorOfFrame.AngleTo(Vector3.ZAxis));
-                var tPoints = points.Select(p => transform.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
-
+                var center3D = points.Average();
+                var toOrientation = new Transform(center3D, normalVectorOfFrame);
+                var fromOrientation = toOrientation.Inverted();
+                var tPoints = points.Select(p => fromOrientation.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
                 var twoDHull = FromPoints(tPoints);
-
-                var threeDHull = twoDHull.TransformedPolygon(transform.Inverted());
-                var center = points.Average();
-                var planPoint = center.Project(threeDHull.Plane());
-                var movement = center - planPoint;
-
-                return threeDHull.TransformedPolygon(new Transform().Moved(movement));
+                return twoDHull.TransformedPolygon(toOrientation);
             }
         }
 
