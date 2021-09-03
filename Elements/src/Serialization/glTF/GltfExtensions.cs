@@ -12,7 +12,6 @@ using Elements.Geometry.Interfaces;
 using SixLabors.ImageSharp.Processing;
 using Elements.Collections.Generics;
 using System.Net;
-using Elements.Interfaces;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
@@ -80,10 +79,12 @@ namespace Elements.Serialization.glTF
         /// Serialize the model to a byte array.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
+        /// <param name="drawEdges">Should edges of the model be drawn?</param>
+        /// <param name="mergeVertices">Should vertices be merged in the resulting output?</param>
         /// <returns>A byte array representing the model.</returns>
-        public static byte[] ToGlTF(this Model model)
+        public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, false);
+            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return null;
@@ -105,10 +106,10 @@ namespace Elements.Serialization.glTF
         /// Serialize the model to a base64 encoded string.
         /// </summary>
         /// <returns>A Base64 string representing the model.</returns>
-        public static string ToBase64String(this Model model, bool drawEdges = false)
+        public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
             var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF(model, out var buffers, drawEdges);
+            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return "";
@@ -696,9 +697,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, bool drawEdges = false)
+        private static bool SaveGlb(Model model, string path, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, drawEdges);
+            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -711,9 +712,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, bool drawEdges = false)
+        private static bool SaveGltf(Model model, string path, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out List<byte[]> buffers, drawEdges);
+            var gltf = InitializeGlTF(model, out List<byte[]> buffers, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -725,7 +726,10 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
-        internal static Gltf InitializeGlTF(Model model, out List<byte[]> allBuffers, bool drawEdges = false)
+        internal static Gltf InitializeGlTF(Model model,
+                                            out List<byte[]> allBuffers,
+                                            bool drawEdges = false,
+                                            bool mergeVertices = false)
         {
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
@@ -833,7 +837,8 @@ namespace Elements.Serialization.glTF
                                         nodeElementMap,
                                         meshTransformMap,
                                         currLines,
-                                        drawEdges);
+                                        drawEdges,
+                                        mergeVertices);
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
             {
@@ -910,7 +915,8 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, ProtoNode> nodeElementMap,
                                                     Dictionary<Guid, Transform> meshTransformMap,
                                                     List<Vector3> lines,
-                                                    bool drawEdges)
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
         {
             var materialName = BuiltInMaterials.Default.Name;
             int meshId = -1;
@@ -964,19 +970,20 @@ namespace Elements.Serialization.glTF
                     else
                     {
                         meshId = ProcessGeometricRepresentation(e,
-                                                        ref gltf,
-                                                        ref materialIndexMap,
-                                                        ref buffer,
-                                                        bufferViews,
-                                                        accessors,
-                                                        meshes,
-                                                        nodes,
-                                                        meshElementMap,
-                                                        lines,
-                                                        drawEdges,
-                                                        materialName,
-                                                        ref meshId,
-                                                        content);
+                                                                ref gltf,
+                                                                ref materialIndexMap,
+                                                                ref buffer,
+                                                                bufferViews,
+                                                                accessors,
+                                                                meshes,
+                                                                nodes,
+                                                                meshElementMap,
+                                                                lines,
+                                                                drawEdges,
+                                                                materialName,
+                                                                ref meshId,
+                                                                content,
+                                                                mergeVertices);
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
                             meshElementMap.Add(e.Id, new List<int> { meshId });
@@ -989,19 +996,20 @@ namespace Elements.Serialization.glTF
                     materialName = geometricElement.Material.Name;
 
                     meshId = ProcessGeometricRepresentation(e,
-                                                   ref gltf,
-                                                   ref materialIndexMap,
-                                                   ref buffer,
-                                                   bufferViews,
-                                                   accessors,
-                                                   meshes,
-                                                   nodes,
-                                                   meshElementMap,
-                                                   lines,
-                                                   drawEdges,
-                                                   materialName,
-                                                   ref meshId,
-                                                   geometricElement);
+                                                            ref gltf,
+                                                            ref materialIndexMap,
+                                                            ref buffer,
+                                                            bufferViews,
+                                                            accessors,
+                                                            meshes,
+                                                            nodes,
+                                                            meshElementMap,
+                                                            lines,
+                                                            drawEdges,
+                                                            materialName,
+                                                            ref meshId,
+                                                            geometricElement,
+                                                            mergeVertices);
                     if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
                     {
                         meshElementMap.Add(e.Id, new List<int> { meshId });
@@ -1188,7 +1196,8 @@ namespace Elements.Serialization.glTF
                                                            bool drawEdges,
                                                            string materialName,
                                                            ref int meshId,
-                                                           GeometricElement geometricElement)
+                                                           GeometricElement geometricElement,
+                                                           bool mergeVertices = false)
         {
             geometricElement.UpdateRepresentations();
 
@@ -1213,7 +1222,8 @@ namespace Elements.Serialization.glTF
                                     accessors,
                                     meshes,
                                     lines,
-                                    geometricElement.Transform);
+                                    geometricElement.Transform,
+                                    mergeVertices);
 
                 // If the id == -1, the mesh is malformed.
                 // It may have no geometry.
@@ -1241,7 +1251,8 @@ namespace Elements.Serialization.glTF
                                       List<Accessor> accessors,
                                       List<glTFLoader.Schema.Mesh> meshes,
                                       List<Vector3> lines,
-                                      Transform t = null)
+                                      Transform t = null,
+                                      bool mergeVertices = false)
         {
             GraphicsBuffers buffers = null;
             if (geometricElement.Representation.SkipCSGUnion)
@@ -1250,12 +1261,12 @@ namespace Elements.Serialization.glTF
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
                 var solids = geometricElement.GetSolids();
-                buffers = solids.Tessellate();
+                buffers = solids.Tessellate(mergeVertices);
             }
             else
             {
                 var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate();
+                buffers = csg.Tessellate(mergeVertices);
             }
 
             if (buffers.Vertices.Count == 0)
