@@ -94,7 +94,7 @@ dotnet test
 ## Benchmark
 ```
 cd Elements.Benchmarks
-dotnet run -c Release
+dotnet run -c release --filter '<benchmark class name>'
 ```
 
 ## Building the Documentation
