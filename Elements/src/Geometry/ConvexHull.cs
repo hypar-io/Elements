@@ -21,7 +21,7 @@ namespace Elements.Geometry
             {
                 return null;
             }
-            var pointsSorted = points.OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
+            var pointsSorted = points.Select(p => new Vector3(p.X, p.Y)).OrderBy(p => p.X).ThenBy(p => p.Y).ToArray();
             List<Vector3> hullPoints = new List<Vector3>();
 
             Func<Vector3, Vector3, Vector3, bool> Ccw = (Vector3 a, Vector3 b, Vector3 c) => ((b.X - a.X) * (c.Y - a.Y)) > ((b.Y - a.Y) * (c.X - a.X));
@@ -50,6 +50,34 @@ namespace Elements.Geometry
 
             hullPoints.RemoveAt(hullPoints.Count - 1);
             return new Polygon(hullPoints);
+        }
+
+        /// <summary>
+        /// Compute the 2D convex hull of a set of 3D points in a plane.
+        /// </summary>
+        /// <param name="points">A collection of points</param>
+        /// <param name="planeNormal">The normal direction of the plane in which to compute the hull.</param>
+        /// <returns>A polygon representing the convex hull, projected along the normal vector to the average depth of the provided points.</returns>
+        public static Polygon FromPointsInPlane(IEnumerable<Vector3> points, Vector3 planeNormal)
+        {
+            if (planeNormal.Length().ApproximatelyEquals(0))
+            {
+                throw new ArgumentException("The current normal vector cannot be of length 0");
+            }
+            if (planeNormal.Unitized() == Vector3.ZAxis
+                 || planeNormal.Unitized().Negate() == Vector3.ZAxis)
+            {
+                return FromPoints(points);
+            }
+            else
+            {
+                var center3D = points.Average();
+                var toOrientation = new Transform(center3D, planeNormal);
+                var fromOrientation = toOrientation.Inverted();
+                var tPoints = points.Select(p => fromOrientation.OfPoint(p)).Select(p => new Vector3(p.X, p.Y));
+                var twoDHull = FromPoints(tPoints);
+                return twoDHull.TransformedPolygon(toOrientation);
+            }
         }
 
         /// <summary>

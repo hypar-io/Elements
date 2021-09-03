@@ -967,7 +967,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="points">The Vector3 collection to average.</param>
         /// <returns>A Vector3 representing the average.</returns>
-        public static Vector3 Average(this IList<Vector3> points)
+        public static Vector3 Average(this IEnumerable<Vector3> points)
         {
             double x = 0.0, y = 0.0, z = 0.0;
             foreach (var p in points)
@@ -976,7 +976,8 @@ namespace Elements.Geometry
                 y += p.Y;
                 z += p.Z;
             }
-            return new Vector3(x / points.Count, y / points.Count, z / points.Count);
+            var count = points.Count();
+            return new Vector3(x / count, y / count, z / count);
         }
 
         /// <summary>
