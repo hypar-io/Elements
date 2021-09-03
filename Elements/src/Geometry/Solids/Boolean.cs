@@ -163,12 +163,6 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bNonCoplanar)
             {
-                // Skip coplanar faces.
-                if (bCoplanarFaces.Contains(bf))
-                {
-                    continue;
-                }
-
                 var classifications = bf.IntersectAndClassify(aNonCoplanar,
                                                               out _,
                                                               out _,
