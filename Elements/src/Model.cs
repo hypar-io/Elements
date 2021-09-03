@@ -359,9 +359,9 @@ namespace Elements
         /// <summary>
         /// Get all elements of a certain type from a specific model name in a dictionary of models.
         /// </summary>
-        /// <param name="models">Dictionary of models keyed by string</param>
-        /// <param name="modelName">The name of the model</param>
-        /// <typeparam name="T">The type of element we want to retrieve</typeparam>
+        /// <param name="models">Dictionary of models keyed by string.</param>
+        /// <param name="modelName">The name of the model.</param>
+        /// <typeparam name="T">The type of element we want to retrieve.</typeparam>
         /// <returns></returns>
         public static List<T> AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
         {
