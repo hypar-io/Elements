@@ -1097,7 +1097,6 @@ namespace Elements.Geometry
         /// <param name="trimPolygons">A collection of polygons to trim against.</param>
         /// <param name="outsideClassification">The outside classification.</param>
         /// <param name="insideClassification">The inside classification.</param>
-        /// <param name="coplanarClassification">The coplanar classification.</param>
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of trim edge data.</param>
         /// <returns>A collection of polygons and their local classification.</returns>
@@ -1105,8 +1104,7 @@ namespace Elements.Geometry
                                                                          out List<Vector3> intersections,
                                                                          out List<(Vector3 from, Vector3 to, int? parentPolygonIndex)> trimEdges,
                                                                          SetClassification outsideClassification = SetClassification.AOutsideB,
-                                                                         SetClassification insideClassification = SetClassification.AInsideB,
-                                                                         SetClassification coplanarClassification = SetClassification.ACoplanarB)
+                                                                         SetClassification insideClassification = SetClassification.AInsideB)
         {
             var classifications = new List<(Polygon, SetClassification)>();
 
@@ -1122,12 +1120,6 @@ namespace Elements.Geometry
                 var ray = Ray.GetTestRayInPlane(splitFace.Vertices[0], splitFace.Normal());
                 foreach (var trimPoly in trimPolygons)
                 {
-                    if (splitFacePlane.IsCoplanar(trimPoly.Plane()))
-                    {
-                        classifications.Add((splitFace, coplanarClassification));
-                        return classifications;
-                    }
-
                     if (ray.Intersects(trimPoly, out _))
                     {
                         intersectionCount++;
@@ -1167,25 +1159,15 @@ namespace Elements.Geometry
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
                         var trimPoly = trimPolygons[trimPolyIndex];
                         var bn = trimPoly.Normal();
-
-                        // Don't classify if the faces are coplanar.
-                        if (bn.IsAlmostEqualTo(n))
+                        var d = (splitFaceEdge.from - splitFaceEdge.to).Unitized();
+                        var dot = bn.Dot(n.Cross(d));
+                        if (dot <= 0.0)
                         {
-                            classifications.Add((splitFace, coplanarClassification));
-                            break;
+                            outside++;
                         }
                         else
                         {
-                            var d = (splitFaceEdge.from - splitFaceEdge.to).Unitized();
-                            var dot = bn.Dot(n.Cross(d));
-                            if (dot <= 0.0)
-                            {
-                                outside++;
-                            }
-                            else
-                            {
-                                inside++;
-                            }
+                            inside++;
                         }
                     }
 
