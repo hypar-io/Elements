@@ -12,7 +12,7 @@
 - `AdaptiveGrid`
 - `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
 - `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
-- `ConvexHull.Frame3DPoints(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)`
+- `ConvexHull.FromPointsInPlane(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)`
 
 ### Changed
 
