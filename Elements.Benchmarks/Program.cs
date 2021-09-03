@@ -10,7 +10,6 @@ using Elements.Serialization.glTF;
 namespace Elements.Benchmarks
 {
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 1, targetCount: 3)]
     public class CsgBenchmarks
     {
         private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
@@ -47,7 +46,6 @@ namespace Elements.Benchmarks
     }
 
     [MemoryDiagnoser]
-    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
     public class HSS
     {
         Model _model;
@@ -87,7 +85,6 @@ namespace Elements.Benchmarks
         }
     }
 
-    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
     public class Solids
     {
         [Benchmark(Description = "Star shaped thing")]
@@ -103,9 +100,7 @@ namespace Elements.Benchmarks
     {
         public static void Main(string[] args)
         {
-            BenchmarkRunner.Run<HSS>();
-            BenchmarkRunner.Run<Solids>();
-            BenchmarkRunner.Run<CsgBenchmarks>();
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
         }
     }
 }
