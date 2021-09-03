@@ -42,7 +42,7 @@ namespace Elements.Tests
             var c = network.AddVertex();
             network.AddEdgeOneWay(a, b, null);
             network.AddEdgeOneWay(b, c, null);
-            Assert.Equal(1, network.LeafNodes().Count);
+            Assert.Single(network.LeafNodes());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0, 1), new Vector3(2, 0, 1));
             var b = new Line(new Vector3(0, -2, 1), new Vector3(0, 2, 1));
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(1, pts.Count);
+            Assert.Single(pts);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = a;
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(2, 0), new Vector3(-2, 0));
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(-1, 0), new Vector3(1, 0)); ;
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -200,7 +200,7 @@ namespace Elements.Tests
         {
             var p = Polygon.Rectangle(5, 5);
             var pts = p.Segments().Intersections();
-            Assert.Equal(1, pts.Count);
+            Assert.Single(pts);
         }
     }
 }
