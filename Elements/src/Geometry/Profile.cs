@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,9 +30,12 @@ namespace Elements.Geometry
         public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
-            if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+            if (!Validator.DisableValidationOnConstruction)
             {
-                throw new Exception("To construct a profile, all points must lie in the same plane.");
+                if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+                {
+                    throw new Exception("To construct a profile, all points must lie in the same plane.");
+                }
             }
 
             this.Perimeter = @perimeter;
