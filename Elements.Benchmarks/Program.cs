@@ -73,11 +73,24 @@ namespace Elements.Benchmarks
         }
     }
 
+    [SimpleJob(launchCount: 1, warmupCount: 3, targetCount: 10)]
+    public class Solids
+    {
+        [Benchmark(Description = "Star shaped thing")]
+        public void StarShapedThing()
+        {
+            var s1 = new Extrude(Polygon.Star(10, 7, 10), 10, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Star(10, 7, 10).TransformedPolygon(new Transform(new Vector3(1, 1, -1))), 8, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1._solid, null, s2._solid, null);
+        }
+    }
+
     public class Program
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<HSS>();
+            BenchmarkRunner.Run<HSS>();
+            BenchmarkRunner.Run<Solids>();
         }
     }
 }
