@@ -4,11 +4,16 @@
 
 ### Added
 
+- `LineSegmentExtensions.Intersections(this IList<Line> lines)`
+- `Elements.Search.DistanceComparer`
+- `Elements.Search.DirectionComparer`
+- `Elements.Search.Network<T>`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 
 ### Changed
 
 ### Fixed
+
 
 ## 0.9.3
 
@@ -22,16 +27,15 @@
 - `AdaptiveGrid`
 - `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
 - `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
+- `ConvexHull.FromPointsInPlane(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)`
 
 ### Changed
 
 ### Fixed
 
 - Deduplicate catalog names during code generation.
-  <<<<<<< HEAD
-- # Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
+- Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
 - Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
-  > > > > > > > 3a8c28c8c385007084e1160636a595d7faaaab55
 
 ## 0.9.2
 
