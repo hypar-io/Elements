@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.4
+- `LineSegmentExtensions.Intersections(this IList<Line> lines)`
+- `Elements.Search.DistanceComparer`
+- `Elements.Search.DirectionComparer`
+- `Elements.Search.Network<T>`
+
 ## 0.9.3
 
 ### Added
