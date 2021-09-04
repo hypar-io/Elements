@@ -252,36 +252,6 @@ namespace Elements.Tests
             this.Model.AddElement(beam1);
         }
 
-        [Fact(Skip = "Benchmark")]
-        public void Benchmark()
-        {
-            var sw = new Stopwatch();
-            sw.Start();
-
-            var x = 0.0;
-            var z = 0.0;
-            var profile = _wideFlangeFactory.AllProfiles().First();
-            var n = 100000;
-            var mesh = new Mesh();
-            for (var i = 0; i < n; i++)
-            {
-                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var beam = new Beam(line, profile, BuiltInMaterials.Steel);
-                beam.UpdateRepresentations();
-                beam.Representation.SolidOperations.First().Solid.Tessellate(ref mesh);
-                x += 2.0;
-                if (x > 20.0)
-                {
-                    z += 2.0;
-                    x = 0.0;
-                }
-            }
-
-            sw.Stop();
-            Console.WriteLine($"{sw.Elapsed.TotalMilliseconds} ms for creating {n} beams.");
-            Console.WriteLine($"{GC.GetTotalMemory(true)} bytes allocated.");
-        }
-
         [Fact]
         public void SweepsBecomeLinearSegments()
         {
