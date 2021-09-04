@@ -934,7 +934,7 @@ namespace Elements.Geometry.Tests
                         new Vector3(13,0,2),
                         new Vector3(13,0,1)
                         });
-            var polygonNormal = polygon.Normal();
+            var polygonNormal = polygon.Normal;
             var transform = polygon.ToTransform();
             Assert.Equal(1, transform.ZAxis.Dot(polygonNormal));
         }
@@ -1459,7 +1459,7 @@ namespace Elements.Geometry.Tests
             foreach (var splitter in splitters)
             {
                 this.Model.AddElement(new Panel(splitter, BuiltInMaterials.Mass));
-                this.Model.AddElement(new ModelCurve(new Line(splitter.Centroid(), splitter.Centroid() + splitter.Normal() * 1)));
+                this.Model.AddElement(new ModelCurve(new Line(splitter.Centroid(), splitter.Centroid() + splitter.Normal * 1)));
             }
 
             var result1 = bigPoly.TrimmedTo(splitters);

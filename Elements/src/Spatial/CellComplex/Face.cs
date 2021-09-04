@@ -116,7 +116,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         private Vector3 GetNormal()
         {
-            return this.GetGeometry().Normal();
+            return this.GetGeometry().Normal;
         }
 
         /// <summary>
@@ -200,7 +200,8 @@ namespace Elements.Spatial.CellComplex
         /// A neighbor is defined as a Face which shares any Edge.
         /// </summary>
         /// <returns></returns>
-        public List<Face> GetNeighbors() {
+        public List<Face> GetNeighbors()
+        {
             return this.GetNeighbors(false, false);
         }
 
@@ -248,7 +249,8 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public Face GetClosestNeighbor(Vector3 target) {
+        public Face GetClosestNeighbor(Vector3 target)
+        {
             return this.GetClosestNeighbor(target, false, false);
         }
 
@@ -279,7 +281,8 @@ namespace Elements.Spatial.CellComplex
         /// <param name="target"></param>
         /// <param name="completedRadius"></param>
         /// <returns></returns>
-        public List<Face> TraverseNeighbors(Vector3 target, double completedRadius = 0) {
+        public List<Face> TraverseNeighbors(Vector3 target, double completedRadius = 0)
+        {
             return this.TraverseNeighbors(target, false, false, completedRadius);
         }
 

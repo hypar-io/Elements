@@ -99,7 +99,7 @@ namespace Elements.Tests
                 });
                 var triangle = new Polygon(verts.Select(v => v.position).ToList());
                 var normal = verts[0].normal;
-                Assert.True(triangle.Normal().Dot(normal.Unitized()) > 0, "The vertex normals are pointing in the opposite direction as their triangles' winding should suggest");
+                Assert.True(triangle.Normal.Dot(normal.Unitized()) > 0, "The vertex normals are pointing in the opposite direction as their triangles' winding should suggest");
                 Model.AddElement(triangle.TransformedPolygon(new Transform(normal * 0.2)));
             }
             Model.AddElement(arrows);

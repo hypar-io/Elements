@@ -3,6 +3,7 @@ using Elements.Search;
 using Elements.Spatial;
 using Elements.Validators;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,13 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        /// <summary>
+        /// The normal of the planar polygon.
+        /// </summary>
+        /// <value></value>
+        [JsonIgnore]
+        public Vector3 Normal { get; internal set; }
+
         /// <summary>
         /// Construct a polygon.
         /// </summary>
@@ -37,6 +45,8 @@ namespace Elements.Geometry
                 var t = this.Vertices.ToTransform();
                 Polyline.CheckSelfIntersectionAndThrow(t, segments);
             }
+
+            this.Normal = this.Vertices.NormalFromPlanarWoundPoints();
         }
 
         /// <summary>
@@ -61,7 +71,7 @@ namespace Elements.Geometry
         /// <param name="vertices">The vertices of the polygon.</param>
         public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices))
         {
-
+            this.Normal = this.Vertices.NormalFromPlanarWoundPoints();
         }
 
         /// <summary>
@@ -94,8 +104,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Transform ToTransform()
         {
-            var normal = Normal();
-            return new Transform(Vertices[0], Vertices[1] - Vertices[0], normal);
+            return new Transform(Vertices[0], Vertices[1] - Vertices[0], this.Normal);
         }
 
         /// <summary>
@@ -274,7 +283,7 @@ namespace Elements.Geometry
         /// <returns>A Plane.</returns>
         public override Plane Plane()
         {
-            return new Plane(this.Vertices[0], this.Normal());
+            return new Plane(this.Vertices[0], this.Normal);
         }
 
         /// <summary>
@@ -304,7 +313,7 @@ namespace Elements.Geometry
                 return false;
             }
 
-            var d = this.Normal().Cross(targetP.Normal).Unitized();
+            var d = this.Normal.Cross(targetP.Normal).Unitized();
 
             // Intersect the polygon against this polygon's plane.
             // Keep the points that lie within the polygon.
@@ -372,7 +381,7 @@ namespace Elements.Geometry
         public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true, bool sort = true)
         {
             results = new List<Vector3>();
-            var d = this.Normal().Cross(plane.Normal).Unitized();
+            var d = this.Normal.Cross(plane.Normal).Unitized();
 
             foreach (var s in this.Segments())
             {
@@ -948,7 +957,7 @@ namespace Elements.Geometry
             for (var i = 0; i < polygons.Count; i++)
             {
                 var polygon = polygons[i];
-                var d = this.Normal().Cross(planes[i].Normal).Unitized();
+                var d = this.Normal.Cross(planes[i].Normal).Unitized();
                 if (results[i].Count > 0)
                 {
                     results[i].Sort(new DirectionComparer(d));
@@ -1450,7 +1459,7 @@ namespace Elements.Geometry
         {
             var otherVertices = other.Vertices;
             if (otherVertices.Count != Vertices.Count) return false;
-            if (ignoreWinding && other.Normal().Dot(Normal()) < 0)
+            if (ignoreWinding && other.Normal.Dot(this.Normal) < 0)
             {
                 //ensure winding is consistent
                 otherVertices = other.Vertices.Reverse().ToList();
@@ -1632,7 +1641,7 @@ namespace Elements.Geometry
 
             // Cache the normal so we don't have to recalculate
             // using Newell for every frame.
-            var up = Normal();
+            var up = this.Normal;
             for (var i = 0; i < result.Length; i++)
             {
                 var a = this.Vertices[i];
@@ -1799,15 +1808,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The normal of this polygon, according to Newell's Method.
-        /// </summary>
-        /// <returns>The unitized sum of the cross products of each pair of edges.</returns>
-        public Vector3 Normal()
-        {
-            return this.Vertices.NormalFromPlanarWoundPoints();
-        }
-
-        /// <summary>
         /// Get the normal of each vertex on the polygon.
         /// </summary>
         /// <remarks>All normals will be the same since polygons are coplanar by definition.</remarks>
@@ -1818,7 +1818,7 @@ namespace Elements.Geometry
             var result = new Vector3[this.Vertices.Count];
 
             // Since polygons must be coplanar, all vertex normals can match the polygon's normal.
-            var normal = this.Normal();
+            var normal = this.Normal;
             for (int i = 0; i < Vertices.Count; i++)
             {
                 result[i] = normal;

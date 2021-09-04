@@ -243,10 +243,10 @@ namespace Elements.Geometry
         public void OrientVoids()
         {
             var correctedVoids = new List<Polygon>();
-            var perimeterNormal = Perimeter.Normal();
+            var perimeterNormal = Perimeter.Normal;
             foreach (var voidCrv in Voids)
             {
-                if (voidCrv.Normal().Dot(perimeterNormal) > 0)
+                if (voidCrv.Normal.Dot(perimeterNormal) > 0)
                 {
                     correctedVoids.Add(voidCrv.Reversed());
                 }
