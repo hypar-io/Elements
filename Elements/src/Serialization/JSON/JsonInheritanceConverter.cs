@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -72,7 +73,13 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             failedAssemblyErrors = new List<string>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
+            {
+                var name = a.GetName().Name;
+                return !name.StartsWith("System")
+                       && !name.StartsWith("SixLabors")
+                       && !name.StartsWith("Newtonsoft");
+            }))
             {
                 var types = Array.Empty<Type>();
                 try
