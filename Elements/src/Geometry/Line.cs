@@ -11,7 +11,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
-    public partial class Line : Curve, IEquatable<Line>
+    public class Line : Curve, IEquatable<Line>
     {
         /// <summary>The start of the line.</summary>
         [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -27,8 +27,7 @@ namespace Elements.Geometry
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Line(in Vector3 @start, in Vector3 @end)
-            : base()
+        public Line(in Vector3 @start, in Vector3 @end) : base()
         {
             if (!Validator.DisableValidationOnConstruction)
             {
