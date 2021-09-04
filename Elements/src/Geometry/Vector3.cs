@@ -7,7 +7,7 @@ namespace Elements.Geometry
     /// <summary>
     /// A 3D vector.
     /// </summary>
-    public partial struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
+    public struct Vector3 : IComparable<Vector3>, IEquatable<Vector3>
     {
         /// <summary>
         /// A tolerance for comparison operations of 1e-5.
@@ -199,7 +199,7 @@ namespace Elements.Geometry
         /// Compute the cross product of this vector and v.
         /// </summary>
         /// <param name="v">The vector with which to compute the cross product.</param>
-        public Vector3 Cross(Vector3 v)
+        public Vector3 Cross(in Vector3 v)
         {
             var x = Y * v.Z - Z * v.Y;
             var y = Z * v.X - X * v.Z;
@@ -229,7 +229,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v">The vector with which to compute the dot product.</param>
         /// <returns>A value between 1 and -1.</returns>
-        public double Dot(Vector3 v)
+        public double Dot(in Vector3 v)
         {
             return v.X * this.X + v.Y * this.Y + v.Z * this.Z;
         }
@@ -254,7 +254,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <returns>The angle in degrees between 0 and 180. </returns>
-        public double AngleTo(Vector3 v)
+        public double AngleTo(in Vector3 v)
         {
             var n = Dot(v);
             var d = Length() * v.Length();
@@ -282,7 +282,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
-        public double PlaneAngleTo(Vector3 v)
+        public double PlaneAngleTo(in Vector3 v)
         {
             return PlaneAngleTo(v, ZAxis);
         }
@@ -293,7 +293,7 @@ namespace Elements.Geometry
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
         /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
-        public double PlaneAngleTo(Vector3 v, Vector3 normal)
+        public double PlaneAngleTo(in Vector3 v, in Vector3 normal)
         {
             var transformFromPlane = new Transform(Vector3.Origin, normal);
             transformFromPlane.Invert();
@@ -336,7 +336,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v">The target vector.</param>
         /// <returns>The distance between this vector and the provided vector.</returns>
-        public double DistanceTo(Vector3 v)
+        public double DistanceTo(in Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
         }
@@ -460,7 +460,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="v">The vector with which to compute the average.</param>
         /// <returns>A vector which is the average of this and v.</returns>
-        public Vector3 Average(Vector3 v)
+        public Vector3 Average(in Vector3 v)
         {
             return new Vector3((this.X + v.X) / 2, (this.Y + v.Y) / 2, (this.Z + v.Z) / 2);
         }
@@ -470,7 +470,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="a">The vector to project onto this vector.</param>
         /// <returns>A new vector which is the projection of a onto this vector.</returns>
-        public Vector3 ProjectOnto(Vector3 a)
+        public Vector3 ProjectOnto(in Vector3 a)
         {
             var b = this;
             return (a.Dot(b) / Math.Pow(a.Length(), 2)) * a;
@@ -482,7 +482,7 @@ namespace Elements.Geometry
         /// <param name="v">The vector to multiply.</param>
         /// <param name="a">The scalar value to multiply.</param>
         /// <returns>A vector whose magnitude is multiplied by a.</returns>
-        public static Vector3 operator *(Vector3 v, double a)
+        public static Vector3 operator *(in Vector3 v, double a)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
         }
@@ -493,7 +493,7 @@ namespace Elements.Geometry
         /// <param name="a">The scalar value to multiply.</param>
         /// <param name="v">The vector to multiply.</param>
         /// <returns>A vector whose magnitude is multiplied by a.</returns>
-        public static Vector3 operator *(double a, Vector3 v)
+        public static Vector3 operator *(double a, in Vector3 v)
         {
             return new Vector3(v.X * a, v.Y * a, v.Z * a);
         }
@@ -504,7 +504,7 @@ namespace Elements.Geometry
         /// <param name="a">The scalar divisor.</param>
         /// <param name="v">The vector to divide.</param>
         /// <returns>A vector whose magnitude is multiplied by a.</returns>
-        public static Vector3 operator /(Vector3 v, double a)
+        public static Vector3 operator /(in Vector3 v, double a)
         {
             return new Vector3(v.X / a, v.Y / a, v.Z / a);
         }
@@ -515,7 +515,7 @@ namespace Elements.Geometry
         /// <param name="a">The first vector.</param>
         /// <param name="b">The second vector.</param>
         /// <returns>A vector which is the difference between a and b.</returns>
-        public static Vector3 operator -(Vector3 a, Vector3 b)
+        public static Vector3 operator -(in Vector3 a, in Vector3 b)
         {
             return new Vector3((a.X - b.X), (a.Y - b.Y), (a.Z - b.Z));
         }
@@ -526,7 +526,7 @@ namespace Elements.Geometry
         /// <param name="a">The first vector.</param>
         /// <param name="b">The second vector.</param>
         /// <returns>A vector which is the sum of a and b.</returns>
-        public static Vector3 operator +(Vector3 a, Vector3 b)
+        public static Vector3 operator +(in Vector3 a, in Vector3 b)
         {
             return new Vector3((a.X + b.X), (a.Y + b.Y), (a.Z + b.Z));
         }
@@ -537,7 +537,7 @@ namespace Elements.Geometry
         /// <param name="a">The first vector.</param>
         /// <param name="b">The second vector.</param>
         /// <returns>True if all of a's components are greater than those of b, otherwise false.</returns>
-        public static bool operator >(Vector3 a, Vector3 b)
+        public static bool operator >(in Vector3 a, in Vector3 b)
         {
             return a.X > b.X && a.Y > b.Y && a.Z > b.Z;
         }
@@ -550,7 +550,7 @@ namespace Elements.Geometry
         /// <param name="b">The second vector.</param>
         /// <returns>True if all of a's components are greater than or equal
         /// to all of those of b, otherwise false.</returns>
-        public static bool operator >=(Vector3 a, Vector3 b)
+        public static bool operator >=(in Vector3 a, in Vector3 b)
         {
             return a.X >= b.X && a.Y >= b.Y && a.Z >= b.Z;
         }
@@ -561,7 +561,7 @@ namespace Elements.Geometry
         /// <param name="a">The first vector.</param>
         /// <param name="b">The second vector.</param>
         /// <returns>True if all of a's components are less than those of b, otherwise false.</returns>
-        public static bool operator <(Vector3 a, Vector3 b)
+        public static bool operator <(in Vector3 a, in Vector3 b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
         }
@@ -574,7 +574,7 @@ namespace Elements.Geometry
         /// <param name="b">The second vector.</param>
         /// <returns>True if all of a's components are less than or equal
         /// to all of those of b, otherwise false.</returns>
-        public static bool operator <=(Vector3 a, Vector3 b)
+        public static bool operator <=(in Vector3 a, in Vector3 b)
         {
             return a.X <= b.X && a.Y <= b.Y && a.Z <= b.Z;
         }
@@ -584,7 +584,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static bool operator ==(Vector3 a, Vector3 b)
+        public static bool operator ==(in Vector3 a, in Vector3 b)
         {
             return a.Equals(b);
         }
@@ -594,7 +594,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public static bool operator !=(Vector3 a, Vector3 b)
+        public static bool operator !=(in Vector3 a, in Vector3 b)
         {
             return !a.Equals(b);
         }
@@ -605,7 +605,7 @@ namespace Elements.Geometry
         /// <param name="v">The vector to compare to this vector.</param>
         /// <param name="tolerance">The amount of tolerance in the parallel comparison.</param>
         /// <returns>True if the vectors are parallel, otherwise false.</returns>
-        public bool IsParallelTo(Vector3 v, double tolerance = Vector3.EPSILON)
+        public bool IsParallelTo(in Vector3 v, double tolerance = Vector3.EPSILON)
         {
             var result = Math.Abs(this.Unitized().Dot(v.Unitized()));
             return result.ApproximatelyEquals(1, tolerance);
@@ -644,7 +644,7 @@ namespace Elements.Geometry
         /// <param name="v">The vector to compare.</param>
         /// <param name="tolerance">Optional custom tolerance value.</param>
         /// <returns>True if the difference of this vector and the supplied vector's components are all within Tolerance, otherwise false.</returns>
-        public bool IsAlmostEqualTo(Vector3 v, double tolerance = Vector3.EPSILON)
+        public bool IsAlmostEqualTo(in Vector3 v, double tolerance = Vector3.EPSILON)
         {
             if ((this.X - v.X) * (this.X - v.X)
               + (this.Y - v.Y) * (this.Y - v.Y)
@@ -686,7 +686,7 @@ namespace Elements.Geometry
         /// <param name="v">The vector along which t project.</param>
         /// <param name="p">The plane on which to project.</param>
         /// <returns>A point on the plane.</returns>
-        public Vector3 ProjectAlong(Vector3 v, Plane p)
+        public Vector3 ProjectAlong(in Vector3 v, Plane p)
         {
             var x = ((p.Origin - this).Dot(p.Normal)) / p.Normal.Dot(v.Unitized());
             return this + x * v;
@@ -761,7 +761,7 @@ namespace Elements.Geometry
         /// <param name="b">The second vector.</param>
         /// <param name="c">The third vector.</param>
         /// <returns>True is the vectors are coplanar, otherwise false.</returns>
-        public double TripleProduct(Vector3 b, Vector3 c)
+        public double TripleProduct(in Vector3 b, in Vector3 c)
         {
             // https://en.wikipedia.org/wiki/Triple_product
             var a = this;
@@ -791,7 +791,7 @@ namespace Elements.Geometry
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
-        public static double CCW(Vector3 a, Vector3 b, Vector3 c)
+        public static double CCW(in Vector3 a, in Vector3 b, in Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
         }
@@ -803,7 +803,7 @@ namespace Elements.Geometry
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
-        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        public static bool AreCollinear(in Vector3 a, in Vector3 b, in Vector3 c)
         {
             var ba = (b - a).Unitized();
             var cb = (c - b).Unitized();
@@ -817,7 +817,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Are four provided points on the same plane?
         /// </summary>
-        public static bool AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        public static bool AreCoplanar(in Vector3 a, in Vector3 b, in Vector3 c, in Vector3 d)
         {
             var ab = b - a;
             var ac = c - a;
