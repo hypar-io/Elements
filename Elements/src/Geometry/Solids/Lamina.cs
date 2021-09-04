@@ -52,8 +52,8 @@ namespace Elements.Geometry.Solids
         public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {
-            this.Perimeter = @perimeter;
-            this.Voids = @voids;
+            this._perimeter = @perimeter;
+            this._voids = @voids;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();

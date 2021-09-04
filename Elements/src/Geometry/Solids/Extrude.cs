@@ -77,9 +77,9 @@ namespace Elements.Geometry.Solids
                 }
             }
 
-            this.Profile = @profile;
-            this.Height = @height;
-            this.Direction = @direction;
+            this._profile = @profile;
+            this._height = @height;
+            this._direction = @direction;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();

@@ -22,11 +22,11 @@ namespace Elements.Geometry.Solids
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {
-            this.Profile = @profile;
-            this.Curve = @curve;
-            this.StartSetback = @startSetback;
-            this.EndSetback = @endSetback;
-            this.ProfileRotation = @profileRotation;
+            this._profile = @profile;
+            this._curve = @curve;
+            this._startSetback = @startSetback;
+            this._endSetback = @endSetback;
+            this._profileRotation = @profileRotation;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();

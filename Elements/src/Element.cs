@@ -19,12 +19,12 @@ namespace Elements
         [Newtonsoft.Json.JsonConstructor]
         public Element(System.Guid @id, string @name)
         {
-            this.Id = @id;
-            this.Name = @name;
+            this._id = @id;
+            this._name = @name;
 
-            if (Id == default(Guid))
+            if (this._id == default(Guid))
             {
-                Id = System.Guid.NewGuid();
+                this._id = System.Guid.NewGuid();
             }
         }
 
