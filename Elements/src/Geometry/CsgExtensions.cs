@@ -200,7 +200,7 @@ namespace Elements.Geometry
                     Vector3 e1 = new Vector3();
                     Vector3 e2 = new Vector3();
 
-                    var vertices = new List<Csg.Vertex>();
+                    var vertices = new List<Csg.Vertex>(tess.Elements.Count() * 3);
                     for (var i = 0; i < tess.ElementCount; i++)
                     {
                         var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
@@ -242,7 +242,7 @@ namespace Elements.Geometry
                 }
                 else
                 {
-                    var verts = new List<Csg.Vertex>();
+                    var verts = new List<Csg.Vertex>(f.Outer.Edges.Count);
                     var n = f.Plane().Normal;
                     var e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
                     var e2 = n.Cross(e1).Unitized();

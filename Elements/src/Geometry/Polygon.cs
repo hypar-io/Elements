@@ -1942,14 +1942,15 @@ namespace Elements.Geometry
 
         internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
         {
-            var contour = new List<ContourVertex>();
-            foreach (var vert in poly.Vertices)
+            var contour = new ContourVertex[poly.Vertices.Count];
+            for (var i = 0; i < poly.Vertices.Count; i++)
             {
+                var vert = poly.Vertices[i];
                 var cv = new ContourVertex();
                 cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
-                contour.Add(cv);
+                contour[i] = cv;
             }
-            return contour.ToArray();
+            return contour;
         }
     }
 }
