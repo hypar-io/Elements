@@ -13,7 +13,6 @@ namespace Elements.Benchmarks
     [MemoryDiagnoser]
     public class CsgBenchmarks
     {
-        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
         private Beam _beam;
         private Csg.Solid _csg;
 
