@@ -19,6 +19,10 @@ namespace Elements.Geometry
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
 
+        private double _x;
+        private double _y;
+        private double _z;
+
         /// <summary>
         /// Create a vector.
         /// </summary>
@@ -41,22 +45,34 @@ namespace Elements.Geometry
                 }
             }
 
-            this.X = @x;
-            this.Y = @y;
-            this.Z = @z;
+            this._x = @x;
+            this._y = @y;
+            this._z = @z;
         }
 
         /// <summary>The X component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
-        public double X { get; set; }
+        public double X
+        {
+            readonly get => _x;
+            set => _x = value;
+        }
 
         /// <summary>The Y component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
-        public double Y { get; set; }
+        public double Y
+        {
+            readonly get => _y;
+            set => _y = value;
+        }
 
         /// <summary>The Z component of the vector.</summary>
         [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
-        public double Z { get; set; }
+        public double Z
+        {
+            readonly get => _z;
+            set => _z = value;
+        }
 
         /// <summary>
         /// Create a vector at the origin.
@@ -136,9 +152,9 @@ namespace Elements.Geometry
         /// <param name="v">The Vector3 to copy.</param>
         public Vector3(Vector3 v)
         {
-            this.X = v.X;
-            this.Y = v.Y;
-            this.Z = v.Z;
+            this._x = v.X;
+            this._y = v.Y;
+            this._z = v.Z;
         }
 
         /// <summary>
@@ -159,9 +175,9 @@ namespace Elements.Geometry
                 throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
             }
 
-            this.X = x;
-            this.Y = y;
-            this.Z = 0;
+            this._x = x;
+            this._y = y;
+            this._z = 0;
         }
 
         /// <summary>

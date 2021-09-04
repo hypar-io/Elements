@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
     <Version>$(Version)</Version>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
