@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
@@ -51,6 +51,8 @@ namespace Elements.Benchmarks
         Model _model;
         string _json;
 
+        private List<HSSPipeProfile> _hssProfiles;
+
         [Params(true, false)]
         public bool SkipValidation { get; set; }
 
@@ -61,12 +63,12 @@ namespace Elements.Benchmarks
         {
             var x = 0.0;
             var z = 0.0;
-            var hssFactory = new HSSPipeProfileFactory();
-            var profiles = hssFactory.AllProfiles().ToList();
+            var factory = new HSSPipeProfileFactory();
+            _hssProfiles = factory.AllProfiles().ToList();
             _model = new Model();
-            foreach (var profile in profiles)
+            foreach (var profile in _hssProfiles)
             {
-                var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
+                var color = new Color((float)(x / 20.0), (float)(z / _hssProfiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile);
                 _model.AddElement(beam);
