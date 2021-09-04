@@ -27,7 +27,7 @@ namespace Elements.Geometry
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Line(in Vector3 @start, in Vector3 @end) : base()
+        public Line(Vector3 @start, Vector3 @end) : base()
         {
             if (!Validator.DisableValidationOnConstruction)
             {
