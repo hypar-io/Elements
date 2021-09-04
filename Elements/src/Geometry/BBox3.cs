@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,9 +26,12 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public BBox3(Vector3 @min, Vector3 @max)
         {
-            if (min.X == max.X || min.Y == max.Y)
+            if (!Validator.DisableValidationOnConstruction)
             {
-                throw new System.ArgumentException("The bounding box will have zero volume, please ensure that the Min and Max don't have any identical vertex values.");
+                if (min.X == max.X || min.Y == max.Y)
+                {
+                    throw new System.ArgumentException("The bounding box will have zero volume, please ensure that the Min and Max don't have any identical vertex values.");
+                }
             }
 
             this.Min = @min;
