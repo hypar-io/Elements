@@ -3,7 +3,6 @@ using Elements.Geometry.Profiles;
 using Elements.Geometry;
 using Elements.Serialization.JSON;
 
-// See https://aka.ms/new-console-template for more information
 var x = 0.0;
 var z = 0.0;
 var factory = new HSSPipeProfileFactory();
