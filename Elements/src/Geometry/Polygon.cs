@@ -1584,6 +1584,12 @@ namespace Elements.Geometry
             {
                 switch (curve)
                 {
+                    case Polygon polygon:
+                        if (v.DistanceTo(polygon, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
                     case Polyline polyline:
                         if (v.DistanceTo(polyline, out _) > tolerance)
                         {
@@ -1895,7 +1901,7 @@ namespace Elements.Geometry
         /// Construct a clipper path from a Polygon.
         /// </summary>
         /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
+        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
         /// <returns></returns>
         internal static List<IntPoint> ToClipperPath(this Polygon p, double tolerance = Vector3.EPSILON)
         {
