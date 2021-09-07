@@ -55,7 +55,7 @@ namespace Elements.Benchmarks
         {
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
-            var model = HSS.DrawAllBeams(hssProfiles);
+            var model = ElementCreation.DrawAllBeams(hssProfiles);
             var json = model.ToJson();
         }
     }
@@ -71,9 +71,12 @@ namespace Elements.Benchmarks
         {
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
-            _model = HSS.DrawAllBeams(hssProfiles);
+            _model = ElementCreation.DrawAllBeams(hssProfiles);
             _json = _model.ToJson();
         }
+
+        [Params(true, false)]
+        public bool Merge { get; set; }
 
         [Benchmark(Description = "Serialize")]
         public void SerializeToJSON()
@@ -90,7 +93,7 @@ namespace Elements.Benchmarks
         [Benchmark(Description = "Serialize to glTF.")]
         public void SerializeToGlTF()
         {
-            _model.ToGlTF(false);
+            _model.ToGlTF(false, this.Merge);
         }
     }
 
@@ -105,22 +108,11 @@ namespace Elements.Benchmarks
         [Params(true, false)]
         public bool SkipValidation { get; set; }
 
-        [Params(true, false)]
-        public bool Merge { get; set; }
-
-        [IterationSetup]
-        public void Setup()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
-            if (this.SkipValidation)
-            {
-                Validator.DisableValidationOnConstruction = true;
-            }
-        }
-
-        [IterationCleanup]
-        public void Cleanup()
-        {
-            Validator.DisableValidationOnConstruction = false;
+            var factory = new HSSPipeProfileFactory();
+            _hssProfiles = factory.AllProfiles().ToList();
         }
 
         public static Model DrawAllBeams(List<HSSPipeProfile> profiles)
@@ -144,17 +136,15 @@ namespace Elements.Benchmarks
             return model;
         }
 
-        [GlobalSetup]
-        public void GlobalSetup()
-        {
-            var factory = new HSSPipeProfileFactory();
-            _hssProfiles = factory.AllProfiles().ToList();
-        }
-
         [Benchmark(Description = "Draw all HSS beams.")]
         public void DrawAllBeams()
         {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
             DrawAllBeams(_hssProfiles);
+            Validator.DisableValidationOnConstruction = false;
         }
     }
 
