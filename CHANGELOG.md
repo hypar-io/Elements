@@ -9,6 +9,7 @@
 - `Elements.Search.DirectionComparer`
 - `Elements.Search.Network<T>`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
+- `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
 
 ### Changed
 
