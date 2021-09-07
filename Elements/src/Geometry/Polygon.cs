@@ -1573,6 +1573,37 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Trim vertices from a polygon that lie near a given curve.
+        /// </summary>
+        /// <param name="curve">The curve used to trim the polygon</param>
+        /// <param name="tolerance">Optional tolerance value.</param>
+        public Polygon RemoveVerticesNearCurve(Curve curve, double tolerance = Vector3.EPSILON)
+        {
+            var newVertices = new List<Vector3>(this.Vertices.Count);
+            foreach (var v in Vertices)
+            {
+                switch (curve)
+                {
+                    case Polyline polyline:
+                        if (v.DistanceTo(polyline, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
+                    case Line line:
+                        if (v.DistanceTo(line, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException("Unknown curve type for removing vertices.  Only Polygon, Polyline, and Line are supported.");
+                }
+            }
+            return new Polygon(newVertices);
+        }
+
+        /// <summary>
         /// Remove collinear points from this Polygon.
         /// </summary>
         /// <returns>New Polygon without collinear points.</returns>
@@ -1864,7 +1895,7 @@ namespace Elements.Geometry
         /// Construct a clipper path from a Polygon.
         /// </summary>
         /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
+        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
         /// <returns></returns>
         internal static List<IntPoint> ToClipperPath(this Polygon p, double tolerance = Vector3.EPSILON)
         {
