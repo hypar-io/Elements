@@ -10,8 +10,6 @@ namespace Elements.Geometry.Solids
     {
         internal Solid _solid;
 
-        internal Csg.Solid _csg;
-
         /// <summary>
         /// The local transform of the operation.
         /// </summary>

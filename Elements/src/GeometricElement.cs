@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Interfaces;
 
 namespace Elements
@@ -128,7 +129,7 @@ namespace Elements
                 var openingContainer = (IHasOpenings)this;
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+                                                      .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
             // Don't try CSG booleans if we only have one one solid.
             if (solids.Count() == 1)
@@ -179,11 +180,11 @@ namespace Elements
         {
             if (Transform == null)
             {
-                return op._csg;
+                return op._solid.ToCsg();
             }
             return op.LocalTransform != null
-                        ? op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
-                        : op._csg.Transform(Transform.ToMatrix4x4());
+                        ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
+                        : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
         }
     }
 }

@@ -84,7 +84,7 @@ namespace Elements.Geometry.Solids
         private void UpdateGeometry()
         {
             this._solid = Kernel.Instance.CreateLamina(this._perimeter, this._voids);
-            this._csg = this._solid.ToCsg();
+            // this._csg = this._solid.ToCsg();
         }
     }
 }
