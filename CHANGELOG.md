@@ -1,10 +1,19 @@
 # Changelog
 
 ## 0.9.4
+
+### Added
+
 - `LineSegmentExtensions.Intersections(this IList<Line> lines)`
 - `Elements.Search.DistanceComparer`
 - `Elements.Search.DirectionComparer`
 - `Elements.Search.Network<T>`
+- `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
+
+### Changed
+
+### Fixed
+
 
 ## 0.9.3
 
