@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
+using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
 
@@ -580,9 +581,8 @@ namespace Elements.Geometry.Solids
                     }
                 }
 
-
                 var d = facePlane.Normal.Cross(p.Normal).Unitized();
-                edgeResults.Sort(new DotComparer(d));
+                edgeResults.Sort(new DirectionComparer(d));
 
                 // Draw segments through the results and add to the 
                 // half edge graph.
@@ -770,6 +770,13 @@ namespace Elements.Geometry.Solids
             return loop;
         }
 
+        // TODO: This method should not be required if we have adequate lookup
+        // operations based on vertex locations and incident edges. This is 
+        // currently used in the case where we want to add a face from a polygon
+        // but in most cases where we want to do that we already know something
+        // about the shape of the existing solid and should be able to lookup 
+        // existing vertices without doing an O(n) search. Implement a better
+        // search strategy!
         private void FindOrCreateVertex(Vector3 pt, int i, Transform transform, bool mergeVerticesAndEdges, Vertex[] verts)
         {
             if (transform != null)

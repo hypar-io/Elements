@@ -85,6 +85,12 @@ namespace Elements.Benchmarks
         {
             _model.ToGlTF(false, true);
         }
+      
+        [Benchmark(Description = "Write all cubes to glb.")]
+        public void WriteModelToGlb()
+        {
+            _model.ToGlTF();
+        }
     }
     
     [MemoryDiagnoser]
@@ -107,12 +113,6 @@ namespace Elements.Benchmarks
                     }
                 }
             }
-        }
-        
-        [Benchmark(Description = "Write all cubes to glb.")]
-        public void WriteModelToGlb()
-        {
-            _model.ToGlTF();
         }
     }
 

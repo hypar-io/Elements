@@ -71,15 +71,12 @@ namespace Elements.Geometry
                             var v = p.Vertices[i];
                             var uu = basis.U.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
                             var vv = basis.V.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
-                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Pos.X,
-                                                                         v.Pos.Y,
-                                                                         v.Pos.Z,
-                                                                         n.X,
-                                                                         n.Y,
-                                                                         n.Z,
-                                                                         uu,
-                                                                         vv,
-                                                                         allVertices, mergeVertices);
+
+                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Pos.X, v.Pos.Y, v.Pos.Z),
+                                                                         (n.X, n.Y, n.Z),
+                                                                         (uu, vv),
+                                                                         allVertices,
+                                                                         mergeVertices);
                         }
 
                         // First triangle
@@ -114,16 +111,11 @@ namespace Elements.Geometry
                             var uu = basis.U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
                             var vv = basis.V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
 
-                            vertexIndices[i] = (ushort)GetOrCreateVertex(v.Position.X,
-                                                                         v.Position.Y,
-                                                                         v.Position.Z,
-                                                                         n.X,
-                                                                         n.Y,
-                                                                         n.Z,
-                                                                         uu,
-                                                                         vv,
-                                                                         allVertices, mergeVertices);
-
+                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Position.X, v.Position.Y, v.Position.Z),
+                                                                         (n.X, n.Y, n.Z),
+                                                                         (uu, vv),
+                                                                         allVertices,
+                                                                         mergeVertices);
                         }
 
                         for (var k = 0; k < tess.Elements.Length; k++)
@@ -149,11 +141,14 @@ namespace Elements.Geometry
             return basis;
         }
 
-        private static int GetOrCreateVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v,
-                                                 List<(Vector3 position, Vector3 normal, UV uv)> pts, bool mergeVertices)
+        private static int GetOrCreateVertex((double x, double y, double z) position,
+                                             (double x, double y, double z) normal,
+                                             (double u, double v) uv,
+                                             List<(Vector3 position, Vector3 normal, UV uv)> pts,
+                                             bool mergeVertices)
         {
-            var n = new Vector3(nx, ny, nz);
-            var pt = new Vector3(x, y, z);
+            var pt = new Vector3(position.x, position.y, position.z);
+            var n = new Vector3(normal.x, normal.y, normal.z);
 
             if (mergeVertices)
             {
@@ -167,7 +162,7 @@ namespace Elements.Geometry
                 }
             }
 
-            pts.Add((pt, n, new UV(u, v)));
+            pts.Add((pt, n, uv));
             return pts.Count - 1;
         }
 
