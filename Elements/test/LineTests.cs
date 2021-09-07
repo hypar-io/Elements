@@ -423,5 +423,15 @@ namespace Elements.Geometry.Tests
             Assert.Equal(-1, furthestExtend.Start.X);
             Assert.Equal(3, furthestExtend.End.X);
         }
+
+        [Fact]
+        public void HashCodesForDifferentComponentsAreNotEqual()
+        {
+            var a = new Vector3(1, 2, 3);
+            var b = new Vector3(3, 2, 1);
+            var l1 = new Line(a, b);
+            var l2 = new Line(b, a);
+            Assert.NotEqual(l1.GetHashCode(), l2.GetHashCode());
+        }
     }
 }
