@@ -86,34 +86,40 @@ namespace Elements.Benchmarks
         [Benchmark(Description = "Draw all beams.")]
         public void DrawAllBeams()
         {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
+
             _model.ToGlTF(false, this.Merge);
+
+            Validator.DisableValidationOnConstruction = true;
         }
 
         [Benchmark(Description = "Serialize")]
         public void SerializeToJSON()
         {
-            _model.ToJson();
-        }
-
-        [IterationSetup]
-        public void Setup()
-        {
             if (this.SkipValidation)
             {
                 Validator.DisableValidationOnConstruction = true;
             }
-        }
 
-        [IterationCleanup]
-        public void Cleanup()
-        {
+            _model.ToJson();
+
             Validator.DisableValidationOnConstruction = false;
         }
 
         [Benchmark(Description = "Deserialize from JSON.")]
         public void DeserializeFromJSON()
         {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
+
             Model.FromJson(_json);
+
+            Validator.DisableValidationOnConstruction = false;
         }
     }
 
