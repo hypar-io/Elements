@@ -30,6 +30,20 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Equality()
+        {
+            var p = new Vector3(1, 1, 1);
+            var lineA = new Line(Vector3.Origin, p);
+            var lineB = new Line(Vector3.Origin, p + new Vector3(1E-4, 1E-4, 1E-4));
+            var lineC = new Line(Vector3.Origin, p + new Vector3(1E-6, 1E-6, 1E-6));
+
+            Assert.False(lineA.IsAlmostEqualTo(lineB, false));
+            Assert.True(lineA.IsAlmostEqualTo(lineB, false, 1E-3));
+            Assert.True(lineA.IsAlmostEqualTo(lineC, false));
+            Assert.False(lineA.IsAlmostEqualTo(lineA.Reversed(), true));
+        }
+
+        [Fact]
         public void Construct()
         {
             var a = new Vector3();
@@ -340,7 +354,7 @@ namespace Elements.Geometry.Tests
         {
             BBox3 box = new BBox3(new Vector3(0, 0, 0), new Vector3(10, 10, 10));
 
-            //1. Line goes inside 
+            //1. Line goes inside
             Line l = new Line(new Vector3(-5, -5, 5), new Vector3(5, 5, 5));
             l.Intersects(box, out var results, infinite: false);
             Assert.True(results.Count == 1);
