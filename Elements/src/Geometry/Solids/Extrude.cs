@@ -87,7 +87,7 @@ namespace Elements.Geometry.Solids
 
         private void UpdateGeometry()
         {
-            this._solid = Kernel.Instance.CreateExtrude(this.Profile, this.Height, this.Direction);
+            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction);
             this._csg = this._solid.ToCsg();
         }
     }

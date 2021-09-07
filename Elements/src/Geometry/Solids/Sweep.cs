@@ -111,7 +111,7 @@ namespace Elements.Geometry.Solids
         {
             var profileTrans = new Transform();
             profileTrans.Rotate(profileTrans.ZAxis, this.ProfileRotation);
-            this._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(this.Profile), this.Curve, this.StartSetback, this.EndSetback);
+            this._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(this._profile), this._curve, this._startSetback, this._endSetback);
             this._csg = this._solid.ToCsg();
         }
 
