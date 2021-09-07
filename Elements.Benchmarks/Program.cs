@@ -93,7 +93,7 @@ namespace Elements.Benchmarks
 
             _model.ToGlTF(false, this.Merge);
 
-            Validator.DisableValidationOnConstruction = true;
+            Validator.DisableValidationOnConstruction = false;
         }
 
         [Benchmark(Description = "Serialize")]
