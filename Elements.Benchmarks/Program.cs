@@ -108,6 +108,21 @@ namespace Elements.Benchmarks
         [Params(true, false)]
         public bool SkipValidation { get; set; }
 
+        [IterationSetup]
+        public void IterSetup()
+        {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
+        }
+
+        [IterationCleanup]
+        public void IterCleanup()
+        {
+            Validator.DisableValidationOnConstruction = false;
+        }
+
         [GlobalSetup]
         public void GlobalSetup()
         {
@@ -139,12 +154,7 @@ namespace Elements.Benchmarks
         [Benchmark(Description = "Draw all HSS beams.")]
         public void DrawAllBeams()
         {
-            if (this.SkipValidation)
-            {
-                Validator.DisableValidationOnConstruction = true;
-            }
             DrawAllBeams(_hssProfiles);
-            Validator.DisableValidationOnConstruction = false;
         }
     }
 
