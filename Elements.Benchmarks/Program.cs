@@ -61,7 +61,41 @@ namespace Elements.Benchmarks
     }
 
     [MemoryDiagnoser]
-    public class HSS
+    public class Serialization
+    {
+        private Model _model;
+        private string _json;
+
+        [GlobalSetup]
+        public void Setup()
+        {
+            var factory = new HSSPipeProfileFactory();
+            var hssProfiles = factory.AllProfiles().ToList();
+            _model = HSS.DrawAllBeams(hssProfiles);
+            _json = _model.ToJson();
+        }
+
+        [Benchmark(Description = "Serialize")]
+        public void SerializeToJSON()
+        {
+            _model.ToJson();
+        }
+
+        [Benchmark(Description = "Deserialize from JSON.")]
+        public void DeserializeFromJSON()
+        {
+            Model.FromJson(_json);
+        }
+
+        [Benchmark(Description = "Serialize to glTF.")]
+        public void SerializeToGlTF()
+        {
+            _model.ToGlTF(false);
+        }
+    }
+
+    [MemoryDiagnoser]
+    public class ElementCreation
     {
         Model _model;
         string _json;
@@ -73,6 +107,21 @@ namespace Elements.Benchmarks
 
         [Params(true, false)]
         public bool Merge { get; set; }
+
+        [IterationSetup]
+        public void Setup()
+        {
+            if (this.SkipValidation)
+            {
+                Validator.DisableValidationOnConstruction = true;
+            }
+        }
+
+        [IterationCleanup]
+        public void Cleanup()
+        {
+            Validator.DisableValidationOnConstruction = false;
+        }
 
         public static Model DrawAllBeams(List<HSSPipeProfile> profiles)
         {
@@ -96,51 +145,16 @@ namespace Elements.Benchmarks
         }
 
         [GlobalSetup]
-        public void Setup()
+        public void GlobalSetup()
         {
             var factory = new HSSPipeProfileFactory();
             _hssProfiles = factory.AllProfiles().ToList();
-            _model = DrawAllBeams(_hssProfiles);
-            _json = _model.ToJson();
         }
 
-        [Benchmark(Description = "Draw all beams.")]
+        [Benchmark(Description = "Draw all HSS beams.")]
         public void DrawAllBeams()
         {
-            if (this.SkipValidation)
-            {
-                Validator.DisableValidationOnConstruction = true;
-            }
-
-            _model.ToGlTF(false, this.Merge);
-
-            Validator.DisableValidationOnConstruction = false;
-        }
-
-        [Benchmark(Description = "Serialize")]
-        public void SerializeToJSON()
-        {
-            if (this.SkipValidation)
-            {
-                Validator.DisableValidationOnConstruction = true;
-            }
-
-            _model.ToJson();
-
-            Validator.DisableValidationOnConstruction = false;
-        }
-
-        [Benchmark(Description = "Deserialize from JSON.")]
-        public void DeserializeFromJSON()
-        {
-            if (this.SkipValidation)
-            {
-                Validator.DisableValidationOnConstruction = true;
-            }
-
-            Model.FromJson(_json);
-
-            Validator.DisableValidationOnConstruction = false;
+            DrawAllBeams(_hssProfiles);
         }
     }
 
