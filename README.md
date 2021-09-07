@@ -47,11 +47,9 @@ We couldn't find anything quite right. So we started building this.
 ## Design Principles
 - There is one base type: Element.
   - Elements have a unique identifier and a name.
-  - An Element can have any number of properties whose types are defined in the provided schemas.
 - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
 - The core Element types will be defined in exactly the same way that third-party types will be defined. 
   - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
-- User-defined element schemas should perform as first class citizens in the system.
 
 ## Geometry
 Elements contains a very simple BREP geometry kernel, and a small set of geometric types like vectors, lines, and polygons. Elements uses a right-handed coordinate system with +Z "up". Elements is unitless except as indicated when calling a geometric method (ex: arcs requires angles in degrees).
