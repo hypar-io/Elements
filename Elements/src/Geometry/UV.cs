@@ -54,5 +54,14 @@ namespace Elements.Geometry
         {
             return $"U:{this.U}, V:{this.V}";
         }
+
+        /// <summary>
+        /// Automatically convert a tuple of two doubles into a UV.
+        /// </summary>
+        /// <param name="uv">An (u,v) tuple of doubles.</param>
+        public static implicit operator UV((double u, double v) uv)
+        {
+            return new UV(uv.u, uv.v);
+        }
     }
 }

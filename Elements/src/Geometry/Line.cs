@@ -142,7 +142,24 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return new[] { this.Start, this.End }.GetHashCode();
+            // https://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-overriding-gethashcode
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + this.Start.GetHashCode();
+                hash = hash * 23 + this.End.GetHashCode();
+                return hash;
+            }
+        }
+
+        /// <summary>
+        /// Are the two lines almost equal?
+        /// </summary>
+        public bool IsAlmostEqualTo(Line other, bool directionDependent, double tolerance = Vector3.EPSILON)
+        {
+            return (Start.IsAlmostEqualTo(other.Start, tolerance) && End.IsAlmostEqualTo(other.End, tolerance))
+                    || (!directionDependent
+                        && (Start.IsAlmostEqualTo(other.End, tolerance) && End.IsAlmostEqualTo(other.Start, tolerance)));
         }
 
         /// <summary>
@@ -378,7 +395,7 @@ namespace Elements.Geometry
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > Vector3.EPSILON && 
+            if (Math.Abs(tMax - tMin) > Vector3.EPSILON &&
                 (infinite || (tMax > -Vector3.EPSILON && tMax < 1 + Vector3.EPSILON)))
             {
                 results.Add(Start + d * tMax);

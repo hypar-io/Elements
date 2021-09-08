@@ -446,5 +446,13 @@ namespace Elements.Tests
             // Mixed tuples + params constructor
             var polyline = new Polyline((0, 0, 0), (0.5, 0), (1, 0.5));
         }
+
+        [Fact]
+        public void HashCodesForDifferentComponentsAreNotEqual()
+        {
+            var a = new Vector3(1, 2, 3);
+            var b = new Vector3(3, 2, 1);
+            Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
+        }
     }
 }
