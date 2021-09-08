@@ -327,26 +327,21 @@ namespace Elements.Search
         /// <param name="visited">A collection of visited node indices.</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  System.Func<List<(int, T)>, int> next,
+                                  System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next,
                                   out List<int> visited)
         {
             var path = new List<int>();
             visited = new List<int>();
             var currentIndex = start;
             var prevIndex = -1;
-            path.Add(currentIndex);
 
             while (currentIndex != -1 && !visited.Contains(currentIndex))
             {
+                path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
                 currentIndex = Traverse(prevIndex, currentIndex, next);
                 prevIndex = oldIndex;
-
-                if (currentIndex != -1)
-                {
-                    path.Add(currentIndex);
-                }
             }
 
             return path;
@@ -354,7 +349,7 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             System.Func<List<(int, T)>, int> next)
+                             System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -370,7 +365,7 @@ namespace Elements.Search
                 return edges.First.Value.Item1;
             }
 
-            return next(edges.ToList());
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1).ToList()));
         }
     }
 }
