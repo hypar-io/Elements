@@ -1075,6 +1075,43 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void RemoveVerticesNearCurve()
+        {
+            this.Name = nameof(RemoveVerticesNearCurve);
+
+            var square = Polygon.Rectangle(1, 1);
+            var upperLeftLine = new Line(new Vector3(-1, 0), new Vector3(0, 1));
+            var remainderPoly1 = square.RemoveVerticesNearCurve(upperLeftLine);
+
+            Assert.Equal(new[] {
+                new Vector3(-0.5, -0.5),
+                new Vector3(0.5, -0.5),
+                new Vector3(0.5, 0.5)
+            }, remainderPoly1.Vertices);
+
+            var lowerRightLine = new Line(new Vector3(0, -1), new Vector3(1, 0));
+
+            var house = new Polygon(new[] {
+                new Vector3(0,0),
+                new Vector3(0,2),
+                new Vector3(2,2),
+                new Vector3(2,0),
+                new Vector3(1.5,0),
+                new Vector3(1.5,1),
+                new Vector3(0.5,1),
+                new Vector3(0.5,0)
+            });
+
+            var doorOutline = Polygon.Rectangle(new Vector3(0.5, 0), new Vector3(1.5, 1));
+
+
+            var houseOutline = house.RemoveVerticesNearCurve(doorOutline);
+
+            var expectedhouseOutline = Polygon.Rectangle(new Vector3(), new Vector3(2, 2));
+            Assert.True(expectedhouseOutline.IsAlmostEqualTo(houseOutline, ignoreWinding: true));
+        }
+
+        [Fact]
         public void SharedSegments_ConcentricCircles_NoResults()
         {
             var a = new Circle(new Vector3(), 1).ToPolygon();
