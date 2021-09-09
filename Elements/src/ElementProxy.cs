@@ -11,6 +11,12 @@ namespace Elements
     /// </summary>
     public class ElementProxy<T> : Element where T : Element
     {
+        /// <summary>
+        /// Cache of created proxies by dependency and element ID
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, Dictionary<Guid, ElementProxy<T>>> _cache = new Dictionary<string, Dictionary<Guid, ElementProxy<T>>>();
+
         [JsonIgnore]
         private T _element = null;
 
@@ -39,15 +45,44 @@ namespace Elements
         }
 
         /// <summary>
-        /// JSON constructor only.
+        /// JSON constructor only for deserializing other models.
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        internal ElementProxy(T element, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
+        internal ElementProxy(Guid elementId, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
+        {
+            this.ElementId = elementId;
+            this.Dependency = dependencyName;
+        }
+
+        /// <summary>
+        /// Create a new proxy within this function.
+        /// </summary>
+        /// <returns></returns>
+        private ElementProxy(T element, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
         {
             this.ElementId = element.Id;
             this.Dependency = dependencyName;
             this._element = element;
+        }
+
+        /// <summary>
+        /// Get an element proxy. Will reuse one if it has already been created via GetProxy, or will create a new one if it didn't exist.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="dependencyName"></param>
+        /// <returns></returns>
+        internal static ElementProxy<T> GetProxy(T element, string dependencyName) {
+            if (!_cache.TryGetValue(dependencyName, out var dictById)) {
+                dictById = new Dictionary<Guid, ElementProxy<T>>();
+                 _cache.Add(dependencyName, dictById);
+            }
+            if (dictById.TryGetValue(element.Id, out var proxy)) {
+                return proxy;
+            }
+            proxy = new ElementProxy<T>(element, dependencyName);
+            dictById.Add(element.Id, proxy);
+            return proxy;
         }
 
         /// <summary>
@@ -87,8 +122,7 @@ namespace Elements
         /// <returns></returns>
         public static ElementProxy<T> Proxy<T>(this T element, string dependencyName) where T : Element
         {
-            var proxy = new ElementProxy<T>(element, dependencyName);
-            return proxy;
+            return ElementProxy<T>.GetProxy(element, dependencyName);
         }
 
         /// <summary>
@@ -104,6 +138,18 @@ namespace Elements
         }
 
         /// <summary>
+        /// Grab the proxy for an element from a list of proxies.
+        /// </summary>
+        /// <param name="proxies">Proxies to search for teh element in.</param>
+        /// <param name="element">The element to find a proxy for.</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static ElementProxy<T> Proxy<T>(this IEnumerable<ElementProxy<T>> proxies, T element) where T : Element
+        {
+            return proxies.FirstOrDefault(e => e.ElementId == element.Id);
+        }
+
+        /// <summary>
         /// Re-populate a list of element proxies' element references.
         /// </summary>
         /// <param name="proxies"></param>
@@ -113,6 +159,17 @@ namespace Elements
         public static IEnumerable<T> Hydrate<T>(this IEnumerable<ElementProxy<T>> proxies, Dictionary<string, Model> models) where T : Element
         {
             return proxies.Select(p => p.Hydrate(models)).ToList();
+        }
+
+        /// <summary>
+        /// Returns a list of element proxies' element references. Assumes they have already been hydrated.
+        /// </summary>
+        /// <param name="proxies"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> Elements<T>(this IEnumerable<ElementProxy<T>> proxies) where T : Element
+        {
+            return proxies.Select(p => p.Element).ToList();
         }
     }
 }
