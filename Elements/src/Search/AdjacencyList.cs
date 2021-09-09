@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -53,10 +52,6 @@ namespace Elements.Search
         /// <param name="data">The data associated with the edge.</param>
         public void AddEdgeAtEnd(int start, int end, T data)
         {
-            if (end == start)
-            {
-                throw new Exception("What the fuck happened here?");
-            }
             if (!_nodes[start].Contains((end, data)))
             {
                 _nodes[start].AddLast((end, data));
