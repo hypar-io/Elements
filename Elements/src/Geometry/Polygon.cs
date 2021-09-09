@@ -1128,7 +1128,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1174,7 +1178,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1246,7 +1254,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1901,6 +1913,10 @@ namespace Elements.Geometry
                 // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back.
                 // here we make a last-ditch attempt to fix this and construct a new polygon.
                 var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
+                if (cleanedVertices.Count < 3)
+                {
+                    return null;
+                }
                 try
                 {
                     return new Polygon(cleanedVertices);
