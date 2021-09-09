@@ -294,27 +294,46 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Draw the adjacency list.
+        /// Draw the network as model arrows.
         /// </summary>
-        /// <param name="points">A collection of points representing the locations
-        /// of the network's nodes.</param>
+        /// <param name="nodeLocations">The locations of the network's nodes.</param>
         /// <param name="color">The color of the resulting model geometry.</param>
-        public ModelArrows ToModelArrows(IList<Vector3> points, Color? color)
+        public ModelArrows ToModelArrows(IList<Vector3> nodeLocations, Color? color)
         {
             var arrowData = new List<(Vector3 origin, Vector3 direction, double scale, Color? color)>();
 
             for (var i = 0; i < _adjacencyList.GetNumberOfVertices(); i++)
             {
-                var start = points[i];
+                var start = nodeLocations[i];
                 foreach (var end in _adjacencyList[i])
                 {
-                    var d = (points[end.Item1] - start).Unitized();
-                    var l = points[end.Item1].DistanceTo(start);
+                    var d = (nodeLocations[end.Item1] - start).Unitized();
+                    var l = nodeLocations[end.Item1].DistanceTo(start);
                     arrowData.Add((start, d, l, color));
                 }
             }
 
             return new ModelArrows(arrowData, arrowAngle: 75);
+        }
+
+        /// <summary>
+        /// Draw the network as model curves.
+        /// </summary>
+        /// <param name="nodeLocations"></param>
+        /// <returns></returns>
+        public List<ModelCurve> ToModelCurves(List<Vector3> nodeLocations)
+        {
+            var curves = new List<ModelCurve>();
+            for (var i = 0; i < this.NodeCount(); i++)
+            {
+                var start = nodeLocations[i];
+                foreach (var end in this.EdgesAt(i))
+                {
+                    curves.Add(new ModelCurve(new Line(start, nodeLocations[end.Item1]), BuiltInMaterials.YAxis));
+                }
+            }
+
+            return curves;
         }
 
         /// <summary>
