@@ -165,11 +165,11 @@ namespace Elements.Geometry
 
                     if (d1 > 0 && d2.ApproximatelyEquals(0, precision))
                     {
-                        // The first point is inside and 
+                        // The first point is inside and
                         // the second point is on the plane.
                         newVertices.Add(v1);
 
-                        // Insert what will become a duplicate 
+                        // Insert what will become a duplicate
                         // vertex.
                         newVertices.Add(v2);
                         continue;
@@ -227,9 +227,9 @@ namespace Elements.Geometry
 
                     for (var i = 0; i < intersections.Count - 1; i += 2)
                     {
-                        // Because we'll have duplicate vertices where an 
+                        // Because we'll have duplicate vertices where an
                         // intersection is on the plane, we need to choose
-                        // which one to use. This follows the rule of finding 
+                        // which one to use. This follows the rule of finding
                         // the one whose index is closer to the first index used.
                         var a = ClosestIndexOf(newVertices, intersections[i], i);
                         var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
@@ -299,9 +299,9 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Intersect this polygon with the provided polygon in 3d.
-        /// Unlike other methods that do 2d intersection, this method is able to 
+        /// Unlike other methods that do 2d intersection, this method is able to
         /// calculate intersections in 3d by doing planar intersections and
-        /// 3D containment checks. If you are looking for 2d intersection, use the 
+        /// 3D containment checks. If you are looking for 2d intersection, use the
         /// Polygon.Intersects(Plane plane, ...) method.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
@@ -310,7 +310,7 @@ namespace Elements.Geometry
         /// <param name="sort">Should the resulting intersections be sorted along
         /// the plane?</param>
         /// <returns>True if this polygon intersect the provided polygon, otherwise false.
-        /// The result collection may have duplicate vertices where intersection 
+        /// The result collection may have duplicate vertices where intersection
         /// with a vertex occurs as there is one intersection associated with each
         /// edge attached to the vertex.</returns>
         internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
@@ -381,13 +381,13 @@ namespace Elements.Geometry
         /// Does this polygon intersect the provided plane?
         /// </summary>
         /// <param name="plane">The intersection plane.</param>
-        /// <param name="results">A collection of intersection results 
+        /// <param name="results">A collection of intersection results
         /// sorted along the plane.</param>
         /// <param name="distinct">Should the intersection results that
         /// are returned be distinct?</param>
         /// <param name="sort">Should the intersection results be sorted
         /// along the plane?</param>
-        /// <returns>True if the plane intersects the polygon, 
+        /// <returns>True if the plane intersects the polygon,
         /// otherwise false.</returns>
         public bool Intersects(Plane plane, out List<Vector3> results, bool distinct = true, bool sort = true)
         {
@@ -871,9 +871,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim the polygon with a collection of polygons that intersect it 
-        /// in 3d. Portions of the intersected polygon on the "outside" 
-        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Trim the polygon with a collection of polygons that intersect it
+        /// in 3d. Portions of the intersected polygon on the "outside"
+        /// (normal-facing side) of the trimming polygons will remain.
         /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
@@ -899,9 +899,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Trim the polygon with a collection of polygons that intersect it 
-        /// in 3d. Portions of the intersected polygon on the "outside" 
-        /// (normal-facing side) of the trimming polygons will remain. 
+        /// Trim the polygon with a collection of polygons that intersect it
+        /// in 3d. Portions of the intersected polygon on the "outside"
+        /// (normal-facing side) of the trimming polygons will remain.
         /// Portions inside the trimming polygons will be discarded.
         /// </summary>
         /// <param name="polygons">The trimming polygons.</param>
@@ -1750,6 +1750,43 @@ namespace Elements.Geometry
                 projected[i] = this.Vertices[i].ProjectAlong(direction, p);
             }
             return new Polygon(projected);
+        }
+
+        /// <summary>
+        /// Trim vertices from a polygon that lie near a given curve.
+        /// </summary>
+        /// <param name="curve">The curve used to trim the polygon</param>
+        /// <param name="tolerance">Optional tolerance value.</param>
+        public Polygon RemoveVerticesNearCurve(Curve curve, double tolerance = Vector3.EPSILON)
+        {
+            var newVertices = new List<Vector3>(this.Vertices.Count);
+            foreach (var v in Vertices)
+            {
+                switch (curve)
+                {
+                    case Polygon polygon:
+                        if (v.DistanceTo(polygon, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
+                    case Polyline polyline:
+                        if (v.DistanceTo(polyline, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
+                    case Line line:
+                        if (v.DistanceTo(line, out _) > tolerance)
+                        {
+                            newVertices.Add(v);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException("Unknown curve type for removing vertices.  Only Polygon, Polyline, and Line are supported.");
+                }
+            }
+            return new Polygon(newVertices);
         }
 
         /// <summary>
