@@ -89,7 +89,6 @@ namespace Elements
         /// Re-populate the element reference in a proxy if it is missing. Does nothing if it is already populated.
         /// </summary>
         /// <param name="models">Keyed dictionary of available models to search for the element reference in.</param>
-        /// <typeparam name="T"></typeparam>
         public T Hydrate(Dictionary<string, Model> models)
         {
             if (this.Element != null)
