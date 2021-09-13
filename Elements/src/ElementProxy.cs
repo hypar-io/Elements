@@ -8,6 +8,8 @@ namespace Elements
     /// <summary>
     /// Proxy for an element from another function.
     /// This is used to attach additional information to upstream elements.
+    /// Proxies created via Element.Proxy() are intended to be reused, so we are not creating multiple proxies for each element.
+    /// Proxies deserialized from other functions are not added to the current proxy cache, so that each function will create its own, new proxies for each element.
     /// </summary>
     public class ElementProxy<T> : Element where T : Element
     {
@@ -113,7 +115,7 @@ namespace Elements
     public static class ElementProxyExtensions
     {
         /// <summary>
-        /// Create a proxy for this element.
+        /// Create a proxy for this element, or get the existing proxy already created for this element if it exists.
         /// </summary>
         /// <param name="element"></param>
         /// <param name="dependencyName">The name of the dependency this element came from. The assumption is that we only need proxies for elements from dependencies.</param>
@@ -125,7 +127,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create proxies for a list of elements.
+        /// Create or get proxies for a list of elements.
         /// </summary>
         /// <param name="elements"></param>
         /// <param name="dependencyName">The name of the dependency these elements came from. The assumption is that we only need proxies for elements from dependencies.</param>
