@@ -68,7 +68,7 @@ namespace Elements
         /// <param name="overrideName"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private static List<OverrideDescriptor> GetOverrideDescriptors<T>(this Element element, string overrideName)
+        private static List<OverrideDescriptor> OverrideDescriptors<T>(this Element element, string overrideName)
         {
             if (!element.AdditionalProperties.ContainsKey(identitiesFieldName))
             {
@@ -89,11 +89,11 @@ namespace Elements
         /// <param name="overrideName"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static List<string> GetOverrideIds<T>(this Element element, string overrideName)
+        public static List<string> OverrideIds<T>(this Element element, string overrideName)
         {
             var ids = new List<string>();
 
-            var descriptors = element.GetOverrideDescriptors<T>(overrideName);
+            var descriptors = element.OverrideDescriptors<T>(overrideName);
 
             if (descriptors != null && descriptors.Count > 0)
             {

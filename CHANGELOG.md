@@ -8,10 +8,14 @@
 - `Elements.Search.DistanceComparer`
 - `Elements.Search.DirectionComparer`
 - `Elements.Search.Network<T>`
+- `Elements.ElementProxy<T>`
+- `Identity.AddOverrideValue`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 - `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
 
 ### Changed
+
+- `Identity.AddOverrideIdentity` is now an extension method.
 
 ### Fixed
 
