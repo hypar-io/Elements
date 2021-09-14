@@ -1,6 +1,7 @@
-using Elements.Geometry;
-using System;
+using Elements.Spatial;
 using Xunit;
+using Newtonsoft.Json;
+using Elements.Geometry;
 
 namespace Elements.Tests
 {
@@ -15,6 +16,20 @@ namespace Elements.Tests
             var proxy1 = mass.Proxy(dependencyName);
             var proxy2 = mass.Proxy(dependencyName);
             Assert.Equal(proxy1.Id, proxy2.Id);
+        }
+
+        [Fact]
+        public void ProxiesCanDeserialize()
+        {
+            var mass = new Mass(new Profile(Polygon.Rectangle(1, 1)));
+            var dependencyName = "Fake Dependency Name";
+            var proxy = mass.Proxy(dependencyName);
+            var model = new Model();
+            model.AddElement(proxy);
+            var json = model.ToJson();
+            var deserialized = Model.FromJson(json);
+            var deserializedProxy = deserialized.GetElementOfType<ElementProxy<Mass>>(proxy.Id);
+            Assert.NotNull(deserializedProxy);
         }
     }
 }
