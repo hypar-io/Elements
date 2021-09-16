@@ -1832,5 +1832,22 @@ namespace Elements.Geometry.Tests
             polygon = polygon.CollinearPointsRemoved();
             Assert.Equal(4, polygon.Vertices.Count());
         }
+
+        [Fact]
+        public void ExtendWhereSomeSegmentsAreAtOrigin()
+        {
+            var pgon = new Polygon((8.01, 6, 0),
+                                    (8, 6, 0),
+                                    (8, 20.90062, 0),
+                                    (8.01, 20.90062, 0),
+                                    (8.01, 26.90062, 0),
+                                    (0, 26.90062, 0),
+                                    (0, 0, 0),
+                                    (8.01, 0, 0),
+                                    (8.01, 6, 0));
+            var line = new Line((2.930087, 15.546126, 0), (2.830087, 15.546126, 0));
+            var extension = line.ExtendTo(pgon.Segments());
+            Assert.True(extension.Direction() == line.Direction());
+        }
     }
 }

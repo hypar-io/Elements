@@ -687,7 +687,7 @@ namespace Elements.Geometry
                     var intersects = testLine.Intersects(segment, out Vector3 intersection, true, true);
 
                     // if the intersection lies on the obstruction, but is beyond the segment, we collect it
-                    if (segment.PointOnLine(intersection, true) && !testLine.PointOnLine(intersection, true))
+                    if (intersects && segment.PointOnLine(intersection, true) && !testLine.PointOnLine(intersection, true))
                     {
                         intersectionsForLine.Add(intersection);
                     }

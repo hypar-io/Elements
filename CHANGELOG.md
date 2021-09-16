@@ -19,6 +19,7 @@
 
 ### Fixed
 
+`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
 
 ## 0.9.3
 
