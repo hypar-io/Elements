@@ -107,6 +107,13 @@ namespace Elements
             this._element = element as T;
             return this.Element;
         }
+
+        /// <summary>
+        /// Clears the current proxy cache. Use this at the beginning of functions so that the previous cache is not polluting our current run.
+        /// </summary>
+        public static void ClearCache() {
+            _cache.Clear();
+        }
     }
 
     /// <summary>
