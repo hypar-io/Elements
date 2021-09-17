@@ -6,6 +6,45 @@ using System.Linq;
 namespace Elements
 {
     /// <summary>
+    /// Wrapper/utilities for ElementProxy generics.
+    /// </summary>
+    public class ElementProxy
+    {
+        private static Dictionary<string, Dictionary<Guid, object>> _cache = new Dictionary<string, Dictionary<Guid, object>>();
+
+        /// <summary>
+        /// Clears the current proxy cache. Use this at the beginning of functions so that the previous cache is not polluting our current run.
+        /// </summary>
+        public static void ClearCache()
+        {
+            Console.WriteLine("Clearing proxy cache.");
+            _cache.Clear();
+        }
+
+        /// <summary>
+        /// Get an element proxy. Will reuse one if it has already been created via GetProxy, or will create a new one if it didn't exist.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="dependencyName"></param>
+        /// <returns></returns>
+        internal static ElementProxy<T> GetProxy<T>(T element, string dependencyName) where T : Element
+        {
+            if (!_cache.TryGetValue(dependencyName, out var dictById))
+            {
+                dictById = new Dictionary<Guid, object>();
+                _cache.Add(dependencyName, dictById);
+            }
+            if (dictById.TryGetValue(element.Id, out var foundProxy))
+            {
+                return (ElementProxy<T>)foundProxy;
+            }
+            var proxy = new ElementProxy<T>(element, dependencyName);
+            dictById.Add(element.Id, proxy);
+            return proxy;
+        }
+    }
+
+    /// <summary>
     /// Proxy for an element from another function.
     /// This is used to attach additional information to upstream elements.
     /// Proxies created via Element.Proxy() are intended to be reused, so we are not creating multiple proxies for each element.
@@ -13,12 +52,6 @@ namespace Elements
     /// </summary>
     public class ElementProxy<T> : Element where T : Element
     {
-        /// <summary>
-        /// Cache of created proxies by dependency and element ID
-        /// </summary>
-        /// <returns></returns>
-        private static Dictionary<string, Dictionary<Guid, ElementProxy<T>>> _cache = new Dictionary<string, Dictionary<Guid, ElementProxy<T>>>();
-
         [JsonIgnore]
         private T _element = null;
 
@@ -58,33 +91,14 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a new proxy within this function.
+        /// Create a new proxy within this function. Not intended to be used anywhere outside of ELementProxy.GetProxy().
         /// </summary>
         /// <returns></returns>
-        private ElementProxy(T element, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
+        internal ElementProxy(T element, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
         {
             this.ElementId = element.Id;
             this.Dependency = dependencyName;
             this._element = element;
-        }
-
-        /// <summary>
-        /// Get an element proxy. Will reuse one if it has already been created via GetProxy, or will create a new one if it didn't exist.
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="dependencyName"></param>
-        /// <returns></returns>
-        internal static ElementProxy<T> GetProxy(T element, string dependencyName) {
-            if (!_cache.TryGetValue(dependencyName, out var dictById)) {
-                dictById = new Dictionary<Guid, ElementProxy<T>>();
-                 _cache.Add(dependencyName, dictById);
-            }
-            if (dictById.TryGetValue(element.Id, out var proxy)) {
-                return proxy;
-            }
-            proxy = new ElementProxy<T>(element, dependencyName);
-            dictById.Add(element.Id, proxy);
-            return proxy;
         }
 
         /// <summary>
@@ -107,13 +121,6 @@ namespace Elements
             this._element = element as T;
             return this.Element;
         }
-
-        /// <summary>
-        /// Clears the current proxy cache. Use this at the beginning of functions so that the previous cache is not polluting our current run.
-        /// </summary>
-        public static void ClearCache() {
-            _cache.Clear();
-        }
     }
 
     /// <summary>
@@ -130,7 +137,7 @@ namespace Elements
         /// <returns></returns>
         public static ElementProxy<T> Proxy<T>(this T element, string dependencyName) where T : Element
         {
-            return ElementProxy<T>.GetProxy(element, dependencyName);
+            return ElementProxy.GetProxy<T>(element, dependencyName);
         }
 
         /// <summary>
