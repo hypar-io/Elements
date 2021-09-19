@@ -9,7 +9,10 @@
 |Name|Description|
 |----|----|
 |Elements|The core elements library containing base geometric types.|
+|Elements.Benchmarks|Benchmarks and tracing for Elements.|
 |Elements.CodeGeneration|Methods for converting JSON schema of Element types to C#.|
+|Elements.Components|Component creation for Elements.|
+|Elements.Serialization.DXF|Methods for serializing a `Model` to and from DXF.|
 |Elements.Serialization.IFC|Methods for serializing a `Model` to IFC.|
 
 # Words of Warning
