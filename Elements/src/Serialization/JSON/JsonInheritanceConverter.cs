@@ -73,12 +73,12 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             failedAssemblyErrors = new List<string>();
+
+            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
             {
                 var name = a.GetName().Name;
-                return !name.StartsWith("System")
-                       && !name.StartsWith("SixLabors")
-                       && !name.StartsWith("Newtonsoft");
+                return !skipAssembliesPrefices.Any(p => name.StartsWith(p));
             }))
             {
                 var types = Array.Empty<Type>();
