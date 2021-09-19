@@ -532,7 +532,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 primaryAxisDirection = Transform.ZAxis - Transform.ZAxis.Dot(boundingPolygonPlane.Normal) * boundingPolygonPlane.Normal;
             }
             var grid = new Grid2d(boundingPolygon, new Transform(boundingPolygon.Vertices.FirstOrDefault(),
-                primaryAxisDirection, boundingPolygon.Normal));
+                primaryAxisDirection, boundingPolygon.Normal()));
             return grid;
 
         }

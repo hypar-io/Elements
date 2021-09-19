@@ -40,7 +40,7 @@ namespace Elements.Geometry
         /// <returns>A solid.</returns>
         public Solid CreateExtrude(Profile profile, double depth, Vector3 direction)
         {
-            if (profile.Perimeter.Normal.Dot(direction) < 0)
+            if (profile.Perimeter.Normal().Dot(direction) < 0)
             {
                 profile = profile.Reversed();
             }

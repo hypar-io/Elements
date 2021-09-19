@@ -116,7 +116,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         private Vector3 GetNormal()
         {
-            return this.GetGeometry().Normal;
+            return this.GetGeometry().Normal();
         }
 
         /// <summary>
