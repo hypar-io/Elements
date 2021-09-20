@@ -16,9 +16,11 @@
 ### Changed
 
 - `Identity.AddOverrideIdentity` is now an extension method.
+- Profile operations throw fewer exceptions when some piece of the profile is invalid, preferring instead to return a partial result or a null.
 
 ### Fixed
 
+### Fixed
 
 ## 0.9.3
 
