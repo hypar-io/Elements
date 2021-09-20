@@ -12,8 +12,9 @@
 
 ### Changed
 
-### Fixed
+- Profile operations throw fewer exceptions when some piece of the profile is invalid, preferring instead to return a partial result or a null.
 
+### Fixed
 
 ## 0.9.3
 
