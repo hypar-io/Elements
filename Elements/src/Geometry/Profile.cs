@@ -568,8 +568,15 @@ namespace Elements.Geometry
                     }
                 }
             }
-            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-            return profile;
+            try
+            {
+                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+                return profile;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
