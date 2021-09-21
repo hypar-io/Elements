@@ -20,6 +20,8 @@
 
 ### Fixed
 
+`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+
 ### Fixed
 
 ## 0.9.3
