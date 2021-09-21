@@ -600,8 +600,15 @@ namespace Elements.Geometry
                     }
                 }
             }
-            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-            return profile;
+            try
+            {
+                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+                return profile;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
@@ -611,7 +618,10 @@ namespace Elements.Geometry
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
                 var profile = node.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
+                if (profile != null)
+                {
+                    joinedProfiles.Add(profile);
+                }
             }
             foreach (var result in node.Childs)
             {
