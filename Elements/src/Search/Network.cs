@@ -320,7 +320,6 @@ namespace Elements.Search
         /// Draw the network as model curves.
         /// </summary>
         /// <param name="nodeLocations"></param>
-        /// <returns></returns>
         public List<ModelCurve> ToModelCurves(List<Vector3> nodeLocations)
         {
             var curves = new List<ModelCurve>();
