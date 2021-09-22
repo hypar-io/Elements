@@ -8,13 +8,21 @@
 - `Elements.Search.DistanceComparer`
 - `Elements.Search.DirectionComparer`
 - `Elements.Search.Network<T>`
+- `Elements.ElementProxy<T>`
+- `Identity.AddOverrideValue`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 - `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
 
 ### Changed
 
+- `Identity.AddOverrideIdentity` is now an extension method.
+- Profile operations throw fewer exceptions when some piece of the profile is invalid, preferring instead to return a partial result or a null.
+
 ### Fixed
 
+`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+
+### Fixed
 
 ## 0.9.3
 
