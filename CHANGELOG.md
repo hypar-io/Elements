@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.5
+
+### Added
+
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+
+### Changed
+
+### Fixed
+
 ## 0.9.4
 
 ### Added
@@ -12,7 +22,6 @@
 - `Identity.AddOverrideValue`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 - `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
-- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
 
 ### Changed
 
