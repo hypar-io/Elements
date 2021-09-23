@@ -5,7 +5,6 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Elements.Tests
 {

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
-using Elements.Validators;
 using Xunit;
 
 namespace Elements.Tests
@@ -48,18 +47,7 @@ namespace Elements.Tests
             [Newtonsoft.Json.JsonConstructor]
             public InputsWithMesh(Mesh @mesh, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey)
             {
-                var validator = Validator.Instance.GetFirstValidatorForType<InputsWithMesh>();
-                if (validator != null)
-                {
-                    validator.PreConstruct(new object[] { @mesh });
-                }
-
                 this.Mesh = @mesh;
-
-                if (validator != null)
-                {
-                    validator.PostConstruct(this);
-                }
             }
 
             [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]

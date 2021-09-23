@@ -1,12 +1,40 @@
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.JSON;
 using Newtonsoft.Json.Linq;
 
 namespace Elements
 {
-    public partial class ContentCatalog
+    /// <summary>
+    /// A collection of content elements.
+    /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public class ContentCatalog : Element
     {
+        /// <summary>The content elements in this catalog.</summary>
+        [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
+
+        /// <summary>An example arrangement of the elements contained in this catalog.</summary>
+        [Newtonsoft.Json.JsonProperty("ReferenceConfiguration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Element> ReferenceConfiguration { get; set; }
+
+        /// <summary>
+        /// Construct a content catalog.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="referenceConfiguration"></param>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        [Newtonsoft.Json.JsonConstructor]
+        public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id = default, string @name = null)
+            : base(id, name)
+        {
+            this.Content = @content;
+            this.ReferenceConfiguration = @referenceConfiguration;
+        }
+
         /// <summary>
         /// Convert the ContentCatalog into it's JSON representation.
         /// </summary>

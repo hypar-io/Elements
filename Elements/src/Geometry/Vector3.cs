@@ -1,6 +1,6 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -18,6 +18,45 @@ namespace Elements.Geometry
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
+
+        /// <summary>
+        /// Create a vector.
+        /// </summary>
+        /// <param name="x">The x component.</param>
+        /// <param name="y">The y component.</param>
+        /// <param name="z">The z component.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Vector3(double @x, double @y, double @z)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Double.IsNaN(x) || Double.IsNaN(y) || Double.IsNaN(z))
+                {
+                    throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was NaN.");
+                }
+
+                if (Double.IsInfinity(x) || Double.IsInfinity(y) || Double.IsInfinity(z))
+                {
+                    throw new ArgumentOutOfRangeException("The vector could not be created. One or more of the components was infinity.");
+                }
+            }
+
+            this.X = @x;
+            this.Y = @y;
+            this.Z = @z;
+        }
+
+        /// <summary>The X component of the vector.</summary>
+        [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
+        public double X { get; set; }
+
+        /// <summary>The Y component of the vector.</summary>
+        [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
+        public double Y { get; set; }
+
+        /// <summary>The Z component of the vector.</summary>
+        [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
+        public double Z { get; set; }
 
         /// <summary>
         /// Create a vector at the origin.

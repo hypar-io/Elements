@@ -1,12 +1,60 @@
+using Elements.Validators;
 using System;
 
 namespace Elements.Geometry
 {
-    /// <summary>
-    /// An RGBA color.
-    /// </summary>
-    public partial struct Color : IEquatable<Color>
+    /// <summary>A color with red, green, blue, and alpha components.</summary>
+    public struct Color : IEquatable<Color>
     {
+        /// <summary>The red component of the color between 0.0 and 1.0.</summary>
+        [Newtonsoft.Json.JsonProperty("Red", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
+        public double Red { get; set; }
+
+        /// <summary>The green component of the color between 0.0 and 1.0.</summary>
+        [Newtonsoft.Json.JsonProperty("Green", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
+        public double Green { get; set; }
+
+        /// <summary>The blue component of the color between 0.0 and 1.0.</summary>
+        [Newtonsoft.Json.JsonProperty("Blue", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
+        public double Blue { get; set; }
+
+        /// <summary>The alpha component of the color between 0.0 and 1.0.</summary>
+        [Newtonsoft.Json.JsonProperty("Alpha", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
+        public double Alpha { get; set; }
+
+        /// <summary>
+        /// Create a color.
+        /// </summary>
+        /// <param name="red">The red component.</param>
+        /// <param name="green">The green component.</param>
+        /// <param name="blue">The blue component.</param>
+        /// <param name="alpha">The alpha component.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Color(double @red, double @green, double @blue, double @alpha)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (red < 0.0 || green < 0.0 || blue < 0.0 || alpha < 0.0)
+                {
+                    throw new ArgumentOutOfRangeException("All components must have a value greater than 0.0.");
+                }
+
+                if (red > 1.0 || green > 1.0 || blue > 1.0 || alpha > 1.0)
+                {
+                    throw new ArgumentOutOfRangeException("All components must have a value less than or equal to 1.0.");
+                }
+            }
+
+            this.Red = @red;
+            this.Green = @green;
+            this.Blue = @blue;
+            this.Alpha = @alpha;
+        }
+
         /// <summary>
         /// Get the color's components as an array.
         /// </summary>
