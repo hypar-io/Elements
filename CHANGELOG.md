@@ -12,6 +12,7 @@
 - `Identity.AddOverrideValue`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 - `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
 
 ### Changed
 
