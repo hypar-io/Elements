@@ -40,6 +40,7 @@ namespace Elements.Geometry
 
             this.Perimeter = @perimeter;
             this.Voids = @voids ?? new List<Polygon>();
+            OrientVoids();
         }
 
         /// <summary>
