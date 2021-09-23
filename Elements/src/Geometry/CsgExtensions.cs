@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
@@ -177,88 +175,6 @@ namespace Elements.Geometry
             });
         }
 
-        internal static Csg.Solid ToCsg(this Solid solid)
-        {
-            var polygons = new List<Csg.Polygon>();
-
-            foreach (var f in solid.Faces.Values)
-            {
-                if (f.Inner != null && f.Inner.Count() > 0)
-                {
-                    var tess = new Tess();
-                    tess.NoEmptyPolygons = true;
-
-                    tess.AddContour(f.Outer.ToContourVertexArray(f));
-
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray(f));
-                    }
-
-                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                    Vector3 e1 = new Vector3();
-                    Vector3 e2 = new Vector3();
-
-                    var vertices = new List<Csg.Vertex>();
-                    for (var i = 0; i < tess.ElementCount; i++)
-                    {
-                        var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
-                        var b = tess.Vertices[tess.Elements[i * 3 + 1]].ToCsgVector3();
-                        var c = tess.Vertices[tess.Elements[i * 3 + 2]].ToCsgVector3();
-
-                        Csg.Vertex av = null;
-                        Csg.Vertex bv = null;
-                        Csg.Vertex cv = null;
-
-                        if (i == 0)
-                        {
-                            var n = f.Plane().Normal;
-                            e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                            e2 = n.Cross(e1).Unitized();
-                        }
-                        if (av == null)
-                        {
-                            var avv = new Vector3(a.X, a.Y, a.Z);
-                            av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
-                            vertices.Add(av);
-                        }
-                        if (bv == null)
-                        {
-                            var bvv = new Vector3(b.X, b.Y, b.Z);
-                            bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
-                            vertices.Add(bv);
-                        }
-                        if (cv == null)
-                        {
-                            var cvv = new Vector3(c.X, c.Y, c.Z);
-                            cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
-                            vertices.Add(cv);
-                        }
-
-                        var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
-                        polygons.Add(p);
-                    }
-                }
-                else
-                {
-                    var verts = new List<Csg.Vertex>();
-                    var n = f.Plane().Normal;
-                    var e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                    var e2 = n.Cross(e1).Unitized();
-                    foreach (var e in f.Outer.Edges)
-                    {
-                        var l = e.Vertex.Point;
-                        var v = new Csg.Vertex(l.ToCsgVector3(), new Csg.Vector2D(e1.Dot(l), e2.Dot(l)));
-                        verts.Add(v);
-                    }
-                    var p = new Csg.Polygon(verts);
-                    polygons.Add(p);
-                }
-            }
-            return Csg.Solid.FromPolygons(polygons);
-        }
-
         internal static Csg.Solid ToCsg(this Mesh mesh)
         {
             var vertices = new List<Csg.Vertex>();
@@ -375,7 +291,7 @@ namespace Elements.Geometry
             return new UV(uv.X, uv.Y);
         }
 
-        private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
+        internal static Csg.Vector3D ToCsgVector3(this ContourVertex v)
         {
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
         }
@@ -416,7 +332,7 @@ namespace Elements.Geometry
             return false;
         }
 
-        private static Csg.Vector3D ToCsgVector3(this Vector3 v)
+        internal static Csg.Vector3D ToCsgVector3(this Vector3 v)
         {
             return new Csg.Vector3D(v.X, v.Y, v.Z);
         }

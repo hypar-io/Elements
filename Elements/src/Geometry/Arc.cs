@@ -1,4 +1,4 @@
-using Elements.Geometry.Interfaces;
+using Elements.Validators;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -11,10 +11,63 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ArcTests.cs?name=example)]
     /// </example>
-    public partial class Arc : ICurve, IEquatable<Arc>
+    public partial class Arc : Curve, IEquatable<Arc>
     {
+        /// <summary>The center of the arc.</summary>
+        [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Center { get; set; }
+
+        /// <summary>The radius of the arc.</summary>
+        [Newtonsoft.Json.JsonProperty("Radius", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Radius { get; set; }
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
+        [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double StartAngle { get; set; }
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
+        [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double EndAngle { get; set; }
+
         /// <summary>
-        /// Construct an arc.
+        /// Create an arc.
+        /// </summary>
+        /// <param name="center">The center of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle) : base()
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (endAngle > 360.0 || startAngle > 360.00)
+                {
+                    throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
+                }
+
+                if (endAngle == startAngle)
+                {
+                    throw new ArgumentException($"The arc could not be created. The start angle ({startAngle}) cannot be equal to the end angle ({endAngle}).");
+                }
+
+                if (radius <= 0.0)
+                {
+                    throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
+                }
+            }
+
+            this.Center = @center;
+            this.Radius = @radius;
+            this.StartAngle = @startAngle;
+            this.EndAngle = @endAngle;
+        }
+
+        /// <summary>
+        /// Create an arc.
         /// </summary>
         /// <param name="radius">The radius of the arc.</param>
         /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
