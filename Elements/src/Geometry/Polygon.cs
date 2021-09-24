@@ -1,7 +1,9 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
+using Elements.Validators;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,28 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Polygon(IList<Vector3> @vertices) : base(vertices)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (!vertices.AreCoplanar())
+                {
+                    throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+                }
+
+                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
+                var segments = Polygon.SegmentsInternal(this.Vertices);
+                Polyline.CheckSegmentLengthAndThrow(segments);
+                var t = this.Vertices.ToTransform();
+                Polyline.CheckSelfIntersectionAndThrow(t, segments);
+            }
+        }
+
         /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>
@@ -36,10 +60,7 @@ namespace Elements.Geometry
         /// that can be used like this: `new Polygon((0,0,0), (10,0,0), (10,10,0))`
         /// </summary>
         /// <param name="vertices">The vertices of the polygon.</param>
-        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices))
-        {
-
-        }
+        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices)) { }
 
         /// <summary>
         /// Construct a transformed copy of this Polygon.
@@ -71,8 +92,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Transform ToTransform()
         {
-            var normal = Normal();
-            return new Transform(Vertices[0], Vertices[1] - Vertices[0], normal);
+            return new Transform(Vertices[0], Vertices[1] - Vertices[0], this.Normal());
         }
 
         /// <summary>
@@ -1439,7 +1459,7 @@ namespace Elements.Geometry
         {
             var otherVertices = other.Vertices;
             if (otherVertices.Count != Vertices.Count) return false;
-            if (ignoreWinding && other.Normal().Dot(Normal()) < 0)
+            if (ignoreWinding && other.Normal().Dot(this.Normal()) < 0)
             {
                 //ensure winding is consistent
                 otherVertices = other.Vertices.Reverse().ToList();
@@ -1658,7 +1678,7 @@ namespace Elements.Geometry
 
             // Cache the normal so we don't have to recalculate
             // using Newell for every frame.
-            var up = Normal();
+            var up = this.Normal();
             for (var i = 0; i < result.Length; i++)
             {
                 var a = this.Vertices[i];
@@ -1972,14 +1992,15 @@ namespace Elements.Geometry
 
         internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
         {
-            var contour = new List<ContourVertex>();
-            foreach (var vert in poly.Vertices)
+            var contour = new ContourVertex[poly.Vertices.Count];
+            for (var i = 0; i < poly.Vertices.Count; i++)
             {
+                var vert = poly.Vertices[i];
                 var cv = new ContourVertex();
                 cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
-                contour.Add(cv);
+                contour[i] = cv;
             }
-            return contour.ToArray();
+            return contour;
         }
     }
 }

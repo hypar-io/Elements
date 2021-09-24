@@ -9,6 +9,7 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Validators
 {
+    [Obsolete]
     public class ElementValidator : IValidator
     {
         public Type ValidatesType => typeof(Element);
@@ -28,6 +29,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class GeometricElementValidator : IValidator
     {
         public Type ValidatesType => typeof(GeometricElement);
@@ -51,6 +53,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class ArcValidator : IValidator
     {
         public Type ValidatesType => typeof(Arc);
@@ -84,6 +87,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class BBox3Validator : IValidator
     {
         public Type ValidatesType => typeof(BBox3);
@@ -105,6 +109,7 @@ namespace Elements.Validators
 
     }
 
+    [Obsolete]
     public class LineValidator : IValidator
     {
         public Type ValidatesType => typeof(Line);
@@ -126,6 +131,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class ProfileValidator : IValidator
     {
         public Type ValidatesType => typeof(Profile);
@@ -153,6 +159,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class MaterialValidator : IValidator
     {
         public Type ValidatesType => typeof(Material);
@@ -202,6 +209,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class PlaneValidator : IValidator
     {
         public Type ValidatesType => typeof(Plane);
@@ -229,6 +237,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class Vector3Validator : IValidator
     {
         public Type ValidatesType => typeof(Vector3);
@@ -256,6 +265,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class ColorValidator : IValidator
     {
         public Type ValidatesType => typeof(Color);
@@ -284,6 +294,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class ExtrudeValidator : IValidator
     {
         public Type ValidatesType => typeof(Extrude);
@@ -298,7 +309,6 @@ namespace Elements.Validators
         private void UpdateGeometry(Extrude extrude)
         {
             extrude._solid = Kernel.Instance.CreateExtrude(extrude.Profile, extrude.Height, extrude.Direction);
-            extrude._csg = extrude._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)
@@ -315,6 +325,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class SweepValidator : IValidator
     {
         public Type ValidatesType => typeof(Sweep);
@@ -331,7 +342,6 @@ namespace Elements.Validators
             var profileTrans = new Transform();
             profileTrans.Rotate(profileTrans.ZAxis, sweep.ProfileRotation);
             sweep._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(sweep.Profile), sweep.Curve, sweep.StartSetback, sweep.EndSetback);
-            sweep._csg = sweep._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)
@@ -340,6 +350,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class LaminaValidator : IValidator
     {
         public Type ValidatesType => typeof(Lamina);
@@ -354,7 +365,6 @@ namespace Elements.Validators
         private void UpdateGeometry(Lamina lamina)
         {
             lamina._solid = Kernel.Instance.CreateLamina(lamina.Perimeter, lamina.Voids);
-            lamina._csg = lamina._solid.ToCsg();
         }
 
         public void PreConstruct(object[] args)
@@ -363,6 +373,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class MatrixValidator : IValidator
     {
         public Type ValidatesType => typeof(Matrix);
@@ -382,6 +393,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class PolylineValidator : IValidator
     {
         public Type ValidatesType => typeof(Polyline);
@@ -407,6 +419,7 @@ namespace Elements.Validators
         }
     }
 
+    [Obsolete]
     public class PolygonValidator : IValidator
     {
         public Type ValidatesType => typeof(Polygon);

@@ -10,10 +10,33 @@ using static Elements.Units;
 
 namespace Elements.Geometry
 {
+    /// <summary>
+    /// A triangle mesh.
+    /// </summary>
     [JsonConverter(typeof(MeshConverter))]
-    public partial class Mesh
+    public class Mesh
     {
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
+
+        /// <summary>The mesh' vertices.</summary>
+        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Vertex> Vertices { get; set; }
+
+        /// <summary>The mesh' triangles.</summary>
+        [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Triangle> Triangles { get; set; }
+
+        /// <summary>
+        /// Construct a mesh.
+        /// </summary>
+        /// <param name="vertices">The vertices of the mesh.</param>
+        /// <param name="triangles">The triangles of the mesh.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles)
+        {
+            this.Vertices = @vertices;
+            this.Triangles = @triangles;
+        }
 
         /// <summary>
         /// Construct an empty mesh.

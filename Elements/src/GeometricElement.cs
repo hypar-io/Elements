@@ -1,12 +1,52 @@
 using System;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Interfaces;
 
 namespace Elements
 {
-    public partial class GeometricElement
+    /// <summary>
+    /// An element with a geometric representation.
+    /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public class GeometricElement : Element
     {
+        /// <summary>The element's transform.</summary>
+        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Transform Transform { get; set; }
+
+        /// <summary>The element's material.</summary>
+        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Material Material { get; set; }
+
+        /// <summary>The element's representation.</summary>
+        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Representation Representation { get; set; }
+
+        /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
+        [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsElementDefinition { get; set; } = false;
+
+        /// <summary>
+        /// Create a geometric element.
+        /// </summary>
+        /// <param name="transform">The element's transform.</param>
+        /// <param name="material">The element's material.</param>
+        /// <param name="representation"></param>
+        /// <param name="isElementDefinition"></param>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        [Newtonsoft.Json.JsonConstructor]
+        public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+            : base(id, name)
+        {
+            this.Transform = @transform ?? new Geometry.Transform();
+            this.Material = @material ?? BuiltInMaterials.Default;
+            this.Representation = @representation;
+            this.IsElementDefinition = @isElementDefinition;
+        }
+
         /// <summary>
         /// This method provides an opportunity for geometric elements
         /// to adjust their solid operations before tesselation. As an example,
@@ -89,7 +129,7 @@ namespace Elements
                 var openingContainer = (IHasOpenings)this;
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._csg.Transform(o.Transform.ToMatrix4x4())))).ToArray();
+                                                      .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
             // Don't try CSG booleans if we only have one one solid.
             if (solids.Count() == 1)
@@ -140,11 +180,11 @@ namespace Elements
         {
             if (Transform == null)
             {
-                return op._csg;
+                return op._solid.ToCsg();
             }
             return op.LocalTransform != null
-                        ? op._csg.Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
-                        : op._csg.Transform(Transform.ToMatrix4x4());
+                        ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
+                        : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
         }
     }
 }

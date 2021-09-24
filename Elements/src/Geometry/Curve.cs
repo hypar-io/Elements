@@ -3,6 +3,10 @@ using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
+    /// <summary>
+    /// The abstract base class for all curves.
+    /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>

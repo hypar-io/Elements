@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,40 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : Element, IEquatable<Profile>
+    public class Profile : Element, IEquatable<Profile>
     {
+        /// <summary>The perimeter of the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Polygon Perimeter { get; set; }
+
+        /// <summary>A collection of Polygons representing voids in the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
+        public IList<Polygon> Voids { get; set; }
+
+        /// <summary>
+        /// Create a profile.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">A collection of voids in the profile.</param>
+        /// <param name="id">The id of the profile.</param>
+        /// <param name="name">The name of the profile.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
+            : base(id, name)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+                {
+                    throw new Exception("To construct a profile, all points must lie in the same plane.");
+                }
+            }
+
+            this.Perimeter = @perimeter;
+            this.Voids = @voids ?? new List<Polygon>();
+            OrientVoids();
+        }
+
         /// <summary>
         /// Construct a profile.
         /// </summary>
