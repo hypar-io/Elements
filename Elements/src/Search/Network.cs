@@ -382,11 +382,20 @@ namespace Elements.Search
                 return -1;
             }
 
-            if (edges.Count == 1 && edges.First.Value.Item1 != currentIndex)
+            if (edges.Count == 1)
             {
-                // If there's only one connected vertex and 
-                // it's not the current vertex, return it.
-                return edges.First.Value.Item1;
+                if (edges.First.Value.Item1 == prevIndex)
+                {
+                    // Don't traverse backwards.
+                    return -1;
+                }
+
+                if (edges.First.Value.Item1 != currentIndex)
+                {
+                    // If there's only one connected vertex and 
+                    // it's not the current vertex, return it.
+                    return edges.First.Value.Item1;
+                }
             }
 
             return next((currentIndex, prevIndex, edges.Select(e => e.Item1).ToList()));
