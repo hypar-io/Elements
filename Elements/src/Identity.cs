@@ -17,24 +17,9 @@ namespace Elements
         /// <summary>
         /// Track that an element was affected by a specific override.
         /// </summary>
-        public static void AddOverrideIdentity(this Element element, dynamic overrideObject)
+        public static void AddOverrideIdentity(this Element element, IOverride overrideObject)
         {
-            AddOverrideIdentity(element, overrideObject.GetName(), GetPropertyFromDynamic<string>(overrideObject, "Id"), GetPropertyFromDynamic<object>(overrideObject, "Identity"));
-        }
-
-        private static T GetPropertyFromDynamic<T>(dynamic obj, string propertyName)
-        {
-            if (obj == null)
-            {
-                return default(T);
-            }
-            var type = obj.GetType();
-            var property = type.GetProperty(propertyName);
-            if (property == null)
-            {
-                return default(T);
-            }
-            return (T)property.GetValue(obj);
+            AddOverrideIdentity(element, overrideObject.GetName(), overrideObject.Id, overrideObject.GetIdentity());
         }
 
         /// <summary>

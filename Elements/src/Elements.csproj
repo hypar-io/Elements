@@ -20,7 +20,6 @@
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Textures\**\*.*">
