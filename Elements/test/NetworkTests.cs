@@ -202,5 +202,67 @@ namespace Elements.Tests
             var pts = p.Segments().Intersections();
             Assert.Single(pts);
         }
+
+        [Fact]
+        public void SingleLeafTraversesOutsideAndClosedLoop()
+        {
+            // A vertical line with a triangle pointing to the right.
+            var a = new Line(Vector3.Origin, new Vector3(0, 10, 0));
+            var b = new Line(new Vector3(0, 5, 0), new Vector3(5, 3, 0));
+            var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
+
+            Func<(int currentIndex, int previousIndex, List<int> edgeIndices), int> next = (a) =>
+                {
+                    var minAngle = double.MaxValue;
+                    var minIndex = -1;
+                    var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
+                    var localEdges = a.edgeIndices.Select(e => (e, allNodeLocations[a.currentIndex], allNodeLocations[e])).ToList();
+                    foreach (var e in a.edgeIndices)
+                    {
+                        if (e == a.previousIndex)
+                        {
+                            continue;
+                        }
+
+                        var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
+                        var angle = baseEdge.PlaneAngleTo(localEdge);
+
+                        // The angle of traversal is not actually zero here,
+                        // it's 180 (unless the path is invalid). We want to
+                        // ensure that traversal happens along the straight
+                        // edge if possible.
+                        if (angle == 0)
+                        {
+                            angle = 180.0;
+                        }
+
+                        if (angle < minAngle)
+                        {
+                            minAngle = angle;
+                            minIndex = e;
+                        }
+                    }
+                    return minIndex;
+                };
+
+            var leafIndices = new List<int>();
+            for (var i = 0; i < network.NodeCount(); i++)
+            {
+                if (network.EdgesAt(i).Count() == 1)
+                {
+                    leafIndices.Add(i);
+                }
+            }
+
+            Assert.Single(leafIndices);
+
+            foreach (var leafIndex in leafIndices)
+            {
+                network.Traverse(leafIndex, next, out List<int> visited);
+                Assert.Equal(6, visited.Count);
+                _output.WriteLine(string.Join(',', visited));
+            }
+        }
     }
 }

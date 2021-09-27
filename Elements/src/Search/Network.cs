@@ -353,13 +353,20 @@ namespace Elements.Search
             var currentIndex = start;
             var prevIndex = -1;
 
-            while (currentIndex != -1 && !visited.Contains(currentIndex))
+            while (currentIndex != -1)
             {
                 path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
                 currentIndex = Traverse(prevIndex, currentIndex, next);
                 prevIndex = oldIndex;
+
+                // After at least one traversal step, if the current index
+                // is the start, we've achieved a loop.
+                if (currentIndex == start)
+                {
+                    break;
+                }
             }
 
             // Allow closing a loop.
