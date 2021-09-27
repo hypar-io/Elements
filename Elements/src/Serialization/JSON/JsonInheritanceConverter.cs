@@ -9,7 +9,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
@@ -74,7 +73,13 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             failedAssemblyErrors = new List<string>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+
+            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
+            {
+                var name = a.GetName().Name;
+                return !skipAssembliesPrefices.Any(p => name.StartsWith(p));
+            }))
             {
                 var types = Array.Empty<Type>();
                 try
