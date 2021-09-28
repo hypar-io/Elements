@@ -208,7 +208,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     // If no intersection found than outside point is exactly within tolerance.
                     // But since Intersects works on 0 to 1 range internally, mismatch in interpretation
                     // is possible. Cut the edge in this case.
-                    if (intersections.Count == 0 )
+                    if (intersections.Count == 0)
                     {
                         edgesToDelete.Add(edge);
                     }
