@@ -205,8 +205,15 @@ namespace Elements.Spatial.AdaptiveGrid
                     var edgeLine = edge.GetGeometry();
                     List<Vector3> intersections;
                     edgeLine.Intersects(box, out intersections);
+                    // If no intersection found than outside point is exactly within tolerance.
+                    // But since Intersects works on 0 to 1 range internally, mismatch in interpretation
+                    // is possible. Cut the edge in this case.
+                    if (intersections.Count == 0 )
+                    {
+                        edgesToDelete.Add(edge);
+                    }
                     // Intersections are sorted from the start point.
-                    if (intersections.Count == 1)
+                    else if (intersections.Count == 1)
                     {
                         //Need to find which end is inside the box. 
                         //If none - we just touched the corner
