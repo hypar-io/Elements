@@ -206,6 +206,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void NormalFromPlanarWoundPoints()
+        {
+            var points = new List<Vector3>() {
+                new Vector3(0,1,0),
+                new Vector3(0,1,1),
+                new Vector3(0,0,1),
+                new Vector3(0,0,0),
+            };
+            points.Reverse();
+            var normal = points.NormalFromPlanarWoundPoints();
+        }
+
+        [Fact]
         public void CCW()
         {
             var a = new Vector3();

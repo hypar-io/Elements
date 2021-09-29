@@ -35,12 +35,18 @@ namespace Elements
         public double DepthBack { get; set; }
 
         /// <summary>
+        /// The normal direction of the opening.
+        /// </summary>
+        public Vector3 Normal { get; set; }
+
+        /// <summary>
         /// Create an opening.
         /// </summary>
         [JsonConstructor]
         public Opening(Polygon perimeter,
                        double depthFront = 1.0,
                        double depthBack = 1.0,
+                       Vector3 normal = default(Vector3),
                        Transform transform = null,
                        Representation representation = null,
                        bool isElementDefinition = false,
@@ -52,6 +58,14 @@ namespace Elements
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
         {
+            if (normal == default(Vector3))
+            {
+                Normal = Vector3.ZAxis; // legacy openings don't have a normal and assume normal is the Z axis
+            }
+            else
+            {
+                Normal = normal.Unitized();
+            }
             this.Perimeter = perimeter;
             this.DepthBack = depthBack;
             this.DepthFront = depthFront;
@@ -65,11 +79,11 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             if (this.DepthFront > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Vector3.ZAxis, true));
+                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Normal, true));
             }
             if (this.DepthBack > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Vector3.ZAxis.Negate(), true));
+                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Normal.Negate(), true));
             }
         }
     }

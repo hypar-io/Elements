@@ -235,6 +235,7 @@ namespace Elements.Serialization.IFC
                 var newOpening = new Opening(profile,
                                              (IfcLengthMeasure)s.Depth,
                                              (IfcLengthMeasure)s.Depth,
+                                             default(Vector3),
                                              solidTransform,
                                              null,
                                              false,
@@ -320,13 +321,13 @@ namespace Elements.Serialization.IFC
         // private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
         // {
         //     // var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-        //     // We use the Z extrude direction because the direction is 
+        //     // We use the Z extrude direction because the direction is
         //     // relative to the local placement, which is a transform at the
         //     // beam's end with the Z axis pointing along the direction.
 
         //     // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
         //     // var position = new Transform().ToIfcAxis2Placement3D(doc);
-        //     // var solid = new IfcExtrudedAreaSolid(sweptArea, position, 
+        //     // var solid = new IfcExtrudedAreaSolid(sweptArea, position,
         //     //     extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
 
         //     var extrude= (Extrude)opening.Geometry.SolidOperations[0];

@@ -15,11 +15,13 @@ namespace Elements
         /// <summary>
         /// The height of the wall.
         /// </summary>
+        [Obsolete]
         public double Height { get; protected set; }
 
         /// <summary>
         /// The profile of the wall.
         /// </summary>
+        [Obsolete]
         public Profile Profile { get; protected set; }
 
         /// <summary>
