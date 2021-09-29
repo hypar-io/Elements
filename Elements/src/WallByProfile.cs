@@ -22,7 +22,7 @@ namespace Elements
         public double Thickness { get; set; }
 
         /// <summary>The perimeter of the wall's profile.  It is assumed to be in the same plane as the centerline, and will often be projected to that plane during internal operations.</summary>
-        [Newtonsoft.Json.JsonProperty("perimeter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>The Centerline of the wall</summary>
@@ -70,6 +70,16 @@ namespace Elements
         public Profile GetProfile()
         {
             return new Profile(Perimeter, Openings.Select(o => o.Perimeter).ToList());
+        }
+
+        /// <summary>
+        /// The computed height of the wall.
+        /// </summary>
+        public double GetHeight()
+        {
+            var bottom = Math.Min(Centerline.Start.Z, Centerline.End.Z);
+            var top = Perimeter.Vertices.Max(v => v.Z);
+            return top - bottom;
         }
 
         /// <summary>

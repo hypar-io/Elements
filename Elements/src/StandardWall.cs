@@ -24,6 +24,12 @@ namespace Elements
         public double Thickness { get; set; }
 
         /// <summary>
+        /// The height of the wall.
+        /// </summary>
+        public new double Height { get; protected set; }
+
+
+        /// <summary>
         /// Construct a wall along a line.
         /// </summary>
         /// <param name="centerLine">The center line of the wall.</param>
