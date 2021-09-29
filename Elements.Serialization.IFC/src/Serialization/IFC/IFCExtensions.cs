@@ -233,9 +233,9 @@ namespace Elements.Serialization.IFC
                 var profile = (Polygon)s.SweptArea.ToCurve();
 
                 var newOpening = new Opening(profile,
-                                             (IfcLengthMeasure)s.Depth,
-                                             (IfcLengthMeasure)s.Depth,
                                              default(Vector3),
+                                             (IfcLengthMeasure)s.Depth,
+                                             (IfcLengthMeasure)s.Depth,
                                              solidTransform,
                                              null,
                                              false,

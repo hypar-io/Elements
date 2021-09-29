@@ -216,6 +216,7 @@ namespace Elements.Tests
             };
             points.Reverse();
             var normal = points.NormalFromPlanarWoundPoints();
+            Assert.Equal(Vector3.XAxis.Negate(), normal);
         }
 
         [Fact]

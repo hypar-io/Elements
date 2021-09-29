@@ -80,7 +80,8 @@ namespace Elements
         }
 
         /// <summary>
-        /// Add an opening in the wall.
+        /// Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
+        /// in the well elevation coordinate system.  The x and y will position the bottom left corner of the rectangular opening.
         /// </summary>
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
@@ -91,13 +92,14 @@ namespace Elements
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, transform: openingTransform);
+            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
 
         /// <summary>
-        /// Add an opening in the wall.
+        /// Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
+        /// in the well elevation coordinate system.  The x and y will position the first point of the polygon opening.
         /// </summary>
         /// <param name="perimeter">The perimeter of the opening.</param>
         /// <param name="x">The distance to the origin of the perimeter opening along the center line of the wall.</param>
@@ -107,7 +109,7 @@ namespace Elements
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(perimeter, depthFront, depthBack, transform: openingTransform);
+            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }

@@ -12,16 +12,19 @@ namespace Elements
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class WallByProfile : Wall
     {
-        /// <summary>The profile, which includes openings that will be extruded.</summary>
+        /// <summary>The Profile, which includes Openings that will be extruded.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("The Profile property is obsolete, use the GetProfile method to access a profile created from the perimeter and the openings.")]
         public new Profile Profile { get; set; }
 
-        /// <summary>The overall thickness of the wall</summary>
+        /// <summary>The overall thickness of the Wall</summary>
         [Newtonsoft.Json.JsonProperty("Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Thickness { get; set; }
 
-        /// <summary>The perimeter of the wall's profile.  It is assumed to be in the same plane as the centerline, and will often be projected to that plane during internal operations.</summary>
+        /// <summary>
+        /// The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
+        /// and will often be projected to that Plane during internal operations.
+        /// </summary>
         [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polygon Perimeter { get; set; }
 
@@ -43,6 +46,7 @@ namespace Elements
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
         [Newtonsoft.Json.JsonConstructor]
+        [Obsolete("Do not use.  This constructor is only preserved to maintain backwards compatibility upon serialization/deserialization.")]
         public WallByProfile(Polygon @perimeter,
                              Profile @profile,
                              double @thickness,
@@ -64,7 +68,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// The profile of the wall computed from it's Perimeter and the openings.
+        /// The Profile of the Wall computed from its Perimeter and the Openings.
         /// </summary>
         /// <returns></returns>
         public Profile GetProfile()
@@ -73,7 +77,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// The computed height of the wall.
+        /// The computed height of the Wall.
         /// </summary>
         public double GetHeight()
         {
@@ -83,9 +87,9 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a wall from a profile and thickness.  If a centerline is not include it will be
-        /// computed from the profile.  The profile will be projected to the
-        /// centerline plane, and used to find openings of the Wall.
+        /// Create a Wall from a Profile and thickness.  If centerline is not included it will be
+        /// computed from the Profile.  The Profile will be projected to the
+        /// centerline Plane, and used to find Openings of the Wall.
         /// </summary>
         public WallByProfile(Profile @profile,
                              double @thickness,
@@ -108,7 +112,7 @@ namespace Elements
             var perpendicularToWall = centerline.Direction().Cross(Vector3.ZAxis);
             foreach (var v in profile.Voids)
             {
-                var opening = new Opening(v, 1.1 * thickness, 1.1 * thickness, normal: perpendicularToWall);
+                var opening = new Opening(v, perpendicularToWall, 1.1 * thickness, 1.1 * thickness);
                 this.Openings.Add(opening);
             }
 
@@ -116,7 +120,7 @@ namespace Elements
             this.Centerline = @centerline;
         }
 
-        /// <summary>Update the geometric representation of this wall.</summary>
+        /// <summary>Update the geometric representation of this Wall.</summary>
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
@@ -124,7 +128,7 @@ namespace Elements
             if (this.Profile != null)
             {
                 //TODO remove this geometry path once we completely delete the obsolete Profile property.
-                // to ensure the correct direction, we find the direction form a point on the polygon to the vertical plane of the centerline
+                // To ensure the correct direction, we find the direction from a point on the Polygon to the vertical plane of the Centerline
                 var point = Profile.Perimeter.Vertices.First();
                 var centerPlane = new Plane(Centerline.Start, Centerline.End, Centerline.End + Vector3.ZAxis);
                 var direction = new Line(point, point.Project(centerPlane)).Direction();

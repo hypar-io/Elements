@@ -40,13 +40,25 @@ namespace Elements
         public Vector3 Normal { get; set; }
 
         /// <summary>
+        /// Create an opening normal to the ZAxis.
+        /// </summary>
+        public Opening(Polygon perimeter,
+                       double depthFront = 1.0,
+                       double depthBack = 1.0,
+                       Transform transform = null,
+                       Representation representation = null,
+                       bool isElementDefinition = false,
+                       Guid id = default(Guid),
+                       string name = null) : this(perimeter, Vector3.ZAxis, depthFront, depthBack, transform, representation, isElementDefinition, id, name) { }
+
+        /// <summary>
         /// Create an opening.
         /// </summary>
         [JsonConstructor]
         public Opening(Polygon perimeter,
+                       Vector3 normal,
                        double depthFront = 1.0,
                        double depthBack = 1.0,
-                       Vector3 normal = default(Vector3),
                        Transform transform = null,
                        Representation representation = null,
                        bool isElementDefinition = false,
