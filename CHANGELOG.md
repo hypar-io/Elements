@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.5
+
+### Added
+
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+
+### Changed
+
+### Fixed
+
 ## 0.9.4
 
 ### Added
