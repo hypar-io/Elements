@@ -81,7 +81,7 @@ namespace Elements
 
         /// <summary>
         /// Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
-        /// in the well elevation coordinate system.  The x and y will position the bottom left corner of the rectangular opening.
+        /// in the wall elevation coordinate system.  The x and y will position origin of the rectangular opening.
         /// </summary>
         /// <param name="width">The width of the opening.</param>
         /// <param name="height">The height of the opening.</param>
@@ -99,7 +99,7 @@ namespace Elements
 
         /// <summary>
         /// Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
-        /// in the well elevation coordinate system.  The x and y will position the first point of the polygon opening.
+        /// in the wall elevation coordinate system.  The x and y will position the origin of the polygon opening.
         /// </summary>
         /// <param name="perimeter">The perimeter of the opening.</param>
         /// <param name="x">The distance to the origin of the perimeter opening along the center line of the wall.</param>
