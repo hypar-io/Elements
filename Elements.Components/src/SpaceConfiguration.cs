@@ -186,7 +186,7 @@ namespace Elements.Components
                 var closestAnchor = baseAnchors[anchorIndex];
                 var element = contentItem.ContentElement;
                 var offsetXform = contentItem.Transform.Concatenated(new Transform(anchor.Negate())).Concatenated(new Transform(anchor - closestAnchor));
-                rules.Add(new PositionPlacementRule(contentItem.Url, anchorIndex, element, offsetXform));
+                rules.Add(new PositionPlacementRule(contentItem.Name ?? contentItem.Url, anchorIndex, element, offsetXform));
             }
             return rules;
         }
