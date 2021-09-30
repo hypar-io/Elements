@@ -109,7 +109,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D, using a 2D method.
         /// </summary>
         /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -611,11 +611,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on the XY plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
+        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared in the XY shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
         /// </returns>
         public bool Covers(Vector3 vector)
         {
@@ -625,6 +625,30 @@ namespace Elements.Geometry
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied polygon is within this Polygon or coincident with an edge.
+        /// </summary>
+        /// <param name="polygon">The polygon we want to know is inside this polygon.</param>
+        /// <param name="containment">The containment status.</param>
+        /// <returns>Returns false if any part of the polygon is entirely outside of this polygon.</returns>
+        public bool Contains3D(Polygon polygon, out Containment containment)
+        {
+            containment = Containment.Inside;
+            foreach (var v in polygon.Vertices)
+            {
+                Polygon.Contains3D(Edges(), v, out var foundContainment);
+                if (foundContainment == Containment.Outside)
+                {
+                    return false;
+                }
+                if (foundContainment > containment)
+                {
+                    containment = foundContainment;
+                }
             }
             return true;
         }
@@ -1728,10 +1752,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's area.
+        /// Calculate the polygon's area in 3D.
         /// </summary>
         public double Area()
         {
+            if (Normal() != Vector3.ZAxis)
+            {
+                var t = new Transform(Vector3.Origin, Normal()).Inverted();
+                var transformedPolygon = this.TransformedPolygon(t);
+                return transformedPolygon.Area();
+            }
             var area = 0.0;
             for (var i = 0; i <= this.Vertices.Count - 1; i++)
             {

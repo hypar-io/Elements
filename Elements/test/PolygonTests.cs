@@ -248,6 +248,15 @@ namespace Elements.Geometry.Tests
             Assert.False(p3.Covers(p1));
             Assert.False(p4.Covers(p1));
             Assert.True(p1.Covers(p4));
+
+            var t = new Transform(Vector3.Origin, Vector3.YAxis);
+            var tp1 = p1.TransformedPolygon(t);
+            var tp2 = p2.TransformedPolygon(t);
+            var tp3 = p3.TransformedPolygon(t);
+
+            Assert.True(tp1.Contains3D(tp1, out var c1));
+            Assert.True(tp1.Contains3D(tp2, out var c2));
+            Assert.True(tp1.Contains3D(tp3, out var c3));
         }
 
         [Fact]
@@ -604,6 +613,12 @@ namespace Elements.Geometry.Tests
             var p4 = new Vector3(0.0, 1.0);
             var pp = new Polygon(new[] { p1, p2, p3, p4 });
             Assert.Equal(1.0, pp.Area());
+
+            var t = new Transform(Vector3.Origin, Vector3.XAxis);
+            var ta = a.TransformedPolygon(t);
+            Assert.Equal(1.0, ta.Area());
+            var tb = b.TransformedPolygon(t);
+            Assert.Equal(4.0, tb.Area());
         }
 
         [Fact]
