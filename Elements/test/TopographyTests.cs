@@ -262,7 +262,7 @@ namespace Elements.Tests
             var csg = topo.Mesh.ToCsg();
 
             var box = new Extrude(Polygon.Star(200, 100, 5), 100, Vector3.ZAxis, false);
-            csg = csg.Substract(box._csg.Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
+            csg = csg.Substract(box._solid.ToCsg().Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
 
             var result = new Mesh();
             csg.Tessellate(ref result);

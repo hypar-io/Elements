@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Elements;
+using IxMilia.Dxf;
 
 namespace Elements.Serialization.DXF
 {
@@ -10,15 +11,21 @@ namespace Elements.Serialization.DXF
     /// </summary>
     public class ModelToDxf
     {
-        private Dictionary<Type, IRenderDxf> _dxfCreators = new Dictionary<Type, IRenderDxf>();
-
         /// <summary>
-        /// Construct a ModelToDxf instance with all of the built in DXFCreators.
+        /// Create a new instance of the renderer.
         /// </summary>
         public ModelToDxf()
         {
-            _dxfCreators.Add(typeof(Floor), new FloorToDXF());
+            context = new DxfRenderContext();
         }
+
+        private DxfRenderContext context;
+
+        private Dictionary<Type, IRenderDxf> _dxfCreators = new Dictionary<Type, IRenderDxf>
+        {
+            {typeof(ContentElement), new ContentElementToDXF()},
+            {typeof(ElementInstance), new ElementInstanceToDXF()}
+        };
 
         /// <summary>
         /// Renders the model in dxf to the returned stream.
@@ -26,26 +33,42 @@ namespace Elements.Serialization.DXF
         /// <param name="model">The model to render</param>
         public Stream Render(Model model)
         {
-            var doc = new netDxf.DxfDocument(netDxf.Header.DxfVersion.AutoCad2018);
-            var context = new DxfRenderContext();
+            var doc = new DxfFile();
             context.Model = model;
 
             foreach (var element in model.Elements.Values)
             {
-                if (!_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                try
                 {
-                    continue;
+                    if (_dxfCreators.TryGetValue(element.GetType(), out var converter))
+                    {
+                        converter.TryAddDxfEntity(doc, element, context);
+                    }
+                    else if (element is GeometricElement geomElement)
+                    {
+                        // fall back to geometric converter
+                        new GeometricElementToDxf().TryAddDxfEntity(doc, geomElement, context);
+                    }
                 }
-                if (converter.TryToCreateDxfEntity(element, context, out var entity))
+                catch (Exception e)
                 {
-                    doc.AddEntity(entity);
+                    // TODO: Implement logging for exceptions
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
                 }
             }
 
             var stream = new MemoryStream();
+            doc.Header.Version = DxfAcadVersion.R2013;
             doc.Save(stream);
-
             return stream;
+        }
+        /// <summary>
+        /// Set the mapping configuration (layer settings, lineweights, etc) for this renderer.
+        /// </summary>
+        public void SetMappingConfiguration(MappingConfiguration config)
+        {
+            this.context.MappingConfiguration = config;
         }
     }
 }

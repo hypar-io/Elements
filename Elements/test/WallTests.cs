@@ -38,6 +38,30 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void WallByProfileFromProfileCreatesOpenings()
+        {
+            this.Name = nameof(WallByProfileFromProfileCreatesOpenings);
+
+            var boundary = new Polygon(new[] {  new Vector3(),
+                                                new Vector3(0,0,10),
+                                                new Vector3(0,10,10),
+                                                new Vector3(0,10,0) });
+            var window = new Polygon(new[] {new Vector3(0,2,2),
+                                            new Vector3(0,2,4),
+                                            new Vector3(0,4,4),
+                                            new Vector3(0,4,2)});
+            var wallProfile = new Profile(boundary, window);
+            var wall = new WallByProfile(wallProfile, 0.1, new Line(Vector3.Origin, new Vector3(0, 10)));
+
+            Assert.Single(wall.Openings);
+            Assert.Null(wall.Profile);
+            Assert.True(wall.GetProfile().Equals(wallProfile));
+
+            this.Model.AddElement(wall);
+            this.Model.AddElement(wall.Centerline);
+        }
+
+        [Fact]
         public void ZeroHeightThrows()
         {
             var a = Vector3.Origin;

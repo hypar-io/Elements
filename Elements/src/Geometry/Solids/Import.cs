@@ -13,7 +13,6 @@ namespace Elements.Geometry.Solids
         public Import(Solid solid, bool isVoid = false) : base(isVoid)
         {
             this._solid = solid;
-            this._csg = solid.ToCsg();
         }
     }
 }

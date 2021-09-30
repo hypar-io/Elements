@@ -35,16 +35,28 @@ namespace Elements
         public double DepthBack { get; set; }
 
         /// <summary>
-        /// The direction of the opening's extrusion.
+        /// The normal direction of the opening.
         /// </summary>
-        public Vector3 Direction { get; set; }
+        public Vector3 Normal { get; set; }
+
+        /// <summary>
+        /// Create an opening normal to the ZAxis.
+        /// </summary>
+        public Opening(Polygon perimeter,
+                       double depthFront = 1.0,
+                       double depthBack = 1.0,
+                       Transform transform = null,
+                       Representation representation = null,
+                       bool isElementDefinition = false,
+                       Guid id = default(Guid),
+                       string name = null) : this(perimeter, Vector3.ZAxis, depthFront, depthBack, transform, representation, isElementDefinition, id, name) { }
 
         /// <summary>
         /// Create an opening.
         /// </summary>
         [JsonConstructor]
         public Opening(Polygon perimeter,
-                       Vector3 direction,
+                       Vector3 normal,
                        double depthFront = 1.0,
                        double depthBack = 1.0,
                        Transform transform = null,
@@ -58,10 +70,17 @@ namespace Elements
                                                   id != default(Guid) ? id : Guid.NewGuid(),
                                                   name)
         {
+            if (normal == default(Vector3))
+            {
+                Normal = Vector3.ZAxis; // legacy openings don't have a normal and assume normal is the Z axis
+            }
+            else
+            {
+                Normal = normal.Unitized();
+            }
             this.Perimeter = perimeter;
             this.DepthBack = depthBack;
             this.DepthFront = depthFront;
-            this.Direction = direction;
         }
 
         /// <summary>
@@ -72,11 +91,11 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             if (this.DepthFront > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, this.Direction, true));
+                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Normal, true));
             }
             if (this.DepthBack > 0)
             {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, this.Direction.Negate(), true));
+                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Normal.Negate(), true));
             }
         }
     }

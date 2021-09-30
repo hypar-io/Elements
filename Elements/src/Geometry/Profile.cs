@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,40 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : Element, IEquatable<Profile>
+    public class Profile : Element, IEquatable<Profile>
     {
+        /// <summary>The perimeter of the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Polygon Perimeter { get; set; }
+
+        /// <summary>A collection of Polygons representing voids in the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
+        public IList<Polygon> Voids { get; set; }
+
+        /// <summary>
+        /// Create a profile.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">A collection of voids in the profile.</param>
+        /// <param name="id">The id of the profile.</param>
+        /// <param name="name">The name of the profile.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
+            : base(id, name)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+                {
+                    throw new Exception("To construct a profile, all points must lie in the same plane.");
+                }
+            }
+
+            this.Perimeter = @perimeter;
+            this.Voids = @voids ?? new List<Polygon>();
+            OrientVoids();
+        }
+
         /// <summary>
         /// Construct a profile.
         /// </summary>
@@ -72,6 +105,15 @@ namespace Elements.Geometry
             this.Perimeter = perimeter;
             this.Voids = voids.ToList();
             OrientVoids();
+        }
+
+        /// <summary>
+        /// A transformed copy of this profile.
+        /// </summary>
+        /// <param name="transform">The transform.</param>
+        public Profile Transformed(Transform transform)
+        {
+            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>());
         }
 
         /// <summary>
@@ -308,12 +350,12 @@ namespace Elements.Geometry
         /// <returns>True if the point is within the profile.</returns>
         public bool Contains(Vector3 point, out Containment containment)
         {
-            IEnumerable<Line> allLines = Perimeter.Segments();
+            IEnumerable<(Vector3 from, Vector3 to)> allEdges = Perimeter.Edges();
             if (Voids != null)
             {
-                allLines = allLines.Union(Voids.SelectMany(v => v.Segments()));
+                allEdges = allEdges.Union(Voids.SelectMany(v => v.Edges()));
             }
-            return Polygon.Contains(allLines, point, out containment);
+            return Polygon.Contains(allEdges, point, out containment);
         }
 
         /// <summary>
@@ -457,6 +499,44 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Offset this profile by a given distance.
+        /// </summary>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns></returns>
+        public List<Profile> Offset(double distance, double tolerance = Vector3.EPSILON)
+        {
+            return Profile.Offset(new[] { this }, distance, tolerance);
+        }
+
+        /// <summary>
+        /// Offset profiles by a given distance.
+        /// </summary>
+        /// <param name="profiles">The profiles to offset.</param>
+        /// <param name="distance">The offset distance.</param>
+        /// <param name="tolerance">An optional tolerance.</param>
+        /// <returns>A collection of resulting profiles.</returns>
+        public static List<Profile> Offset(IEnumerable<Profile> profiles, double distance, double tolerance = Vector3.EPSILON)
+        {
+            var clipperScale = 1.0 / tolerance;
+            ClipperOffset clipper = new ClipperOffset();
+            foreach (var profile in profiles)
+            {
+                var subjectPolygons = new List<Polygon> { profile.Perimeter };
+                if (profile.Voids != null && profile.Voids.Count > 0)
+                {
+                    subjectPolygons.AddRange(profile.Voids);
+                }
+                var clipperPaths = subjectPolygons.Select(s => s.ToClipperPath(tolerance)).ToList();
+                clipper.AddPaths(clipperPaths, JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+            }
+            PolyTree solution = new PolyTree();
+            clipper.Execute(ref solution, distance * clipperScale);
+            var joinedProfiles = solution.ToProfiles(tolerance);
+            return joinedProfiles;
+        }
+
+        /// <summary>
         /// Create a collection of profiles from a collection of polygons. Inner polygons will be treated as voids in alternating fashion.
         /// </summary>
         /// <param name="polygons">The polygons to sort into profiles</param>
@@ -521,8 +601,15 @@ namespace Elements.Geometry
                     }
                 }
             }
-            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-            return profile;
+            try
+            {
+                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+                return profile;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
@@ -532,7 +619,10 @@ namespace Elements.Geometry
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
                 var profile = node.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
+                if (profile != null)
+                {
+                    joinedProfiles.Add(profile);
+                }
             }
             foreach (var result in node.Childs)
             {

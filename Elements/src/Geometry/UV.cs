@@ -1,9 +1,30 @@
-using System;
-
 namespace Elements.Geometry
 {
-    public partial struct UV
+    /// <summary>
+    /// A UV coordinate.
+    /// </summary>
+    public struct UV
     {
+        /// <summary>The U coordinate.</summary>
+        [Newtonsoft.Json.JsonProperty("U", Required = Newtonsoft.Json.Required.Always)]
+        public double U { get; set; }
+
+        /// <summary>The V coordinate.</summary>
+        [Newtonsoft.Json.JsonProperty("V", Required = Newtonsoft.Json.Required.Always)]
+        public double V { get; set; }
+
+        /// <summary>
+        /// Construct a uv coordinate.
+        /// </summary>
+        /// <param name="u">The U coordinate.</param>
+        /// <param name="v">The V coordinate.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public UV(double @u, double @v)
+        {
+            this.U = @u;
+            this.V = @v;
+        }
+
         /// <summary>
         /// Are the two uvs equal?
         /// </summary>
@@ -53,6 +74,15 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $"U:{this.U}, V:{this.V}";
+        }
+
+        /// <summary>
+        /// Automatically convert a tuple of two doubles into a UV.
+        /// </summary>
+        /// <param name="uv">An (u,v) tuple of doubles.</param>
+        public static implicit operator UV((double u, double v) uv)
+        {
+            return new UV(uv.u, uv.v);
         }
     }
 }

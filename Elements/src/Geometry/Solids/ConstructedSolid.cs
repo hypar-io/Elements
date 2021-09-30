@@ -16,7 +16,6 @@ namespace Elements.Geometry.Solids
         public ConstructedSolid(Solid solid, bool isVoid = false) : base(isVoid)
         {
             this._solid = solid;
-            this._csg = solid.ToCsg();
         }
 
         // This is a hack to get the normally JsonIgnored

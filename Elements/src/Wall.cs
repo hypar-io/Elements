@@ -14,11 +14,13 @@ namespace Elements
         /// <summary>
         /// The height of the wall.
         /// </summary>
+        [Obsolete("The height property on the Wall base class is obsolete, check the methods of an inherited class like StandardWall or WallByProfile.")]
         public double Height { get; protected set; }
 
         /// <summary>
         /// The profile of the wall.
         /// </summary>
+        [Obsolete("The profile property on the Wall base class is obsolete, check the methods of an inherited class like StandardWall or WallByProfile.")]
         public Profile Profile { get; protected set; }
 
         /// <summary>

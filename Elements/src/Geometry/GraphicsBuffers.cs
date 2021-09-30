@@ -4,10 +4,46 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
+    /// A generic container for graphics data. This is broken out primarily to facilitate
+    /// simpler testing of graphics buffers.
+    /// </summary>
+    internal interface IGraphicsBuffers
+    {
+        /// <summary>
+        /// Add a vertex to the graphics buffers.
+        /// </summary>
+        /// <param name="position">The position of the vertex.</param>
+        /// <param name="normal">The normal of the vertex.</param>
+        /// <param name="uv">The UV of the vertex.</param>
+        /// <param name="color">The vertex color.</param>
+        void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null);
+
+        /// <summary>
+        /// Add a vertex to the graphics buffers.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="nx"></param>
+        /// <param name="ny"></param>
+        /// <param name="nz"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="color"></param>
+        void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null);
+
+        /// <summary>
+        /// Add an index to the graphics buffers.
+        /// </summary>
+        /// <param name="index">The index to add.</param>
+        void AddIndex(ushort index);
+    }
+
+    /// <summary>
     /// A container for graphics data.
     /// The buffers used in this class align with webgl requirements.
     /// </summary>
-    public class GraphicsBuffers
+    public class GraphicsBuffers : IGraphicsBuffers
     {
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
@@ -118,35 +154,52 @@ namespace Elements.Geometry
         /// <param name="color">The vertex color.</param>
         public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
         {
-            this.Vertices.AddRange(BitConverter.GetBytes((float)position.X));
-            this.Vertices.AddRange(BitConverter.GetBytes((float)position.Y));
-            this.Vertices.AddRange(BitConverter.GetBytes((float)position.Z));
+            this.AddVertex(position.X, position.Y, position.Z, normal.X, normal.Y, normal.Z, uv.U, uv.V, color);
+        }
 
-            this.Normals.AddRange(BitConverter.GetBytes((float)normal.X));
-            this.Normals.AddRange(BitConverter.GetBytes((float)normal.Y));
-            this.Normals.AddRange(BitConverter.GetBytes((float)normal.Z));
+        /// <summary>
+        /// Add a vertex to the graphics buffers.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="nx"></param>
+        /// <param name="ny"></param>
+        /// <param name="nz"></param>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="color"></param>
+        public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color)
+        {
+            this.Vertices.AddRange(BitConverter.GetBytes((float)x));
+            this.Vertices.AddRange(BitConverter.GetBytes((float)y));
+            this.Vertices.AddRange(BitConverter.GetBytes((float)z));
 
-            this.UVs.AddRange(BitConverter.GetBytes((float)uv.U));
-            this.UVs.AddRange(BitConverter.GetBytes((float)uv.V));
+            this.Normals.AddRange(BitConverter.GetBytes((float)nx));
+            this.Normals.AddRange(BitConverter.GetBytes((float)ny));
+            this.Normals.AddRange(BitConverter.GetBytes((float)nz));
 
-            this.VMax[0] = Math.Max(this.VMax[0], position.X);
-            this.VMax[1] = Math.Max(this.VMax[1], position.Y);
-            this.VMax[2] = Math.Max(this.VMax[2], position.Z);
-            this.VMin[0] = Math.Min(this.VMin[0], position.X);
-            this.VMin[1] = Math.Min(this.VMin[1], position.Y);
-            this.VMin[2] = Math.Min(this.VMin[2], position.Z);
+            this.UVs.AddRange(BitConverter.GetBytes((float)u));
+            this.UVs.AddRange(BitConverter.GetBytes((float)v));
 
-            this.NMax[0] = Math.Max(this.NMax[0], normal.X);
-            this.NMax[1] = Math.Max(this.NMax[1], normal.Y);
-            this.NMax[2] = Math.Max(this.NMax[2], normal.Z);
-            this.NMin[0] = Math.Min(this.NMin[0], normal.X);
-            this.NMin[1] = Math.Min(this.NMin[1], normal.Y);
-            this.NMin[2] = Math.Min(this.NMin[2], normal.Z);
+            this.VMax[0] = Math.Max(this.VMax[0], x);
+            this.VMax[1] = Math.Max(this.VMax[1], y);
+            this.VMax[2] = Math.Max(this.VMax[2], z);
+            this.VMin[0] = Math.Min(this.VMin[0], x);
+            this.VMin[1] = Math.Min(this.VMin[1], y);
+            this.VMin[2] = Math.Min(this.VMin[2], z);
 
-            this.UVMax[0] = Math.Max(this.UVMax[0], uv.U);
-            this.UVMax[1] = Math.Max(this.UVMax[1], uv.V);
-            this.UVMin[0] = Math.Min(this.UVMin[0], uv.U);
-            this.UVMin[1] = Math.Min(this.UVMin[1], uv.V);
+            this.NMax[0] = Math.Max(this.NMax[0], nx);
+            this.NMax[1] = Math.Max(this.NMax[1], ny);
+            this.NMax[2] = Math.Max(this.NMax[2], nz);
+            this.NMin[0] = Math.Min(this.NMin[0], nx);
+            this.NMin[1] = Math.Min(this.NMin[1], ny);
+            this.NMin[2] = Math.Min(this.NMin[2], nz);
+
+            this.UVMax[0] = Math.Max(this.UVMax[0], u);
+            this.UVMax[1] = Math.Max(this.UVMax[1], v);
+            this.UVMin[0] = Math.Min(this.UVMin[0], u);
+            this.UVMin[1] = Math.Min(this.UVMin[1], v);
 
             if (color.HasValue && color.Value != default(Color))
             {
@@ -173,5 +226,6 @@ namespace Elements.Geometry
             this.IMax = Math.Max(this.IMax, index);
             this.IMin = Math.Min(this.IMin, index);
         }
+
     }
 }

@@ -29,6 +29,10 @@ namespace Elements.Serialization.JSON
         // The desired schema format is the one this converter reads/writes, it is very compact.
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            if (reader.Value == null && reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
             var obj = JObject.Load(reader);
             var mesh = new Mesh();
 

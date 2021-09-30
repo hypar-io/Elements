@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Elements.Validators;
 
 namespace Elements.Geometry
 {
@@ -8,6 +9,42 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Plane : IEquatable<Plane>
     {
+        /// <summary>The origin of the plane.</summary>
+        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Origin { get; set; }
+
+        /// <summary>The normal of the plane.</summary>
+        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Normal { get; set; }
+
+        /// <summary>
+        /// Construct a plane.
+        /// </summary>
+        /// <param name="origin">The origin of the plane.</param>
+        /// <param name="normal">The normal of the plane.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Plane(Vector3 @origin, Vector3 @normal)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (normal.IsZero())
+                {
+                    throw new ArgumentException($"The plane could not be constructed. The normal, {normal}, has zero length.");
+                }
+            }
+
+            this.Origin = @origin;
+            this.Normal = @normal;
+
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (!this.Normal.IsUnitized())
+                {
+                    this.Normal = this.Normal.Unitized();
+                }
+            }
+        }
+
         /// <summary>
         /// Construct a plane by three points.
         /// The plane is constructed as a->b * b->c.
@@ -88,6 +125,7 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Is this plane coplanar with the provided plane?
+        /// This method assumes that both planes have unit length normals.
         /// </summary>
         /// <param name="plane">The plane to test.</param>
         /// <returns>True if the plane is coplanar, otherwise false.</returns>

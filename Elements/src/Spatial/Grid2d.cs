@@ -823,10 +823,11 @@ namespace Elements.Spatial
         /// <returns></returns>
         private Polygon GetBaseRectangleTransformed()
         {
-            var A = GetTransformedPoint(U.Domain.Min, V.Domain.Min);
-            var B = GetTransformedPoint(U.Domain.Max, V.Domain.Min);
-            var C = GetTransformedPoint(U.Domain.Max, V.Domain.Max);
-            var D = GetTransformedPoint(U.Domain.Min, V.Domain.Max);
+            var transformedOrigin = GetTransformedOrigin();
+            var A = GetTransformedPoint(U.Domain.Min, V.Domain.Min, transformedOrigin);
+            var B = GetTransformedPoint(U.Domain.Max, V.Domain.Min, transformedOrigin);
+            var C = GetTransformedPoint(U.Domain.Max, V.Domain.Max, transformedOrigin);
+            var D = GetTransformedPoint(U.Domain.Min, V.Domain.Max, transformedOrigin);
             return new Polygon(new[] { A, B, C, D });
         }
 
@@ -843,17 +844,17 @@ namespace Elements.Spatial
             var uStart = U.StartPoint();
             var vVec = V.Direction();
             var vStart = V.StartPoint();
-            var vAxis = new Line(uStart, vVec, 1.0);
-            var uAxis = new Line(vStart, uVec, 1.0);
-            vAxis.Intersects(uAxis, out Vector3 intersection, true);
+            var end1 = uStart + vVec.Unitized();
+            var end2 = vStart + uVec.Unitized();
+            Line.Intersects(uStart, end1, vStart, end2, out Vector3 intersection, true);
             return intersection;
         }
 
-        private Vector3 GetTransformedPoint(double u, double v)
+        private Vector3 GetTransformedPoint(double u, double v, Vector3 origin)
         {
             var uPt = U.Evaluate(u) - U.StartPoint();
             var vPt = V.Evaluate(v) - V.StartPoint();
-            return uPt + vPt + GetTransformedOrigin();
+            return uPt + vPt + origin;
         }
 
         private Vector3 AxisTransformPoint(GridDirection direction, Vector3 point)

@@ -11,7 +11,7 @@ namespace Elements.Tests
         {
             this.Name = "Elements_Floor";
 
-            // <example>            
+            // <example>
             // Create a floor with no elevation.
             var p = Polygon.L(10, 20, 5);
             var floor1 = new Floor(p, 0.1);
@@ -54,6 +54,14 @@ namespace Elements.Tests
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
+
+            floor1.UpdateRepresentations();
+            Assert.Single(floor1.GetSolids());
+            Assert.Equal(25, floor1.GetFinalCsgFromSolids().Polygons.Count);
+
+            floor2.UpdateRepresentations();
+            Assert.Single(floor2.GetSolids());
+            Assert.Equal(8, floor2.GetFinalCsgFromSolids().Polygons.Count);
 
             this.Model.AddElements(new[] { floor1, floor2 });
         }

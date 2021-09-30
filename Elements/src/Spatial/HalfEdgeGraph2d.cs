@@ -165,15 +165,20 @@ namespace Elements.Spatial
             return graph;
         }
 
-
         /// <summary>
         /// Calculate the closed polygons in this graph.
         /// </summary>
-        public List<Polygon> Polygonize(Func<int?, bool> predicate = null)
+        /// <param name="predicate">A predicate used during the final step of polygonization to determine if edges are
+        /// valid.</param>
+        /// <param name="normal">The normal of the plane in which graph traversal for polygon construction will occur.
+        /// If no normal is provided, the +Z axis is used.</param>
+        /// <returns>A collection of polygons.</returns>
+        public List<Polygon> Polygonize(Func<int?, bool> predicate = null, Vector3 normal = default(Vector3))
         {
             var edgesPerVertex = new List<List<(int from, int to, int? tag)>>(this.EdgesPerVertex);
             var vertices = this.Vertices;
             var newPolygons = new List<Polygon>();
+
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
             // and stop when you run out of edges. 
@@ -207,7 +212,9 @@ namespace Elements.Spatial
                         throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
                     }
                     // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
-                    var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from])).Last();
+                    var n = normal == default(Vector3) ? Vector3.ZAxis : normal;
+                    var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+
                     possibleNextSegments.Remove(nextSegment);
                     currentSegment = nextSegment;
                 }
@@ -240,12 +247,16 @@ namespace Elements.Spatial
                         // in this case, we actually step backwards — to compare "the one before the first one we just removed" and
                         // "the one after the second one we just removed", which will now be adjacent in the list. 
                         i--;
+                        // if we are at the end of the list, we have to step backwards again, because we removed the last edge.
+                        if (i == validEdges.Count)
+                        {
+                            i--;
+                        }
                     }
                     else
                     {
                         i++;
                     }
-
                 }
 
                 if (predicate != null)
@@ -267,7 +278,6 @@ namespace Elements.Spatial
                     newPolygons.Add(new Polygon(currentVertexList));
                 }
             }
-
             return newPolygons;
         }
     }

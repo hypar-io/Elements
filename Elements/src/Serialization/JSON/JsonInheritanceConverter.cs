@@ -9,7 +9,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.0.24.0 (Newtonsoft.Json v9.0.0.0)")]
     public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
@@ -74,7 +73,13 @@ namespace Elements.Serialization.JSON
             var typeCache = new Dictionary<string, Type>();
 
             failedAssemblyErrors = new List<string>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+
+            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
+            {
+                var name = a.GetName().Name;
+                return !skipAssembliesPrefices.Any(p => name.StartsWith(p));
+            }))
             {
                 var types = Array.Empty<Type>();
                 try
@@ -147,13 +152,13 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    if (jObject.ContainsKey(_discriminator))
+                    if (jObject.TryGetValue(_discriminator, out _))
                     {
-                        jObject[_discriminator] = value.GetType().FullName;
+                        jObject[_discriminator] = GetDiscriminatorName(value);
                     }
                     else
                     {
-                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, value.GetType().FullName));
+                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetDiscriminatorName(value)));
                     }
                     writer.WriteToken(jObject.CreateReader());
                 }
@@ -162,6 +167,18 @@ namespace Elements.Serialization.JSON
             {
                 _isWriting = false;
             }
+        }
+
+        private static string GetDiscriminatorName(object value)
+        {
+            var discriminatorName = "";
+            var t = value.GetType();
+            discriminatorName += t.FullName.Split('`').First();
+            if (t.IsGenericType)
+            {
+                discriminatorName += "<" + String.Join(",", t.GenericTypeArguments.Select(arg => arg.FullName)) + ">";
+            }
+            return discriminatorName;
         }
 
         public override bool CanWrite
@@ -278,6 +295,16 @@ namespace Elements.Serialization.JSON
             if (discriminator != null && TypeCache.ContainsKey(discriminator))
             {
                 return TypeCache[discriminator];
+            }
+
+            // Check for proxy generics.
+            if (discriminator != null && discriminator.StartsWith("Elements.ElementProxy<"))
+            {
+                var typeNames = discriminator.Split('<')[1].Split('>')[0].Split(','); // We do this split because in theory we can serialize with multiple generics
+                var typeName = typeNames.FirstOrDefault();
+                var generic = TypeCache[typeName];
+                var proxy = typeof(ElementProxy<>).MakeGenericType(generic);
+                return proxy;
             }
 
             // If it's not in the type cache see if it's got a representation.
