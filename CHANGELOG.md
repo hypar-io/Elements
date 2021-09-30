@@ -5,6 +5,7 @@
 ### Added
 
 - `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+- `GeometricElement.ModifyVertexAttributes`
 
 ### Changed
 - Wall doesn't have Height or Profile any more
