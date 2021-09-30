@@ -110,7 +110,7 @@ namespace Elements.Search
         /// <param name="allIntersectionLocations">A collection of all intersection locations.</param>
         /// <param name="twoWayEdges">Should edges be created in both directions?</param>
         /// <returns>A network.</returns>
-        public static Network<Line> FromSegmentableItems(IList<T> items,
+        public static Network<T> FromSegmentableItems(IList<T> items,
                                                          Func<T, Line> getSegment,
                                                          out List<Vector3> allNodeLocations,
                                                          out List<Vector3> allIntersectionLocations,
@@ -123,11 +123,11 @@ namespace Elements.Search
             // to their X coordinate.
             var events = items.SelectMany((item, i) =>
             {
-                var s = getSegment(item);
-                var leftMost = s.Start.X < s.End.X ? s.Start : s.End;
-                return new[]{
-                    (s.Start, i, s.Start == leftMost, s),
-                    (s.End, i, s.End == leftMost, s)
+                var segment = getSegment(item);
+                var leftMost = segment.Start.X < segment.End.X ? segment.Start : segment.End;
+                return new (Vector3 location, int index, bool isLeftMost, T item)[]{
+                    (segment.Start, i, segment.Start == leftMost, item),
+                    (segment.End, i, segment.End == leftMost, item)
                 };
             }).GroupBy(x => x.Item1).Select(g =>
             {
@@ -137,7 +137,7 @@ namespace Elements.Search
 
                 // Group by the event coordinate as lines may share start 
                 // or end points.
-                return new LineSweepEvent<Line>(g.Key, g.Select(e => (e.i, e.Item3, e.s)).ToList());
+                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)).ToList());
             }).ToList();
 
             events.Sort();
@@ -146,14 +146,14 @@ namespace Elements.Search
 
             // Create a binary tree to contain all segments ordered by their
             // left most point's Y coordinate
-            var tree = new BinaryTree<Line>(new LeftMostPointComparer());
+            var tree = new BinaryTree<T>(new LeftMostPointComparer<T>(getSegment));
 
-            var segmentIntersections = new Dictionary<Line, List<Vector3>>();
+            var segmentIntersections = new Dictionary<T, List<Vector3>>();
             for (var i = 0; i < items.Count; i++)
             {
-                if (!segmentIntersections.ContainsKey(segments[i]))
+                if (!segmentIntersections.ContainsKey(items[i]))
                 {
-                    segmentIntersections.Add(segments[i], new List<Vector3>());
+                    segmentIntersections.Add(items[i], new List<Vector3>());
                 }
             }
 
@@ -171,11 +171,11 @@ namespace Elements.Search
 
                         if (tree.Add(sd.data))
                         {
-                            tree.FindPredecessorSuccessors(sd.data, out List<BinaryTreeNode<Line>> pres, out List<BinaryTreeNode<Line>> sucs);
+                            tree.FindPredecessorSuccessors(sd.data, out List<BinaryTreeNode<T>> pres, out List<BinaryTreeNode<T>> sucs);
 
                             foreach (var pre in pres)
                             {
-                                if (s.Intersects(pre.Data, out Vector3 result, includeEnds: true))
+                                if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                                 {
                                     segmentIntersections[sd.data].Add(result);
                                     segmentIntersections[pre.Data].Add(result);
@@ -192,7 +192,7 @@ namespace Elements.Search
 
                             foreach (var suc in sucs)
                             {
-                                if (s.Intersects(suc.Data, out Vector3 result, includeEnds: true))
+                                if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                                 {
                                     segmentIntersections[sd.data].Add(result);
                                     segmentIntersections[suc.Data].Add(result);
@@ -207,10 +207,10 @@ namespace Elements.Search
                     }
                     else
                     {
-                        tree.FindPredecessorSuccessor(sd.data, out BinaryTreeNode<Line> pre, out BinaryTreeNode<Line> suc);
+                        tree.FindPredecessorSuccessor(sd.data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
                         if (pre != null && suc != null)
                         {
-                            if (pre.Data.Intersects(suc.Data, out Vector3 result, includeEnds: true))
+                            if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
                                 segmentIntersections[pre.Data].Add(result);
                                 segmentIntersections[suc.Data].Add(result);
@@ -233,10 +233,10 @@ namespace Elements.Search
             // Loop over all segment intersection data, sorting the 
             // data by distance from the segment's start point, and
             // creating new vertices and edges as necessary.
-            var adjacencyList = new AdjacencyList<Line>();
+            var adjacencyList = new AdjacencyList<T>();
             foreach (var segmentData in segmentIntersections)
             {
-                var line = segmentData.Key;
+                var line = getSegment(segmentData.Key);
                 segmentIntersections[segmentData.Key].Sort(new DistanceComparer(line.Start));
                 var prevIndex = -1;
                 var count = segmentIntersections[segmentData.Key].Count;
@@ -249,19 +249,19 @@ namespace Elements.Search
                     prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
-                                                 line,
+                                                 segmentData.Key,
                                                  prevIndex,
                                                  twoWayEdges);
                 }
             }
 
-            return new Network<Line>(adjacencyList);
+            return new Network<T>(adjacencyList);
         }
 
         private static int AddVertexAtEvent(Vector3 location,
                                             List<Vector3> allNodeLocations,
-                                            AdjacencyList<Line> adj,
-                                            Line data,
+                                            AdjacencyList<T> adj,
+                                            T data,
                                             int previousIndex,
                                             bool twoWayEdges)
         {
@@ -294,27 +294,45 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Draw the adjacency list.
+        /// Draw the network as model arrows.
         /// </summary>
-        /// <param name="points">A collection of points representing the locations
-        /// of the network's nodes.</param>
+        /// <param name="nodeLocations">The locations of the network's nodes.</param>
         /// <param name="color">The color of the resulting model geometry.</param>
-        public ModelArrows ToModelArrows(IList<Vector3> points, Color? color)
+        public ModelArrows ToModelArrows(IList<Vector3> nodeLocations, Color? color)
         {
             var arrowData = new List<(Vector3 origin, Vector3 direction, double scale, Color? color)>();
 
             for (var i = 0; i < _adjacencyList.GetNumberOfVertices(); i++)
             {
-                var start = points[i];
+                var start = nodeLocations[i];
                 foreach (var end in _adjacencyList[i])
                 {
-                    var d = (points[end.Item1] - start).Unitized();
-                    var l = points[end.Item1].DistanceTo(start);
+                    var d = (nodeLocations[end.Item1] - start).Unitized();
+                    var l = nodeLocations[end.Item1].DistanceTo(start);
                     arrowData.Add((start, d, l, color));
                 }
             }
 
             return new ModelArrows(arrowData, arrowAngle: 75);
+        }
+
+        /// <summary>
+        /// Draw the network as model curves.
+        /// </summary>
+        /// <param name="nodeLocations"></param>
+        public List<ModelCurve> ToModelCurves(List<Vector3> nodeLocations)
+        {
+            var curves = new List<ModelCurve>();
+            for (var i = 0; i < this.NodeCount(); i++)
+            {
+                var start = nodeLocations[i];
+                foreach (var end in this.EdgesAt(i))
+                {
+                    curves.Add(new ModelCurve(new Line(start, nodeLocations[end.Item1]), BuiltInMaterials.YAxis));
+                }
+            }
+
+            return curves;
         }
 
         /// <summary>
@@ -327,26 +345,34 @@ namespace Elements.Search
         /// <param name="visited">A collection of visited node indices.</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  System.Func<List<(int, T)>, int> next,
+                                  System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next,
                                   out List<int> visited)
         {
             var path = new List<int>();
             visited = new List<int>();
             var currentIndex = start;
             var prevIndex = -1;
-            path.Add(currentIndex);
 
-            while (currentIndex != -1 && !visited.Contains(currentIndex))
+            while (currentIndex != -1)
             {
+                path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
                 currentIndex = Traverse(prevIndex, currentIndex, next);
                 prevIndex = oldIndex;
 
-                if (currentIndex != -1)
+                // After at least one traversal step, if the current index
+                // is the start, we've achieved a loop.
+                if (currentIndex == start)
                 {
-                    path.Add(currentIndex);
+                    break;
                 }
+            }
+
+            // Allow closing a loop.
+            if (visited[0] == currentIndex)
+            {
+                path.Add(currentIndex);
             }
 
             return path;
@@ -354,7 +380,7 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             System.Func<List<(int, T)>, int> next)
+                             System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -363,14 +389,23 @@ namespace Elements.Search
                 return -1;
             }
 
-            if (edges.Count == 1 && edges.First.Value.Item1 != currentIndex)
+            if (edges.Count == 1)
             {
-                // If there's only one connected vertex and 
-                // it's not the current vertex, return it.
-                return edges.First.Value.Item1;
+                if (edges.First.Value.Item1 == prevIndex)
+                {
+                    // Don't traverse backwards.
+                    return -1;
+                }
+
+                if (edges.First.Value.Item1 != currentIndex)
+                {
+                    // If there's only one connected vertex and 
+                    // it's not the current vertex, return it.
+                    return edges.First.Value.Item1;
+                }
             }
 
-            return next(edges.ToList());
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1).ToList()));
         }
     }
 }
