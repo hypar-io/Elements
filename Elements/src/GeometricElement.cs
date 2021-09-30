@@ -127,6 +127,7 @@ namespace Elements
             if (this is IHasOpenings)
             {
                 var openingContainer = (IHasOpenings)this;
+                openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
@@ -136,9 +137,13 @@ namespace Elements
             {
                 csg = solids.First();
             }
-            else
+            else if (solids.Count() > 0)
             {
                 csg = csg.Union(solids);
+            }
+            else
+            {
+                return csg;
             }
             if (voids.Count() > 0)
             {
