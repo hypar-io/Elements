@@ -125,7 +125,7 @@ namespace Elements.Search
             {
                 var segment = getSegment(item);
                 var leftMost = segment.Start.X < segment.End.X ? segment.Start : segment.End;
-                return new[]{
+                return new (Vector3 location, int index, bool isLeftMost, T item)[]{
                     (segment.Start, i, segment.Start == leftMost, item),
                     (segment.End, i, segment.End == leftMost, item)
                 };
@@ -137,7 +137,7 @@ namespace Elements.Search
 
                 // Group by the event coordinate as lines may share start 
                 // or end points.
-                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.i, e.Item3, e.item)).ToList());
+                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)).ToList());
             }).ToList();
 
             events.Sort();
