@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.5
+
+### Added
+
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+
+### Changed
+- Wall doesn't have Height or Profile any more
+- WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
+
+
+### Fixed
+
 ## 0.9.4
 
 ### Added

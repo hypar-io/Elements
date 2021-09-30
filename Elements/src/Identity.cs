@@ -17,6 +17,14 @@ namespace Elements
         /// <summary>
         /// Track that an element was affected by a specific override.
         /// </summary>
+        public static void AddOverrideIdentity(this Element element, IOverride overrideObject)
+        {
+            AddOverrideIdentity(element, overrideObject.GetName(), overrideObject.Id, overrideObject.GetIdentity());
+        }
+
+        /// <summary>
+        /// Track that an element was affected by a specific override.
+        /// </summary>
         /// <param name="element">The element that was overridden.</param>
         /// <param name="overrideName">The name of the override property, from the hypar.json.</param>
         /// <param name="overrideId">The unique ID of the specific override within overrideName that is associated with this element.</param>

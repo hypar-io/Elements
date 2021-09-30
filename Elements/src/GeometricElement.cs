@@ -131,8 +131,8 @@ namespace Elements
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
-            // Don't try CSG booleans if we only have one one solid.
-            if (solids.Count() == 1)
+            // Don't try CSG booleans if we only have one one solid and no voids.
+            if (solids.Count() == 1 && voids.Count() == 0)
             {
                 csg = solids.First();
             }

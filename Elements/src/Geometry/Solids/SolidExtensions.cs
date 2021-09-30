@@ -37,7 +37,15 @@ namespace Elements.Geometry.Solids
         internal static Plane Plane(this Face f)
         {
             var v = f.Outer.Edges.Select(e => e.Vertex.Point).ToList();
-            return new Plane(v[0], v.NormalFromPlanarWoundPoints());
+            var n = v.NormalFromPlanarWoundPoints();
+            if (n.Length() > 0)
+            {
+                return new Plane(v[0], v.NormalFromPlanarWoundPoints());
+            }
+            else
+            {
+                throw new System.Exception("Could not get valid normal from points.");
+            }
         }
 
         internal static Csg.Solid ToCsg(this Solid solid)
