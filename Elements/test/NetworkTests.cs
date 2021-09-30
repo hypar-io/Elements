@@ -259,8 +259,8 @@ namespace Elements.Tests
 
             foreach (var leafIndex in leafIndices)
             {
-                network.Traverse(leafIndex, next, out List<int> visited);
-                Assert.Equal(6, visited.Count);
+                var path = network.Traverse(leafIndex, next, out List<int> visited);
+                Assert.Equal(6, path.Count);
                 _output.WriteLine(string.Join(',', visited));
             }
         }
