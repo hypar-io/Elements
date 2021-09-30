@@ -87,7 +87,7 @@ namespace Elements.Tests
 
             var lines = new[] { a, b, c };
 
-            var tree = new BinaryTree<Line>(new LeftMostPointComparer());
+            var tree = new BinaryTree<Line>(new LeftMostPointComparer<Line>((l) => { return l; }));
 
             for (var i = 0; i < lines.Length; i++)
             {
