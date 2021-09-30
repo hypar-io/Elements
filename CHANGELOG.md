@@ -5,6 +5,7 @@
 ### Added
 
 - `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+- `BuildingElement`
 
 ### Changed
 - Wall doesn't have Height or Profile any more

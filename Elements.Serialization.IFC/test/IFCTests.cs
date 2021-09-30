@@ -58,7 +58,7 @@ namespace Elements.IFC.Tests
             // TODO: See if we can improve using this predicate here. For some
             // reason the IFCs have a very large number of solid operations, which
             // cause CSG unions to fail (or take an exceedingly long time).
-            model.ToGlTF(ConstructGlbPath(name), merge: (e) => e.Openings != null && e.Openings.Count > 0);
+            model.ToGlTF(ConstructGlbPath(name));
         }
 
         [Theory(Skip = "IFC2X3")]

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
@@ -46,11 +45,6 @@ namespace Elements
             this.Representation = @representation;
             this.IsElementDefinition = @isElementDefinition;
         }
-
-        /// <summary>
-        /// A collection of openings.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// This method provides an opportunity for geometric elements
@@ -129,9 +123,10 @@ namespace Elements
                                                       .Select(op => TransformedSolidOperation(op))
                                                       .ToArray();
 
-            if (this.Openings != null && this.Openings.Count > 0)
+            var be = this as BuildingElement;
+            if (be != null && be.Openings != null && be.Openings.Count > 0)
             {
-                voids = voids.Concat(this.Openings.SelectMany(o => o.Representation.SolidOperations
+                voids = voids.Concat(be.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
                                                       .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
             }
