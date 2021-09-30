@@ -22,20 +22,20 @@ namespace Elements.Geometry
         /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid csg, bool mergeVertices = false)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid csg, bool mergeVertices = false, Func<Vector3, Color> colorize = null)
         {
-            return Tessellate(new[] { csg }, mergeVertices);
+            return Tessellate(new[] { csg }, mergeVertices, colorize);
         }
 
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// buffers appropriate for use with gltf. 
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs, bool mergeVertices = false)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs, bool mergeVertices = false, Func<Vector3, Color> colorize = null)
         {
             var buffers = new GraphicsBuffers();
 
-            Tessellate(csgs, buffers, mergeVertices);
+            Tessellate(csgs, buffers, mergeVertices, colorize);
             return buffers;
         }
 
@@ -43,7 +43,7 @@ namespace Elements.Geometry
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers, bool mergeVertices = false)
+        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers, bool mergeVertices = false, Func<Vector3, Color> colorize = null)
         {
             (Vector3 U, Vector3 V) basis;
 
@@ -127,7 +127,15 @@ namespace Elements.Geometry
 
             foreach (var v in allVertices)
             {
-                buffers.AddVertex(v.Item1, v.Item2, v.Item3);
+                if (colorize != null)
+                {
+                    var color = colorize(v.Item1);
+                    buffers.AddVertex(v.Item1, v.Item2, v.Item3, color);
+                }
+                else
+                {
+                    buffers.AddVertex(v.Item1, v.Item2, v.Item3);
+                }
             }
         }
 

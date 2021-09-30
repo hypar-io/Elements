@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Xunit;
@@ -48,6 +47,19 @@ namespace Elements.Tests
 
             Assert.Equal(panel.Area() * 2, mesh.Triangles.Sum(t => t.Area()), 5);
             Assert.Equal(panel.Area() * 2, meshTransformed.Triangles.Sum(t => t.Area()), 5);
+        }
+
+        [Fact]
+        public void Colorize()
+        {
+            this.Name = nameof(Colorize);
+            var height = 5.0;
+            var mass = new Mass(Polygon.L(2, 2, 1), height, BuiltInMaterials.Default);
+            mass.Colorize = (v) =>
+            {
+                return new Color(v.Z / height, v.Z / height, 1, 1);
+            };
+            this.Model.AddElement(mass);
         }
     }
 }

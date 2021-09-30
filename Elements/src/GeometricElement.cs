@@ -3,6 +3,7 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -27,6 +28,15 @@ namespace Elements
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
+
+        /// <summary>
+        /// A function used to colorize vertices of the object's mesh
+        /// during tesselation. Each vertex location is passed to the colorizer
+        /// as the object is tessellated. The resulting color will be blended
+        /// with the material's color.
+        /// </summary>
+        [JsonIgnore]
+        public Func<Vector3, Color> Colorize { get; set; }
 
         /// <summary>
         /// Create a geometric element.

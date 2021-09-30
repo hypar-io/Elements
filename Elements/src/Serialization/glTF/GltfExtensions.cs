@@ -1266,7 +1266,7 @@ namespace Elements.Serialization.glTF
             else
             {
                 var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(mergeVertices);
+                buffers = csg.Tessellate(mergeVertices, geometricElement.Colorize);
             }
 
             if (buffers.Vertices.Count == 0)
