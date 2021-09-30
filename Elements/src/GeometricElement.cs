@@ -30,13 +30,12 @@ namespace Elements
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>
-        /// A function used to colorize vertices of the object's mesh
-        /// during tesselation. Each vertex location is passed to the colorizer
-        /// as the object is tessellated. The resulting color will be blended
-        /// with the material's color.
+        /// A function used to modify vertex attributes of the object's mesh
+        /// during tesselation. Each vertex is passed to the modifier
+        /// as the object is tessellated.
         /// </summary>
         [JsonIgnore]
-        public Func<Vector3, Color> Colorize { get; set; }
+        public Func<(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)> ModifyVertexAttributes { get; set; }
 
         /// <summary>
         /// Create a geometric element.

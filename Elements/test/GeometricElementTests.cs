@@ -55,9 +55,9 @@ namespace Elements.Tests
             this.Name = nameof(Colorize);
             var height = 5.0;
             var mass = new Mass(Polygon.L(2, 2, 1), height, BuiltInMaterials.Default);
-            mass.Colorize = (v) =>
+            mass.ModifyVertexAttributes = (v) =>
             {
-                return new Color(v.Z / height, v.Z / height, 1, 1);
+                return (v.position, v.normal, v.uv, new Color(v.position.Z / height, v.position.Z / height, 1, 1));
             };
             this.Model.AddElement(mass);
         }
