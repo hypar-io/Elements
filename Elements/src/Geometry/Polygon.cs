@@ -1772,7 +1772,10 @@ namespace Elements.Geometry
         /// </summary>
         public double Area()
         {
-            if (Normal() != Vector3.ZAxis)
+            var n = Normal();
+            if (!(n.IsAlmostEqualTo(Vector3.ZAxis) ||
+                  n.Negate().IsAlmostEqualTo(Vector3.ZAxis)
+                 ))
             {
                 var t = new Transform(Vector3.Origin, Normal()).Inverted();
                 var transformedPolygon = this.TransformedPolygon(t);
