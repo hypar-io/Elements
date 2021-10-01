@@ -124,9 +124,8 @@ namespace Elements
                                                       .Select(op => TransformedSolidOperation(op))
                                                       .ToArray();
 
-            if (this is IHasOpenings)
+            if (this is IHasOpenings openingContainer)
             {
-                var openingContainer = (IHasOpenings)this;
                 openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
