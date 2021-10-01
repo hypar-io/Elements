@@ -9,7 +9,7 @@ namespace Elements
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
     /// </summary>
-    public class Wall : GeometricElement
+    public class Wall : BuildingElement
     {
         /// <summary>
         /// The height of the wall.

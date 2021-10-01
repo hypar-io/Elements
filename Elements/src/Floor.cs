@@ -12,7 +12,7 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/FloorTests.cs?name=example)]
     /// </example>
-    public class Floor : GeometricElement
+    public class Floor : BuildingElement
     {
         /// <summary>
         /// The elevation from which the floor is extruded.
