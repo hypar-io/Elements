@@ -168,14 +168,18 @@ namespace Elements.Serialization.IFC
 
             // If the element has openings, make opening relationships in
             // the IfcElement.
-            foreach (var o in geoElement.Openings)
+            if (geoElement is BuildingElement)
             {
-                var element = (IfcElement)product;
-                // TODO: Find the opening that we've already created that relates here
-                var opening = ifcOpenings.First(ifcO => ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
-                var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
-                element.HasOpenings.Add(voidRel);
-                doc.AddEntity(voidRel);
+                var be = geoElement as BuildingElement;
+                foreach (var o in be.Openings)
+                {
+                    var element = (IfcElement)product;
+                    // TODO: Find the opening that we've already created that relates here
+                    var opening = ifcOpenings.First(ifcO => ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
+                    var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
+                    element.HasOpenings.Add(voidRel);
+                    doc.AddEntity(voidRel);
+                }
             }
 
             foreach (var geom in geoms)

@@ -36,7 +36,7 @@ namespace Elements.Serialization.IFC
 
             constructionErrors = new List<string>();
 
-            Dictionary<Guid, GeometricElement> elementDefinitions = new Dictionary<Guid, GeometricElement>();
+            Dictionary<Guid, BuildingElement> elementDefinitions = new Dictionary<Guid, BuildingElement>();
 
             // var types = ifcModel.AllInstancesDerivedFromType<IfcBuildingElementType>();
             // var relTypes = ifcModel.AllInstancesOfType<IfcRelDefinesByType>();
@@ -154,20 +154,22 @@ namespace Elements.Serialization.IFC
 
                     if (mapTransform != null)
                     {
-                        GeometricElement definition = null;
+                        BuildingElement definition = null;
                         if (elementDefinitions.ContainsKey(mapId))
                         {
                             definition = elementDefinitions[mapId];
                         }
                         else
                         {
-                            definition = new GeometricElement(transform,
+                            definition = new BuildingElement(transform,
                                                         materialHint ?? BuiltInMaterials.Default,
                                                         rep,
                                                         true,
                                                         IfcGuid.FromIfcGUID(buildingElement.GlobalId),
                                                         buildingElement.Name);
                             elementDefinitions.Add(mapId, definition);
+
+                            definition.Representation.SkipCSGUnion = true;
                         }
 
                         // The cartesian transform needs to be applied 
@@ -190,12 +192,14 @@ namespace Elements.Serialization.IFC
                         // TODO: Handle IfcMappedItem
                         // - Idea: Make Representations an Element, so that they can be shared.
                         // - Idea: Make PropertySet an Element. PropertySets can store type properties.
-                        var geom = new GeometricElement(transform,
+                        var geom = new BuildingElement(transform,
                                                         materialHint ?? BuiltInMaterials.Default,
                                                         rep,
                                                         false,
                                                         IfcGuid.FromIfcGUID(buildingElement.GlobalId),
                                                         buildingElement.Name);
+
+                        geom.Representation.SkipCSGUnion = true;
 
                         var voids = relVoids.Where(v => v.RelatingBuildingElement == buildingElement).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>();
                         foreach (var v in voids)
