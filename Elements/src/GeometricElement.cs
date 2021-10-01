@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
@@ -142,7 +144,14 @@ namespace Elements
             }
             if (voids.Count() > 0)
             {
+                // var finished = Task.Run(() =>
+                // {
                 csg = csg.Substract(voids);
+                // }).Wait(1000);
+                // if (!finished)
+                // {
+                //     // throw new TimeoutException();
+                // }
             }
 
             if (Transform == null || transformed)

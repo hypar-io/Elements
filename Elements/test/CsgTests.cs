@@ -5,6 +5,8 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Elements.Tests
 {
@@ -72,6 +74,42 @@ namespace Elements.Tests
             }
 
             this.Model.AddElement(beam);
+        }
+
+        [Fact]
+        public void SubstractNotAllowedToGoForInfiniteTime()
+        {
+            var perimeter = new Polygon(new List<Vector3> {
+                (X:6.9609, Y:-18.4036, Z:2.7000), (X:6.9609, Y:-3.2016, Z:2.7000),
+                 (X:6.9609, Y:-3.2016, Z:0.0000), (X:6.9609, Y:-3.4816, Z:0.0000),
+                  (X:6.9609, Y:-3.4816, Z:-1.2000), (X:6.9609, Y:-18.4036, Z:-1.2000)});
+            var centerline = new Line((X: 6.9609, Y: -18.4036, Z: 0.0000), (X: 6.9609, Y: -3.2016, Z: 0.0000));
+
+            const double halfThickness = .33528;
+            var openingPerimienter = new Polygon(new List<Vector3> {
+                (X:6.8599, Y:-12.2016, Z:-0.5500), (X:6.8599, Y:-6.2016, Z:-0.5500),
+                 (X:6.8599, Y:-6.2016, Z:2.1500), (X:6.8599, Y:-12.2016, Z:2.1500) });
+            var openings = new List<Opening> { new Opening(openingPerimienter, halfThickness, halfThickness) };
+
+
+            var wallByProfile = new WallByProfile(perimeter,
+                                                  null,
+                                                  halfThickness * 2,
+                                                  centerline,
+                                                  new Transform(),
+                                                  BuiltInMaterials.Concrete,
+                                                  openings,
+                                                  new Representation(new List<SolidOperation>()),
+                                                  false,
+                                                  Guid.NewGuid(),
+                                                  "bad wall");
+
+            var taskFinishedOnTime = Task.Run(() =>
+            {
+                wallByProfile.UpdateRepresentations();
+                var solid = wallByProfile.GetFinalCsgFromSolids();
+            }).Wait(2000);
+            Assert.True(taskFinishedOnTime);
         }
 
         [Fact]
