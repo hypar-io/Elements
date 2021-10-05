@@ -1768,25 +1768,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's area in 3D.
+        /// Calculate the polygon's signed area in 3D.
         /// </summary>
         public double Area()
         {
-            var n = Normal();
-            if (!(n.IsAlmostEqualTo(Vector3.ZAxis) ||
-                  n.Negate().IsAlmostEqualTo(Vector3.ZAxis)
+            var vertices = this.Vertices;
+            var normal = Normal();
+            if (!(normal.IsAlmostEqualTo(Vector3.ZAxis) ||
+                  normal.Negate().IsAlmostEqualTo(Vector3.ZAxis)
                  ))
             {
-                var t = new Transform(Vector3.Origin, Normal()).Inverted();
+                var t = new Transform(Vector3.Origin, normal).Inverted();
                 var transformedPolygon = this.TransformedPolygon(t);
-                return transformedPolygon.Area();
+                vertices = transformedPolygon.Vertices;
             }
             var area = 0.0;
-            for (var i = 0; i <= this.Vertices.Count - 1; i++)
+            for (var i = 0; i <= vertices.Count - 1; i++)
             {
-                var j = (i + 1) % this.Vertices.Count;
-                area += this.Vertices[i].X * this.Vertices[j].Y;
-                area -= this.Vertices[i].Y * this.Vertices[j].X;
+                var j = (i + 1) % vertices.Count;
+                area += vertices[i].X * vertices[j].Y;
+                area -= vertices[i].Y * vertices[j].X;
             }
             return area / 2.0;
         }

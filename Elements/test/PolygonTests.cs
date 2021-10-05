@@ -929,7 +929,7 @@ namespace Elements.Geometry.Tests
 
             var results = shape.Split(polylines);
             Assert.True(results.Count == 5);
-            Assert.True(Math.Abs(shape.Area()).ApproximatelyEquals(results.Sum(r => Math.Abs(r.Area()))));
+            Assert.Equal(Math.Abs(shape.Area()), results.Sum(r => Math.Abs(r.Area())), 5);
             var rand = new Random(4);
             Model.AddElements(results.Select(r => new Panel(r, rand.NextMaterial())));
         }
