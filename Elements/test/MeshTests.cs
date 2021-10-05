@@ -29,7 +29,7 @@ namespace Elements.Tests
             var l1Mesh = new Mesh();
             var l1Extrude = new Extrude(new Profile(l, l1), 5, Vector3.ZAxis, false);
             l1Extrude.Solid.Tessellate(ref l1Mesh);
-            Assert.Equal((l.Area() + l1.Area()) * 5, l1Mesh.Volume(), 5);
+            Assert.Equal((l.Area() - l1.Area()) * 5, l1Mesh.Volume(), 5);
         }
         [Fact]
         public void ReadMeshSerializedAsNull()
