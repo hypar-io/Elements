@@ -55,8 +55,9 @@ namespace Elements.Search
         {
             if (end == start)
             {
-                throw new Exception("What the fuck happened here?");
+                throw new Exception($"An edge could not be created. The start, {start}, and end, {end}, of an edge are the same.");
             }
+
             if (!_nodes[start].Contains((end, data)))
             {
                 _nodes[start].AddLast((end, data));
@@ -72,6 +73,11 @@ namespace Elements.Search
         /// <param name="data">The data associated with the edge.</param>
         public void AddEdgeAtBeginning(int start, int end, T data)
         {
+            if (end == start)
+            {
+                throw new Exception($"An edge could not be created. The start, {start}, and end, {end}, of an edge are the same.");
+            }
+
             _nodes[start].AddFirst((end, data));
         }
 
