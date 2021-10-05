@@ -1768,7 +1768,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's area in 3D.
+        /// Calculate the polygon's signed area in 3D.
         /// </summary>
         public double Area()
         {
