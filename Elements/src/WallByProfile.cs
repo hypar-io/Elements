@@ -12,11 +12,6 @@ namespace Elements
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class WallByProfile : Wall
     {
-        /// <summary>The Profile, which includes Openings that will be extruded.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Obsolete("The Profile property is obsolete, use the GetProfile method to access a profile created from the perimeter and the openings.")]
-        public new Profile Profile { get; set; }
-
         /// <summary>The overall thickness of the Wall</summary>
         [Newtonsoft.Json.JsonProperty("Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Thickness { get; set; }
@@ -41,6 +36,7 @@ namespace Elements
         /// <param name="centerline">The centerline of the wall.</param>
         /// <param name="transform">The transform of the wall.</param>
         /// <param name="material">The material of the wall.</param>
+        /// <param name="openings">The openings of the wall.</param>
         /// <param name="representation">The representation of the wall.</param>
         /// <param name="isElementDefinition">Is the wall an element definition?</param>
         /// <param name="id">The id of the wall.</param>
@@ -68,11 +64,42 @@ namespace Elements
         }
 
         /// <summary>
+        /// Construct a wall by profile.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the wall elevation.</param>
+        /// <param name="thickness">The thickness of the wall.</param>
+        /// <param name="centerline">The centerline of the wall.</param>
+        /// <param name="transform">The transform of the wall.</param>
+        /// <param name="material">The material of the wall.</param>
+        /// <param name="representation">The representation of the wall.</param>
+        /// <param name="isElementDefinition">Is the wall an element definition?</param>
+        /// <param name="name">The name of the wall.</param>
+        public WallByProfile(Polygon @perimeter,
+                             double @thickness,
+                             Line @centerline,
+                             Transform @transform = null,
+                             Material @material = null,
+                             Representation @representation = null,
+                             bool @isElementDefinition = false,
+                             string @name = "Wall by Profile")
+            : base(transform, material, representation, isElementDefinition, Guid.NewGuid(), name)
+        {
+            this.Thickness = @thickness;
+            this.Centerline = @centerline;
+            this.Perimeter = @perimeter.Project(GetCenterPlane());
+            this.Profile = GetProfile();
+        }
+
+        /// <summary>
         /// The Profile of the Wall computed from its Perimeter and the Openings.
         /// </summary>
         /// <returns></returns>
         public Profile GetProfile()
         {
+            if (Perimeter == null && Profile != null) // this might be a legacy style WallByProfile, we should check for Profile directly
+            {
+                return Profile;
+            }
             return new Profile(Perimeter, Openings.Select(o => o.Perimeter).ToList());
         }
 
@@ -106,42 +133,51 @@ namespace Elements
                    "Wall by Profile")
         {
             var point = profile.Perimeter.Vertices.First();
-            var centerPlane = new Plane(centerline.Start, centerline.End, centerline.End + Vector3.ZAxis);
-            this.Perimeter = profile.Perimeter.Project(centerPlane);
+            this.Centerline = @centerline;
+            this.Thickness = @thickness;
+            this.Perimeter = profile.Perimeter.Project(GetCenterPlane());
 
-            var perpendicularToWall = centerline.Direction().Cross(Vector3.ZAxis);
-            foreach (var v in profile.Voids)
+            foreach (var aVoid in profile.Voids)
             {
-                var opening = new Opening(v, perpendicularToWall, 1.1 * thickness, 1.1 * thickness);
-                this.Openings.Add(opening);
+                AddOpening(aVoid, thickness, thickness);
             }
 
-            this.Thickness = @thickness;
-            this.Centerline = @centerline;
+            // TODO remove when we remove Profile.
+            var perpendicularToWall = Centerline.Direction().Cross(Vector3.ZAxis);
+            this.Profile = GetProfile().Transformed(new Transform(perpendicularToWall * this.Thickness / 2));
+        }
+
+        /// <summary>
+        /// Add an Opening to the Wall.
+        /// </summary>
+        /// <param name="perimeter"></param>
+        /// <param name="depthFront"></param>
+        /// <param name="depthBack"></param>
+        public void AddOpening(Polygon perimeter, double depthFront = 1, double depthBack = 1)
+        {
+            var perpendicularToWall = Centerline.Direction().Cross(Vector3.ZAxis);
+            var voidOnCenterline = perimeter.Project(GetCenterPlane());
+            var opening = new Opening(voidOnCenterline, perpendicularToWall, depthFront, depthBack);
+            this.Openings.Add(opening);
         }
 
         /// <summary>Update the geometric representation of this Wall.</summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-
-            if (this.Profile != null)
+            if (Representation == null)
             {
-                //TODO remove this geometry path once we completely delete the obsolete Profile property.
-                // To ensure the correct direction, we find the direction from a point on the Polygon to the vertical plane of the Centerline
-                var point = Profile.Perimeter.Vertices.First();
-                var centerPlane = new Plane(Centerline.Start, Centerline.End, Centerline.End + Vector3.ZAxis);
-                var direction = new Line(point, point.Project(centerPlane)).Direction();
-
-                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, direction, false));
+                Representation = new Representation(new List<SolidOperation>());
             }
-            else
-            {
-                var direction = Centerline.Direction().Cross(Vector3.ZAxis);
-                var shiftedProfile = GetProfile().Transformed(new Transform(direction.Negate() * Thickness / 2));
+            this.Representation?.SolidOperations?.Clear();
+            var direction = Centerline.Direction().Cross(Vector3.ZAxis);
+            var shiftedProfile = GetProfile().Transformed(new Transform(direction.Negate() * Thickness / 2));
 
-                this.Representation.SolidOperations.Add(new Extrude(shiftedProfile, this.Thickness, direction, false));
-            }
+            this.Representation.SolidOperations.Add(new Extrude(shiftedProfile, this.Thickness, direction, false));
+        }
+
+        private Plane GetCenterPlane()
+        {
+            return new Plane(Centerline.Start, Centerline.End, Centerline.End + Vector3.ZAxis);
         }
     }
 }

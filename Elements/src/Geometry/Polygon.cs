@@ -1633,17 +1633,25 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="curve">The curve used to trim the polygon</param>
         /// <param name="tolerance">Optional tolerance value.</param>
-        public Polygon RemoveVerticesNearCurve(Curve curve, double tolerance = Vector3.EPSILON)
+        /// <param name="removed">The vertices that were removed.</param>
+        public Polygon RemoveVerticesNearCurve(Curve curve, out List<Vector3> removed, double tolerance = Vector3.EPSILON)
         {
             var newVertices = new List<Vector3>(this.Vertices.Count);
+            removed = new List<Vector3>(this.Vertices.Count);
             foreach (var v in Vertices)
             {
                 switch (curve)
                 {
                     case Polygon polygon:
-                        if (v.DistanceTo(polygon, out _) > tolerance)
+                        var d = v.DistanceTo(polygon, out _);
+                        var covers = polygon.Contains(v);
+                        if (d > tolerance && !covers)
                         {
                             newVertices.Add(v);
+                        }
+                        else
+                        {
+                            removed.Add(v);
                         }
                         break;
                     case Polyline polyline:
@@ -1651,11 +1659,19 @@ namespace Elements.Geometry
                         {
                             newVertices.Add(v);
                         }
+                        else
+                        {
+                            removed.Add(v);
+                        }
                         break;
                     case Line line:
                         if (v.DistanceTo(line, out _) > tolerance)
                         {
                             newVertices.Add(v);
+                        }
+                        else
+                        {
+                            removed.Add(v);
                         }
                         break;
                     default:
@@ -1756,9 +1772,11 @@ namespace Elements.Geometry
         /// </summary>
         public double Area()
         {
-            var normal = Normal();
             var vertices = this.Vertices;
-            if (normal != Vector3.ZAxis)
+            var normal = Normal();
+            if (!(normal.IsAlmostEqualTo(Vector3.ZAxis) ||
+                  normal.Negate().IsAlmostEqualTo(Vector3.ZAxis)
+                 ))
             {
                 var t = new Transform(Vector3.Origin, normal).Inverted();
                 var transformedPolygon = this.TransformedPolygon(t);

@@ -1096,13 +1096,14 @@ namespace Elements.Geometry.Tests
 
             var square = Polygon.Rectangle(1, 1);
             var upperLeftLine = new Line(new Vector3(-1, 0), new Vector3(0, 1));
-            var remainderPoly1 = square.RemoveVerticesNearCurve(upperLeftLine);
+            var remainderPoly1 = square.RemoveVerticesNearCurve(upperLeftLine, out var removed);
 
             Assert.Equal(new[] {
                 new Vector3(-0.5, -0.5),
                 new Vector3(0.5, -0.5),
                 new Vector3(0.5, 0.5)
             }, remainderPoly1.Vertices);
+            Assert.Equal(new[] { new Vector3(-0.5, 0.5) }, removed);
 
             var lowerRightLine = new Line(new Vector3(0, -1), new Vector3(1, 0));
 
@@ -1119,8 +1120,10 @@ namespace Elements.Geometry.Tests
 
             var doorOutline = Polygon.Rectangle(new Vector3(0.5, 0), new Vector3(1.5, 1));
 
-
-            var houseOutline = house.RemoveVerticesNearCurve(doorOutline);
+            var houseOutline = house.RemoveVerticesNearCurve(doorOutline, out var removedDoor);
+            Assert.Equal(new List<Vector3> {( X:1.5000, Y:0.0000, Z:0.0000 ), ( X:1.5000, Y:1.0000, Z:0.0000 ),
+                                            ( X:0.5000, Y:1.0000, Z:0.0000 ), ( X:0.5000, Y:0.0000, Z:0.0000 )},
+                             removedDoor);
 
             var expectedhouseOutline = Polygon.Rectangle(new Vector3(), new Vector3(2, 2));
             Assert.True(expectedhouseOutline.IsAlmostEqualTo(houseOutline, ignoreWinding: true));

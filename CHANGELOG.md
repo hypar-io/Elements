@@ -4,13 +4,16 @@
 
 ### Added
 
-- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
 - `Polygon.Contains3D` method for checking polygon containment in 3D.
+- `WallByProfile.AddOpenings()`
 
 ### Changed
-- Wall doesn't have Height or Profile any more
+- Wall doesn't have Height or Profile any more.
 - WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
 - `Polygon.Area()` will now calculate the area of a polygon in 3D.
+- WallByProfile updated constructor options and `UpdateRepresentation` logic.
+
 
 ### Fixed
 
