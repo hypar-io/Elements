@@ -248,6 +248,15 @@ namespace Elements.Geometry.Tests
             Assert.False(p3.Covers(p1));
             Assert.False(p4.Covers(p1));
             Assert.True(p1.Covers(p4));
+
+            var t = new Transform(Vector3.Origin, Vector3.YAxis);
+            var tp1 = p1.TransformedPolygon(t);
+            var tp2 = p2.TransformedPolygon(t);
+            var tp3 = p3.TransformedPolygon(t);
+
+            Assert.True(tp1.Contains3D(tp1, out var c1));
+            Assert.True(tp1.Contains3D(tp2, out var c2));
+            Assert.True(tp1.Contains3D(tp3, out var c3));
         }
 
         [Fact]
@@ -604,6 +613,12 @@ namespace Elements.Geometry.Tests
             var p4 = new Vector3(0.0, 1.0);
             var pp = new Polygon(new[] { p1, p2, p3, p4 });
             Assert.Equal(1.0, pp.Area());
+
+            var t = new Transform(Vector3.Origin, Vector3.XAxis);
+            var ta = a.TransformedPolygon(t);
+            Assert.Equal(1.0, ta.Area());
+            var tb = b.TransformedPolygon(t);
+            Assert.Equal(4.0, tb.Area());
         }
 
         [Fact]
@@ -914,7 +929,7 @@ namespace Elements.Geometry.Tests
 
             var results = shape.Split(polylines);
             Assert.True(results.Count == 5);
-            Assert.Equal(Math.Abs(shape.Area()), results.Sum(r => Math.Abs(r.Area())));
+            Assert.True(Math.Abs(shape.Area()).ApproximatelyEquals(results.Sum(r => Math.Abs(r.Area()))));
             var rand = new Random(4);
             Model.AddElements(results.Select(r => new Panel(r, rand.NextMaterial())));
         }
@@ -1081,13 +1096,14 @@ namespace Elements.Geometry.Tests
 
             var square = Polygon.Rectangle(1, 1);
             var upperLeftLine = new Line(new Vector3(-1, 0), new Vector3(0, 1));
-            var remainderPoly1 = square.RemoveVerticesNearCurve(upperLeftLine);
+            var remainderPoly1 = square.RemoveVerticesNearCurve(upperLeftLine, out var removed);
 
             Assert.Equal(new[] {
                 new Vector3(-0.5, -0.5),
                 new Vector3(0.5, -0.5),
                 new Vector3(0.5, 0.5)
             }, remainderPoly1.Vertices);
+            Assert.Equal(new[] { new Vector3(-0.5, 0.5) }, removed);
 
             var lowerRightLine = new Line(new Vector3(0, -1), new Vector3(1, 0));
 
@@ -1104,8 +1120,10 @@ namespace Elements.Geometry.Tests
 
             var doorOutline = Polygon.Rectangle(new Vector3(0.5, 0), new Vector3(1.5, 1));
 
-
-            var houseOutline = house.RemoveVerticesNearCurve(doorOutline);
+            var houseOutline = house.RemoveVerticesNearCurve(doorOutline, out var removedDoor);
+            Assert.Equal(new List<Vector3> {( X:1.5000, Y:0.0000, Z:0.0000 ), ( X:1.5000, Y:1.0000, Z:0.0000 ),
+                                            ( X:0.5000, Y:1.0000, Z:0.0000 ), ( X:0.5000, Y:0.0000, Z:0.0000 )},
+                             removedDoor);
 
             var expectedhouseOutline = Polygon.Rectangle(new Vector3(), new Vector3(2, 2));
             Assert.True(expectedhouseOutline.IsAlmostEqualTo(houseOutline, ignoreWinding: true));

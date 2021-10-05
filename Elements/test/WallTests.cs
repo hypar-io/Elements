@@ -54,7 +54,6 @@ namespace Elements.Tests
             var wall = new WallByProfile(wallProfile, 0.1, new Line(Vector3.Origin, new Vector3(0, 10)));
 
             Assert.Single(wall.Openings);
-            Assert.Null(wall.Profile);
             Assert.True(wall.GetProfile().Equals(wallProfile));
 
             this.Model.AddElement(wall);
