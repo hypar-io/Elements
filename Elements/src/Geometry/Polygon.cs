@@ -96,7 +96,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
@@ -1599,7 +1599,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project the specified vector onto the plane.
+        /// Project this Polygon onto the plane.
         /// </summary>
         /// <param name="p"></param>
         public Polygon Project(Plane p)
