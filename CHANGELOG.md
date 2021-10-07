@@ -7,6 +7,7 @@
 - `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
 - `Polygon.Contains3D` method for checking polygon containment in 3D.
 - `WallByProfile.AddOpenings()`
+- `Profile.Project(Plane)`
 
 ### Changed
 - Wall doesn't have Height or Profile any more.
