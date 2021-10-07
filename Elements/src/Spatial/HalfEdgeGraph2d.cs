@@ -14,7 +14,7 @@ namespace Elements.Spatial
         internal HalfEdgeGraph2d()
         {
             Vertices = new List<Vector3>();
-            EdgesPerVertex = new List<List<(int from, int to)>>();
+            EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Elements.Spatial
         /// <summary>
         /// The index pairs, grouped by starting vertex, representing unique half edges.
         /// </summary>
-        public List<List<(int from, int to)>> EdgesPerVertex { get; set; }
+        public List<List<(int from, int to, int? tag)>> EdgesPerVertex { get; set; }
 
         /// <summary>
         /// Construct a 2D Half Edge Graph from a polygon and an intersecting polyline.
@@ -113,19 +113,19 @@ namespace Elements.Spatial
                         {
                             fromIndex = vertices.Count;
                             vertices.Add(from);
-                            edgesPerVertex.Add(new List<(int from, int to)>());
+                            edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                         }
                         var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
                         if (toIndex == -1)
                         {
                             toIndex = vertices.Count;
                             vertices.Add(to);
-                            edgesPerVertex.Add(new List<(int from, int to)>());
+                            edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                         }
                         // only add one set of polygon halfEdges, so we don't wind up with an outer loop.
-                        if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)))
+                        if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex, null)))
                         {
-                            edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
+                            edgesPerVertex[fromIndex].Add((fromIndex, toIndex, null));
                         }
                     }
                 }
@@ -144,36 +144,41 @@ namespace Elements.Spatial
                     {
                         fromIndex = vertices.Count;
                         vertices.Add(from);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
+                        edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
                     var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(to));
                     if (toIndex == -1)
                     {
                         toIndex = vertices.Count;
                         vertices.Add(to);
-                        edgesPerVertex.Add(new List<(int from, int to)>());
+                        edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
                     }
                     // add both half edges for polyline segments. If we have a splitter 
                     // lying exactly on a polygon edge, don't add it. 
-                    if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex)) && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex)))
+                    if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex, null)) && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex, null)))
                     {
-                        edgesPerVertex[fromIndex].Add((fromIndex, toIndex));
-                        edgesPerVertex[toIndex].Add((toIndex, fromIndex));
+                        edgesPerVertex[fromIndex].Add((fromIndex, toIndex, null));
+                        edgesPerVertex[toIndex].Add((toIndex, fromIndex, null));
                     }
                 }
             }
             return graph;
         }
 
-
         /// <summary>
         /// Calculate the closed polygons in this graph.
         /// </summary>
-        public List<Polygon> Polygonize()
+        /// <param name="predicate">A predicate used during the final step of polygonization to determine if edges are
+        /// valid.</param>
+        /// <param name="normal">The normal of the plane in which graph traversal for polygon construction will occur.
+        /// If no normal is provided, the +Z axis is used.</param>
+        /// <returns>A collection of polygons.</returns>
+        public List<Polygon> Polygonize(Func<int?, bool> predicate = null, Vector3 normal = default(Vector3))
         {
-            var edgesPerVertex = new List<List<(int from, int to)>>(this.EdgesPerVertex);
+            var edgesPerVertex = new List<List<(int from, int to, int? tag)>>(this.EdgesPerVertex);
             var vertices = this.Vertices;
             var newPolygons = new List<Polygon>();
+
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
             // and stop when you run out of edges. 
@@ -181,7 +186,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = new List<(int from, int to)>();
+                var currentEdgeList = new List<(int from, int to, int? tag)>();
                 // pick a starting point
                 var startingSet = edgesPerVertex.First(l => l.Count > 0);
                 var currentSegment = startingSet[0];
@@ -207,7 +212,9 @@ namespace Elements.Spatial
                         throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
                     }
                     // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
-                    var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from])).Last();
+                    var n = normal == default(Vector3) ? Vector3.ZAxis : normal;
+                    var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+
                     possibleNextSegments.Remove(nextSegment);
                     currentSegment = nextSegment;
                 }
@@ -216,7 +223,7 @@ namespace Elements.Spatial
 
                 // remove duplicate edges in the same new polygon, 
                 // which will occur if we have a polyline that doesn't cross all the way through.
-                var validEdges = new List<(int from, int to)>(currentEdgeList);
+                var validEdges = new List<(int from, int to, int? tag)>(currentEdgeList);
                 int i = 0;
                 // guaranteed to terminate, since at every step we either increment i by one, or make validEdges.Count smaller by 2 (and decrement i by 1).
                 // validEdges.Count-i always gets smaller, every step, until 0. 
@@ -240,12 +247,24 @@ namespace Elements.Spatial
                         // in this case, we actually step backwards — to compare "the one before the first one we just removed" and
                         // "the one after the second one we just removed", which will now be adjacent in the list. 
                         i--;
+                        // if we are at the end of the list, we have to step backwards again, because we removed the last edge.
+                        if (i == validEdges.Count)
+                        {
+                            i--;
+                        }
                     }
                     else
                     {
                         i++;
                     }
+                }
 
+                if (predicate != null)
+                {
+                    if (validEdges.Any(e => predicate(e.tag)))
+                    {
+                        continue;
+                    }
                 }
 
                 foreach (var edge in validEdges)
@@ -259,7 +278,6 @@ namespace Elements.Spatial
                     newPolygons.Add(new Polygon(currentVertexList));
                 }
             }
-
             return newPolygons;
         }
     }

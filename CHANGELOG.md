@@ -1,5 +1,112 @@
 # Changelog
 
+## 0.9.5
+
+### Added
+
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+- `Polygon.Contains3D` method for checking polygon containment in 3D.
+- `WallByProfile.AddOpenings()`
+
+### Changed
+- Wall doesn't have Height or Profile any more.
+- WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
+- `Polygon.Area()` will now calculate the area of a polygon in 3D.
+- WallByProfile updated constructor options and `UpdateRepresentation` logic.
+
+
+### Fixed
+
+## 0.9.4
+
+### Added
+
+- `LineSegmentExtensions.Intersections(this IList<Line> lines)`
+- `Elements.Search.DistanceComparer`
+- `Elements.Search.DirectionComparer`
+- `Elements.Search.Network<T>`
+- `Elements.ElementProxy<T>`
+- `Identity.AddOverrideValue`
+- `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
+- `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
+
+### Changed
+
+- `Identity.AddOverrideIdentity` is now an extension method.
+- Profile operations throw fewer exceptions when some piece of the profile is invalid, preferring instead to return a partial result or a null.
+
+### Fixed
+
+`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+
+### Fixed
+
+## 0.9.3
+
+### Added
+
+- `ModelArrows`
+- `ModelText`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
+- `Vector3.IsUnitized()`
+- `Transform.Inverted()`
+- `AdaptiveGrid`
+- `Line.Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)`
+- `Vector3.AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)`
+- `Line.IsAlmostEqualTo(Line line)`
+- `ConvexHull.FromPointsInPlane(IEnumerable<Vector3> points, Vector3 normalVectorOfFrame)`
+
+### Changed
+
+### Fixed
+
+- Deduplicate catalog names during code generation.
+- Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
+- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
+
+## 0.9.2
+
+### Added
+
+- `Polyline.Split(List<Vector3> point)`
+- `Polygon.Split(List<Vector3> point)`
+- `Polygon.TrimmedTo(List<Polygon> polygons)`
+- `Vector3.>=`
+- `Vector3.<=`
+- `Plane.Intersects(Plane a, Plane b)`
+- A handful of convenience operators and conversions:
+  - implicit `(double X, double Y, double Z)` => `Vector3`
+  - implicit `(double X, double Y)` => `Vector3`
+  - implicit `(int X, int Y, int Z)` => `Vector3`
+  - implicit `(int X, int Y)` => `Vector3`
+  - implicit `(double R, double G, double B, double A)` => `Color`
+  - implicit `(double R, double G, double B)` => `Color`
+  - `new Polygon(params Vector3[] vertices)`
+  - `new Polyline(params Vector3[] vertices)`
+  - implicit `SolidOperation` => `Representation`
+  - `new Representation(params SolidOperation[] solidOperations)`
+  - `Polygon.Split(params Polyline[] polylines)`
+  - `Polygon.UnionAll(params Polygon[] polygons)`
+  - `Polygon.Difference(params Polygon[] polygons)`
+  - `Polygon.Union(params Polygon[] polygons)`
+- `Profile.Offset()`
+- Overloads with `maxDistance` parameter for
+  - `Line.ExtendTo(IEnumerable<Line>)`
+  - `Line.ExtendTo(Polyline)`
+  - `Line.ExtendTo(Polygon)`
+  - `Line.ExtendTo(Profile)`
+- Support for DXF from many basic elements.
+
+### Changed
+
+- Some changes to `ContentElement` instance glTF serialization to allow selectability and transformability in the Hypar UI.
+- Added `Symbols` property to `ContentElement`.
+- Introduce a `SkipCSGUnion` flag on Representation, as a hack to get around CSG failures.
+
+### Fixed
+
+- [#616](https://github.com/hypar-io/Elements/issues/616) Code generation from local files now supplies a directory path to help resolve local references.
+
 ## 0.9.1
 
 ### Added

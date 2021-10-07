@@ -30,6 +30,20 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Equality()
+        {
+            var p = new Vector3(1, 1, 1);
+            var lineA = new Line(Vector3.Origin, p);
+            var lineB = new Line(Vector3.Origin, p + new Vector3(1E-4, 1E-4, 1E-4));
+            var lineC = new Line(Vector3.Origin, p + new Vector3(1E-6, 1E-6, 1E-6));
+
+            Assert.False(lineA.IsAlmostEqualTo(lineB, false));
+            Assert.True(lineA.IsAlmostEqualTo(lineB, false, 1E-3));
+            Assert.True(lineA.IsAlmostEqualTo(lineC, false));
+            Assert.False(lineA.IsAlmostEqualTo(lineA.Reversed(), true));
+        }
+
+        [Fact]
         public void Construct()
         {
             var a = new Vector3();
@@ -333,6 +347,91 @@ namespace Elements.Geometry.Tests
 
             Assert.Equal(line.Start.X, noIntersection.Start.X);
             Assert.Equal(line.End.X, noIntersection.End.X);
+        }
+
+        [Fact]
+        public void IntersectsBox()
+        {
+            BBox3 box = new BBox3(new Vector3(0, 0, 0), new Vector3(10, 10, 10));
+
+            //1. Line goes inside
+            Line l = new Line(new Vector3(-5, -5, 5), new Vector3(5, 5, 5));
+            l.Intersects(box, out var results, infinite: false);
+            Assert.True(results.Count == 1);
+            Assert.Equal(results[0], new Vector3(0, 0, 5));
+            l.Intersects(box, out results, infinite: true);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[1], new Vector3(10, 10, 5));
+
+            //2. Line goes though. Intersections are ordered in line direction
+            l = new Line(new Vector3(1, 1, 15), new Vector3(1, 1, -5));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[0], new Vector3(1, 1, 10));
+            Assert.Equal(results[1], new Vector3(1, 1, 0));
+
+            //3. Line touches corner of box as it goes by
+            l = new Line(new Vector3(-10, 10, 3), new Vector3(-5, 5, 3));
+            l.Intersects(box, out results, infinite: true);
+            Assert.True(results.Count == 1);
+            Assert.Equal(results[0], new Vector3(0, 0, 3));
+
+            //4. Line overlaps with box side
+            l = new Line(new Vector3(-5, 0, 4), new Vector3(15, 0, 8));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.Equal(results[0], new Vector3(0, 0, 5));
+            Assert.Equal(results[1], new Vector3(10, 0, 7));
+        }
+
+        [Fact]
+        public void ExtendWithMultipleIntersectionsAndMaxDistance()
+        {
+            Name = "ExtendWithMultipleIntersectionsAndMaxDistance";
+            var line = new Line(new Vector3(0, 0), new Vector3(1, 0));
+
+            var vertices = new List<Vector3>()
+                {
+                    new Vector3(-1, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, -1),
+                    new Vector3(4, -1),
+                    new Vector3(4, 2),
+                    new Vector3(-1, 2)
+                };
+
+            var polygon = new Polygon(vertices);
+
+            // Extends in both directions, and stops at earliest intersection.
+            var defaultExtend = line.ExtendTo(polygon, 10);
+
+            Assert.Equal(-1, defaultExtend.Start.X);
+            Assert.Equal(2, defaultExtend.End.X);
+
+            // Extends in both directions, and stops at earliest intersection.
+            // The distance from line points to polygon segments is greater than maxDistance, so the line must remain unchanged.
+            var extendWithMaxDistance = line.ExtendTo(polygon, 0.5);
+
+            Assert.Equal(line.Start.X, extendWithMaxDistance.Start.X);
+            Assert.Equal(line.End.X, extendWithMaxDistance.End.X);
+
+            // Extend both sides to furthest intersection, but no further than maxDistance.
+            var furthestExtend = line.ExtendTo(polygon, 2.5, true, true);
+
+            Assert.Equal(-1, furthestExtend.Start.X);
+            Assert.Equal(3, furthestExtend.End.X);
+        }
+
+        [Fact]
+        public void HashCodesForDifferentComponentsAreNotEqual()
+        {
+            var a = new Vector3(1, 2, 3);
+            var b = new Vector3(3, 2, 1);
+            var l1 = new Line(a, b);
+            var l2 = new Line(b, a);
+            Assert.NotEqual(l1.GetHashCode(), l2.GetHashCode());
         }
     }
 }

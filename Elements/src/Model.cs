@@ -9,16 +9,44 @@ using System.Collections;
 using Newtonsoft.Json;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
-using Elements.Validators;
 using Elements.Geometry.Solids;
+using Elements.GeoJSON;
 
 namespace Elements
 {
     /// <summary>
     /// A container for elements.
     /// </summary>
-    public partial class Model
+    public class Model
     {
+        /// <summary>The origin of the model.</summary>
+        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Obsolete("Use Transform instead.")]
+        public Position Origin { get; set; }
+
+        /// <summary>The transform of the model.</summary>
+        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Transform Transform { get; set; }
+
+        /// <summary>A collection of Elements keyed by their identifiers.</summary>
+        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+
+        /// <summary>
+        /// Construct a model.
+        /// </summary>
+        /// <param name="origin">The origin of the model.</param>
+        /// <param name="transform">The transform of the model.</param>
+        /// <param name="elements">A collection of elements.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
+        {
+            this.Origin = @origin;
+            this.Transform = @transform;
+            this.Elements = @elements;
+        }
+
         /// <summary>
         /// Construct an empty model.
         /// </summary>
@@ -34,12 +62,6 @@ namespace Elements
         /// <param name="elements">The model's elements.</param>
         public Model(Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
-            var validator = Validator.Instance.GetFirstValidatorForType<Model>();
-            if (validator != null)
-            {
-                validator.PreConstruct(new object[] { @transform, @elements });
-            }
-
             this.Transform = @transform;
             this.Elements = @elements;
         }
@@ -251,7 +273,7 @@ namespace Elements
                 return elements;
             }
 
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any());
             var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
             foreach (var p in constrainedProps)
             {
@@ -352,6 +374,39 @@ namespace Elements
         {
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
+        }
+    }
+
+    public static class ModelExtensions
+    {
+        /// <summary>
+        /// Get all elements of a certain type from a specific model name in a dictionary of models.
+        /// </summary>
+        /// <param name="models">Dictionary of models keyed by string.</param>
+        /// <param name="modelName">The name of the model.</param>
+        /// <typeparam name="T">The type of element we want to retrieve.</typeparam>
+        /// <returns></returns>
+        public static List<T> AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
+        {
+            var elements = new List<T>();
+            models.TryGetValue(modelName, out var model);
+            if (model != null)
+            {
+                elements.AddRange(model.AllElementsOfType<T>());
+            }
+            return elements;
+        }
+
+        /// <summary>
+        /// Get all proxies of a certain type from a specific model name in a dictionary of models.
+        /// </summary>
+        /// <param name="models">Dictionary of models keyed by string</param>
+        /// <param name="modelName">The name of the model</param>
+        /// <typeparam name="T">The type of element we want to retrieve</typeparam>
+        /// <returns></returns>
+        public static List<ElementProxy<T>> AllProxiesOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
+        {
+            return models.AllElementsOfType<T>(modelName).Proxies(modelName).ToList();
         }
     }
 }

@@ -65,5 +65,13 @@ namespace Elements.Tests
             var m2 = newModel.AllElementsOfType<Material>().First();
             Assert.Equal(m1.Id, m2.Id);
         }
+
+        [Fact]
+        public void ImplicitConversion()
+        {
+            var material = new Material("A test", (0.5, 1, 0.2));
+
+            Assert.Equal(new Color(0.9, 0.3, 0.5, 1.0), (0.9, 0.3, 0.5));
+        }
     }
 }

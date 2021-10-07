@@ -341,3 +341,5 @@ appsettings.dev.json
 Elements/test/*.bin
 Elements/test/*.gltf
 !Elements/test/models/**/*.glb
+
+*.dxf

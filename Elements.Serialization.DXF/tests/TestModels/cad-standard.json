@@ -1,0 +1,72 @@
+{
+    "Layers": [
+        {
+            "LayerName": "A-FLOOR",
+            "LayerColor": {
+                "Red": 1.0,
+                "Green": 0.0,
+                "Blue": 0.0,
+                "Alpha": 1.0
+            },
+            "Lineweight": 0,
+            "Types": [
+                "Elements.Floor"
+            ]
+        },
+        {
+            "LayerName": "A-COLS",
+            "LayerColor": {
+                "Red": 0.8,
+                "Green": 0.8,
+                "Blue": 0.0,
+                "Alpha": 1.0
+            },
+            "Lineweight": 0,
+            "Types": [
+                "Elements.Column"
+            ]
+        },
+        {
+            "LayerName": "I-WALL",
+            "LayerColor": {
+                "Red": 1.0,
+                "Green": 0.8999999761581421,
+                "Blue": 0.10000000149011612,
+                "Alpha": 1.0
+            },
+            "Lineweight": 0,
+            "Types": [
+                "Elements.Wall",
+                "Elements.StandardWall",
+                "Elements.WallByProfile"
+            ]
+        },
+        {
+            "LayerName": "I-FURN",
+            "LayerColor": {
+                "Red": 1.0,
+                "Green": 0.5,
+                "Blue": 0.10000000149011612,
+                "Alpha": 1.0
+            },
+            "Lineweight": 0,
+            "Types": [
+                "Elements.ContentElement"
+            ]
+        },
+        {
+            "LayerName": "I-SPACE",
+            "LayerColor": {
+                "Red": 0,
+                "Green": 0,
+                "Blue": 0,
+                "Alpha": 1.0
+            },
+            "ElementColorSetting": "TryGetColorFromMaterial",
+            "Lineweight": 0,
+            "Types": [
+                "Elements.SpaceBoundary"
+            ]
+        }
+    ]
+}

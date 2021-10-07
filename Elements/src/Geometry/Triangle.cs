@@ -1,11 +1,35 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
 {
-    public partial class Triangle
+    /// <summary>
+    /// A mesh triangle.
+    /// </summary>
+    public class Triangle
     {
+        /// <summary>The triangle's vertices.</summary>
+        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
+
+        /// <summary>The triangle's normal.</summary>
+        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Normal { get; set; }
+
+        /// <summary>
+        /// Construct a triangle.
+        /// </summary>
+        /// <param name="vertices">The vertices of the triangle.</param>
+        /// <param name="normal">The normal of the triangle.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Triangle(IList<Vertex> @vertices, Vector3 @normal)
+        {
+            this.Vertices = @vertices;
+            this.Normal = @normal;
+        }
 
         /// <summary>
         /// Create a triangle.

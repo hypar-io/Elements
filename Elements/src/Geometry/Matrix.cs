@@ -1,5 +1,5 @@
+using Elements.Validators;
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
@@ -11,6 +11,31 @@ namespace Elements.Geometry
     /// </summary>
     public partial class Matrix : IEquatable<Matrix>
     {
+        /// <summary>The components of the matrix.</summary>
+        [Newtonsoft.Json.JsonProperty("Components", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.MinLength(12)]
+        [System.ComponentModel.DataAnnotations.MaxLength(12)]
+        public double[] Components { get; set; } = new double[12];
+
+        /// <summary>
+        /// Construct a matrix.
+        /// </summary>
+        /// <param name="components">The components of the matrix.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Matrix(double[] @components)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (components.Length != 12)
+                {
+                    throw new ArgumentOutOfRangeException("The matrix could not be created. The component array must have 12 values.");
+                }
+            }
+
+            this.Components = @components;
+        }
+
         /// <summary>
         /// m11
         /// </summary>
@@ -172,7 +197,7 @@ namespace Elements.Geometry
         /// </summary>
         public Matrix()
         {
-            this.Components = new List<double>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            this.Components = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             SetIdentity();
         }
 
@@ -185,7 +210,7 @@ namespace Elements.Geometry
         /// <param name="translation">The translation.</param>
         public Matrix(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis, Vector3 translation)
         {
-            this.Components = new List<double>() { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            this.Components = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             m11 = xAxis.X; m12 = xAxis.Y; m13 = xAxis.Z;
             m21 = yAxis.X; m22 = yAxis.Y; m23 = yAxis.Z;
             m31 = zAxis.X; m32 = zAxis.Y; m33 = zAxis.Z;
@@ -437,7 +462,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Compute the inverse of the matrix.
         /// </summary>
-        public Matrix Inverse()
+        public Matrix Inverted()
         {
             var det = Determinant();
             if (Math.Abs(det) < 0.000001)
@@ -468,6 +493,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Compute the inverse of the matrix.
+        /// </summary>
+        [Obsolete("Use Matrix.Inverted() instead.")]
+        public Matrix Inverse()
+        {
+            return Inverted();
+        }
+
+        /// <summary>
         /// Return the string representation of the matrix.
         /// </summary>
         /// <returns></returns>
@@ -483,7 +517,7 @@ namespace Elements.Geometry
         /// <returns>True if the two transforms are equal, otherwise false.</returns>
         public bool Equals(Matrix other)
         {
-            for (var i = 0; i < Components.Count; i++)
+            for (var i = 0; i < Components.Length; i++)
             {
                 if (this.Components[i] != other.Components[i])
                 {

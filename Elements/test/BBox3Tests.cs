@@ -31,6 +31,42 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ContainsPointAtBounds()
+        {
+            var bounds = new BBox3(new Vector3(1, 1, 1), new Vector3(3, 3, 3));
+            Assert.True(bounds.Contains(new Vector3(1, 1, 1)));
+        }
+
+        [Fact]
+        public void ContainsPointInsideBounds()
+        {
+            var bounds = new BBox3(new Vector3(1, 1, 1), new Vector3(3, 3, 3));
+            Assert.True(bounds.Contains(new Vector3(2, 2, 2)));
+        }
+
+        [Fact]
+        public void DoesNotContainPointOutsideBounds()
+        {
+            var bounds = new BBox3(new Vector3(1, 1, 1), new Vector3(3, 3, 3));
+            Assert.False(bounds.Contains(new Vector3(0, 0, 0)));
+        }
+
+        [Fact]
+        public void ContainsPointInFlatBounds()
+        {
+            var bounds = new BBox3(new Vector3(1, 1, 1), new Vector3(3, 3, 1));
+            Assert.True(bounds.Contains(new Vector3(2, 2, 1)));
+        }
+
+        [Fact]
+        public void CorrectlyOrdersMinMax()
+        {
+            var bounds = new BBox3(new[] { new Vector3(3, 3, 3), new Vector3(1, 1, 1) });
+            Assert.Equal(new Vector3(1, 1, 1), bounds.Min);
+            Assert.Equal(new Vector3(3, 3, 3), bounds.Max);
+        }
+
+        [Fact]
         public void BBoxesForElements()
         {
             Name = nameof(BBoxesForElements);

@@ -162,10 +162,10 @@ namespace Elements.Tests
         {
             var squareSize = 10;
             var rect = Polygon.Rectangle(squareSize, squareSize);
-            Assert.Equal(new Vector3().DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(-5, 0).DistanceTo(rect), 0);
-            Assert.Equal(new Vector3(10, 0).DistanceTo(rect), 5);
-            Assert.Equal(new Vector3(0, 0, 5).DistanceTo(rect), 5);
+            Assert.Equal(0, new Vector3().DistanceTo(rect));
+            Assert.Equal(0, new Vector3(-5, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(10, 0).DistanceTo(rect));
+            Assert.Equal(5, new Vector3(0, 0, 5).DistanceTo(rect));
         }
 
         [Fact]
@@ -186,6 +186,37 @@ namespace Elements.Tests
             var g = new Vector3(1, 1, 1);
             var h = new Vector3(1, 0, 1);
             Assert.True(new[] { e, f, g, h }.AreCoplanar());
+        }
+
+        [Fact]
+        public void AreCoplanar_FourPoints()
+        {
+            var a = new Vector3(1, 1, 0);
+            var b = new Vector3(3, 0, 2);
+            var c = new Vector3(1, 5, 0);
+            var cross = (b - a).Cross(c - a).Unitized();
+            var expected = Math.Sqrt(2) / 2;
+            Assert.Equal(cross, new Vector3(-expected, 0, expected));
+            var d = new Vector3(-1 + 1e-7, -10, -2 - 1e-7);
+            Assert.True(Vector3.AreCoplanar(a, b, c, d));
+            b = c + cross.Cross(d - a) * 1.5;
+            Assert.True(Vector3.AreCoplanar(a, b, c, d));
+            d = new Vector3(4, 4, 4);
+            Assert.False(Vector3.AreCoplanar(a, b, c, d));
+        }
+
+        [Fact]
+        public void NormalFromPlanarWoundPoints()
+        {
+            var points = new List<Vector3>() {
+                new Vector3(0,1,0),
+                new Vector3(0,1,1),
+                new Vector3(0,0,1),
+                new Vector3(0,0,0),
+            };
+            points.Reverse();
+            var normal = points.NormalFromPlanarWoundPoints();
+            Assert.Equal(Vector3.XAxis.Negate(), normal);
         }
 
         [Fact]
@@ -391,13 +422,51 @@ namespace Elements.Tests
         [Fact]
         public void Collinear()
         {
-            Vector3 p0 = new Vector3( 0, 0, 0);
-            Vector3 p1 = new Vector3( 10, 10, 10);
-            Vector3 p2 = new Vector3( 20, 20, 20);
-            Vector3 p3 = new Vector3( 15, 5, 20);
+            Vector3 p0 = new Vector3(0, 0, 0);
+            Vector3 p1 = new Vector3(10, 10, 10);
+            Vector3 p2 = new Vector3(20, 20, 20);
+            Vector3 p3 = new Vector3(15, 5, 20);
 
-            Assert.True( Vector3.AreCollinear( p0, p1, p2 ) );
-            Assert.False( Vector3.AreCollinear( p0, p1, p3 ) );
+            Assert.True(Vector3.AreCollinear(p0, p1, p2));
+            Assert.False(Vector3.AreCollinear(p0, p1, p3));
+        }
+
+        [Fact]
+        public void CollinearWithCoincidentPoints()
+        {
+            Vector3 p0 = new Vector3(13.770340049720485, 2.8262770874797756);
+            Vector3 p1 = new Vector3(14.68227083781888, -2.387949898514293);
+            Vector3 p2 = new Vector3(14.682270837818884, -2.3879498985142926);
+            Vector3 p3 = new Vector3(11.069392253545676, 18.26972418936262);
+
+            Vector3 p4 = new Vector3(0, 0);
+            Vector3 p5 = new Vector3(1, 0);
+            Vector3 p6 = new Vector3(1, 0.000000000001);
+            Vector3 p7 = new Vector3(2, 0);
+
+            Assert.True(p1.IsAlmostEqualTo(p2));
+            Assert.True(new[] { p0, p1, p2, p3 }.AreCollinear());
+            Assert.True(p5.IsAlmostEqualTo(p6));
+            Assert.True(new[] { p4, p5, p6, p7 }.AreCollinear());
+        }
+
+        [Fact]
+        public void TupleSyntax()
+        {
+            // Integer Tuples + params constructor
+            var polygon = new Polygon((0, 0), (10, 0), (10, 10));
+            Assert.Equal(50, polygon.Area());
+
+            // Mixed tuples + params constructor
+            var polyline = new Polyline((0, 0, 0), (0.5, 0), (1, 0.5));
+        }
+
+        [Fact]
+        public void HashCodesForDifferentComponentsAreNotEqual()
+        {
+            var a = new Vector3(1, 2, 3);
+            var b = new Vector3(3, 2, 1);
+            Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
         }
     }
 }

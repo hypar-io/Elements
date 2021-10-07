@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Elements.Geometry.Interfaces;
+using Elements.Search;
+using Elements.Spatial;
 using LibTessDotNet.Double;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -61,12 +63,12 @@ namespace Elements.Geometry.Solids
             if (voids != null && voids.Count > 0)
             {
                 solid.AddFace(perimeter, voids);
-                solid.AddFace(perimeter.Reversed(), voids.Select(h => h.Reversed()).ToArray(), true);
+                solid.AddFace(perimeter, voids, true, reverse: true);
             }
             else
             {
                 solid.AddFace(perimeter);
-                solid.AddFace(perimeter.Reversed(), null, true);
+                solid.AddFace(perimeter, null, true, reverse: true);
             }
 
             return solid;
@@ -140,13 +142,13 @@ namespace Elements.Geometry.Solids
             }
             else if (curve is Bezier)
             {
-                var startCap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]));
+                var startCap = solid.AddFace(perimeter, transform: transforms[0]);
                 for (var i = 0; i < transforms.Length - 1; i++)
                 {
                     var next = transforms[i + 1];
                     solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
                 }
-                var endCap = solid.AddFace(((Polygon)perimeter.Transformed(transforms[transforms.Length - 1])).Reversed());
+                var endCap = solid.AddFace(perimeter, transform: transforms[transforms.Length - 1], reverse: true);
             }
             else
             {
@@ -156,12 +158,12 @@ namespace Elements.Geometry.Solids
 
                 if (holes != null)
                 {
-                    cap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]), transforms[0].OfPolygons(holes));
+                    cap = solid.AddFace(perimeter, holes, transform: transforms[0]);
                     openEdges = new Edge[1 + holes.Count][];
                 }
                 else
                 {
-                    cap = solid.AddFace((Polygon)perimeter.Transformed(transforms[0]));
+                    cap = solid.AddFace(perimeter, transform: transforms[0]);
                     openEdges = new Edge[1][];
                 }
 
@@ -222,22 +224,22 @@ namespace Elements.Geometry.Solids
                 var t = new Transform(direction.Negate() * (distance / 2), rotation);
                 if (holes != null)
                 {
-                    fStart = solid.AddFace((Polygon)perimeter.Reversed().Transformed(t), t.OfPolygons(holes.Reversed()));
+                    fStart = solid.AddFace(perimeter, holes, transform: t, reverse: true);
                 }
                 else
                 {
-                    fStart = solid.AddFace((Polygon)perimeter.Reversed().Transformed(t));
+                    fStart = solid.AddFace(perimeter, transform: t, reverse: true);
                 }
             }
             else
             {
                 if (holes != null)
                 {
-                    fStart = solid.AddFace(perimeter.Reversed(), holes.Reversed());
+                    fStart = solid.AddFace(perimeter, holes, reverse: true);
                 }
                 else
                 {
-                    fStart = solid.AddFace(perimeter.Reversed());
+                    fStart = solid.AddFace(perimeter, reverse: true);
                 }
             }
 
@@ -279,10 +281,16 @@ namespace Elements.Geometry.Solids
         /// <param name="outer">A polygon representing the perimeter of the face.</param>
         /// <param name="inner">An array of polygons representing the holes in the face.</param>
         /// <param name="mergeVerticesAndEdges">Should existing vertices / edges in the solid be used for the added face?</param>
+        /// <param name="transform">An optional transform which is applied to the polygon.</param>
+        /// <param name="reverse">Should the loop be reversed?</param>
         /// <returns>The newly added face.</returns>
-        public Face AddFace(Polygon outer, IList<Polygon> inner = null, bool mergeVerticesAndEdges = false)
+        public Face AddFace(Polygon outer,
+                            IList<Polygon> inner = null,
+                            bool mergeVerticesAndEdges = false,
+                            Transform transform = null,
+                            bool reverse = false)
         {
-            var outerLoop = LoopFromPolygon(outer, mergeVerticesAndEdges);
+            var outerLoop = LoopFromPolygon(outer, mergeVerticesAndEdges, transform, reverse);
             Loop[] innerLoops = null;
 
             if (inner != null)
@@ -290,7 +298,7 @@ namespace Elements.Geometry.Solids
                 innerLoops = new Loop[inner.Count];
                 for (var i = 0; i < inner.Count; i++)
                 {
-                    innerLoops[i] = LoopFromPolygon(inner[i], mergeVerticesAndEdges);
+                    innerLoops[i] = LoopFromPolygon(inner[i], mergeVerticesAndEdges, transform, reverse);
                 }
             }
 
@@ -538,6 +546,154 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>
+        /// Intersect this solid with the provided plane.
+        /// </summary>
+        /// <param name="p">The plane of intersection.</param>
+        /// <param name="result">A collection of polygons resulting
+        /// from the intersection or null if there was no intersection.</param>
+        /// <returns>True if an intersection occurred, otherwise false.</returns>
+        public bool Intersects(Plane p, out List<Polygon> result)
+        {
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+            foreach (var f in this.Faces)
+            {
+                var facePlane = f.Value.Plane();
+
+                // If the face is coplanar, skip it. The edges of
+                // the face also belong to adjacent faces and will
+                // be included in their results.
+                if (facePlane.IsCoplanar(p))
+                {
+                    continue;
+                }
+
+                var edgeResults = new List<Vector3>();
+
+                edgeResults.AddRange(IntersectLoop(f.Value.Outer, p));
+
+                if (f.Value.Inner != null)
+                {
+                    foreach (var inner in f.Value.Inner)
+                    {
+                        edgeResults.AddRange(IntersectLoop(inner, p));
+                    }
+                }
+
+                var d = facePlane.Normal.Cross(p.Normal).Unitized();
+                edgeResults.Sort(new DirectionComparer(d));
+
+                // Draw segments through the results and add to the 
+                // half edge graph.
+                for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                {
+                    // Don't create zero-length edges.
+                    if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
+                    {
+                        continue;
+                    }
+
+                    var a = FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
+                    var b = FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
+                    var e1 = (a, b, 0);
+                    var e2 = (b, a, 0);
+                    if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        graphEdges[a].Add(e1);
+                    }
+                }
+            }
+
+            var heg = new HalfEdgeGraph2d()
+            {
+                Vertices = graphVertices,
+                EdgesPerVertex = graphEdges
+            };
+
+            try
+            {
+                var polys = heg.Polygonize();
+                if (polys == null || polys.Count == 0)
+                {
+                    result = null;
+                    return false;
+                }
+                result = polys;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // TODO: We could test for known failure modes, but the
+                // iteration over the edge graph before attempting to
+                // graph to identify these modes, is as expensive as 
+                // the graph attempt.
+                // Known cases there the half edge graph will throw an
+                // exception:
+                // - Co-linear edges.
+                // - Disconnected graphs.
+                // - Graphs with one vertex.
+                Console.WriteLine(ex.Message);
+
+                result = null;
+                return false;
+            }
+        }
+
+        private int FindOrCreateGraphVertex(Vector3 v, List<Vector3> vertices, List<List<(int from, int to, int? tag)>> edges)
+        {
+            var a = vertices.IndexOf(v);
+            if (a == -1)
+            {
+                vertices.Add(v);
+                a = vertices.Count - 1;
+                edges.Add(new List<(int from, int to, int? tag)>());
+            }
+            return a;
+        }
+
+        private List<Vector3> IntersectLoop(Loop loop, Plane p)
+        {
+            var edgeResults = new List<Vector3>();
+            var v = loop.Edges.Select(e => e.Vertex).ToList();
+            for (var i = 0; i < v.Count(); i++)
+            {
+                var a = v[i];
+                var b = i == v.Count - 1 ? v[0] : v[i + 1];
+                var start = a.Point;
+                var end = b.Point;
+
+                // If this edge lies on the plane, add it and continue;
+                if (start.DistanceTo(p).ApproximatelyEquals(0) && end.DistanceTo(p).ApproximatelyEquals(0))
+                {
+                    if (!edgeResults.Contains(start))
+                    {
+                        edgeResults.Add(start);
+                    }
+                    if (!edgeResults.Contains(end))
+                    {
+                        edgeResults.Add(end);
+                    }
+                    continue;
+                }
+
+                if (Line.Intersects(p, start, end, out Vector3 xsect))
+                {
+                    if (!edgeResults.Contains(xsect))
+                    {
+                        edgeResults.Add(xsect);
+                    }
+                }
+            }
+
+            return edgeResults;
+        }
+
+        /// <summary>
         /// Create a face from edges.
         /// The first edge array is treated as the outer edge.
         /// Additional edge arrays are treated as holes.
@@ -578,22 +734,31 @@ namespace Elements.Geometry.Solids
             AddFace(loop, inner);
         }
 
-        protected Loop LoopFromPolygon(Polygon p, bool mergeVerticesAndEdges = false)
+        protected Loop LoopFromPolygon(Polygon p,
+                                       bool mergeVerticesAndEdges = false,
+                                       Transform transform = null,
+                                       bool reverse = false)
         {
             var loop = new Loop();
             var verts = new Vertex[p.Vertices.Count];
-            for (var i = 0; i < p.Vertices.Count; i++)
+
+            if (reverse)
             {
-                if (mergeVerticesAndEdges)
+                for (var i = p.Vertices.Count - 1; i >= 0; i--)
                 {
-                    var existingVertex = Vertices.Select(v => v.Value).FirstOrDefault(v => v.Point.IsAlmostEqualTo(p.Vertices[i]));
-                    verts[i] = existingVertex ?? AddVertex(p.Vertices[i]);
-                }
-                else
-                {
-                    verts[i] = AddVertex(p.Vertices[i]);
+                    var pt = p.Vertices[i];
+                    FindOrCreateVertex(pt, p.Vertices.Count - 1 - i, transform, mergeVerticesAndEdges, verts);
                 }
             }
+            else
+            {
+                for (var i = 0; i < p.Vertices.Count; i++)
+                {
+                    var pt = p.Vertices[i];
+                    FindOrCreateVertex(pt, i, transform, mergeVerticesAndEdges, verts);
+                }
+            }
+
             for (var i = 0; i < p.Vertices.Count; i++)
             {
                 var v1 = verts[i];
@@ -601,7 +766,33 @@ namespace Elements.Geometry.Solids
                 var edge = AddEdge(v1, v2, mergeVerticesAndEdges, out var edgeType);
                 loop.AddEdgeToEnd(edgeType == "left" ? edge.Left : edge.Right);
             }
+
             return loop;
+        }
+
+        // TODO: This method should not be required if we have adequate lookup
+        // operations based on vertex locations and incident edges. This is 
+        // currently used in the case where we want to add a face from a polygon
+        // but in most cases where we want to do that we already know something
+        // about the shape of the existing solid and should be able to lookup 
+        // existing vertices without doing an O(n) search. Implement a better
+        // search strategy!
+        private void FindOrCreateVertex(Vector3 pt, int i, Transform transform, bool mergeVerticesAndEdges, Vertex[] verts)
+        {
+            if (transform != null)
+            {
+                pt = transform.OfPoint(pt);
+            }
+
+            if (mergeVerticesAndEdges)
+            {
+                var existingVertex = Vertices.Select(v => v.Value).FirstOrDefault(v => v.Point.IsAlmostEqualTo(pt));
+                verts[i] = existingVertex ?? AddVertex(pt);
+            }
+            else
+            {
+                verts[i] = AddVertex(pt);
+            }
         }
 
         internal Face AddFace(long id, Loop outer, Loop[] inner = null)
@@ -711,7 +902,7 @@ namespace Elements.Geometry.Solids
             // do not introduce shear into the transform.
             var v = (start.Origin - end.Origin).Unitized();
             var midTrans = new Transform(end.Origin.Average(start.Origin), start.YAxis.Cross(v), v);
-            var mid = (Polygon)p.Transformed(midTrans);
+            var mid = p.TransformedPolygon(midTrans);
             var startP = mid.ProjectAlong(v, start.XY());
             var endP = mid.ProjectAlong(v, end.XY());
 

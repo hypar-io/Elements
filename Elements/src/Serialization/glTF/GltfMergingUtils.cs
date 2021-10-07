@@ -28,6 +28,7 @@ namespace Elements.Serialization.glTF
                                         List<Image> images,
                                         List<Sampler> samplers,
                                         bool shouldAddMaterials,
+                                        System.Guid contentElementId,
                                         out ProtoNode parentNode
                                         )
         {
@@ -125,6 +126,7 @@ namespace Elements.Serialization.glTF
                         prim.Material = 0;  // This assumes that the default material is at index 0
                     }
                 }
+                originMesh.Name = $"{contentElementId}_mesh";
                 meshes.Add(originMesh);
                 meshIndices.Add(meshes.Count - 1);
             }
