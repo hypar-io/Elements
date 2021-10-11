@@ -1607,7 +1607,7 @@ namespace Elements.Geometry
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)
             {
-                projected[i] = this.Vertices[i].Project(p);
+                projected[i] = this.Vertices[i].Project(plane);
             }
             return new Polygon(projected);
         }

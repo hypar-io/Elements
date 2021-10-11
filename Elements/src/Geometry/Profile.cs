@@ -186,8 +186,8 @@ namespace Elements.Geometry
         /// <param name="plane">The plane of the returned profile.</param>
         public Profile Project(Plane plane)
         {
-            var projectedPerimeter = this.Perimeter.Project(p);
-            var projectedVoids = this.Voids.Select(v => v.Project(p));
+            var projectedPerimeter = this.Perimeter.Project(plane);
+            var projectedVoids = this.Voids.Select(v => v.Project(plane));
             return new Profile(projectedPerimeter, projectedVoids.ToList());
         }
 
