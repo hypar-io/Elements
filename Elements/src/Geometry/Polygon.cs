@@ -1599,10 +1599,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project this Polygon onto the plane.
+        /// Project this polygon onto the plane.
         /// </summary>
-        /// <param name="p"></param>
-        public Polygon Project(Plane p)
+        /// <param name="plane">The plane of the returned polygon.</param>
+        public Polygon Project(Plane plane)
         {
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)

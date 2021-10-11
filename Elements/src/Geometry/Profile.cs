@@ -181,10 +181,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project this Profile onto the plane.
+        /// Project this profile onto the plane.
         /// </summary>
-        /// <param name="p"></param>
-        public Profile Project(Plane p)
+        /// <param name="plane">The plane of the returned profile.</param>
+        public Profile Project(Plane plane)
         {
             var projectedPerimeter = this.Perimeter.Project(p);
             var projectedVoids = this.Voids.Select(v => v.Project(p));
