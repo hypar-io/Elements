@@ -17,6 +17,7 @@
 
 
 ### Fixed
+- WallByProfile was failing to deserialize walls without openings.
 
 ## 0.9.4
 
