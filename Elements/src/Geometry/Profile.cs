@@ -56,7 +56,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a profile from a collection of polygons.
         /// If the collection contains more than one polygon, the first polygon
-        /// will be used as the perimeter and any remaining polygons will 
+        /// will be used as the perimeter and any remaining polygons will
         /// be used as voids.
         /// </summary>
         /// <param name="polygons">The polygons bounding this profile.</param>
@@ -178,6 +178,17 @@ namespace Elements.Geometry
             transform.Scale(amount);
 
             return transform.OfProfile(this);
+        }
+
+        /// <summary>
+        /// Project this profile onto the plane.
+        /// </summary>
+        /// <param name="plane">The plane of the returned profile.</param>
+        public Profile Project(Plane plane)
+        {
+            var projectedPerimeter = this.Perimeter.Project(plane);
+            var projectedVoids = this.Voids.Select(v => v.Project(plane));
+            return new Profile(projectedPerimeter, projectedVoids.ToList());
         }
 
         /// <summary>
@@ -343,7 +354,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids). 
+        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids).
         /// </summary>
         /// <param name="point">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -462,7 +473,7 @@ namespace Elements.Geometry
                 var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
                 // for every resultant polygon, we can't be sure if it's a void, or should have a void,
                 // so we check if it includes any of the others, and subtract the original profile's voids
-                // as well. 
+                // as well.
                 for (int i = 0; i < perimSplits.Count; i++)
                 {
                     Polygon perimeterPoly = perimSplits[i];

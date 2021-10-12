@@ -96,7 +96,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
@@ -1599,15 +1599,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project the specified vector onto the plane.
+        /// Project this polygon onto the plane.
         /// </summary>
-        /// <param name="p"></param>
-        public Polygon Project(Plane p)
+        /// <param name="plane">The plane of the returned polygon.</param>
+        public Polygon Project(Plane plane)
         {
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)
             {
-                projected[i] = this.Vertices[i].Project(p);
+                projected[i] = this.Vertices[i].Project(plane);
             }
             return new Polygon(projected);
         }
