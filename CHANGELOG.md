@@ -5,6 +5,7 @@
 ### Added
 
 - `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+- `GeometricElement.ModifyVertexAttributes`
 - `Polygon.Contains3D` method for checking polygon containment in 3D.
 - `WallByProfile.AddOpenings()`
 - `Profile.Project(Plane)`
