@@ -11,13 +11,15 @@
 - `Profile.Project(Plane)`
 
 ### Changed
+
 - Wall doesn't have Height or Profile any more.
 - WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
 - `Polygon.Area()` will now calculate the area of a polygon in 3D.
 - WallByProfile updated constructor options and `UpdateRepresentation` logic.
-
+- Code generation includes an empty constructor for generated types.
 
 ### Fixed
+
 - WallByProfile was failing to deserialize walls without openings.
 
 ## 0.9.4

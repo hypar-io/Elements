@@ -17,7 +17,7 @@ namespace Elements
         /// <param name="id">The unique id of the element.</param>
         /// <param name="name">The name of the element.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Element(System.Guid @id, string @name)
+        public Element(System.Guid @id = default(Guid), string @name = null)
         {
             this._id = @id;
             this._name = @name;
