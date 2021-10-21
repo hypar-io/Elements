@@ -46,7 +46,7 @@ namespace Elements.Generate
         /// <param name="uri">The location of the catalog json file.</param>
         /// <param name="saveDirectory">The folder of where to save the resulting generated code.</param>
         /// <param name="useReferenceOrientation">Should ContentElements be reoriented to match the rotation they had when they were exported?</param>
-        public static void FromUri(string uri, string saveDirectory, bool useReferenceOrientation = true)
+        public static void FromUri(string uri, string saveDirectory, bool useReferenceOrientation = false)
         {
             Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content", "ReferenceConfiguration" });
             Template.RegisterSafeType(typeof(ContentElement), GetContentElementToRender);
@@ -55,6 +55,7 @@ namespace Elements.Generate
 
             var json = GetContentsOfUri(uri);
             ContentCatalog catalog = ContentCatalog.FromJson(json);
+            // TODO useReferenceOrientation may have fallen out of use entirely.  Consider removing this optional flag.
             if (useReferenceOrientation)
             {
                 catalog.UseReferenceOrientation();
