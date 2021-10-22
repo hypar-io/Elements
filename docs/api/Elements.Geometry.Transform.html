@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -271,12 +271,12 @@ for (var i = 0.0; i &lt; 360.0; i += 360.0 / (double)count)
   </div>
   <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
   <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Matrix_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Matrix)">Transform(Matrix)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a transform.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Transform(Matrix matrix)</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform(Matrix matrix)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -292,6 +292,33 @@ public Transform(Matrix matrix)</code></pre>
         <td><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></td>
         <td><span class="parametername">matrix</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Plane)">Transform(Plane)</h4>
+  <div class="markdown level1 summary"><p>Create a transform using the provided plane's origin and normal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane used to orient the transform.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -539,9 +566,7 @@ along up.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Matrix&quot;, Required = Required.Always)]
-[Required]
-public Matrix Matrix { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Matrix Matrix { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -565,8 +590,7 @@ public Matrix Matrix { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -590,8 +614,7 @@ public Vector3 Origin { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -615,8 +638,7 @@ public Vector3 XAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -640,8 +662,7 @@ public Vector3 YAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -836,6 +857,30 @@ of the curve.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Invert()</code></pre>
   </div>
+  <a id="Elements_Geometry_Transform_Inverted_" data-uid="Elements.Geometry.Transform.Inverted*"></a>
+  <h4 id="Elements_Geometry_Transform_Inverted" data-uid="Elements.Geometry.Transform.Inverted">Inverted()</h4>
+  <div class="markdown level1 summary"><p>Return a new transform which is the inverse of this transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Inverted()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_Move_" data-uid="Elements.Geometry.Transform.Move*"></a>
   <h4 id="Elements_Geometry_Transform_Move_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.Move(Elements.Geometry.Vector3)">Move(Vector3)</h4>
   <div class="markdown level1 summary"><p>Apply a translation to the transform.</p>
@@ -1168,7 +1213,7 @@ public Line OfLine(Line line)</code></pre>
   </table>
   <a id="Elements_Geometry_Transform_OfPoint_" data-uid="Elements.Geometry.Transform.OfPoint*"></a>
   <h4 id="Elements_Geometry_Transform_OfPoint_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.OfPoint(Elements.Geometry.Vector3)">OfPoint(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform ignoring the translation.</p>
+  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1341,7 +1386,7 @@ public Polygon OfPolygon(Polygon polygon)</code></pre>
   </table>
   <a id="Elements_Geometry_Transform_OfVector_" data-uid="Elements.Geometry.Transform.OfVector*"></a>
   <h4 id="Elements_Geometry_Transform_OfVector_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.OfVector(Elements.Geometry.Vector3)">OfVector(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform.</p>
+  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform ignoring the translation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

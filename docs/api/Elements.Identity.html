@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Identity
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -118,13 +118,44 @@
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Identity_AddOverrideIdentity_" data-uid="Elements.Identity.AddOverrideIdentity*"></a>
+  <h4 id="Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_" data-uid="Elements.Identity.AddOverrideIdentity(Elements.Element,Elements.IOverride)">AddOverrideIdentity(Element, IOverride)</h4>
+  <div class="markdown level1 summary"><p>Track that an element was affected by a specific override.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddOverrideIdentity(this Element element, IOverride overrideObject)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.IOverride.html">IOverride</a></td>
+        <td><span class="parametername">overrideObject</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Identity_AddOverrideIdentity_" data-uid="Elements.Identity.AddOverrideIdentity*"></a>
   <h4 id="Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_" data-uid="Elements.Identity.AddOverrideIdentity(Elements.Element,System.String,System.String,System.Object)">AddOverrideIdentity(Element, String, String, Object)</h4>
   <div class="markdown level1 summary"><p>Track that an element was affected by a specific override.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void AddOverrideIdentity(Element element, string overrideName, string overrideId, object overrideIdentity)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void AddOverrideIdentity(this Element element, string overrideName, string overrideId, object overrideIdentity)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -159,6 +190,107 @@
         <td><span class="parametername">overrideIdentity</span></td>
         <td><p>The identity object that the override used to describe the object.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Identity_AddOverrideValue_" data-uid="Elements.Identity.AddOverrideValue*"></a>
+  <h4 id="Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_" data-uid="Elements.Identity.AddOverrideValue(Elements.Element,System.String,System.Object)">AddOverrideValue(Element, String, Object)</h4>
+  <div class="markdown level1 summary"><p>Add the final values used from an override to an element or proxy.
+This is only required if the override schema does not reflect the element schema,
+or if the properties within the override were not added directly to additionalProperties.
+In the earlier two cases, the data on the element within the schema or in additionalProperties
+will be used as the current values for override.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void AddOverrideValue(this Element element, string overrideName, object overrideValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">overrideName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">overrideValue</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Identity_OverrideIds_" data-uid="Elements.Identity.OverrideIds*"></a>
+  <h4 id="Elements_Identity_OverrideIds__1_Elements_Element_System_String_" data-uid="Elements.Identity.OverrideIds``1(Elements.Element,System.String)">OverrideIds&lt;T&gt;(Element, String)</h4>
+  <div class="markdown level1 summary"><p>Get the IDs of all overrides of this type that were already attached using AddOverrideIdentity to this element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;string&gt; OverrideIds&lt;T&gt;(this Element element, string overrideName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">overrideName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

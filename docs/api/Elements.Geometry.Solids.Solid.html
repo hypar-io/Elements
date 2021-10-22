@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Solid
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -294,13 +294,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_AddFace_" data-uid="Elements.Geometry.Solids.Solid.AddFace*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})">AddFace(Polygon, IList&lt;Polygon&gt;)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_AddFace_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Boolean_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Geometry.Solids.Solid.AddFace(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Boolean,Elements.Geometry.Transform,System.Boolean)">AddFace(Polygon, IList&lt;Polygon&gt;, Boolean, Transform, Boolean)</h4>
   <div class="markdown level1 summary"><p>Add a Face to the Solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Face AddFace(Polygon outer, IList&lt;Polygon&gt; inner = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Face AddFace(Polygon outer, IList&lt;Polygon&gt; inner = null, bool mergeVerticesAndEdges = false, Transform transform = null, bool reverse = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -322,6 +322,24 @@
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">inner</span></td>
         <td><p>An array of polygons representing the holes in the face.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">mergeVerticesAndEdges</span></td>
+        <td><p>Should existing vertices / edges in the solid be used for the added face?</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>An optional transform which is applied to the polygon.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">reverse</span></td>
+        <td><p>Should the loop be reversed?</p>
 </td>
       </tr>
     </tbody>
@@ -469,6 +487,91 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_CreateLamina_" data-uid="Elements.Geometry.Solids.Solid.CreateLamina*"></a>
+  <h4 id="Elements_Geometry_Solids_Solid_CreateLamina_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__" data-uid="Elements.Geometry.Solids.Solid.CreateLamina(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon})">CreateLamina(Polygon, IList&lt;Polygon&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Solid CreateLamina(Polygon perimeter, IList&lt;Polygon&gt; voids = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">voids</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Solid_CreateLamina_" data-uid="Elements.Geometry.Solids.Solid.CreateLamina*"></a>
+  <h4 id="Elements_Geometry_Solids_Solid_CreateLamina_Elements_Geometry_Profile_" data-uid="Elements.Geometry.Solids.Solid.CreateLamina(Elements.Geometry.Profile)">CreateLamina(Profile)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Solid CreateLamina(Profile profile)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Solids.Solid.html">Solid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Solid_CreateLamina_" data-uid="Elements.Geometry.Solids.Solid.CreateLamina*"></a>
   <h4 id="Elements_Geometry_Solids_Solid_CreateLamina_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Solids.Solid.CreateLamina(System.Collections.Generic.IList{Elements.Geometry.Vector3})">CreateLamina(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a lamina solid.</p>
 </div>
@@ -510,13 +613,63 @@ Additional edge arrays are treated as holes.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Solids_Solid_Intersects_" data-uid="Elements.Geometry.Solids.Solid.Intersects*"></a>
+  <h4 id="Elements_Geometry_Solids_Solid_Intersects_Elements_Geometry_Plane_System_Collections_Generic_List_Elements_Geometry_Polygon___" data-uid="Elements.Geometry.Solids.Solid.Intersects(Elements.Geometry.Plane,System.Collections.Generic.List{Elements.Geometry.Polygon}@)">Intersects(Plane, out List&lt;Polygon&gt;)</h4>
+  <div class="markdown level1 summary"><p>Intersect this solid with the provided plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane p, out List&lt;Polygon&gt; result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>The plane of intersection.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">result</span></td>
+        <td><p>A collection of polygons resulting
+from the intersection or null if there was no intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurred, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Solids_Solid_LoopFromPolygon_" data-uid="Elements.Geometry.Solids.Solid.LoopFromPolygon*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_LoopFromPolygon_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Solids.Solid.LoopFromPolygon(Elements.Geometry.Polygon)">LoopFromPolygon(Polygon)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_LoopFromPolygon_Elements_Geometry_Polygon_System_Boolean_Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Geometry.Solids.Solid.LoopFromPolygon(Elements.Geometry.Polygon,System.Boolean,Elements.Geometry.Transform,System.Boolean)">LoopFromPolygon(Polygon, Boolean, Transform, Boolean)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected Loop LoopFromPolygon(Polygon p)</code></pre>
+    <pre><code class="lang-csharp hljs">protected Loop LoopFromPolygon(Polygon p, bool mergeVerticesAndEdges = false, Transform transform = null, bool reverse = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -531,6 +684,21 @@ Additional edge arrays are treated as holes.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">p</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">mergeVerticesAndEdges</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">reverse</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -758,6 +926,31 @@ Additional edge arrays are treated as holes.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_Tessellate_" data-uid="Elements.Geometry.Solids.Solid.Tessellate*"></a>
+  <h4 id="Elements_Geometry_Solids_Solid_Tessellate" data-uid="Elements.Geometry.Solids.Solid.Tessellate">Tessellate()</h4>
+  <div class="markdown level1 summary"><p>Triangulate this solid and pack the triangulated data into buffers
+appropriate for use with gltf.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraphicsBuffers Tessellate()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Solid_Tessellate_" data-uid="Elements.Geometry.Solids.Solid.Tessellate*"></a>
   <h4 id="Elements_Geometry_Solids_Solid_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_" data-uid="Elements.Geometry.Solids.Solid.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)">Tessellate(ref Mesh, Transform, Color)</h4>
   <div class="markdown level1 summary"><p>Triangulate this solid.</p>
 </div>
@@ -796,99 +989,26 @@ Additional edge arrays are treated as holes.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Solids_Solid_Tessellate_" data-uid="Elements.Geometry.Solids.Solid.Tessellate*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_Tessellate_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____" data-uid="Elements.Geometry.Solids.Solid.Tessellate(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)">Tessellate(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])</h4>
-  <div class="markdown level1 summary"><p>Triangulate this solid and pack the triangulated data into buffers
-appropriate for use with gltf.</p>
+  <a id="Elements_Geometry_Solids_Solid_ToMesh_" data-uid="Elements.Geometry.Solids.Solid.ToMesh*"></a>
+  <h4 id="Elements_Geometry_Solids_Solid_ToMesh" data-uid="Elements.Geometry.Solids.Solid.ToMesh">ToMesh()</h4>
+  <div class="markdown level1 summary"><p>Get the Mesh of this Solid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Tessellate(out byte[] vertexBuffer, out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer, out double[] vmax, out double[] vmin, out double[] nmin, out double[] nmax, out float[] cmin, out float[] cmax, out ushort imin, out ushort imax, out double[] uvmin, out double[] uvmax)</code></pre>
+    <pre><code class="lang-csharp hljs">public Mesh ToMesh()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">vertexBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">indexBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">normalBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">colorBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">uvBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">vmax</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">vmin</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">nmin</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">nmax</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span>[]</td>
-        <td><span class="parametername">cmin</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span>[]</td>
-        <td><span class="parametername">cmax</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">imin</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">imax</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">uvmin</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">uvmax</span></td>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
         <td></td>
       </tr>
     </tbody>

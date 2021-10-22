@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GltfExtensions
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -117,14 +117,58 @@
   </div>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Serialization_glTF_GltfExtensions_GetGlbStreamFromPath_" data-uid="Elements.Serialization.glTF.GltfExtensions.GetGlbStreamFromPath*"></a>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_GetGlbStreamFromPath_System_String_" data-uid="Elements.Serialization.glTF.GltfExtensions.GetGlbStreamFromPath(System.String)">GetGlbStreamFromPath(String)</h4>
+  <div class="markdown level1 summary"><p>Get a stream from a glb path, either file reference or remote.
+The streams are cached based on the location, so updates to files may
+not be reflected immediately, especially during long running parent processes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Stream GetGlbStreamFromPath(string gltfLocation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">gltfLocation</span></td>
+        <td><p>The URI of the gltf binary file</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.IO.Stream</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Serialization_glTF_GltfExtensions_ToBase64String_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToBase64String*"></a>
-  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model,System.Boolean)">ToBase64String(Model, Boolean)</h4>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToBase64String_Elements_Model_System_Boolean_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToBase64String(Elements.Model,System.Boolean,System.Boolean)">ToBase64String(Model, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Serialize the model to a base64 encoded string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static string ToBase64String(this Model model, bool drawEdges = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -146,6 +190,11 @@
         <td><span class="parametername">drawEdges</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">mergeVertices</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -165,13 +214,13 @@
     </tbody>
   </table>
   <a id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF*"></a>
-  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model)">ToGlTF(Model)</h4>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_Boolean_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.Boolean,System.Boolean)">ToGlTF(Model, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Serialize the model to a byte array.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static byte[] ToGlTF(this Model model)</code></pre>
+    <pre><code class="lang-csharp hljs">public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -187,6 +236,18 @@
         <td><a class="xref" href="Elements.Model.html">Model</a></td>
         <td><span class="parametername">model</span></td>
         <td><p>The model to serialize.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">drawEdges</span></td>
+        <td><p>Should edges of the model be drawn?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">mergeVertices</span></td>
+        <td><p>Should vertices be merged in the resulting output?</p>
 </td>
       </tr>
     </tbody>

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct BBox3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -96,11 +96,38 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_BBox3_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public struct BBox3</code></pre>
+    <pre><code class="lang-csharp hljs">public struct BBox3</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
+  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
+  <h4 id="Elements_Geometry_BBox3__ctor_Elements_Element_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Element)">BBox3(Element)</h4>
+  <div class="markdown level1 summary"><p>Create the BBox3 for an Element. Elements without any geometry will return invalid boxes.
+Properties of the element that are themselves elements will not be considered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3(Element element)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td><p>The element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
   <h4 id="Elements_Geometry_BBox3__ctor_Elements_Geometry_Profile_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Geometry.Profile)">BBox3(Profile)</h4>
   <div class="markdown level1 summary"><p>Create the BBox3 for a Profile.</p>
@@ -130,12 +157,12 @@ public struct BBox3</code></pre>
   </table>
   <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
   <h4 id="Elements_Geometry_BBox3__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">BBox3(Vector3, Vector3)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Create a bounding box.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public BBox3(Vector3 min, Vector3 max)</code></pre>
+    <pre><code class="lang-csharp hljs">public BBox3(Vector3 min, Vector3 max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,12 +177,14 @@ public BBox3(Vector3 min, Vector3 max)</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">min</span></td>
-        <td></td>
+        <td><p>The minimum point.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">max</span></td>
-        <td></td>
+        <td><p>The maximum point.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -221,8 +250,7 @@ public BBox3(Vector3 min, Vector3 max)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Max&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 Max { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Max { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -246,8 +274,7 @@ public Vector3 Max { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Min&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 Min { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Min { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -287,6 +314,77 @@ public Vector3 Min { get; set; }</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>The center of the bounding box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Contains_" data-uid="Elements.Geometry.BBox3.Contains*"></a>
+  <h4 id="Elements_Geometry_BBox3_Contains_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Contains(Elements.Geometry.Vector3)">Contains(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this bounding box contain the provided point?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the bounding box contains the point, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Corners_" data-uid="Elements.Geometry.BBox3.Corners*"></a>
+  <h4 id="Elements_Geometry_BBox3_Corners" data-uid="Elements.Geometry.BBox3.Corners">Corners()</h4>
+  <div class="markdown level1 summary"><p>Get all 8 corners of this bounding box.
+Ordering is CCW bottom, then CCW top, each starting from minimum (X,Y).
+For a unit cube this would be:
+(0,0,0),(1,0,0),(1,1,0),(0,1,0),(0,0,1),(1,0,1),(1,1,1),(0,1,1)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vector3&gt; Corners()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><p>The corners of the bounding box.</p>
 </td>
       </tr>
     </tbody>

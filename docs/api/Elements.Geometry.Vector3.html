@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -167,12 +167,12 @@
   </table>
   <a id="Elements_Geometry_Vector3__ctor_" data-uid="Elements.Geometry.Vector3.#ctor*"></a>
   <h4 id="Elements_Geometry_Vector3__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Vector3.#ctor(System.Double,System.Double,System.Double)">Vector3(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Create a vector.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -187,17 +187,20 @@ public Vector3(double x, double y, double z)</code></pre>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">x</span></td>
-        <td></td>
+        <td><p>The x component.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">y</span></td>
-        <td></td>
+        <td><p>The y component.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">z</span></td>
-        <td></td>
+        <td><p>The z component.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -259,8 +262,7 @@ public Vector3(double x, double y, double z)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
-public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,8 +310,7 @@ public double X { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
-public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -357,8 +358,7 @@ public double Y { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
-public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -443,6 +443,117 @@ you should use Vector3.PlaneAngleTo.</p>
         <td><span class="xref">System.Double</span></td>
         <td><p>The angle in degrees between 0 and 180.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_AreCollinear_" data-uid="Elements.Geometry.Vector3.AreCollinear*"></a>
+  <h4 id="Elements_Geometry_Vector3_AreCollinear_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.AreCollinear(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">AreCollinear(Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Check whether three points are on the same line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the points are on the same line, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_AreCoplanar_" data-uid="Elements.Geometry.Vector3.AreCoplanar*"></a>
+  <h4 id="Elements_Geometry_Vector3_AreCoplanar_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.AreCoplanar(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">AreCoplanar(Vector3, Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Are four provided points on the same plane?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AreCoplanar(Vector3 a, Vector3 b, Vector3 c, Vector3 d)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">d</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -751,6 +862,61 @@ the world Z axis, then the world Y axis is used instead.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3_Cross_" data-uid="Elements.Geometry.Vector3.Cross*"></a>
+  <h4 id="Elements_Geometry_Vector3_Cross_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Vector3.Cross(System.Double,System.Double,System.Double)">Cross(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Compute the cross product of this vector and a vector composed
+of the provided components.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 Cross(double x, double y, double z)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>X</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>Y</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">z</span></td>
+        <td><p>Z</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
   <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Line_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Line)">DistanceTo(Line)</h4>
   <div class="markdown level1 summary"><p>Find the distance from this point to the line.</p>
@@ -867,6 +1033,97 @@ The distance will be negative when this point lies
         <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
         <td><span class="parametername">p</span></td>
         <td><p>The plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polygon_" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polygon)">DistanceTo(Polygon)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point within the polygon</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polygon polygon)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon for computing the distance</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_Elements_Geometry_Polygon_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(Elements.Geometry.Polygon,Elements.Geometry.Vector3@)">DistanceTo(Polygon, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the shortest distance from this point to any point within the
+polygon, and output the location of the closest point on that polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Polygon polygon, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon for computing the distance</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>Point within the polygon that is closest to this point</p>
 </td>
       </tr>
     </tbody>
@@ -1059,7 +1316,63 @@ polyline, and output the location of the closest point on that polyline.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>The dot product.</p>
+        <td><p>A value between 1 and -1.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_Dot_" data-uid="Elements.Geometry.Vector3.Dot*"></a>
+  <h4 id="Elements_Geometry_Vector3_Dot_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Vector3.Dot(System.Double,System.Double,System.Double)">Dot(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Compute the dot product of this vector and a vector composed
+of the provided components.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Dot(double x, double y, double z)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>X</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>Y</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">z</span></td>
+        <td><p>Z</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>A value between 1 and -1.</p>
 </td>
       </tr>
     </tbody>
@@ -1308,13 +1621,13 @@ polyline, and output the location of the closest point on that polyline.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3_IsParallelTo_" data-uid="Elements.Geometry.Vector3.IsParallelTo*"></a>
-  <h4 id="Elements_Geometry_Vector3_IsParallelTo_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.IsParallelTo(Elements.Geometry.Vector3)">IsParallelTo(Vector3)</h4>
+  <h4 id="Elements_Geometry_Vector3_IsParallelTo_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Vector3.IsParallelTo(Elements.Geometry.Vector3,System.Double)">IsParallelTo(Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Determine whether this vector is parallel to v.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsParallelTo(Vector3 v)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsParallelTo(Vector3 v, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1332,6 +1645,12 @@ polyline, and output the location of the closest point on that polyline.</p>
         <td><p>The vector to compare to this vector.</p>
 </td>
       </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>The amount of tolerance in the parallel comparison.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -1346,6 +1665,31 @@ polyline, and output the location of the closest point on that polyline.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if the vectors are parallel, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_IsUnitized_" data-uid="Elements.Geometry.Vector3.IsUnitized*"></a>
+  <h4 id="Elements_Geometry_Vector3_IsUnitized" data-uid="Elements.Geometry.Vector3.IsUnitized">IsUnitized()</h4>
+  <div class="markdown level1 summary"><p>Is this vector of unit length?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsUnitized()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the vector is of unit length, otherwise false.</p>
 </td>
       </tr>
     </tbody>
@@ -1752,14 +2096,32 @@ polyline, and output the location of the closest point on that polyline.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3_Unitized_" data-uid="Elements.Geometry.Vector3.Unitized*"></a>
-  <h4 id="Elements_Geometry_Vector3_Unitized" data-uid="Elements.Geometry.Vector3.Unitized">Unitized()</h4>
+  <h4 id="Elements_Geometry_Vector3_Unitized_System_Double_" data-uid="Elements.Geometry.Vector3.Unitized(System.Double)">Unitized(Double)</h4>
   <div class="markdown level1 summary"><p>Return a new vector which is the unitized version of this vector.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Unitized()</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Unitized(double tolerance = 1E-05)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>The amount of tolerance in the zero length comparison.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -1970,6 +2332,225 @@ polyline, and output the location of the closest point on that polyline.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3_op_GreaterThanOrEqual_" data-uid="Elements.Geometry.Vector3.op_GreaterThanOrEqual*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_GreaterThanOrEqual_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.op_GreaterThanOrEqual(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">GreaterThanOrEqual(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Compute whether all components of vector a are greater than or
+equal to those of vector b.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &gt;=(Vector3 a, Vector3 b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first vector.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second vector.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if all of a's components are greater than or equal
+to all of those of b, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_op_Implicit_" data-uid="Elements.Geometry.Vector3.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_Implicit_System_ValueTuple_System_Double_System_Double_System_Double___Elements_Geometry_Vector3" data-uid="Elements.Geometry.Vector3.op_Implicit(System.ValueTuple{System.Double,System.Double,System.Double})~Elements.Geometry.Vector3">Implicit((Double X, Double Y, Double Z) to Vector3)</h4>
+  <div class="markdown level1 summary"><p>Automatically convert a tuple of three doubles into a Vector3.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Vector3((double X, double Y, double Z) vector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Double</span>, <span class="xref">System.Double</span>, <span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">vector</span></td>
+        <td><p>An (X,Y,Z) tuple of doubles.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_op_Implicit_" data-uid="Elements.Geometry.Vector3.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_Implicit_System_ValueTuple_System_Double_System_Double___Elements_Geometry_Vector3" data-uid="Elements.Geometry.Vector3.op_Implicit(System.ValueTuple{System.Double,System.Double})~Elements.Geometry.Vector3">Implicit((Double X, Double Y) to Vector3)</h4>
+  <div class="markdown level1 summary"><p>Automatically convert a tuple of two doubles into a Vector3.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Vector3((double X, double Y) vector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Double</span>, <span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">vector</span></td>
+        <td><p>An (X,Y) tuple of doubles.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_op_Implicit_" data-uid="Elements.Geometry.Vector3.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_Implicit_System_ValueTuple_System_Int32_System_Int32_System_Int32___Elements_Geometry_Vector3" data-uid="Elements.Geometry.Vector3.op_Implicit(System.ValueTuple{System.Int32,System.Int32,System.Int32})~Elements.Geometry.Vector3">Implicit((Int32 X, Int32 Y, Int32 Z) to Vector3)</h4>
+  <div class="markdown level1 summary"><p>Automatically convert a tuple of three ints into a Vector3.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Vector3((int X, int Y, int Z) vector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">vector</span></td>
+        <td><p>An (X,Y,Z) tuple of ints.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_op_Implicit_" data-uid="Elements.Geometry.Vector3.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_Implicit_System_ValueTuple_System_Int32_System_Int32___Elements_Geometry_Vector3" data-uid="Elements.Geometry.Vector3.op_Implicit(System.ValueTuple{System.Int32,System.Int32})~Elements.Geometry.Vector3">Implicit((Int32 X, Int32 Y) to Vector3)</h4>
+  <div class="markdown level1 summary"><p>Automatically convert a tuple of two ints into a Vector3.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Vector3((int X, int Y) vector)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">vector</span></td>
+        <td><p>An (X,Y) tuple of ints.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Vector3_op_Inequality_" data-uid="Elements.Geometry.Vector3.op_Inequality*"></a>
   <h4 id="Elements_Geometry_Vector3_op_Inequality_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.op_Inequality(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Inequality(Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Are the two vectors not the same within Epsilon?</p>
@@ -2061,6 +2642,57 @@ polyline, and output the location of the closest point on that polyline.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if all of a's components are less than those of b, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_op_LessThanOrEqual_" data-uid="Elements.Geometry.Vector3.op_LessThanOrEqual*"></a>
+  <h4 id="Elements_Geometry_Vector3_op_LessThanOrEqual_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Vector3.op_LessThanOrEqual(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">LessThanOrEqual(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Compute whether all components of vector a are less than or
+equal to those of vector b.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator &lt;=(Vector3 a, Vector3 b)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first vector.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second vector.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if all of a's components are less than or equal
+to all of those of b, otherwise false.</p>
 </td>
       </tr>
     </tbody>

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Lamina
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,20 +86,22 @@
     <div class="level1"><a class="xref" href="Elements.Geometry.Solids.SolidOperation.html">SolidOperation</a></div>
     <div class="level2"><span class="xref">Lamina</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_IsVoid">SolidOperation.IsVoid</a>
-    </div>
     <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_LocalTransform">SolidOperation.LocalTransform</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid">SolidOperation.Solid</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_IsVoid">SolidOperation.IsVoid</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_PropertyChanged">SolidOperation.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_RaisePropertyChanged_System_String_">SolidOperation.RaisePropertyChanged(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -127,18 +129,51 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Solids_Lamina_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Lamina : SolidOperation, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class Lamina : SolidOperation</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Solids_Lamina__ctor_" data-uid="Elements.Geometry.Solids.Lamina.#ctor*"></a>
   <h4 id="Elements_Geometry_Solids_Lamina__ctor_Elements_Geometry_Polygon_System_Boolean_" data-uid="Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Polygon,System.Boolean)">Lamina(Polygon, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a lamina from a perimeter.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Lamina(Polygon perimeter, bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">public Lamina(Polygon perimeter, bool isVoid = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>The lamina's perimeter</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isVoid</span></td>
+        <td><p>Should the lamina be considered a void?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Lamina__ctor_" data-uid="Elements.Geometry.Solids.Lamina.#ctor*"></a>
+  <h4 id="Elements_Geometry_Solids_Lamina__ctor_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Boolean_" data-uid="Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Boolean)">Lamina(Polygon, IList&lt;Polygon&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Construct a lamina.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Lamina(Polygon perimeter, IList&lt;Polygon&gt; voids, bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,9 +191,47 @@ public Lamina(Polygon perimeter, bool isVoid)</code></pre>
         <td></td>
       </tr>
       <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">voids</span></td>
+        <td></td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">isVoid</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Lamina__ctor_" data-uid="Elements.Geometry.Solids.Lamina.#ctor*"></a>
+  <h4 id="Elements_Geometry_Solids_Lamina__ctor_Elements_Geometry_Profile_System_Boolean_" data-uid="Elements.Geometry.Solids.Lamina.#ctor(Elements.Geometry.Profile,System.Boolean)">Lamina(Profile, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Construct a lamina from a profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Lamina(Profile profile, bool isVoid = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The profile of the lamina</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isVoid</span></td>
+        <td><p>Should the lamina be considered a void?</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -171,8 +244,7 @@ public Lamina(Polygon perimeter, bool isVoid)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.AllowNull)]
-public Polygon Perimeter { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -189,43 +261,16 @@ public Polygon Perimeter { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-  </h3>
-  <a id="Elements_Geometry_Solids_Lamina_RaisePropertyChanged_" data-uid="Elements.Geometry.Solids.Lamina.RaisePropertyChanged*"></a>
-  <h4 id="Elements_Geometry_Solids_Lamina_RaisePropertyChanged_System_String_" data-uid="Elements.Geometry.Solids.Lamina.RaisePropertyChanged(System.String)">RaisePropertyChanged(String)</h4>
-  <div class="markdown level1 summary"></div>
+  <a id="Elements_Geometry_Solids_Lamina_Voids_" data-uid="Elements.Geometry.Solids.Lamina.Voids*"></a>
+  <h4 id="Elements_Geometry_Solids_Lamina_Voids" data-uid="Elements.Geometry.Solids.Lamina.Voids">Voids</h4>
+  <div class="markdown level1 summary"><p>A collection of voids.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void RaisePropertyChanged(string propertyName = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">propertyName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="events">Events
-  </h3>
-  <h4 id="Elements_Geometry_Solids_Lamina_PropertyChanged" data-uid="Elements.Geometry.Solids.Lamina.PropertyChanged">PropertyChanged</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler PropertyChanged</code></pre>
-  </div>
-  <h5 class="eventType">Event Type</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -235,15 +280,11 @@ public Polygon Perimeter { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.ComponentModel.PropertyChangedEventHandler</span></td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
 </article>
           </div>
           

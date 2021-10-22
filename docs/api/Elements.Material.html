@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Material
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Material" data-uid="Elements.Material" class="text-break">Class Material
   </h1>
-  <div class="markdown level0 summary"><p>A material.</p>
+  <div class="markdown level0 summary"><p>A material with red, green, blue, alpha, and metallic factor components.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -132,13 +132,13 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Guid,System.String)">Material(Color, Double, Double, Boolean, String, Boolean, Guid, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Boolean_System_String_System_Boolean_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Boolean,System.String,System.Boolean,System.Guid,System.String)">Material(Color, Double, Double, Boolean, String, Boolean, Boolean, String, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a material.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, bool repeatTexture, string normalTexture, bool interpolateTexture, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,53 +153,79 @@ public Material(Color color, double specularFactor, double glossinessFactor, boo
       <tr>
         <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
         <td><span class="parametername">color</span></td>
-        <td></td>
+        <td><p>The color component.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">specularFactor</span></td>
-        <td></td>
+        <td><p>The specular component.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">glossinessFactor</span></td>
-        <td></td>
+        <td><p>The glossiness factor.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">unlit</span></td>
-        <td></td>
+        <td><p>Does this material have a constant color?</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">texture</span></td>
-        <td></td>
+        <td><p>A path to an image texture for texture mapping.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">doubleSided</span></td>
-        <td></td>
+        <td><p>Is this material double sided?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">repeatTexture</span></td>
+        <td><p>Does the texture repeat?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">normalTexture</span></td>
+        <td><p>A path to an image texture for normal mapping.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">interpolateTexture</span></td>
+        <td><p>Should the texture be interpolated?</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td></td>
+        <td><p>The id of the material.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>The name of the material.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Guid)">Material(String, Color, Double, Double, String, Boolean, Boolean, Guid)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Boolean_System_String_System_Boolean_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean,System.Guid)">Material(String, Color, Double, Double, String, Boolean, Boolean, Boolean, String, Boolean, Guid)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, bool repeatTexture = true, string normalTexture = null, bool interpolateTexture = true, Guid id = default(Guid))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -254,6 +280,24 @@ public Material(Color color, double specularFactor, double glossinessFactor, boo
 </td>
       </tr>
       <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">repeatTexture</span></td>
+        <td><p>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">normalTexture</span></td>
+        <td><p>A relative path to a jpg or png image file to be used as a normal texture.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">interpolateTexture</span></td>
+        <td><p>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the material.</p>
@@ -303,9 +347,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, boo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
-[Required]
-public Color Color { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -329,8 +371,7 @@ public Color Color { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;DoubleSided&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool DoubleSided { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool DoubleSided { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -354,9 +395,7 @@ public bool DoubleSided { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;GlossinessFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double GlossinessFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GlossinessFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,6 +408,30 @@ public double GlossinessFactor { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_InterpolateTexture_" data-uid="Elements.Material.InterpolateTexture*"></a>
+  <h4 id="Elements_Material_InterpolateTexture" data-uid="Elements.Material.InterpolateTexture">InterpolateTexture</h4>
+  <div class="markdown level1 summary"><p>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool InterpolateTexture { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -399,7 +462,7 @@ public double GlossinessFactor { get; set; }</code></pre>
   </table>
   <a id="Elements_Material_RepeatTexture_" data-uid="Elements.Material.RepeatTexture*"></a>
   <h4 id="Elements_Material_RepeatTexture" data-uid="Elements.Material.RepeatTexture">RepeatTexture</h4>
-  <div class="markdown level1 summary"><p>Should the texture be repeated?</p>
+  <div class="markdown level1 summary"><p>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -417,8 +480,7 @@ public double GlossinessFactor { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><p>The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -429,9 +491,7 @@ public double GlossinessFactor { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SpecularFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double SpecularFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double SpecularFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -455,8 +515,7 @@ public double SpecularFactor { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Texture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public string Texture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Texture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -480,8 +539,7 @@ public string Texture { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Unlit&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool Unlit { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Unlit { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -572,6 +630,22 @@ public bool Unlit { get; set; }</code></pre>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
   </div>
 </article>
           </div>

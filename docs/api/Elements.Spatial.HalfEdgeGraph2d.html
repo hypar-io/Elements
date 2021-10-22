@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class HalfEdgeGraph2d
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -125,7 +125,7 @@ bounded by intersecting or overlapping edges.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;List&lt;(int from, int to)&gt;&gt; EdgesPerVertex { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;List&lt;(int from, int to, int? tag)&gt;&gt; EdgesPerVertex { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -137,7 +137,7 @@ bounded by intersecting or overlapping edges.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -265,14 +265,40 @@ bounded by intersecting or overlapping edges.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_HalfEdgeGraph2d_Polygonize_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Polygonize*"></a>
-  <h4 id="Elements_Spatial_HalfEdgeGraph2d_Polygonize" data-uid="Elements.Spatial.HalfEdgeGraph2d.Polygonize">Polygonize()</h4>
+  <h4 id="Elements_Spatial_HalfEdgeGraph2d_Polygonize_System_Func_System_Nullable_System_Int32__System_Boolean__Elements_Geometry_Vector3_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Polygonize(System.Func{System.Nullable{System.Int32},System.Boolean},Elements.Geometry.Vector3)">Polygonize(Func&lt;Nullable&lt;Int32&gt;, Boolean&gt;, Vector3)</h4>
   <div class="markdown level1 summary"><p>Calculate the closed polygons in this graph.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Polygon&gt; Polygonize()</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Polygon&gt; Polygonize(Func&lt;int?, bool&gt; predicate = null, Vector3 normal = default(Vector3))</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;, <span class="xref">System.Boolean</span>&gt;</td>
+        <td><span class="parametername">predicate</span></td>
+        <td><p>A predicate used during the final step of polygonization to determine if edges are
+valid.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">normal</span></td>
+        <td><p>The normal of the plane in which graph traversal for polygon construction will occur.
+If no normal is provided, the +Z axis is used.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -284,7 +310,8 @@ bounded by intersecting or overlapping edges.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
-        <td></td>
+        <td><p>A collection of polygons.</p>
+</td>
       </tr>
     </tbody>
   </table>

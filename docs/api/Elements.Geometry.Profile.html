@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Profile
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Geometry_Profile" data-uid="Elements.Geometry.Profile" class="text-break">Class Profile
   </h1>
-  <div class="markdown level0 summary"><p>A profile comprised of an external boundary and one or several holes.</p>
+  <div class="markdown level0 summary"><p>A polygonal perimeter with zero or more polygonal voids.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -203,12 +203,12 @@
   </table>
   <a id="Elements_Geometry_Profile__ctor_" data-uid="Elements.Geometry.Profile.#ctor*"></a>
   <h4 id="Elements_Geometry_Profile__ctor_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__System_Guid_System_String_" data-uid="Elements.Geometry.Profile.#ctor(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},System.Guid,System.String)">Profile(Polygon, IList&lt;Polygon&gt;, Guid, String)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Create a profile.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,22 +223,26 @@ public Profile(Polygon perimeter, IList&lt;Polygon&gt; voids, Guid id, string na
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
-        <td></td>
+        <td><p>The perimeter of the profile.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">voids</span></td>
-        <td></td>
+        <td><p>A collection of voids in the profile.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td></td>
+        <td><p>The id of the profile.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>The name of the profile.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -307,8 +311,7 @@ be used as voids.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.AllowNull)]
-public Polygon Perimeter { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -332,8 +335,7 @@ public Polygon Perimeter { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Voids&quot;, Required = Required.AllowNull)]
-public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -463,6 +465,54 @@ public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if the point is within the profile.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_CreateFromPolygons_" data-uid="Elements.Geometry.Profile.CreateFromPolygons*"></a>
+  <h4 id="Elements_Geometry_Profile_CreateFromPolygons_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Double_" data-uid="Elements.Geometry.Profile.CreateFromPolygons(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Double)">CreateFromPolygons(IEnumerable&lt;Polygon&gt;, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a collection of profiles from a collection of polygons. Inner polygons will be treated as voids in alternating fashion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; CreateFromPolygons(IEnumerable&lt;Polygon&gt; polygons, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">polygons</span></td>
+        <td><p>The polygons to sort into profiles</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -618,6 +668,109 @@ public IList&lt;Polygon&gt; Voids { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Profile_Offset_" data-uid="Elements.Geometry.Profile.Offset*"></a>
+  <h4 id="Elements_Geometry_Profile_Offset_System_Collections_Generic_IEnumerable_Elements_Geometry_Profile__System_Double_System_Double_" data-uid="Elements.Geometry.Profile.Offset(System.Collections.Generic.IEnumerable{Elements.Geometry.Profile},System.Double,System.Double)">Offset(IEnumerable&lt;Profile&gt;, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Offset profiles by a given distance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;Profile&gt; Offset(IEnumerable&lt;Profile&gt; profiles, double distance, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><span class="parametername">profiles</span></td>
+        <td><p>The profiles to offset.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The offset distance.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><p>A collection of resulting profiles.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Profile_Offset_" data-uid="Elements.Geometry.Profile.Offset*"></a>
+  <h4 id="Elements_Geometry_Profile_Offset_System_Double_System_Double_" data-uid="Elements.Geometry.Profile.Offset(System.Double,System.Double)">Offset(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Offset this profile by a given distance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Profile&gt; Offset(double distance, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The offset distance.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_OrientVoids_" data-uid="Elements.Geometry.Profile.OrientVoids*"></a>
   <h4 id="Elements_Geometry_Profile_OrientVoids" data-uid="Elements.Geometry.Profile.OrientVoids">OrientVoids()</h4>
   <div class="markdown level1 summary"><p>Ensure that voids run in an opposite winding direction to the perimeter of the profile.
@@ -628,6 +781,48 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void OrientVoids()</code></pre>
   </div>
+  <a id="Elements_Geometry_Profile_Project_" data-uid="Elements.Geometry.Profile.Project*"></a>
+  <h4 id="Elements_Geometry_Profile_Project_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Profile.Project(Elements.Geometry.Plane)">Project(Plane)</h4>
+  <div class="markdown level1 summary"><p>Project this profile onto the plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile Project(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane of the returned profile.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_Reversed_" data-uid="Elements.Geometry.Profile.Reversed*"></a>
   <h4 id="Elements_Geometry_Profile_Reversed" data-uid="Elements.Geometry.Profile.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Get a new profile which is the reverse of this profile.</p>
@@ -852,6 +1047,48 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Profile_Transformed_" data-uid="Elements.Geometry.Profile.Transformed*"></a>
+  <h4 id="Elements_Geometry_Profile_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Profile.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>A transformed copy of this profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Profile_Union_" data-uid="Elements.Geometry.Profile.Union*"></a>
   <h4 id="Elements_Geometry_Profile_Union_Elements_Geometry_Profile_System_Double_" data-uid="Elements.Geometry.Profile.Union(Elements.Geometry.Profile,System.Double)">Union(Profile, Double)</h4>
   <div class="markdown level1 summary"><p>Perform a union operation, returning a new profile that is the union of the current profile with the other profile</p>
@@ -957,6 +1194,21 @@ Be sure to call this if you modify the Profile's Voids array directly.</p>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
+  </div>
   <div>
       <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_">ModelCurveExtensions.ToModelCurves(Profile, Transform, Material)</a>
   </div>
