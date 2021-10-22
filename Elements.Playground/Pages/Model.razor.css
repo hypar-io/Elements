@@ -1,0 +1,41 @@
+.grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: auto 300px;
+    grid-template-areas: 
+        "code model"
+        "output output";
+    width: 100%;
+    height: calc(100vh - 24px);
+    border: 1px solid lightgray;
+}
+
+#editor {
+    grid-area: code;
+    border-right: 1px solid lightgray;
+}
+
+#model {
+    grid-area: model;
+}
+
+.output {
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 10pt;
+    color: darkgray;
+    grid-area: output;
+    border-top: 1px solid lightgray;
+    padding: 10px;
+}
+
+.output span.error {
+    color: red;
+}
+
+.run {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}

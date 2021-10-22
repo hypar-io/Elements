@@ -1,0 +1,235 @@
+@page "/"
+
+@using Microsoft.CodeAnalysis
+@using Microsoft.CodeAnalysis.CSharp
+@using Microsoft.CodeAnalysis.CSharp.Scripting.Hosting
+@using System.Reflection
+@using System.IO
+@using System.Threading
+@using System.Web
+
+@inject IJSRuntime JSRuntime
+@inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
+@inject NavigationManager MyNavigationManager
+
+<div class=grid>
+    <button class="run btn btn-primary" @onclick="EvaluateAsync">Compile</button>
+    <input type="range" min="1.0" max="100.0" value="@FirstParamValue" @onchange="RunAsync" />
+    <div id="editor">@csharp</div>
+    <div id="model"></div>
+    <div class="output">@((MarkupString)output)</div>
+</div>
+
+@code {
+    private bool isFirstLoad = true;
+    private static string csharp = @"var model = new Model();
+
+public double length;
+
+Validator.DisableValidationOnConstruction = true;
+var m = BuiltInMaterials.Concrete;
+var wf = new WideFlangeProfileFactory();
+var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
+for(var i=0; i<1; i++)
+{
+var start = new Vector3(i, 0, 0);
+var end = new Vector3(i, Length, i);
+
+// The bottom chord
+var bottomChord = new Line(start, end);
+var bottomChordBeam = new Beam(bottomChord, p, m);
+model.AddElement(bottomChordBeam);
+
+var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
+var topChordBeam = new Beam(topChord, p, m);
+model.AddElement(topChordBeam);
+
+Vector3 last = default(Vector3);
+for(var j=0.0; j<=1.0; j+=0.1)
+{
+var pt = bottomChord.PointAt(j);
+var top = pt + new Vector3(0,0,5);
+var panelLine = new Line(pt, top);
+var panelBeam = new Beam(panelLine, p, m);
+model.AddElement(panelBeam);
+
+if(j > 0.0)
+{
+var braceLine = new Line(top, last);
+var braceBeam = new Beam(braceLine, p, m);
+model.AddElement(braceBeam);
+}
+last = pt;
+}
+}
+return model;";
+    private string output = "";
+    private List<MetadataReference> references;
+    private Func<object[], Task> submission;
+
+    public double FirstParamValue { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Create instances of model and Console
+        // to ensure they're loaded in the app domain.
+        var model = new Elements.Model();
+        Console.WriteLine("");
+
+        var refs = AppDomain.CurrentDomain.GetAssemblies();
+        var client = new HttpClient
+        {
+            BaseAddress = new Uri(MyNavigationManager.BaseUri)
+        };
+
+        var listRefs = new List<MetadataReference>();
+
+        foreach (var reference in refs.Where(x => !x.IsDynamic)) // && !string.IsNullOrWhiteSpace(x.Location)))
+        {
+            var location = $"_framework/{reference.GetName().Name}.dll";
+            var stream = await client.GetStreamAsync(location);
+            listRefs.Add(MetadataReference.CreateFromStream(stream));
+        }
+
+        references = listRefs;
+    }
+
+    private void EvaluateAsync(MouseEventArgs args)
+    {
+        EvaluateAsync(csharp);
+    }
+
+    private async Task RunAsync(ChangeEventArgs args)
+    {
+        this.FirstParamValue = double.Parse(args.Value.ToString());
+
+        var model = await (Task<object>)submission(new object[] { new ScriptGlobals(double.Parse(args.Value.ToString())), null
+});
+        await Task.Run(() =>
+        {
+            var glb = ((Elements.Model)model).ToGlTF();
+            JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+        });
+    }
+
+    private void EvaluateAsync(string code)
+    {
+        output = "";
+        var previousOut = Console.Out;
+        try
+        {
+            if (TryCompile(code, out var compilation, out var script, out var errorDiagnostics))
+            {
+                var writer = new StringWriter();
+                Console.SetOut(writer);
+
+                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+                var type = script.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+
+                Console.WriteLine("Compilation was successful.");
+
+                submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+
+                var evalOutput = HttpUtility.HtmlEncode(writer.ToString());
+                if (!string.IsNullOrWhiteSpace(evalOutput))
+                {
+                    output += $"\n{evalOutput}";
+                }
+            }
+            else
+            {
+                Console.WriteLine("Compilation failed.");
+                foreach (var diag in errorDiagnostics)
+                {
+                    output += $@"<span class=""error"">{HttpUtility.HtmlEncode(diag)}</span>";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            output += $"{ex.Message}\n";
+            output += $@"{ex.StackTrace}\n";
+            output += $@"{ex.InnerException}\n";
+        }
+        finally
+        {
+            Console.SetOut(previousOut);
+        }
+    }
+
+    private bool TryCompile(string source, out CSharpCompilation compilation, out Assembly assembly, out
+    List<Diagnostic> errorDiagnostics)
+    {
+        assembly = null;
+        compilation = null;
+
+        // Use ConcurrentBuild to avoid the issue in
+        // TODO: https://github.com/dotnet/runtime/issues/43411
+        var scriptCompilation = CSharpCompilation.CreateScriptCompilation(
+        Path.GetRandomFileName(),
+        CSharpSyntaxTree.ParseText(source,
+        CSharpParseOptions.Default.WithKind(SourceCodeKind.Script).WithLanguageVersion(LanguageVersion.Preview)),
+        references,
+        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, usings: new[]
+        {
+"System",
+"System.Collections.Generic",
+"System.Console",
+"System.Linq",
+"Elements",
+"Elements.Geometry",
+"Elements.Geometry.Profiles",
+"Elements.Validators"
+        }, concurrentBuild: false), globalsType: typeof(ScriptGlobals));
+
+        errorDiagnostics = scriptCompilation.GetDiagnostics().Where(x => x.Severity == DiagnosticSeverity.Error).ToList();
+        if (errorDiagnostics.Any())
+        {
+            return false;
+        }
+
+        using (var peStream = new MemoryStream())
+        {
+            var emitResult = scriptCompilation.Emit(peStream);
+
+            if (emitResult.Success)
+            {
+                compilation = scriptCompilation;
+                assembly = Assembly.Load(peStream.ToArray());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (isFirstLoad)
+        {
+            isFirstLoad = false;
+            await JSRuntime.InvokeVoidAsync("model.initializeEditor");
+            await JSRuntime.InvokeVoidAsync("model.initialize3D");
+        }
+    }
+
+    [JSInvokable]
+    public static void SetCodeValue(string code)
+    {
+        csharp = code;
+    }
+
+    /// <summary>
+    /// A class containing the global values to
+    /// be passed to the executing script.
+    /// </summary>
+    public class ScriptGlobals
+    {
+        public double Length = 10;
+        public ScriptGlobals(double length)
+        {
+            this.Length = length;
+        }
+    }
+}
