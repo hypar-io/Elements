@@ -1,10 +1,4 @@
-- name: Getting Started
+- name: What is Elements?
   href: index.md
-  items:
-    - name: Hub
-      href: Hub.md
-    - name: Revit
-      href: Revit.md
-- name: Elements
-  href: Elements/
-  homepage: Elements/WhatIsElements.md
+- name: API Documentation
+  href: api/

@@ -22845,6 +22845,3 @@ references:
   isSpec: "True"
   fullName: Elements.WallByProfile.UpdateRepresentations
   nameWithType: WallByProfile.UpdateRepresentations
-- uid: hub
-  name: Getting Started with the Hypar Hub
-  href: Hub.html

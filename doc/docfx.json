@@ -24,15 +24,13 @@
           "toc.yml",
           "*.md",
           "api/**",
-          "Elements/**"
+          "Revit/**"
         ]
       }
     ],
     "resource": [
       {
-        "files": [
-          "images/**"
-        ]
+        "files": []
       },
       {
         "files": [
