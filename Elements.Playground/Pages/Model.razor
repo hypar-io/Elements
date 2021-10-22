@@ -13,7 +13,7 @@
 @inject NavigationManager MyNavigationManager
 
 <div class=grid>
-    <button class="run btn btn-primary" @onclick="EvaluateAsync">Compile</button>
+    <button class="run" @onclick="Run">Run</button>
     <div id="editor">@csharp</div>
     <div id="model"></div>
     <div class="output">@((MarkupString)output)</div>
@@ -91,22 +91,35 @@ return model;";
         references = listRefs;
     }
 
-    private void EvaluateAsync(MouseEventArgs args)
-    {
-        EvaluateAsync(csharp);
-    }
-
     private async Task RunAsync(ChangeEventArgs args)
     {
-        var model = await (Task<object>)submission(new object[] { null, null });
-        await Task.Run(() =>
+        try
         {
-            var glb = ((Elements.Model)model).ToGlTF();
-            JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-        });
+            var model = await (Task<object>)submission(new object[] { null, null });
+            await Task.Run(() =>
+            {
+                var glb = ((Elements.Model)model).ToGlTF();
+                JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+            });
+        }
+        catch(Exception ex)
+        {
+            output += $@"<div class=""error"">Run failed.</div>";
+            output += $@"<div class=""error"">{ex.Message}</div>";
+            @* output += $@"<div class=""error"">{ex.StackTrace}</div>\n"; *@
+            @* output += $@"<div class=""error"">{ex.InnerException}</div>\n"; *@
+        }
     }
 
-    private void EvaluateAsync(string code)
+    private async Task Run()
+    {
+        if(EvaluateAsync(csharp))
+        {
+            await RunAsync(null);
+        }
+    }
+
+    private bool EvaluateAsync(string code)
     {
         output = "";
         var previousOut = Console.Out;
@@ -114,37 +127,35 @@ return model;";
         {
             if (TryCompile(code, out var compilation, out var script, out var errorDiagnostics))
             {
-                var writer = new StringWriter();
-                Console.SetOut(writer);
-
                 var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
                 var type = script.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
                 var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
 
-                Console.WriteLine("Compilation was successful.");
+                output += $@"<div class=""error"">Compilation was successful.</div>";
+                output += $@"<br>";
 
                 submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
 
-                var evalOutput = HttpUtility.HtmlEncode(writer.ToString());
-                if (!string.IsNullOrWhiteSpace(evalOutput))
-                {
-                    output += $"\n{evalOutput}";
-                }
+                return true;
             }
             else
             {
-                Console.WriteLine("Compilation failed.");
+                output += $@"<div class=""error"">Compilation failed.</div>";
+                output += $@"<br>";
+
                 foreach (var diag in errorDiagnostics)
                 {
-                    output += $@"<span class=""error"">{HttpUtility.HtmlEncode(diag)}</span>";
+                    output += $@"<div class=""error"">{HttpUtility.HtmlEncode(diag)}</div>";
                 }
+                return false;
             }
         }
         catch (Exception ex)
         {
-            output += $"{ex.Message}\n";
-            output += $@"{ex.StackTrace}\n";
-            output += $@"{ex.InnerException}\n";
+            output += $@"<div class=""error"">{ex.Message}</div>";
+            output += $@"<div class=""error"">{ex.StackTrace}</div>";
+            output += $@"<div class=""error"">{ex.InnerException}</div>";
+            return false;
         }
         finally
         {
