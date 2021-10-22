@@ -2,13 +2,12 @@
     position: relative;
     display: grid;
     grid-template-columns: 50% 50%;
-    grid-template-rows: auto 300px;
+    grid-template-rows: auto 200px;
     grid-template-areas: 
         "code model"
         "output output";
-    width: 100%;
-    height: calc(100vh - 24px);
     border: 1px solid lightgray;
+    height: calc(100vh - 16px);
 }
 
 #editor {

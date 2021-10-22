@@ -14,7 +14,6 @@
 
 <div class=grid>
     <button class="run btn btn-primary" @onclick="EvaluateAsync">Compile</button>
-    <input type="range" min="1.0" max="100.0" value="@FirstParamValue" @onchange="RunAsync" />
     <div id="editor">@csharp</div>
     <div id="model"></div>
     <div class="output">@((MarkupString)output)</div>
@@ -67,8 +66,6 @@ return model;";
     private List<MetadataReference> references;
     private Func<object[], Task> submission;
 
-    public double FirstParamValue { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         // Create instances of model and Console
@@ -101,10 +98,7 @@ return model;";
 
     private async Task RunAsync(ChangeEventArgs args)
     {
-        this.FirstParamValue = double.Parse(args.Value.ToString());
-
-        var model = await (Task<object>)submission(new object[] { new ScriptGlobals(double.Parse(args.Value.ToString())), null
-});
+        var model = await (Task<object>)submission(new object[] { null, null });
         await Task.Run(() =>
         {
             var glb = ((Elements.Model)model).ToGlTF();
@@ -181,7 +175,7 @@ return model;";
 "Elements.Geometry",
 "Elements.Geometry.Profiles",
 "Elements.Validators"
-        }, concurrentBuild: false), globalsType: typeof(ScriptGlobals));
+        }, concurrentBuild: false));
 
         errorDiagnostics = scriptCompilation.GetDiagnostics().Where(x => x.Severity == DiagnosticSeverity.Error).ToList();
         if (errorDiagnostics.Any())
@@ -218,18 +212,5 @@ return model;";
     public static void SetCodeValue(string code)
     {
         csharp = code;
-    }
-
-    /// <summary>
-    /// A class containing the global values to
-    /// be passed to the executing script.
-    /// </summary>
-    public class ScriptGlobals
-    {
-        public double Length = 10;
-        public ScriptGlobals(double length)
-        {
-            this.Length = length;
-        }
     }
 }
