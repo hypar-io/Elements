@@ -1,4 +1,15 @@
 # Changelog
+## 0.9.6
+
+### Added
+
+-
+### Changed
+
+- Change default for `useReferenceOrientation` when generating content catalogs.
+### Fixed
+
+-
 
 ## 0.9.5
 
