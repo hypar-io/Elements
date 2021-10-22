@@ -85,7 +85,7 @@ function initialize3D() {
     const gridHelper = new THREE.GridHelper(size, divisions, "darkgray", "lightgray");
     scene.add(gridHelper);
 
-    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
+    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.0);
     scene.add(light);
 
     camera.position.z = 5;
