@@ -102,6 +102,7 @@ return model;";
                 var glb = ((Elements.Model)model).ToGlTF();
                 JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
             });
+            
         }
         catch(Exception ex)
         {
@@ -114,9 +115,19 @@ return model;";
 
     private async Task Run()
     {
+        var sw = new Stopwatch();
+            sw.Start();
         if(EvaluateAsync(csharp))
         {
+            sw.Stop();
+            output += $@"<div class=""message"">Compilation complete in {sw.ElapsedMilliseconds}ms.</div>";
+            sw.Reset();
+
+            sw.Start();
             await RunAsync(null);
+            sw.Stop();
+            output += $@"<div class=""message"">Execution and display complete in {sw.ElapsedMilliseconds}ms.</div>";
+            output += $@"<br>";
         }
     }
 
@@ -131,9 +142,6 @@ return model;";
                 var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
                 var type = script.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
                 var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
-
-                output += $@"<div class=""success"">Compilation was successful.</div>";
-                output += $@"<br>";
 
                 submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
 
