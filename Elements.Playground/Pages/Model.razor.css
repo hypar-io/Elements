@@ -17,6 +17,7 @@
 
 #model {
     grid-area: model;
+    background: linear-gradient(#b8b8b8, #ffffff);
 }
 
 .output {
@@ -29,8 +30,16 @@
     padding: 10px;
 }
 
-.output span.error {
+.error {
     color: red;
+}
+
+.success {
+    color: green;
+}
+
+.message {
+    color: gray;
 }
 
 .run {

@@ -23,7 +23,7 @@
     private bool isFirstLoad = true;
     private static string csharp = @"var model = new Model();
 
-public double length;
+var length = 10;
 
 Validator.DisableValidationOnConstruction = true;
 var m = BuiltInMaterials.Concrete;
@@ -32,7 +32,7 @@ var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
 for(var i=0; i<1; i++)
 {
 var start = new Vector3(i, 0, 0);
-var end = new Vector3(i, Length, i);
+var end = new Vector3(i, length, i);
 
 // The bottom chord
 var bottomChord = new Line(start, end);
@@ -104,8 +104,8 @@ return model;";
         }
         catch(Exception ex)
         {
-            output += $@"<div class=""error"">Run failed.</div>";
-            output += $@"<div class=""error"">{ex.Message}</div>";
+            output += $@"<div class=""message"">Run failed.</div>";
+            output += $@"<div class=""message"">{ex.Message}</div>";
             @* output += $@"<div class=""error"">{ex.StackTrace}</div>\n"; *@
             @* output += $@"<div class=""error"">{ex.InnerException}</div>\n"; *@
         }
@@ -131,7 +131,7 @@ return model;";
                 var type = script.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
                 var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
 
-                output += $@"<div class=""error"">Compilation was successful.</div>";
+                output += $@"<div class=""success"">Compilation was successful.</div>";
                 output += $@"<br>";
 
                 submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
@@ -145,16 +145,16 @@ return model;";
 
                 foreach (var diag in errorDiagnostics)
                 {
-                    output += $@"<div class=""error"">{HttpUtility.HtmlEncode(diag)}</div>";
+                    output += $@"<div class=""message"">{HttpUtility.HtmlEncode(diag)}</div>";
                 }
                 return false;
             }
         }
         catch (Exception ex)
         {
-            output += $@"<div class=""error"">{ex.Message}</div>";
-            output += $@"<div class=""error"">{ex.StackTrace}</div>";
-            output += $@"<div class=""error"">{ex.InnerException}</div>";
+            output += $@"<div class=""message"">{ex.Message}</div>";
+            output += $@"<div class=""message"">{ex.StackTrace}</div>";
+            output += $@"<div class=""message"">{ex.InnerException}</div>";
             return false;
         }
         finally

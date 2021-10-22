@@ -68,14 +68,15 @@ function initialize3D() {
     const div = document.getElementById("model");
     const camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 1000);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
     renderer.setSize(div.clientWidth, div.clientHeight);
     div.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(0.5, 0.5, 0);
     scene.add(directionalLight);
 
     const size = 100;
@@ -84,7 +85,7 @@ function initialize3D() {
     const gridHelper = new THREE.GridHelper(size, divisions, "darkgray", "lightgray");
     scene.add(gridHelper);
 
-    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.5);
     scene.add(light);
 
     camera.position.z = 5;
