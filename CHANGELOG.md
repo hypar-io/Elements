@@ -1,12 +1,17 @@
 # Changelog
+
 ## 0.9.6
 
 ### Added
 
--
+- `DependencySource` Attribute
+
 ### Changed
 
+- Codegen adds the `DependencySource` attribute to properties with a `dependency` property in their schema
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- Deserialization should now tolerate missing Ids.
+
 ### Fixed
 
 -
