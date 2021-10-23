@@ -55,6 +55,9 @@
 {%   if property.IsDate and UseDateFormatConverter -%}
     [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
 {%   endif -%}
+{%   if property.ExtensionData != null and property.ExtensionData.dependency != null -%}
+    [DependencySource("{{property.ExtensionData.dependency}}")]
+{%   endif -%}
     {% template Class.Property.Annotations %}
     public {{ property.Type }} {{ property.PropertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}set; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false %} = {{ property.DefaultValue }};{% endif %}
 {% else %}

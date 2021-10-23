@@ -272,7 +272,7 @@ namespace Elements
                 return elements;
             }
 
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any());
+            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any() && !p.GetCustomAttributes<DependencySourceAttribute>().Any());
             var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
             foreach (var p in constrainedProps)
             {

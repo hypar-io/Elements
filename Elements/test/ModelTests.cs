@@ -358,6 +358,27 @@ namespace Elements.Tests
             Assert.False(Model.IsValidForRecursiveAddition(typeof(object)));
         }
 
+        [Fact]
+        private void DoesntSerializeDependencyElements()
+        {
+            var e = new ElementWithDependencyProperty
+            {
+                Material = BuiltInMaterials.Steel,
+                Floor = new Floor(Polygon.Rectangle(1, 1), 1)
+            };
+            var model = new Model();
+            model.AddElement(e);
+            var json = model.ToJson();
+            // The floor should not be serialized — only its id should be.
+            Assert.Contains(e.Floor.Id.ToString(), json);
+            Assert.DoesNotContain("\"discriminator\":\"Elements.Floor\"", json);
+
+            var deserializedModel = Model.FromJson(json);
+            var deserializedElement = deserializedModel.AllElementsOfType<ElementWithDependencyProperty>().First();
+            Assert.NotNull(deserializedElement);
+            Assert.True(deserializedElement.Floor == null, "Properties with the DependencySource attribute should not deserialize.");
+        }
+
         private Model QuadPanelModel()
         {
             var model = new Model();
@@ -369,5 +390,13 @@ namespace Elements.Tests
             model.AddElement(panel);
             return model;
         }
+    }
+
+    public class ElementWithDependencyProperty : Element
+    {
+        public Material Material { get; set; }
+
+        [DependencySource("Floors")]
+        public Floor Floor { get; set; }
     }
 }

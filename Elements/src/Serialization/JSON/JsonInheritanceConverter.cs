@@ -219,7 +219,14 @@ namespace Elements.Serialization.JSON
             if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
-                return Elements[id];
+                if (Elements.TryGetValue(id, out var element))
+                {
+                    return element;
+                }
+                // The referenced element may have come from a dependency, in which
+                // case the id would be present, but the element would not be serialized 
+                // with the model. We should return null in this case.
+                return null;
             }
 
             var jObject = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);

@@ -179,6 +179,25 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public async Task CodeGenerationOfTypeWithPropertyFromDependency()
+        {
+            var tmpPath = Path.Combine(Path.GetTempPath(), "HyparModels");
+            if (!Directory.Exists(tmpPath))
+            {
+                Directory.CreateDirectory(tmpPath);
+            }
+            else
+            {
+                Directory.Delete(tmpPath, true);
+                Directory.CreateDirectory(tmpPath);
+            }
+            var uri = "https://prod-api.hypar.io/schemas/NewTypeWithDependencyExample";
+            await TypeGenerator.GenerateUserElementTypeFromUriAsync(uri, tmpPath);
+            var source = File.ReadAllText(Path.Combine(tmpPath, "NewTypeWithDependencyExample.g.cs"));
+            Assert.True(source.Contains("[DependencySource(\"Envelope\")]"));
+        }
+
+        [Fact]
         public async Task InMemoryCodeGenOfTypeWithEmbeddedType()
         {
             var tmpPath = Path.Combine(Path.GetTempPath(), "HyparModels");
