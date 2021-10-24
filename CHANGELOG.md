@@ -1,12 +1,16 @@
 # Changelog
+
 ## 0.9.6
 
 ### Added
 
 -
+
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- Rename `CreateOrientedAlongCurve` => `CreateHorizontalFrameAlongCurve` for clarity per [#687](https://github.com/hypar-io/Elements/issues/687) (Thanks @gytaco!)
+
 ### Fixed
 
 -
