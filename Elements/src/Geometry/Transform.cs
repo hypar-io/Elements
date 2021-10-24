@@ -488,7 +488,7 @@ namespace Elements.Geometry
         /// Create a transform that is oriented along 
         /// a curve at parameter t. The transform's +z axis will align with 
         /// the +z world axis, and the +x axis will align with the tangent
-        /// of the curve.
+        /// of the curve. If you want a perpendicular transform, use `Curve.TransformAt(t)` instead.
         /// </summary>
         /// <param name="curve">The curve along which to orient the transform.</param>
         /// <param name="t">A parameter value between 0.0 and 1.0.</param>
@@ -505,7 +505,7 @@ namespace Elements.Geometry
         /// Create a transform that is oriented along 
         /// a curve at parameter t. The transform's +z axis will align with 
         /// the +z world axis, and the +x axis will align with the tangent
-        /// of the curve.
+        /// of the curve. If you want a perpendicular transform, use `Curve.TransformAt(t)` instead.
         /// </summary>
         /// <param name="curve">The curve along which to orient the transform.</param>
         /// <param name="t">A parameter value between 0.0 and 1.0.</param>
