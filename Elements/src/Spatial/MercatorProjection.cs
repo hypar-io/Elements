@@ -24,7 +24,7 @@ namespace Elements.Spatial
         /// <returns>A Vector3 in meters specifying the offset from the origin for this location.</returns>
         public static Vector3 LatLonToMeters(Position relativeToOrigin, double lat, double lon)
         {
-            var originX = LonToX(relativeToOrigin.Latitude);
+            var originX = LonToX(relativeToOrigin.Longitude);
             var originY = LatToY(relativeToOrigin.Latitude);
             var phi = Units.DegreesToRadians(relativeToOrigin.Latitude);
             var x = (LonToX(lon) - originX) * Math.Cos(phi);
@@ -43,8 +43,8 @@ namespace Elements.Spatial
             var phi = Units.DegreesToRadians(relativeToOrigin.Latitude);
             var locationX = location.X / Math.Cos(phi);
             var locationY = location.Y / Math.Cos(phi);
-            var lon = XToLon(locationX);
-            var lat = YToLat(locationY);
+            var lon = XToLon(locationX) + relativeToOrigin.Longitude;
+            var lat = YToLat(locationY) + relativeToOrigin.Latitude;
             return new Position(lat, lon);
         }
 
