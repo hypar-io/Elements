@@ -85,6 +85,7 @@ namespace Elements.Generate
             "Matrix",
             "Mesh",
             "MeshRepresentation",
+            "Origin",
             "Plane",
             "PointsRepresentation",
             "Polygon",
