@@ -18,12 +18,13 @@ namespace Elements.Spatial
         /// </summary>
         /// <param name="lon"></param>
         /// <param name="lat"></param>
-        /// <returns>An array of doubles containing the x, and y coordintes, in meters.</returns>
+        /// <returns>An array of doubles containing the x, and y coordinates, in meters.</returns>
         public static double[] ToPixel(double lon, double lat)
         {
-            return new double[] { LonToX(lon), LatToY(lat) };
+            var (x, y) = LatLonToXY(lon, lat);
+            return new double[] { x, y };
         }
-        
+
         /// <summary>
         /// Get the latitude and longitude of the specified x and y coordinates.
         /// </summary>
@@ -38,18 +39,29 @@ namespace Elements.Spatial
         /// <summary>
         /// Get the x coordinate, in meters, of the specified longitude.
         /// </summary>
-        /// <param name="lon"></param>
-        /// <returns></returns>
-        public static double LonToX(double lon)
+        /// <param name="lon">The longitude</param>
+        /// <param name="lat">The latitude</param>
+        public static double LonToX(double lon, double lat)
         {
-            return R_MAJOR * Units.DegreesToRadians(lon);
+            return R_MAJOR * Units.DegreesToRadians(lon) * Math.Sin(Units.DegreesToRadians(lat));
+        }
+
+        public static (double x, double y) LatLonToXY(double lat, double lon)
+        {
+            var x = LonToX(lon, lat);
+            var y = LatToY(lat);
+            return (x, y);
+        }
+
+        public static Elements.Geometry.Vector3 LatLonToVector3(double lat, double lon)
+        {
+            return new Elements.Geometry.Vector3(LonToX(lon, lat), LatToY(lat), 0);
         }
 
         /// <summary>
         /// Get the y coordinate, in meters, of the specified latitude.
         /// </summary>
-        /// <param name="lat"></param>
-        /// <returns></returns>
+        /// <param name="lat">The latitude</param>
         public static double LatToY(double lat)
         {
             lat = Math.Min(89.5, Math.Max(lat, -89.5));
@@ -58,7 +70,7 @@ namespace Elements.Spatial
             double con = ECCENT * sinphi;
             con = Math.Pow(((1.0 - con) / (1.0 + con)), COM);
             double ts = Math.Tan(0.5 * ((Math.PI * 0.5) - phi)) / con;
-            return 0 - R_MAJOR * Math.Log(ts);
+            return (0 - R_MAJOR * Math.Log(ts)) * Math.Cos(phi);
         }
 
         /// <summary>

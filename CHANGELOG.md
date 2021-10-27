@@ -1,15 +1,18 @@
 # Changelog
+
 ## 0.9.6
 
 ### Added
 
 -
+
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+
 ### Fixed
 
--
+- Fixed an issue in the conversion from Lat/Lon to X/Y coordinates in the MercatorProjection class (also utilized by `Position.ToVectorMeters()`).
 
 ## 0.9.5
 

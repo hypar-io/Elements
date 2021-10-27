@@ -57,7 +57,7 @@ namespace Elements.GeoJSON
         /// </summary>
         public Vector3 ToVectorMeters()
         {
-            return new Vector3(MercatorProjection.LonToX(Longitude), MercatorProjection.LatToY(Latitude));
+            return MercatorProjection.LatLonToVector3(Latitude, Longitude);
         }
     }
 }
