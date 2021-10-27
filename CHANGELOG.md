@@ -1,12 +1,17 @@
 # Changelog
+
 ## 0.9.6
 
 ### Added
 
+- `Position.FromVectorMeters`
 -
+
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
+
 ### Fixed
 
 -
