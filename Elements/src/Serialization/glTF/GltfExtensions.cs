@@ -855,7 +855,7 @@ namespace Elements.Serialization.glTF
                     }
                     var id = $"{GetNextId()}_edge";
                     var gb = lineSet.ToGraphicsBuffers(false);
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
                 }
             }
 
@@ -1074,7 +1074,7 @@ namespace Elements.Serialization.glTF
                 var mc = (ModelCurve)e;
                 var id = $"{e.Id}_curve";
                 var gb = mc.ToGraphicsBuffers(true);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
+                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
             }
 
             if (e is ModelPoints)
@@ -1084,7 +1084,7 @@ namespace Elements.Serialization.glTF
                 {
                     var id = $"{e.Id}_point";
                     var gb = mp.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Name], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
                 }
             }
 
@@ -1095,7 +1095,7 @@ namespace Elements.Serialization.glTF
                 {
                     var id = $"{e.Id}_arrow";
                     var gb = ma.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Name], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
                 }
             }
 
