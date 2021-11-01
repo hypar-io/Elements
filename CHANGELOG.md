@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.6
+
+### Added
+
+- `Position.FromVectorMeters`
+-
+
+### Changed
+
+- Change default for `useReferenceOrientation` when generating content catalogs.
+- `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
+- glTF generation now uses material IDs instead of names for material names, to prevent collisions.
+
+### Fixed
+
+-
+
 ## 0.9.5
 
 ### Added
@@ -67,7 +84,7 @@
 
 - Deduplicate catalog names during code generation.
 - Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
-- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
+- Fixed an issue where gLTFs would occasionally be generated with incorrect vertex normals.
 
 ## 0.9.2
 
