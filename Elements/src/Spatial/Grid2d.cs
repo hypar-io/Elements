@@ -738,12 +738,12 @@ namespace Elements.Spatial
             if (trimmedRect != null && trimmedRect.Count() > 0)
             {
                 var profiles = new List<Profile>();
-                var outerRectangles = trimmedRect.Where(rect => !rect.IsClockWise());
-                var innerRectangles = trimmedRect.Where(rect => rect.IsClockWise());
+                var outerLoops = trimmedRect.Where(loop => !loop.IsClockWise());
+                var innerLoops = trimmedRect.Where(loop => loop.IsClockWise());
 
-                foreach (var item in outerRectangles)
+                foreach (var item in outerLoops)
                 {
-                    var inner = innerRectangles.Where(rect => rect.Intersects(item)).ToList();
+                    var inner = innerLoops.Where(loop => loop.Intersects(item)).ToList();
                     profiles.Add(new Profile(item.TransformedPolygon(fromGrid), fromGrid.OfPolygons(inner)));
                 }
 
