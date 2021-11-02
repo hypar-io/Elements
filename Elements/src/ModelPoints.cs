@@ -1,7 +1,9 @@
+using Elements.Geometry;
+using Elements.Serialization.glTF;
+using glTFLoader.Schema;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -55,6 +57,35 @@ namespace Elements
             }
 
             return gb;
+        }
+
+        internal override void UpdateGLTF(Gltf gltf,
+                                                    Dictionary<string, int> materialIndexMap,
+                                                    List<byte> buffer,
+                                                    List<byte[]> allBuffers,
+                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
+                                                    List<Sampler> samplers,
+                                                    List<glTFLoader.Schema.Mesh> meshes,
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
+                                                    Dictionary<Guid, Transform> meshTransformMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
+        {
+            base.UpdateGLTF(gltf, materialIndexMap, buffer, allBuffers, schemaBuffers, bufferViews, accessors, materials, textures, images, samplers, meshes, nodes, meshElementMap, nodeElementMap, meshTransformMap, lines, drawEdges, mergeVertices);
+            if (this.Locations.Count != 0)
+            {
+                var id = $"{this.Id}_point";
+                var gb = this.ToGraphicsBuffers();
+                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[this.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, this.Transform);
+            }
         }
     }
 }

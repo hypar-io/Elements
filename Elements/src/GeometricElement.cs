@@ -1,9 +1,15 @@
-using System;
-using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using Elements.Serialization.glTF;
+using glTFLoader.Schema;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using Elements.Collections.Generics;
+// using SixLabors.ImageSharp;
 
 namespace Elements
 {
@@ -87,7 +93,7 @@ namespace Elements
         /// Get the mesh representing the this Element's geometry. By default it will be untransformed.
         /// </summary>
         /// <param name="transform">Should the mesh be transformed into its final location?</param>
-        public Mesh ToMesh(bool transform = false)
+        public Elements.Geometry.Mesh ToMesh(bool transform = false)
         {
             if (!HasGeometry())
             {
@@ -97,7 +103,7 @@ namespace Elements
                     throw new ArgumentNullException("This geometric element has no geometry, and cannot be turned into a mesh.");
                 }
             }
-            var mesh = new Mesh();
+            var mesh = new Elements.Geometry.Mesh();
             var solid = GetFinalCsgFromSolids(transform);
             solid.Tessellate(ref mesh);
             return mesh;
@@ -109,6 +115,158 @@ namespace Elements
         public bool HasGeometry()
         {
             return Representation != null && Representation.SolidOperations != null && Representation.SolidOperations.Count > 0;
+        }
+
+        internal override void UpdateGLTF(Gltf gltf,
+                                                    Dictionary<string, int> materialIndexMap,
+                                                    List<byte> buffer,
+                                                    List<byte[]> allBuffers,
+                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
+                                                    List<Sampler> samplers,
+                                                    List<glTFLoader.Schema.Mesh> meshes,
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
+                                                    Dictionary<Guid, Transform> meshTransformMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
+        {
+            var materialId = BuiltInMaterials.Default.Id.ToString();
+            int meshId = -1;
+
+            if (typeof(ContentElement).IsAssignableFrom(this.GetType()))
+            {
+                var content = this as ContentElement;
+                Stream glbStream = GltfExtensions.GetGlbStreamFromPath(content.GltfLocation);
+                if (glbStream != System.IO.Stream.Null)
+                {
+                    var meshIndices = GltfMergingUtils.AddAllMeshesFromFromGlb(glbStream,
+                                                            schemaBuffers,
+                                                            allBuffers,
+                                                            bufferViews,
+                                                            accessors,
+                                                            meshes,
+                                                            materials,
+                                                            textures,
+                                                            images,
+                                                            samplers,
+                                                            true,
+                                                            this.Id,
+                                                            out var parentNode
+                                                            );
+
+
+                    if (!nodeElementMap.ContainsKey(this.Id) && parentNode != null)
+                    {
+                        nodeElementMap.Add(this.Id, parentNode);
+                    }
+                    if (!content.IsElementDefinition)
+                    {
+                        // This element is not used for instancing.
+                        // apply scale transform here to bring the content glb into meters
+                        var transform = content.Transform.Scaled(content.GltfScaleToMeters);
+                        NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
+                    }
+                    else
+                    {
+                        // This element will be used for instancing.  Save the transform of the
+                        // content element base that will be needed when instances are placed.
+                        // The scaled transform is only necessary because we are using the glb.
+                        if (!meshTransformMap.ContainsKey(this.Id))
+                        {
+                            meshTransformMap[this.Id] = content.Transform.Scaled(content.GltfScaleToMeters);
+                        }
+                    }
+                }
+                else
+                {
+                    meshId = GltfExtensions.ProcessGeometricRepresentation(this,
+                                                            ref gltf,
+                                                            ref materialIndexMap,
+                                                            ref buffer,
+                                                            bufferViews,
+                                                            accessors,
+                                                            meshes,
+                                                            nodes,
+                                                            meshElementMap,
+                                                            lines,
+                                                            drawEdges,
+                                                            materialId,
+                                                            ref meshId,
+                                                            content,
+                                                            mergeVertices);
+                    if (!meshElementMap.ContainsKey(this.Id))
+                    {
+                        meshElementMap.Add(this.Id, new List<int> { meshId });
+                    }
+                }
+            }
+            else
+            {
+                materialId = this.Material.Id.ToString();
+
+                meshId = GltfExtensions.ProcessGeometricRepresentation(this,
+                                                        ref gltf,
+                                                        ref materialIndexMap,
+                                                        ref buffer,
+                                                        bufferViews,
+                                                        accessors,
+                                                        meshes,
+                                                        nodes,
+                                                        meshElementMap,
+                                                        lines,
+                                                        drawEdges,
+                                                        materialId,
+                                                        ref meshId,
+                                                        this,
+                                                        mergeVertices);
+                if (meshId > -1 && !meshElementMap.ContainsKey(this.Id))
+                {
+                    meshElementMap.Add(this.Id, new List<int> { meshId });
+                }
+            }
+
+            if (this is Geometry.Interfaces.ITessellate)
+            {
+                var geo = (Geometry.Interfaces.ITessellate)this;
+                var mesh = new Elements.Geometry.Mesh();
+                geo.Tessellate(ref mesh);
+                if (mesh == null)
+                {
+                    return;
+                }
+
+                var gbuffers = mesh.GetBuffers();
+
+                // TODO(Ian): Remove this cast to GeometricElement when we
+                // consolidate mesh under geometric representations.
+                meshId = gltf.AddTriangleMesh(this.Id + "_mesh",
+                                     buffer,
+                                     bufferViews,
+                                     accessors,
+                                     materialIndexMap[materialId],
+                                     gbuffers,
+                                     null,
+                                     meshes);
+
+                if (!meshElementMap.ContainsKey(this.Id))
+                {
+                    meshElementMap.Add(this.Id, new List<int>());
+                }
+                meshElementMap[this.Id].Add(meshId);
+
+                if (!this.IsElementDefinition)
+                {
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, this.Transform);
+                }
+            }
+
         }
 
         /// <summary>

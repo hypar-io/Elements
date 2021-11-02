@@ -819,26 +819,25 @@ namespace Elements.Serialization.glTF
                     lines.Add(currLines);
                 }
 
-                GetRenderDataForElement(e,
-                                        gltf,
-                                        materialIndexMap,
-                                        buffer,
-                                        allBuffers,
-                                        schemaBuffers,
-                                        bufferViews,
-                                        accessors,
-                                        materials,
-                                        textures,
-                                        images,
-                                        samplers,
-                                        meshes,
-                                        nodes,
-                                        meshElementMap,
-                                        nodeElementMap,
-                                        meshTransformMap,
-                                        currLines,
-                                        drawEdges,
-                                        mergeVertices);
+                e.UpdateGLTF(gltf,
+                                materialIndexMap,
+                                buffer,
+                                allBuffers,
+                                schemaBuffers,
+                                bufferViews,
+                                accessors,
+                                materials,
+                                textures,
+                                images,
+                                samplers,
+                                meshes,
+                                nodes,
+                                meshElementMap,
+                                nodeElementMap,
+                                meshTransformMap,
+                                currLines,
+                                drawEdges,
+                                mergeVertices);
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
             {
@@ -897,245 +896,6 @@ namespace Elements.Serialization.glTF
             return gltf;
         }
 
-        private static void GetRenderDataForElement(Element e,
-                                                    Gltf gltf,
-                                                    Dictionary<string, int> materialIndexMap,
-                                                    List<byte> buffer,
-                                                    List<byte[]> allBuffers,
-                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
-                                                    List<BufferView> bufferViews,
-                                                    List<Accessor> accessors,
-                                                    List<glTFLoader.Schema.Material> materials,
-                                                    List<Texture> textures,
-                                                    List<Image> images,
-                                                    List<Sampler> samplers,
-                                                    List<glTFLoader.Schema.Mesh> meshes,
-                                                    List<glTFLoader.Schema.Node> nodes,
-                                                    Dictionary<Guid, List<int>> meshElementMap,
-                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
-                                                    Dictionary<Guid, Transform> meshTransformMap,
-                                                    List<Vector3> lines,
-                                                    bool drawEdges,
-                                                    bool mergeVertices = false)
-        {
-            var materialId = BuiltInMaterials.Default.Id.ToString();
-            int meshId = -1;
-
-            if (e is GeometricElement)
-            {
-                if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
-                {
-                    var content = e as ContentElement;
-                    Stream glbStream = GetGlbStreamFromPath(content.GltfLocation);
-                    if (glbStream != System.IO.Stream.Null)
-                    {
-                        var meshIndices = GltfMergingUtils.AddAllMeshesFromFromGlb(glbStream,
-                                                                schemaBuffers,
-                                                                allBuffers,
-                                                                bufferViews,
-                                                                accessors,
-                                                                meshes,
-                                                                materials,
-                                                                textures,
-                                                                images,
-                                                                samplers,
-                                                                true,
-                                                                e.Id,
-                                                                out var parentNode
-                                                                );
-
-
-                        if (!nodeElementMap.ContainsKey(e.Id) && parentNode != null)
-                        {
-                            nodeElementMap.Add(e.Id, parentNode);
-                        }
-                        if (!content.IsElementDefinition)
-                        {
-                            // This element is not used for instancing.
-                            // apply scale transform here to bring the content glb into meters
-                            var transform = content.Transform.Scaled(content.GltfScaleToMeters);
-                            NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
-                        }
-                        else
-                        {
-                            // This element will be used for instancing.  Save the transform of the
-                            // content element base that will be needed when instances are placed.
-                            // The scaled transform is only necessary because we are using the glb.
-                            if (!meshTransformMap.ContainsKey(e.Id))
-                            {
-                                meshTransformMap[e.Id] = content.Transform.Scaled(content.GltfScaleToMeters);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        meshId = ProcessGeometricRepresentation(e,
-                                                                ref gltf,
-                                                                ref materialIndexMap,
-                                                                ref buffer,
-                                                                bufferViews,
-                                                                accessors,
-                                                                meshes,
-                                                                nodes,
-                                                                meshElementMap,
-                                                                lines,
-                                                                drawEdges,
-                                                                materialId,
-                                                                ref meshId,
-                                                                content,
-                                                                mergeVertices);
-                        if (!meshElementMap.ContainsKey(e.Id))
-                        {
-                            meshElementMap.Add(e.Id, new List<int> { meshId });
-                        }
-                    }
-                }
-                else
-                {
-                    var geometricElement = (GeometricElement)e;
-                    materialId = geometricElement.Material.Id.ToString();
-
-                    meshId = ProcessGeometricRepresentation(e,
-                                                            ref gltf,
-                                                            ref materialIndexMap,
-                                                            ref buffer,
-                                                            bufferViews,
-                                                            accessors,
-                                                            meshes,
-                                                            nodes,
-                                                            meshElementMap,
-                                                            lines,
-                                                            drawEdges,
-                                                            materialId,
-                                                            ref meshId,
-                                                            geometricElement,
-                                                            mergeVertices);
-                    if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
-                    {
-                        meshElementMap.Add(e.Id, new List<int> { meshId });
-                    }
-                }
-            }
-
-            if (e is ElementInstance)
-            {
-                var i = (ElementInstance)e;
-                var transform = new Transform();
-                if (i.BaseDefinition is ContentElement contentBase)
-                {
-                    // if we have a stored node for this object, we use that when adding it to the gltf.
-                    if (nodeElementMap.TryGetValue(i.BaseDefinition.Id, out var nodeToCopy))
-                    {
-                        transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform, i.Id);
-                    }
-                    else
-                    {
-                        // If there is a transform stored for the content base definition we
-                        // should apply it when creating instances.
-                        // TODO check if this meshTransformMap ever does anything.
-                        if (meshTransformMap.TryGetValue(i.BaseDefinition.Id, out var baseTransform))
-                        {
-                            transform.Concatenate(baseTransform);
-                        }
-                        transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
-                    }
-                }
-                else
-                {
-                    transform.Concatenate(i.Transform);
-                    // Lookup the corresponding mesh in the map.
-                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
-                }
-
-                if (drawEdges)
-                {
-                    // Get the edges for the solid
-                    var geom = i.BaseDefinition;
-                    if (geom.Representation != null)
-                    {
-                        foreach (var solidOp in geom.Representation.SolidOperations)
-                        {
-                            if (solidOp.Solid != null)
-                            {
-                                foreach (var edge in solidOp.Solid.Edges.Values)
-                                {
-                                    lines.AddRange(new[] { i.Transform.OfPoint(edge.Left.Vertex.Point), i.Transform.OfPoint(edge.Right.Vertex.Point) });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (e is ModelCurve)
-            {
-                var mc = (ModelCurve)e;
-                var id = $"{e.Id}_curve";
-                var gb = mc.ToGraphicsBuffers(true);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
-            }
-
-            if (e is ModelPoints)
-            {
-                var mp = (ModelPoints)e;
-                if (mp.Locations.Count != 0)
-                {
-                    var id = $"{e.Id}_point";
-                    var gb = mp.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
-                }
-            }
-
-            if (e is ModelArrows)
-            {
-                var ma = (ModelArrows)e;
-                if (ma.Vectors.Count > 0)
-                {
-                    var id = $"{e.Id}_arrow";
-                    var gb = ma.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
-                }
-            }
-
-            if (e is ITessellate)
-            {
-                var geo = (ITessellate)e;
-                var mesh = new Elements.Geometry.Mesh();
-                geo.Tessellate(ref mesh);
-                if (mesh == null)
-                {
-                    return;
-                }
-
-                var gbuffers = mesh.GetBuffers();
-
-                // TODO(Ian): Remove this cast to GeometricElement when we
-                // consolidate mesh under geometric representations.
-                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
-                                     buffer,
-                                     bufferViews,
-                                     accessors,
-                                     materialIndexMap[materialId],
-                                     gbuffers,
-                                     null,
-                                     meshes);
-
-                if (!meshElementMap.ContainsKey(e.Id))
-                {
-                    meshElementMap.Add(e.Id, new List<int>());
-                }
-                meshElementMap[e.Id].Add(meshId);
-
-                var geom = (GeometricElement)e;
-                if (!geom.IsElementDefinition)
-                {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
-                }
-            }
-        }
-
         private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
 
         /// <summary>
@@ -1183,7 +943,7 @@ namespace Elements.Serialization.glTF
         /// <summary>
         /// Returns the index of the mesh created while processing the Geometry.
         /// </summary>
-        private static int ProcessGeometricRepresentation(Element e,
+        internal static int ProcessGeometricRepresentation(Element e,
                                                            ref Gltf gltf,
                                                            ref Dictionary<string, int> materialIndexMap,
                                                            ref List<byte> buffers,

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Serialization.glTF;
+using glTFLoader.Schema;
 
 namespace Elements
 {
@@ -43,6 +45,32 @@ namespace Elements
         {
             this.Curve = curve;
             this.Material = material != null ? material : BuiltInMaterials.Edges;
+        }
+
+        internal override void UpdateGLTF(Gltf gltf,
+                                                    Dictionary<string, int> materialIndexMap,
+                                                    List<byte> buffer,
+                                                    List<byte[]> allBuffers,
+                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
+                                                    List<Sampler> samplers,
+                                                    List<glTFLoader.Schema.Mesh> meshes,
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
+                                                    Dictionary<Guid, Transform> meshTransformMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
+        {
+            base.UpdateGLTF(gltf, materialIndexMap, buffer, allBuffers, schemaBuffers, bufferViews, accessors, materials, textures, images, samplers, meshes, nodes, meshElementMap, nodeElementMap, meshTransformMap, lines, drawEdges, mergeVertices);
+            var id = $"{this.Id}_curve";
+            var gb = this.ToGraphicsBuffers(true);
+            gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[this.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, this.Transform);
         }
 
         internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)

@@ -1,4 +1,8 @@
+using Elements.Geometry;
+using Elements.Serialization.glTF;
+using glTFLoader.Schema;
 using System;
+using System.Collections.Generic;
 
 namespace Elements
 {
@@ -85,6 +89,29 @@ namespace Elements
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
+        internal virtual void UpdateGLTF(Gltf gltf,
+                                                    Dictionary<string, int> materialIndexMap,
+                                                    List<byte> buffer,
+                                                    List<byte[]> allBuffers,
+                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
+                                                    List<Sampler> samplers,
+                                                    List<glTFLoader.Schema.Mesh> meshes,
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
+                                                    Dictionary<Guid, Transform> meshTransformMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
+        {
+            // Override in derived classes.
         }
 
     }

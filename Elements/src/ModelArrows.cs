@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Newtonsoft.Json;
+using Elements.Serialization.glTF;
+using glTFLoader.Schema;
 
 namespace Elements
 {
@@ -37,7 +39,7 @@ namespace Elements
         /// <summary>
         /// Create a collection of points.
         /// </summary>
-        /// <param name="vectors">A collection of tuples specifying the 
+        /// <param name="vectors">A collection of tuples specifying the
         /// origin, direction, and the magnitude of the arrows.</param>
         /// <param name="arrowAtStart">Should an arrow head be drawn at the start?</param>
         /// <param name="arrowAtEnd">Should an arrow head be drawn at the end?</param>
@@ -116,6 +118,35 @@ namespace Elements
             }
 
             return gb;
+        }
+
+        internal override void UpdateGLTF(Gltf gltf,
+                                                    Dictionary<string, int> materialIndexMap,
+                                                    List<byte> buffer,
+                                                    List<byte[]> allBuffers,
+                                                    List<glTFLoader.Schema.Buffer> schemaBuffers,
+                                                    List<BufferView> bufferViews,
+                                                    List<Accessor> accessors,
+                                                    List<glTFLoader.Schema.Material> materials,
+                                                    List<Texture> textures,
+                                                    List<Image> images,
+                                                    List<Sampler> samplers,
+                                                    List<glTFLoader.Schema.Mesh> meshes,
+                                                    List<glTFLoader.Schema.Node> nodes,
+                                                    Dictionary<Guid, List<int>> meshElementMap,
+                                                    Dictionary<Guid, ProtoNode> nodeElementMap,
+                                                    Dictionary<Guid, Transform> meshTransformMap,
+                                                    List<Vector3> lines,
+                                                    bool drawEdges,
+                                                    bool mergeVertices = false)
+        {
+            base.UpdateGLTF(gltf, materialIndexMap, buffer, allBuffers, schemaBuffers, bufferViews, accessors, materials, textures, images, samplers, meshes, nodes, meshElementMap, nodeElementMap, meshTransformMap, lines, drawEdges, mergeVertices);
+            if (this.Vectors.Count > 0)
+            {
+                var id = $"{this.Id}_arrow";
+                var gb = this.ToGraphicsBuffers();
+                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[this.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, this.Transform);
+            }
         }
     }
 }
