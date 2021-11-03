@@ -142,7 +142,7 @@ namespace Elements
                         bool repeatTexture = true,
                         string normalTexture = null,
                         bool interpolateTexture = true,
-                        Guid id = default(Guid)) :
+                        Guid id = default) :
             this(color,
                  specularFactor,
                  glossinessFactor,
@@ -152,7 +152,7 @@ namespace Elements
                  repeatTexture,
                  normalTexture,
                  interpolateTexture,
-                 id != default(Guid) ? id : Guid.NewGuid(),
+                 id != default ? id : Guid.NewGuid(),
                  name)
         { }
 
@@ -162,8 +162,7 @@ namespace Elements
         /// <param name="obj"></param>
         public override bool Equals(object obj)
         {
-            var m = obj as Material;
-            if (m == null)
+            if (!(obj is Material m))
             {
                 return false;
             }
