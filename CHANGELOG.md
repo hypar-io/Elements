@@ -5,7 +5,9 @@
 ### Added
 
 - `Position.FromVectorMeters`
--
+- `Elements.Geometry.Profiles.ParametricProfile`
+- `Elements.Geometry.Profiles.ParametricProfileData`
+- `Elements.Geometry.Profiles.VectorExpression`
 
 ### Changed
 
