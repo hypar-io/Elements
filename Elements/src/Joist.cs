@@ -64,11 +64,14 @@ namespace Elements
         IN70,
         IN72
     }
+
     /// <summary>
     /// A joist.
     /// </summary>
     public class Joist : StructuralFraming
     {
+        private const double THICKNESS = 0.125;
+
         /// <summary>
         /// The distance to the first panel.
         /// </summary>
@@ -124,7 +127,7 @@ namespace Elements
         /// <param name="seatDepth">The seat depth of the joist.</param>
         /// <param name="y">The distance to the first panel of the joist.</param>
         [JsonConstructor]
-        public Joist(Curve curve,
+        public Joist(Line curve,
                      JoistProfileType topChordProfile,
                      JoistProfileType bottomChordProfile,
                      JoistProfileType webProfile,
@@ -136,10 +139,6 @@ namespace Elements
                      string name = null,
                      Guid id = default) : base(curve, null, material, name: name, id: id)
         {
-            if (!(curve is Line))
-            {
-                throw new ArgumentException("Bar joists must be constructed from lines.");
-            }
             TopChordProfile = topChordProfile;
             BottomChordProfile = bottomChordProfile;
             WebProfile = webProfile;
@@ -152,35 +151,35 @@ namespace Elements
             Representation.SkipCSGUnion = true;
         }
 
-        private Profile[] LL(JoistProfileType profileType, bool flip = false)
+        private Profile[] Construct2LProfile(JoistProfileType profileType, bool flip = false)
         {
             var w = Units.InchesToMeters(double.Parse(profileType.ToString().Substring(2).Split('X')[0].Replace('_', '.')));
 
-            var L = Polygon.L(w, w, Units.InchesToMeters(0.125));
-            double flangeT = Units.InchesToMeters(0.125);
+            var L = Polygon.L(w, w, Units.InchesToMeters(THICKNESS));
+            double flangeT = Units.InchesToMeters(THICKNESS);
 
-            Transform r;
-            Transform l;
+            Transform right;
+            Transform left;
             if (flip)
             {
-                r = new Transform(Vector3.Origin);
-                r.Rotate(Vector3.ZAxis, -90);
-                r.Move(flangeT / 2);
+                right = new Transform(Vector3.Origin);
+                right.Rotate(Vector3.ZAxis, -90);
+                right.Move(flangeT / 2);
 
-                l = new Transform(Vector3.Origin);
-                l.Rotate(Vector3.ZAxis, 180);
-                l.Move(-flangeT / 2);
+                left = new Transform(Vector3.Origin);
+                left.Rotate(Vector3.ZAxis, 180);
+                left.Move(-flangeT / 2);
             }
             else
             {
-                r = new Transform(Vector3.Origin);
-                r.Move(flangeT / 2);
+                right = new Transform(Vector3.Origin);
+                right.Move(flangeT / 2);
 
-                l = new Transform(Vector3.Origin);
-                l.Rotate(Vector3.ZAxis, 90);
-                l.Move(-flangeT / 2);
+                left = new Transform(Vector3.Origin);
+                left.Rotate(Vector3.ZAxis, 90);
+                left.Move(-flangeT / 2);
             }
-            return new Profile[] { L.TransformedPolygon(r), L.TransformedPolygon(l) };
+            return new Profile[] { L.TransformedPolygon(right), L.TransformedPolygon(left) };
         }
 
         private Representation ConstructRepresentation()
@@ -192,7 +191,7 @@ namespace Elements
 
             JoistPoints.Clear();
 
-            var ll = LL(TopChordProfile, true);
+            var ll = Construct2LProfile(TopChordProfile, true);
 
             var topSweepR = new Sweep(ll[0],
                                      Curve,
@@ -217,7 +216,7 @@ namespace Elements
             var bottomStart = line.Start - startT.YAxis * d - startT.ZAxis * Y;
             var bottomEnd = line.End - startT.YAxis * d + startT.ZAxis * Y;
 
-            ll = LL(BottomChordProfile);
+            ll = Construct2LProfile(BottomChordProfile);
 
             var bottomChord = new Line(bottomStart, bottomEnd);
             var bottomSweepR = new Sweep(ll[0],
@@ -248,7 +247,7 @@ namespace Elements
             Vector3 prevTop = default;
             Vector3 prevBottom = default;
 
-            var wll = LL(WebProfile);
+            var wll = Construct2LProfile(WebProfile);
 
             for (var i = 0; i < topPts.Count; i++)
             {
@@ -300,7 +299,6 @@ namespace Elements
                 }
                 else
                 {
-
                     // Backward leaning web
                     var bl1 = new Sweep(wll[0],
                                              new Line(bottomPt, prevTop),
