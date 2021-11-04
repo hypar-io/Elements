@@ -15,7 +15,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public class ParametricProfile : Profile
     {
-        private readonly List<MetadataReference> _refs;
+        private static List<MetadataReference> _refs;
 
         /// <summary>
         /// The data which defines the profile.
@@ -25,39 +25,61 @@ namespace Elements.Geometry.Profiles
         /// <summary>
         /// Create a parametric profile.
         /// </summary>
-        /// <param name="data">The profile </param>
+        /// <param name="data">The data used to generate the profile.</param>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">The voids of the profile.</param>
         /// <param name="id">The unique identifier of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         [JsonConstructor]
-        public ParametricProfile(ParametericProfileData data, Guid @id = default, string @name = null) : base(null, null, id, name)
+        private ParametricProfile(ParametericProfileData data,
+                                  Polygon @perimeter,
+                                  IList<Polygon> @voids,
+                                  Guid @id = default,
+                                  string @name = null) : base(perimeter, voids, id, name)
         {
+            Data = data;
+        }
+
+        /// <summary>
+        /// Create a parametric profile.
+        /// </summary>
+        /// <param name="data">The data used to generate the profile.</param>
+        /// <param name="id">The unique identifier of the profile.</param>
+        /// <param name="name">The name of the profile.</param>
+        public static async Task<ParametricProfile> CreateAsync(ParametericProfileData data, Guid id = default, string name = null)
+        {
+            if (_refs == null)
+            {
+                // These references are required to get dynamic to work.
+                _refs = new List<MetadataReference>{
+                                    MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
+                                    MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)};
+            }
+
             if (data.PerimeterVectorExpressions == null || data.PerimeterVectorExpressions.Count == 0)
             {
                 throw new ArgumentException("The parametric profile could not be created. No translation expressions were provided.");
             }
 
-            Data = data;
+            var perimeter = await CreatePolygonFromExpressionsAsync(data.PerimeterVectorExpressions, data.PropertyValues, _refs);
 
-            // These references are required to get dynamic to work.
-            _refs = new List<MetadataReference>{
-                                    MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
-                                    MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)};
-            Perimeter = CreatePolygonFromExpressions(data.PerimeterVectorExpressions, data.PropertyValues, _refs).Result;
-
+            var voids = new List<Polygon>();
             if (data.VoidVectorExpressions != null)
             {
                 foreach (var voidExpr in data.VoidVectorExpressions)
                 {
-                    var voidPoly = CreatePolygonFromExpressions(voidExpr, data.PropertyValues, _refs).Result;
-                    Voids.Add(voidPoly);
+                    var voidPoly = await CreatePolygonFromExpressionsAsync(voidExpr, data.PropertyValues, _refs);
+                    voids.Add(voidPoly);
                 }
             }
+
+            return new ParametricProfile(data, perimeter, voids, id, name);
         }
 
         /// <summary>
         /// Create the profile.
         /// </summary>
-        public static async Task<Polygon> CreatePolygonFromExpressions(List<VectorExpression> expressions,
+        private static async Task<Polygon> CreatePolygonFromExpressionsAsync(List<VectorExpression> expressions,
                                                                        Dictionary<string, double> propertyValues,
                                                                        List<MetadataReference> refs)
         {

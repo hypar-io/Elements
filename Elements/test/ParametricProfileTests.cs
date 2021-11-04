@@ -17,7 +17,7 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void ParametricProfile()
+        public async void Create()
         {
             Name = nameof(ParametricProfile);
 
@@ -34,7 +34,7 @@ namespace Elements.Geometry.Tests
 
             var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
 
-            var profile = new ParametricProfile(profileData);
+            var profile = await ParametricProfile.CreateAsync(profileData);
 
             Model.AddElement(new ModelCurve(profile.Perimeter));
         }
@@ -50,7 +50,7 @@ namespace Elements.Geometry.Tests
                 new VectorExpression(x: "foo()", y: "var()"),
             };
             var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
-            Assert.Throws<AggregateException>(() => new ParametricProfile(profileData));
+            Assert.ThrowsAsync<AggregateException>(async () => await ParametricProfile.CreateAsync(profileData));
         }
 
         [Fact]
@@ -62,11 +62,11 @@ namespace Elements.Geometry.Tests
             };
             var vectorExpressions = new List<VectorExpression>() { };
             var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
-            Assert.Throws<ArgumentException>(() => new ParametricProfile(profileData));
+            Assert.ThrowsAsync<ArgumentException>(async () => await ParametricProfile.CreateAsync(profileData));
         }
 
         [Fact]
-        public void SerializesToJSON()
+        public async void SerializesToJSON()
         {
             var propertyValues = new Dictionary<string, double>() {
                 {"w", 1},
@@ -80,7 +80,7 @@ namespace Elements.Geometry.Tests
             };
             var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
 
-            var profile = new ParametricProfile(profileData);
+            var profile = await ParametricProfile.CreateAsync(profileData);
             Model.AddElement(profile);
             var json = Model.ToJson(true);
 
@@ -88,7 +88,7 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void BridgeDeck()
+        public async void BridgeDeck()
         {
             Name = nameof(BridgeDeck);
 
@@ -124,7 +124,7 @@ namespace Elements.Geometry.Tests
                 }
             };
             var profileData = new ParametericProfileData(vectorExpressions, propertyValues, voidVectorExpressions);
-            var profile = new ParametricProfile(profileData);
+            var profile = await ParametricProfile.CreateAsync(profileData);
 
             var beam = new Beam(new Line(Vector3.Origin, new Vector3(30, 0, 0)), profile, BuiltInMaterials.Concrete);
 
