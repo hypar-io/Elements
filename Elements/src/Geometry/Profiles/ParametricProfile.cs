@@ -69,7 +69,8 @@ namespace Elements.Geometry.Profiles
         }
 
         /// <summary>
-        /// Create the profile.
+        /// Create a polygon by evaluating all vertex expressions
+        /// in one script evaluation.
         /// </summary>
         private async Task<Polygon> CreatePolygonFromExpressionsAsync(List<VectorExpression> expressions)
         {
