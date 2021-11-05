@@ -32,6 +32,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
+    <Content Include="ProfileData\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
     <Content Include="../lib/Csg.dll">
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <PackagePath>lib\$(TargetFramework)</PackagePath>

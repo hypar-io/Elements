@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
@@ -15,116 +14,111 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public class ParametricProfile : Profile
     {
-        private static List<MetadataReference> _refs;
+        /// <summary>
+        /// A collection of vector expressions.
+        /// </summary>
+        public List<VectorExpression> PerimeterVectorExpressions { get; }
 
         /// <summary>
-        /// The data which defines the profile.
+        /// A collection of vector expressions.
         /// </summary>
-        public ParametericProfileData Data { get; set; }
+        public List<List<VectorExpression>> VoidVectorExpressions { get; }
 
         /// <summary>
         /// Create a parametric profile.
         /// </summary>
-        /// <param name="data">The data used to generate the profile.</param>
+        /// <param name="perimeterVectorExpressions"></param>
+        /// <param name="voidVectorExpressions"></param>
         /// <param name="perimeter">The perimeter of the profile.</param>
         /// <param name="voids">The voids of the profile.</param>
         /// <param name="id">The unique identifier of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         [JsonConstructor]
-        private ParametricProfile(ParametericProfileData data,
-                                  Polygon @perimeter,
-                                  IList<Polygon> @voids,
-                                  Guid @id = default,
-                                  string @name = null) : base(perimeter, voids, id, name)
+        public ParametricProfile(List<VectorExpression> perimeterVectorExpressions,
+                                    List<List<VectorExpression>> voidVectorExpressions = null,
+                                    Polygon @perimeter = null,
+                                    IList<Polygon> @voids = null,
+                                    Guid @id = default,
+                                    string @name = null) : base(perimeter, voids, id, name)
         {
-            Data = data;
+            PerimeterVectorExpressions = perimeterVectorExpressions;
+            VoidVectorExpressions = voidVectorExpressions;
         }
 
         /// <summary>
-        /// Create a parametric profile.
+        /// Create the geometry of the parametric profile.
         /// </summary>
-        /// <param name="data">The data used to generate the profile.</param>
-        /// <param name="id">The unique identifier of the profile.</param>
-        /// <param name="name">The name of the profile.</param>
-        public static async Task<ParametricProfile> CreateAsync(ParametericProfileData data, Guid id = default, string name = null)
+        public async Task SetGeometryAsync()
         {
-            if (_refs == null)
-            {
-                // These references are required to get dynamic to work.
-                _refs = new List<MetadataReference>{
-                                    MetadataReference.CreateFromFile(typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).GetTypeInfo().Assembly.Location),
-                                    MetadataReference.CreateFromFile(typeof(System.Runtime.CompilerServices.DynamicAttribute).GetTypeInfo().Assembly.Location)};
-            }
-
-            if (data.PerimeterVectorExpressions == null || data.PerimeterVectorExpressions.Count == 0)
+            if (PerimeterVectorExpressions == null || PerimeterVectorExpressions.Count == 0)
             {
                 throw new ArgumentException("The parametric profile could not be created. No translation expressions were provided.");
             }
 
-            var perimeter = await CreatePolygonFromExpressionsAsync(data.PerimeterVectorExpressions, data.PropertyValues, _refs);
+            Perimeter = await CreatePolygonFromExpressionsAsync(PerimeterVectorExpressions);
 
-            var voids = new List<Polygon>();
-            if (data.VoidVectorExpressions != null)
+            Voids = new List<Polygon>();
+            if (VoidVectorExpressions != null)
             {
-                foreach (var voidExpr in data.VoidVectorExpressions)
+                foreach (var voidExpr in VoidVectorExpressions)
                 {
-                    var voidPoly = await CreatePolygonFromExpressionsAsync(voidExpr, data.PropertyValues, _refs);
-                    voids.Add(voidPoly);
+                    var voidPoly = await CreatePolygonFromExpressionsAsync(voidExpr);
+                    Voids.Add(voidPoly);
                 }
             }
-
-            return new ParametricProfile(data, perimeter, voids, id, name);
         }
 
         /// <summary>
         /// Create the profile.
         /// </summary>
-        private static async Task<Polygon> CreatePolygonFromExpressionsAsync(List<VectorExpression> expressions,
-                                                                       Dictionary<string, double> propertyValues,
-                                                                       List<MetadataReference> refs)
+        private async Task<Polygon> CreatePolygonFromExpressionsAsync(List<VectorExpression> expressions)
         {
-            var vertices = new List<Vector3>();
-
-            // https://github.com/dotnet/roslyn/issues/3194
-            // We use an exando object so we can load it up with
-            // the properties at runtime.
-            dynamic expando = new ExpandoObject();
-            foreach (var p in propertyValues)
-            {
-                ((IDictionary<string, object>)expando).Add(p.Key, p.Value);
-            }
-            var g = new ProfileScriptGlobals() { data = expando };
-
-            var options = ScriptOptions.Default.AddReferences(refs);
+            var sb = new StringBuilder();
+            sb.Append("new Polygon(new[]{");
 
             foreach (var expr in expressions)
             {
-                var script = CSharpScript.Create<double>(expr.X,
-                                                         options: options,
-                                                         globalsType: typeof(ProfileScriptGlobals));
-                var xResult = (await script.RunAsync(g)).ReturnValue;
-
-                script = CSharpScript.Create<double>(expr.Y,
-                                                     options: options,
-                                                     globalsType: typeof(ProfileScriptGlobals));
-                var yResult = (await script.RunAsync(g)).ReturnValue;
-
-                var newPosition = new Vector3(xResult, yResult, 0);
-                vertices.Add(newPosition);
+                sb.Append($"new Vector3({expr.X}, {expr.Y}),");
             }
-
-            return new Polygon(vertices);
+            sb.Append("})");
+            var script = sb.ToString();
+            return await CSharpScript.EvaluateAsync<Polygon>(script,
+                                                             ScriptOptions.Default.WithReferences(GetType().Assembly).WithImports("Elements.Geometry"),
+                                                             globals: this);
         }
 
         /// <summary>
-        /// The globals type for the profile script.
+        /// Set the properties or public member values of this profile instance
+        /// to the values contained in the supplied dictionary.
         /// </summary>
-        public class ProfileScriptGlobals
+        /// <param name="profileData">A dictionary of property values.</param>
+        public void SetPropertiesFromProfileData(Dictionary<string, double> profileData)
         {
-            /// <summary>
-            /// The 'data' property available to the script.
-            /// </summary>
-            public dynamic data;
+            var t = GetType();
+            foreach (var p in profileData)
+            {
+                var field = t.GetField(p.Key, BindingFlags.Public | BindingFlags.Instance);
+                if (field != null)
+                {
+                    if (field.FieldType != typeof(double))
+                    {
+                        continue;
+                    }
+                    field.SetValue(this, p.Value);
+                }
+                else
+                {
+                    var prop = t.GetProperty(p.Key, BindingFlags.Public | BindingFlags.Instance);
+                    if (prop != null)
+                    {
+                        if (prop.PropertyType != typeof(double))
+                        {
+                            continue;
+                        }
+                        prop.SetValue(this, p.Value);
+                    }
+                }
+            }
         }
     }
 }

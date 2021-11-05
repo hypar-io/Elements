@@ -7,6 +7,80 @@ using Xunit.Abstractions;
 
 namespace Elements.Geometry.Tests
 {
+    public class TestParametricProfile : ParametricProfile
+    {
+        public double w;
+        public double d;
+
+        public TestParametricProfile(Polygon perimeter = null,
+                                     IList<Polygon> voids = null,
+                                     Guid id = default,
+                                     string name = null) : base(new List<VectorExpression>() {
+                                                                    new VectorExpression(x: "0", y: "0"),
+                                                                    new VectorExpression(x: "w", y: "0"),
+                                                                    new VectorExpression(x: "w", y: "d"),
+                                                                    new VectorExpression(x: "0", y: "d")
+                                                                }, null, perimeter, voids, id, name)
+        { }
+    }
+
+    public class EmptyParametricProfile : ParametricProfile
+    {
+        public EmptyParametricProfile(Polygon perimeter = null,
+                                      IList<Polygon> voids = null,
+                                      Guid id = default,
+                                      string name = null) : base(null, null, perimeter, voids, id, name)
+        {
+        }
+    }
+
+    public class BadParametricProfile : ParametricProfile
+    {
+        public double w;
+        public double d;
+        public BadParametricProfile(Polygon perimeter = null,
+                                    IList<Polygon> voids = null,
+                                    Guid id = default,
+                                    string name = null) : base(new List<VectorExpression>() { new VectorExpression(x: "foo()", y: "var()") }, null, perimeter, voids, id, name)
+        { }
+    }
+
+    public class BridgeDeckProfile : ParametricProfile
+    {
+        public double w1;
+        public double w2;
+        public double curbWidth;
+        public double deckEdgeThickness;
+        public double roadCamber;
+        public double depth;
+
+        public BridgeDeckProfile(Polygon perimeter = null,
+                                 IList<Polygon> voids = null,
+                                 Guid id = default,
+                                 string name = null) : base(new List<VectorExpression>() {
+                                                                new VectorExpression(x: "w1", y: "-depth"),
+                                                                new VectorExpression(x: "w2", y: "-deckEdgeThickness"),
+                                                                new VectorExpression(x: "w2", y: "0"),
+                                                                new VectorExpression(x: "w2 - curbWidth", y: "0"),
+                                                                new VectorExpression(x: "w2 - curbWidth", y: "-roadCamber"),
+                                                                new VectorExpression(x: "0", y: "0"),
+                                                                new VectorExpression(x: "-w2 + curbWidth", y: "-roadCamber"),
+                                                                new VectorExpression(x: "-w2 + curbWidth", y: "0"),
+                                                                new VectorExpression(x: "-w2", y: "0"),
+                                                                new VectorExpression(x: "-w2", y: "-deckEdgeThickness"),
+                                                                new VectorExpression(x: "-w1", y: "-depth")
+                                                            }, new List<List<VectorExpression>>() {
+                                                                new List<VectorExpression>() {
+                                                                    new VectorExpression(x: "w1 - 0.2", y: "-depth + 0.2"),
+                                                                    new VectorExpression(x: "-w1 + 0.2", y: "-depth + 0.2"),
+                                                                    new VectorExpression(x: "-w1 + 0.2", y: "-roadCamber - 0.2"),
+                                                                    new VectorExpression(x: "w1 - 0.2", y: "-roadCamber - 0.2"),
+                                                                }
+                                                            }, perimeter, voids, id, name)
+        {
+        }
+    }
+
     public class ParametricProfileTests : ModelTest
     {
         private ITestOutputHelper _output;
@@ -21,20 +95,12 @@ namespace Elements.Geometry.Tests
         {
             Name = nameof(ParametricProfile);
 
-            var propertyValues = new Dictionary<string, double>() {
-                {"w", 1},
-                {"d", 2}
+            var profile = new TestParametricProfile()
+            {
+                w = 1,
+                d = 2
             };
-            var vectorExpressions = new List<VectorExpression>() {
-                new VectorExpression(x: "0", y: "0"),
-                new VectorExpression(x: "data.w", y: "0"),
-                new VectorExpression(x: "data.w", y: "data.d"),
-                new VectorExpression(x: "0", y: "data.d")
-            };
-
-            var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
-
-            var profile = await ParametricProfile.CreateAsync(profileData);
+            await profile.SetGeometryAsync();
 
             Model.AddElement(new ModelCurve(profile.Perimeter));
         }
@@ -42,45 +108,31 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void ThrowsExceptionWhenExpressionContainsUnknownMember()
         {
-            var propertyValues = new Dictionary<string, double>() {
-                {"w", 1},
-                {"d", 2}
+            var profile = new BadParametricProfile()
+            {
+                w = 1,
+                d = 2
             };
-            var vectorExpressions = new List<VectorExpression>() {
-                new VectorExpression(x: "foo()", y: "var()"),
-            };
-            var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
-            Assert.ThrowsAsync<AggregateException>(async () => await ParametricProfile.CreateAsync(profileData));
+            Assert.ThrowsAsync<AggregateException>(async () => await profile.SetGeometryAsync());
         }
 
         [Fact]
         public void ThrowsExceptionWhenNoExpressions()
         {
-            var propertyValues = new Dictionary<string, double>() {
-                {"w", 1},
-                {"d", 2}
-            };
-            var vectorExpressions = new List<VectorExpression>() { };
-            var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
-            Assert.ThrowsAsync<ArgumentException>(async () => await ParametricProfile.CreateAsync(profileData));
+            var profile = new EmptyParametricProfile() { };
+            Assert.ThrowsAsync<ArgumentException>(async () => await profile.SetGeometryAsync());
         }
 
         [Fact]
         public async void SerializesToJSON()
         {
-            var propertyValues = new Dictionary<string, double>() {
-                {"w", 1},
-                {"d", 2}
+            var profile = new TestParametricProfile()
+            {
+                w = 1,
+                d = 2
             };
-            var vectorExpressions = new List<VectorExpression>() {
-                new VectorExpression(x: "0", y: "0"),
-                new VectorExpression(x: "data.w", y: "0"),
-                new VectorExpression(x: "data.w", y: "data.d"),
-                new VectorExpression(x: "0", y: "data.d")
-            };
-            var profileData = new ParametericProfileData(vectorExpressions, propertyValues);
+            await profile.SetGeometryAsync();
 
-            var profile = await ParametricProfile.CreateAsync(profileData);
             Model.AddElement(profile);
             var json = Model.ToJson(true);
 
@@ -92,43 +144,45 @@ namespace Elements.Geometry.Tests
         {
             Name = nameof(BridgeDeck);
 
-            var propertyValues = new Dictionary<string, double>() {
-                {"w1", 2},
-                {"w2", 4},
-                {"curbWidth", 1},
-                {"deckEdgeThickness", 0.5},
-                {"roadCamber", 0.1},
-                {"depth", 2}
+            var profile = new BridgeDeckProfile()
+            {
+                w1 = 2,
+                w2 = 4,
+                curbWidth = 1,
+                deckEdgeThickness = 0.5,
+                roadCamber = 0.1,
+                depth = 2
             };
 
-            var vectorExpressions = new List<VectorExpression>() {
-                new VectorExpression(x: "data.w1", y: "-data.depth"),
-                new VectorExpression(x: "data.w2", y: "-data.deckEdgeThickness"),
-                new VectorExpression(x: "data.w2", y: "0"),
-                new VectorExpression(x: "data.w2 - data.curbWidth", y: "0"),
-                new VectorExpression(x: "data.w2 - data.curbWidth", y: "-data.roadCamber"),
-                new VectorExpression(x: "0", y: "0"),
-                new VectorExpression(x: "-data.w2 + data.curbWidth", y: "-data.roadCamber"),
-                new VectorExpression(x: "-data.w2 + data.curbWidth", y: "0"),
-                new VectorExpression(x: "-data.w2", y: "0"),
-                new VectorExpression(x: "-data.w2", y: "-data.deckEdgeThickness"),
-                new VectorExpression(x: "-data.w1", y: "-data.depth")
-            };
-
-            var voidVectorExpressions = new List<List<VectorExpression>>() {
-                new List<VectorExpression>() {
-                    new VectorExpression(x: "data.w1 - 0.2", y: "-data.depth + 0.2"),
-                    new VectorExpression(x: "-data.w1 + 0.2", y: "-data.depth + 0.2"),
-                    new VectorExpression(x: "-data.w1 + 0.2", y: "-data.roadCamber - 0.2"),
-                    new VectorExpression(x: "data.w1 - 0.2", y: "-data.roadCamber - 0.2"),
-                }
-            };
-            var profileData = new ParametericProfileData(vectorExpressions, propertyValues, voidVectorExpressions);
-            var profile = await ParametricProfile.CreateAsync(profileData);
+            await profile.SetGeometryAsync();
 
             var beam = new Beam(new Line(Vector3.Origin, new Vector3(30, 0, 0)), profile, BuiltInMaterials.Concrete);
 
             Model.AddElement(beam);
+        }
+
+        [Fact]
+        public void LProfileFactoryCreate()
+        {
+            Name = nameof(LProfileFactoryCreate);
+
+            var lFactory = new LProfileFactory();
+            var profiles = lFactory.AllProfiles();
+
+            var x = 0.0;
+            var z = 0.0;
+            foreach (var profile in profiles)
+            {
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var beam = new Beam(line, profile);
+                Model.AddElement(beam);
+                x += 1.0;
+                if (x > 10.0)
+                {
+                    z += 1.0;
+                    x = 0.0;
+                }
+            }
         }
     }
 }

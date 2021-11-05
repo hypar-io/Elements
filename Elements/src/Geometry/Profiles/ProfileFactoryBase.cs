@@ -6,10 +6,10 @@ namespace Elements.Geometry.Profiles
 {
     /// <summary>
     /// Base class for profile factories.
-    /// A profile factory is constructed with a table of data where each row
-    /// represents a comma-delimited set of profile properties.
     /// </summary>
-    public abstract class ProfileFactory<T, TProfile> where T : Enum
+    /// <typeparam name="TProfileType"></typeparam>
+    /// <typeparam name="TProfile"></typeparam>
+    public abstract class ProfileFactoryBase<TProfileType, TProfile> : IProfileFactory<TProfileType, TProfile> where TProfileType : Enum
     {
         /// <summary>
         /// A collection of profile data.
@@ -20,7 +20,7 @@ namespace Elements.Geometry.Profiles
         /// Construct a profile factory.
         /// </summary>
         /// <param name="data">A comma separated data value representing the properties of the profiles.</param>
-        public ProfileFactory(string data)
+        public ProfileFactoryBase(string data)
         {
             using (var reader = new StringReader(data))
             {
@@ -64,25 +64,23 @@ namespace Elements.Geometry.Profiles
         }
 
         /// <summary>
-        /// Get a profile by name from the factory.
+        /// Get a profile by name.
         /// </summary>
-        /// <param name="name">The name of the profile.</param>
-        /// <returns>A profile. Throws an exception if a profile with the specified name cannot be found.</returns>
-        /// <exception>Thrown when a profile with the specfied name cannot be found.</exception>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public abstract TProfile GetProfileByName(string name);
 
         /// <summary>
-        /// Get a profile by type enumeration from the factory.
+        /// Get a profile by type.
         /// </summary>
-        /// <param name="type">The enumerated type of the profile.</param>
-        /// <returns>A profile. Throws an exception if a profile with the specified name cannot be found.</returns>
-        /// <exception>Thrown when a profile of the specfied type cannot be found.</exception>
-        public abstract TProfile GetProfileByType(T type);
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public abstract TProfile GetProfileByType(TProfileType type);
 
         /// <summary>
-        /// Get all Profiles available in the factory.
+        /// Get all profiles.
         /// </summary>
-        /// <returns>A collection of all profiles available from the factory.</returns>
+        /// <returns></returns>
         public IEnumerable<TProfile> AllProfiles()
         {
             for (var i = 0; i < _profileData.Count; i++)
@@ -92,9 +90,13 @@ namespace Elements.Geometry.Profiles
         }
 
         /// <summary>
-        /// Create the profile give a type.
+        /// Create a profile.
         /// </summary>
-        /// <param name="typeIndex">The index of the type of profile to create.</param>
-        protected abstract TProfile CreateProfile(int typeIndex);
+        /// <param name="typeIndex"></param>
+        /// <returns></returns>
+        protected virtual TProfile CreateProfile(int typeIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
