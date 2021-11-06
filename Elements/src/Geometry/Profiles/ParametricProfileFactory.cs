@@ -114,8 +114,6 @@ namespace Elements.Geometry.Profiles
 
             var profile = GetOrCreateInstanceAndSetGeometry(profileType);
 
-            _profileCache.Add(profileType, profile);
-
             return profile;
         }
 
