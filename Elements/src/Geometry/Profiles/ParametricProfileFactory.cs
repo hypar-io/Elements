@@ -146,6 +146,7 @@ namespace Elements.Geometry.Profiles
 
             // Create instance of the type
             var profile = (TProfile)Activator.CreateInstance(typeof(TProfile));
+            profile.Name = name;
 
             // Set the properties on the instance.
             profile.SetPropertiesFromProfileData(profileData, name);
@@ -154,6 +155,8 @@ namespace Elements.Geometry.Profiles
             // TODO: Is there a better way to run this?
             var runTask = Task.Run(() => profile.SetGeometryAsync());
             runTask.Wait();
+
+            _profileCache.Add(profileType, profile);
 
             return profile;
         }
