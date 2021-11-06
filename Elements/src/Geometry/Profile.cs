@@ -23,7 +23,7 @@ namespace Elements.Geometry
         /// The default constructor is used by derived classes, 
         /// and is not intended to be used directly.
         /// </summary>
-        public Profile() { }
+        internal Profile() { }
 
         /// <summary>
         /// Create a profile.
