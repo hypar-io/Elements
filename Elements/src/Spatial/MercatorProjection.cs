@@ -1,4 +1,6 @@
 using System;
+using Elements.GeoJSON;
+using Elements.Geometry;
 
 namespace Elements.Spatial
 {
@@ -14,16 +16,49 @@ namespace Elements.Spatial
         private static readonly double COM = 0.5 * ECCENT;
 
         /// <summary>
+        /// Convert Latitude and Longitude to meters relative to a base position.
+        /// </summary>
+        /// <param name="relativeToOrigin">A position marking the latitude and longitude of (0,0)</param>
+        /// <param name="lat">The latitude in degrees</param>
+        /// <param name="lon">The longitude in degrees</param>
+        /// <returns>A Vector3 in meters specifying the offset from the origin for this location.</returns>
+        public static Vector3 LatLonToMeters(Position relativeToOrigin, double lat, double lon)
+        {
+            var originX = LonToX(relativeToOrigin.Longitude);
+            var originY = LatToY(relativeToOrigin.Latitude);
+            var phi = Units.DegreesToRadians(relativeToOrigin.Latitude);
+            var x = (LonToX(lon) - originX) * Math.Cos(phi);
+            var y = (LatToY(lat) - originY) * Math.Cos(phi);
+            return new Vector3(x, y);
+        }
+
+        /// <summary>
+        /// Convert a position in space to a latitude and longitude.
+        /// </summary>
+        /// <param name="relativeToOrigin">A position marking the latitude and longitude of (0,0).</param>
+        /// <param name="location">The position to convert to latitude and longitude.</param>
+        /// <returns>A position indicating the latitude and longitude of the location.</returns>
+        public static Position MetersToLatLon(Position relativeToOrigin, Vector3 location)
+        {
+            var phi = Units.DegreesToRadians(relativeToOrigin.Latitude);
+            var locationX = location.X / Math.Cos(phi);
+            var locationY = location.Y / Math.Cos(phi);
+            var lon = XToLon(locationX) + relativeToOrigin.Longitude;
+            var lat = YToLat(locationY) + relativeToOrigin.Latitude;
+            return new Position(lat, lon);
+        }
+
+        /// <summary>
         /// Get the coordinates of the longitude and latitude.
         /// </summary>
         /// <param name="lon"></param>
         /// <param name="lat"></param>
-        /// <returns>An array of doubles containing the x, and y coordintes, in meters.</returns>
+        /// <returns>An array of doubles containing the x, and y coordintes, in the Mercator projection.</returns>
         public static double[] ToPixel(double lon, double lat)
         {
             return new double[] { LonToX(lon), LatToY(lat) };
         }
-        
+
         /// <summary>
         /// Get the latitude and longitude of the specified x and y coordinates.
         /// </summary>
@@ -36,7 +71,9 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Get the x coordinate, in meters, of the specified longitude.
+        /// Get the x coordinate, in the Mercator projection, of the specified longitude. 
+        /// The units will be in meters at the equator, and distorted elsewhere. Utilize LatLonToMeters() for a conversion
+        /// relative to a basepoint.
         /// </summary>
         /// <param name="lon"></param>
         /// <returns></returns>
@@ -46,9 +83,11 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Get the y coordinate, in meters, of the specified latitude.
+        /// Get the y coordinate, in the Mercator projection, of the specified latitude.
+        /// The units will be in meters at the equator, and distorted elsewhere. Utilize LatLonToMeters() for a conversion
+        /// relative to a basepoint.
         /// </summary>
-        /// <param name="lat"></param>
+        /// <param name="lat">The latitude to convert, within the range [-89.5, 89.5]. Values outside this range will be clamped.</param>
         /// <returns></returns>
         public static double LatToY(double lat)
         {
@@ -64,7 +103,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Get the longitude of the specified x coordinate.
         /// </summary>
-        /// <param name="x">The x coordinate.</param>
+        /// <param name="x">The x coordinate in the Mercator projection.</param>
         /// <returns>The longitude in degrees.</returns>
         public static double XToLon(double x)
         {
@@ -74,7 +113,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Get the latitude of the specified y coordinate.
         /// </summary>
-        /// <param name="y">The y coordinate.</param>
+        /// <param name="y">The y coordinate in the Mercator projection.</param>
         /// <returns>The latitude in degrees.</returns>
         public static double YToLat(double y)
         {
