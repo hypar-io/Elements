@@ -166,6 +166,7 @@ namespace Elements.Geometry.Tests
         [InlineData("L", typeof(WTProfileFactory))]
         [InlineData("ST", typeof(WTProfileFactory))]
         [InlineData("MC", typeof(MCProfileFactory))]
+        [InlineData("HSS", typeof(HSSProfileFactory))]
         public void ProfileFactory(string name, Type factoryType)
         {
             Name = name;

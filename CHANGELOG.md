@@ -19,6 +19,9 @@
 - `Elements.Geometry.Profiles.MCProfileType`
 - `Elements.Geometry.Profiles.MCProfile`
 - `Elements.Geometry.Profiles.MCProfileFactory`
+- `Elements.Geometry.Profiles.HSSProfileType`
+- `Elements.Geometry.Profiles.HSSProfile`
+- `Elements.Geometry.Profiles.HSSProfileFactory`
 
 ### Changed
 
