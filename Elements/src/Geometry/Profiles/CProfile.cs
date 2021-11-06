@@ -57,8 +57,8 @@ namespace Elements.Geometry.Profiles
                                                     new VectorExpression("0", "0"),
                                                     new VectorExpression("bf", "0"),
                                                     new VectorExpression("bf", "tf"),
-                                                    new VectorExpression("tw", "tf"),
-                                                    new VectorExpression("tw", "d - tf"),
+                                                    new VectorExpression("tw", "kdes"),
+                                                    new VectorExpression("tw", "d - kdes"),
                                                     new VectorExpression("bf", "d - tf"),
                                                     new VectorExpression("bf", "d"),
                                                     new VectorExpression("0", "d")
@@ -73,8 +73,8 @@ namespace Elements.Geometry.Profiles
                                                     new VectorExpression("0", "0"),
                                                     new VectorExpression("bf", "0"),
                                                     new VectorExpression("bf", "tf"),
-                                                    new VectorExpression("tw", "tf"),
-                                                    new VectorExpression("tw", "d - tf"),
+                                                    new VectorExpression("tw", "kdes"),
+                                                    new VectorExpression("tw", "d - kdes"),
                                                     new VectorExpression("bf", "d - tf"),
                                                     new VectorExpression("bf", "d"),
                                                     new VectorExpression("0", "d")
