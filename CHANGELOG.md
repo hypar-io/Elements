@@ -5,9 +5,17 @@
 ### Added
 
 - `Position.FromVectorMeters`
+- `Elements.Geometry.Profiles.IProfileFactory`
 - `Elements.Geometry.Profiles.ParametricProfile`
-- `Elements.Geometry.Profiles.ParametricProfileData`
 - `Elements.Geometry.Profiles.VectorExpression`
+- `Elements.Geometry.Profiles.ProfileFactoryBase`
+- `Elements.Geometry.Profiles.ParametricProfileFactory`
+- `Elements.Geometry.Profiles.WTProfileType`
+- `Elements.Geometry.Profiles.WTProfile`
+- `Elements.Geometry.Profiles.WTProfileFactory`
+- `Elements.Geometry.Profiles.LProfileType`
+- `Elements.Geometry.Profiles.LProfile`
+- `Elements.Geometry.Profiles.LProfileFactory`
 
 ### Changed
 
