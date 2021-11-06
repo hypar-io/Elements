@@ -22,6 +22,9 @@
 - `Elements.Geometry.Profiles.HSSProfileType`
 - `Elements.Geometry.Profiles.HSSProfile`
 - `Elements.Geometry.Profiles.HSSProfileFactory`
+- `Elements.Geometry.Profiles.WProfileType`
+- `Elements.Geometry.Profiles.WProfile`
+- `Elements.Geometry.Profiles.WProfileFactory`
 
 ### Changed
 

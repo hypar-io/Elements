@@ -1,7 +1,7 @@
 namespace Elements.Geometry.Profiles
 {
     /// <summary>
-    /// A factory for creation L profiles.
+    /// A factory for creation WT profiles.
     /// </summary>
     public class WTProfileFactory : ParametricProfileFactory<WTProfileType, WTProfile>
     {

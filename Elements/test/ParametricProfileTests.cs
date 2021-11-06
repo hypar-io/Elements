@@ -161,12 +161,13 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
-        [InlineData("C", typeof(CProfileFactory))]
-        [InlineData("WT", typeof(WTProfileFactory))]
-        [InlineData("L", typeof(LProfileFactory))]
-        [InlineData("ST", typeof(LProfileFactory))]
-        [InlineData("MC", typeof(MCProfileFactory))]
-        [InlineData("HSS", typeof(HSSProfileFactory))]
+        // [InlineData("C", typeof(CProfileFactory))]
+        // [InlineData("WT", typeof(WTProfileFactory))]
+        // [InlineData("L", typeof(LProfileFactory))]
+        // [InlineData("ST", typeof(LProfileFactory))]
+        // [InlineData("MC", typeof(MCProfileFactory))]
+        // [InlineData("HSS", typeof(HSSProfileFactory))]
+        [InlineData("W", typeof(WProfileFactory))]
         public void ProfileFactory(string name, Type factoryType)
         {
             Name = name;
