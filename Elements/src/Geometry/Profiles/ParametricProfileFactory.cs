@@ -69,10 +69,10 @@ namespace Elements.Geometry.Profiles
                         for (var i = 1; i < keys.Length; i++)
                         {
                             double.TryParse(values[i], out double value);
-                            currentProfileData.Add(keys[i], value * conversion);
+                            currentProfileData.Add(ToSafeIdentifier(keys[i]), value * conversion);
                         }
 
-                        _profileData.Add(CleanName(values[0]), currentProfileData);
+                        _profileData.Add(ToSafeIdentifier(values[0]), currentProfileData);
                     }
                     catch (Exception ex)
                     {
@@ -104,7 +104,7 @@ namespace Elements.Geometry.Profiles
             TProfileType profileType;
             try
             {
-                profileType = (TProfileType)Enum.Parse(typeof(TProfileType), CleanName(name));
+                profileType = (TProfileType)Enum.Parse(typeof(TProfileType), ToSafeIdentifier(name));
             }
             catch (ArgumentException)
             {
@@ -137,7 +137,7 @@ namespace Elements.Geometry.Profiles
 
             // Enums will have names that don't contain special characters.
             // We need to pass the clean name.
-            var name = CleanName(profileType.ToString());
+            var name = ToSafeIdentifier(profileType.ToString());
             if (!_profileData.ContainsKey(name))
             {
                 return null;
@@ -148,7 +148,7 @@ namespace Elements.Geometry.Profiles
             var profile = (TProfile)Activator.CreateInstance(typeof(TProfile));
 
             // Set the properties on the instance.
-            profile.SetPropertiesFromProfileData(profileData);
+            profile.SetPropertiesFromProfileData(profileData, name);
 
             // Set the geometry on the instance.
             // TODO: Is there a better way to run this?
@@ -158,9 +158,9 @@ namespace Elements.Geometry.Profiles
             return profile;
         }
 
-        private string CleanName(string name)
+        private static string ToSafeIdentifier(string name)
         {
-            return name.Replace("-", "__").Replace('/', '_');
+            return name.Replace("-", "__").Replace('/', '_').Replace('.', '_');
         }
     }
 }

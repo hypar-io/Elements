@@ -11,7 +11,6 @@ namespace Elements.Geometry.Tests
     {
         public double w;
         public double d;
-
         public TestParametricProfile(Polygon perimeter = null,
                                      IList<Polygon> voids = null,
                                      Guid id = default,
@@ -166,8 +165,32 @@ namespace Elements.Geometry.Tests
         {
             Name = nameof(LProfileFactoryCreate);
 
-            var lFactory = new LProfileFactory();
-            var profiles = lFactory.AllProfiles();
+            var factory = new LProfileFactory();
+            var profiles = factory.AllProfiles();
+
+            var x = 0.0;
+            var z = 0.0;
+            foreach (var profile in profiles)
+            {
+                var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
+                var beam = new Beam(line, profile);
+                Model.AddElement(beam);
+                x += 1.0;
+                if (x > 10.0)
+                {
+                    z += 1.0;
+                    x = 0.0;
+                }
+            }
+        }
+
+        [Fact]
+        public void WTProfileFactoryCreate()
+        {
+            Name = nameof(WTProfileFactoryCreate);
+
+            var factory = new WTProfileFactory();
+            var profiles = factory.AllProfiles();
 
             var x = 0.0;
             var z = 0.0;

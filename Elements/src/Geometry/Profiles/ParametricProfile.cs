@@ -93,7 +93,7 @@ namespace Elements.Geometry.Profiles
         /// to the values contained in the supplied dictionary.
         /// </summary>
         /// <param name="profileData">A dictionary of property values.</param>
-        public void SetPropertiesFromProfileData(Dictionary<string, double> profileData)
+        public void SetPropertiesFromProfileData(Dictionary<string, double> profileData, string name)
         {
             var t = GetType();
             foreach (var p in profileData)
@@ -118,6 +118,10 @@ namespace Elements.Geometry.Profiles
                         }
                         prop.SetValue(this, p.Value);
                     }
+                    // else
+                    // {
+                    //     throw new Exception($"The profile type, {name}, has no field called {p.Key}.");
+                    // }
                 }
             }
         }
