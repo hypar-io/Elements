@@ -14,6 +14,11 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public class ParametricProfile : Profile
     {
+        private ScriptState<Polygon> _scriptState;
+        ScriptOptions _options;
+        private readonly string _perimeterScript;
+        private readonly List<string> _voidScripts = new List<string>();
+
         /// <summary>
         /// A collection of vector expressions.
         /// </summary>
@@ -43,6 +48,28 @@ namespace Elements.Geometry.Profiles
         {
             PerimeterVectorExpressions = perimeterVectorExpressions;
             VoidVectorExpressions = voidVectorExpressions;
+
+            _perimeterScript = CompilePolygonScriptFromExpressions(perimeterVectorExpressions);
+            if (voidVectorExpressions != null)
+            {
+                foreach (var voidExpression in voidVectorExpressions)
+                {
+                    _voidScripts.Add(CompilePolygonScriptFromExpressions(voidExpression));
+                }
+            }
+        }
+
+        private string CompilePolygonScriptFromExpressions(List<VectorExpression> expressions)
+        {
+            var sb = new StringBuilder();
+            sb.Append("new Polygon(new[]{");
+
+            foreach (var expr in expressions)
+            {
+                sb.Append($"new Vector3({expr.X}, {expr.Y}),");
+            }
+            sb.Append("})");
+            return sb.ToString();
         }
 
         /// <summary>
@@ -55,14 +82,14 @@ namespace Elements.Geometry.Profiles
                 throw new ArgumentException("The parametric profile could not be created. No translation expressions were provided.");
             }
 
-            Perimeter = await CreatePolygonFromExpressionsAsync(PerimeterVectorExpressions);
+            Perimeter = await CreatePolygonFromScriptAsync(_perimeterScript);
 
             Voids = new List<Polygon>();
-            if (VoidVectorExpressions != null)
+            if (_voidScripts.Count > 0)
             {
-                foreach (var voidExpr in VoidVectorExpressions)
+                foreach (var voidScript in _voidScripts)
                 {
-                    var voidPoly = await CreatePolygonFromExpressionsAsync(voidExpr);
+                    var voidPoly = await CreatePolygonFromScriptAsync(voidScript);
                     Voids.Add(voidPoly);
                 }
             }
@@ -72,20 +99,15 @@ namespace Elements.Geometry.Profiles
         /// Create a polygon by evaluating all vertex expressions
         /// in one script evaluation.
         /// </summary>
-        private async Task<Polygon> CreatePolygonFromExpressionsAsync(List<VectorExpression> expressions)
+        private async Task<Polygon> CreatePolygonFromScriptAsync(string script)
         {
-            var sb = new StringBuilder();
-            sb.Append("new Polygon(new[]{");
-
-            foreach (var expr in expressions)
+            if (_options == null)
             {
-                sb.Append($"new Vector3({expr.X}, {expr.Y}),");
+                _options = ScriptOptions.Default.WithReferences(GetType().Assembly).WithImports("Elements.Geometry");
             }
-            sb.Append("})");
-            var script = sb.ToString();
-            return await CSharpScript.EvaluateAsync<Polygon>(script,
-                                                             ScriptOptions.Default.WithReferences(GetType().Assembly).WithImports("Elements.Geometry"),
-                                                             globals: this);
+            _scriptState = _scriptState == null ? await CSharpScript.RunAsync<Polygon>(script, _options, this) :
+                                                  await _scriptState.ContinueWithAsync<Polygon>(script);
+            return _scriptState.ReturnValue;
         }
 
         /// <summary>
