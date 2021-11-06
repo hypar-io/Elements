@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Elements.Geometry.Profiles
 {
-    public class WTProfile : ParametricProfile
+    public class STProfile : ParametricProfile
     {
         public double W;
         public double A;
@@ -36,13 +36,9 @@ namespace Elements.Geometry.Profiles
         public double Cw;
         public double ro;
         public double H;
-        public double PA;
-        public double PB;
-        public double PC;
-        public double PD;
         public double WGi;
 
-        public WTProfile() : base(new List<VectorExpression>(){
+        public STProfile() : base(new List<VectorExpression>(){
                                                     new VectorExpression("bf/2", "0"),
                                                     new VectorExpression("-bf/2", "0"),
                                                     new VectorExpression("-bf/2", "-tf"),
@@ -50,22 +46,24 @@ namespace Elements.Geometry.Profiles
                                                     new VectorExpression("-tw/2", "-d"),
                                                     new VectorExpression("tw/2", "-d"),
                                                     new VectorExpression("tw/2", "-kdes"),
-                                                    new VectorExpression("bf/2", "-tf")}, id: Guid.NewGuid())
+                                                    new VectorExpression("bf/2", "-tf")
+                                                }, id: Guid.NewGuid())
         { }
 
         [JsonConstructor]
-        public WTProfile(Polygon @perimeter,
+        public STProfile(Polygon @perimeter,
                         IList<Polygon> @voids,
                         Guid @id = default,
                         string @name = null) : base(new List<VectorExpression>(){
-                                                    new VectorExpression("bf/2", "0"),
+                                                   new VectorExpression("bf/2", "0"),
                                                     new VectorExpression("-bf/2", "0"),
                                                     new VectorExpression("-bf/2", "-tf"),
                                                     new VectorExpression("-tw/2", "-kdes"),
                                                     new VectorExpression("-tw/2", "-d"),
                                                     new VectorExpression("tw/2", "-d"),
                                                     new VectorExpression("tw/2", "-kdes"),
-                                                    new VectorExpression("bf/2", "-tf")}, null, perimeter, voids, id, name)
+                                                    new VectorExpression("bf/2", "-tf")
+                                                }, null, perimeter, voids, id, name)
         { }
     }
 }

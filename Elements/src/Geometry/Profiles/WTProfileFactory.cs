@@ -6,7 +6,7 @@ namespace Elements.Geometry.Profiles
     public class WTProfileFactory : ParametricProfileFactory<WTProfileType, WTProfile>
     {
         /// <summary>
-        /// Create an L profile factory.
+        /// Create an WT profile factory.
         /// </summary>
         public WTProfileFactory() : base("./ProfileData/WT.csv", Units.InchesToMeters(1)) { }
     }

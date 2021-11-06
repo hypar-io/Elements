@@ -16,6 +16,9 @@
 - `Elements.Geometry.Profiles.LProfileType`
 - `Elements.Geometry.Profiles.LProfile`
 - `Elements.Geometry.Profiles.LProfileFactory`
+- `Elements.Geometry.Profiles.MCProfileType`
+- `Elements.Geometry.Profiles.MCProfile`
+- `Elements.Geometry.Profiles.MCProfileFactory`
 
 ### Changed
 
