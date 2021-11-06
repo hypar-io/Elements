@@ -163,8 +163,8 @@ namespace Elements.Geometry.Tests
         [Theory]
         [InlineData("C", typeof(CProfileFactory))]
         [InlineData("WT", typeof(WTProfileFactory))]
-        [InlineData("L", typeof(WTProfileFactory))]
-        [InlineData("ST", typeof(WTProfileFactory))]
+        [InlineData("L", typeof(LProfileFactory))]
+        [InlineData("ST", typeof(LProfileFactory))]
         [InlineData("MC", typeof(MCProfileFactory))]
         [InlineData("HSS", typeof(HSSProfileFactory))]
         public void ProfileFactory(string name, Type factoryType)
@@ -177,6 +177,7 @@ namespace Elements.Geometry.Tests
 
             var x = 0.0;
             var z = 0.0;
+
             foreach (var profile in profiles)
             {
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
