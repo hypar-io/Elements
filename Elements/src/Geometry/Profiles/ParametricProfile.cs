@@ -46,6 +46,16 @@ namespace Elements.Geometry.Profiles
                                     Guid @id = default,
                                     string @name = null) : base(perimeter, voids, id, name)
         {
+            if (perimeterVectorExpressions == null)
+            {
+                throw new ArgumentException("The profile could not be created. The perimeter and void expression lists must be defined.");
+            }
+
+            if (perimeterVectorExpressions.Count < 3)
+            {
+                throw new ArgumentException("The profile could not be created. There must be at least 3 perimeter vector expressions.");
+            }
+
             PerimeterVectorExpressions = perimeterVectorExpressions;
             VoidVectorExpressions = voidVectorExpressions;
 

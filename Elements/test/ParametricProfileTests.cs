@@ -40,7 +40,12 @@ namespace Elements.Geometry.Tests
         public BadParametricProfile(Polygon perimeter = null,
                                     IList<Polygon> voids = null,
                                     Guid id = default,
-                                    string name = null) : base(new List<VectorExpression>() { new VectorExpression(x: "foo()", y: "var()") }, null, perimeter, voids, id, name)
+                                    string name = null) : base(new List<VectorExpression>() {
+                                                                    new VectorExpression(x: "0", y: "0"),
+                                                                    new VectorExpression(x: "w", y: "bar"),
+                                                                    new VectorExpression(x: "w", y: "d"),
+                                                                    new VectorExpression(x: "foo", y: "d")
+                                    }, null, perimeter, voids, id, name)
         { }
     }
 
@@ -118,8 +123,7 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void ThrowsExceptionWhenNoExpressions()
         {
-            var profile = new EmptyParametricProfile() { };
-            Assert.ThrowsAsync<ArgumentException>(async () => await profile.SetGeometryAsync());
+            Assert.Throws<ArgumentException>(() => new EmptyParametricProfile() { });
         }
 
         [Fact]
