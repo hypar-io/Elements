@@ -152,7 +152,7 @@ namespace Elements.Geometry.Profiles
 
             // Set the geometry on the instance.
             // TODO: Is there a better way to run this?
-            var runTask = Task.Run(async () => await profile.SetGeometryAsync());
+            var runTask = Task.Run(() => profile.SetGeometryAsync());
             runTask.Wait();
 
             return profile;
