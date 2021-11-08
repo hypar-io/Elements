@@ -5,7 +5,7 @@
 ### Added
 
 - `Position.FromVectorMeters`
--
+- `Grid2d.GetTrimmedCellProfiles`
 
 ### Changed
 
