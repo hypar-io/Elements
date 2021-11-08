@@ -97,6 +97,70 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TrimmedCellProfile()
+        {
+            var outer = new Polygon(new List<Vector3> { new Vector3(0, 0, 0), new Vector3(10, 0, 0), new Vector3(10, 0, 10), new Vector3(0, 0, 10) });
+            var inner1 = new Polygon(new List<Vector3> { new Vector3(3, 0, 9), new Vector3(3, 0, 7), new Vector3(1, 0, 7), new Vector3(1, 0, 9) });
+            var inner2 = new Polygon(new List<Vector3> { new Vector3(9, 0, 3), new Vector3(9, 0, 1), new Vector3(7, 0, 1), new Vector3(7, 0, 3) });
+            var inner3 = new Polygon(new List<Vector3> { new Vector3(6, 0, 6), new Vector3(6, 0, 3), new Vector3(3, 0, 3), new Vector3(3, 0, 6) });
+
+            var polygons = new List<Polygon>();
+            polygons.Add(outer);
+            polygons.Add(inner1);
+            polygons.Add(inner2);
+            polygons.Add(inner3);
+
+            var grid = new Grid2d(polygons);
+            var profiles = grid.GetTrimmedCellProfiles();
+
+            Assert.Equal(1, profiles.Count());
+            var profile = profiles.FirstOrDefault();
+            Assert.Equal(3, profile.Voids.Count());
+            Assert.Equal(100, profile.Perimeter.Area());
+            foreach (var item in profile.Voids)
+            {
+                Assert.Equal(4, item.Area());
+            }
+        }
+
+        [Fact]
+        public void TrimmedCellProfileAfterSplitting()
+        {
+            var outer = new Polygon(new List<Vector3> { new Vector3(0, 0, 0), new Vector3(10, 0, 0), new Vector3(10, 0, 10), new Vector3(0, 0, 10) });
+            var inner1 = new Polygon(new List<Vector3> { new Vector3(3, 0, 9), new Vector3(3, 0, 7), new Vector3(1, 0, 7), new Vector3(1, 0, 9) });
+            var inner2 = new Polygon(new List<Vector3> { new Vector3(9, 0, 3), new Vector3(9, 0, 1), new Vector3(7, 0, 1), new Vector3(7, 0, 3) });
+            var inner3 = new Polygon(new List<Vector3> { new Vector3(6, 0, 6), new Vector3(6, 0, 3), new Vector3(3, 0, 3), new Vector3(3, 0, 6) });
+
+
+            var polygons = new List<Polygon>();
+            polygons.Add(outer);
+            polygons.Add(inner1);
+            polygons.Add(inner2);
+            polygons.Add(inner3);
+            var grid = new Grid2d(polygons);
+
+            grid.SplitAtPoints(new List<Vector3> { new Vector3(4, 0, 0), new Vector3(6, 0, 0) });
+            var cells = grid.GetCells();
+
+            var cell = cells[0];
+            var profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(1, profiles.Count());
+            Assert.Equal(1, profiles.First().Voids.Count());
+
+            cell = cells[1];
+            profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(2, profiles.Count());
+            Assert.Equal(0, profiles.First().Voids.Count());
+            Assert.Equal(0, profiles.Last().Voids.Count());
+
+            cell = cells[2];
+            profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(1, profiles.Count());
+            Assert.Equal(1, profiles.First().Voids.Count());
+        }
+
+
+        [Fact]
         public void ChildGridUpdatesParent()
         {
             var u = new Grid1d(10);
