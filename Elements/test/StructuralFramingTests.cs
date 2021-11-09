@@ -277,6 +277,7 @@ namespace Elements.Tests
         {
             Name = nameof(Joists);
 
+            // <joist-example>
             var xSpacing = 10.0;
             var yLength = 30;
 
@@ -290,9 +291,9 @@ namespace Elements.Tests
                                   profile8,
                                   profile8,
                                   profile2,
-                                  JoistDepth.IN48,
+                                  Units.InchesToMeters(48),
                                   20,
-                                  JoistSeatDepth.IN10_5,
+                                  Units.InchesToMeters(10.5),
                                   Units.FeetToMeters(2.0),
                                   BuiltInMaterials.Steel)
             {
@@ -305,9 +306,9 @@ namespace Elements.Tests
                                        profile5,
                                        profile5,
                                        profile2,
-                                       JoistDepth.IN24,
+                                       Units.InchesToMeters(24),
                                        10,
-                                       JoistSeatDepth.IN2_5,
+                                       Units.InchesToMeters(2.5),
                                        Units.FeetToMeters(1),
                                        BuiltInMaterials.Steel)
             {
@@ -328,6 +329,7 @@ namespace Elements.Tests
                     Model.AddElement(innerJoistInstance);
                 }
             }
+            // <joist-example>
         }
     }
 }

@@ -10,70 +10,14 @@ using Newtonsoft.Json;
 
 namespace Elements
 {
-    public enum JoistSeatDepth
-    {
-        IN2_5,
-        IN5,
-        IN7_5,
-        IN10_5
-    }
-
-    public enum JoistProfileType
-    {
-        LL1_5X1_5,
-        LL2X2,
-        LL3X3,
-        LL4X4,
-        LL5X5,
-        LL6X6,
-        LL7X7,
-        LL8X8
-    }
-
-    public enum JoistDepth
-    {
-        IN10,
-        IN12,
-        IN14,
-        IN16,
-        IN18,
-        IN20,
-        IN22,
-        IN24,
-        IN26,
-        IN28,
-        IN30,
-        IN32,
-        IN34,
-        IN36,
-        IN38,
-        IN40,
-        IN42,
-        IN44,
-        IN46,
-        IN48,
-        IN50,
-        IN52,
-        IN54,
-        IN56,
-        IN58,
-        IN60,
-        IN62,
-        IN64,
-        IN66,
-        IN68,
-        IN70,
-        IN72
-    }
-
     /// <summary>
     /// A joist.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/StructuralFramingTests.cs?name=joist-example)]
+    /// </example>
     public class Joist : StructuralFraming
     {
-        private const double THICKNESS = 0.125;
-        private LProfileFactory _profileFactory = new LProfileFactory();
-
         /// <summary>
         /// The distance to the first panel.
         /// </summary>
@@ -97,7 +41,7 @@ namespace Elements
         /// <summary>
         /// The depth of the joist.
         /// </summary>
-        public JoistDepth Depth { get; set; }
+        public double Depth { get; set; }
 
         /// <summary>
         /// The number of cells in the joist.
@@ -107,7 +51,7 @@ namespace Elements
         /// <summary>
         /// The seat depth of the joist.
         /// </summary>
-        public JoistSeatDepth SeatDepth { get; set; }
+        public double SeatDepth { get; set; }
 
         /// <summary>
         /// The joist support points along the top of the joist.
@@ -133,9 +77,9 @@ namespace Elements
                      LProfile topChordProfile,
                      LProfile bottomChordProfile,
                      LProfile webProfile,
-                     JoistDepth depth,
+                     double depth,
                      int cellCount,
-                     JoistSeatDepth seatDepth,
+                     double seatDepth,
                      double y,
                      Material material,
                      string name = null,
