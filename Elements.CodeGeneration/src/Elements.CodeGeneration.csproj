@@ -17,8 +17,8 @@
     <ItemGroup>
         <PackageReference Include="NJsonSchema.CodeGeneration" Version="10.1.21" />
         <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="10.1.21" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0" />
     </ItemGroup>
 
     <ItemGroup>
