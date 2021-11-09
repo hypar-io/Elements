@@ -273,18 +273,23 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void Joists()
+        public async void Joists()
         {
             Name = nameof(Joists);
 
             var xSpacing = 10.0;
             var yLength = 30;
 
+            var profileFactory = new LProfileFactory();
+            var profile8 = await profileFactory.GetProfileByTypeAsync(LProfileType.L8X8X5_8);
+            var profile2 = await profileFactory.GetProfileByTypeAsync(LProfileType.L2X2X1_8);
+            var profile5 = await profileFactory.GetProfileByTypeAsync(LProfileType.L5X5X1_2);
+
             var line = new Line(new Vector3(0, 0, 0), new Vector3(0, yLength, 0));
             var joist = new Joist(line,
-                                  JoistProfileType.LL8X8,
-                                  JoistProfileType.LL8X8,
-                                  JoistProfileType.LL2X2,
+                                  profile8,
+                                  profile8,
+                                  profile2,
                                   JoistDepth.IN48,
                                   20,
                                   JoistSeatDepth.IN10_5,
@@ -297,9 +302,9 @@ namespace Elements.Tests
 
             var cl = new Line(new Vector3(0, 0, 0), new Vector3(xSpacing, 0, 0));
             var firstJoist = new Joist(cl,
-                                       JoistProfileType.LL2X2,
-                                       JoistProfileType.LL2X2,
-                                       JoistProfileType.LL1_5X1_5,
+                                       profile5,
+                                       profile5,
+                                       profile2,
                                        JoistDepth.IN24,
                                        10,
                                        JoistSeatDepth.IN2_5,

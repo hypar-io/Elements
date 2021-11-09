@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
 using Newtonsoft.Json;
@@ -71,6 +72,7 @@ namespace Elements
     public class Joist : StructuralFraming
     {
         private const double THICKNESS = 0.125;
+        private LProfileFactory _profileFactory = new LProfileFactory();
 
         /// <summary>
         /// The distance to the first panel.
@@ -80,17 +82,17 @@ namespace Elements
         /// <summary>
         /// Profile of the top chord of the joist.
         /// </summary>
-        public JoistProfileType TopChordProfile { get; set; }
+        public LProfile TopChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the bottom chord of the joist.
         /// </summary>
-        public JoistProfileType BottomChordProfile { get; set; }
+        public LProfile BottomChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the web of the joist.
         /// </summary>
-        public JoistProfileType WebProfile { get; set; }
+        public LProfile WebProfile { get; set; }
 
         /// <summary>
         /// The depth of the joist.
@@ -128,9 +130,9 @@ namespace Elements
         /// <param name="y">The distance to the first panel of the joist.</param>
         [JsonConstructor]
         public Joist(Line curve,
-                     JoistProfileType topChordProfile,
-                     JoistProfileType bottomChordProfile,
-                     JoistProfileType webProfile,
+                     LProfile topChordProfile,
+                     LProfile bottomChordProfile,
+                     LProfile webProfile,
                      JoistDepth depth,
                      int cellCount,
                      JoistSeatDepth seatDepth,
@@ -151,12 +153,10 @@ namespace Elements
             Representation.SkipCSGUnion = true;
         }
 
-        private Profile[] Construct2LProfile(JoistProfileType profileType, bool flip = false)
+        private Profile[] Construct2LProfile(LProfile profile, bool flip = false)
         {
-            var w = Units.InchesToMeters(double.Parse(profileType.ToString().Substring(2).Split('X')[0].Replace('_', '.')));
-
-            var L = Polygon.L(w, w, Units.InchesToMeters(THICKNESS));
-            double flangeT = Units.InchesToMeters(THICKNESS);
+            var L = profile.Perimeter;
+            var flangeT = profile.t;
 
             Transform right;
             Transform left;
