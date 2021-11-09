@@ -589,21 +589,6 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var cell in cells)
             {
-                var uMin = cell.U.Domain.Min.MapFromDomain(cell.U.curveDomain);
-                var uMax = cell.U.Domain.Max.MapFromDomain(cell.U.curveDomain);
-                var vMin = cell.V.Domain.Min.MapFromDomain(cell.V.curveDomain);
-                var vMax = cell.V.Domain.Max.MapFromDomain(cell.V.curveDomain);
-                if ((uMin.ApproximatelyEquals(0) && uMax.ApproximatelyEquals(0)) ||
-                    (uMin.ApproximatelyEquals(1) && uMax.ApproximatelyEquals(1)) ||
-                    (vMin.ApproximatelyEquals(0) && vMax.ApproximatelyEquals(0)) ||
-                    (vMin.ApproximatelyEquals(1) && vMax.ApproximatelyEquals(1)))
-                {
-                    //Line.PointAt will round the values within EPSILON to 0 or 1.
-                    //It's the only implementation of PointAt that does so.
-                    //Handling it here allow avoid exceptions that are caught too late
-                    continue;
-                }
-
                 foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
                 {
                     var polygon = (Polygon)cellGeometry;
