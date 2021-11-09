@@ -5,6 +5,26 @@
 ### Added
 
 - `Position.FromVectorMeters`
+- `Elements.Geometry.Profiles.IProfileFactory`
+- `Elements.Geometry.Profiles.ParametricProfile`
+- `Elements.Geometry.Profiles.VectorExpression`
+- `Elements.Geometry.Profiles.ProfileFactoryBase`
+- `Elements.Geometry.Profiles.ParametricProfileFactory`
+- `Elements.Geometry.Profiles.WTProfileType`
+- `Elements.Geometry.Profiles.WTProfile`
+- `Elements.Geometry.Profiles.WTProfileFactory`
+- `Elements.Geometry.Profiles.LProfileType`
+- `Elements.Geometry.Profiles.LProfile`
+- `Elements.Geometry.Profiles.LProfileFactory`
+- `Elements.Geometry.Profiles.MCProfileType`
+- `Elements.Geometry.Profiles.MCProfile`
+- `Elements.Geometry.Profiles.MCProfileFactory`
+- `Elements.Geometry.Profiles.HSSProfileType`
+- `Elements.Geometry.Profiles.HSSProfile`
+- `Elements.Geometry.Profiles.HSSProfileFactory`
+- `Elements.Geometry.Profiles.WProfileType`
+- `Elements.Geometry.Profiles.WProfile`
+- `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 
 ### Changed
