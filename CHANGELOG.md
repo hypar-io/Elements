@@ -6,6 +6,7 @@
 
 - `Position.FromVectorMeters`
 -
+- `Ceiling`
 
 ### Changed
 

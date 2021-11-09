@@ -33,7 +33,7 @@ namespace Elements
         /// <param name="profile">The plan profile of the ceiling.</param>
         /// <param name="thickness">The thickness of the ceiling.</param>
         /// <param name="material">The material of the ceiling.</param>
-        /// <param name="transform">An option transform for the ceiling.</param>
+        /// <param name="transform">An optionional transform for the ceiling.</param>
         /// <param name="representation">The ceiling's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
@@ -70,28 +70,6 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
         }
-
-        /// <summary>
-        /// A pass-through constructor to set the id, name, and transform.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="transform"></param>
-        /// <param name="material"></param>
-        /// <param name="representation"></param>
-        /// <param name="isElementDefinition">Is this an element definition?</param>
-        protected Ceiling(Transform transform,
-                       Material material,
-                       Representation representation,
-                       bool isElementDefinition = false,
-                       Guid id = default(Guid),
-                       string name = null) : base(transform,
-                                           material,
-                                           representation,
-                                           isElementDefinition,
-                                           id == default(Guid) ? Guid.NewGuid() : id,
-                                           name)
-        { }
 
         /// <summary>
         /// Construct a ceiling from geometry.
