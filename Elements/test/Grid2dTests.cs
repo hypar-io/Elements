@@ -117,10 +117,9 @@ namespace Elements.Tests
             var profile = profiles.FirstOrDefault();
             Assert.Equal(3, profile.Voids.Count());
             Assert.Equal(100, profile.Perimeter.Area());
-            foreach (var item in profile.Voids)
-            {
-                Assert.Equal(4, item.Area());
-            }
+            Assert.Equal(4, profile.Voids[0].Area());
+            Assert.Equal(9, profile.Voids[1].Area());
+            Assert.Equal(4, profile.Voids[2].Area());
         }
 
         [Fact]
