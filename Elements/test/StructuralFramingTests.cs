@@ -293,7 +293,7 @@ namespace Elements.Tests
                                   profile2,
                                   Units.InchesToMeters(48),
                                   20,
-                                  Units.InchesToMeters(10.5),
+                                  Units.InchesToMeters(2.5),
                                   Units.FeetToMeters(2.0),
                                   BuiltInMaterials.Steel)
             {

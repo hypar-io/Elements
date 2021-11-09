@@ -19,9 +19,9 @@ namespace Elements
     public class Joist : StructuralFraming
     {
         /// <summary>
-        /// The distance to the first panel.
+        /// The distance to the first panel (Y).
         /// </summary>
-        public double Y { get; set; }
+        public double DistanceToFirstPanel { get; set; }
 
         /// <summary>
         /// Profile of the top chord of the joist.
@@ -71,7 +71,7 @@ namespace Elements
         /// <param name="depth">The depth of the joist.</param>
         /// <param name="cellCount">The cell count of the joist.</param>
         /// <param name="seatDepth">The seat depth of the joist.</param>
-        /// <param name="y">The distance to the first panel of the joist.</param>
+        /// <param name="distanceToFirstPanel">The distance to the first panel of the joist (Y).</param>
         [JsonConstructor]
         public Joist(Line curve,
                      LProfile topChordProfile,
@@ -80,7 +80,7 @@ namespace Elements
                      double depth,
                      int cellCount,
                      double seatDepth,
-                     double y,
+                     double distanceToFirstPanel,
                      Material material,
                      string name = null,
                      Guid id = default) : base(curve, null, material, name: name, id: id)
@@ -91,7 +91,7 @@ namespace Elements
             Depth = depth;
             CellCount = cellCount;
             SeatDepth = seatDepth;
-            Y = y;
+            DistanceToFirstPanel = distanceToFirstPanel;
 
             Representation = ConstructRepresentation();
             Representation.SkipCSGUnion = true;
@@ -152,13 +152,12 @@ namespace Elements
 
             var startT = Curve.TransformAt(0);
             Line line = (Line)Curve;
-            var d = Units.InchesToMeters(double.Parse(Depth.ToString().Substring(2)));
 
-            var topStart = line.Start - startT.ZAxis * Y;
-            var topEnd = line.End + startT.ZAxis * Y;
+            var topStart = line.Start - startT.ZAxis * DistanceToFirstPanel;
+            var topEnd = line.End + startT.ZAxis * DistanceToFirstPanel;
 
-            var bottomStart = line.Start - startT.YAxis * d - startT.ZAxis * Y;
-            var bottomEnd = line.End - startT.YAxis * d + startT.ZAxis * Y;
+            var bottomStart = line.Start - startT.YAxis * Depth - startT.ZAxis * DistanceToFirstPanel;
+            var bottomEnd = line.End - startT.YAxis * Depth + startT.ZAxis * DistanceToFirstPanel;
 
             ll = Construct2LProfile(BottomChordProfile);
 
