@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Elements.Geometry.Profiles;
 using Elements.Tests;
 using Xunit;
@@ -164,22 +167,85 @@ namespace Elements.Geometry.Tests
             Model.AddElement(beam);
         }
 
-        [Theory]
-        [InlineData("C", typeof(CProfileFactory))]
-        [InlineData("WT", typeof(WTProfileFactory))]
-        [InlineData("L", typeof(LProfileFactory))]
-        [InlineData("ST", typeof(LProfileFactory))]
-        [InlineData("MC", typeof(MCProfileFactory))]
-        [InlineData("HSS", typeof(HSSProfileFactory))]
-        [InlineData("W", typeof(WProfileFactory))]
-        public void ProfileFactory(string name, Type factoryType)
+        [Fact]
+        public async void CProfiles()
         {
-            Name = name;
+            Name = nameof(CProfiles);
 
-            var factory = Activator.CreateInstance(factoryType);
-            var method = factoryType.GetMethod("AllProfiles");
-            var profiles = (IEnumerable<Profile>)method.Invoke(factory, null);
+            var factory = new CProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
 
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void WTProfiles()
+        {
+            Name = nameof(WTProfiles);
+
+            var factory = new WTProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void LProfiles()
+        {
+            Name = nameof(LProfiles);
+
+            var factory = new LProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void STProfiles()
+        {
+            Name = nameof(STProfiles);
+
+            var factory = new STProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void MCProfiles()
+        {
+            Name = nameof(MCProfiles);
+
+            var factory = new MCProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void HSSProfiles()
+        {
+            Name = nameof(HSSProfiles);
+
+            var factory = new HSSProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        [Fact]
+        public async void WProfiles()
+        {
+            Name = nameof(WProfiles);
+
+            var factory = new WProfileFactory();
+            var profiles = await factory.AllProfilesAsync();
+
+            DrawAllProfiles(Model, profiles.ToList());
+        }
+
+        private void DrawAllProfiles(Model model, IEnumerable<Profile> profiles)
+        {
             var x = 0.0;
             var z = 0.0;
 
@@ -187,7 +253,7 @@ namespace Elements.Geometry.Tests
             {
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile);
-                Model.AddElement(beam);
+                model.AddElement(beam);
                 x += 1.0;
                 if (x > 10.0)
                 {

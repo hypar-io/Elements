@@ -9,7 +9,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     /// <typeparam name="TProfileType"></typeparam>
     /// <typeparam name="TProfile"></typeparam>
-    public abstract class ProfileFactoryBase<TProfileType, TProfile> : IProfileFactory<TProfileType, TProfile> where TProfileType : Enum
+    public abstract class ProfileFactoryBase<TProfileType, TProfile>
     {
         /// <summary>
         /// A collection of profile data.

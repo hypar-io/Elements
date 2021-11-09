@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Elements.Geometry.Profiles
@@ -10,7 +11,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     /// <typeparam name="TProfileType"></typeparam>
     /// <typeparam name="TProfile"></typeparam>
-    public class ParametricProfileFactory<TProfileType, TProfile> : IProfileFactory<TProfileType, TProfile>
+    public class ParametricProfileFactory<TProfileType, TProfile>
         where TProfileType : Enum
         where TProfile : ParametricProfile
     {
@@ -87,19 +88,17 @@ namespace Elements.Geometry.Profiles
         /// <summary>
         /// Get all profiles.
         /// </summary>
-        public IEnumerable<TProfile> AllProfiles()
+        public async Task<IEnumerable<TProfile>> AllProfilesAsync()
         {
-            foreach (var data in _profileData)
-            {
-                yield return GetProfileByName(data.Key);
-            }
+            var tasks = _profileData.Select(pd => GetProfileByNameAsync(pd.Key));
+            return await Task.WhenAll(tasks);
         }
 
         /// <summary>
         /// Get a profile by name.
         /// </summary>
-        /// <param name="name"></param>
-        public TProfile GetProfileByName(string name)
+        /// <param name="name">The name of the profile.</param>
+        public async Task<TProfile> GetProfileByNameAsync(string name)
         {
             TProfileType profileType;
             try
@@ -112,7 +111,7 @@ namespace Elements.Geometry.Profiles
                 return null;
             }
 
-            var profile = GetOrCreateInstanceAndSetGeometry(profileType);
+            var profile = await GetOrCreateInstanceAndSetGeometryAsync(profileType);
 
             return profile;
         }
@@ -121,12 +120,12 @@ namespace Elements.Geometry.Profiles
         /// Get a profile by type.
         /// </summary>
         /// <param name="type"></param>
-        public TProfile GetProfileByType(TProfileType type)
+        public async Task<TProfile> GetProfileByTypeAsync(TProfileType type)
         {
-            return GetOrCreateInstanceAndSetGeometry(type);
+            return await GetOrCreateInstanceAndSetGeometryAsync(type);
         }
 
-        private TProfile GetOrCreateInstanceAndSetGeometry(TProfileType profileType)
+        private async Task<TProfile> GetOrCreateInstanceAndSetGeometryAsync(TProfileType profileType)
         {
             if (_profileCache.ContainsKey(profileType))
             {
@@ -151,8 +150,7 @@ namespace Elements.Geometry.Profiles
 
             // Set the geometry on the instance.
             // TODO: Is there a better way to run this?
-            var runTask = Task.Run(() => profile.SetGeometryAsync());
-            runTask.Wait();
+            await profile.SetGeometryAsync();
 
             _profileCache.Add(profileType, profile);
 

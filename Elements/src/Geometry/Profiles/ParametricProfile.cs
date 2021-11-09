@@ -14,7 +14,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public class ParametricProfile : Profile
     {
-        private ScriptState<Polygon> _scriptState;
+        private static Script<Polygon> _script;
         ScriptOptions _options;
         private readonly string _perimeterScript;
         private readonly List<string> _voidScripts = new List<string>();
@@ -115,9 +115,14 @@ namespace Elements.Geometry.Profiles
             {
                 _options = ScriptOptions.Default.WithReferences(GetType().Assembly).WithImports("Elements.Geometry");
             }
-            _scriptState = _scriptState == null ? await CSharpScript.RunAsync<Polygon>(script, _options, this) :
-                                                  await _scriptState.ContinueWithAsync<Polygon>(script);
-            return _scriptState.ReturnValue;
+
+            if (_script == null)
+            {
+                _script = CSharpScript.Create<Polygon>(script, _options, GetType());
+                _script.Compile();
+            }
+            var scriptState = await _script.RunAsync(this);
+            return scriptState.ReturnValue;
         }
 
         /// <summary>
