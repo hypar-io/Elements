@@ -116,7 +116,11 @@ namespace Elements.Geometry.Profiles
                 _options = ScriptOptions.Default.WithReferences(GetType().Assembly).WithImports("Elements.Geometry");
             }
 
-            if (_script == null)
+            // We cache the script wherever possible, but the script will fail
+            // to run if the globals type does not match the globals object
+            // provided. If this is the case, we need to re-compile the script
+            // with the desired type.
+            if (_script == null || _script.GlobalsType != GetType())
             {
                 _script = CSharpScript.Create<Polygon>(script, _options, GetType());
                 _script.Compile();
