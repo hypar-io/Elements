@@ -780,6 +780,14 @@ namespace Elements.Serialization.glTF
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
             }
+
+            // Gltf can't handle a materials array with zero materials.
+            // So we add the default material if this happens.
+            if (materialsToAdd.Count == 0)
+            {
+                materialsToAdd.Add(BuiltInMaterials.Default);
+            }
+
             var materialIndexMap = gltf.AddMaterials(materialsToAdd, buffer, bufferViews);
 
             var elements = model.Elements.Where(e =>
