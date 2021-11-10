@@ -135,8 +135,6 @@ namespace Elements
         /// </summary>
         /// <param name="perimeter">The plan perimeter of the ceiling. It must lie on the XY plane.
         /// The Z coordinate will be ignored</param>
-        /// <param name="depthFront"></param>
-        /// <param name="depthBack"></param>
         public void AddOpening(Polygon perimeter)
         {
             if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
@@ -144,6 +142,7 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The opening could not be created. The perimeter polygon must lie on the XY plane");
             }
 
+            // TODO: add support of the openings with custom depthFront/depthBack
             var opening = new Opening(perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)), perimeter.Normal(), Thickness, 0);
             this.Openings.Add(opening);
         }
