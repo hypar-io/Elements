@@ -24,7 +24,7 @@ namespace Elements
         public double Elevation { get; protected set; }
 
         /// <summary>
-        /// The profile of the ceiling.
+        /// The perimeter of the ceiling.
         /// </summary>
         public Polygon Perimeter { get; protected set; }
 
@@ -36,12 +36,12 @@ namespace Elements
         /// <summary>
         /// Construct a ceiling by extruding a profile.
         /// </summary>
-        /// <param name="perimeter">The plan profile of the ceiling. It should lie on XY plane.
+        /// <param name="perimeter">The plan profile of the ceiling. It must lie on the XY plane.
         /// The Z coordinate will be ignored</param>
         /// <param name="thickness">The thickness of the ceiling.</param>
         /// <param name="elevation">The elevation of the ceiling.</param>
         /// <param name="material">The material of the ceiling.</param>
-        /// <param name="transform">An optionional transform for the ceiling.</param>
+        /// <param name="transform">An optional transform for the ceiling.</param>
         /// <param name="representation">The ceiling's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
@@ -69,7 +69,7 @@ namespace Elements
 
             if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
             {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on XY plane");
+                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
             }
 
             this.Elevation = elevation;
@@ -81,11 +81,11 @@ namespace Elements
         /// <summary>
         /// Construct a ceiling by extruding a profile.
         /// </summary>
-        /// <param name="perimeter">The plan perimeter of the ceiling. It should lie on XY plane.
+        /// <param name="perimeter">The plan perimeter of the ceiling. It must lie on the XY plane.
         /// Z coordinate will be used as elevation</param>
         /// <param name="thickness">The thickness of the ceiling.</param>
         /// <param name="material">The material of the ceiling.</param>
-        /// <param name="transform">An optionional transform for the ceiling.</param>
+        /// <param name="transform">An optional transform for the ceiling.</param>
         /// <param name="representation">The ceiling's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
@@ -111,7 +111,7 @@ namespace Elements
 
             if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
             {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on XY plane");
+                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
             }
 
             // we do not need null check cause id there is no vertices it will fail on calculating Normal
@@ -133,18 +133,18 @@ namespace Elements
         /// <summary>
         /// Add an Opening to the Ceiling.
         /// </summary>
-        /// <param name="perimeter">The plan perimeter of the ceiling. It should lie on XY plane.
+        /// <param name="perimeter">The plan perimeter of the ceiling. It must lie on the XY plane.
         /// The Z coordinate will be ignored</param>
         /// <param name="depthFront"></param>
         /// <param name="depthBack"></param>
-        public void AddOpening(Polygon perimeter, double depthFront = 1, double depthBack = 1)
+        public void AddOpening(Polygon perimeter)
         {
             if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
             {
-                throw new ArgumentOutOfRangeException("The opening could not be created. The perimeter polygon must lie on XY plane");
+                throw new ArgumentOutOfRangeException("The opening could not be created. The perimeter polygon must lie on the XY plane");
             }
 
-            var opening = new Opening(perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)), perimeter.Normal(), depthFront, depthBack);
+            var opening = new Opening(perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)), perimeter.Normal(), Thickness, 0);
             this.Openings.Add(opening);
         }
 
