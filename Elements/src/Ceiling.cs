@@ -46,7 +46,6 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
         /// <param name="name">The name of the ceiling.</param>
-        [JsonConstructor]
         public Ceiling(Polygon perimeter,
                       double thickness,
                       double elevation,
@@ -119,6 +118,50 @@ namespace Elements
             this.Perimeter = perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis));
             this.Thickness = thickness;
             Transform.Move(Vector3.ZAxis * Elevation);
+        }
+
+        /// <summary>
+        /// Construct a ceiling by extruding a profile. It's a private constructor that doesn't add elevation to transform
+        /// </summary>
+        /// <param name="perimeter">The plan profile of the ceiling. It must lie on the XY plane.
+        /// The Z coordinate will be ignored</param>
+        /// <param name="thickness">The thickness of the ceiling.</param>
+        /// <param name="elevation">The elevation of the ceiling.</param>
+        /// <param name="material">The material of the ceiling.</param>
+        /// <param name="transform">An optional transform for the ceiling.</param>
+        /// <param name="representation">The ceiling's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        /// <param name="id">The id of the ceiling.</param>
+        /// <param name="name">The name of the ceiling.</param>
+        [JsonConstructor]
+        private Ceiling(Polygon perimeter,
+                      double thickness,
+                      double elevation,
+                      Guid id = default(Guid),
+                      Material material = null,
+                      Transform transform = null,
+                      Representation representation = null,
+                      bool isElementDefinition = false,
+                      string name = null) : base(transform != null ? transform : new Transform(),
+                                                 material != null ? material : BuiltInMaterials.Concrete,
+                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                 isElementDefinition,
+                                                 id != default(Guid) ? id : Guid.NewGuid(),
+                                                 name)
+        {
+            if (thickness <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException("The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
+            }
+
+            if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
+            {
+                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
+            }
+
+            this.Elevation = elevation;
+            this.Perimeter = perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)); ;
+            this.Thickness = thickness;
         }
 
         /// <summary>
