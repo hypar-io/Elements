@@ -542,6 +542,5 @@ namespace Elements.Tests
             }
             Assert.Equal(3, cellBoundaries.Where(cb => cb.Any()).Count());
         }
-
     }
 }

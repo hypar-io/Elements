@@ -998,7 +998,7 @@ namespace Elements.Spatial
         /// And so, such region may be cut off by Intersection - in this case the cell is just skipped.
         /// But if number passed the tolerance test - chances are high it will fail after fromGrid
         /// transformation is applied and then whole trimming process will fail.
-        /// To avloid unpredictable behavior double tolerance is used.
+        /// To avoid unpredictable behavior double tolerance is used.
         /// </summary>
         private const double PolygonIntersectionTolerance = Vector3.EPSILON * 2;
 

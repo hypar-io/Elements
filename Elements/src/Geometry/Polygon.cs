@@ -33,7 +33,7 @@ namespace Elements.Geometry
                 }
 
                 this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-                
+
                 if (this.Vertices.Count < 3)
                 {
                     throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
