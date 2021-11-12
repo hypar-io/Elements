@@ -33,6 +33,7 @@
 - Change default for `useReferenceOrientation` when generating content catalogs.
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
+- Line.PointAt does not round input values near 0 or 1 anymore.
 
 ### Fixed
 
