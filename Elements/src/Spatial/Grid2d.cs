@@ -720,6 +720,38 @@ namespace Elements.Spatial
             return new Curve[0];
         }
 
+        /// <summary>
+        /// Get a list of profiles representing this cell boundary, trimmed by any polygon boundary.
+        /// Internal polygons that are completely inside the cell and are clockwise, will be added as profile voids.
+        /// If the cell falls completely outside of the boundary, an empty array will be returned.
+        /// </summary>
+        /// <returns>Curves representing this cell in world coordinates.</returns>
+        public IEnumerable<Profile> GetTrimmedCellProfiles()
+        {
+            Polygon baseRect = GetBaseRectangleTransformed();
+
+            if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
+            {
+                return new[] { new Profile(baseRect.TransformedPolygon(fromGrid)) };
+            }
+            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
+            if (trimmedRect != null && trimmedRect.Count() > 0)
+            {
+                var profiles = new List<Profile>();
+                var outerLoops = trimmedRect.Where(loop => !loop.IsClockWise());
+                var innerLoops = trimmedRect.Where(loop => loop.IsClockWise());
+
+                foreach (var item in outerLoops)
+                {
+                    var inner = innerLoops.Where(loop => loop.Intersects(item)).ToList();
+                    profiles.Add(new Profile(item.TransformedPolygon(fromGrid), fromGrid.OfPolygons(inner)));
+                }
+
+                return profiles;
+            }
+            return new Profile[0];
+        }
+
         #endregion
 
         #region Other Public Methods
