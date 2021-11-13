@@ -149,6 +149,16 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void DivideIntoEqualSegmentsSingle()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(100, 0));
+            var segments = l.DivideIntoEqualSegments(1);
+            Assert.Single(segments);
+            Assert.True(segments.First().Start.IsAlmostEqualTo(l.Start, 1e-10));
+            Assert.True(segments.First().End.IsAlmostEqualTo(l.End, 1e-10));
+        }
+
+        [Fact]
         public void DivideByLength()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));

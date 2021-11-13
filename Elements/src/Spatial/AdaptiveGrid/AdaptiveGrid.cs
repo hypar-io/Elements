@@ -205,8 +205,15 @@ namespace Elements.Spatial.AdaptiveGrid
                     var edgeLine = edge.GetGeometry();
                     List<Vector3> intersections;
                     edgeLine.Intersects(box, out intersections);
+                    // If no intersection found than outside point is exactly within tolerance.
+                    // But since Intersects works on 0 to 1 range internally, mismatch in interpretation
+                    // is possible. Cut the edge in this case.
+                    if (intersections.Count == 0)
+                    {
+                        edgesToDelete.Add(edge);
+                    }
                     // Intersections are sorted from the start point.
-                    if (intersections.Count == 1)
+                    else if (intersections.Count == 1)
                     {
                         //Need to find which end is inside the box. 
                         //If none - we just touched the corner
@@ -340,115 +347,119 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private List<Edge> AddEdge(ulong startId, ulong endId, IEnumerable<Edge> edgesToIntersect)
+        private List<Edge> AddEdge(ulong startId, ulong endId,
+            IEnumerable<Edge> edgesToIntersect, BBox3 checkBox)
         {
             var addedEdges = new List<Edge>();
             var startVertex = GetVertex(startId);
             var endVertex = GetVertex(endId);
             var sp = startVertex.Point;
             var ep = endVertex.Point;
-            Vector3 min = new Vector3();
-            Vector3 max = new Vector3();
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
 
             var intersectionPoints = new List<Vector3>();
-            foreach (var edge in edgesToIntersect)
+            if (edgesToIntersect.Any() && (checkBox.Contains(sp) || checkBox.Contains(ep)))
             {
-                var edgeV0 = GetVertex(edge.StartId);
-                var edgeV1 = GetVertex(edge.EndId);
-
-                PointOrientation startZ = Orientation(edgeV0.Point.Z, min.Z, max.Z);
-                PointOrientation endZ = Orientation(edgeV1.Point.Z, min.Z, max.Z);
-                if (startZ == endZ && startZ != PointOrientation.Inside)
-                    continue;
-
-                PointOrientation startX = Orientation(edgeV0.Point.X, min.X, max.X);
-                PointOrientation startY = Orientation(edgeV0.Point.Y, min.Y, max.Y);
-                PointOrientation endX = Orientation(edgeV1.Point.X, min.X, max.X);
-                PointOrientation endY = Orientation(edgeV1.Point.Y, min.Y, max.Y);
-
-                if ((startX == endX && startX != PointOrientation.Inside) ||
-                    (startY == endY && startY != PointOrientation.Inside) ||
-                    !Vector3.AreCoplanar(sp, ep, edgeV0.Point, edgeV1.Point))
+                Vector3 min = new Vector3();
+                Vector3 max = new Vector3();
+                (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
+                (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
+                (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
+                foreach (var edge in edgesToIntersect)
                 {
-                    continue;
-                }
+                    var edgeV0 = GetVertex(edge.StartId);
+                    var edgeV1 = GetVertex(edge.EndId);
 
-                var newEdgeLine = new Line(sp, ep);
-                var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
-                if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint))
-                {
-                    intersectionPoints.Add(intersectionPoint);
-                    var newVertex = AddVertex(intersectionPoint);
-                    if (edge.StartId != newVertex.Id)
+                    PointOrientation startZ = Orientation(edgeV0.Point.Z, min.Z, max.Z);
+                    PointOrientation endZ = Orientation(edgeV1.Point.Z, min.Z, max.Z);
+                    if (startZ == endZ && startZ != PointOrientation.Inside)
+                        continue;
+
+                    PointOrientation startX = Orientation(edgeV0.Point.X, min.X, max.X);
+                    PointOrientation startY = Orientation(edgeV0.Point.Y, min.Y, max.Y);
+                    PointOrientation endX = Orientation(edgeV1.Point.X, min.X, max.X);
+                    PointOrientation endY = Orientation(edgeV1.Point.Y, min.Y, max.Y);
+
+                    if ((startX == endX && startX != PointOrientation.Inside) ||
+                        (startY == endY && startY != PointOrientation.Inside) ||
+                        !Vector3.AreCoplanar(sp, ep, edgeV0.Point, edgeV1.Point))
                     {
-                        AddEdge(edge.StartId, newVertex.Id);
-                    }
-                    if (edge.EndId != newVertex.Id)
-                    {
-                        AddEdge(edge.EndId, newVertex.Id);
+                        continue;
                     }
 
-                    DeleteEdge(edge);
-                }
-                else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
-                {
-                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
-                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
-                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
-                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
-                    // new edge is inside old edge
-                    if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge)
+                    var newEdgeLine = new Line(sp, ep);
+                    var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
+                    if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint))
                     {
-                        if (oldEdgeLine.Start.DistanceTo(newEdgeLine.Start) < oldEdgeLine.Start.DistanceTo(newEdgeLine.End))
+                        intersectionPoints.Add(intersectionPoint);
+                        var newVertex = AddVertex(intersectionPoint);
+                        if (edge.StartId != newVertex.Id)
                         {
-                            AddEdge(edge.StartId, startVertex.Id);
-                            AddEdge(edge.EndId, endVertex.Id);
+                            AddEdge(edge.StartId, newVertex.Id);
                         }
-                        else
+                        if (edge.EndId != newVertex.Id)
                         {
-                            AddEdge(edge.StartId, endVertex.Id);
-                            AddEdge(edge.EndId, startVertex.Id);
+                            AddEdge(edge.EndId, newVertex.Id);
                         }
+
                         DeleteEdge(edge);
                     }
-                    // edges overlap
-                    else if (isNewEdgeStartOnOldEdge || isNewEdgeEndOnOldEdge)
+                    else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
                     {
-                        if (isOldEdgeEndOnNewEdge)
+                        var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
+                        var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
+                        var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
+                        var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
+                        // new edge is inside old edge
+                        if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge)
                         {
-                            intersectionPoints.Add(oldEdgeLine.End);
                             if (oldEdgeLine.Start.DistanceTo(newEdgeLine.Start) < oldEdgeLine.Start.DistanceTo(newEdgeLine.End))
                             {
                                 AddEdge(edge.StartId, startVertex.Id);
+                                AddEdge(edge.EndId, endVertex.Id);
                             }
                             else
                             {
                                 AddEdge(edge.StartId, endVertex.Id);
-                            }
-                        }
-                        else if (isOldEdgeStartOnNewEdge)
-                        {
-                            intersectionPoints.Add(oldEdgeLine.Start);
-                            if (oldEdgeLine.End.DistanceTo(newEdgeLine.Start) < oldEdgeLine.End.DistanceTo(newEdgeLine.End))
-                            {
                                 AddEdge(edge.EndId, startVertex.Id);
                             }
-                            else
-                            {
-                                AddEdge(edge.EndId, endVertex.Id);
-                            }
+                            DeleteEdge(edge);
                         }
-                        DeleteEdge(edge);
-                    }
-                    // old edge is inside new edge
-                    else if (isOldEdgeStartOnNewEdge && isOldEdgeEndOnNewEdge)
-                    {
-                        intersectionPoints.Add(oldEdgeLine.Start);
-                        intersectionPoints.Add(oldEdgeLine.End);
-                        DeleteEdge(edge);
+                        // edges overlap
+                        else if (isNewEdgeStartOnOldEdge || isNewEdgeEndOnOldEdge)
+                        {
+                            if (isOldEdgeEndOnNewEdge)
+                            {
+                                intersectionPoints.Add(oldEdgeLine.End);
+                                if (oldEdgeLine.Start.DistanceTo(newEdgeLine.Start) < oldEdgeLine.Start.DistanceTo(newEdgeLine.End))
+                                {
+                                    AddEdge(edge.StartId, startVertex.Id);
+                                }
+                                else
+                                {
+                                    AddEdge(edge.StartId, endVertex.Id);
+                                }
+                            }
+                            else if (isOldEdgeStartOnNewEdge)
+                            {
+                                intersectionPoints.Add(oldEdgeLine.Start);
+                                if (oldEdgeLine.End.DistanceTo(newEdgeLine.Start) < oldEdgeLine.End.DistanceTo(newEdgeLine.End))
+                                {
+                                    AddEdge(edge.EndId, startVertex.Id);
+                                }
+                                else
+                                {
+                                    AddEdge(edge.EndId, endVertex.Id);
+                                }
+                            }
+                            DeleteEdge(edge);
+                        }
+                        // old edge is inside new edge
+                        else if (isOldEdgeStartOnNewEdge && isOldEdgeEndOnNewEdge)
+                        {
+                            intersectionPoints.Add(oldEdgeLine.Start);
+                            intersectionPoints.Add(oldEdgeLine.End);
+                            DeleteEdge(edge);
+                        }
                     }
                 }
             }
@@ -589,10 +600,17 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            foreach (var edge in edgeCandidates)
+            if (edgeCandidates.Any())
             {
-                var edges = AddEdge(edge.Item1, edge.Item2, edgesToIntersect);
-                edges.ForEach(e => addedEdges.Add(e));
+                var vertices = edgesToIntersect.Select(e => GetVertex(e.StartId).Point);
+                vertices.Concat(edgesToIntersect.Select(e => GetVertex(e.EndId).Point));
+                BBox3 checkBox = new BBox3(vertices.ToList());
+
+                foreach (var edge in edgeCandidates)
+                {
+                    var edges = AddEdge(edge.Item1, edge.Item2, edgesToIntersect, checkBox);
+                    edges.ForEach(e => addedEdges.Add(e));
+                }
             }
 
             return addedEdges;

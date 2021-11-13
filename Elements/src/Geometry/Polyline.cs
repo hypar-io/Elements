@@ -1,9 +1,9 @@
-using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
+using Elements.Validators;
 
 namespace Elements.Geometry
 {
@@ -13,8 +13,30 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public partial class Polyline : ICurve, IEquatable<Polyline>
+    public class Polyline : Curve, IEquatable<Polyline>
     {
+        /// <summary>The vertices of the polygon.</summary>
+        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.MinLength(2)]
+        public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
+
+        /// <summary>
+        /// Construct a polyline.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Polyline(IList<Vector3> @vertices) : base()
+        {
+            this.Vertices = @vertices;
+
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices);
+                var segments = Polyline.SegmentsInternal(this.Vertices);
+                Polyline.CheckSegmentLengthAndThrow(segments);
+            }
+        }
 
         /// <summary>
         /// Construct a polyline from points. This is a convenience constructor

@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,46 @@ namespace Elements.Geometry
     /// <summary>
     /// A polygonal perimeter with zero or more polygonal voids.
     /// </summary>
-    public partial class Profile : Element, IEquatable<Profile>
+    public class Profile : Element, IEquatable<Profile>
     {
+        /// <summary>The perimeter of the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Polygon Perimeter { get; set; }
+
+        /// <summary>A collection of Polygons representing voids in the profile.</summary>
+        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
+        public IList<Polygon> Voids { get; set; }
+
+        /// <summary>
+        /// The default constructor is used by derived classes, 
+        /// and is not intended to be used directly.
+        /// </summary>
+        internal Profile() { }
+
+        /// <summary>
+        /// Create a profile.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the profile.</param>
+        /// <param name="voids">A collection of voids in the profile.</param>
+        /// <param name="id">The id of the profile.</param>
+        /// <param name="name">The name of the profile.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, Guid @id = default, string @name = null)
+            : base(id, name)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (perimeter != null && !perimeter.Vertices.AreCoplanar())
+                {
+                    throw new Exception("To construct a profile, all points must lie in the same plane.");
+                }
+            }
+
+            this.Perimeter = @perimeter;
+            this.Voids = @voids ?? new List<Polygon>();
+            OrientVoids();
+        }
+
         /// <summary>
         /// Construct a profile.
         /// </summary>
@@ -23,7 +62,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a profile from a collection of polygons.
         /// If the collection contains more than one polygon, the first polygon
-        /// will be used as the perimeter and any remaining polygons will 
+        /// will be used as the perimeter and any remaining polygons will
         /// be used as voids.
         /// </summary>
         /// <param name="polygons">The polygons bounding this profile.</param>
@@ -148,6 +187,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Project this profile onto the plane.
+        /// </summary>
+        /// <param name="plane">The plane of the returned profile.</param>
+        public Profile Project(Plane plane)
+        {
+            var projectedPerimeter = this.Perimeter.Project(plane);
+            var projectedVoids = this.Voids.Select(v => v.Project(plane));
+            return new Profile(projectedPerimeter, projectedVoids.ToList());
+        }
+
+        /// <summary>
         /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
         /// <param name="profile">The profile with which to create a union.</param>
         /// <param name="tolerance">An optional tolerance.</param>
@@ -210,6 +260,14 @@ namespace Elements.Geometry
         /// </summary>
         public void OrientVoids()
         {
+            // This should only occur in the case of a parametric 
+            // profile which defines its own perimeter and void logic
+            // during construction.
+            if (Perimeter == null || Voids == null)
+            {
+                return;
+            }
+
             var correctedVoids = new List<Polygon>();
             var perimeterNormal = Perimeter.Normal();
             foreach (var voidCrv in Voids)
@@ -310,7 +368,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids). 
+        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids).
         /// </summary>
         /// <param name="point">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -429,7 +487,7 @@ namespace Elements.Geometry
                 var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
                 // for every resultant polygon, we can't be sure if it's a void, or should have a void,
                 // so we check if it includes any of the others, and subtract the original profile's voids
-                // as well. 
+                // as well.
                 for (int i = 0; i < perimSplits.Count; i++)
                 {
                     Polygon perimeterPoly = perimSplits[i];
@@ -568,8 +626,15 @@ namespace Elements.Geometry
                     }
                 }
             }
-            var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-            return profile;
+            try
+            {
+                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
+                return profile;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
@@ -579,7 +644,10 @@ namespace Elements.Geometry
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
                 var profile = node.ToProfile(tolerance);
-                joinedProfiles.Add(profile);
+                if (profile != null)
+                {
+                    joinedProfiles.Add(profile);
+                }
             }
             foreach (var result in node.Childs)
             {

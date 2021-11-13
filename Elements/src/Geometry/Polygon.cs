@@ -1,7 +1,9 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
+using Elements.Validators;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,28 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Polygon(IList<Vector3> @vertices) : base(vertices)
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (!vertices.AreCoplanar())
+                {
+                    throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
+                }
+
+                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
+                var segments = Polygon.SegmentsInternal(this.Vertices);
+                Polyline.CheckSegmentLengthAndThrow(segments);
+                var t = this.Vertices.ToTransform();
+                Polyline.CheckSelfIntersectionAndThrow(t, segments);
+            }
+        }
+
         /// <summary>
         /// Implicitly convert a polygon to a profile.
         /// </summary>
@@ -36,10 +60,7 @@ namespace Elements.Geometry
         /// that can be used like this: `new Polygon((0,0,0), (10,0,0), (10,10,0))`
         /// </summary>
         /// <param name="vertices">The vertices of the polygon.</param>
-        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices))
-        {
-
-        }
+        public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices)) { }
 
         /// <summary>
         /// Construct a transformed copy of this Polygon.
@@ -81,12 +102,11 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Transform ToTransform()
         {
-            var normal = Normal();
-            return new Transform(Vertices[0], Vertices[1] - Vertices[0], normal);
+            return new Transform(Vertices[0], Vertices[1] - Vertices[0], this.Normal());
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
@@ -99,7 +119,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon, using a 2D method.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D, using a 2D method.
         /// </summary>
         /// <param name="vector">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -634,11 +654,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon or coincident with an edge when compared on the XY plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared on a shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
+        /// Returns true if the supplied Vector3 is within this Polygon or coincident with an edge when compared in the XY shared plane. Returns false if the supplied Vector3 is outside this Polygon, or if the supplied Vector3 is null.
         /// </returns>
         public bool Covers(Vector3 vector)
         {
@@ -648,6 +668,30 @@ namespace Elements.Geometry
             if (Clipper.PointInPolygon(intPoint, thisPath) == 0)
             {
                 return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Tests if the supplied polygon is within this Polygon or coincident with an edge.
+        /// </summary>
+        /// <param name="polygon">The polygon we want to know is inside this polygon.</param>
+        /// <param name="containment">The containment status.</param>
+        /// <returns>Returns false if any part of the polygon is entirely outside of this polygon.</returns>
+        public bool Contains3D(Polygon polygon, out Containment containment)
+        {
+            containment = Containment.Inside;
+            foreach (var v in polygon.Vertices)
+            {
+                Polygon.Contains3D(Edges(), v, out var foundContainment);
+                if (foundContainment == Containment.Outside)
+                {
+                    return false;
+                }
+                if (foundContainment > containment)
+                {
+                    containment = foundContainment;
+                }
             }
             return true;
         }
@@ -1308,7 +1352,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1354,7 +1402,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1426,7 +1478,11 @@ namespace Elements.Geometry
             var polygons = new List<Polygon>();
             foreach (List<IntPoint> path in solution)
             {
-                polygons.Add(PolygonExtensions.ToPolygon(path, tolerance));
+                var result = PolygonExtensions.ToPolygon(path, tolerance);
+                if (result != null)
+                {
+                    polygons.Add(result);
+                }
             }
             return polygons;
         }
@@ -1607,7 +1663,7 @@ namespace Elements.Geometry
         {
             var otherVertices = other.Vertices;
             if (otherVertices.Count != Vertices.Count) return false;
-            if (ignoreWinding && other.Normal().Dot(Normal()) < 0)
+            if (ignoreWinding && other.Normal().Dot(this.Normal()) < 0)
             {
                 //ensure winding is consistent
                 otherVertices = other.Vertices.Reverse().ToList();
@@ -1723,15 +1779,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project the specified vector onto the plane.
+        /// Project this polygon onto the plane.
         /// </summary>
-        /// <param name="p"></param>
-        public Polygon Project(Plane p)
+        /// <param name="plane">The plane of the returned polygon.</param>
+        public Polygon Project(Plane plane)
         {
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)
             {
-                projected[i] = this.Vertices[i].Project(p);
+                projected[i] = this.Vertices[i].Project(plane);
             }
             return new Polygon(projected);
         }
@@ -1757,17 +1813,25 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="curve">The curve used to trim the polygon</param>
         /// <param name="tolerance">Optional tolerance value.</param>
-        public Polygon RemoveVerticesNearCurve(Curve curve, double tolerance = Vector3.EPSILON)
+        /// <param name="removed">The vertices that were removed.</param>
+        public Polygon RemoveVerticesNearCurve(Curve curve, out List<Vector3> removed, double tolerance = Vector3.EPSILON)
         {
             var newVertices = new List<Vector3>(this.Vertices.Count);
+            removed = new List<Vector3>(this.Vertices.Count);
             foreach (var v in Vertices)
             {
                 switch (curve)
                 {
                     case Polygon polygon:
-                        if (v.DistanceTo(polygon, out _) > tolerance)
+                        var d = v.DistanceTo(polygon, out _);
+                        var covers = polygon.Contains(v);
+                        if (d > tolerance && !covers)
                         {
                             newVertices.Add(v);
+                        }
+                        else
+                        {
+                            removed.Add(v);
                         }
                         break;
                     case Polyline polyline:
@@ -1775,11 +1839,19 @@ namespace Elements.Geometry
                         {
                             newVertices.Add(v);
                         }
+                        else
+                        {
+                            removed.Add(v);
+                        }
                         break;
                     case Line line:
                         if (v.DistanceTo(line, out _) > tolerance)
                         {
                             newVertices.Add(v);
+                        }
+                        else
+                        {
+                            removed.Add(v);
                         }
                         break;
                     default:
@@ -1826,7 +1898,7 @@ namespace Elements.Geometry
 
             // Cache the normal so we don't have to recalculate
             // using Newell for every frame.
-            var up = Normal();
+            var up = this.Normal();
             for (var i = 0; i < result.Length; i++)
             {
                 var a = this.Vertices[i];
@@ -1876,16 +1948,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's area.
+        /// Calculate the polygon's signed area in 3D.
         /// </summary>
         public double Area()
         {
-            var area = 0.0;
-            for (var i = 0; i <= this.Vertices.Count - 1; i++)
+            var vertices = this.Vertices;
+            var normal = Normal();
+            if (!(normal.IsAlmostEqualTo(Vector3.ZAxis) ||
+                  normal.Negate().IsAlmostEqualTo(Vector3.ZAxis)
+                 ))
             {
-                var j = (i + 1) % this.Vertices.Count;
-                area += this.Vertices[i].X * this.Vertices[j].Y;
-                area -= this.Vertices[i].Y * this.Vertices[j].X;
+                var t = new Transform(Vector3.Origin, normal).Inverted();
+                var transformedPolygon = this.TransformedPolygon(t);
+                vertices = transformedPolygon.Vertices;
+            }
+            var area = 0.0;
+            for (var i = 0; i <= vertices.Count - 1; i++)
+            {
+                var j = (i + 1) % vertices.Count;
+                area += vertices[i].X * vertices[j].Y;
+                area -= vertices[i].Y * vertices[j].X;
             }
             return area / 2.0;
         }
@@ -2118,6 +2200,10 @@ namespace Elements.Geometry
                 // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back.
                 // here we make a last-ditch attempt to fix this and construct a new polygon.
                 var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
+                if (cleanedVertices.Count < 3)
+                {
+                    return null;
+                }
                 try
                 {
                     return new Polygon(cleanedVertices);
@@ -2136,14 +2222,15 @@ namespace Elements.Geometry
 
         internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
         {
-            var contour = new List<ContourVertex>();
-            foreach (var vert in poly.Vertices)
+            var contour = new ContourVertex[poly.Vertices.Count];
+            for (var i = 0; i < poly.Vertices.Count; i++)
             {
+                var vert = poly.Vertices[i];
                 var cv = new ContourVertex();
                 cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
-                contour.Add(cv);
+                contour[i] = cv;
             }
-            return contour.ToArray();
+            return contour;
         }
     }
 }

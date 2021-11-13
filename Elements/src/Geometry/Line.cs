@@ -1,3 +1,4 @@
+using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,36 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
-    public partial class Line : Curve, IEquatable<Line>
+    public class Line : Curve, IEquatable<Line>
     {
+        /// <summary>The start of the line.</summary>
+        [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 Start { get; set; }
+
+        /// <summary>The end of the line.</summary>
+        [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
+        public Vector3 End { get; set; }
+
+        /// <summary>
+        /// Create a line.
+        /// </summary>
+        /// <param name="start">The start of the line.</param>
+        /// <param name="end">The end of the line.</param>
+        [Newtonsoft.Json.JsonConstructor]
+        public Line(Vector3 @start, Vector3 @end) : base()
+        {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (start.IsAlmostEqualTo(end))
+                {
+                    throw new ArgumentException($"The line could not be created. The start and end points of the line cannot be the same: start {start}, end {end}");
+                }
+            }
+
+            this.Start = @start;
+            this.End = @end;
+        }
+
         /// <summary>
         /// Calculate the length of the line.
         /// </summary>
@@ -59,16 +88,6 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u.ApproximatelyEquals(0.0))
-            {
-                return this.Start;
-            }
-
-            if (u.ApproximatelyEquals(1.0))
-            {
-                return this.End;
-            }
-
             if (u > 1.0 || u < 0.0)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
@@ -568,12 +587,17 @@ namespace Elements.Geometry
             }
             var lines = new List<Line>();
             var div = 1.0 / n;
-            for (var t = 0.0; t < 1.0 - div + Vector3.EPSILON; t += div)
+            var a = Start;
+            var t = div;
+            for (var i = 0; i < n - 1; i++)
             {
-                var a = PointAt(t);
-                var b = PointAt(t + div);
+                var b = PointAt(t);
                 lines.Add(new Line(a, b));
+
+                t += div;
+                a = b;
             }
+            lines.Add(new Line(a, End));
             return lines;
         }
 
@@ -697,7 +721,7 @@ namespace Elements.Geometry
                     var intersects = testLine.Intersects(segment, out Vector3 intersection, true, true);
 
                     // if the intersection lies on the obstruction, but is beyond the segment, we collect it
-                    if (segment.PointOnLine(intersection, true) && !testLine.PointOnLine(intersection, true))
+                    if (intersects && segment.PointOnLine(intersection, true) && !testLine.PointOnLine(intersection, true))
                     {
                         intersectionsForLine.Add(intersection);
                     }

@@ -1,5 +1,4 @@
 using Elements.Geometry;
-using Elements.Spatial;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -19,44 +18,7 @@ namespace Elements.GeoJSON
         [JsonProperty("type")]
         public virtual string Type
         {
-            get{return GetType().Name;}
-        }
-    }
-
-    /// <summary>
-    /// A GeoJSON position specified by longitude and latitude.
-    /// </summary>
-    [JsonConverter(typeof(PositionConverter))]
-    public partial class Position
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        public override bool Equals(object obj)
-        {
-            if(obj.GetType() != GetType())
-            {
-                return false;
-            }
-            var p = (Position)obj;
-            return p.Longitude == Longitude && p.Latitude == Latitude;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override int GetHashCode()
-        {
-            return Longitude.GetHashCode() + ",".GetHashCode() + Latitude.GetHashCode();
-        }
-
-        /// <summary>
-        /// Convert the position to a vector.
-        /// </summary>
-        public Vector3 ToVectorMeters()
-        {
-            return new Vector3(MercatorProjection.LonToX(Longitude), MercatorProjection.LatToY(Latitude));
+            get { return GetType().Name; }
         }
     }
 
@@ -69,7 +31,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position Coordinates{get;}
+        public Position Coordinates { get; }
 
         /// <summary>
         /// Construct a Point.
@@ -78,7 +40,7 @@ namespace Elements.GeoJSON
         /// <exception>Thrown when the provided coordinates are null.</exception>
         public Point(Position coordinates)
         {
-            if(coordinates == null)
+            if (coordinates == null)
             {
                 throw new ArgumentNullException("coordinates");
             }
@@ -95,7 +57,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[] Coordinates{get;}
+        public Position[] Coordinates { get; }
 
         /// <summary>
         /// Construct a Line.
@@ -104,7 +66,7 @@ namespace Elements.GeoJSON
         ///<exception>Thrown when the coordinates provides does not contain 2 items.</exception>
         public Line(Position[] coordinates)
         {
-            if(coordinates == null || coordinates.Length != 2)
+            if (coordinates == null || coordinates.Length != 2)
             {
                 throw new ArgumentException("A line type must have exactly two points.");
             }
@@ -121,7 +83,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[] Coordinates{get;}
+        public Position[] Coordinates { get; }
 
         /// <summary>
         /// Construct a MultiPoint.
@@ -130,7 +92,7 @@ namespace Elements.GeoJSON
         /// <exception>Thrown when the coordinates provided contains 1 item or less.</exception>
         public MultiPoint(Position[] coordinates)
         {
-            if(coordinates == null || coordinates.Length <= 1)
+            if (coordinates == null || coordinates.Length <= 1)
             {
                 throw new ArgumentException("A multipoint type must have more than one point.");
             }
@@ -147,7 +109,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[] Coordinates{get;}
+        public Position[] Coordinates { get; }
 
         /// <summary>
         /// Construct a LineString.
@@ -161,7 +123,7 @@ namespace Elements.GeoJSON
 
         internal static void CheckLineString(Position[] coordinates)
         {
-            if(coordinates.Length <= 2)
+            if (coordinates.Length <= 2)
             {
                 throw new Exception("A linestring must have more than two points.");
             }
@@ -177,7 +139,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[][] Coordinates{get;}
+        public Position[][] Coordinates { get; }
 
         /// <summary>
         /// Construct a MultiLineString.
@@ -185,7 +147,7 @@ namespace Elements.GeoJSON
         /// <param name="coordinates"></param>
         public MultiLineString(Position[][] coordinates)
         {
-            foreach(var lineString in coordinates)
+            foreach (var lineString in coordinates)
             {
                 LineString.CheckLineString(lineString);
             }
@@ -202,7 +164,7 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[][] Coordinates{get;}
+        public Position[][] Coordinates { get; }
 
         /// <summary>
         /// Construct a Polygon.
@@ -210,7 +172,7 @@ namespace Elements.GeoJSON
         /// <param name="coordinates"></param>
         public Polygon(Position[][] coordinates)
         {
-            foreach(var p in coordinates)
+            foreach (var p in coordinates)
             {
                 CheckPoly(p);
             }
@@ -219,13 +181,13 @@ namespace Elements.GeoJSON
 
         internal static void CheckPoly(Position[] coordinates)
         {
-            if(coordinates.Length <= 2)
+            if (coordinates.Length <= 2)
             {
                 throw new Exception("A polygon must have more than two points.");
             }
             var a = coordinates[0];
-            var b = coordinates[coordinates.Length-1];
-            if(a.Longitude != b.Longitude || a.Latitude != b.Latitude)
+            var b = coordinates[coordinates.Length - 1];
+            if (a.Longitude != b.Longitude || a.Latitude != b.Latitude)
             {
                 throw new Exception("The first and last points of the polygon must coincide.");
             }
@@ -236,17 +198,17 @@ namespace Elements.GeoJSON
         /// The last position of the polygon is dropped.
         /// </summary>
         /// <returns></returns>
-        public Elements.Geometry.Polygon[] ToPolygons()
+        public Elements.Geometry.Polygon[] ToPolygons(Position relativeToOrigin)
         {
             var plineArr = new Elements.Geometry.Polygon[Coordinates.Length];
-            for(var i=0; i<plineArr.Length; i++)
+            for (var i = 0; i < plineArr.Length; i++)
             {
                 var coords = this.Coordinates[i];
-                var verts = new Vector3[coords.Length-1];
+                var verts = new Vector3[coords.Length - 1];
                 // Drop the last position.
-                for(var j=0; j<coords.Length-1; j++)
+                for (var j = 0; j < coords.Length - 1; j++)
                 {
-                    verts[j] = coords[j].ToVectorMeters();
+                    verts[j] = coords[j].ToVectorMeters(relativeToOrigin);
                 }
                 var pline = new Elements.Geometry.Polygon(verts);
                 plineArr[i] = pline;
@@ -264,15 +226,15 @@ namespace Elements.GeoJSON
         /// The coordinates of the geometry.
         /// </summary>
         [JsonProperty("coordinates")]
-        public Position[][] Coordinates{get;}
-        
+        public Position[][] Coordinates { get; }
+
         /// <summary>
         /// Construct a MultiPolygon.
         /// </summary>
         /// <param name="coordinates"></param>
         public MultiPolygon(Position[][] coordinates)
         {
-            foreach(var poly in coordinates)
+            foreach (var poly in coordinates)
             {
                 Polygon.CheckPoly(poly);
             }
@@ -286,7 +248,7 @@ namespace Elements.GeoJSON
     public class GeometryCollection
     {
         [JsonProperty("geometries")]
-        Geometry[] Geometries{get;}
+        Geometry[] Geometries { get; }
 
         /// <summary>
         /// Construct a geometry collection.
@@ -302,7 +264,7 @@ namespace Elements.GeoJSON
     {
         public override bool CanConvert(Type objectType)
         {
-            if(objectType == typeof(Position))
+            if (objectType == typeof(Position))
             {
                 return true;
             }
@@ -314,7 +276,7 @@ namespace Elements.GeoJSON
             var lon = reader.ReadAsDouble();
             var lat = reader.ReadAsDouble();
             reader.Read();
-            return new Position(lat.Value,lon.Value);
+            return new Position(lat.Value, lon.Value);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -327,12 +289,12 @@ namespace Elements.GeoJSON
         }
     }
 
-    
+
     class GeometryConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            if(typeof(Geometry).IsAssignableFrom(objectType))
+            if (typeof(Geometry).IsAssignableFrom(objectType))
             {
                 return true;
             }
@@ -341,14 +303,14 @@ namespace Elements.GeoJSON
 
         public override bool CanWrite
         {
-            get{return false;}
+            get { return false; }
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
             string typeName = (jsonObject["type"]).ToString();
-            switch(typeName)
+            switch (typeName)
             {
                 case "Point":
                     return jsonObject.ToObject<Point>();

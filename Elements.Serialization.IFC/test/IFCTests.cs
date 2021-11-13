@@ -107,7 +107,7 @@ namespace Elements.IFC.Tests
                 this.output.WriteLine(e);
             }
 
-            Assert.Equal(7, newModel.Elements.Values.Count);
+            Assert.Equal(model.Elements.Values.Count, newModel.Elements.Values.Count);
             newModel.ToGlTF(ConstructGlbPath("IfcFloor2"));
         }
 

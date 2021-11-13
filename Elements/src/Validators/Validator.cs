@@ -8,6 +8,7 @@ namespace Elements.Validators
     /// <summary>
     /// Implement this interface to act as a validator.
     /// </summary>
+    [Obsolete]
     public interface IValidator
     {
         /// <summary>
@@ -44,6 +45,7 @@ namespace Elements.Validators
         /// <summary>
         /// The validator singleton.
         /// </summary>
+        [Obsolete]
         public static Validator Instance
         {
             get
@@ -79,6 +81,7 @@ namespace Elements.Validators
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>A validator for T, or null if no validator for T can be found.</returns>
+        [Obsolete("Please include validation logic in the constructor of your object. Use the DisableValidationOnConstruction property to disable validation logic.")]
         public IValidator GetFirstValidatorForType<T>()
         {
             if (Validator.DisableValidationOnConstruction)
@@ -90,7 +93,7 @@ namespace Elements.Validators
             {
                 return _validators[typeof(T)];
             }
-            
+
             return null;
         }
     }

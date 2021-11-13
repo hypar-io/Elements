@@ -42,7 +42,7 @@ namespace Elements.Tests
             var c = network.AddVertex();
             network.AddEdgeOneWay(a, b, null);
             network.AddEdgeOneWay(b, c, null);
-            Assert.Equal(1, network.LeafNodes().Count);
+            Assert.Single(network.LeafNodes());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0, 1), new Vector3(2, 0, 1));
             var b = new Line(new Vector3(0, -2, 1), new Vector3(0, 2, 1));
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(1, pts.Count);
+            Assert.Single(pts);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = a;
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(2, 0), new Vector3(-2, 0));
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Elements.Tests
             var a = new Line(new Vector3(-2, 0), new Vector3(2, 0));
             var b = new Line(new Vector3(-1, 0), new Vector3(1, 0)); ;
             var pts = new[] { a, b }.Intersections();
-            Assert.Equal(0, pts.Count);
+            Assert.Empty(pts);
         }
 
         [Fact]
@@ -200,7 +200,69 @@ namespace Elements.Tests
         {
             var p = Polygon.Rectangle(5, 5);
             var pts = p.Segments().Intersections();
-            Assert.Equal(1, pts.Count);
+            Assert.Single(pts);
+        }
+
+        [Fact]
+        public void SingleLeafTraversesOutsideAndClosedLoop()
+        {
+            // A vertical line with a triangle pointing to the right.
+            var a = new Line(Vector3.Origin, new Vector3(0, 10, 0));
+            var b = new Line(new Vector3(0, 5, 0), new Vector3(5, 3, 0));
+            var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
+
+            Func<(int currentIndex, int previousIndex, List<int> edgeIndices), int> next = (a) =>
+                {
+                    var minAngle = double.MaxValue;
+                    var minIndex = -1;
+                    var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
+                    var localEdges = a.edgeIndices.Select(e => (e, allNodeLocations[a.currentIndex], allNodeLocations[e])).ToList();
+                    foreach (var e in a.edgeIndices)
+                    {
+                        if (e == a.previousIndex)
+                        {
+                            continue;
+                        }
+
+                        var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
+                        var angle = baseEdge.PlaneAngleTo(localEdge);
+
+                        // The angle of traversal is not actually zero here,
+                        // it's 180 (unless the path is invalid). We want to
+                        // ensure that traversal happens along the straight
+                        // edge if possible.
+                        if (angle == 0)
+                        {
+                            angle = 180.0;
+                        }
+
+                        if (angle < minAngle)
+                        {
+                            minAngle = angle;
+                            minIndex = e;
+                        }
+                    }
+                    return minIndex;
+                };
+
+            var leafIndices = new List<int>();
+            for (var i = 0; i < network.NodeCount(); i++)
+            {
+                if (network.EdgesAt(i).Count() == 1)
+                {
+                    leafIndices.Add(i);
+                }
+            }
+
+            Assert.Single(leafIndices);
+
+            foreach (var leafIndex in leafIndices)
+            {
+                var path = network.Traverse(leafIndex, next, out List<int> visited);
+                Assert.Equal(6, path.Count);
+                _output.WriteLine(string.Join(',', visited));
+            }
         }
     }
 }

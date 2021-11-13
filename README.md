@@ -9,7 +9,10 @@
 |Name|Description|
 |----|----|
 |Elements|The core elements library containing base geometric types.|
+|Elements.Benchmarks|Benchmarks and tracing for Elements.|
 |Elements.CodeGeneration|Methods for converting JSON schema of Element types to C#.|
+|Elements.Components|Component creation for Elements.|
+|Elements.Serialization.DXF|Methods for serializing a `Model` to and from DXF.|
 |Elements.Serialization.IFC|Methods for serializing a `Model` to IFC.|
 
 # Words of Warning
@@ -47,25 +50,9 @@ We couldn't find anything quite right. So we started building this.
 ## Design Principles
 - There is one base type: Element.
   - Elements have a unique identifier and a name.
-  - An Element can have any number of properties whose types are defined in the provided schemas.
-- The library is schema first. 
-  - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
+- Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
 - The core Element types will be defined in exactly the same way that third-party types will be defined. 
   - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
-- User-defined element schemas should perform as first class citizens in the system.
-
-## Code Generation
-- Elements constructs its primitive types from schemas in the `/Schemas` directory. These schemas are provided as JSON schema. 
-- Elements uses [NJsonSchema](https://github.com/RicoSuter/NJsonSchema) to generate C# classes from JSON schemas.
-- C# classes can be generated using the Hypar CLI's `hypar generate-types` command. For users of Visual Studio Code, the "CLI Generate Elements" task can be used.
-- The default collection type used is `System.Collections.Generic.IList`.
-- Generated classes are marked as `partial`. You can add constructors using a separate partial class, but remember that those constructors will not be available to other developers unless you share them in a library (ex: a NuGet package).
-- The custom class template for the code generator can be found in `/Generate/Templates`.
-- Core class definitions are generated as `CSharpClassStyle.POCO` using NJsonSchema. This results in class definitions without constructors.
-- Deserialization into inherited types is handled in two ways:
-  - Base types that live in the Elements library are decorated with one or more `JsonInheritanceAttribute` pointing to their derived types.
-  - External types that inherit from `Element` must be decorated with the `UserElement` attribute. This is required because a type author doesn't have access to the base types, and must therefore signify to the serializer that it needs to load a specific type.
-
 
 ## Geometry
 Elements contains a very simple BREP geometry kernel, and a small set of geometric types like vectors, lines, and polygons. Elements uses a right-handed coordinate system with +Z "up". Elements is unitless except as indicated when calling a geometric method (ex: arcs requires angles in degrees).

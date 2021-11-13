@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.9.6
+
+### Added
+
+- `Position.FromVectorMeters`
+- `Elements.Geometry.Profiles.IProfileFactory`
+- `Elements.Geometry.Profiles.ParametricProfile`
+- `Elements.Geometry.Profiles.VectorExpression`
+- `Elements.Geometry.Profiles.ProfileFactoryBase`
+- `Elements.Geometry.Profiles.ParametricProfileFactory`
+- `Elements.Geometry.Profiles.WTProfileType`
+- `Elements.Geometry.Profiles.WTProfile`
+- `Elements.Geometry.Profiles.WTProfileFactory`
+- `Elements.Geometry.Profiles.LProfileType`
+- `Elements.Geometry.Profiles.LProfile`
+- `Elements.Geometry.Profiles.LProfileFactory`
+- `Elements.Geometry.Profiles.MCProfileType`
+- `Elements.Geometry.Profiles.MCProfile`
+- `Elements.Geometry.Profiles.MCProfileFactory`
+- `Elements.Geometry.Profiles.HSSProfileType`
+- `Elements.Geometry.Profiles.HSSProfile`
+- `Elements.Geometry.Profiles.HSSProfileFactory`
+- `Elements.Geometry.Profiles.WProfileType`
+- `Elements.Geometry.Profiles.WProfile`
+- `Elements.Geometry.Profiles.WProfileFactory`
+- `Grid2d.GetTrimmedCellProfiles`
+- `Ceiling`
+
+### Changed
+
+- Change default for `useReferenceOrientation` when generating content catalogs.
+- `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
+- glTF generation now uses material IDs instead of names for material names, to prevent collisions.
+- Line.PointAt does not round input values near 0 or 1 anymore.
+
+### Fixed
+
+-
+
+## 0.9.5
+
+### Added
+
+- `Identity.AddOverrideIdentity(this Element element, dynamic overrideObject)`
+- `GeometricElement.ModifyVertexAttributes`
+- `Polygon.Contains3D` method for checking polygon containment in 3D.
+- `WallByProfile.AddOpenings()`
+- `Profile.Project(Plane)`
+
+### Changed
+
+- Wall doesn't have Height or Profile any more.
+- WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
+- `Polygon.Area()` will now calculate the area of a polygon in 3D.
+- WallByProfile updated constructor options and `UpdateRepresentation` logic.
+- Code generation includes an empty constructor for generated types.
+
+### Fixed
+
+- WallByProfile was failing to deserialize walls without openings.
+
 ## 0.9.4
 
 ### Added
@@ -8,13 +69,21 @@
 - `Elements.Search.DistanceComparer`
 - `Elements.Search.DirectionComparer`
 - `Elements.Search.Network<T>`
+- `Elements.ElementProxy<T>`
+- `Identity.AddOverrideValue`
 - `ModelExtensions.AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName)`
 - `Polygon RemoveVerticesNearCurve(Curve curve, double tolerance)`
 
 ### Changed
 
+- `Identity.AddOverrideIdentity` is now an extension method.
+- Profile operations throw fewer exceptions when some piece of the profile is invalid, preferring instead to return a partial result or a null.
+
 ### Fixed
 
+`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+
+### Fixed
 
 ## 0.9.3
 
@@ -51,7 +120,7 @@
 
 - Deduplicate catalog names during code generation.
 - Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
-- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
+- Fixed an issue where gLTFs would occasionally be generated with incorrect vertex normals.
 
 ## 0.9.2
 

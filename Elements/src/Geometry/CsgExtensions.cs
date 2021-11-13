@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
 
 namespace Elements.Geometry
@@ -24,20 +22,24 @@ namespace Elements.Geometry
         /// Triangulate this csg and pack the triangulated data into buffers
         /// appropriate for use with gltf.
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid csg, bool mergeVertices = false)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid csg,
+                                                   bool mergeVertices = false,
+                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
-            return Tessellate(new[] { csg }, mergeVertices);
+            return Tessellate(new[] { csg }, mergeVertices, modifyVertexAttributes);
         }
 
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// buffers appropriate for use with gltf. 
         /// </summary>
-        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs, bool mergeVertices = false)
+        internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs,
+                                                   bool mergeVertices = false,
+                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
             var buffers = new GraphicsBuffers();
 
-            Tessellate(csgs, buffers, mergeVertices);
+            Tessellate(csgs, buffers, mergeVertices, modifyVertexAttributes);
             return buffers;
         }
 
@@ -45,11 +47,14 @@ namespace Elements.Geometry
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(Csg.Solid[] csgs, IGraphicsBuffers buffers, bool mergeVertices = false)
+        internal static void Tessellate(Csg.Solid[] csgs,
+                                        IGraphicsBuffers buffers,
+                                        bool mergeVertices = false,
+                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
             (Vector3 U, Vector3 V) basis;
 
-            var allVertices = new List<(Vector3, Vector3, UV)>();
+            var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color color)>();
             foreach (var csg in csgs)
             {
                 foreach (var p in csg.Polygons)
@@ -71,9 +76,9 @@ namespace Elements.Geometry
                             var v = p.Vertices[i];
                             var uu = basis.U.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
                             var vv = basis.V.Dot(v.Pos.X, v.Pos.Y, v.Pos.Z);
-                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Pos.X, v.Pos.Y, v.Pos.Z),
-                                                                         (n.X, n.Y, n.Z),
-                                                                         (uu, vv),
+                            vertexIndices[i] = (ushort)GetOrCreateVertex(new Vector3(v.Pos.X, v.Pos.Y, v.Pos.Z),
+                                                                         new Vector3(n.X, n.Y, n.Z),
+                                                                         new UV(uu, vv),
                                                                          allVertices,
                                                                          mergeVertices);
                         }
@@ -110,9 +115,9 @@ namespace Elements.Geometry
                             var uu = basis.U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
                             var vv = basis.V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
 
-                            vertexIndices[i] = (ushort)GetOrCreateVertex((v.Position.X, v.Position.Y, v.Position.Z),
-                                                                         (n.X, n.Y, n.Z),
-                                                                         (uu, vv),
+                            vertexIndices[i] = (ushort)GetOrCreateVertex(new Vector3(v.Position.X, v.Position.Y, v.Position.Z),
+                                                                         new Vector3(n.X, n.Y, n.Z),
+                                                                         new UV(uu, vv),
                                                                          allVertices,
                                                                          mergeVertices);
 
@@ -129,7 +134,15 @@ namespace Elements.Geometry
 
             foreach (var v in allVertices)
             {
-                buffers.AddVertex(v.Item1, v.Item2, v.Item3);
+                if (modifyVertexAttributes != null)
+                {
+                    var mod = modifyVertexAttributes(v);
+                    buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
+                }
+                else
+                {
+                    buffers.AddVertex(v.Item1, v.Item2, v.Item3);
+                }
             }
         }
 
@@ -141,20 +154,17 @@ namespace Elements.Geometry
             return basis;
         }
 
-        private static int GetOrCreateVertex((double x, double y, double z) position,
-                                             (double x, double y, double z) normal,
-                                             (double u, double v) uv,
-                                             List<(Vector3 position, Vector3 normal, UV uv)> pts,
+        private static int GetOrCreateVertex(Vector3 position,
+                                             Vector3 normal,
+                                             UV uv,
+                                             List<(Vector3 position, Vector3 normal, UV uv, Color color)> pts,
                                              bool mergeVertices)
         {
-            var pt = new Vector3(position.x, position.y, position.z);
-            var n = new Vector3(normal.x, normal.y, normal.z);
-
             if (mergeVertices)
             {
                 var index = pts.FindIndex(p =>
                 {
-                    return p.position.IsAlmostEqualTo(pt) && p.normal.AngleTo(n) < 45.0;
+                    return p.position.IsAlmostEqualTo(position) && p.normal.AngleTo(normal) < 45.0;
                 });
                 if (index != -1)
                 {
@@ -162,7 +172,7 @@ namespace Elements.Geometry
                 }
             }
 
-            pts.Add((pt, n, uv));
+            pts.Add((position, normal, uv, default(Color)));
             return pts.Count - 1;
         }
 
@@ -175,88 +185,6 @@ namespace Elements.Geometry
                 m.m31, m.m32, m.m33, 0.0,
                 m.tx, m.ty, m.tz, 1.0
             });
-        }
-
-        internal static Csg.Solid ToCsg(this Solid solid)
-        {
-            var polygons = new List<Csg.Polygon>();
-
-            foreach (var f in solid.Faces.Values)
-            {
-                if (f.Inner != null && f.Inner.Count() > 0)
-                {
-                    var tess = new Tess();
-                    tess.NoEmptyPolygons = true;
-
-                    tess.AddContour(f.Outer.ToContourVertexArray(f));
-
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray(f));
-                    }
-
-                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                    Vector3 e1 = new Vector3();
-                    Vector3 e2 = new Vector3();
-
-                    var vertices = new List<Csg.Vertex>();
-                    for (var i = 0; i < tess.ElementCount; i++)
-                    {
-                        var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
-                        var b = tess.Vertices[tess.Elements[i * 3 + 1]].ToCsgVector3();
-                        var c = tess.Vertices[tess.Elements[i * 3 + 2]].ToCsgVector3();
-
-                        Csg.Vertex av = null;
-                        Csg.Vertex bv = null;
-                        Csg.Vertex cv = null;
-
-                        if (i == 0)
-                        {
-                            var n = f.Plane().Normal;
-                            e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                            e2 = n.Cross(e1).Unitized();
-                        }
-                        if (av == null)
-                        {
-                            var avv = new Vector3(a.X, a.Y, a.Z);
-                            av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
-                            vertices.Add(av);
-                        }
-                        if (bv == null)
-                        {
-                            var bvv = new Vector3(b.X, b.Y, b.Z);
-                            bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
-                            vertices.Add(bv);
-                        }
-                        if (cv == null)
-                        {
-                            var cvv = new Vector3(c.X, c.Y, c.Z);
-                            cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
-                            vertices.Add(cv);
-                        }
-
-                        var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
-                        polygons.Add(p);
-                    }
-                }
-                else
-                {
-                    var verts = new List<Csg.Vertex>();
-                    var n = f.Plane().Normal;
-                    var e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                    var e2 = n.Cross(e1).Unitized();
-                    foreach (var e in f.Outer.Edges)
-                    {
-                        var l = e.Vertex.Point;
-                        var v = new Csg.Vertex(l.ToCsgVector3(), new Csg.Vector2D(e1.Dot(l), e2.Dot(l)));
-                        verts.Add(v);
-                    }
-                    var p = new Csg.Polygon(verts);
-                    polygons.Add(p);
-                }
-            }
-            return Csg.Solid.FromPolygons(polygons);
         }
 
         internal static Csg.Solid ToCsg(this Mesh mesh)
@@ -375,7 +303,7 @@ namespace Elements.Geometry
             return new UV(uv.X, uv.Y);
         }
 
-        private static Csg.Vector3D ToCsgVector3(this ContourVertex v)
+        internal static Csg.Vector3D ToCsgVector3(this ContourVertex v)
         {
             return new Csg.Vector3D(v.Position.X, v.Position.Y, v.Position.Z);
         }
@@ -416,7 +344,7 @@ namespace Elements.Geometry
             return false;
         }
 
-        private static Csg.Vector3D ToCsgVector3(this Vector3 v)
+        internal static Csg.Vector3D ToCsgVector3(this Vector3 v)
         {
             return new Csg.Vector3D(v.X, v.Y, v.Z);
         }

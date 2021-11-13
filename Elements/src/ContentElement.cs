@@ -1,13 +1,73 @@
 using System.Collections.Generic;
-using System.IO;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
 namespace Elements
 {
-    public partial class ContentElement
+    /// <summary>
+    /// An element representing user content.
+    /// </summary>
+    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public class ContentElement : GeometricElement
     {
-         /// <summary>
+        /// <summary>The URI of the gltf for this element.</summary>
+        [Newtonsoft.Json.JsonProperty("gltfLocation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string GltfLocation { get; set; }
+
+        /// <summary>The bounding box of the content.</summary>
+        [Newtonsoft.Json.JsonProperty("Bounding Box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public BBox3 BoundingBox { get; set; }
+
+        /// <summary>The scale needed to convert the gltf to meters.</summary>
+        [Newtonsoft.Json.JsonProperty("Gltf Scale to Meters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double GltfScaleToMeters { get; set; }
+
+        /// <summary>A vector indicating the direction the source object was originally facing.</summary>
+        [Newtonsoft.Json.JsonProperty("SourceDirection", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Vector3 SourceDirection { get; set; }
+
+        /// <summary>Alternate symbolic representations of the object.</summary>
+        [Newtonsoft.Json.JsonProperty("Symbols", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public IList<Symbol> Symbols { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+
+        /// <summary>
+        /// Construct a content element.
+        /// </summary>
+        /// <param name="gltfLocation"></param>
+        /// <param name="boundingBox"></param>
+        /// <param name="gltfScaleToMeters"></param>
+        /// <param name="sourceDirection"></param>
+        /// <param name="symbols"></param>
+        /// <param name="transform"></param>
+        /// <param name="material"></param>
+        /// <param name="representation"></param>
+        /// <param name="isElementDefinition"></param>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        [Newtonsoft.Json.JsonConstructor]
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              IList<Symbol> @symbols,
+                              Transform @transform = null,
+                              Material @material = null,
+                              Representation @representation = null,
+                              bool @isElementDefinition = false,
+                              System.Guid @id = default,
+                              string @name = null)
+            : base(transform, material, representation, isElementDefinition, id, name)
+        {
+            this.GltfLocation = @gltfLocation;
+            this.BoundingBox = @boundingBox;
+            this.GltfScaleToMeters = @gltfScaleToMeters;
+            this.SourceDirection = @sourceDirection;
+            this.Symbols = @symbols;
+        }
+
+        /// <summary>
         /// This constructor adds the ability to include additionalProperties.  The additional properties should be 
         /// a dictionary that has been serialized to a string, they are deserialized during construction.
         /// This is used in Revit Content workflows to store instance parameter data.
