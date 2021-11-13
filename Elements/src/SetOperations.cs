@@ -43,14 +43,16 @@ namespace Elements
                                         List<(Vector3 from, Vector3 to, SetClassification classification)> classifications,
                                         Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter)
         {
-            var r = new Random();
             // A tests
             for (var i = 0; i < a.Vertices.Count; i++)
             {
                 var intersections = 0;
                 var v1 = a.Vertices[i];
                 var v2 = i == a.Vertices.Count - 1 ? a.Vertices[0] : a.Vertices[i + 1];
-                var ray = r.NextRayInPlane(v1.Average(v2), p.Normal);
+
+                // The perpendicular vector to the edge is used as the test vector.
+                var d = (v2 - v1).Unitized();
+                var ray = new Ray(v1.Average(v2), d.Cross(p.Normal));
 
                 // B tests
                 for (var j = 0; j < b.Vertices.Count; j++)
