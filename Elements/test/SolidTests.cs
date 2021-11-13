@@ -399,6 +399,7 @@ namespace Elements.Tests
             b.Representation.SolidOperations[0].LocalTransform = rotate;
         }
 
+        [Fact]
         public void SolidIntersectsWithPlane()
         {
             this.Name = nameof(SolidIntersectsWithPlane);
