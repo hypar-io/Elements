@@ -22,7 +22,7 @@ namespace Elements.Geometry.Solids
             var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
-            foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB || o.Item2 == SetClassification.BOutsideA).Select(o => o.Item1))
+            foreach (var p in allFaces.Where(o => o.classification == SetClassification.AOutsideB || o.classification == SetClassification.BOutsideA).Select(o => o.polygon))
             {
                 s.AddFace(p, mergeVerticesAndEdges: true);
             }
@@ -63,12 +63,12 @@ namespace Elements.Geometry.Solids
             var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
-            foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AOutsideB).Select(o => o.Item1))
+            foreach (var p in allFaces.Where(o => o.classification == SetClassification.AOutsideB).Select(o => o.polygon))
             {
                 s.AddFace(p, mergeVerticesAndEdges: true);
             }
 
-            foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.BInsideA).Select(o => o.Item1))
+            foreach (var p in allFaces.Where(o => o.classification == SetClassification.BInsideA).Select(o => o.polygon))
             {
                 s.AddFace(p.Reversed(), mergeVerticesAndEdges: true);
             }
@@ -109,7 +109,7 @@ namespace Elements.Geometry.Solids
             var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
-            foreach (var p in allFaces.Where(o => o.Item2 == SetClassification.AInsideB || o.Item2 == SetClassification.BInsideA).Select(o => o.Item1))
+            foreach (var p in allFaces.Where(o => o.classification == SetClassification.AInsideB || o.classification == SetClassification.BInsideA).Select(o => o.polygon))
             {
                 s.AddFace(p, mergeVerticesAndEdges: true);
             }
@@ -137,11 +137,12 @@ namespace Elements.Geometry.Solids
             return Intersection(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
         }
 
-        private static List<(Polygon, SetClassification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
+        private static List<(Polygon polygon, SetClassification classification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var allFaces = new List<(Polygon, SetClassification)>();
 
             // TODO: Don't create polygons. Operate on the loops and edges directly.
+            // TODO: Support holes. We drop the inner loop information here currently.
             var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(aTransform)).ToList();
             var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(bTransform)).ToList();
 
