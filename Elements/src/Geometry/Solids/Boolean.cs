@@ -137,9 +137,9 @@ namespace Elements.Geometry.Solids
             return Intersection(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
         }
 
-        private static List<(Polygon polygon, SetClassification classification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
+        private static List<(Polygon polygon, SetClassification classification, CoplanarSetClassification coplanarClassification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
-            var allFaces = new List<(Polygon, SetClassification)>();
+            var allFaces = new List<(Polygon, SetClassification, CoplanarSetClassification)>();
 
             // TODO: Don't create polygons. Operate on the loops and edges directly.
             // TODO: Support holes. We drop the inner loop information here currently.
@@ -189,9 +189,9 @@ namespace Elements.Geometry.Solids
                             {
                                 var result = planarIntersectionResults.Select(r => r.result).ToList();
                                 aFace.Split(result);
-                                allFaces.Add((aFace, SetClassification.ACoplanarB));
+                                allFaces.Add((aFace, SetClassification.None, CoplanarSetClassification.ACoplanarB));
                                 bFace.Split(result);
-                                allFaces.Add((bFace, SetClassification.BCoplanarA));
+                                allFaces.Add((bFace, SetClassification.None, CoplanarSetClassification.BCoplanarA));
                             }
                         }
                     }
@@ -201,11 +201,11 @@ namespace Elements.Geometry.Solids
             return allFaces;
         }
 
-        private static List<Polygon> MergeCoplanarFaces(List<(Polygon, SetClassification)> allFaces,
+        private static List<Polygon> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
                                                         Func<Polygon, Polygon, List<Polygon>> merge)
         {
-            var aCoplanar = allFaces.Where(f => f.Item2 == SetClassification.ACoplanarB).GroupBy(x => x.Item1.Normal());
-            var bCoplanar = allFaces.Where(f => f.Item2 == SetClassification.BCoplanarA).GroupBy(x => x.Item1.Normal());
+            var aCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.ACoplanarB).GroupBy(x => x.polygon.Normal());
+            var bCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.BCoplanarA).GroupBy(x => x.polygon.Normal());
 
             var results = new List<Polygon>();
 
@@ -219,7 +219,7 @@ namespace Elements.Geometry.Solids
                     {
                         foreach (var bFace in bCoplanarFaceSet)
                         {
-                            var mergeResults = merge(aFace.Item1, bFace.Item1);
+                            var mergeResults = merge(aFace.polygon, bFace.polygon);
                             if (mergeResults != null)
                             {
                                 results.AddRange(mergeResults);

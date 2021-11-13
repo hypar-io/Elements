@@ -1144,13 +1144,13 @@ namespace Elements.Geometry
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of trim edge data.</param>
         /// <returns>A collection of polygons and their local classification.</returns>
-        internal List<(Polygon, SetClassification)> IntersectAndClassify(IList<Polygon> trimPolygons,
+        internal List<(Polygon, SetClassification, CoplanarSetClassification)> IntersectAndClassify(IList<Polygon> trimPolygons,
                                                                          out List<Vector3> intersections,
                                                                          out List<(Vector3 from, Vector3 to, int? parentPolygonIndex)> trimEdges,
                                                                          SetClassification outsideClassification = SetClassification.AOutsideB,
                                                                          SetClassification insideClassification = SetClassification.AInsideB)
         {
-            var classifications = new List<(Polygon, SetClassification)>();
+            var classifications = new List<(Polygon, SetClassification, CoplanarSetClassification)>();
 
             var splitFaces = this.IntersectOneToMany(trimPolygons, out intersections, out trimEdges);
 
@@ -1169,7 +1169,7 @@ namespace Elements.Geometry
                         intersectionCount++;
                     }
                 }
-                classifications.Add((splitFace, intersectionCount % 2 == 0 ? outsideClassification : insideClassification));
+                classifications.Add((splitFace, intersectionCount % 2 == 0 ? outsideClassification : insideClassification, CoplanarSetClassification.None));
             }
             else
             {
@@ -1186,12 +1186,12 @@ namespace Elements.Geometry
                     // Every edge needs to be checked against its trimming
                     // poly to ensure that a face is "inside" or "outside" all
                     // of the polys that trim the polygon.
-                    foreach (var splitFaceEdge in splitFaceEdges)
+                    foreach (var (from, to) in splitFaceEdges)
                     {
                         // Find the matching trim edge.
                         // TODO: Find a way to organize this data so that we
                         // don't have to do a comparison.
-                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == splitFaceEdge.from && e.to == splitFaceEdge.to) || (e.from == splitFaceEdge.to && e.to == splitFaceEdge.from));
+                        var compareEdge = compareEdges.FirstOrDefault(e => (e.from == from && e.to == to) || (e.from == to && e.to == from));
 
                         // In the case where an edge is an edge of the original
                         // polygon, and isn't trimmed by another polygon, there
@@ -1203,7 +1203,7 @@ namespace Elements.Geometry
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
                         var trimPoly = trimPolygons[trimPolyIndex];
                         var bn = trimPoly.Normal();
-                        var d = (splitFaceEdge.from - splitFaceEdge.to).Unitized();
+                        var d = (from - to).Unitized();
                         var dot = bn.Dot(n.Cross(d));
                         if (dot <= 0.0)
                         {
@@ -1217,11 +1217,11 @@ namespace Elements.Geometry
 
                     if (outside > 0 && inside == 0)
                     {
-                        classifications.Add((splitFace, outsideClassification));
+                        classifications.Add((splitFace, outsideClassification, CoplanarSetClassification.None));
                     }
                     else if (inside > 0 && outside == 0)
                     {
-                        classifications.Add((splitFace, insideClassification));
+                        classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
                     }
                 }
             }
