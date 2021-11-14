@@ -27,6 +27,15 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `SetClassification`
+- `LocalClassification`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
 
 ### Changed
 
@@ -34,10 +43,6 @@
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
 - Line.PointAt does not round input values near 0 or 1 anymore.
-
-### Fixed
-
--
 
 ## 0.9.5
 
@@ -90,22 +95,12 @@
 ### Added
 
 - Support for DXF from many basic elements.
-- `SetClassification`
 - `SetOperations.ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
 - `SetOperations.BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set, SetClassification shared)`
 - `RandomExtensions.NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)`
 - `RandomExtensions.NextRay(this Random random, Vector3 origin)`
-- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Union(SolidOperation a, SolidOperation b)`
-- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Difference(SolidOperation a, SolidOperation b)`
-- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Intersection(SolidOperation a, SolidOperation b)`
-- `SetClassification`
-- `LocalClassification`
 - `ModelArrows`
 - `ModelText`
-- `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
 - `Transform.Inverted()`
 - `AdaptiveGrid`
