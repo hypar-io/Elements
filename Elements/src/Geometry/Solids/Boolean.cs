@@ -237,7 +237,7 @@ namespace Elements.Geometry.Solids
                                             {
                                                 return e.classification == SetClassification.AOutsideB || e.classification == SetClassification.BOutsideA;
                                             });
-            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            var graph = SetOperations.BuildGraph(segments);
             return graph.Polygonize();
         }
 
@@ -256,7 +256,7 @@ namespace Elements.Geometry.Solids
                     segments[i] = (segments[i].to, segments[i].from, SetClassification.BInsideA);
                 }
             }
-            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            var graph = SetOperations.BuildGraph(segments);
             return graph.Polygonize();
         }
 
@@ -266,7 +266,7 @@ namespace Elements.Geometry.Solids
                                             {
                                                 return e.classification == SetClassification.AInsideB || e.classification == SetClassification.BInsideA;
                                             });
-            var graph = SetOperations.BuildGraph(segments, SetClassification.None);
+            var graph = SetOperations.BuildGraph(segments);
             return graph.Polygonize();
         }
     }

@@ -101,10 +101,7 @@ namespace Elements
         /// Build a half edge graph from a collection of segments.
         /// </summary>
         /// <param name="set">A collection of classified segments.</param>
-        /// <param name="shared">The classification of shared segments.</param>
-        /// <returns></returns>
-        public static HalfEdgeGraph2d BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set,
-                                                 SetClassification shared)
+        public static HalfEdgeGraph2d BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set)
         {
             var graphVertices = new List<Vector3>();
             var graphEdges = new List<List<(int from, int to, int? tag)>>();

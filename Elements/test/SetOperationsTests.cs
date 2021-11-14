@@ -95,7 +95,7 @@ namespace Elements.Tests
 
             Assert.Empty(set.Where(c => c.classification == SetClassification.BOutsideA));
 
-            var graph = SetOperations.BuildGraph(set, SetClassification.BInsideA);
+            var graph = SetOperations.BuildGraph(set);
 
             Assert.Equal(7, graph.Vertices.Count);
 
