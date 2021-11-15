@@ -32,35 +32,35 @@ var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
 
 for(var i=0; i<1; i++)
 {
-    var start = new Vector3(i, 0, 0);
-    var end = new Vector3(i, length, i);
+var start = new Vector3(i, 0, 0);
+var end = new Vector3(i, length, i);
 
-    // The bottom chord
-    var bottomChord = new Line(start, end);
-    var bottomChordBeam = new Beam(bottomChord, p, m);
-    model.AddElement(bottomChordBeam);
+// The bottom chord
+var bottomChord = new Line(start, end);
+var bottomChordBeam = new Beam(bottomChord, p, m);
+model.AddElement(bottomChordBeam);
 
-    var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-    var topChordBeam = new Beam(topChord, p, m);
-    model.AddElement(topChordBeam);
+var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
+var topChordBeam = new Beam(topChord, p, m);
+model.AddElement(topChordBeam);
 
-    Vector3 last = default(Vector3);
-    for(var j=0.0; j<=1.0; j+=0.1)
-    {
-        var pt = bottomChord.PointAt(j);
-        var top = pt + new Vector3(0,0,5);
-        var panelLine = new Line(pt, top);
-        var panelBeam = new Beam(panelLine, p, m);
-        model.AddElement(panelBeam);
+Vector3 last = default(Vector3);
+for(var j=0.0; j<=1.0; j+=0.1)
+{
+var pt = bottomChord.PointAt(j);
+var top = pt + new Vector3(0,0,5);
+var panelLine = new Line(pt, top);
+var panelBeam = new Beam(panelLine, p, m);
+model.AddElement(panelBeam);
 
-        if(j > 0.0)
-        {
-            var braceLine = new Line(top, last);
-            var braceBeam = new Beam(braceLine, p, m);
-            model.AddElement(braceBeam);
-        }
-        last = pt;
-    }
+if(j > 0.0)
+{
+var braceLine = new Line(top, last);
+var braceBeam = new Beam(braceLine, p, m);
+model.AddElement(braceBeam);
+}
+last = pt;
+}
 }
 return model;";
     private string output = "";
@@ -72,7 +72,9 @@ return model;";
         // Create instances of model and Console
         // to ensure they're loaded in the app domain.
         var model = new Elements.Model();
-        Console.WriteLine("");
+        Console.WriteLine("Initializing the code editor...");
+
+        Console.WriteLine($"Using base address {MyNavigationManager.BaseUri}");
 
         var refs = AppDomain.CurrentDomain.GetAssemblies();
         var client = new HttpClient
@@ -84,7 +86,9 @@ return model;";
 
         foreach (var reference in refs.Where(x => !x.IsDynamic)) // && !string.IsNullOrWhiteSpace(x.Location)))
         {
-            var location = $"_framework/{reference.GetName().Name}.dll";
+            var refName = reference.GetName().Name;
+            Console.WriteLine($"Getting reference {refName}...");
+            var location = $"_framework/{refName}.dll";
             var stream = await client.GetStreamAsync(location);
             listRefs.Add(MetadataReference.CreateFromStream(stream));
         }
@@ -102,9 +106,9 @@ return model;";
                 var glb = ((Elements.Model)model).ToGlTF();
                 JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
             });
-            
+
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             output += $@"<div class=""message"">Run failed.</div>";
             output += $@"<div class=""message"">{ex.Message}</div>";
@@ -116,8 +120,8 @@ return model;";
     private async Task Run()
     {
         var sw = new Stopwatch();
-            sw.Start();
-        if(EvaluateAsync(csharp))
+        sw.Start();
+        if (EvaluateAsync(csharp))
         {
             sw.Stop();
             output += $@"<div class=""message"">Compilation complete in {sw.ElapsedMilliseconds}ms.</div>";
