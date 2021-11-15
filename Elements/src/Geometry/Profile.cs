@@ -292,8 +292,11 @@ namespace Elements.Geometry
             }
 
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            var tranfrorm = new Transform(Perimeter.Start, Perimeter.Normal());
+            tranfrorm.Invert();
+            var perimeter = Perimeter.TransformedPolygon(tranfrorm);
+            clipper.AddPath(perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+            clipper.AddPaths(this.Voids.Select(p => p.TransformedPolygon(tranfrorm).ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
             return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1.0 / Vector3.EPSILON, 2);
