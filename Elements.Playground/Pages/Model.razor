@@ -16,11 +16,10 @@
     <button class="run" @onclick="Run">Run</button>
     <div id="editor">@csharp</div>
     <div id="model"></div>
-    <div class="output">@((MarkupString)output)</div>
+    <div class="output">@((MarkupString)Output)</div>
 </div>
 
 @code {
-    private bool isFirstLoad = true;
     private static string csharp = @"var model = new Model();
 
 var length = 10;
@@ -63,170 +62,21 @@ last = pt;
 }
 }
 return model;";
-    private string output = "";
-    private List<MetadataReference> references;
-    private Func<object[], Task> submission;
+    private string Output = "";
 
-    protected override async Task OnInitializedAsync()
+    [Inject] private HttpClient Client { get; set; }
+
+    protected override Task OnInitializedAsync()
     {
-        // Create instances of model and Console
-        // to ensure they're loaded in the app domain.
-        var model = new Elements.Model();
-        Console.WriteLine("Initializing the code editor...");
-
-        Console.WriteLine($"Using base address {MyNavigationManager.BaseUri}");
-
-        var refs = AppDomain.CurrentDomain.GetAssemblies();
-        var client = new HttpClient
-        {
-            BaseAddress = new Uri(MyNavigationManager.BaseUri)
-        };
-
-        var listRefs = new List<MetadataReference>();
-
-        foreach (var reference in refs.Where(x => !x.IsDynamic)) // && !string.IsNullOrWhiteSpace(x.Location)))
-        {
-            var refName = reference.GetName().Name;
-            Console.WriteLine($"Getting reference {refName}...");
-            var location = $"_framework/{refName}.dll";
-            var stream = await client.GetStreamAsync(location);
-            listRefs.Add(MetadataReference.CreateFromStream(stream));
-        }
-
-        references = listRefs;
-    }
-
-    private async Task RunAsync(ChangeEventArgs args)
-    {
-        try
-        {
-            var model = await (Task<object>)submission(new object[] { null, null });
-            await Task.Run(() =>
-            {
-                var glb = ((Elements.Model)model).ToGlTF();
-                JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-            });
-
-        }
-        catch (Exception ex)
-        {
-            output += $@"<div class=""message"">Run failed.</div>";
-            output += $@"<div class=""message"">{ex.Message}</div>";
-            @* output += $@"<div class=""error"">{ex.StackTrace}</div>\n"; *@
-            @* output += $@"<div class=""error"">{ex.InnerException}</div>\n"; *@
-        }
-    }
-
-    private async Task Run()
-    {
-        var sw = new Stopwatch();
-        sw.Start();
-        if (EvaluateAsync(csharp))
-        {
-            sw.Stop();
-            output += $@"<div class=""message"">Compilation complete in {sw.ElapsedMilliseconds}ms.</div>";
-            sw.Reset();
-
-            sw.Start();
-            await RunAsync(null);
-            sw.Stop();
-            output += $@"<div class=""message"">Execution and display complete in {sw.ElapsedMilliseconds}ms.</div>";
-            output += $@"<br>";
-        }
-    }
-
-    private bool EvaluateAsync(string code)
-    {
-        output = "";
-        var previousOut = Console.Out;
-        try
-        {
-            if (TryCompile(code, out var compilation, out var script, out var errorDiagnostics))
-            {
-                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
-                var type = script.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
-                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
-
-                submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-
-                return true;
-            }
-            else
-            {
-                output += $@"<div class=""error"">Compilation failed.</div>";
-                output += $@"<br>";
-
-                foreach (var diag in errorDiagnostics)
-                {
-                    output += $@"<div class=""message"">{HttpUtility.HtmlEncode(diag)}</div>";
-                }
-                return false;
-            }
-        }
-        catch (Exception ex)
-        {
-            output += $@"<div class=""message"">{ex.Message}</div>";
-            output += $@"<div class=""message"">{ex.StackTrace}</div>";
-            output += $@"<div class=""message"">{ex.InnerException}</div>";
-            return false;
-        }
-        finally
-        {
-            Console.SetOut(previousOut);
-        }
-    }
-
-    private bool TryCompile(string source, out CSharpCompilation compilation, out Assembly assembly, out
-    List<Diagnostic> errorDiagnostics)
-    {
-        assembly = null;
-        compilation = null;
-
-        // Use ConcurrentBuild to avoid the issue in
-        // TODO: https://github.com/dotnet/runtime/issues/43411
-        var scriptCompilation = CSharpCompilation.CreateScriptCompilation(
-        Path.GetRandomFileName(),
-        CSharpSyntaxTree.ParseText(source,
-        CSharpParseOptions.Default.WithKind(SourceCodeKind.Script).WithLanguageVersion(LanguageVersion.Preview)),
-        references,
-        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, usings: new[]
-        {
-"System",
-"System.Collections.Generic",
-"System.Console",
-"System.Linq",
-"Elements",
-"Elements.Geometry",
-"Elements.Geometry.Profiles",
-"Elements.Validators"
-        }, concurrentBuild: false));
-
-        errorDiagnostics = scriptCompilation.GetDiagnostics().Where(x => x.Severity == DiagnosticSeverity.Error).ToList();
-        if (errorDiagnostics.Any())
-        {
-            return false;
-        }
-
-        using (var peStream = new MemoryStream())
-        {
-            var emitResult = scriptCompilation.Emit(peStream);
-
-            if (emitResult.Success)
-            {
-                compilation = scriptCompilation;
-                assembly = Assembly.Load(peStream.ToArray());
-                return true;
-            }
-        }
-
-        return false;
+        Compiler.InitializeMetadataReferences(Client);
+        return base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (isFirstLoad)
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
         {
-            isFirstLoad = false;
             await JSRuntime.InvokeVoidAsync("model.initializeEditor");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
         }
@@ -236,5 +86,55 @@ return model;";
     public static void SetCodeValue(string code)
     {
         csharp = code;
+    }
+
+    public Task Run()
+    {
+        return Compiler.WhenReady(RunInternal);
+    }
+
+    async Task RunInternal()
+    {
+        Output = "";
+
+        Console.WriteLine("Compiling and Running code");
+        var sw = Stopwatch.StartNew();
+
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        Exception exception = null;
+        try
+        {
+            var (success, asm, compilation) = Compiler.LoadSource(csharp);
+            if (success)
+            {
+                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+                var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+
+                var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+                var model = await (Task<object>)submission(new object[] { null, null });
+                await Task.Run(() =>
+                {
+                    var glb = ((Elements.Model)model).ToGlTF();
+                    JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+        Output = writer.ToString();
+        if (exception != null)
+        {
+            Output += "\r\n" + exception.ToString();
+        }
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+        Console.WriteLine("Done in " + sw.ElapsedMilliseconds + "ms");
     }
 }
