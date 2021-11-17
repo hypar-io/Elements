@@ -34,6 +34,8 @@
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
 - Line.PointAt does not round input values near 0 or 1 anymore.
+- `Polygon` constructor throws error if there are less than 3 vertices provided.
+- Decrease intersection tolerance for Grid2d polygon splitting.
 
 ### Fixed
 
