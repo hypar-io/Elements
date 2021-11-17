@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 // TODO: Get rid of System.Linq
 using System.Linq;
+using System.Reflection;
 using glTFLoader;
 using glTFLoader.Schema;
 using System.IO;
@@ -1077,34 +1078,28 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is ModelCurve)
+            if (e is GeometricElement)
             {
-                var mc = (ModelCurve)e;
-                var id = $"{e.Id}_curve";
-                var gb = mc.ToGraphicsBuffers(true);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
-            }
-
-            if (e is ModelPoints)
-            {
-                var mp = (ModelPoints)e;
-                if (mp.Locations.Count != 0)
+                var eType = e.GetType();
+                var toGraphicsBuffers = eType.GetMethod("TryToGraphicsBuffers", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (toGraphicsBuffers != null)
                 {
-                    var id = $"{e.Id}_point";
-                    var gb = mp.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
+                    var ge = (GeometricElement)e;
+                    var parameters = new object[] {
+                    new GraphicsBuffers(), // default graphics buffer, which is empty
+                    "", // default ID, which is nothing
+                    MeshPrimitive.ModeEnum.POINTS, // default mode, which is random and won't be used if this wasn't handled by the method
+                };
+                    var convertedSuccesfully = (Boolean)toGraphicsBuffers.Invoke(e, parameters);
+                    if (convertedSuccesfully)
+                    {
+                        var gb = (GraphicsBuffers)parameters[0];
+                        var id = (string)parameters[1];
+                        var mode = (MeshPrimitive.ModeEnum)parameters[2];
+                        gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, mode, meshes, nodes, ge.Transform);
+                    }
                 }
-            }
 
-            if (e is ModelArrows)
-            {
-                var ma = (ModelArrows)e;
-                if (ma.Vectors.Count > 0)
-                {
-                    var id = $"{e.Id}_arrow";
-                    var gb = ma.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
-                }
             }
 
             if (e is ITessellate)

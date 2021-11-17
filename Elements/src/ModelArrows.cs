@@ -37,7 +37,7 @@ namespace Elements
         /// <summary>
         /// Create a collection of points.
         /// </summary>
-        /// <param name="vectors">A collection of tuples specifying the 
+        /// <param name="vectors">A collection of tuples specifying the
         /// origin, direction, and the magnitude of the arrows.</param>
         /// <param name="arrowAtStart">Should an arrow head be drawn at the start?</param>
         /// <param name="arrowAtEnd">Should an arrow head be drawn at the end?</param>
@@ -116,6 +116,18 @@ namespace Elements
             }
 
             return gb;
+        }
+
+        new internal Boolean TryToGraphicsBuffers(out GraphicsBuffers graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            if (this.Vectors.Count < 1)
+            {
+                return base.TryToGraphicsBuffers(out graphicsBuffers, out id, out mode);
+            }
+            id = $"{this.Id}_arrow";
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
+            graphicsBuffers = this.ToGraphicsBuffers();
+            return true;
         }
     }
 }

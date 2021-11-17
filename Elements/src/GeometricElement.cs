@@ -199,5 +199,20 @@ namespace Elements
                         ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
                         : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
         }
+
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        internal Boolean TryToGraphicsBuffers(out GraphicsBuffers graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            id = null;
+            mode = null;
+            graphicsBuffers = new GraphicsBuffers(); // this is intended to be discarded
+            return false;
+        }
     }
 }
