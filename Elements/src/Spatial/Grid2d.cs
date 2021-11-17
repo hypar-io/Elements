@@ -711,13 +711,46 @@ namespace Elements.Spatial
                 return new[] { GetCellGeometry() };
             }
             Polygon baseRect = GetBaseRectangleTransformed();
-            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
+            var trimmedRect = Polygon.Intersection(new[] { baseRect },
+                boundariesInGridSpace, PolygonIntersectionTolerance);
             if (trimmedRect != null && trimmedRect.Count() > 0)
             {
                 return fromGrid.OfPolygons(trimmedRect);
 
             }
             return new Curve[0];
+        }
+
+        /// <summary>
+        /// Get a list of profiles representing this cell boundary, trimmed by any polygon boundary.
+        /// Internal polygons that are completely inside the cell and are clockwise, will be added as profile voids.
+        /// If the cell falls completely outside of the boundary, an empty array will be returned.
+        /// </summary>
+        /// <returns>Curves representing this cell in world coordinates.</returns>
+        public IEnumerable<Profile> GetTrimmedCellProfiles()
+        {
+            Polygon baseRect = GetBaseRectangleTransformed();
+
+            if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
+            {
+                return new[] { new Profile(baseRect.TransformedPolygon(fromGrid)) };
+            }
+            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
+            if (trimmedRect != null && trimmedRect.Count() > 0)
+            {
+                var profiles = new List<Profile>();
+                var outerLoops = trimmedRect.Where(loop => !loop.IsClockWise());
+                var innerLoops = trimmedRect.Where(loop => loop.IsClockWise());
+
+                foreach (var item in outerLoops)
+                {
+                    var inner = innerLoops.Where(loop => loop.Intersects(item)).ToList();
+                    profiles.Add(new Profile(item.TransformedPolygon(fromGrid), fromGrid.OfPolygons(inner)));
+                }
+
+                return profiles;
+            }
+            return new Profile[0];
         }
 
         #endregion
@@ -741,7 +774,8 @@ namespace Elements.Spatial
             {
                 return true;
             }
-            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
+            var trimmedRect = Polygon.Intersection(new[] { baseRect },
+                boundariesInGridSpace, PolygonIntersectionTolerance);
             if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
             if (trimmedRect.Count > 1) { return true; }
             return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
@@ -956,6 +990,17 @@ namespace Elements.Spatial
         /// We pass along a much smaller tolerance when we run our line extensions for Grid2d.
         /// </summary>
         private const double ExtensionTolerance = Vector3.EPSILON * Vector3.EPSILON;
+
+        /// <summary>
+        /// Intersection returns quantized distances with step of tolerance.
+        /// If intersection region is one EPSILON wide it's highly unstable:
+        /// 4.00001 - 4 = 9.9999999996214228E-06 but 4 - 3.99999 = 1.0000000000065512E-05.
+        /// And so, such region may be cut off by Intersection - in this case the cell is just skipped.
+        /// But if number passed the tolerance test - chances are high it will fail after fromGrid
+        /// transformation is applied and then whole trimming process will fail.
+        /// To avoid unpredictable behavior double tolerance is used.
+        /// </summary>
+        private const double PolygonIntersectionTolerance = Vector3.EPSILON * 2;
 
         /// <summary>
         /// Modifies a list of lines intended to represent uv guides in place to hit the bounds.
