@@ -13,13 +13,14 @@
 @inject NavigationManager MyNavigationManager
 
 <div class=grid>
-    <button class="run" @onclick="Run">Run</button>
+    <button class="run" disabled=@loading @onclick="Run">Run</button>
     <div id="editor">@csharp</div>
     <div id="model"></div>
     <div class="output">@((MarkupString)Output)</div>
 </div>
 
 @code {
+    bool loading = true;
     private static string csharp = @"var model = new Model();
 
 var length = 10;
@@ -69,7 +70,14 @@ return model;";
     protected override Task OnInitializedAsync()
     {
         Compiler.InitializeMetadataReferences(Client);
-        return base.OnInitializedAsync();
+
+        base.OnInitializedAsync();
+
+        return Compiler.WhenReady(() =>
+        {
+            loading = false;
+            return Task.FromResult(0);
+        });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
