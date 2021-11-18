@@ -63,12 +63,14 @@ for(var i=0; i<1; i++)
     }
 }
 return model;";
-    private string Output = "";
-
+    private static string Output = "";
+    private static IJSUnmarshalledRuntime Runtime;
     [Inject] private HttpClient Client { get; set; }
 
     protected override Task OnInitializedAsync()
     {
+        Runtime = JSUnmarshalledRuntime;
+
         Compiler.InitializeMetadataReferences(Client);
 
         base.OnInitializedAsync();
@@ -96,12 +98,13 @@ return model;";
         csharp = code;
     }
 
-    public Task Run()
+    [JSInvokable]
+    public static Task Run()
     {
         return Compiler.WhenReady(RunInternal);
     }
 
-    async Task RunInternal()
+    static async Task RunInternal()
     {
         Output = "";
 
@@ -124,10 +127,12 @@ return model;";
 
                 var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
                 var model = await (Task<object>)submission(new object[] { null, null });
+                Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
+
                 await Task.Run(() =>
                 {
                     var glb = ((Elements.Model)model).ToGlTF();
-                    JSUnmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+                    Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
                 });
             }
         }
@@ -138,11 +143,12 @@ return model;";
         Output = writer.ToString();
         if (exception != null)
         {
+
             Output += "\r\n" + exception.ToString();
         }
         Console.SetOut(currentOut);
 
         sw.Stop();
-        Console.WriteLine("Done in " + sw.ElapsedMilliseconds + "ms");
+
     }
 }
