@@ -15,14 +15,27 @@ namespace Elements
         /// <value></value>
         public Line Line { get; set; }
 
+        /// <summary>
+        /// Radius of the gridline head.
+        /// </summary>
+        public double Radius = 1;
+
+        /// <summary>
+        /// How far to extend the gridline from the beginning to the start of the circle.
+        /// </summary>
+        public double ExtensionBeginning = 1;
+
+        /// <summary>
+        /// How far to extend the gridline past the end of the circle.
+        /// </summary>
+        public double ExtensionEnd = 1;
+
         new internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             if (this.Line == null)
             {
                 return base.TryToGraphicsBuffers(out graphicsBuffers, out id, out mode);
             }
-
-            var rad = 5;
 
             id = $"{this.Id}_gridline";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
@@ -32,11 +45,21 @@ namespace Elements
             graphicsBuffers.Add(line.ToGraphicsBuffers(true));
 
             var dir = this.Line.Direction();
-            var extension = new ModelCurve(new Line(this.Line.Start, this.Line.Start - dir * rad));
-            graphicsBuffers.Add(extension.ToGraphicsBuffers(true));
 
-            var circle = new Circle(rad);
-            circle.Center = this.Line.Start - dir * rad * 2;
+            if (ExtensionBeginning > 0)
+            {
+                var extensionBeginning = new ModelCurve(new Line(this.Line.Start, this.Line.Start - dir * ExtensionBeginning));
+                graphicsBuffers.Add(extensionBeginning.ToGraphicsBuffers(true));
+            }
+
+            if (ExtensionEnd > 0)
+            {
+                var extensionEnd = new ModelCurve(new Line(this.Line.End, this.Line.End + dir * ExtensionEnd));
+                graphicsBuffers.Add(extensionEnd.ToGraphicsBuffers(true));
+            }
+
+            var circle = new Circle(Radius);
+            circle.Center = this.Line.Start - dir * (ExtensionBeginning + Radius);
             graphicsBuffers.Add(new ModelCurve(circle).ToGraphicsBuffers(true));
             return true;
         }
