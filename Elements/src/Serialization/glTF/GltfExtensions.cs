@@ -521,7 +521,7 @@ namespace Elements.Serialization.glTF
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
                                         int materialId,
-                                        IEnumerable<GraphicsBuffers> gBuffersList,
+                                        List<GraphicsBuffers> gBuffersList,
                                         MeshPrimitive.ModeEnum mode,
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<glTFLoader.Schema.Node> nodes,
@@ -529,8 +529,10 @@ namespace Elements.Serialization.glTF
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
-            foreach (var gBuffers in gBuffersList)
+            m.Primitives = new glTFLoader.Schema.MeshPrimitive[gBuffersList.Count()];
+            for (var idx = 0; idx < gBuffersList.Count(); idx++)
             {
+                var gBuffers = gBuffersList[idx];
                 var vBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Vertices.Count, null, null);
                 var iBuff = AddBufferView(bufferViews, 0, buffer.Count + gBuffers.Vertices.Count, gBuffers.Indices.Count, null, null);
 
@@ -582,7 +584,7 @@ namespace Elements.Serialization.glTF
                     prim.Attributes.Add("COLOR_0", cAccess);
                 }
 
-                m.Primitives = new[] { prim };
+                m.Primitives[idx] = prim;
             }
 
             // Add mesh to gltf
