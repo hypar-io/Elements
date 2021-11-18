@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
@@ -207,11 +208,11 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        internal Boolean TryToGraphicsBuffers(out GraphicsBuffers graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;
-            graphicsBuffers = new GraphicsBuffers(); // this is intended to be discarded
+            graphicsBuffers = new List<GraphicsBuffers>(); // this is intended to be discarded
             return false;
         }
     }

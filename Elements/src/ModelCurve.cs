@@ -50,11 +50,11 @@ namespace Elements
             return this.Curve.ToGraphicsBuffers(lineLoop);
         }
 
-        new internal Boolean TryToGraphicsBuffers(out GraphicsBuffers graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        new internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = $"{this.Id}_curve";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
-            graphicsBuffers = this.ToGraphicsBuffers(true);
+            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers(true) };
             return true;
         }
     }

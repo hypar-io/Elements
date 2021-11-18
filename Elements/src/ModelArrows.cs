@@ -118,7 +118,7 @@ namespace Elements
             return gb;
         }
 
-        new internal Boolean TryToGraphicsBuffers(out GraphicsBuffers graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        new internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             if (this.Vectors.Count < 1)
             {
@@ -126,7 +126,7 @@ namespace Elements
             }
             id = $"{this.Id}_arrow";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
-            graphicsBuffers = this.ToGraphicsBuffers();
+            graphicsBuffers = new List<GraphicsBuffers> { this.ToGraphicsBuffers() };
             return true;
         }
     }
