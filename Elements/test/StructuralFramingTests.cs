@@ -271,5 +271,65 @@ namespace Elements.Tests
                 this.Model.AddElement(straightBeam);
             }
         }
+
+        [Fact]
+        public async void Joists()
+        {
+            Name = nameof(Joists);
+
+            // <joist-example>
+            var xSpacing = 10.0;
+            var yLength = 30;
+
+            var profileFactory = new LProfileFactory();
+            var profile8 = await profileFactory.GetProfileByTypeAsync(LProfileType.L8X8X5_8);
+            var profile2 = await profileFactory.GetProfileByTypeAsync(LProfileType.L2X2X1_8);
+            var profile5 = await profileFactory.GetProfileByTypeAsync(LProfileType.L5X5X1_2);
+
+            var line = new Line(new Vector3(0, 0, 0), new Vector3(0, yLength, 0));
+            var joist = new Joist(line,
+                                  profile8,
+                                  profile8,
+                                  profile2,
+                                  Units.InchesToMeters(48),
+                                  20,
+                                  Units.InchesToMeters(2.5),
+                                  Units.FeetToMeters(2.0),
+                                  BuiltInMaterials.Steel)
+            {
+                IsElementDefinition = true
+            };
+
+
+            var cl = new Line(new Vector3(0, 0, 0), new Vector3(xSpacing, 0, 0));
+            var firstJoist = new Joist(cl,
+                                       profile5,
+                                       profile5,
+                                       profile2,
+                                       Units.InchesToMeters(24),
+                                       10,
+                                       Units.InchesToMeters(2.5),
+                                       Units.FeetToMeters(1),
+                                       BuiltInMaterials.Steel)
+            {
+                IsElementDefinition = true
+            };
+
+            for (var x = 0.0; x < 100.0; x += xSpacing)
+            {
+                var t = new Transform(new Vector3(x, 0, 4));
+                var joistInstance = joist.CreateInstance(t, $"joist_girder_{x}");
+                Model.AddElement(joistInstance);
+
+                var joistPoints = joist.JoistPoints.Select(jp => t.OfPoint(jp)).ToList();
+                for (var i = 0; i < joistPoints.Count; i++)
+                {
+                    var pt = joistPoints[i];
+                    var innerJoistInstance = firstJoist.CreateInstance(new Transform(pt), $"joist_{x}_{i}");
+                    Model.AddElement(innerJoistInstance);
+                }
+            }
+            // <joist-example>
+        }
     }
 }

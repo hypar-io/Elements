@@ -97,6 +97,69 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TrimmedCellProfile()
+        {
+            var outer = new Polygon(new List<Vector3> { new Vector3(0, 0, 0), new Vector3(10, 0, 0), new Vector3(10, 0, 10), new Vector3(0, 0, 10) });
+            var inner1 = new Polygon(new List<Vector3> { new Vector3(3, 0, 9), new Vector3(3, 0, 7), new Vector3(1, 0, 7), new Vector3(1, 0, 9) });
+            var inner2 = new Polygon(new List<Vector3> { new Vector3(9, 0, 3), new Vector3(9, 0, 1), new Vector3(7, 0, 1), new Vector3(7, 0, 3) });
+            var inner3 = new Polygon(new List<Vector3> { new Vector3(6, 0, 6), new Vector3(6, 0, 3), new Vector3(3, 0, 3), new Vector3(3, 0, 6) });
+
+            var polygons = new List<Polygon>();
+            polygons.Add(outer);
+            polygons.Add(inner1);
+            polygons.Add(inner2);
+            polygons.Add(inner3);
+
+            var grid = new Grid2d(polygons);
+            var profiles = grid.GetTrimmedCellProfiles();
+
+            Assert.Equal(1, profiles.Count());
+            var profile = profiles.FirstOrDefault();
+            Assert.Equal(3, profile.Voids.Count());
+            Assert.Equal(100, profile.Perimeter.Area());
+            Assert.Equal(4, profile.Voids[0].Area());
+            Assert.Equal(9, profile.Voids[1].Area());
+            Assert.Equal(4, profile.Voids[2].Area());
+        }
+
+        [Fact]
+        public void TrimmedCellProfileAfterSplitting()
+        {
+            var outer = new Polygon(new List<Vector3> { new Vector3(0, 0, 0), new Vector3(10, 0, 0), new Vector3(10, 0, 10), new Vector3(0, 0, 10) });
+            var inner1 = new Polygon(new List<Vector3> { new Vector3(3, 0, 9), new Vector3(3, 0, 7), new Vector3(1, 0, 7), new Vector3(1, 0, 9) });
+            var inner2 = new Polygon(new List<Vector3> { new Vector3(9, 0, 3), new Vector3(9, 0, 1), new Vector3(7, 0, 1), new Vector3(7, 0, 3) });
+            var inner3 = new Polygon(new List<Vector3> { new Vector3(6, 0, 6), new Vector3(6, 0, 3), new Vector3(3, 0, 3), new Vector3(3, 0, 6) });
+
+
+            var polygons = new List<Polygon>();
+            polygons.Add(outer);
+            polygons.Add(inner1);
+            polygons.Add(inner2);
+            polygons.Add(inner3);
+            var grid = new Grid2d(polygons);
+
+            grid.SplitAtPoints(new List<Vector3> { new Vector3(4, 0, 0), new Vector3(6, 0, 0) });
+            var cells = grid.GetCells();
+
+            var cell = cells[0];
+            var profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(1, profiles.Count());
+            Assert.Equal(1, profiles.First().Voids.Count());
+
+            cell = cells[1];
+            profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(2, profiles.Count());
+            Assert.Equal(0, profiles.First().Voids.Count());
+            Assert.Equal(0, profiles.Last().Voids.Count());
+
+            cell = cells[2];
+            profiles = cell.GetTrimmedCellProfiles();
+            Assert.Equal(1, profiles.Count());
+            Assert.Equal(1, profiles.First().Voids.Count());
+        }
+
+
+        [Fact]
         public void ChildGridUpdatesParent()
         {
             var u = new Grid1d(10);
@@ -452,6 +515,32 @@ namespace Elements.Tests
                 var trimmed = cell.GetTrimmedCellGeometry();
                 Assert.True(trimmed.Count() == 0);
             }
+        }
+
+        [Fact]
+        public void RotateGridWithClosePointDoNotThrow()
+        {
+            var boundary = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(3.998, 0.0),
+                    new Vector3(4 , 2),
+                    new Vector3(0.0, 1.998)
+                }
+            );
+
+            Transform t = new Transform(new Vector3(2, 0));
+            var grid = new Grid2d(boundary, t);
+            grid.SplitAtPoint(new Vector3(3.998, 0.01));
+
+            List<Curve[]> cellBoundaries = new List<Curve[]>();
+            foreach (var cell in grid.GetCells())
+            {
+                cellBoundaries.Add(cell.GetTrimmedCellGeometry());
+            }
+            Assert.Equal(3, cellBoundaries.Where(cb => cb.Any()).Count());
         }
     }
 }
