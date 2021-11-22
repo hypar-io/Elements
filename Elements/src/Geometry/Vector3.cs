@@ -169,7 +169,15 @@ namespace Elements.Geometry
         /// </summary>
         public double Length()
         {
-            return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            return Math.Sqrt(this.LengthSquared());
+        }
+
+        /// <summary>
+        /// Get the squared length of this vector.
+        /// </summary>
+        public double LengthSquared()
+        {
+            return Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2);
         }
 
         /// <summary>
