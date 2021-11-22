@@ -824,8 +824,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
+        /// <param name="includeCoincidenceAtEdge">Include coincidence at edge as inner segment.</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
-        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false)
         {
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
             // Make lists to hold points of intersection
@@ -880,7 +881,12 @@ namespace Elements.Geometry
                 var segment = new Line(A, B);
                 if (hasVertexIntersections || containment == Containment.CoincidesAtEdge) // if it passed through a vertex, or started at an edge or vertex, we can't rely on alternating, so check each midpoint
                 {
-                    currentlyIn = polygon.Contains((A + B) / 2);
+                    polygon.Contains((A + B) / 2, out var containmentInPolygon);
+                    currentlyIn = containmentInPolygon == Containment.Inside;
+                    if (includeCoincidenceAtEdge)
+                    {
+                        currentlyIn = currentlyIn || containmentInPolygon == Containment.CoincidesAtEdge;
+                    }
                 }
                 if (currentlyIn)
                 {
