@@ -542,5 +542,13 @@ namespace Elements.Tests
             }
             Assert.Equal(3, cellBoundaries.Where(cb => cb.Any()).Count());
         }
+
+        [Fact]
+        public void SeparatorsFromBadPolygon()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/bad_grid.json");
+            var grid = JsonConvert.DeserializeObject<Grid2d>(json);
+            var cellSeparators = grid.GetCellSeparators(GridDirection.V, true);
+        }
     }
 }

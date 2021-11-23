@@ -443,5 +443,22 @@ namespace Elements.Geometry.Tests
             var l2 = new Line(b, a);
             Assert.NotEqual(l1.GetHashCode(), l2.GetHashCode());
         }
+
+        [Fact]
+        public void FitLineAndCollinearity()
+        {
+            var points1 = new List<Vector3> {
+                (0,0,0),
+                (5,Vector3.EPSILON * 0.5,0),
+                (8,0,Vector3.EPSILON * 0.5),
+                (-4, 0, 0)
+            };
+            Assert.True(points1.AreCollinear());
+
+            points1.Add(
+                  (-6, Vector3.EPSILON * 2, 0)
+            );
+            Assert.False(points1.AreCollinear());
+        }
     }
 }

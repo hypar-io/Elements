@@ -52,31 +52,46 @@ namespace Elements.Geometry
             {
                 return true;
             }
-            var testVector = (points[1] - points[0]).Unitized();
-            // in general this loop should not execute. This is just a check in case the first two points are
-            // coincident.
-            while (testVector.IsZero()) //loop until you find an initial vector that isn't zero-length
+
+            var fitLine = points.FitLine(out var directions);
+            var fitDir = fitLine.Direction();
+            var epsilonSquared = Vector3.EPSILON * Vector3.EPSILON;
+            return directions.All(d =>
             {
-                points.RemoveAt(0);
-                if (points.Count < 3)
-                {
-                    return true;
-                }
-                testVector = (points[1] - points[0]).Unitized();
-            }
-            for (int i = 2; i < points.Count; i++)
-            {
-                var nextVector = (points[i] - points[i - 1]).Unitized();
-                if (nextVector.IsZero()) // coincident points may be safely skipped
-                {
-                    continue;
-                }
-                if (Math.Abs(nextVector.Dot(testVector)) < (1 - Vector3.EPSILON))
-                {
-                    return false;
-                }
-            }
-            return true;
+                var dot = d.Dot(fitDir);
+                var lengthSquared = d.LengthSquared();
+                return lengthSquared - (dot * dot) < epsilonSquared;
+            });
+        }
+
+        /// <summary>
+        /// Return an approximate fit line through a set of points. 
+        /// Not intended for statistical regression purposes. 
+        /// Note that the line is unit length: it shouldn't be expected
+        /// to span the length of the points.
+        /// </summary>
+        /// <param name="points">The points to fit.</param>
+        /// <returns>A line roughly running through the set of points.</returns>
+        public static Line FitLine(this IList<Vector3> points)
+        {
+            return FitLine(points, out _);
+        }
+        private static Line FitLine(this IList<Vector3> points, out IEnumerable<Vector3> directionsFromMean)
+        {
+            // get the mean point, presumably near the center of the pts
+            var meanPt = points.Average();
+            // get the points minus their mean (direction from the mean to the other points)
+            var ptsMinusMean = points.Select(pt => pt - meanPt);
+            // pick any non-zero vector as an alignment guide, so that a set of directions
+            // that's perfectly symmetrical about the mean doesn't average out to zero
+            var alignmentVector = ptsMinusMean.First(p => !p.IsZero());
+            // flip the directions so they're all pointing in the same direction as the alignment vector
+            var ptsMinusMeanAligned = ptsMinusMean.Select(p => p.Dot(alignmentVector) < 0 ? p * -1 : p);
+            // get average direction
+            var averageDirFromMean = ptsMinusMeanAligned.Average();
+
+            directionsFromMean = ptsMinusMean;
+            return new Line(meanPt, meanPt + averageDirFromMean.Unitized());
         }
 
         /// <summary>
