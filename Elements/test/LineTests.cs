@@ -251,6 +251,7 @@ namespace Elements.Geometry.Tests
             Line startsOutsideAndLandsOnEdge = new Line(new Vector3(-2, 4, 0), new Vector3(4, 5, 0));
             Line crossesAtVertexStaysOutside = new Line(new Vector3(6, 2, 0), new Vector3(4, 0));
             Line passesThroughAtVertex = new Line(new Vector3(6, 0, 0), new Vector3(4, 2, 0));
+            Line passesThroughEdge = new Line(new Vector3(0, 5, 0), new Vector3(10, 5, 0));
             var Polygon = new Polygon(new[]
             {
                 new Vector3(1,1,0),
@@ -280,6 +281,9 @@ namespace Elements.Geometry.Tests
             var i7 = passesThroughAtVertex.Trim(Polygon, out var o7);
             Assert.Single(i7);
             Assert.Single(o7);
+            var i8 = passesThroughEdge.Trim(Polygon, out var o8, true);
+            Assert.Single(i8);
+            Assert.Equal(2, o8.Count);
         }
 
         [Fact]
