@@ -27,6 +27,7 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `FitLine(IList<Point2d> points)`
 
 ### Changed
 
@@ -37,6 +38,7 @@
 - `Polygon` constructor throws error if there are less than 3 vertices provided.
 - Decrease intersection tolerance for Grid2d polygon splitting.
 - Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
+- Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
 
 ### Fixed
 
