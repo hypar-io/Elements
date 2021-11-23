@@ -57,7 +57,7 @@ namespace Elements
             return gb;
         }
 
-        new internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             if (this.Locations.Count == 0)
             {
