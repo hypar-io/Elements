@@ -27,6 +27,7 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `GridLine`
 
 ### Changed
 
