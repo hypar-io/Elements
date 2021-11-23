@@ -445,6 +445,7 @@ namespace Elements.Geometry.Solids
 
                 var faceMesh = new Mesh();
                 (Vector3 U, Vector3 V) basis = (default(Vector3), default(Vector3));
+                Vector3 normal = default(Vector3);
 
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
@@ -466,13 +467,13 @@ namespace Elements.Geometry.Solids
                         // for planar faces.
                         // TODO: Update this when we support non-planar faces.
                         // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                        var n = f.Plane().Normal;
-                        basis = n.ComputeDefaultBasisVectors();
+                        normal = f.Plane().Normal;
+                        basis = normal.ComputeDefaultBasisVectors();
                     }
 
-                    var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), color: color);
-                    var v2 = faceMesh.AddVertex(b, new UV(basis.U.Dot(b), basis.V.Dot(b)), color: color);
-                    var v3 = faceMesh.AddVertex(c, new UV(basis.U.Dot(c), basis.V.Dot(c)), color: color);
+                    var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), normal, color: color);
+                    var v2 = faceMesh.AddVertex(b, new UV(basis.U.Dot(b), basis.V.Dot(b)), normal, color: color);
+                    var v3 = faceMesh.AddVertex(c, new UV(basis.U.Dot(c), basis.V.Dot(c)), normal, color: color);
 
                     faceMesh.AddTriangle(v1, v2, v3);
                 }
