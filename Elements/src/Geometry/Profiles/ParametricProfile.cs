@@ -14,6 +14,7 @@ namespace Elements.Geometry.Profiles
     /// </summary>
     public class ParametricProfile : Profile
     {
+        [ThreadStatic]
         private static Script<Polygon> _script;
         ScriptOptions _options;
         private readonly string _perimeterScript;
