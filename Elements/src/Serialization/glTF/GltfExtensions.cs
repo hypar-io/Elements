@@ -1085,26 +1085,11 @@ namespace Elements.Serialization.glTF
 
             if (e is GeometricElement)
             {
-                var eType = e.GetType();
-                var toGraphicsBuffers = eType.GetMethod("TryToGraphicsBuffers", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (toGraphicsBuffers != null)
+                var ge = (GeometricElement)e;
+                if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
-                    var ge = (GeometricElement)e;
-                    var parameters = new object[] {
-                        new List<GraphicsBuffers>(), // default graphics buffer, which is empty
-                        "", // default ID, which is nothing
-                        MeshPrimitive.ModeEnum.POINTS, // default mode, which is random and won't be used if this wasn't handled by the method
-                    };
-                    var convertedSuccesfully = (Boolean)toGraphicsBuffers.Invoke(e, parameters);
-                    if (convertedSuccesfully)
-                    {
-                        var gb = (List<GraphicsBuffers>)parameters[0];
-                        var id = (string)parameters[1];
-                        var mode = (MeshPrimitive.ModeEnum)parameters[2];
-                        gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, mode, meshes, nodes, ge.Transform);
-                    }
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, (MeshPrimitive.ModeEnum)mode, meshes, nodes, ge.Transform);
                 }
-
             }
 
             if (e is ITessellate)

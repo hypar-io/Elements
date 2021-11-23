@@ -208,7 +208,7 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        internal Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        internal virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;
