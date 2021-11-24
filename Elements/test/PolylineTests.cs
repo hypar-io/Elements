@@ -69,6 +69,24 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Polyline_OffsetOnSide_threeSegment()
+        {
+            var line = new Polyline(new List<Vector3>()
+            {
+                new Vector3(13540, 430),
+                new Vector3(13540, -1240),
+                new Vector3(9840, -1240),
+                new Vector3(6914, -1190),
+            });
+
+            var polygons = line.OffsetOnSide(2, false);
+            Assert.Equal(3,polygons.Length);
+
+            // A rectangle extruded down from the original line.
+            Assert.Equal(new Vector3[] { new Vector3(13540, 430, 0), new Vector3(13538, 430, 0), new Vector3(13538, -1238, 0), new Vector3(13540, -1240, 0) }, polygons.First().Vertices);
+        }
+
+        [Fact]
         public void Polyline_OffsetOnSide_SingleSegmentFlipped()
         {
             var line = new Polyline(new List<Vector3>(){
