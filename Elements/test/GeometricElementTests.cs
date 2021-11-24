@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Xunit;
@@ -60,6 +61,36 @@ namespace Elements.Tests
                 return (v.position, v.normal, v.uv, new Color(v.position.Z / height, v.position.Z / height, 1, 1));
             };
             this.Model.AddElement(mass);
+        }
+
+        [Fact]
+        public void CustomGraphicsBuffers()
+        {
+            this.Name = nameof(CustomGraphicsBuffers);
+            var geo = new CustomGBClass
+            {
+                Material = BuiltInMaterials.Steel
+            };
+            Model.AddElement(geo);
+        }
+
+    }
+    class CustomGBClass : GeometricElement
+    {
+        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            id = $"{this.Id}_customthing";
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.TRIANGLE_FAN;
+            var vertices = new List<Vector3>() {
+                    (0,0,0),
+                    (1,0,0),
+                    (1.5,0.5,0),
+                    (1,1,0),
+                    (0.5, 1.5,0),
+                    (0,1,0),
+            };
+            graphicsBuffers = new List<GraphicsBuffers>() { vertices.ToGraphicsBuffers(false) };
+            return true;
         }
     }
 }
