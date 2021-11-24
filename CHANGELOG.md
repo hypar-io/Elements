@@ -27,6 +27,7 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `GridLine`
 - `FitLine(IList<Point2d> points)`
 
 ### Changed
