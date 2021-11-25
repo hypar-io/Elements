@@ -17,12 +17,23 @@ namespace Elements.Tests.Examples
         {
             this.Name = "Elements_GridLines";
 
-            var gridline = new GridLine();
-            gridline.Name = "A";
-            gridline.Line = new Line(new Vector3(), new Vector3(25, 25, 0));
-            gridline.Material = new Material("Red", new Color(1, 0, 0, 1));
+            var gridline = new GridLine
+            {
+                Name = "A",
+                Line = new Line(new Vector3(), new Vector3(25, 25, 0)),
+                Material = new Material("Red", new Color(1, 0, 0, 1))
+            };
 
             this.Model.AddElement(gridline);
+
+            var verticalGridline = new GridLine
+            {
+                Name = "B",
+                Line = new Line(new Vector3(), new Vector3(0, 0, 25)),
+                Material = new Material("Green", new Color(0, 1, 0, 1))
+            };
+
+            this.Model.AddElements(gridline, verticalGridline);
         }
     }
 }
