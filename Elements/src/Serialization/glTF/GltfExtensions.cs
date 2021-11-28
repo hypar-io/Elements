@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 // TODO: Get rid of System.Linq
 using System.Linq;
+using System.Reflection;
 using glTFLoader;
 using glTFLoader.Schema;
 using System.IO;
@@ -520,7 +521,7 @@ namespace Elements.Serialization.glTF
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
                                         int materialId,
-                                        GraphicsBuffers gBuffers,
+                                        List<GraphicsBuffers> gBuffersList,
                                         MeshPrimitive.ModeEnum mode,
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<glTFLoader.Schema.Node> nodes,
@@ -528,58 +529,63 @@ namespace Elements.Serialization.glTF
         {
             var m = new glTFLoader.Schema.Mesh();
             m.Name = name;
-            var vBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Vertices.Count, null, null);
-            var iBuff = AddBufferView(bufferViews, 0, buffer.Count + gBuffers.Vertices.Count, gBuffers.Indices.Count, null, null);
-
-            buffer.AddRange(gBuffers.Vertices);
-            buffer.AddRange(gBuffers.Indices);
-
-            while (buffer.Count % 4 != 0)
+            m.Primitives = new glTFLoader.Schema.MeshPrimitive[gBuffersList.Count()];
+            for (var idx = 0; idx < gBuffersList.Count(); idx++)
             {
-                buffer.Add(0);
-            }
+                var gBuffers = gBuffersList[idx];
+                var vBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Vertices.Count, null, null);
+                var iBuff = AddBufferView(bufferViews, 0, buffer.Count + gBuffers.Vertices.Count, gBuffers.Indices.Count, null, null);
 
-            var vAccess = AddAccessor(accessors,
-                                      vBuff,
-                                      0,
-                                      Accessor.ComponentTypeEnum.FLOAT,
-                                      gBuffers.Vertices.Count / sizeof(float) / 3,
-                                      new[] { (float)gBuffers.VMin[0], (float)gBuffers.VMin[1], (float)gBuffers.VMin[2] },
-                                      new[] { (float)gBuffers.VMax[0], (float)gBuffers.VMax[1], (float)gBuffers.VMax[2] },
-                                      Accessor.TypeEnum.VEC3);
-            var iAccess = AddAccessor(accessors,
-                                      iBuff,
-                                      0,
-                                      Accessor.ComponentTypeEnum.UNSIGNED_SHORT,
-                                      gBuffers.Indices.Count / sizeof(ushort),
-                                      new[] { (float)gBuffers.IMin },
-                                      new[] { (float)gBuffers.IMax },
-                                      Accessor.TypeEnum.SCALAR);
+                buffer.AddRange(gBuffers.Vertices);
+                buffer.AddRange(gBuffers.Indices);
 
-            var prim = new MeshPrimitive();
-            prim.Indices = iAccess;
-            prim.Material = materialId;
-            prim.Mode = mode;
-            prim.Attributes = new Dictionary<string, int>{
+                while (buffer.Count % 4 != 0)
+                {
+                    buffer.Add(0);
+                }
+
+                var vAccess = AddAccessor(accessors,
+                                          vBuff,
+                                          0,
+                                          Accessor.ComponentTypeEnum.FLOAT,
+                                          gBuffers.Vertices.Count / sizeof(float) / 3,
+                                          new[] { (float)gBuffers.VMin[0], (float)gBuffers.VMin[1], (float)gBuffers.VMin[2] },
+                                          new[] { (float)gBuffers.VMax[0], (float)gBuffers.VMax[1], (float)gBuffers.VMax[2] },
+                                          Accessor.TypeEnum.VEC3);
+                var iAccess = AddAccessor(accessors,
+                                          iBuff,
+                                          0,
+                                          Accessor.ComponentTypeEnum.UNSIGNED_SHORT,
+                                          gBuffers.Indices.Count / sizeof(ushort),
+                                          new[] { (float)gBuffers.IMin },
+                                          new[] { (float)gBuffers.IMax },
+                                          Accessor.TypeEnum.SCALAR);
+
+                var prim = new MeshPrimitive();
+                prim.Indices = iAccess;
+                prim.Material = materialId;
+                prim.Mode = mode;
+                prim.Attributes = new Dictionary<string, int>{
                 {"POSITION",vAccess}
             };
 
-            if (gBuffers.Colors.Count > 0)
-            {
-                var cBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Colors.Count, null, null);
-                buffer.AddRange(gBuffers.Colors);
-                var cAccess = AddAccessor(accessors,
-                                          cBuff,
-                                          0,
-                                          Accessor.ComponentTypeEnum.FLOAT,
-                                          gBuffers.Colors.Count / sizeof(float) / 3,
-                                          new[] { (float)gBuffers.CMin[0], (float)gBuffers.CMin[1], (float)gBuffers.CMin[2] },
-                                          new[] { (float)gBuffers.CMax[0], (float)gBuffers.CMax[1], (float)gBuffers.CMax[2] },
-                                          Accessor.TypeEnum.VEC3);
-                prim.Attributes.Add("COLOR_0", cAccess);
-            }
+                if (gBuffers.Colors.Count > 0)
+                {
+                    var cBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Colors.Count, null, null);
+                    buffer.AddRange(gBuffers.Colors);
+                    var cAccess = AddAccessor(accessors,
+                                              cBuff,
+                                              0,
+                                              Accessor.ComponentTypeEnum.FLOAT,
+                                              gBuffers.Colors.Count / sizeof(float) / 3,
+                                              new[] { (float)gBuffers.CMin[0], (float)gBuffers.CMin[1], (float)gBuffers.CMin[2] },
+                                              new[] { (float)gBuffers.CMax[0], (float)gBuffers.CMax[1], (float)gBuffers.CMax[2] },
+                                              Accessor.TypeEnum.VEC3);
+                    prim.Attributes.Add("COLOR_0", cAccess);
+                }
 
-            m.Primitives = new[] { prim };
+                m.Primitives[idx] = prim;
+            }
 
             // Add mesh to gltf
             meshes.Add(m);
@@ -670,7 +676,7 @@ namespace Elements.Serialization.glTF
                 // Draw standard edges
                 var id = $"{100000}_curve";
                 var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers(false);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.Edges.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
             }
 
             if (verticesHighlighted.Count > 0)
@@ -678,7 +684,7 @@ namespace Elements.Serialization.glTF
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
                 var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers(false);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
             }
 
             var buff = new glTFLoader.Schema.Buffer();
@@ -863,7 +869,7 @@ namespace Elements.Serialization.glTF
                     }
                     var id = $"{GetNextId()}_edge";
                     var gb = lineSet.ToGraphicsBuffers(false);
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
                 }
             }
 
@@ -1077,33 +1083,12 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is ModelCurve)
+            if (e is GeometricElement)
             {
-                var mc = (ModelCurve)e;
-                var id = $"{e.Id}_curve";
-                var gb = mc.ToGraphicsBuffers(true);
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mc.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, mc.Transform);
-            }
-
-            if (e is ModelPoints)
-            {
-                var mp = (ModelPoints)e;
-                if (mp.Locations.Count != 0)
+                var ge = (GeometricElement)e;
+                if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
-                    var id = $"{e.Id}_point";
-                    var gb = mp.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[mp.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.POINTS, meshes, nodes, mp.Transform);
-                }
-            }
-
-            if (e is ModelArrows)
-            {
-                var ma = (ModelArrows)e;
-                if (ma.Vectors.Count > 0)
-                {
-                    var id = $"{e.Id}_arrow";
-                    var gb = ma.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ma.Material.Id.ToString()], gb, MeshPrimitive.ModeEnum.LINES, meshes, nodes, ma.Transform);
+                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, (MeshPrimitive.ModeEnum)mode, meshes, nodes, ge.Transform);
                 }
             }
 
