@@ -217,7 +217,7 @@ namespace Elements.Geometry
                 normal.Y += (p0.Z - p1.Z) * (p0.X + p1.X);
                 normal.Z += (p0.X - p1.X) * (p0.Y + p1.Y);
             }
-            return normal.Unitized(0);
+            return normal.Unitized();
         }
     }
 

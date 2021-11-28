@@ -80,7 +80,7 @@ namespace Elements.Geometry.Tests
             });
 
             var polygons = line.OffsetOnSide(2, false);
-            Assert.Equal(3,polygons.Length);
+            Assert.Equal(3, polygons.Length);
 
             // A 3 segment line with the end segment endpoint almost parallel to the second line
             Assert.Equal(new Vector3[] { new Vector3(13540, 430, 0), new Vector3(13538, 430, 0), new Vector3(13538, -1238, 0), new Vector3(13540, -1240, 0) }, polygons.First().Vertices);

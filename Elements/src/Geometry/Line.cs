@@ -298,7 +298,10 @@ namespace Elements.Geometry
             {
                 plane = new Plane(start1, end1, start2);
                 if (plane.Normal.IsZero())
-                    plane = new Plane(end1, start2, end2);
+                {
+                    var areCollinear = (new[] { start1, end1, start2 }).AreCollinear();
+                    // plane = new Plane(end1, start2, end2);
+                }
                 testpoint = end2;
 
             } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
