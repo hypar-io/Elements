@@ -88,16 +88,6 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u.ApproximatelyEquals(0.0))
-            {
-                return this.Start;
-            }
-
-            if (u.ApproximatelyEquals(1.0))
-            {
-                return this.End;
-            }
-
             if (u > 1.0 || u < 0.0)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
@@ -587,12 +577,17 @@ namespace Elements.Geometry
             }
             var lines = new List<Line>();
             var div = 1.0 / n;
-            for (var t = 0.0; t < 1.0 - div + Vector3.EPSILON; t += div)
+            var a = Start;
+            var t = div;
+            for (var i = 0; i < n - 1; i++)
             {
-                var a = PointAt(t);
-                var b = PointAt(t + div);
+                var b = PointAt(t);
                 lines.Add(new Line(a, b));
+
+                t += div;
+                a = b;
             }
+            lines.Add(new Line(a, End));
             return lines;
         }
 
@@ -829,8 +824,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
+        /// <param name="includeCoincidenceAtEdge">Include coincidence at edge as inner segment.</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
-        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments)
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false)
         {
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
             // Make lists to hold points of intersection
@@ -885,7 +881,12 @@ namespace Elements.Geometry
                 var segment = new Line(A, B);
                 if (hasVertexIntersections || containment == Containment.CoincidesAtEdge) // if it passed through a vertex, or started at an edge or vertex, we can't rely on alternating, so check each midpoint
                 {
-                    currentlyIn = polygon.Contains((A + B) / 2);
+                    polygon.Contains((A + B) / 2, out var containmentInPolygon);
+                    currentlyIn = containmentInPolygon == Containment.Inside;
+                    if (includeCoincidenceAtEdge)
+                    {
+                        currentlyIn = currentlyIn || containmentInPolygon == Containment.CoincidesAtEdge;
+                    }
                 }
                 if (currentlyIn)
                 {

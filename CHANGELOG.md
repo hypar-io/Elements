@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.9.6
+
+### Added
+
+- `Position.FromVectorMeters`
+- `Elements.Geometry.Profiles.IProfileFactory`
+- `Elements.Geometry.Profiles.ParametricProfile`
+- `Elements.Geometry.Profiles.VectorExpression`
+- `Elements.Geometry.Profiles.ProfileFactoryBase`
+- `Elements.Geometry.Profiles.ParametricProfileFactory`
+- `Elements.Geometry.Profiles.WTProfileType`
+- `Elements.Geometry.Profiles.WTProfile`
+- `Elements.Geometry.Profiles.WTProfileFactory`
+- `Elements.Geometry.Profiles.LProfileType`
+- `Elements.Geometry.Profiles.LProfile`
+- `Elements.Geometry.Profiles.LProfileFactory`
+- `Elements.Geometry.Profiles.MCProfileType`
+- `Elements.Geometry.Profiles.MCProfile`
+- `Elements.Geometry.Profiles.MCProfileFactory`
+- `Elements.Geometry.Profiles.HSSProfileType`
+- `Elements.Geometry.Profiles.HSSProfile`
+- `Elements.Geometry.Profiles.HSSProfileFactory`
+- `Elements.Geometry.Profiles.WProfileType`
+- `Elements.Geometry.Profiles.WProfile`
+- `Elements.Geometry.Profiles.WProfileFactory`
+- `Grid2d.GetTrimmedCellProfiles`
+- `Ceiling`
+- `GridLine`
+- `FitLine(IList<Point2d> points)`
+
+### Changed
+
+- Change default for `useReferenceOrientation` when generating content catalogs.
+- `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
+- glTF generation now uses material IDs instead of names for material names, to prevent collisions.
+- Line.PointAt does not round input values near 0 or 1 anymore.
+- `Polygon` constructor throws error if there are less than 3 vertices provided.
+- Decrease intersection tolerance for Grid2d polygon splitting.
+- Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
+- Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
+
+### Fixed
+
+-
+
 ## 0.9.5
 
 ### Added
@@ -11,13 +56,15 @@
 - `Profile.Project(Plane)`
 
 ### Changed
+
 - Wall doesn't have Height or Profile any more.
 - WallByProfile deprecates `Profile` and has methods/constructors to use Perimeter and Openings only.
 - `Polygon.Area()` will now calculate the area of a polygon in 3D.
 - WallByProfile updated constructor options and `UpdateRepresentation` logic.
-
+- Code generation includes an empty constructor for generated types.
 
 ### Fixed
+
 - WallByProfile was failing to deserialize walls without openings.
 
 ## 0.9.4
@@ -65,7 +112,7 @@
 
 - Deduplicate catalog names during code generation.
 - Fix some issues with code generation and deserialization of `Vector3` and `Mesh` types.
-- Fixed an issue where GLTFs would occasionally be generated with incorrect vertex normals.
+- Fixed an issue where gLTFs would occasionally be generated with incorrect vertex normals.
 
 ## 0.9.2
 

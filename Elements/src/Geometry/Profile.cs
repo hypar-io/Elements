@@ -20,6 +20,12 @@ namespace Elements.Geometry
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
+        /// The default constructor is used by derived classes, 
+        /// and is not intended to be used directly.
+        /// </summary>
+        internal Profile() { }
+
+        /// <summary>
         /// Create a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
@@ -27,7 +33,7 @@ namespace Elements.Geometry
         /// <param name="id">The id of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, Guid @id = default, string @name = null)
             : base(id, name)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -254,6 +260,14 @@ namespace Elements.Geometry
         /// </summary>
         public void OrientVoids()
         {
+            // This should only occur in the case of a parametric 
+            // profile which defines its own perimeter and void logic
+            // during construction.
+            if (Perimeter == null || Voids == null)
+            {
+                return;
+            }
+
             var correctedVoids = new List<Polygon>();
             var perimeterNormal = Perimeter.Normal();
             foreach (var voidCrv in Voids)
