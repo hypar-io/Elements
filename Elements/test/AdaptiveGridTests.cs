@@ -119,5 +119,18 @@ namespace Elements.Tests
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 1), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 2), out _));
         }
+
+        [Fact]
+        public void AdaptiveGridLongSectionDoNowThrow()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(200000, 10));
+
+            var points = new List<Vector3>();
+            points.Add(new Vector3(1, 5));
+            points.Add(new Vector3(1999, 5));
+ 
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+        }
     }
 }

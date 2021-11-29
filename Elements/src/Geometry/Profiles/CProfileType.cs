@@ -1,0 +1,39 @@
+#pragma warning disable CS1591
+namespace Elements.Geometry.Profiles
+{
+    public enum CProfileType
+    {
+        C15X50,
+        C15X40,
+        C15X33_9,
+        C12X30,
+        C12X25,
+        C12X20_7,
+        C10X30,
+        C10X25,
+        C10X20,
+        C10X15_3,
+        C9X20,
+        C9X15,
+        C9X13_4,
+        C8X18_75,
+        C8X13_75,
+        C8X11_5,
+        C7X14_75,
+        C7X12_25,
+        C7X9_8,
+        C6X13,
+        C6X10_5,
+        C6X8_2,
+        C5X9,
+        C5X6_7,
+        C4X7_25,
+        C4X6_25,
+        C4X5_4,
+        C4X4_5,
+        C3X6,
+        C3X5,
+        C3X4_1,
+        C3X3_5
+    }
+}

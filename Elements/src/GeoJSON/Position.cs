@@ -53,11 +53,22 @@ namespace Elements.GeoJSON
         }
 
         /// <summary>
-        /// Convert the position to a vector.
+        /// Convert the position to a vector in meters relative to an origin position.
         /// </summary>
-        public Vector3 ToVectorMeters()
+        /// <param name="relativeToOrigin">A position marking the latitude and longitude of (0,0)</param>
+        public Vector3 ToVectorMeters(Position relativeToOrigin)
         {
-            return new Vector3(MercatorProjection.LonToX(Longitude), MercatorProjection.LatToY(Latitude));
+            return MercatorProjection.LatLonToMeters(relativeToOrigin, Latitude, Longitude);
+        }
+
+        /// <summary>
+        /// Convert the position to a vector in meters relative to an origin position.
+        /// </summary>
+        /// <param name="relativeToOrigin">A position marking the latitude and longitude of (0,0)</param>
+        /// <param name="location">The position to convert to latitude and longitude.</param>
+        public static Position FromVectorMeters(Position relativeToOrigin, Vector3 location)
+        {
+            return MercatorProjection.MetersToLatLon(relativeToOrigin, location);
         }
     }
 }
