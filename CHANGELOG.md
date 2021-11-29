@@ -41,6 +41,7 @@
 - Decrease intersection tolerance for Grid2d polygon splitting.
 - Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
 - Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
+- `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
 
 ### Fixed
 
