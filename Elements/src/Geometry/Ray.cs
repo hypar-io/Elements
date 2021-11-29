@@ -261,7 +261,6 @@ namespace Elements.Geometry
         /// <param name="topo">The topography.</param>
         /// <param name="result">The location of intersection.</param>
         /// <returns>True if an intersection result occurs.
-        /// The type of intersection should be checked in the intersection result.
         /// False if no intersection occurs.</returns>
         public bool Intersects(Topography topo, out Vector3 result)
         {
@@ -274,7 +273,6 @@ namespace Elements.Geometry
         /// <param name="mesh">The Mesh.</param>
         /// <param name="result">The location of intersection.</param>
         /// <returns>True if an intersection result occurs.
-        /// The type of intersection should be checked in the intersection result.
         /// False if no intersection occurs.</returns>
 
         public bool Intersects(Mesh mesh, out Vector3 result)
