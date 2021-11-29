@@ -29,6 +29,7 @@
 - `Ceiling`
 - `GridLine`
 - `FitLine(IList<Point2d> points)`
+- `Ray.Interects(Mesh mesh)`
 
 ### Changed
 

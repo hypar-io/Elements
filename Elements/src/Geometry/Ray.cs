@@ -279,7 +279,7 @@ namespace Elements.Geometry
 
         public bool Intersects(Mesh mesh, out Vector3 result)
         {
-            result = default(Vector3);
+            result = default;
             foreach (var t in mesh.Triangles)
             {
                 if (this.Intersects(t, out result))
