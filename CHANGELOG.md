@@ -29,6 +29,10 @@
 - `Ceiling`
 - `GridLine`
 - `FitLine(IList<Point2d> points)`
+- `HalfEdgeGraph.Construct(IEnumerable<Line> lines)`
+- `Polyline.Project(Plane plane)`
+- `new Mesh(Mesh mesh)`
+-
 
 ### Changed
 
@@ -40,6 +44,7 @@
 - Decrease intersection tolerance for Grid2d polygon splitting.
 - Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
 - Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
+- `BBox3` constructor now takes an `IEnumerable<Vector3>` instead of a `IList<Vector3>` as input.
 
 ### Fixed
 

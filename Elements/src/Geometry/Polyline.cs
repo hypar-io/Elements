@@ -755,6 +755,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Project this polyline onto the plane.
+        /// </summary>
+        /// <param name="plane">The plane of the returned polyline.</param>
+        public Polyline Project(Plane plane)
+        {
+            var projected = new Vector3[this.Vertices.Count];
+            for (var i = 0; i < projected.Length; i++)
+            {
+                projected[i] = this.Vertices[i].Project(plane);
+            }
+            return new Polyline(projected);
+        }
+
+        /// <summary>
         /// Identify any shared segments between two polylines.
         /// </summary>
         /// <param name="a">The first polyline to compare.</param>
