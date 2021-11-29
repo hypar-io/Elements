@@ -32,7 +32,7 @@
 - `HalfEdgeGraph.Construct(IEnumerable<Line> lines)`
 - `Polyline.Project(Plane plane)`
 - `new Mesh(Mesh mesh)`
--
+- `new Topography(Mesh mesh, Material material, Transform transform, Guid id, string name)`
 
 ### Changed
 
