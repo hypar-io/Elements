@@ -157,6 +157,27 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void HorizontalFrameAlongCurve()
+        {
+            Name = nameof(HorizontalFrameAlongCurve);
+
+            var nonXYPolygon = new Polygon(
+                (0, 0),
+                (5, 0, 5),
+                (5, 5, 5),
+                (0, 5, 0)
+            );
+            for (var t = 0.0; t <= 1.0; t += 0.1)
+            {
+                var frame = Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(nonXYPolygon, t);
+                var m = new Mass(Polygon.Rectangle(1.0, 1.0), 0.5, transform: frame);
+                this.Model.AddElement(m);
+                this.Model.AddElement(nonXYPolygon);
+            }
+
+        }
+
+        [Fact]
         public void AllTransformsRunInTheSameDirection()
         {
             this.Name = "AllTransformsRunInTheSameDirection";
