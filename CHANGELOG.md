@@ -30,6 +30,7 @@
 - `GridLine`
 - `FitLine(IList<Point2d> points)`
 - `Transform.CreateHorizontalFrameAlongCurve()`
+- `Ray.Interects(Mesh mesh)`
 
 ### Changed
 
