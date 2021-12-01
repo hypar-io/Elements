@@ -42,13 +42,13 @@ namespace Elements.Geometry
         /// Construct a bounding box from an array of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
-        public BBox3(IList<Vector3> points)
+        public BBox3(IEnumerable<Vector3> points)
         {
             this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
             this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
-            for (var i = 0; i < points.Count; i++)
+            foreach (Vector3 v in points)
             {
-                this.Extend(points[i]);
+                this.Extend(v);
             }
         }
 

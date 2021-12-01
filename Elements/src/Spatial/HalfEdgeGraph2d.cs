@@ -166,6 +166,47 @@ namespace Elements.Spatial
         }
 
         /// <summary>
+        /// Construct a 2D half-edge graph from a collection of lines.
+        /// </summary>
+        /// <param name="lines">The line segments from which to construct the graph.</param>
+        /// <param name="bothWays">If true, each line will create two half edges — one running each way.</param>
+        public static HalfEdgeGraph2d Construct(IEnumerable<Line> lines, bool bothWays = false)
+        {
+            var graph = new HalfEdgeGraph2d();
+            var vertices = graph.Vertices;
+            var edgesPerVertex = graph.EdgesPerVertex;
+
+            foreach (var line in lines)
+            {
+                var fromIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(line.Start));
+                if (fromIndex == -1)
+                {
+                    fromIndex = vertices.Count;
+                    vertices.Add(line.Start);
+                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
+                }
+                var toIndex = vertices.FindIndex(v => v.IsAlmostEqualTo(line.End));
+                if (toIndex == -1)
+                {
+                    toIndex = vertices.Count;
+                    vertices.Add(line.End);
+                    edgesPerVertex.Add(new List<(int from, int to, int? tag)>());
+                }
+                if (fromIndex != toIndex && !edgesPerVertex[fromIndex].Contains((fromIndex, toIndex, null)))
+                {
+                    edgesPerVertex[fromIndex].Add((fromIndex, toIndex, null));
+                }
+
+                if (bothWays && fromIndex != toIndex && !edgesPerVertex[toIndex].Contains((toIndex, fromIndex, null)))
+                {
+                    edgesPerVertex[toIndex].Add((toIndex, fromIndex, null));
+                }
+
+            }
+            return graph;
+        }
+
+        /// <summary>
         /// Calculate the closed polygons in this graph.
         /// </summary>
         /// <param name="predicate">A predicate used during the final step of polygonization to determine if edges are
@@ -175,9 +216,18 @@ namespace Elements.Spatial
         /// <returns>A collection of polygons.</returns>
         public List<Polygon> Polygonize(Func<int?, bool> predicate = null, Vector3 normal = default(Vector3))
         {
+            return Polygonize(predicate, (points) => new Polygon(points), normal);
+        }
+
+        /// <summary>
+        /// A generic polygonizer which can be used to construct different data results from the polygonization process —
+        /// for instance, if your polygons are not planar, you can create polylines from them, or output point collections directly.
+        /// </summary>
+        internal List<T> Polygonize<T>(Func<int?, bool> predicate = null, Func<IList<Vector3>, T> resultProcess = null, Vector3 normal = default)
+        {
             var edgesPerVertex = new List<List<(int from, int to, int? tag)>>(this.EdgesPerVertex);
             var vertices = this.Vertices;
-            var newPolygons = new List<Polygon>();
+            var newPolygons = new List<T>();
 
             // construct polygons from half edge graph.
             // remove edges from edgesPerVertex as they get "consumed" by a polygon,
@@ -212,7 +262,7 @@ namespace Elements.Spatial
                         throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
                     }
                     // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
-                    var n = normal == default(Vector3) ? Vector3.ZAxis : normal;
+                    var n = normal == default ? Vector3.ZAxis : normal;
                     var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
 
                     possibleNextSegments.Remove(nextSegment);
@@ -275,7 +325,7 @@ namespace Elements.Spatial
                 // so we check before trying to construct a polygon.
                 if (currentVertexList.Count > 0)
                 {
-                    newPolygons.Add(new Polygon(currentVertexList));
+                    newPolygons.Add(resultProcess(currentVertexList));
                 }
             }
             return newPolygons;
