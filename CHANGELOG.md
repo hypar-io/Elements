@@ -29,11 +29,13 @@
 - `Ceiling`
 - `GridLine`
 - `FitLine(IList<Point2d> points)`
+- `Transform.CreateHorizontalFrameAlongCurve()`
 - `Ray.Interects(Mesh mesh)`
 
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- Deprecate `CreateOrientedAlongCurve` (and add `CreateHorizontalFrameAlongCurve`) for clarity per [#687](https://github.com/hypar-io/Elements/issues/687) (Thanks @gytaco!)
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
 - Line.PointAt does not round input values near 0 or 1 anymore.
