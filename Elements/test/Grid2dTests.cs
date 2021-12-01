@@ -516,5 +516,39 @@ namespace Elements.Tests
                 Assert.True(trimmed.Count() == 0);
             }
         }
+
+        [Fact]
+        public void RotateGridWithClosePointDoNotThrow()
+        {
+            var boundary = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(),
+                    new Vector3(3.998, 0.0),
+                    new Vector3(4 , 2),
+                    new Vector3(0.0, 1.998)
+                }
+            );
+
+            Transform t = new Transform(new Vector3(2, 0));
+            var grid = new Grid2d(boundary, t);
+            grid.SplitAtPoint(new Vector3(3.998, 0.01));
+
+            List<Curve[]> cellBoundaries = new List<Curve[]>();
+            foreach (var cell in grid.GetCells())
+            {
+                cellBoundaries.Add(cell.GetTrimmedCellGeometry());
+            }
+            Assert.Equal(3, cellBoundaries.Where(cb => cb.Any()).Count());
+        }
+
+        [Fact]
+        public void SeparatorsFromBadPolygon()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/bad_grid.json");
+            var grid = JsonConvert.DeserializeObject<Grid2d>(json);
+            var cellSeparators = grid.GetCellSeparators(GridDirection.V, true);
+        }
     }
 }
