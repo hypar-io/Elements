@@ -18,6 +18,8 @@ namespace Elements
         /// </summary>
         public Curve Curve { get; set; }
 
+        private bool _isSelectable = true;
+
         /// <summary>
         /// Create a model curve.
         /// </summary>
@@ -45,14 +47,23 @@ namespace Elements
             this.Material = material != null ? material : BuiltInMaterials.Edges;
         }
 
+        /// <summary>
+        /// Set whether this model curve should be selectable in the web UI.
+        /// </summary>
+        /// <param name="selectable"></param>
+        public void SetSelectable(bool selectable)
+        {
+            this._isSelectable = selectable;
+        }
+
         internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
         {
             return this.Curve.ToGraphicsBuffers(lineLoop);
         }
 
-        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
-            id = $"{this.Id}_curve";
+            id = this._isSelectable ? $"{this.Id}_curve" : $"unselectable_{this.Id}_curve";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
             graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers(true) };
             return true;
