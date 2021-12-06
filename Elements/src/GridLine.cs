@@ -51,7 +51,9 @@ namespace Elements
             }
             var circle = new Circle(Radius);
             var circleVertexTransform = new Transform(center, dir, normal);
-            var renderVertices = circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)).Union(line.RenderVertices()).ToList();
+            var renderVertices = new List<Vector3>();
+            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
+            renderVertices.AddRange(line.RenderVertices());
             graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
             return true;
         }
