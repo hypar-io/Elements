@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.7
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Under some circumstances when a line originated nearly within tolerance of a polygon, `Line.Trim` would return the wrong result.
+
 ## 0.9.6
 
 ### Added
