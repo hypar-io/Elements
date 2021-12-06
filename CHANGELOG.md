@@ -27,15 +27,28 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `GridLine`
+- `FitLine(IList<Point2d> points)`
+- `HalfEdgeGraph.Construct(IEnumerable<Line> lines)`
+- `Polyline.Project(Plane plane)`
+- `new Mesh(Mesh mesh)`
+- `new Topography(Mesh mesh, Material material, Transform transform, Guid id, string name)`
+- `Ray.Intersects(Mesh mesh)`
+- `Transform.CreateHorizontalFrameAlongCurve()`
 
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- Deprecate `CreateOrientedAlongCurve` (and add `CreateHorizontalFrameAlongCurve`) for clarity per [#687](https://github.com/hypar-io/Elements/issues/687) (Thanks @gytaco!)
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
 - Line.PointAt does not round input values near 0 or 1 anymore.
 - `Polygon` constructor throws error if there are less than 3 vertices provided.
 - Decrease intersection tolerance for Grid2d polygon splitting.
+- Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
+- Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
+- `BBox3` constructor now takes an `IEnumerable<Vector3>` instead of a `IList<Vector3>` as input.
+- `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
 
 ### Fixed
 
