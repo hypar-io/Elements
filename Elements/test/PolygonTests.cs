@@ -1914,5 +1914,17 @@ namespace Elements.Geometry.Tests
             var extension = line.ExtendTo(pgon.Segments());
             Assert.True(extension.Direction() == line.Direction());
         }
+
+        [Fact]
+        public void LineTrim()
+        {
+            Name = nameof(LineTrim);
+            var boundary = JsonConvert.DeserializeObject<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":27.25008,\"Y\":19.98296,\"Z\":0.0},{\"X\":-14.78244,\"Y\":19.98296,\"Z\":0.0},{\"X\":-14.78244,\"Y\":16.4675,\"Z\":0.0},{\"X\":27.25008,\"Y\":16.4675,\"Z\":0.0}]}");
+            var line = JsonConvert.DeserializeObject<Line>("{\"discriminator\": \"Elements.Geometry.Line\",\"Start\": {\"X\": -0.771609999999999,\"Y\": 16.46749,\"Z\": 0.0},\"End\": {\"X\": -0.771609999999999,\"Y\": 19.98295,\"Z\": 0.0}\n}");
+
+            var trimmed = line.Trim(boundary, out var remainder);
+            Assert.True(trimmed.Sum(l => l.Length()) > 0);
+
+        }
     }
 }

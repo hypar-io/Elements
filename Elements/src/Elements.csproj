@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
     <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
     <Version>$(Version)</Version>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="glTF2Loader" Version="1.1.3-alpha" />

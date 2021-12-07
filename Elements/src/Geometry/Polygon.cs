@@ -33,6 +33,12 @@ namespace Elements.Geometry
                 }
 
                 this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
+
+                if (this.Vertices.Count < 3)
+                {
+                    throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
+                }
+
                 var segments = Polygon.SegmentsInternal(this.Vertices);
                 Polyline.CheckSegmentLengthAndThrow(segments);
                 var t = this.Vertices.ToTransform();
@@ -1782,7 +1788,7 @@ namespace Elements.Geometry
         /// Project this polygon onto the plane.
         /// </summary>
         /// <param name="plane">The plane of the returned polygon.</param>
-        public Polygon Project(Plane plane)
+        public new Polygon Project(Plane plane)
         {
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)
@@ -2220,7 +2226,7 @@ namespace Elements.Geometry
             return polygons.Select(p => p.Reversed()).ToArray();
         }
 
-        internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
+        internal static ContourVertex[] ToContourVertexArray(this Polyline poly)
         {
             var contour = new ContourVertex[poly.Vertices.Count];
             for (var i = 0; i < poly.Vertices.Count; i++)
