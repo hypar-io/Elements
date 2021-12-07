@@ -388,7 +388,7 @@ namespace Elements.Geometry
             {
                 if (s.Length() == 0)
                 {
-                    throw new ArgumentException("A segment fo the polyline has zero length.");
+                    throw new ArgumentException("A segment of the polyline has zero length.");
                 }
             }
         }
@@ -731,6 +731,58 @@ namespace Elements.Geometry
             }
 
             return polygons.ToArray();
+        }
+
+        /// <summary>
+        /// A naïve control-point-only 2D open offset. This algorithm does not
+        /// do any self-intersection checking.
+        /// </summary>
+        /// <param name="offset">The offset distance.</param>
+        /// <returns>A new polyline with the same number of control points.</returns>
+        public Polyline OffsetOpen(double offset)
+        {
+            var newVertices = new List<Vector3>();
+            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
+            if (segments.Count == 1)
+            {
+                return new Polyline(segments[0].Start, segments[0].End);
+            }
+            for (int i = 0; i < segments.Count - 1; i++)
+            {
+                var currSegment = segments[i];
+                var nextSegment = segments[i + 1];
+                if (i == 0)
+                {
+                    newVertices.Add(currSegment.Start);
+                }
+
+                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
+                {
+                    newVertices.Add(currSegment.End);
+                }
+                else
+                {
+                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
+                    {
+                        newVertices.Add(intersection);
+                    }
+                    else
+                    {
+                        newVertices.Add(currSegment.End);
+                    }
+                }
+
+                if (i == segments.Count - 2)
+                {
+                    newVertices.Add(nextSegment.End);
+                }
+            }
+            var polyline = new Polyline(newVertices);
+            if (polyline.Vertices.Count < 2)
+            {
+                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
+            }
+            return polyline;
         }
 
         /// <summary>

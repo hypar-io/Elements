@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.7
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Under some circumstances when a line originated nearly within tolerance of a polygon, `Line.Trim` would return the wrong result.
+- #722
+
 ## 0.9.6
 
 ### Added
@@ -51,10 +62,6 @@
 - `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
 - `AdaptiveGrid` no longer inrsect new edges with all existing edges when new region is added to the grid.
 
-### Fixed
-
--
-
 ## 0.9.5
 
 ### Added
@@ -97,7 +104,7 @@
 
 ### Fixed
 
-`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+- `Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
 
 ### Fixed
 
