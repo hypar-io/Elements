@@ -61,6 +61,7 @@
 - Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
 - `BBox3` constructor now takes an `IEnumerable<Vector3>` instead of a `IList<Vector3>` as input.
 - `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
+- `AdaptiveGrid` no longer inrsect new edges with all existing edges when new region is added to the grid.
 
 ## 0.9.5
 

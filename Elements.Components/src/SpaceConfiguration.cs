@@ -71,7 +71,7 @@ namespace Elements.Components
             /// <summary>
             /// The reference position this content item should move with.
             /// </summary>
-    
+
             public Vector3 Anchor { get; set; }
 
             /// <summary>
@@ -99,6 +99,7 @@ namespace Elements.Components
             /// <summary>
             /// The content element corresponding to this item.
             /// </summary>
+            [Newtonsoft.Json.JsonIgnore]
             public ContentElement ContentElement
             {
                 get
