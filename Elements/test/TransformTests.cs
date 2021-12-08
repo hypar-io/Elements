@@ -149,11 +149,32 @@ namespace Elements.Tests
             var arc = new Arc(Vector3.Origin, 10.0, 45.0, 135.0);
             for (var i = 0.0; i <= 1.0; i += 0.1)
             {
-                var t = Elements.Geometry.Transform.CreateOrientedAlongCurve(arc, i);
+                var t = Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(arc, i);
                 var m = new Mass(Polygon.Rectangle(1.0, 1.0), 0.5, transform: t);
                 this.Model.AddElement(m);
                 this.Model.AddElements(t.ToModelCurves());
             }
+        }
+
+        [Fact]
+        public void HorizontalFrameAlongCurve()
+        {
+            Name = nameof(HorizontalFrameAlongCurve);
+
+            var nonXYPolygon = new Polygon(
+                (0, 0),
+                (5, 0, 5),
+                (5, 5, 5),
+                (0, 5, 0)
+            );
+            for (var t = 0.0; t <= 1.0; t += 0.1)
+            {
+                var frame = Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(nonXYPolygon, t);
+                var m = new Mass(Polygon.Rectangle(1.0, 1.0), 0.5, transform: frame);
+                this.Model.AddElement(m);
+                this.Model.AddElement(nonXYPolygon);
+            }
+
         }
 
         [Fact]

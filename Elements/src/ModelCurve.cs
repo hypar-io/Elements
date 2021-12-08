@@ -49,6 +49,14 @@ namespace Elements
         {
             return this.Curve.ToGraphicsBuffers(lineLoop);
         }
+
+        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            id = $"{this.Id}_curve";
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
+            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers(true) };
+            return true;
+        }
     }
 
     /// <summary>
