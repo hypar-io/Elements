@@ -177,5 +177,67 @@ namespace Elements.Geometry.Tests
 
             Assert.Empty(matches);
         }
+
+        [Fact]
+        public void OffsetOpen()
+        {
+            Name = nameof(OffsetOpen);
+
+            var right = new Polyline(
+                (0, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var acute = new Polyline(
+                (5, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var obtuse = new Polyline(
+                (-5, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var straight = new Polyline(
+                (-5, 0),
+                (0, 0),
+                (10, 0)
+            );
+            var line = new Polyline(
+                (0, 0),
+                (10, 0)
+            );
+            var tightCorner = new Polyline(
+                (0, 10),
+                (0, 1),
+                (1, 0),
+                (10, 0)
+            );
+            var z = new Polyline(
+                (0, 10),
+                (10, 10),
+                (0, 0),
+                (10, 0)
+            );
+
+            Assert.Throws<System.Exception>(() =>
+            {
+                right.OffsetOpen(-10);
+            });
+
+            var testPolylines = new[] { right, acute, obtuse, straight, line, tightCorner, z };
+            for (int i = 0; i < testPolylines.Length; i++)
+            {
+                var xform = new Transform(i * 40, 0, 0);
+                Polyline p = testPolylines[i].TransformedPolyline(xform);
+                Model.AddElement(p);
+                for (double j = -9; j < 9; j += 0.5)
+                {
+                    if (j == 0) continue;
+                    var offset = p.OffsetOpen(j);
+                    Model.AddElement(new ModelCurve(offset, BuiltInMaterials.XAxis));
+                }
+            }
+        }
     }
 }

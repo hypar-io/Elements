@@ -22,13 +22,24 @@ namespace Elements.Geometry.Profiles
         /// <summary>
         /// Create a parametric profile factory by reading from a csv.
         /// </summary>
-        /// <param name="csvPath">The path of the csv.</param>
+        /// <param name="csvPath">The path of the csv. This can be an absolute
+        /// path, a path relative to the current working directory, or a path
+        /// relative to the location of the type's assembly.</param>
         /// <param name="conversion">The conversion factor applied to values in the catalogue.</param>
         public ParametricProfileFactory(string csvPath, double conversion)
         {
+            // Try first as an absolute path, or possibly as a path relative
+            // to the current working directory.
             if (!File.Exists(csvPath))
             {
-                throw new FileNotFoundException("The profile server could not be created. The specified file does not exist.");
+                // Try the path as a relative path to the assembly.
+                var dir = Path.GetDirectoryName(GetType().Assembly.Location);
+                var path = Path.GetFullPath(Path.Combine(dir, csvPath));
+                if (!File.Exists(path))
+                {
+                    throw new FileNotFoundException($"The profile factory could not be created. The specified file does not exist: {path}");
+                }
+                csvPath = path;
             }
 
             string[] keys = null;
