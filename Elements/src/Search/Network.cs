@@ -336,6 +336,37 @@ namespace Elements.Search
         }
 
         /// <summary>
+        /// Draw node indices and connected node indices at each node.
+        /// </summary>
+        /// <param name="nodeLocations">A collection of node locations.</param>
+        /// <param name="color">The color of the model text.</param>
+        public List<ModelText> ToModelText(List<Vector3> nodeLocations, Color color)
+        {
+            var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+            var texts = new List<ModelText>();
+
+            for (var i = 0; i < NodeCount(); i++)
+            {
+                var start = nodeLocations[i];
+                var indexStr = $"{i}: {string.Join(",", EdgesAt(i).Select(e => e.Item1.ToString()))}";
+                textData.Add((nodeLocations[i], Vector3.ZAxis, Vector3.XAxis, indexStr, color));
+
+                if (textData.Count > 100)
+                {
+                    texts.Add(new ModelText(textData, FontSize.PT24));
+                    textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+                }
+            }
+
+            if (textData.Count > 0)
+            {
+                texts.Add(new ModelText(textData, FontSize.PT24));
+            }
+
+            return texts;
+        }
+
+        /// <summary>
         /// Traverse the network from the specified node index.
         /// Traversal concludes when there are no more 
         /// available nodes to traverse.

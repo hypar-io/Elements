@@ -57,12 +57,7 @@ namespace Elements.Tests
             var arrows = network.ToModelArrows(allNodeLocations, Colors.Red);
             this.Model.AddElement(arrows);
 
-            var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
-            for (var i = 0; i < allNodeLocations.Count; i++)
-            {
-                textData.Add((allNodeLocations[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', network.EdgesAt(i).Select(x => x.Item1))}", Colors.Black));
-            }
-            this.Model.AddElement(new ModelText(textData, FontSize.PT24));
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
 
             Assert.Equal(5, allNodeLocations.Count);
         }
@@ -125,12 +120,7 @@ namespace Elements.Tests
 
             Assert.Equal(18, allNodeLocations.Count);
 
-            var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
-            for (var i = 0; i < allNodeLocations.Count; i++)
-            {
-                textData.Add((allNodeLocations[i], Vector3.ZAxis, Vector3.XAxis, $"[{i}]:{string.Join(',', network.EdgesAt(i).Select(x => x.Item1))}", Colors.Black));
-            }
-            this.Model.AddElement(new ModelText(textData, FontSize.PT24));
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
         }
 
         [Fact]
@@ -157,7 +147,7 @@ namespace Elements.Tests
             var scale = 15;
 
             var lines = new List<Line>();
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < 50; i++)
             {
                 var start = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);
                 var end = new Vector3(r.NextDouble() * scale, r.NextDouble() * scale, 0);

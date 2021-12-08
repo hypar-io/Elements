@@ -3,6 +3,7 @@
 ## 0.9.7
 
 ### Added
+- `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 
 ### Changed
 
