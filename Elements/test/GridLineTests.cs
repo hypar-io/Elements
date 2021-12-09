@@ -47,7 +47,7 @@ namespace Elements.Tests.Examples
         {
             this.Name = "Elements_GridLinesCurved";
 
-            var size = 50;
+            var size = 10;
             var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
 
             // Semicircle
@@ -55,9 +55,9 @@ namespace Elements.Tests.Examples
             {
                 Name = "A",
                 Material = new Material("Red", new Color(1, 0, 0, 1)),
-                Curve = new Arc(new Vector3(), size, 0, 180),
-                ExtensionBeginning = 100,
-                ExtensionEnd = 100,
+                Curve = new Arc(new Vector3(size, 0, 0), size, 0, 180),
+                ExtensionBeginning = size / 2,
+                ExtensionEnd = size / 2,
             };
             gridline.AddTextToCollection(texts, Colors.White);
 
