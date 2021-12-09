@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
 
 ### Fixed
 
