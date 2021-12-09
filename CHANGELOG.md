@@ -4,6 +4,8 @@
 
 ### Added
 
+- Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
+
 ### Changed
 
 ### Fixed
