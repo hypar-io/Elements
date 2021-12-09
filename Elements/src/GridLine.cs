@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -48,47 +49,57 @@ namespace Elements
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
             graphicsBuffers = new List<GraphicsBuffers>();
 
-            var curve = new ModelCurve(this.Curve);
-            graphicsBuffers.Add(curve.ToGraphicsBuffers(true));
+            var renderVertices = new List<Vector3>();
 
-            var start = this.Curve.PointAt(0);
-            var end = this.Curve.PointAt(1);
+            var start = GetPointAndDirectionAt(this.Curve, 0);
+            var end = GetPointAndDirectionAt(this.Curve, 1);
 
-            var dirStart = this.Curve.TransformAt(0).ZAxis;
-            var dirEnd = this.Curve.TransformAt(1).ZAxis;
-
-            // TransformAt does not seem to consistently point either from start to end, or end to start,
-            // so we normalize for that here.
-            // TODO: fix TransformAt for all curves so that they point in a consistent direction?
-
-            var segments = this.Curve.ToPolyline().Segments();
-            var firstSegment = segments[0];
-            if (firstSegment.Direction().PlaneAngleTo(dirStart) > Math.PI / 2)
+            var normal = Vector3.ZAxis;
+            if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
             {
-                dirStart = dirStart.Negate();
-            }
-            var lastSegment = segments[segments.Length - 1];
-            if (lastSegment.Direction().PlaneAngleTo(dirEnd) > Math.PI / 2)
-            {
-                dirEnd = dirEnd.Negate();
-            }
-
-            if (ExtensionBeginning > 0)
-            {
-                var extensionBeginning = new ModelCurve(new Line(start, start - dirStart * ExtensionBeginning));
-                graphicsBuffers.Add(extensionBeginning.ToGraphicsBuffers(true));
-            }
-
-            if (ExtensionEnd > 0)
-            {
-                var extensionEnd = new ModelCurve(new Line(end, end + dirEnd * ExtensionEnd));
-                graphicsBuffers.Add(extensionEnd.ToGraphicsBuffers(true));
+                normal = Vector3.XAxis;
             }
 
             var circle = new Circle(Radius);
-            circle.Center = start - dirStart * (ExtensionBeginning + Radius);
-            graphicsBuffers.Add(new ModelCurve(circle).ToGraphicsBuffers(true));
+            var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
+            var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
+            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
+
+            if (ExtensionBeginning > 0)
+            {
+                renderVertices.Add(start.point - start.dir * ExtensionBeginning);
+            }
+
+            renderVertices.AddRange(this.Curve.RenderVertices());
+
+            if (ExtensionEnd > 0)
+            {
+                renderVertices.Add(end.point + end.dir * ExtensionEnd);
+            }
+
+            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
+
             return true;
+        }
+
+        /// <summary>
+        /// TODO: This function can be sidestepped altogether if curve.TransformAt consistently pointed from start to end or vice versa.
+        /// </summary>
+        private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(Curve curve, double u)
+        {
+            var transform = curve.TransformAt(u);
+            var point = transform.Origin;
+            var dir = transform.ZAxis;
+
+            // TransformAt does not seem to consistently point either from start to end, or end to start,
+            // so we normalize for that here in a very rough way.
+            var segments = this.Curve.ToPolyline().Segments();
+            var segment = u < 0.5 ? segments[0] : segments[segments.Length - 1];
+            if (segment.Direction().PlaneAngleTo(dir) > Math.PI / 2)
+            {
+                dir = dir.Negate();
+            }
+            return (point, dir);
         }
     }
 }
