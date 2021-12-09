@@ -51,18 +51,12 @@ namespace Elements
 
             var renderVertices = new List<Vector3>();
 
-            var start = GetPointAndDirectionAt(this.Curve, 0);
-            var end = GetPointAndDirectionAt(this.Curve, 1);
-
-            var normal = Vector3.ZAxis;
-            if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
-            {
-                normal = Vector3.XAxis;
-            }
+            var start = GetPointAndDirectionAt(0);
+            var end = GetPointAndDirectionAt(1);
 
             var circle = new Circle(Radius);
-            var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
-            var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
+            var circleVertexTransform = GetCircleTransform();
+
             renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
 
             if (ExtensionBeginning > 0)
@@ -85,9 +79,9 @@ namespace Elements
         /// <summary>
         /// TODO: This function can be sidestepped altogether if curve.TransformAt consistently pointed from start to end or vice versa.
         /// </summary>
-        private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(Curve curve, double u)
+        private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(double u)
         {
-            var transform = curve.TransformAt(u);
+            var transform = this.Curve.TransformAt(u);
             var point = transform.Origin;
             var dir = transform.ZAxis;
 
@@ -100,6 +94,23 @@ namespace Elements
                 dir = dir.Negate();
             }
             return (point, dir);
+        }
+
+        /// <summary>
+        /// Get the transform of the circle created by the gridline.
+        /// </summary>
+        /// <returns></returns>
+        public Transform GetCircleTransform()
+        {
+            var start = GetPointAndDirectionAt(0);
+            var normal = Vector3.ZAxis;
+            if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
+            {
+                normal = Vector3.XAxis;
+            }
+            var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
+            var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
+            return circleVertexTransform;
         }
     }
 }

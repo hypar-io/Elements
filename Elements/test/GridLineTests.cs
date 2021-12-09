@@ -17,12 +17,31 @@ namespace Elements.Tests.Examples
         {
             this.Name = "Elements_GridLines";
 
-            var gridline = new GridLine();
-            gridline.Name = "A";
-            gridline.Curve = new Line(new Vector3(), new Vector3(25, 25, 0));
-            gridline.Material = new Material("Red", new Color(1, 0, 0, 1));
+            var gridData = new List<(string name, Vector3 origin)>() {
+                ("A", new Vector3()),
+                ("B", new Vector3(10, 0, 0)),
+                ("C", new Vector3(20, 0, 0)),
+                ("D", new Vector3(30, 0, 0)),
+            };
 
-            this.Model.AddElement(gridline);
+            var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+            var radius = 1;
+            var material = new Material("Red", new Color(1, 0, 0, 1));
+
+            foreach (var (name, origin) in gridData)
+            {
+                var gridline = new GridLine();
+                gridline.Name = name;
+                gridline.Curve = new Line(origin, origin + new Vector3(25, 25, 0));
+                gridline.Material = material;
+                gridline.Radius = radius;
+
+                var circleCenter = gridline.GetCircleTransform();
+                texts.Add((circleCenter.Origin, circleCenter.ZAxis, circleCenter.XAxis, name, Colors.White));
+                this.Model.AddElement(gridline);
+            }
+
+            this.Model.AddElement(new ModelText(texts, FontSize.PT72, 50));
         }
 
         [Fact]
