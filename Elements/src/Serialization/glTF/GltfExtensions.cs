@@ -35,6 +35,17 @@ namespace Elements.Serialization.glTF
             return _currentId;
         }
 
+        /// <summary>
+        /// In normal function use, this should be set to null.
+        /// If not null and set to a valid directory path, gltfs loaded for 
+        /// content elements will be cached to this directory, and can be
+        /// explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
+        /// by `hypar run` and test capabilities to speed up repeated runs. 
+        /// </summary>
+        public static string GltfCachePath { get; set; } = null;
+
+        private const string GLTF_CACHE_FOLDER_NAME = "elementsGltfCache";
+
         private const string emptyGltf = @"{
     ""asset"": {""version"": ""2.0""},
     ""nodes"": [{""name"": ""empty""}],
@@ -1129,7 +1140,56 @@ namespace Elements.Serialization.glTF
             }
         }
 
-        private static Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
+        private static readonly Dictionary<string, MemoryStream> gltfCache = new Dictionary<string, MemoryStream>();
+
+        private static void WriteGltfCacheForKey(string key, MemoryStream stream)
+        {
+            if (GltfCachePath == null || !Directory.Exists(GltfCachePath))
+            {
+                return;
+            }
+            // write the gltfCache to disk
+            var path = Path.Combine(GltfCachePath, GLTF_CACHE_FOLDER_NAME);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var filePath = Path.Combine(path, key + ".gltfcache");
+            // we assume files aren't changing much, so if it's already been
+            // written, we don't need to re-write it.
+            if (!File.Exists(filePath))
+            {
+                using (var fileStream = File.Create(filePath))
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(fileStream);
+                }
+            }
+        }
+        private static void LoadGltfCacheFromDisk()
+        {
+            if (GltfCachePath == null)
+            {
+                return;
+            }
+            var path = Path.Combine(GltfCachePath, GLTF_CACHE_FOLDER_NAME);
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
+
+            foreach (var file in Directory.GetFiles(path))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                var filePath = Path.Combine(path, fileName + ".gltfcache");
+                using (var fileStream = File.OpenRead(filePath))
+                {
+                    var stream = new MemoryStream();
+                    fileStream.CopyTo(stream);
+                    gltfCache.Add(fileName, stream);
+                }
+            }
+        }
 
         /// <summary>
         /// Get a stream from a glb path, either file reference or remote.
@@ -1139,9 +1199,14 @@ namespace Elements.Serialization.glTF
         /// <param name="gltfLocation">The URI of the gltf binary file</param>
         public static Stream GetGlbStreamFromPath(string gltfLocation)
         {
+            var gltfLocationSanitized = gltfLocation.Replace("/", "_");
             var responseStream = new MemoryStream();
 
-            if (gltfCache.TryGetValue(gltfLocation, out var foundStream))
+            if (GltfCachePath != null && gltfCache.Count == 0)
+            {
+                LoadGltfCacheFromDisk();
+            }
+            if (gltfCache.TryGetValue(gltfLocationSanitized, out var foundStream))
             {
                 foundStream.Position = 0;
                 foundStream.CopyTo(responseStream);
@@ -1164,11 +1229,12 @@ namespace Elements.Serialization.glTF
                 return Stream.Null;
             }
             responseStream.Position = 0;
-            if (!gltfCache.ContainsKey(gltfLocation))
+            if (!gltfCache.ContainsKey(gltfLocationSanitized))
             {
                 var cacheStream = new MemoryStream();
                 responseStream.CopyTo(cacheStream);
-                gltfCache.Add(gltfLocation, cacheStream);
+                gltfCache.Add(gltfLocationSanitized, cacheStream);
+                WriteGltfCacheForKey(gltfLocationSanitized, cacheStream);
             }
             return responseStream;
         }
