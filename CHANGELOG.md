@@ -3,6 +3,7 @@
 ## 0.9.7
 
 ### Added
+- `GridLine.GetCircleTransform`
 
 ### Changed
 - Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
