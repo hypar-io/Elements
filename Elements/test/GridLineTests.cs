@@ -59,6 +59,15 @@ namespace Elements.Tests.Examples
             gridline.ExtensionEnd = 100;
 
             this.Model.AddElement(gridline);
+
+            var verticalGridline = new GridLine
+            {
+                Name = "B",
+                Line = new Line(new Vector3(), new Vector3(0, 0, 25)),
+                Material = new Material("Green", new Color(0, 1, 0, 1))
+            };
+
+            this.Model.AddElements(gridline, verticalGridline);
         }
     }
 }

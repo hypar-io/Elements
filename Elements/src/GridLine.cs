@@ -72,7 +72,6 @@ namespace Elements
             }
 
             graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
-
             return true;
         }
 
