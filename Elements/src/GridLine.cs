@@ -76,23 +76,14 @@ namespace Elements
         }
 
         /// <summary>
-        /// TODO: This function can be sidestepped altogether if curve.TransformAt consistently pointed from start to end or vice versa.
+        /// Get normal and direction at a point on the curve. The direction is the invert of TransformAt's Z Axis.
         /// </summary>
         private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(double u)
         {
             var transform = this.Curve.TransformAt(u);
             var point = transform.Origin;
             var dir = transform.ZAxis;
-
-            // TransformAt does not seem to consistently point either from start to end, or end to start,
-            // so we normalize for that here in a very rough way.
-            var segments = this.Curve.ToPolyline().Segments();
-            var segment = u < 0.5 ? segments[0] : segments[segments.Length - 1];
-            if (segment.Direction().PlaneAngleTo(dir) > Math.PI / 2)
-            {
-                dir = dir.Negate();
-            }
-            return (point, dir);
+            return (point, dir.Negate());
         }
 
         /// <summary>
@@ -110,6 +101,17 @@ namespace Elements
             var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
             var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
             return circleVertexTransform;
+        }
+
+        /// <summary>
+        /// Add gridline's text data to a text collection for insertion into ModelText.
+        /// </summary>
+        /// <param name="texts">Collection of texts to add to.</param>
+        /// <param name="color">Color for this text.</param>
+        public void AddTextToCollection(List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)> texts, Color? color = null)
+        {
+            var circleCenter = this.GetCircleTransform();
+            texts.Add((circleCenter.Origin, circleCenter.ZAxis, circleCenter.XAxis, this.Name, color));
         }
     }
 }
