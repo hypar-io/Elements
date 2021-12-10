@@ -119,7 +119,7 @@ namespace Elements.Geometry
         /// <param name="transform">The transform.</param>
         public Profile Transformed(Transform transform)
         {
-            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>(), null, this.Name);
+            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>(), Guid.NewGuid(), this.Name);
         }
 
         /// <summary>
