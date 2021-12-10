@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -40,27 +41,20 @@ namespace Elements
             id = $"{this.Id}_gridline";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
             graphicsBuffers = new List<GraphicsBuffers>();
-
-            var line = new ModelCurve(this.Line);
-            graphicsBuffers.Add(line.ToGraphicsBuffers(true));
-
             var dir = this.Line.Direction();
-
-            if (ExtensionBeginning > 0)
+            var line = new Line(this.Line.Start - dir * ExtensionBeginning, this.Line.End + dir * ExtensionEnd);
+            var center = this.Line.Start - dir * (ExtensionBeginning + Radius);
+            var normal = Vector3.ZAxis;
+            if (normal.Dot(dir) > 1 - Vector3.EPSILON)
             {
-                var extensionBeginning = new ModelCurve(new Line(this.Line.Start, this.Line.Start - dir * ExtensionBeginning));
-                graphicsBuffers.Add(extensionBeginning.ToGraphicsBuffers(true));
+                normal = Vector3.XAxis;
             }
-
-            if (ExtensionEnd > 0)
-            {
-                var extensionEnd = new ModelCurve(new Line(this.Line.End, this.Line.End + dir * ExtensionEnd));
-                graphicsBuffers.Add(extensionEnd.ToGraphicsBuffers(true));
-            }
-
             var circle = new Circle(Radius);
-            circle.Center = this.Line.Start - dir * (ExtensionBeginning + Radius);
-            graphicsBuffers.Add(new ModelCurve(circle).ToGraphicsBuffers(true));
+            var circleVertexTransform = new Transform(center, dir, normal);
+            var renderVertices = new List<Vector3>();
+            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
+            renderVertices.AddRange(line.RenderVertices());
+            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
             return true;
         }
     }
