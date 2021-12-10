@@ -42,8 +42,22 @@ namespace Elements.Serialization.glTF
         /// explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
         /// by `hypar run` and test capabilities to speed up repeated runs. 
         /// </summary>
-        public static string GltfCachePath { get; set; } = null;
-
+        public static string GltfCachePath
+        {
+            get => gltfCachePath;
+            set
+            {
+                if (Directory.Exists(value))
+                {
+                    gltfCachePath = value;
+                }
+                else
+                {
+                    throw new ArgumentException("GltfCachePath must be a valid directory path.");
+                }
+            }
+        }
+        private static string gltfCachePath = null;
         private const string GLTF_CACHE_FOLDER_NAME = "elementsGltfCache";
 
         private const string emptyGltf = @"{
@@ -1144,7 +1158,7 @@ namespace Elements.Serialization.glTF
 
         private static void WriteGltfCacheForKey(string key, MemoryStream stream)
         {
-            if (GltfCachePath == null || !Directory.Exists(GltfCachePath))
+            if (GltfCachePath == null)
             {
                 return;
             }
@@ -1173,10 +1187,6 @@ namespace Elements.Serialization.glTF
                 return;
             }
             var path = Path.Combine(GltfCachePath, GLTF_CACHE_FOLDER_NAME);
-            if (!Directory.Exists(path))
-            {
-                return;
-            }
 
             foreach (var file in Directory.GetFiles(path))
             {
