@@ -15,7 +15,10 @@ namespace Elements
         /// </summary>
         /// <value></value>
         [Obsolete("We now use 'Curve' instead.")]
-        public Line Line { get; set; }
+        public Line Line {
+            get { return this.Curve as Line; }
+            set { this.Curve = Line; }
+        }
 
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
