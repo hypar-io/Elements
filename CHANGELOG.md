@@ -3,6 +3,7 @@
 ## 0.9.7
 
 ### Added
+- `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
 
