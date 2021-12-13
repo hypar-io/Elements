@@ -14,7 +14,17 @@ namespace Elements
         /// Line that runs from the start of the gridline to its end.
         /// </summary>
         /// <value></value>
-        public Line Line { get; set; }
+        [Obsolete("We now use 'Curve' instead.")]
+        public Line Line {
+            get { return this.Curve as Line; }
+            set { this.Curve = Line; }
+        }
+
+        /// <summary>
+        /// Curve that runs from the start of the gridline to its end.
+        /// </summary>
+        /// <value></value>
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// Radius of the gridline head.
@@ -33,7 +43,7 @@ namespace Elements
 
         internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
-            if (this.Line == null)
+            if (this.Curve == null)
             {
                 return base.TryToGraphicsBuffers(out graphicsBuffers, out id, out mode);
             }
@@ -41,21 +51,70 @@ namespace Elements
             id = $"{this.Id}_gridline";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
             graphicsBuffers = new List<GraphicsBuffers>();
-            var dir = this.Line.Direction();
-            var line = new Line(this.Line.Start - dir * ExtensionBeginning, this.Line.End + dir * ExtensionEnd);
-            var center = this.Line.Start - dir * (ExtensionBeginning + Radius);
+
+            var renderVertices = new List<Vector3>();
+
+            var start = GetPointAndDirectionAt(0);
+            var end = GetPointAndDirectionAt(1);
+
+            var circle = new Circle(Radius);
+            var circleVertexTransform = GetCircleTransform();
+
+            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
+
+            if (ExtensionBeginning > 0)
+            {
+                renderVertices.Add(start.point - start.dir * ExtensionBeginning);
+            }
+
+            renderVertices.AddRange(this.Curve.RenderVertices());
+
+            if (ExtensionEnd > 0)
+            {
+                renderVertices.Add(end.point + end.dir * ExtensionEnd);
+            }
+
+            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
+            return true;
+        }
+
+        /// <summary>
+        /// Get normal and direction at a point on the curve. The direction is the invert of TransformAt's Z Axis.
+        /// </summary>
+        private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(double u)
+        {
+            var transform = this.Curve.TransformAt(u);
+            var point = transform.Origin;
+            var dir = transform.ZAxis;
+            return (point, dir.Negate());
+        }
+
+        /// <summary>
+        /// Get the transform of the circle created by the gridline.
+        /// </summary>
+        /// <returns></returns>
+        public Transform GetCircleTransform()
+        {
+            var start = GetPointAndDirectionAt(0);
             var normal = Vector3.ZAxis;
-            if (normal.Dot(dir) > 1 - Vector3.EPSILON)
+            if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
             {
                 normal = Vector3.XAxis;
             }
-            var circle = new Circle(Radius);
-            var circleVertexTransform = new Transform(center, dir, normal);
-            var renderVertices = new List<Vector3>();
-            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
-            renderVertices.AddRange(line.RenderVertices());
-            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
-            return true;
+            var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
+            var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
+            return circleVertexTransform;
+        }
+
+        /// <summary>
+        /// Add gridline's text data to a text collection for insertion into ModelText.
+        /// </summary>
+        /// <param name="texts">Collection of texts to add to.</param>
+        /// <param name="color">Color for this text.</param>
+        public void AddTextToCollection(List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)> texts, Color? color = null)
+        {
+            var circleCenter = this.GetCircleTransform();
+            texts.Add((circleCenter.Origin, circleCenter.ZAxis, circleCenter.XAxis, this.Name, color));
         }
     }
 }
