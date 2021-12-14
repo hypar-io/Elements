@@ -150,12 +150,20 @@ namespace Elements
             }
             else if (solids.Count() > 0)
             {
-                csg = csg.Union(solids);
+                var finished = Task.Run(() =>
+                {
+                    csg = csg.Union(solids);
+                }).Wait(1000);
+                if (!finished)
+                {
+                    throw new TimeoutException();
+                }
             }
             else
             {
                 return csg;
             }
+
             if (voids.Count() > 0)
             {
                 var finished = Task.Run(() =>

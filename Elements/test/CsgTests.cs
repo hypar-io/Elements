@@ -7,6 +7,7 @@ using Xunit;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -79,37 +80,117 @@ namespace Elements.Tests
         [Fact]
         public void SubstractNotAllowedToGoForInfiniteTime()
         {
-            var perimeter = new Polygon(new List<Vector3> {
-                (X:6.9609, Y:-18.4036, Z:2.7000), (X:6.9609, Y:-3.2016, Z:2.7000),
-                 (X:6.9609, Y:-3.2016, Z:0.0000), (X:6.9609, Y:-3.4816, Z:0.0000),
-                  (X:6.9609, Y:-3.4816, Z:-1.2000), (X:6.9609, Y:-18.4036, Z:-1.2000)});
-            var centerline = new Line((X: 6.9609, Y: -18.4036, Z: 0.0000), (X: 6.9609, Y: -3.2016, Z: 0.0000));
 
-            const double halfThickness = .33528;
-            var openingPerimienter = new Polygon(new List<Vector3> {
-                (X:6.8599, Y:-12.2016, Z:-0.5500), (X:6.8599, Y:-6.2016, Z:-0.5500),
-                 (X:6.8599, Y:-6.2016, Z:2.1500), (X:6.8599, Y:-12.2016, Z:2.1500) });
-            var openings = new List<Opening> { new Opening(openingPerimienter, halfThickness, halfThickness) };
+            var wallPerimeter = new Elements.Geometry.Polygon(new Vector3(-48.41, 0, 0), new Vector3(-48.53, 0, 0), new Vector3(-51.48, 0, 0), new Vector3(-51.48, 0, 3.81), new Vector3(-46.27, 0, 3.81));
+            var wall = new WallByProfile(wallPerimeter,
+                    0.2, new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0)));
+            var oP = new Elements.Geometry.Polygon(new Vector3(-46.27, 0, 0.00), new Vector3(-46.42, 0, 0.00), new Vector3(-46.42, 0, 2.13), new Vector3(-47.34, 0, 2.13), new Vector3(-47.34, 0, 0.00));
+            wall.AddOpening(oP);
 
-
-            var wallByProfile = new WallByProfile(perimeter,
-                                                  null,
-                                                  halfThickness * 2,
-                                                  centerline,
-                                                  new Transform(),
-                                                  BuiltInMaterials.Concrete,
-                                                  openings,
-                                                  new Representation(new List<SolidOperation>()),
-                                                  false,
-                                                  Guid.NewGuid(),
-                                                  "bad wall");
-
-            var taskFinishedOnTime = Task.Run(() =>
+            // var taskFinishedOnTime = Task.Run(() =>
+            // {
+            //     wallByProfile.UpdateRepresentations();
+            //     var solid = wallByProfile.GetFinalCsgFromSolids();
+            // }).Wait(2000);
+            // Assert.True(taskFinishedOnTime);
+            Assert.Throws<TimeoutException>(() =>
             {
-                wallByProfile.UpdateRepresentations();
-                var solid = wallByProfile.GetFinalCsgFromSolids();
-            }).Wait(2000);
-            Assert.True(taskFinishedOnTime);
+                wall.UpdateRepresentations();
+                var solid = wall.GetFinalCsgFromSolids();
+            });
+        }
+
+
+        [Fact]
+        public void UnionNotAllowedToGoForInfiniteTime()
+        {
+            var profile1 = JsonConvert.DeserializeObject<Polygon>(
+                @"{
+                ""Vertices"": [
+                    {
+                        ""X"": -348.82036858497275,
+                        ""Y"": 246.02759072077453,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -348.85572392403208,
+                        ""Y"": 246.06294605983385,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.60244308413706,
+                        ""Y"": 244.31622689972886,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.56708774507774,
+                        ""Y"": 244.28087156066954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.53173240601842,
+                        ""Y"": 244.24551622161022,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -348.78501324591343,
+                        ""Y"": 245.9922353817152,
+                        ""Z"": 30.25
+                    }
+                ]}
+                ");
+            var profile2 = JsonConvert.DeserializeObject<Polygon>(
+                @"{
+                ""Vertices"": [
+                    {
+                        ""X"": -350.56708774507774,
+                        ""Y"": 244.28087156066954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.51708774507773,
+                        ""Y"": 244.28087156066954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.51708774507773,
+                        ""Y"": 247.77430988087954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.56708774507774,
+                        ""Y"": 247.77430988087954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.61708774507775,
+                        ""Y"": 247.77430988087954,
+                        ""Z"": 30.25
+                    },
+                    {
+                        ""X"": -350.61708774507775,
+                        ""Y"": 244.28087156066954,
+                        ""Z"": 30.25
+                    }
+                    ]}"
+                    );
+            var element = new GeometricElement();
+            element.Representation = new Representation(new List<SolidOperation>{
+                new Extrude(profile1, 1, Vector3.ZAxis, false),
+                new Extrude(profile2, 1, Vector3.ZAxis, false)
+            });
+
+            // var taskFinishedOnTime = Task.Run(() =>
+            // {
+            //     element.UpdateRepresentations();
+            //     var solid = element.GetFinalCsgFromSolids();
+            // }).Wait(2000);
+            // Assert.True(taskFinishedOnTime);
+            Assert.Throws<TimeoutException>(() =>
+            {
+                element.UpdateRepresentations();
+                var solid = element.GetFinalCsgFromSolids();
+            });
         }
 
         [Fact]
