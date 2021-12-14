@@ -37,11 +37,5 @@ namespace Elements.Benchmarks
         {
             _csg.Tessellate();
         }
-
-        [Benchmark(Description = "Perform CSG ops.")]
-        public void CsgOperations()
-        {
-            _beam.GetFinalCsgFromSolids();
-        }
     }
 }
