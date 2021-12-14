@@ -87,12 +87,6 @@ namespace Elements.Tests
             var oP = new Elements.Geometry.Polygon(new Vector3(-46.27, 0, 0.00), new Vector3(-46.42, 0, 0.00), new Vector3(-46.42, 0, 2.13), new Vector3(-47.34, 0, 2.13), new Vector3(-47.34, 0, 0.00));
             wall.AddOpening(oP);
 
-            // var taskFinishedOnTime = Task.Run(() =>
-            // {
-            //     wallByProfile.UpdateRepresentations();
-            //     var solid = wallByProfile.GetFinalCsgFromSolids();
-            // }).Wait(2000);
-            // Assert.True(taskFinishedOnTime);
             Assert.Throws<TimeoutException>(() =>
             {
                 wall.UpdateRepresentations();
@@ -180,12 +174,6 @@ namespace Elements.Tests
                 new Extrude(profile2, 1, Vector3.ZAxis, false)
             });
 
-            // var taskFinishedOnTime = Task.Run(() =>
-            // {
-            //     element.UpdateRepresentations();
-            //     var solid = element.GetFinalCsgFromSolids();
-            // }).Wait(2000);
-            // Assert.True(taskFinishedOnTime);
             Assert.Throws<TimeoutException>(() =>
             {
                 element.UpdateRepresentations();
