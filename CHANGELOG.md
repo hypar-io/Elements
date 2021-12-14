@@ -9,7 +9,6 @@
 
 ### Changed
 - Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
-- Add exceptions for timeout during long running csg operations.
 
 ### Fixed
 
