@@ -70,7 +70,7 @@ namespace Elements.Components
         /// Construct a set of elements from this rule for a given definition.
         /// </summary>
         /// <param name="definition">The definition to instantiate.</param>
-        public List<Element> Instantiate(ComponentDefinition definition)
+        public virtual List<Element> Instantiate(ComponentDefinition definition)
         {
             var transformedCurves = new List<Element>();
             List<Vector3> newVertices = TransformPolyline(this, definition);

@@ -12,13 +12,12 @@
         <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
         <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
         <Version>$(Version)</Version>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="NJsonSchema.CodeGeneration" Version="10.1.21" />
         <PackageReference Include="NJsonSchema.CodeGeneration.CSharp" Version="10.1.21" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" />
     </ItemGroup>
 
     <ItemGroup>
