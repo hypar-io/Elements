@@ -156,7 +156,7 @@ namespace Elements
                 }).Wait(1000);
                 if (!finished)
                 {
-                    throw new TimeoutException();
+                    throw new TimeoutException("The CSG Union operation timed out.");
                 }
             }
             else
@@ -172,7 +172,7 @@ namespace Elements
                 }).Wait(1000);
                 if (!finished)
                 {
-                    throw new TimeoutException();
+                    throw new TimeoutException("The CSG Substract operation timed out.");
                 }
             }
 
