@@ -25,13 +25,13 @@ namespace Elements
         /// Construct a cable from the centerline
         /// </summary>
         /// <param name="centerLine">The center line of the cable.</param>
-        /// <param name="radius">The radius of the cabel.</param>
-        /// <param name="material">The material of the cabel.</param>
-        /// <param name="transform">An optional transform for the cabel.</param>
-        /// <param name="representation">The cabel's representation.</param>
+        /// <param name="radius">The radius of the cable.</param>
+        /// <param name="material">The material of the cable.</param>
+        /// <param name="transform">An optional transform for the cable.</param>
+        /// <param name="representation">The cable's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
-        /// <param name="id">The id of the cabel.</param>
-        /// <param name="name">The name of the cabel.</param>
+        /// <param name="id">The id of the cable.</param>
+        /// <param name="name">The name of the cable.</param>
         public Cable(Polyline centerLine, double radius,
                     Material material = null,
                     Transform transform = null,
