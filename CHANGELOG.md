@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.9.7
+
+### Added
+- `GridLine.GetCircleTransform()`
+- `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
+- Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
+
+### Changed
+- Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
+
+### Fixed
+
+- Under some circumstances when a line originated nearly within tolerance of a polygon, `Line.Trim` would return the wrong result.
+- #722
+
 ## 0.9.6
 
 ### Added
@@ -49,10 +64,7 @@
 - Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
 - `BBox3` constructor now takes an `IEnumerable<Vector3>` instead of a `IList<Vector3>` as input.
 - `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
-
-### Fixed
-
--
+- `AdaptiveGrid` no longer inrsect new edges with all existing edges when new region is added to the grid.
 
 ## 0.9.5
 
@@ -96,7 +108,7 @@
 
 ### Fixed
 
-`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+- `Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
 
 ### Fixed
 

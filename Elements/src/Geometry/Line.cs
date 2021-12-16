@@ -876,6 +876,12 @@ namespace Elements.Geometry
                 var B = intersectionsOrdered[i + 1];
                 if (A.IsAlmostEqualTo(B)) // skip duplicate points
                 {
+                    // it's possible that A is outside, but B is at an edge, even 
+                    // if they are within tolerance of each other. 
+                    // This can happen due to floating point error when the point is almost exactly
+                    // epsilon distance from the edge.
+                    // so if we have duplicate points, we have to update the containment value.
+                    polygon.Contains(B, out containment);
                     continue;
                 }
                 var segment = new Line(A, B);
