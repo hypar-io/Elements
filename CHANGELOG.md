@@ -12,6 +12,7 @@
 ### Changed
 
 - Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
+- Add use new CSG library and test it's effectiveness
 
 ### Fixed
 
