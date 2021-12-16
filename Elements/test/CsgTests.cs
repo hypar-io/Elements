@@ -78,7 +78,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void SubtractThrowsArgumentOutOfRange()
+        public void SubtractWithProblematicPolygons()
         {
             var wallPerimeter = new Elements.Geometry.Polygon(new Vector3(-48.41, 0, 0), new Vector3(-48.53, 0, 0), new Vector3(-51.48, 0, 0), new Vector3(-51.48, 0, 3.81), new Vector3(-46.27, 0, 3.81));
             var wall = new WallByProfile(wallPerimeter,
@@ -86,15 +86,12 @@ namespace Elements.Tests
             var oP = new Elements.Geometry.Polygon(new Vector3(-46.27, 0, 0.00), new Vector3(-46.42, 0, 0.00), new Vector3(-46.42, 0, 2.13), new Vector3(-47.34, 0, 2.13), new Vector3(-47.34, 0, 0.00));
             wall.AddOpening(oP);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                wall.UpdateRepresentations();
-                var solid = wall.GetFinalCsgFromSolids();
-            });
+            wall.UpdateRepresentations();
+            var solid = wall.GetFinalCsgFromSolids();
         }
 
         [Fact]
-        public void UnionThrowsArgumentOutOfRange()
+        public void UnionWithProblematicPolygons()
         {
             var profile1 = JsonConvert.DeserializeObject<Polygon>(
                 @"{
@@ -172,11 +169,8 @@ namespace Elements.Tests
                 new Extrude(profile2, 1, Vector3.ZAxis, false)
             });
 
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                element.UpdateRepresentations();
-                var solid = element.GetFinalCsgFromSolids();
-            });
+            element.UpdateRepresentations();
+            var solid = element.GetFinalCsgFromSolids();
         }
 
         [Fact]

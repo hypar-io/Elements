@@ -123,7 +123,7 @@ namespace Elements.Geometry.Solids
                         var v = new Csg.Vertex(l.ToCsgVector3(), new Csg.Vector2D(e1.Dot(l), e2.Dot(l)));
                         verts.Add(v);
                     }
-                    var p = new Csg.Polygon(verts, null, new Csg.Plane(n.ToCsgVector3(), 1));
+                    var p = new Csg.Polygon(verts);
                     polygons.Add(p);
                 }
             }
