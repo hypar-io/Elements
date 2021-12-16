@@ -78,25 +78,23 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void SubstractNotAllowedToGoForInfiniteTime()
+        public void SubtractThrowsArgumentOutOfRange()
         {
-
             var wallPerimeter = new Elements.Geometry.Polygon(new Vector3(-48.41, 0, 0), new Vector3(-48.53, 0, 0), new Vector3(-51.48, 0, 0), new Vector3(-51.48, 0, 3.81), new Vector3(-46.27, 0, 3.81));
             var wall = new WallByProfile(wallPerimeter,
                     0.2, new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0)));
             var oP = new Elements.Geometry.Polygon(new Vector3(-46.27, 0, 0.00), new Vector3(-46.42, 0, 0.00), new Vector3(-46.42, 0, 2.13), new Vector3(-47.34, 0, 2.13), new Vector3(-47.34, 0, 0.00));
             wall.AddOpening(oP);
 
-            Assert.Throws<TimeoutException>(() =>
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
                 wall.UpdateRepresentations();
                 var solid = wall.GetFinalCsgFromSolids();
             });
         }
 
-
         [Fact]
-        public void UnionNotAllowedToGoForInfiniteTime()
+        public void UnionThrowsArgumentOutOfRange()
         {
             var profile1 = JsonConvert.DeserializeObject<Polygon>(
                 @"{
@@ -174,7 +172,7 @@ namespace Elements.Tests
                 new Extrude(profile2, 1, Vector3.ZAxis, false)
             });
 
-            Assert.Throws<TimeoutException>(() =>
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
             {
                 element.UpdateRepresentations();
                 var solid = element.GetFinalCsgFromSolids();

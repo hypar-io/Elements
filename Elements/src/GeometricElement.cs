@@ -150,14 +150,7 @@ namespace Elements
             }
             else if (solids.Count() > 0)
             {
-                var finished = Task.Run(() =>
-                {
-                    csg = csg.Union(solids);
-                }).Wait(1000);
-                if (!finished)
-                {
-                    throw new TimeoutException("The CSG Union operation timed out.");
-                }
+                csg = csg.Union(solids);
             }
             else
             {
@@ -166,14 +159,7 @@ namespace Elements
 
             if (voids.Count() > 0)
             {
-                var finished = Task.Run(() =>
-                {
-                    csg = csg.Substract(voids);
-                }).Wait(1000);
-                if (!finished)
-                {
-                    throw new TimeoutException("The CSG Substract operation timed out.");
-                }
+                csg = csg.Subtract(voids);
             }
 
             if (Transform == null || transformed)
