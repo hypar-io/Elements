@@ -100,7 +100,7 @@ docfx -f --serve
 - [SixLabors.ImageSharp.Drawing](https://github.com/SixLabors/ImageSharp.Drawing)
 - [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
-- [Csg](https://github.com/praeclarum/Csg) We work with a customized fork of this project
+- [Csg](https://github.com/praeclarum/Csg) We work with a customized fork of this project.  Currently using branch `hypars-branch`
 - [NetOctree](https://github.com/mcserep/NetOctree)
 
 ## Updating the Changelog
