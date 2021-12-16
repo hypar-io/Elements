@@ -215,5 +215,35 @@ namespace Elements.Tests
             var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime), new Transform(new Vector3(-7, -8, 0), new Vector3(-5, 3, 2)));
             return meshElement;
         }
+
+        [Fact]
+        public void PointAtAndUVWCoordinates()
+        {
+            // point at coordinates
+            var box = new BBox3((5, 2, 8), (10, 4, 10));
+            Assert.Equal(new Vector3(7.5, 3, 9), box.PointAt(0.5, 0.5, 0.5));
+
+            // point at vector3
+            var box2 = new BBox3((0, 0, 0), (100, 1000, 10));
+            Assert.Equal(new Vector3(20, 200, 2), box2.PointAt(new Vector3(0.2, 0.2, 0.2)));
+
+            // transformAt
+            var box3 = new BBox3((-10, -10, -10), (10, 10, 10));
+            Assert.Equal(new Transform(), box3.TransformAt(0.5, 0.5, 0.5));
+
+            // point at and uvw at point should be perfect inverses of each other
+            var box4 = new BBox3((12, 6, 3), (45, 8, 22));
+            var uvw = new Vector3(0.3, 0.7, 0.2);
+            var pointInBox = box4.PointAt(uvw);
+            var pointInUVW = box4.UVWAtPoint(pointInBox);
+            Assert.Equal(uvw, pointInUVW);
+
+            // point at and uvw at point should both work with coordinates outside the box
+            var uvw2 = new Vector3(3, 4.2, -6.2);
+            var pointInBox2 = box4.PointAt(uvw2);
+            Assert.False(box4.Contains(pointInBox2));
+            var pointInUVW2 = box4.UVWAtPoint(pointInBox2);
+            Assert.Equal(uvw2, pointInUVW2);
+        }
     }
 }
