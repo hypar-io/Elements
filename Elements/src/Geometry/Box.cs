@@ -66,7 +66,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="box">The world-oriented bounding box.</param>
         /// <param name="transform">If supplied, the transform indicating the box's local coordinate frame.</param>
-        public Box(BBox3 box, Transform transform = null)
+        [JsonConstructor]
+        public Box(BBox3 box = default, Transform transform = null)
         {
             Transform = transform ?? new Transform();
 
@@ -143,7 +144,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Transform TransformAt(double u, double v, double w)
         {
-            return new Transform(PointAt(new Vector3(u, v, w))).Concatenated(Transform);
+            return new Transform(PointAt(u, v, w)).Concatenated(Transform);
         }
 
         /// <summary>
@@ -224,5 +225,12 @@ namespace Elements.Geometry
             return scaleTransform.Concatenated(positionTransform);
         }
 
+        /// <summary>
+        /// Check if this box has a valid transform and bounds.
+        /// </summary>
+        public bool IsValid()
+        {
+            return Bounds.IsValid() && Transform != null;
+        }
     }
 }

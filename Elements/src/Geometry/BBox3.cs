@@ -294,7 +294,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public Transform TransformAt(double u, double v, double w)
         {
-            return new Transform(PointAt(new Vector3(u, v, w)));
+            return new Transform(PointAt(u, v, w));
         }
 
         /// <summary>
