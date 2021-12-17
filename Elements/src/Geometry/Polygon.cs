@@ -33,7 +33,7 @@ namespace Elements.Geometry
                 }
 
                 this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-                DeleteInvalidPoints(this.Vertices);
+                DeleteInvalidVertices(this.Vertices);
                 if (this.Vertices.Count < 3)
                 {
                     throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
@@ -1938,9 +1938,8 @@ namespace Elements.Geometry
             return verts;
         }
 
-        private void DeleteInvalidPoints(IList<Vector3> vertices)
+        private void DeleteInvalidVertices(IList<Vector3> vertices)
         {
-            // var lines = new Line[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)
             {
                 var a = vertices[i];
@@ -1952,16 +1951,7 @@ namespace Elements.Geometry
                     vertices.Remove(b);
                     i--;
                 }
-                // lines[i] = new Line(a, b);
             }
-            // var lines = new Line[vertices.Count];
-            // for (var i = 0; i < vertices.Count; i++)
-            // {
-            //     var a = vertices[i];
-            //     var b = i == vertices.Count - 1 ? vertices[0] : vertices[i + 1];
-            //     lines[i] = new Line(a, b);
-            // }
-            // return lines;
         }
     }
 
