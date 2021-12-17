@@ -1940,6 +1940,11 @@ namespace Elements.Geometry
 
         private void DeleteInvalidVertices(IList<Vector3> vertices)
         {
+            if (vertices.Count < 4)
+            {
+                return;
+            }
+
             for (var i = 0; i < vertices.Count; i++)
             {
                 var a = vertices[i];
