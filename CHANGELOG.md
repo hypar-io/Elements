@@ -8,6 +8,7 @@
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
 - `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
+- `Elements.Playground` project.
 
 ### Changed
 
