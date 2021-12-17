@@ -736,6 +736,50 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   <h5 id="Elements_Geometry_Polyline_OffsetOnSide_System_Double_System_Boolean__remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>This blunts sharp corners to keep widths close to the target.</p>
 </div>
+  <a id="Elements_Geometry_Polyline_OffsetOpen_" data-uid="Elements.Geometry.Polyline.OffsetOpen*"></a>
+  <h4 id="Elements_Geometry_Polyline_OffsetOpen_System_Double_" data-uid="Elements.Geometry.Polyline.OffsetOpen(System.Double)">OffsetOpen(Double)</h4>
+  <div class="markdown level1 summary"><p>A naïve control-point-only 2D open offset. This algorithm does not
+do any self-intersection checking.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline OffsetOpen(double offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>The offset distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>A new polyline with the same number of control points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Plane_" data-uid="Elements.Geometry.Polyline.Plane*"></a>
   <h4 id="Elements_Geometry_Polyline_Plane" data-uid="Elements.Geometry.Polyline.Plane">Plane()</h4>
   <div class="markdown level1 summary"><p>Compute the Plane defined by the first three non-collinear vertices of the Polygon.</p>
@@ -852,6 +896,48 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Project_" data-uid="Elements.Geometry.Polyline.Project*"></a>
+  <h4 id="Elements_Geometry_Polyline_Project_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Polyline.Project(Elements.Geometry.Plane)">Project(Plane)</h4>
+  <div class="markdown level1 summary"><p>Project this polyline onto the plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline Project(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane of the returned polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

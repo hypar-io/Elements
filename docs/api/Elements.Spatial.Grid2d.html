@@ -1155,6 +1155,33 @@ If the cell falls completely outside of the boundary, an empty array will be ret
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_Grid2d_GetTrimmedCellProfiles_" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellProfiles*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetTrimmedCellProfiles" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellProfiles">GetTrimmedCellProfiles()</h4>
+  <div class="markdown level1 summary"><p>Get a list of profiles representing this cell boundary, trimmed by any polygon boundary.
+Internal polygons that are completely inside the cell and are clockwise, will be added as profile voids.
+If the cell falls completely outside of the boundary, an empty array will be returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Profile&gt; GetTrimmedCellProfiles()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><p>Curves representing this cell in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_Grid2d_IsOutside_" data-uid="Elements.Spatial.Grid2d.IsOutside*"></a>
   <h4 id="Elements_Spatial_Grid2d_IsOutside" data-uid="Elements.Spatial.Grid2d.IsOutside">IsOutside()</h4>
   <div class="markdown level1 summary"><p>Test if the cell is fully outside the boundary.</p>

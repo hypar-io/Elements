@@ -115,6 +115,36 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static class GltfExtensions</code></pre>
   </div>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Serialization_glTF_GltfExtensions_GltfCachePath_" data-uid="Elements.Serialization.glTF.GltfExtensions.GltfCachePath*"></a>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_GltfCachePath" data-uid="Elements.Serialization.glTF.GltfExtensions.GltfCachePath">GltfCachePath</h4>
+  <div class="markdown level1 summary"><p>In normal function use, this should be set to null.
+If not null and set to a valid directory path, gltfs loaded for
+content elements will be cached to this directory, and can be
+explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
+by <code>hypar run</code> and test capabilities to speed up repeated runs.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static string GltfCachePath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Serialization_glTF_GltfExtensions_GetGlbStreamFromPath_" data-uid="Elements.Serialization.glTF.GltfExtensions.GetGlbStreamFromPath*"></a>

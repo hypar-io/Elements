@@ -339,6 +339,56 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
+  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Mesh_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Mesh,Elements.Geometry.Vector3@)">Intersects(Mesh, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this ray intersect the provided mesh?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Mesh mesh, out Vector3 result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
+        <td><span class="parametername">mesh</span></td>
+        <td><p>The Mesh.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection result occurs.
+False if no intersection occurs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
   <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Plane_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Plane,Elements.Geometry.Vector3@)">Intersects(Plane, out Vector3)</h4>
   <div class="markdown level1 summary"><p>Does this ray intersect the provided plane?</p>
 </div>
@@ -690,7 +740,6 @@ If true, check the intersection result for the location of the intersection.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if an intersection result occurs.
-The type of intersection should be checked in the intersection result.
 False if no intersection occurs.</p>
 </td>
       </tr>
