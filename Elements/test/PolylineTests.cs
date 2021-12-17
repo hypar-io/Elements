@@ -69,6 +69,24 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Polyline_OffsetOnSide_threeSegment()
+        {
+            var line = new Polyline(new List<Vector3>()
+            {
+                new Vector3(13540, 430),
+                new Vector3(13540, -1240),
+                new Vector3(9840, -1240),
+                new Vector3(6914, -1190),
+            });
+
+            var polygons = line.OffsetOnSide(2, false);
+            Assert.Equal(3, polygons.Length);
+
+            // A 3 segment line with the end segment endpoint almost parallel to the second line
+            Assert.Equal(new Vector3[] { new Vector3(13540, 430, 0), new Vector3(13538, 430, 0), new Vector3(13538, -1238, 0), new Vector3(13540, -1240, 0) }, polygons.First().Vertices);
+        }
+
+        [Fact]
         public void Polyline_OffsetOnSide_SingleSegmentFlipped()
         {
             var line = new Polyline(new List<Vector3>(){
@@ -158,6 +176,68 @@ namespace Elements.Geometry.Tests
             var matches = Polygon.SharedSegments(a, b);
 
             Assert.Empty(matches);
+        }
+
+        [Fact]
+        public void OffsetOpen()
+        {
+            Name = nameof(OffsetOpen);
+
+            var right = new Polyline(
+                (0, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var acute = new Polyline(
+                (5, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var obtuse = new Polyline(
+                (-5, 10),
+                (0, 0),
+                (10, 0)
+            );
+            var straight = new Polyline(
+                (-5, 0),
+                (0, 0),
+                (10, 0)
+            );
+            var line = new Polyline(
+                (0, 0),
+                (10, 0)
+            );
+            var tightCorner = new Polyline(
+                (0, 10),
+                (0, 1),
+                (1, 0),
+                (10, 0)
+            );
+            var z = new Polyline(
+                (0, 10),
+                (10, 10),
+                (0, 0),
+                (10, 0)
+            );
+
+            Assert.Throws<System.Exception>(() =>
+            {
+                right.OffsetOpen(-10);
+            });
+
+            var testPolylines = new[] { right, acute, obtuse, straight, line, tightCorner, z };
+            for (int i = 0; i < testPolylines.Length; i++)
+            {
+                var xform = new Transform(i * 40, 0, 0);
+                Polyline p = testPolylines[i].TransformedPolyline(xform);
+                Model.AddElement(p);
+                for (double j = -9; j < 9; j += 0.5)
+                {
+                    if (j == 0) continue;
+                    var offset = p.OffsetOpen(j);
+                    Model.AddElement(new ModelCurve(offset, BuiltInMaterials.XAxis));
+                }
+            }
         }
     }
 }

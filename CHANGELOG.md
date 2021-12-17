@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.7
+
+### Added
+
+- `GridLine.GetCircleTransform()`
+- `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
+- Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
+- `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
+
+### Changed
+
+- Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
+- Add use new CSG library and test it's effectiveness
+
+### Fixed
+
+- Under some circumstances when a line originated nearly within tolerance of a polygon, `Line.Trim` would return the wrong result.
+- #722
+
 ## 0.9.6
 
 ### Added
@@ -27,19 +46,29 @@
 - `Elements.Geometry.Profiles.WProfileFactory`
 - `Grid2d.GetTrimmedCellProfiles`
 - `Ceiling`
+- `GridLine`
+- `FitLine(IList<Point2d> points)`
+- `HalfEdgeGraph.Construct(IEnumerable<Line> lines)`
+- `Polyline.Project(Plane plane)`
+- `new Mesh(Mesh mesh)`
+- `new Topography(Mesh mesh, Material material, Transform transform, Guid id, string name)`
+- `Ray.Intersects(Mesh mesh)`
+- `Transform.CreateHorizontalFrameAlongCurve()`
 
 ### Changed
 
 - Change default for `useReferenceOrientation` when generating content catalogs.
+- Deprecate `CreateOrientedAlongCurve` (and add `CreateHorizontalFrameAlongCurve`) for clarity per [#687](https://github.com/hypar-io/Elements/issues/687) (Thanks @gytaco!)
 - `Position.ToVectorMeters` now requires a `relativeToOrigin` Position, so that it will actually give meaningful measurements in meters.
 - glTF generation now uses material IDs instead of names for material names, to prevent collisions.
 - Line.PointAt does not round input values near 0 or 1 anymore.
 - `Polygon` constructor throws error if there are less than 3 vertices provided.
 - Decrease intersection tolerance for Grid2d polygon splitting.
-
-### Fixed
-
--
+- Added `includeCoincidenceAtEdge` parameter to `Line.Trim`.
+- Improved the logic of `AreCollinear` to utilize perpendicular distance for tolerance checks.
+- `BBox3` constructor now takes an `IEnumerable<Vector3>` instead of a `IList<Vector3>` as input.
+- `Vector3Extensions.Unitized` no longer takes a tolerance for its zero-length check.
+- `AdaptiveGrid` no longer inrsect new edges with all existing edges when new region is added to the grid.
 
 ## 0.9.5
 
@@ -83,7 +112,7 @@
 
 ### Fixed
 
-`Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
+- `Line.ExtendTo` would sometimes return erroneous results if any of the trimming segments crossed the origin.
 
 ### Fixed
 

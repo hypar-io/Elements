@@ -262,7 +262,7 @@ namespace Elements.Tests
             var csg = topo.Mesh.ToCsg();
 
             var box = new Extrude(Polygon.Star(200, 100, 5), 100, Vector3.ZAxis, false);
-            csg = csg.Substract(box._solid.ToCsg().Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
+            csg = csg.Subtract(box._solid.ToCsg().Transform(new Transform(topo.Mesh.Vertices[topo.RowWidth * topo.RowWidth / 2 + topo.RowWidth / 2].Position + new Vector3(0, 0, -50)).ToMatrix4x4()));
 
             var result = new Mesh();
             csg.Tessellate(ref result);
@@ -376,6 +376,36 @@ namespace Elements.Tests
             // introduced by the CSG operation. We round to 3 decimal places here
             // which is millimeter accuracy.
             Assert.Equal(1, result.CutVolume, 3);
+        }
+
+        [Fact]
+        public void CreateTopoFromMesh()
+        {
+            Name = nameof(CreateTopoFromMesh);
+            var mesh = new Mesh();
+            // e---f---g---h
+            // | / | / | / |
+            // a---b---c---d
+            var a = mesh.AddVertex((0, 0, 10));
+            var b = mesh.AddVertex((5, 0, 11));
+            var c = mesh.AddVertex((10, -1, 12));
+            var d = mesh.AddVertex((15, 1, 9));
+            var e = mesh.AddVertex((-1, 5, 8));
+            var f = mesh.AddVertex((6, 6, 9));
+            var g = mesh.AddVertex((11, 5, 10));
+            var h = mesh.AddVertex((16, 4, 11));
+            mesh.AddTriangle(a, b, f);
+            mesh.AddTriangle(f, e, a);
+            mesh.AddTriangle(b, c, g);
+            mesh.AddTriangle(g, f, b);
+            mesh.AddTriangle(c, d, h);
+            mesh.AddTriangle(h, g, c);
+
+            var topo = new Topography(mesh, null, new Transform(), Guid.NewGuid(), "Topo From Mesh");
+
+            var tunnel = new Line((7, -5, 5), (7, 10, 5));
+            topo.Tunnel(tunnel, 3);
+            Model.AddElement(topo);
         }
 
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
