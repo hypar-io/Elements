@@ -32,9 +32,8 @@ namespace Elements.Geometry
 
             if (!Validator.DisableValidationOnConstruction)
             {
-                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices);
-                var segments = Polyline.SegmentsInternal(this.Vertices);
-                Polyline.CheckSegmentLengthAndThrow(segments);
+                Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
+                CheckSegmentLengthAndThrow(Edges());
             }
         }
 
@@ -106,6 +105,17 @@ namespace Elements.Geometry
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
+        }
+
+        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        {
+            for (var i = 0; i < Vertices.Count - 1; i++)
+            {
+                var from = Vertices[i];
+                var to = Vertices[i + 1];
+                yield return (from, to);
+            }
         }
 
         /// <summary>
@@ -382,11 +392,11 @@ namespace Elements.Geometry
         /// <summary>
         /// Check if any of the polygon segments have zero length.
         /// </summary>
-        internal static void CheckSegmentLengthAndThrow(IList<Line> segments)
+        internal static void CheckSegmentLengthAndThrow(IEnumerable<(Vector3 from, Vector3 to)> segments)
         {
-            foreach (var s in segments)
+            foreach (var (from, to) in segments)
             {
-                if (s.Length() == 0)
+                if (from.DistanceTo(to) == 0)
                 {
                     throw new ArgumentException("A segment of the polyline has zero length.");
                 }
@@ -398,18 +408,14 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="t">The transform representing the plane of the polygon.</param>
         /// <param name="segments"></param>
-        internal static void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
+        internal static void CheckSelfIntersectionAndThrow(Transform t, IEnumerable<(Vector3 from, Vector3 to)> segments)
         {
-            var segmentsTrans = new List<Line>();
-
-            foreach (var l in segments)
+            for (var i = 0; i < segments.Count(); i++)
             {
-                segmentsTrans.Add(l.TransformedLine(t));
-            };
-
-            for (var i = 0; i < segmentsTrans.Count; i++)
-            {
-                for (var j = 0; j < segmentsTrans.Count; j++)
+                var (from, to) = segments.ElementAt(i);
+                var s1a = t.OfPoint(from);
+                var s1b = t.OfPoint(to);
+                for (var j = 0; j < segments.Count(); j++)
                 {
                     if (i == j)
                     {
@@ -417,7 +423,11 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (segmentsTrans[i].Intersects2D(segmentsTrans[j]))
+                    var s2 = segments.ElementAt(j);
+                    var s2a = t.OfPoint(s2.from);
+                    var s2b = t.OfPoint(s2.to);
+
+                    if (Line.Intersects2d(s1a, s1b, s2a, s2b))
                     {
                         throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
