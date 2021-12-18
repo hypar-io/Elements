@@ -38,7 +38,7 @@ namespace Elements.Geometry
                 {
                     throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
                 }
-;
+
                 CheckSegmentLengthAndThrow(Edges());
                 var t = Vertices.ToTransform();
                 CheckSelfIntersectionAndThrow(t, Edges());
