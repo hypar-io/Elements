@@ -410,24 +410,25 @@ namespace Elements.Geometry
         /// <param name="segments"></param>
         internal static void CheckSelfIntersectionAndThrow(Transform t, IEnumerable<(Vector3 from, Vector3 to)> segments)
         {
-            for (var i = 0; i < segments.Count(); i++)
+            var segmentsT = new List<(Vector3 from, Vector3 to)>();
+            foreach (var (from, to) in segments)
             {
-                var (from, to) = segments.ElementAt(i);
-                var s1a = t.OfPoint(from);
-                var s1b = t.OfPoint(to);
-                for (var j = 0; j < segments.Count(); j++)
+                segmentsT.Add((t.OfPoint(from), t.OfPoint(to)));
+            }
+
+            for (var i = 0; i < segmentsT.Count; i++)
+            {
+                for (var j = 0; j < segmentsT.Count; j++)
                 {
                     if (i == j)
                     {
                         // Don't check against itself.
                         continue;
                     }
+                    var s1 = segmentsT[i];
+                    var s2 = segmentsT[j];
 
-                    var s2 = segments.ElementAt(j);
-                    var s2a = t.OfPoint(s2.from);
-                    var s2b = t.OfPoint(s2.to);
-
-                    if (Line.Intersects2d(s1a, s1b, s2a, s2b))
+                    if (Line.Intersects2d(s1.from, s1.to, s2.from, s2.to))
                     {
                         throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
