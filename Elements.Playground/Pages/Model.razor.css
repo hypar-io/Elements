@@ -1,11 +1,11 @@
 .grid {
     position: relative;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 500px 500px auto;
     grid-template-rows: auto 200px;
     grid-template-areas: 
-        "code model"
-        "output output";
+        "code graph model"
+        "output output output";
     border: 1px solid lightgray;
     height: calc(100vh - 16px);
 }
@@ -19,6 +19,11 @@
     grid-area: model;
     background: linear-gradient(#b8b8b8, #ffffff);
 }
+
+#graph {
+    position: relative;
+    background: #cccccc;
+}   
 
 .output {
     overflow-y: auto;

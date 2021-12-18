@@ -1,11 +1,13 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.133.0/build/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/loaders/GLTFLoader.js';
+import * as Flow from './flow.module.js';
 
 window.model = {
     initialize3D: () => { initialize3D(); },
     initializeEditor: () => { initializeEditor(); },
     loadModel: (glb) => { loadModel(glb) },
+    initializeGraph: () => { initializeGraph(); },
 };
 
 const scene = new THREE.Scene();
@@ -42,6 +44,87 @@ function loadModel(glb) {
             console.log(error)
         }
     );
+}
+
+class Vector3Node {
+    constructor(posx, posy) {
+        const vectorNode = new Flow.Node();
+        vectorNode.setWidth(300)
+        vectorNode.setPosition(posx, posy);
+        const vectorOutput = new Flow.TitleElement('Vector3').setStyle('gray').setOutput(1);
+        vectorNode.add(vectorOutput);
+        const x = new Flow.LabelElement('x').setStyle('red').add(new Flow.SliderInput(5));
+        const y = new Flow.LabelElement('y').setStyle('green').add(new Flow.SliderInput(5));
+        const z = new Flow.LabelElement('z').setStyle('blue').add(new Flow.SliderInput(5));
+        vectorNode.add(x);
+        vectorNode.add(y);
+        vectorNode.add(z);
+        this.node = vectorNode;
+    }
+
+    compile() {
+        return 'var v = new Vector3();';
+    }
+}
+
+class LineNode {
+    constructor(posx, posy) {
+        const line = new Flow.Node();
+        line.setWidth(200)
+        line.setPosition(posx, posy);
+        line.add(new Flow.TitleElement('Line').setStyle('gray'));
+        const start = new Flow.LabelElement('start');
+        const end = new Flow.LabelElement('end');
+        line.add(start);
+        line.add(end);
+
+        start.setInput(1);
+        end.setInput(1);
+
+        this.node = line;
+        this.start = start;
+        this.end = end;
+    }
+
+    compile() {
+        return 'var l = new Line();';
+    }
+}
+
+function compileGraph(graphNodes) {
+    let code = '';
+    graphNodes.forEach((node) => {
+        code += node.compile() + '\n';
+    });
+    return code;
+}
+
+function initializeGraph() {
+
+    const graphDiv = document.getElementById('graph');
+    const w = graphDiv.clientWidth;
+    const h = graphDiv.clientHeight;
+
+    const canvas = new Flow.Canvas();
+
+    const vector1 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY);
+    const vector2 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY + 100);
+    const line = new LineNode(canvas.relativeX + 10, canvas.relativeY + 200);
+
+    canvas.add(vector1.node);
+    canvas.add(vector2.node);
+    canvas.add(line.node);
+
+    const graphNodes = [vector1, vector2, line];
+
+    line.start.onConnect(() => {
+
+        //console.log( slider.link.inputElement === slider );
+        // console.log( slider.link ? slider.link.outputElement === vector : null );
+        console.log(compileGraph(graphNodes));
+    });
+
+    graphDiv.appendChild(canvas.dom);
 }
 
 function initializeEditor() {
