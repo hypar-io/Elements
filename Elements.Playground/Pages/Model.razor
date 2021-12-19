@@ -7,6 +7,7 @@
 @using System.IO
 @using System.Threading
 @using System.Web
+@using System.Text.Json;
 
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
@@ -22,6 +23,7 @@
 
 @code {
     bool loading = true;
+    private static Dictionary<string, double> context;
     private static string csharp = @"var model = new Model();
 
 var length = 10;
@@ -97,7 +99,14 @@ return model;";
     [JSInvokable]
     public static void SetCodeValue(string code)
     {
+        Console.WriteLine($"Setting code value to \n {code}");
         csharp = code;
+    }
+
+    [JSInvokable]
+    public static void SetCodeContext(Dictionary<string, double> value)
+    {
+        context = value;
     }
 
     [JSInvokable]
@@ -111,6 +120,8 @@ return model;";
         Output = "";
 
         Console.WriteLine("Compiling and Running code");
+        var globals = new Globals(context);
+        Console.WriteLine(JsonSerializer.Serialize(globals));
         var sw = Stopwatch.StartNew();
 
         var currentOut = Console.Out;
@@ -128,7 +139,7 @@ return model;";
                 var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
 
                 var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-                var model = await (Task<object>)submission(new object[] { null, null });
+                var model = await (Task<object>)submission(new object[] { globals, null });
                 Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
 
                 await Task.Run(() =>
@@ -145,7 +156,6 @@ return model;";
         Output = writer.ToString();
         if (exception != null)
         {
-
             Output += "\r\n" + exception.ToString();
         }
         Console.SetOut(currentOut);

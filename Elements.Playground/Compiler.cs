@@ -12,6 +12,15 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Elements.Playground
 {
+    public class Globals
+    {
+        public Dictionary<string, double> Inputs { get; set; }
+        public Globals(Dictionary<string, double> inputs)
+        {
+            this.Inputs = inputs;
+        }
+    }
+
     public static class Compiler
     {
         class BlazorBoot
@@ -87,7 +96,7 @@ namespace Elements.Playground
 "Elements.Geometry",
 "Elements.Geometry.Profiles",
 "Elements.Validators"
-        }, concurrentBuild: false));
+        }, concurrentBuild: false), globalsType: typeof(Globals));
 
             ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
 
