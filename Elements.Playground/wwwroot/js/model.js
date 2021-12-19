@@ -60,6 +60,31 @@ class Node {
     }
 }
 
+class BeamNode extends Node {
+
+    #curveInput;
+
+    constructor(posx, posy, onConnect, onChange) {
+        super('beam', posx, posy, 300);
+        const title = new Flow.TitleElement('Beam').setStyle('gray');
+        this.node.add(title);
+
+        this.#curveInput = new Flow.LabelElement('curve').setInput(1);
+        this.#curveInput.onConnect(() => {
+            onConnect();
+        });
+        this.node.add(this.#curveInput);
+
+    }
+
+    compile() {
+        var lineId = this.#curveInput.linkedElement ? this.#curveInput.linkedElement.node.wrapper.id : 'null';
+        var code = `var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5));\n`;
+        code += `model.AddElement(${this.id});`
+        return code;
+    }
+}
+
 class TransformAtNode extends Node {
 
     #lineInput;
@@ -232,12 +257,21 @@ function initializeGraph() {
         DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
 
+    const beam = new BeamNode(canvas.relativeX + 10, canvas.relativeY + 800, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
+    }, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
+    });
+
     canvas.add(vector1.node);
     canvas.add(vector2.node);
     canvas.add(line.node);
     canvas.add(transform.node);
+    canvas.add(beam.node)
 
-    const graphNodes = [vector1, vector2, line, transform];
+    const graphNodes = [vector1, vector2, line, transform, beam];
 
     const graphDiv = document.getElementById('graph');
     graphDiv.appendChild(canvas.dom);
