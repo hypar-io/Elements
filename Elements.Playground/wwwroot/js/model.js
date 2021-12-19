@@ -47,12 +47,56 @@ function loadModel(glb) {
 }
 
 class Node {
-    constructor(prefix) {
+    constructor(prefix, posx, posy, width) {
         this.id = `${prefix}_${uuidv4()}`.replace(/-/g, '_');
+        this.node = new Flow.Node();
+        this.node.setPosition(posx, posy);
+        this.node.setWidth(width);
+        this.node.wrapper = this;
     }
 
     getData() {
         return {};
+    }
+}
+
+class TransformAtNode extends Node {
+
+    #lineInput;
+    #tInput;
+    #tId = `x_${uuidv4()}`.replace(/-/g, '_');
+    constructor(posx, posy, onConnect, onChange) {
+        super('transformAt', posx, posy, 300);
+
+        const title = new Flow.TitleElement('TransformAt').setStyle('gray');
+        this.node.add(title);
+
+        this.#tInput = new Flow.SliderInput(0.5, 0.0, 1.0);
+        this.#tInput.onChange(() => {
+            onChange();
+        });
+
+        this.#lineInput = new Flow.LabelElement('line').setInput(1);
+        this.#lineInput.onConnect(() => {
+            onConnect();
+        });
+
+        const t = new Flow.LabelElement('t').add(this.#tInput);
+        this.node.add(this.#lineInput);
+        this.node.add(t);
+    }
+
+    compile() {
+        var lineId = this.#lineInput.linkedElement ? this.#lineInput.linkedElement.node.wrapper.id : 'null';
+        var code = `var ${this.id} = ${lineId}.TransformAt(Inputs["${this.#tId}"]);\n`;
+        code += `model.AddElements(${this.id}.ToModelCurves());`
+        return code;
+    }
+
+    getData() {
+        var data = {};
+        data[this.#tId] = this.#tInput.getValue();
+        return data;
     }
 }
 
@@ -65,12 +109,9 @@ class Vector3Node extends Node {
     #yId = `y_${uuidv4()}`.replace(/-/g, '_');
     #zId = `z_${uuidv4()}`.replace(/-/g, '_');
     constructor(posx, posy, onConnect, onChange) {
-        super('vector3');
-        const vectorNode = new Flow.Node();
-        vectorNode.setWidth(300)
-        vectorNode.setPosition(posx, posy);
+        super('vector3', posx, posy, 300);
         const vectorOutput = new Flow.TitleElement('Vector3').setStyle('gray').setOutput(1);
-        vectorNode.add(vectorOutput);
+        this.node.add(vectorOutput);
         this.#xSlider = new Flow.SliderInput(5);
         this.#xSlider.onChange(() => {
             onChange();
@@ -86,11 +127,9 @@ class Vector3Node extends Node {
         const x = new Flow.LabelElement('x').add(this.#xSlider);
         const y = new Flow.LabelElement('y').add(this.#ySlider);
         const z = new Flow.LabelElement('z').add(this.#zSlider);
-        vectorNode.add(x);
-        vectorNode.add(y);
-        vectorNode.add(z);
-        this.node = vectorNode;
-        this.node.wrapper = this;
+        this.node.add(x);
+        this.node.add(y);
+        this.node.add(z);
     }
 
     compile() {
@@ -108,11 +147,8 @@ class Vector3Node extends Node {
 
 class LineNode extends Node {
     constructor(posx, posy, onConnect) {
-        super('line');
-        const line = new Flow.Node();
-        line.setWidth(200)
-        line.setPosition(posx, posy);
-        line.add(new Flow.TitleElement('Line').setStyle('gray').setOutput(1));
+        super('line', posx, posy, 200);
+        this.node.add(new Flow.TitleElement('Line').setStyle('gray').setOutput(1));
         const start = new Flow.LabelElement('start');
         start.onConnect(() => {
             onConnect();
@@ -121,16 +157,14 @@ class LineNode extends Node {
         end.onConnect(() => {
             onConnect();
         });
-        line.add(start);
-        line.add(end);
+        this.node.add(start);
+        this.node.add(end);
 
         start.setInput(1);
         end.setInput(1);
 
-        this.node = line;
         this.start = start;
         this.end = end;
-        this.node.wrapper = this;
     }
 
     compile() {
@@ -173,14 +207,24 @@ function initializeGraph() {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
         DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
-    const vector2 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY + 100, () => {
+
+    const vector2 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY + 200, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
         DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
         DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
-    const line = new LineNode(canvas.relativeX + 10, canvas.relativeY + 200, () => {
+
+    const line = new LineNode(canvas.relativeX + 10, canvas.relativeY + 400, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
+    }, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
+    });
+
+    const transform = new TransformAtNode(canvas.relativeX + 10, canvas.relativeY + 600, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
         DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
@@ -191,8 +235,9 @@ function initializeGraph() {
     canvas.add(vector1.node);
     canvas.add(vector2.node);
     canvas.add(line.node);
+    canvas.add(transform.node);
 
-    const graphNodes = [vector1, vector2, line];
+    const graphNodes = [vector1, vector2, line, transform];
 
     const graphDiv = document.getElementById('graph');
     graphDiv.appendChild(canvas.dom);
