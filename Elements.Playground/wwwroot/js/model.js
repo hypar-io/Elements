@@ -168,18 +168,24 @@ function initializeGraph() {
 
     const vector1 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
     const vector2 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY + 100, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
     const line = new LineNode(canvas.relativeX + 10, canvas.relativeY + 200, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
 
     canvas.add(vector1.node);

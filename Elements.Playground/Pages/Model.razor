@@ -15,7 +15,7 @@
 
 <div class=grid>
     <button class="run" disabled=@loading @onclick="Run">Run</button>
-    <div id="editor">@csharp</div>
+    @* <div id="editor">@csharp</div> *@
     <div id="model"></div>
     <div id="graph"></div>
     <div class="output">@((MarkupString)Output)</div>
@@ -24,6 +24,9 @@
 @code {
     bool loading = true;
     private static Dictionary<string, double> context;
+    private static Assembly asm;
+    private static Compilation compilation;
+
     private static string csharp = @"var model = new Model();
 
 var length = 10;
@@ -90,7 +93,7 @@ return model;";
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("model.initializeEditor");
+            @* await JSRuntime.InvokeVoidAsync("model.initializeEditor"); *@
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
         }
@@ -115,38 +118,24 @@ return model;";
         return Compiler.WhenReady(RunInternal);
     }
 
-    static async Task RunInternal()
+    [JSInvokable]
+    public static void Compile()
     {
-        Output = "";
-
-        Console.WriteLine("Compiling and Running code");
-        var globals = new Globals(context);
-        Console.WriteLine(JsonSerializer.Serialize(globals));
-        var sw = Stopwatch.StartNew();
-
         var currentOut = Console.Out;
         var writer = new StringWriter();
         Console.SetOut(writer);
-
+        var sw = Stopwatch.StartNew();
         Exception exception = null;
         try
         {
-            var (success, asm, compilation) = Compiler.LoadSource(csharp);
+            asm = null;
+            compilation = null;
+            var (success, newAsm, newCompilation) = Compiler.LoadSource(csharp);
             if (success)
             {
-                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
-                var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
-                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
-
-                var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-                var model = await (Task<object>)submission(new object[] { globals, null });
+                asm = newAsm;
+                compilation = newCompilation;
                 Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
-
-                await Task.Run(() =>
-                {
-                    var glb = ((Elements.Model)model).ToGlTF();
-                    Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                });
             }
         }
         catch (Exception ex)
@@ -159,8 +148,46 @@ return model;";
             Output += "\r\n" + exception.ToString();
         }
         Console.SetOut(currentOut);
-
         sw.Stop();
+    }
 
+    static async Task RunInternal()
+    {
+        Output = "";
+
+        Console.WriteLine("Running code");
+
+        var globals = new Globals(context);
+
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        Exception exception = null;
+        try
+        {
+            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+
+            var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+            var model = await (Task<object>)submission(new object[] { globals, null });
+
+            await Task.Run(() =>
+            {
+                var glb = ((Elements.Model)model).ToGlTF();
+                Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+            });
+        }
+        catch (Exception ex)
+        {
+            exception = ex;
+        }
+        Output = writer.ToString();
+        if (exception != null)
+        {
+            Output += "\r\n" + exception.ToString();
+        }
+        Console.SetOut(currentOut);
     }
 }
