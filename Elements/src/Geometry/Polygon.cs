@@ -33,7 +33,7 @@ namespace Elements.Geometry
                 }
 
                 this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-                DeleteInvalidVertices(this.Vertices);
+                DeleteVerticesForOverlappingEdges(this.Vertices);
                 if (this.Vertices.Count < 3)
                 {
                     throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
@@ -1938,7 +1938,16 @@ namespace Elements.Geometry
             return verts;
         }
 
-        private void DeleteInvalidVertices(IList<Vector3> vertices)
+        /// <summary>
+        /// Deletes Vertices that are out on overloping Edges
+        /// D__________C
+        ///  |         |
+        ///  |         |
+        /// E|_________|B_____A
+        /// Vertex A will be deleted
+        /// </summary>
+        /// <param name="vertices"></param>
+        private void DeleteVerticesForOverlappingEdges(IList<Vector3> vertices)
         {
             if (vertices.Count < 4)
             {
