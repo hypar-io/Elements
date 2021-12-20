@@ -44,7 +44,7 @@ namespace Elements.Playground
         [JSInvokable]
         public static void SetCodeValue(string code)
         {
-            Console.WriteLine($"Setting code value to \n {code}");
+            // Console.WriteLine($"Setting code value to \n {code}");
             Code = code;
         }
 
