@@ -121,6 +121,7 @@ class MaterialNode extends Node {
     compile() {
         var code = `var ${this.id}_color = new Color(Inputs["${this.#rId}"],Inputs["${this.#gId}"],Inputs["${this.#bId}"], Inputs["${this.#aId}"]);\n`;
         code += `var ${this.id} = new Material("${this.id}_material", ${this.id}_color, Inputs["${this.#specId}"], Inputs["${this.#glossId}"]);\n`;
+        code += `model.AddElement(${this.id}, false);\n`;
         return code;
     }
 
@@ -164,7 +165,7 @@ class BeamNode extends Node {
         var lineId = this.#curveInput.linkedElement ? this.#curveInput.linkedElement.node.wrapper.id : 'null';
         var materialId = this.#materialInput.linkedElement ? this.#materialInput.linkedElement.node.wrapper.id : 'null';
         var code = `var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5), material: ${materialId});\n`;
-        code += `model.AddElement(${this.id});`
+        code += `model.AddElement(${this.id}, false);`
         return code;
     }
 }
