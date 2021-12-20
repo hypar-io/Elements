@@ -16,7 +16,7 @@ namespace Elements.Playground
 {
     public static class CodeRunner
     {
-        public static string Output = "This is a test";
+        public static string Output = "Nothing to see yet. Try adding and connecting nodes.";
         public static string Code = string.Empty;
         public static IJSUnmarshalledRuntime Runtime;
         private static Dictionary<string, double> context;
@@ -44,7 +44,7 @@ namespace Elements.Playground
         [JSInvokable]
         public static void SetCodeValue(string code)
         {
-            // Console.WriteLine($"Setting code value to \n {code}");
+            Console.WriteLine($"Setting code value to \n {code}");
             Code = code;
         }
 
@@ -86,8 +86,9 @@ namespace Elements.Playground
             }
             catch (Exception ex)
             {
+                Console.Write(exception);
                 exception = ex;
-                Output += "\r\n" + exception.ToString();
+                Output += "\r\n" + ex.ToString();
             }
             finally
             {
