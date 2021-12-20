@@ -39,10 +39,9 @@ namespace Elements.Geometry
                     throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
                 }
 
-                var segments = Polygon.SegmentsInternal(this.Vertices);
-                Polyline.CheckSegmentLengthAndThrow(segments);
-                var t = this.Vertices.ToTransform();
-                Polyline.CheckSelfIntersectionAndThrow(t, segments);
+                CheckSegmentLengthAndThrow(Edges());
+                var t = Vertices.ToTransform();
+                CheckSelfIntersectionAndThrow(t, Edges());
             }
         }
 
@@ -1890,7 +1889,7 @@ namespace Elements.Geometry
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges()
         {
             for (var i = 0; i < this.Vertices.Count; i++)
             {
