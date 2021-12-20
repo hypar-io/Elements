@@ -23,7 +23,14 @@
 #graph {
     position: relative;
     background: #cccccc;
-}   
+}
+
+#node-types {
+    position: relative;
+    z-index: 100;
+    left: 20px;
+    top: 20px;
+}
 
 .output {
     overflow-y: auto;

@@ -10,8 +10,18 @@
     @* <button class="run" disabled=@loading @onclick="Run">Run</button> *@
     @* <div id="editor">@csharp</div> *@
     <div id="model"></div>
-    <div id="graph"></div>
-    <div class="output">@CodeRunner.Output</div>
+    <div id="graph">
+        <select id="node-types" @onchange="AddNode">
+            <option disabled selected>Select a node type...</option>
+            <option>Vector3</option>
+            <option>TransformAt</option>
+            <option>Line</option>
+            <option>Rectangle</option>
+            <option>Material</option>
+            <option>Beam</option>
+        </select>
+    </div>
+    <div class="output">@((MarkupString)CodeRunner.Output)</div>
 </div>
 
 @code {
@@ -43,7 +53,6 @@
             return Task.FromResult(0);
         });
     }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -53,5 +62,10 @@
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
         }
+    }
+
+    private async Task AddNode(ChangeEventArgs args)
+    {
+        await JSRuntime.InvokeVoidAsync("model.addNode", args.Value);
     }
 }
