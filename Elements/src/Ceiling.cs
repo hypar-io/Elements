@@ -28,11 +28,6 @@ namespace Elements
         public Polygon Perimeter { get; protected set; }
 
         /// <summary>
-        /// A collection of openings in the ceiling.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
-
-        /// <summary>
         /// Construct a ceiling by extruding a profile.
         /// </summary>
         /// <param name="perimeter">The plan profile of the ceiling. It must lie on the XY plane.
