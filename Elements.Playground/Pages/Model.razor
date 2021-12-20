@@ -1,13 +1,6 @@
 @page "/"
-
-@using Microsoft.CodeAnalysis
-@using Microsoft.CodeAnalysis.CSharp
-@using Microsoft.CodeAnalysis.CSharp.Scripting.Hosting
-@using System.Reflection
 @using System.IO
-@using System.Threading
 @using System.Web
-@using System.Text.Json;
 
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
@@ -18,66 +11,29 @@
     @* <div id="editor">@csharp</div> *@
     <div id="model"></div>
     <div id="graph"></div>
-    <div class="output">@((MarkupString)Output)</div>
+    <div class="output"><p>@CodeRunner.Output</p></div>
 </div>
 
 @code {
+
     bool loading = true;
-    private static Dictionary<string, double> context;
-    private static Assembly asm;
-    private static Compilation compilation;
-
-    private static string csharp = @"var model = new Model();
-
-var length = 10;
-
-Validator.DisableValidationOnConstruction = true;
-var m = BuiltInMaterials.Concrete;
-var wf = new WideFlangeProfileFactory();
-var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
-
-for(var i=0; i<1; i++)
-{
-var start = new Vector3(i, 0, 0);
-var end = new Vector3(i, length, i);
-
-// The bottom chord
-var bottomChord = new Line(start, end);
-var bottomChordBeam = new Beam(bottomChord, p, m);
-model.AddElement(bottomChordBeam);
-
-var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-var topChordBeam = new Beam(topChord, p, m);
-model.AddElement(topChordBeam);
-
-Vector3 last = default(Vector3);
-for(var j=0.0; j<=1.0; j+=0.1)
-{
-var pt = bottomChord.PointAt(j);
-var top = pt + new Vector3(0,0,5);
-var panelLine = new Line(pt, top);
-var panelBeam = new Beam(panelLine, p, m);
-model.AddElement(panelBeam);
-
-if(j > 0.0)
-{
-var braceLine = new Line(top, last);
-var braceBeam = new Beam(braceLine, p, m);
-model.AddElement(braceBeam);
-}
-last = pt;
-}
-}
-return model;";
-    private static string Output = "";
-    private static IJSUnmarshalledRuntime Runtime;
     [Inject] private HttpClient Client { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        Runtime = JSUnmarshalledRuntime;
+        CodeRunner.Runtime = JSUnmarshalledRuntime;
 
         Compiler.InitializeMetadataReferences(Client);
+        CodeRunner.ExecutionComplete += () =>
+        {
+            Console.WriteLine("Updating state after execution completion.");
+            StateHasChanged();
+        };
+        CodeRunner.CompilationComplete += () =>
+        {
+            Console.WriteLine("Updating state after compilation completion.");
+            StateHasChanged();
+        };
 
         base.OnInitializedAsync();
 
@@ -97,97 +53,5 @@ return model;";
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
         }
-    }
-
-    [JSInvokable]
-    public static void SetCodeValue(string code)
-    {
-        Console.WriteLine($"Setting code value to \n {code}");
-        csharp = code;
-    }
-
-    [JSInvokable]
-    public static void SetCodeContext(Dictionary<string, double> value)
-    {
-        context = value;
-    }
-
-    [JSInvokable]
-    public static Task Run()
-    {
-        return Compiler.WhenReady(RunInternal);
-    }
-
-    [JSInvokable]
-    public static void Compile()
-    {
-        var currentOut = Console.Out;
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-        var sw = Stopwatch.StartNew();
-        Exception exception = null;
-        try
-        {
-            asm = null;
-            compilation = null;
-            var (success, newAsm, newCompilation) = Compiler.LoadSource(csharp);
-            if (success)
-            {
-                asm = newAsm;
-                compilation = newCompilation;
-                Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
-            }
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-        Output = writer.ToString();
-        if (exception != null)
-        {
-            Output += "\r\n" + exception.ToString();
-        }
-        Console.SetOut(currentOut);
-        sw.Stop();
-    }
-
-    static async Task RunInternal()
-    {
-        Output = "";
-
-        Console.WriteLine("Running code");
-
-        var globals = new Globals(context);
-
-        var currentOut = Console.Out;
-        var writer = new StringWriter();
-        Console.SetOut(writer);
-
-        Exception exception = null;
-        try
-        {
-            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
-            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
-            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
-
-            var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-            var model = await (Task<object>)submission(new object[] { globals, null });
-
-            await Task.Run(() =>
-            {
-                var glb = ((Elements.Model)model).ToGlTF();
-                Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-            });
-        }
-        catch (Exception ex)
-        {
-            exception = ex;
-        }
-        Output = writer.ToString();
-        if (exception != null)
-        {
-            Output += "\r\n" + exception.ToString();
-        }
-        Console.SetOut(currentOut);
     }
 }
