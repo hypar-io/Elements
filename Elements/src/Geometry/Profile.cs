@@ -20,6 +20,12 @@ namespace Elements.Geometry
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
+        /// The default constructor is used by derived classes, 
+        /// and is not intended to be used directly.
+        /// </summary>
+        internal Profile() { }
+
+        /// <summary>
         /// Create a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
@@ -27,7 +33,7 @@ namespace Elements.Geometry
         /// <param name="id">The id of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Profile(Polygon @perimeter, IList<Polygon> @voids, System.Guid @id = default, string @name = null)
+        public Profile(Polygon @perimeter, IList<Polygon> @voids, Guid @id = default, string @name = null)
             : base(id, name)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -56,7 +62,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Construct a profile from a collection of polygons.
         /// If the collection contains more than one polygon, the first polygon
-        /// will be used as the perimeter and any remaining polygons will 
+        /// will be used as the perimeter and any remaining polygons will
         /// be used as voids.
         /// </summary>
         /// <param name="polygons">The polygons bounding this profile.</param>
@@ -113,7 +119,7 @@ namespace Elements.Geometry
         /// <param name="transform">The transform.</param>
         public Profile Transformed(Transform transform)
         {
-            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>());
+            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>(), Guid.NewGuid(), this.Name);
         }
 
         /// <summary>
@@ -181,6 +187,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Project this profile onto the plane.
+        /// </summary>
+        /// <param name="plane">The plane of the returned profile.</param>
+        public Profile Project(Plane plane)
+        {
+            var projectedPerimeter = this.Perimeter.Project(plane);
+            var projectedVoids = this.Voids.Select(v => v.Project(plane));
+            return new Profile(projectedPerimeter, projectedVoids.ToList());
+        }
+
+        /// <summary>
         /// Perform a union operation, returning a new profile that is the union of the current profile with the other profile
         /// <param name="profile">The profile with which to create a union.</param>
         /// <param name="tolerance">An optional tolerance.</param>
@@ -243,6 +260,14 @@ namespace Elements.Geometry
         /// </summary>
         public void OrientVoids()
         {
+            // This should only occur in the case of a parametric 
+            // profile which defines its own perimeter and void logic
+            // during construction.
+            if (Perimeter == null || Voids == null)
+            {
+                return;
+            }
+
             var correctedVoids = new List<Polygon>();
             var perimeterNormal = Perimeter.Normal();
             foreach (var voidCrv in Voids)
@@ -267,8 +292,22 @@ namespace Elements.Geometry
             }
 
             var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
-            clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            var normal = Perimeter.Normal();
+
+            if (normal.IsAlmostEqualTo(Vector3.ZAxis))
+            {
+                clipper.AddPath(Perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+                clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+            else
+            {
+                var transform = new Transform(Perimeter.Start, normal);
+                transform.Invert();
+                var perimeter = Perimeter.TransformedPolygon(transform);
+                clipper.AddPath(perimeter.ToClipperPath(), ClipperLib.PolyType.ptSubject, true);
+                clipper.AddPaths(this.Voids.Select(p => p.TransformedPolygon(transform).ToClipperPath()).ToList(), ClipperLib.PolyType.ptClip, true);
+            }
+
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
             return solution.Sum(s => ClipperLib.Clipper.Area(s)) / Math.Pow(1.0 / Vector3.EPSILON, 2);
@@ -343,7 +382,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids). 
+        /// Tests if a point is contained within this profile. Returns false for points that are outside of the profile (or within voids).
         /// </summary>
         /// <param name="point">The position to test.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
@@ -462,7 +501,7 @@ namespace Elements.Geometry
                 var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
                 // for every resultant polygon, we can't be sure if it's a void, or should have a void,
                 // so we check if it includes any of the others, and subtract the original profile's voids
-                // as well. 
+                // as well.
                 for (int i = 0; i < perimSplits.Count; i++)
                 {
                     Polygon perimeterPoly = perimSplits[i];

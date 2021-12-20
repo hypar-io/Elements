@@ -39,6 +39,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a new mesh from another mesh by copying vertices and triangles.
+        /// </summary>
+        public Mesh(Mesh mesh)
+        {
+            Vertices = new List<Vertex>();
+            Triangles = new List<Triangle>();
+            foreach (var v in mesh.Vertices)
+            {
+                AddVertex(new Vertex(v.Position, v.Normal, v.Color, v.Index, v.UV));
+            }
+            foreach (var triangle in mesh.Triangles)
+            {
+                var triangleVertices = triangle.Vertices.Select(v => Vertices[v.Index]).ToList();
+                AddTriangle(new Triangle(triangleVertices, triangle.Normal));
+            }
+        }
+
+        /// <summary>
         /// Construct an empty mesh.
         /// </summary>
         public Mesh()
@@ -277,6 +295,46 @@ Triangles:{Triangles.Count}";
             return false;
         }
 
+        /// <summary>
+        /// Get the open edges of this mesh.
+        /// </summary>
+        public List<Line> GetNakedEdges()
+        {
+            var edges = new List<Line>();
+            foreach (var t in this.Triangles)
+            {
+                for (var j = 0; j < 3; j++)
+                {
+                    var v = t.Vertices[j];
+                    var v2 = t.Vertices[(j + 1) % 3];
+                    var edgeTriangles = v.Triangles.Intersect(v2.Triangles);
+                    if (edgeTriangles.Count() == 1)
+                    {
+                        edges.Add(new Line(v.Position, v2.Position));
+                    }
+                }
+            }
+            return edges;
+        }
+
+        /// <summary>
+        /// Get the naked edges of this mesh as polylines
+        /// </summary>
+        /// <returns></returns>
+        public List<Polyline> GetNakedBoundaries()
+        {
+            var lines = this.GetNakedEdges();
+            var heg = Elements.Spatial.HalfEdgeGraph2d.Construct(lines);
+            var polygons = heg.Polygonize(null, (points) =>
+            {
+                var polyline = new Polyline(points);
+                // we have to add in the starting vertex to make this a closed polyline.
+                polyline.Vertices.Add(points[0]);
+                return polyline;
+            });
+            return polygons;
+        }
+
         private double SignedVolumeOfTriangle(Triangle t)
         {
             var p1 = t.Vertices[0].Position;
@@ -299,5 +357,46 @@ Triangles:{Triangles.Count}";
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
+
+
+
+        internal static Mesh ToMesh(this Tess tess, Transform transform = null, Color color = default, Vector3 normal = default)
+        {
+            var faceMesh = new Mesh();
+            (Vector3 U, Vector3 V) basis = (default(Vector3), default(Vector3));
+
+            for (var i = 0; i < tess.ElementCount; i++)
+            {
+                var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
+                var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
+                var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
+
+                if (transform != null)
+                {
+                    a = transform.OfPoint(a);
+                    b = transform.OfPoint(b);
+                    c = transform.OfPoint(c);
+                }
+
+                if (i == 0)
+                {
+                    // Calculate the texture space basis vectors
+                    // from the first triangle. This is acceptable
+                    // for planar faces.
+                    // TODO: Update this when we support non-planar faces.
+                    // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                    basis = normal.ComputeDefaultBasisVectors();
+                }
+
+                var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), normal, color: color);
+                var v2 = faceMesh.AddVertex(b, new UV(basis.U.Dot(b), basis.V.Dot(b)), normal, color: color);
+                var v3 = faceMesh.AddVertex(c, new UV(basis.U.Dot(c), basis.V.Dot(c)), normal, color: color);
+
+                faceMesh.AddTriangle(v1, v2, v3);
+            }
+
+            return faceMesh;
+        }
+
     }
 }

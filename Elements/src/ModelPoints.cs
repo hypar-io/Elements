@@ -56,5 +56,17 @@ namespace Elements
 
             return gb;
         }
+
+        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            if (this.Locations.Count == 0)
+            {
+                return base.TryToGraphicsBuffers(out graphicsBuffers, out id, out mode);
+            }
+            id = $"{this.Id}_point";
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.POINTS;
+            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers() };
+            return true;
+        }
     }
 }

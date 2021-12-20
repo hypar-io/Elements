@@ -20,3 +20,11 @@
 this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
     {% endfor -%}
 }
+
+// Empty constructor
+{% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}()
+{% if HasInheritance -%}
+    : base()
+{% endif -%}
+{
+}

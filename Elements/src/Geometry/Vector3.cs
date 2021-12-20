@@ -169,17 +169,24 @@ namespace Elements.Geometry
         /// </summary>
         public double Length()
         {
-            return Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2));
+            return Math.Sqrt(this.LengthSquared());
+        }
+
+        /// <summary>
+        /// Get the squared length of this vector.
+        /// </summary>
+        public double LengthSquared()
+        {
+            return Math.Pow(X, 2) + Math.Pow(Y, 2) + Math.Pow(Z, 2);
         }
 
         /// <summary>
         /// Return a new vector which is the unitized version of this vector.
         /// </summary>
-        /// <param name="tolerance">The amount of tolerance in the zero length comparison.</param>
-        public Vector3 Unitized(double tolerance = Vector3.EPSILON)
+        public Vector3 Unitized()
         {
             var length = Length();
-            if (length.ApproximatelyEquals(0, tolerance))
+            if (length == 0)
             {
                 return this;
             }
