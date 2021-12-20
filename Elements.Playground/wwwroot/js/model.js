@@ -60,12 +60,89 @@ class Node {
     }
 }
 
+class MaterialNode extends Node {
+    #rSlider;
+    #gSlider;
+    #bSlider;
+    #aSlider;
+    #specSlider;
+    #glossSlider;
+    #rId = `x_${uuidv4()}`.replace(/-/g, '_');
+    #gId = `y_${uuidv4()}`.replace(/-/g, '_');
+    #bId = `z_${uuidv4()}`.replace(/-/g, '_');
+    #aId = `z_${uuidv4()}`.replace(/-/g, '_');
+    #specId = `z_${uuidv4()}`.replace(/-/g, '_');
+    #glossId = `z_${uuidv4()}`.replace(/-/g, '_');
+
+    constructor(posx, posy, onConnect, onChange) {
+        super('material', posx, posy, 300);
+        const output = new Flow.TitleElement('Material').setStyle('gray').setOutput(1);
+        this.node.add(output);
+
+        this.#rSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#rSlider.onChange(() => {
+            onChange();
+        });
+        this.#gSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#gSlider.onChange(() => {
+            onChange();
+        });
+        this.#bSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#bSlider.onChange(() => {
+            onChange();
+        });
+        this.#aSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#aSlider.onChange(() => {
+            onChange();
+        });
+        this.#specSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#specSlider.onChange(() => {
+            onChange();
+        });
+        this.#glossSlider = new Flow.SliderInput(0.5, 0, 1);
+        this.#glossSlider.onChange(() => {
+            onChange();
+        });
+
+        const r = new Flow.LabelElement('r').add(this.#rSlider);
+        const g = new Flow.LabelElement('g').add(this.#gSlider);
+        const b = new Flow.LabelElement('b').add(this.#bSlider);
+        const a = new Flow.LabelElement('a').add(this.#aSlider);
+        const spec = new Flow.LabelElement('specular').add(this.#specSlider);
+        const gloss = new Flow.LabelElement('glossiness').add(this.#glossSlider);
+        this.node.add(r);
+        this.node.add(g);
+        this.node.add(b);
+        this.node.add(a);
+        this.node.add(spec);
+        this.node.add(gloss);
+    }
+
+    compile() {
+        var code = `var ${this.id}_color = new Color(Inputs["${this.#rId}"],Inputs["${this.#gId}"],Inputs["${this.#bId}"], Inputs["${this.#aId}"]);\n`;
+        code += `var ${this.id} = new Material("${this.id}_material", ${this.id}_color, Inputs["${this.#specId}"], Inputs["${this.#glossId}"]);\n`;
+        return code;
+    }
+
+    getData() {
+        var data = {};
+        data[this.#rId] = this.#rSlider.getValue();
+        data[this.#gId] = this.#gSlider.getValue();
+        data[this.#bId] = this.#bSlider.getValue();
+        data[this.#aId] = this.#aSlider.getValue();
+        data[this.#specId] = this.#specSlider.getValue();
+        data[this.#glossId] = this.#glossSlider.getValue();
+        return data;
+    }
+}
+
 class BeamNode extends Node {
 
     #curveInput;
+    #materialInput;
 
     constructor(posx, posy, onConnect, onChange) {
-        super('beam', posx, posy, 300);
+        super('beam', posx, posy, 200);
         const title = new Flow.TitleElement('Beam').setStyle('gray');
         this.node.add(title);
 
@@ -75,11 +152,18 @@ class BeamNode extends Node {
         });
         this.node.add(this.#curveInput);
 
+        this.#materialInput = new Flow.LabelElement('material').setInput(1);
+        this.#materialInput.onConnect(() => {
+            onConnect();
+        });
+        this.node.add(this.#materialInput);
+
     }
 
     compile() {
         var lineId = this.#curveInput.linkedElement ? this.#curveInput.linkedElement.node.wrapper.id : 'null';
-        var code = `var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5));\n`;
+        var materialId = this.#materialInput.linkedElement ? this.#materialInput.linkedElement.node.wrapper.id : 'null';
+        var code = `var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5), material: ${materialId});\n`;
         code += `model.AddElement(${this.id});`
         return code;
     }
@@ -257,7 +341,15 @@ function initializeGraph() {
         DotNet.invokeMethodAsync('Elements.Playground', 'Run');
     });
 
-    const beam = new BeamNode(canvas.relativeX + 10, canvas.relativeY + 800, () => {
+    const beam = new BeamNode(canvas.relativeX + 400, canvas.relativeY + 600, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
+    }, () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
+    });
+
+    const material = new MaterialNode(canvas.relativeX + 400, canvas.relativeY + 600, () => {
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes));
         DotNet.invokeMethod('Elements.Playground', 'Compile');
     }, () => {
@@ -270,8 +362,9 @@ function initializeGraph() {
     canvas.add(line.node);
     canvas.add(transform.node);
     canvas.add(beam.node)
+    canvas.add(material.node);
 
-    const graphNodes = [vector1, vector2, line, transform, beam];
+    const graphNodes = [vector1, vector2, line, transform, material, beam];
 
     const graphDiv = document.getElementById('graph');
     graphDiv.appendChild(canvas.dom);
