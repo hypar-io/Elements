@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.8
+
+### Added
+
+- `Polyline.Edges()`
+
 ## 0.9.7
 
 ### Added
