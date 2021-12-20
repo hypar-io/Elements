@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
@@ -154,9 +156,10 @@ namespace Elements
             {
                 return csg;
             }
+
             if (voids.Count() > 0)
             {
-                csg = csg.Substract(voids);
+                csg = csg.Subtract(voids);
             }
 
             if (Transform == null || transformed)

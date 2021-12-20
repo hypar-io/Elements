@@ -182,7 +182,7 @@ namespace Elements.Tests
 
             var solid = Solid.SweepFace(outer, new[] { inner }, new Vector3(0.5, 0.5, 0.5), 5);
             var mesh = solid.ToMesh();
-            var subtraction = mesh.ToCsg().Substract(solid.ToCsg());
+            var subtraction = mesh.ToCsg().Subtract(solid.ToCsg());
             Assert.Empty(subtraction.Polygons);
         }
 
