@@ -79,7 +79,7 @@ namespace Elements.Playground
                 {
                     asm = newAsm;
                     compilation = newCompilation;
-                    Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
+                    Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
                 }
                 Output += writer.ToString();
                 OnCompilationComplete();
@@ -118,8 +118,11 @@ namespace Elements.Playground
                 await Task.Run(() =>
                 {
                     var glb = ((Elements.Model)model).ToGlTF();
-                    Console.WriteLine($"\r\n Exceution completed in {sw.ElapsedMilliseconds} ms");
+                    Console.WriteLine($"Execution completed in {sw.ElapsedMilliseconds} ms");
+                    sw.Reset();
+                    sw.Start();
                     Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+                    Console.WriteLine($"Drawing completed in {sw.ElapsedMilliseconds} ms");
                 });
 
                 Output += writer.ToString();
