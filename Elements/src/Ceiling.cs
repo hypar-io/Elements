@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace Elements
     /// <summary>
     /// A ceiling defined by a planar profile extruded to a thickness.
     /// </summary>
-    public class Ceiling : GeometricElement, IHasOpenings
+    public class Ceiling : BuildingElement
     {
         /// <summary>
         /// The thickness of the ceiling.
