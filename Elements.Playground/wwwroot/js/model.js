@@ -8,11 +8,14 @@ window.model = {
     initializeEditor: () => { initializeEditor(); },
     loadModel: (glb) => { loadModel(glb) },
     initializeGraph: () => { initializeGraph(); },
+    addNode: (nodeType) => { addNode(nodeType); },
 };
 
 const scene = new THREE.Scene();
 var gltfScene = null;
 var editor = null;
+var canvas = null;
+var graphNodes = [];
 
 function loadModel(glb) {
     const contentArray = Blazor.platform.toUint8Array(glb);
@@ -67,12 +70,12 @@ class MaterialNode extends Node {
     #aSlider;
     #specSlider;
     #glossSlider;
-    #rId = `x_${uuidv4()}`.replace(/-/g, '_');
-    #gId = `y_${uuidv4()}`.replace(/-/g, '_');
-    #bId = `z_${uuidv4()}`.replace(/-/g, '_');
-    #aId = `z_${uuidv4()}`.replace(/-/g, '_');
-    #specId = `z_${uuidv4()}`.replace(/-/g, '_');
-    #glossId = `z_${uuidv4()}`.replace(/-/g, '_');
+    #rId = `r_${uuidv4()}`.replace(/-/g, '_');
+    #gId = `g_${uuidv4()}`.replace(/-/g, '_');
+    #bId = `b_${uuidv4()}`.replace(/-/g, '_');
+    #aId = `a_${uuidv4()}`.replace(/-/g, '_');
+    #specId = `spec_${uuidv4()}`.replace(/-/g, '_');
+    #glossId = `gloss_${uuidv4()}`.replace(/-/g, '_');
 
     constructor(posx, posy, onConnect, onChange) {
         super('material', posx, posy, 300);
@@ -286,7 +289,45 @@ class LineNode extends Node {
     }
 }
 
-function compileGraph(graphNodes, canvas) {
+class RectangleNode extends Node {
+
+    #wSlider;
+    #lSlider;
+    #wId = `width_${uuidv4()}`.replace(/-/g, '_');
+    #lId = `length_${uuidv4()}`.replace(/-/g, '_');
+
+    constructor(posx, posy, onConnect, onChange) {
+        super('rectangle', posx, posy, 300);
+        this.node.add(new Flow.TitleElement('Rectangle').setStyle('gray').setOutput(1));
+        this.#wSlider = new Flow.SliderInput(5);
+        this.#wSlider.onChange(() => {
+            onChange();
+        });
+        this.#lSlider = new Flow.SliderInput(5);
+        this.#lSlider.onChange(() => {
+            onChange();
+        });
+        const w = new Flow.LabelElement('width').add(this.#wSlider);
+        const l = new Flow.LabelElement('length').add(this.#lSlider);
+        this.node.add(w);
+        this.node.add(l);
+    }
+
+    compile() {
+        var code = `var ${this.id} = Polygon.Rectangle(Inputs["${this.#wId}"],Inputs["${this.#lId}"]);
+model.AddElement(new ModelCurve(${this.id}));`;
+        return code;
+    }
+
+    getData() {
+        var data = {};
+        data[this.#wId] = this.#wSlider.getValue();
+        data[this.#lId] = this.#lSlider.getValue();
+        return data;
+    }
+}
+
+function compileGraph(canvas) {
     let code = 'var model = new Model();\n';
 
     // TODO: Verify that links gives you a list of nodes in ordered fashion
@@ -329,67 +370,47 @@ function getData(graphNodes) {
     return data;
 }
 
+function addNode(nodeType) {
+
+    const onConnect = () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(canvas));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
+    };
+    const onChange = () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
+    };
+
+    let graphNode = null;
+
+    const startX = canvas.relativeX + 10;
+    const startY = canvas.relativeY + 50;
+    switch (nodeType) {
+        case 'Vector3':
+            graphNode = new Vector3Node(startX, startY, onConnect, onChange);
+            break;
+        case 'Line':
+            graphNode = new LineNode(startX, startY, onConnect, onChange);
+            break;
+        case 'Rectangle':
+            graphNode = new RectangleNode(startX, startY, onConnect, onChange);
+            break;
+        case 'Material':
+            graphNode = new MaterialNode(startX, startY, onConnect, onChange);
+            break;
+        case 'TransformAt':
+            graphNode = new TransformAtNode(startX, startY, onConnect, onChange);
+            break;
+        case 'Beam':
+            graphNode = new BeamNode(startX, startY, onConnect, onChange);
+            break;
+    }
+    canvas.add(graphNode.node);
+    graphNodes.push(graphNode);
+}
+
 function initializeGraph() {
-
-    const canvas = new Flow.Canvas();
-
-    const vector1 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    const vector2 = new Vector3Node(canvas.relativeX + 10, canvas.relativeY + 200, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    const line = new LineNode(canvas.relativeX + 10, canvas.relativeY + 400, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    const transform = new TransformAtNode(canvas.relativeX + 10, canvas.relativeY + 600, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    const beam = new BeamNode(canvas.relativeX + 400, canvas.relativeY + 600, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    const material = new MaterialNode(canvas.relativeX + 400, canvas.relativeY + 600, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(graphNodes, canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    }, () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes, canvas));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    });
-
-    canvas.add(vector1.node);
-    canvas.add(line.node);
-    canvas.add(transform.node);
-    canvas.add(beam.node)
-    canvas.add(material.node);
-    canvas.add(vector2.node);
-
-    const graphNodes = [vector1, vector2, line, transform, material, beam];
-
+    canvas = new Flow.Canvas();
     const graphDiv = document.getElementById('graph');
     graphDiv.appendChild(canvas.dom);
 }
