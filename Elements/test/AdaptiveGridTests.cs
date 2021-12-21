@@ -132,5 +132,29 @@ namespace Elements.Tests
  
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
         }
+
+        [Fact]
+        public void AdaptiveGridTwoAlignedSections()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var polygon1 = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+            var polygon2 = Polygon.Rectangle(new Vector3(10, 2), new Vector3(20, 12));
+
+            var points = new List<Vector3>();
+            points.AddRange(polygon1.Vertices);
+            points.AddRange(polygon2.Vertices);
+
+            adaptiveGrid.AddFromExtrude(polygon1, Vector3.ZAxis, 2, points);
+            adaptiveGrid.AddFromExtrude(polygon2, Vector3.ZAxis, 2, points);
+
+            ulong id;
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(10, 2), out id));
+            var vertex = adaptiveGrid.GetVertex(id);
+            //Up, North, South, East, West
+            Assert.Equal(5, vertex.Edges.Count);
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(10, 10), out id));
+            vertex = adaptiveGrid.GetVertex(id);
+            Assert.Equal(5, vertex.Edges.Count);
+        }
     }
 }

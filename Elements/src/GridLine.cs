@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -13,7 +14,17 @@ namespace Elements
         /// Line that runs from the start of the gridline to its end.
         /// </summary>
         /// <value></value>
-        public Line Line { get; set; }
+        [Obsolete("We now use 'Curve' instead.")]
+        public Line Line {
+            get { return this.Curve as Line; }
+            set { this.Curve = Line; }
+        }
+
+        /// <summary>
+        /// Curve that runs from the start of the gridline to its end.
+        /// </summary>
+        /// <value></value>
+        public Curve Curve { get; set; }
 
         /// <summary>
         /// Radius of the gridline head.
@@ -32,7 +43,7 @@ namespace Elements
 
         internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
-            if (this.Line == null)
+            if (this.Curve == null)
             {
                 return base.TryToGraphicsBuffers(out graphicsBuffers, out id, out mode);
             }
@@ -41,27 +52,69 @@ namespace Elements
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
             graphicsBuffers = new List<GraphicsBuffers>();
 
-            var line = new ModelCurve(this.Line);
-            graphicsBuffers.Add(line.ToGraphicsBuffers(true));
+            var renderVertices = new List<Vector3>();
 
-            var dir = this.Line.Direction();
+            var start = GetPointAndDirectionAt(0);
+            var end = GetPointAndDirectionAt(1);
+
+            var circle = new Circle(Radius);
+            var circleVertexTransform = GetCircleTransform();
+
+            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
 
             if (ExtensionBeginning > 0)
             {
-                var extensionBeginning = new ModelCurve(new Line(this.Line.Start, this.Line.Start - dir * ExtensionBeginning));
-                graphicsBuffers.Add(extensionBeginning.ToGraphicsBuffers(true));
+                renderVertices.Add(start.point - start.dir * ExtensionBeginning);
             }
+
+            renderVertices.AddRange(this.Curve.RenderVertices());
 
             if (ExtensionEnd > 0)
             {
-                var extensionEnd = new ModelCurve(new Line(this.Line.End, this.Line.End + dir * ExtensionEnd));
-                graphicsBuffers.Add(extensionEnd.ToGraphicsBuffers(true));
+                renderVertices.Add(end.point + end.dir * ExtensionEnd);
             }
 
-            var circle = new Circle(Radius);
-            circle.Center = this.Line.Start - dir * (ExtensionBeginning + Radius);
-            graphicsBuffers.Add(new ModelCurve(circle).ToGraphicsBuffers(true));
+            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
             return true;
+        }
+
+        /// <summary>
+        /// Get normal and direction at a point on the curve. The direction is the invert of TransformAt's Z Axis.
+        /// </summary>
+        private (Vector3 point, Vector3 dir) GetPointAndDirectionAt(double u)
+        {
+            var transform = this.Curve.TransformAt(u);
+            var point = transform.Origin;
+            var dir = transform.ZAxis;
+            return (point, dir.Negate());
+        }
+
+        /// <summary>
+        /// Get the transform of the circle created by the gridline.
+        /// </summary>
+        /// <returns></returns>
+        public Transform GetCircleTransform()
+        {
+            var start = GetPointAndDirectionAt(0);
+            var normal = Vector3.ZAxis;
+            if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
+            {
+                normal = Vector3.XAxis;
+            }
+            var circleCenter = start.point - start.dir * (ExtensionBeginning + Radius);
+            var circleVertexTransform = new Transform(circleCenter, start.dir, normal);
+            return circleVertexTransform;
+        }
+
+        /// <summary>
+        /// Add gridline's text data to a text collection for insertion into ModelText.
+        /// </summary>
+        /// <param name="texts">Collection of texts to add to.</param>
+        /// <param name="color">Color for this text.</param>
+        public void AddTextToCollection(List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)> texts, Color? color = null)
+        {
+            var circleCenter = this.GetCircleTransform();
+            texts.Add((circleCenter.Origin, circleCenter.ZAxis, circleCenter.XAxis, this.Name, color));
         }
     }
 }

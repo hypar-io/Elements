@@ -398,6 +398,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is a rotated copy of this transform.
+        /// </summary>
+        /// <param name="axis">The axis of rotation.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        /// <returns></returns>
+        public Transform Rotated(Vector3 axis, double angle)
+        {
+            var result = new Transform(this);
+            result.Rotate(axis, angle);
+            return result;
+        }
+
+        /// <summary>
         /// Apply a scale to the transform.
         /// </summary>
         /// <param name="amount">The amount to scale.</param>
