@@ -9,7 +9,13 @@
 <div class=grid>
     @* <div id="editor">@CodeRunner.Code</div> *@
     <div id="model">
-        <div class="output">@((MarkupString)CodeRunner.Output)</div>
+        <div class="output">
+            <p class="success">Execution: @CodeRunner.ExecutionTime ms</p>
+            <p class="success">Compilation: @CodeRunner.CompilationTime ms</p>
+            <p class="success">Draw: @CodeRunner.DrawingTime ms</p>
+            <p class="message">@((MarkupString)CodeRunner.Output)</p>
+            <p class="error">@((MarkupString)CodeRunner.Error)</p>
+        </div>
     </div>
     <div id="graph">
         <select id="node-types" @onchange="AddNode">

@@ -18,6 +18,10 @@ namespace Elements.Playground
     {
         public static string Output = "<p class=\"message\">Nothing to see yet. Try adding and connecting nodes.</p>";
         public static string Code = "// No code available yet. Try adding and connecting nodes.";
+        public static long ExecutionTime = 0;
+        public static long CompilationTime = 0;
+        public static long DrawingTime = 0;
+        public static string Error = string.Empty;
         public static IJSUnmarshalledRuntime Runtime;
         private static Dictionary<string, double> context;
         private static Assembly asm;
@@ -78,18 +82,22 @@ namespace Elements.Playground
                 var (success, newAsm, newCompilation) = Compiler.LoadSource(Code);
                 if (success)
                 {
+                    Error = string.Empty;
                     asm = newAsm;
                     compilation = newCompilation;
-                    Output += $"<p class=\"success\">Compilation successful in {sw.ElapsedMilliseconds} ms</p>";
+                    CodeRunner.CompilationTime = sw.ElapsedMilliseconds;
+                    await RunInternal();
                 }
-                Output += $"<p class=\"message\">{writer.ToString()}</p>";
+                else
+                {
+                    Error = "Compilation failed";
+                }
+                Output += writer.ToString();
                 OnCompilationComplete();
             }
             catch (Exception ex)
             {
-                Console.Write(exception);
-                exception = ex;
-                Output += $"<p class=\"error\">{ex.ToString()}</p>";
+                Error = ex.ToString();
             }
             finally
             {
@@ -100,8 +108,6 @@ namespace Elements.Playground
 
         static async Task RunInternal()
         {
-
-
             var globals = new Globals(context);
 
             var currentOut = Console.Out;
@@ -119,21 +125,22 @@ namespace Elements.Playground
 
                 await Task.Run(() =>
                 {
+                    Error = string.Empty;
                     Output = string.Empty;
                     var glb = ((Elements.Model)model).ToGlTF();
-                    Output += $"<p class=\"success\">Execution: {sw.ElapsedMilliseconds} ms</p>";
+                    CodeRunner.ExecutionTime = sw.ElapsedMilliseconds;
                     sw.Reset();
                     sw.Start();
                     Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                    Output += $"<p class=\"success\">Drawing: {sw.ElapsedMilliseconds} ms</p>";
+                    DrawingTime = sw.ElapsedMilliseconds;
                 });
 
-                Output += $"<p class=\"message\">{writer.ToString()}</p>";
+                Output += writer.ToString();
                 OnExecutionComplete();
             }
             catch (Exception ex)
             {
-                Output += $"<p class=\"error\">{ex.ToString()}</p>";
+                Error = ex.ToString();
             }
             finally
             {

@@ -45,6 +45,7 @@
     border-top: 1px solid lightgray;
     padding: 10px;
     height: 500px;
+    width: 500px;
 }
 
 div.output p.error {
