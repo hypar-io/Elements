@@ -40,7 +40,7 @@
     position: absolute;
     overflow-y: auto;
     font-family: monospace;
-    font-size: 10pt;
+    font-size: 12pt;
     grid-area: output;
     border-top: 1px solid lightgray;
     padding: 10px;

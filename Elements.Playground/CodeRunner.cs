@@ -20,6 +20,7 @@ namespace Elements.Playground
         public static string Code = "// No code available yet. Try adding and connecting nodes.";
         public static long ExecutionTime = 0;
         public static long CompilationTime = 0;
+        public static long GeometryGenerationTime = 0;
         public static long DrawingTime = 0;
         public static string Error = string.Empty;
         public static IJSUnmarshalledRuntime Runtime;
@@ -123,13 +124,18 @@ namespace Elements.Playground
                 var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
                 var model = await (Task<object>)submission(new object[] { globals, null });
 
+                CodeRunner.ExecutionTime = sw.ElapsedMilliseconds;
+                sw.Reset();
+
                 await Task.Run(() =>
                 {
+                    sw.Start();
                     Error = string.Empty;
                     Output = string.Empty;
                     var glb = ((Elements.Model)model).ToGlTF();
-                    CodeRunner.ExecutionTime = sw.ElapsedMilliseconds;
+                    CodeRunner.GeometryGenerationTime = sw.ElapsedMilliseconds;
                     sw.Reset();
+
                     sw.Start();
                     Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
                     DrawingTime = sw.ElapsedMilliseconds;
