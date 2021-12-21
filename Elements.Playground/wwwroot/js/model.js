@@ -16,6 +16,12 @@ var gltfScene = null;
 var editor = null;
 var canvas = null;
 var graphNodes = [];
+var currentIndex = 0;
+
+function getNextIndex() {
+    currentIndex++;
+    return currentIndex;
+}
 
 function loadModel(glb) {
     const contentArray = Blazor.platform.toUint8Array(glb);
@@ -51,7 +57,7 @@ function loadModel(glb) {
 
 class Node {
     constructor(prefix, posx, posy, width) {
-        this.id = `${prefix}_${uuidv4()}`.replace(/-/g, '_');
+        this.id = `${prefix}_${getNextIndex()}`;
         this.node = new Flow.Node();
         this.node.setPosition(posx, posy);
         this.node.setWidth(width);
@@ -70,12 +76,12 @@ class MaterialNode extends Node {
     #aSlider;
     #specSlider;
     #glossSlider;
-    #rId = `r_${uuidv4()}`.replace(/-/g, '_');
-    #gId = `g_${uuidv4()}`.replace(/-/g, '_');
-    #bId = `b_${uuidv4()}`.replace(/-/g, '_');
-    #aId = `a_${uuidv4()}`.replace(/-/g, '_');
-    #specId = `spec_${uuidv4()}`.replace(/-/g, '_');
-    #glossId = `gloss_${uuidv4()}`.replace(/-/g, '_');
+    #rId = `r_${getNextIndex()}`;
+    #gId = `g_${getNextIndex()}`;
+    #bId = `b_${getNextIndex()}`;
+    #aId = `a_${getNextIndex()}`;
+    #specId = `spec_${getNextIndex()}`;
+    #glossId = `gloss_${getNextIndex()}`;
 
     constructor(posx, posy, onConnect, onChange) {
         super('material', posx, posy, 300);
@@ -122,9 +128,11 @@ class MaterialNode extends Node {
     }
 
     compile() {
-        var code = `var ${this.id}_color = new Color(Inputs["${this.#rId}"],Inputs["${this.#gId}"],Inputs["${this.#bId}"], Inputs["${this.#aId}"]);\n`;
-        code += `var ${this.id} = new Material("${this.id}_material", ${this.id}_color, Inputs["${this.#specId}"], Inputs["${this.#glossId}"]);\n`;
-        code += `model.AddElement(${this.id}, false);\n`;
+        var code = `
+var ${this.id}_color = new Color(Inputs["${this.#rId}"],Inputs["${this.#gId}"],Inputs["${this.#bId}"], Inputs["${this.#aId}"]);
+var ${this.id} = new Material("${this.id}_material", ${this.id}_color, Inputs["${this.#specId}"], Inputs["${this.#glossId}"]);
+model.AddElement(${this.id});
+`;
         return code;
     }
 
@@ -167,8 +175,10 @@ class BeamNode extends Node {
     compile() {
         var lineId = this.#curveInput.linkedElement ? this.#curveInput.linkedElement.node.wrapper.id : 'null';
         var materialId = this.#materialInput.linkedElement ? this.#materialInput.linkedElement.node.wrapper.id : 'null';
-        var code = `var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5), material: ${materialId});\n`;
-        code += `model.AddElement(${this.id}, false);`
+        var code = `
+var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5), material: ${materialId});
+model.AddElement(${this.id});
+`;
         return code;
     }
 }
@@ -177,7 +187,7 @@ class TransformAtNode extends Node {
 
     #lineInput;
     #tInput;
-    #tId = `x_${uuidv4()}`.replace(/-/g, '_');
+    #tId = `x_${getNextIndex()}`;
     constructor(posx, posy, onConnect, onChange) {
         super('transformAt', posx, posy, 300);
 
@@ -201,8 +211,10 @@ class TransformAtNode extends Node {
 
     compile() {
         var lineId = this.#lineInput.linkedElement ? this.#lineInput.linkedElement.node.wrapper.id : 'null';
-        var code = `var ${this.id} = ${lineId}.TransformAt(Inputs["${this.#tId}"]);\n`;
-        code += `model.AddElements(${this.id}.ToModelCurves());`
+        var code = `
+var ${this.id} = ${lineId}.TransformAt(Inputs["${this.#tId}"]);
+model.AddElements(${this.id}.ToModelCurves());
+`;
         return code;
     }
 
@@ -218,9 +230,9 @@ class Vector3Node extends Node {
     #xSlider;
     #ySlider;
     #zSlider;
-    #xId = `x_${uuidv4()}`.replace(/-/g, '_');
-    #yId = `y_${uuidv4()}`.replace(/-/g, '_');
-    #zId = `z_${uuidv4()}`.replace(/-/g, '_');
+    #xId = `x_${getNextIndex()}`;
+    #yId = `y_${getNextIndex()}`;
+    #zId = `z_${getNextIndex()}`;
     constructor(posx, posy, onConnect, onChange) {
         super('vector3', posx, posy, 300);
         const vectorOutput = new Flow.TitleElement('Vector3').setStyle('gray').setOutput(1);
@@ -246,7 +258,9 @@ class Vector3Node extends Node {
     }
 
     compile() {
-        return `var ${this.id} = new Vector3(Inputs["${this.#xId}"],Inputs["${this.#yId}"],Inputs["${this.#zId}"]);\n`;
+        return `
+var ${this.id} = new Vector3(Inputs["${this.#xId}"],Inputs["${this.#yId}"],Inputs["${this.#zId}"]);
+`;
     }
 
     getData() {
@@ -283,8 +297,47 @@ class LineNode extends Node {
     compile() {
         var startId = this.start.linkedElement ? this.start.linkedElement.node.wrapper.id : 'null';
         var endId = this.end.linkedElement ? this.end.linkedElement.node.wrapper.id : null;
-        var code = `var ${this.id} = new Line(${startId}, ${endId});\n`;
-        code += `model.AddElement(new ModelCurve(${this.id}));\n`;
+        var code = `
+var ${this.id} = new Line(${startId}, ${endId});
+model.AddElement(new ModelCurve(${this.id}));
+`;
+        return code;
+    }
+}
+
+class IntersectNode extends Node {
+
+    #lineA;
+    #lineB
+    constructor(posx, posy, onConnect) {
+        super('intersect', posx, posy, 200);
+        this.node.add(new Flow.TitleElement('Intersects').setStyle('gray').setOutput(1));
+        const lineA = new Flow.LabelElement('Line A');
+        lineA.onConnect(() => {
+            onConnect();
+        });
+        const lineB = new Flow.LabelElement('Line B');
+        lineB.onConnect(() => {
+            onConnect();
+        });
+        this.node.add(lineA);
+        this.node.add(lineB);
+
+        lineA.setInput(1);
+        lineB.setInput(1);
+
+        this.#lineA = lineA;
+        this.#lineB = lineB;
+    }
+
+    compile() {
+        var startId = this.#lineA.linkedElement ? this.#lineA.linkedElement.node.wrapper.id : 'null';
+        var endId = this.#lineB.linkedElement ? this.#lineB.linkedElement.node.wrapper.id : null;
+        var code = `
+var ${this.id} = ${startId}.Intersects(${endId}, out Vector3 ${endId}_xsect);
+if( ${this.id} == true) {
+    model.AddElements(new Transform(${endId}_xsect).ToModelCurves());
+}`;
         return code;
     }
 }
@@ -293,8 +346,8 @@ class RectangleNode extends Node {
 
     #wSlider;
     #lSlider;
-    #wId = `width_${uuidv4()}`.replace(/-/g, '_');
-    #lId = `length_${uuidv4()}`.replace(/-/g, '_');
+    #wId = `width_${getNextIndex()}`;
+    #lId = `length_${getNextIndex()}`;
 
     constructor(posx, posy, onConnect, onChange) {
         super('rectangle', posx, posy, 300);
@@ -314,8 +367,10 @@ class RectangleNode extends Node {
     }
 
     compile() {
-        var code = `var ${this.id} = Polygon.Rectangle(Inputs["${this.#wId}"],Inputs["${this.#lId}"]);
-model.AddElement(new ModelCurve(${this.id}));`;
+        var code = `
+var ${this.id} = Polygon.Rectangle(Inputs["${this.#wId}"],Inputs["${this.#lId}"]);
+model.AddElement(new ModelCurve(${this.id}));
+`;
         return code;
     }
 
@@ -328,8 +383,10 @@ model.AddElement(new ModelCurve(${this.id}));`;
 }
 
 function compileGraph(canvas) {
-    let code = `var model = new Model();
-    Validator.DisableValidationOnConstruction = false;`;
+    let code = `
+var model = new Model();
+Validator.DisableValidationOnConstruction = false;
+`;
 
     // TODO: Verify that links gives you a list of nodes in ordered fashion
     // Links have inputElement.node and outputElement.node
@@ -404,6 +461,9 @@ function addNode(nodeType) {
             break;
         case 'Beam':
             graphNode = new BeamNode(startX, startY, onConnect, onChange);
+            break;
+        case 'Intersects':
+            graphNode = new IntersectNode(startX, startY, onConnect, onChange);
             break;
     }
     canvas.add(graphNode.node);
