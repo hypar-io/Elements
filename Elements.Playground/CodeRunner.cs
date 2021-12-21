@@ -16,8 +16,8 @@ namespace Elements.Playground
 {
     public static class CodeRunner
     {
-        public static string Output = "Nothing to see yet. Try adding and connecting nodes.";
-        public static string Code = string.Empty;
+        public static string Output = "<p class=\"message\">Nothing to see yet. Try adding and connecting nodes.</p>";
+        public static string Code = "// No code available yet. Try adding and connecting nodes.";
         public static IJSUnmarshalledRuntime Runtime;
         private static Dictionary<string, double> context;
         private static Assembly asm;
@@ -46,6 +46,7 @@ namespace Elements.Playground
         {
             Console.WriteLine($"Setting code value to \n {code}");
             Code = code;
+            OnCompilationComplete();
         }
 
         [JSInvokable]
@@ -61,7 +62,7 @@ namespace Elements.Playground
         }
 
         [JSInvokable]
-        public static void Compile()
+        public static async Task Compile()
         {
             Output = string.Empty;
 
@@ -79,16 +80,16 @@ namespace Elements.Playground
                 {
                     asm = newAsm;
                     compilation = newCompilation;
-                    Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
+                    Output += $"<p class=\"success\">Compilation successful in {sw.ElapsedMilliseconds} ms</p>";
                 }
-                Output += writer.ToString();
+                Output += $"<p class=\"message\">{writer.ToString()}</p>";
                 OnCompilationComplete();
             }
             catch (Exception ex)
             {
                 Console.Write(exception);
                 exception = ex;
-                Output += "\r\n" + ex.ToString();
+                Output += $"<p class=\"error\">{ex.ToString()}</p>";
             }
             finally
             {
@@ -99,7 +100,7 @@ namespace Elements.Playground
 
         static async Task RunInternal()
         {
-            Output = string.Empty;
+
 
             var globals = new Globals(context);
 
@@ -118,20 +119,21 @@ namespace Elements.Playground
 
                 await Task.Run(() =>
                 {
+                    Output = string.Empty;
                     var glb = ((Elements.Model)model).ToGlTF();
-                    Console.WriteLine($"Execution completed in {sw.ElapsedMilliseconds} ms");
+                    Output += $"<p class=\"success\">Execution: {sw.ElapsedMilliseconds} ms</p>";
                     sw.Reset();
                     sw.Start();
                     Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                    Console.WriteLine($"Drawing completed in {sw.ElapsedMilliseconds} ms");
+                    Output += $"<p class=\"success\">Drawing: {sw.ElapsedMilliseconds} ms</p>";
                 });
 
-                Output += writer.ToString();
+                Output += $"<p class=\"message\">{writer.ToString()}</p>";
                 OnExecutionComplete();
             }
             catch (Exception ex)
             {
-                Output += "\r\n" + ex.ToString();
+                Output += $"<p class=\"error\">{ex.ToString()}</p>";
             }
             finally
             {

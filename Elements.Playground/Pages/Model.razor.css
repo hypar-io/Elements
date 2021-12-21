@@ -1,11 +1,14 @@
 .grid {
     position: relative;
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: auto 200px;
+    grid-template-columns: 100%;
+    grid-template-rows: auto 500px;
+    /* grid-template-areas: 
+        "code graph model"
+        "output output output"; */
     grid-template-areas: 
-        "graph model"
-        "output output";
+        "model"
+        "graph";
     border: 1px solid lightgray;
     height: calc(100vh - 16px);
 }
@@ -21,6 +24,7 @@
 }
 
 #graph {
+    grid-area: graph;
     position: relative;
     background: #cccccc;
 }
@@ -33,24 +37,25 @@
 }
 
 .output {
+    position: absolute;
     overflow-y: auto;
     font-family: monospace;
     font-size: 10pt;
-    color: darkgray;
     grid-area: output;
     border-top: 1px solid lightgray;
     padding: 10px;
+    height: 500px;
 }
 
-.error {
+div.output p.error {
     color: red;
 }
 
-.success {
+div.output p.success {
     color: green;
 }
 
-.message {
+div.output p.message {
     color: gray;
 }
 

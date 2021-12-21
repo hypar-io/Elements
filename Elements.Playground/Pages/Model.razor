@@ -7,9 +7,10 @@
 @inject NavigationManager MyNavigationManager
 
 <div class=grid>
-    @* <button class="run" disabled=@loading @onclick="Run">Run</button> *@
-    @* <div id="editor">@csharp</div> *@
-    <div id="model"></div>
+    @* <div id="editor">@CodeRunner.Code</div> *@
+    <div id="model">
+        <div class="output">@((MarkupString)CodeRunner.Output)</div>
+    </div>
     <div id="graph">
         <select id="node-types" @onchange="AddNode">
             <option disabled selected>Select a node type...</option>
@@ -21,7 +22,6 @@
             <option>Beam</option>
         </select>
     </div>
-    <div class="output">@((MarkupString)CodeRunner.Output)</div>
 </div>
 
 @code {
@@ -55,13 +55,14 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
+        
+        if(firstRender)
         {
             @* await JSRuntime.InvokeVoidAsync("model.initializeEditor"); *@
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
         }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task AddNode(ChangeEventArgs args)
