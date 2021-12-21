@@ -328,7 +328,8 @@ model.AddElement(new ModelCurve(${this.id}));`;
 }
 
 function compileGraph(canvas) {
-    let code = 'var model = new Model();\n';
+    let code = `var model = new Model();
+    Validator.DisableValidationOnConstruction = false;`;
 
     // TODO: Verify that links gives you a list of nodes in ordered fashion
     // Links have inputElement.node and outputElement.node
