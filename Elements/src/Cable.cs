@@ -72,9 +72,9 @@ namespace Elements
         /// <summary>
         /// Calculates the length of the cable
         /// </summary>
-        public double Length()
+        public double Length
         {
-            return CenterLine.Length();
+            get { return CenterLine.Length(); }
         }
     }
 }
