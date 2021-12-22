@@ -1,15 +1,38 @@
 # Changelog
 
+## 0.9.8
+
+### Added
+
+- `Polyline.Edges()`
+- `Cable`
+
 ## 0.9.7
 
 ### Added
+
 - `GridLine.GetCircleTransform()`
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
-- `Cable`
+- `Transform.Rotated()`
+- `BBox3.PointAt`
+- `BBox3.TransformAt`
+- `BBox3.UVWAtPoint`
+- `BBox3.XSize`, `BBox3.YSize`, `BBox3.ZSize`
+- `BBox3.XDomain`, `BBox3.YDomain`, `BBox3.ZDomain`
+- `Box` type, representing an oriented 3d box.
+  - `Box.PointAt`
+  - `Box.TransformAt`
+  - `Box.UVWAtPoint`
+  - `Box.UVWToBox`
+  - `Box.BoxToUVW`
+  - `Box.TransformBetween`
+- `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
 
 ### Changed
+
 - Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
+- Add use new CSG library and test it's effectiveness
 
 ### Fixed
 

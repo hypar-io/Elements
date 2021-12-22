@@ -167,7 +167,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Create a topography from a custom mesh. It is assumed that the mesh is an open mesh that's roughly parallel to the XY plane. 
+        /// Create a topography from a custom mesh. It is assumed that the mesh is an open mesh that's roughly parallel to the XY plane.
         /// </summary>
         /// <param name="mesh">The mesh geometry of the topography.</param>
         /// <param name="material">The topography's material.</param>
@@ -287,7 +287,7 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    // Add the tiniest amount of fuzz to avoid the 
+                    // Add the tiniest amount of fuzz to avoid the
                     // triangles being identified as coplanar during
                     // operations like CSG.
                     var fuzz = r.NextDouble() * 0.0001;
@@ -482,7 +482,7 @@ namespace Elements
 
         /// <summary>
         /// Average the vertex placement along the specified edge
-        /// of this topography with the vertex placement along the 
+        /// of this topography with the vertex placement along the
         /// corresponding edge of a target topography.
         /// </summary>
         /// <param name="target"></param>
@@ -603,7 +603,7 @@ namespace Elements
             var sweep = new Sweep(profile, path, 0.0, 0.0, 0.0, false);
             var tunnelCsg = sweep._solid.ToCsg();
 
-            topoCsg = topoCsg.Substract(tunnelCsg);
+            topoCsg = topoCsg.Subtract(tunnelCsg);
             var mesh = new Mesh();
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
@@ -671,7 +671,7 @@ namespace Elements
                 cutXsect.Tessellate(ref cut);
                 cuts.Add(cut);
 
-                topoCsg = topoCsg.Substract(cutCsg);
+                topoCsg = topoCsg.Subtract(cutCsg);
             }
 
             if (elevation > this.MinElevation)
@@ -698,7 +698,7 @@ namespace Elements
                 var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
                 fillCsg = fillCsg.Union(batterCsg);
 
-                var xsect = fillCsg.Substract(topoCsg);
+                var xsect = fillCsg.Subtract(topoCsg);
                 var fill = new Mesh();
                 xsect.Tessellate(ref fill);
                 fills.Add(fill);
