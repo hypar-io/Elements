@@ -6,6 +6,9 @@
 
 - `Polyline.Edges()`
 
+### Fixed
+- Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
+
 ## 0.9.7
 
 ### Added
