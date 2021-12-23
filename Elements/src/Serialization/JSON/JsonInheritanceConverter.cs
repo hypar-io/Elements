@@ -230,6 +230,7 @@ namespace Elements.Serialization.JSON
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!Elements.ContainsKey(id))
                 {
+                    _deserializationDiscriminatorWarnings.Add($"Expected to find an element with id {id} but it was not found during deserialization.  Look for other deserialization errors.");
                     return null;
                 }
                 return Elements[id];
