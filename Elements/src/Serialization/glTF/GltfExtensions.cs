@@ -1128,6 +1128,10 @@ namespace Elements.Serialization.glTF
                 }
 
                 var gbuffers = mesh.GetBuffers();
+                if (gbuffers.Vertices.Count == 0)
+                {
+                    return;
+                }
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
