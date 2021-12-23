@@ -237,6 +237,11 @@ namespace Elements
             deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
             errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
+            // Don't leave null elements in the model.
+            foreach (var e in model.Elements.Where(e => e.Value == null).ToList())
+            {
+                model.Elements.Remove(e.Key);
+            }
             return model;
         }
 
