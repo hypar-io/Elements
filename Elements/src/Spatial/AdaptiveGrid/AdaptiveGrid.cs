@@ -7,7 +7,10 @@ using System.Linq;
 namespace Elements.Spatial.AdaptiveGrid
 {
     /// <summary>
-    /// A graph like edge-vertex structure with planar spaces connected by vertical edges
+    /// A graph like edge-vertex structure with planar spaces connected by vertical edges.
+    /// The grid doesn't do any intersections when new sections are added, they are stitched 
+    /// only by common vertices. Make sure that regions that are added into the graph are 
+    /// aligned with respect to boundaries and split points.
     /// </summary>
     public class AdaptiveGrid
     {
@@ -56,8 +59,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Tolerance for points being considered the same.
         /// Applies individually to X, Y, and Z coordinates, not the cumulative difference!
+        /// Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.
         /// </summary>
-        public double Tolerance { get; set; } = Vector3.EPSILON;
+        public double Tolerance { get; } = Vector3.EPSILON * 2;
 
         /// <summary>
         /// Transformation with which planar spaces are aligned
@@ -85,8 +89,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Add graph section using bounding box, divided by a set of key points. 
         /// Key points don't respect "MinimumResolution" at the moment.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
+        /// Any vertices that already exist are not created but reused.
+        /// This way new region is connected with the rest of the graph.
         /// </summary>
         /// <param name="bBox">Box which region is populated with graph.</param>
         /// <param name="keyPoints">Set of 3D points, region is split with.</param>
@@ -105,8 +109,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Add graph section using polygon, extruded in given direction.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
+        /// Any vertices that already exist are not created but reused.
+        /// This way new region is connected with the rest of the graph.
         /// </summary>
         /// <param name="boundingPolygon">Base polygon</param>
         /// <param name="extrusionAxis">Extrusion direction</param>
@@ -142,8 +146,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Add single planar region to the graph section using polygon.
-        /// If edges of new section are intersecting with edges of other existing regions - 
-        /// two regions are connected.
+        /// Any vertices that already exist are not created but reused.
+        /// This way new region is connected with the rest of the graph.
         /// </summary>
         /// <param name="boundingPolygon">Base polygon</param>
         /// <param name="keyPoints">Set of 3D points, region is split with.</param>
@@ -347,139 +351,6 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private List<Edge> AddEdge(ulong startId, ulong endId, IEnumerable<Edge> edgesToIntersect)
-        {
-            var addedEdges = new List<Edge>();
-            var startVertex = GetVertex(startId);
-            var endVertex = GetVertex(endId);
-            var sp = startVertex.Point;
-            var ep = endVertex.Point;
-            Vector3 min = new Vector3();
-            Vector3 max = new Vector3();
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
-            (min.X, max.X) = sp.X > ep.X ? (ep.X, sp.X) : (sp.X, ep.X);
-
-            var intersectionPoints = new List<Vector3>();
-            foreach (var edge in edgesToIntersect)
-            {
-                var edgeV0 = GetVertex(edge.StartId);
-                var edgeV1 = GetVertex(edge.EndId);
-
-                PointOrientation startZ = Orientation(edgeV0.Point.Z, min.Z, max.Z);
-                PointOrientation endZ = Orientation(edgeV1.Point.Z, min.Z, max.Z);
-                if (startZ == endZ && startZ != PointOrientation.Inside)
-                    continue;
-
-                PointOrientation startX = Orientation(edgeV0.Point.X, min.X, max.X);
-                PointOrientation startY = Orientation(edgeV0.Point.Y, min.Y, max.Y);
-                PointOrientation endX = Orientation(edgeV1.Point.X, min.X, max.X);
-                PointOrientation endY = Orientation(edgeV1.Point.Y, min.Y, max.Y);
-
-                if ((startX == endX && startX != PointOrientation.Inside) ||
-                    (startY == endY && startY != PointOrientation.Inside) ||
-                    !Vector3.AreCoplanar(sp, ep, edgeV0.Point, edgeV1.Point))
-                {
-                    continue;
-                }
-
-                var newEdgeLine = new Line(sp, ep);
-                var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
-                if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint))
-                {
-                    intersectionPoints.Add(intersectionPoint);
-                    var newVertex = AddVertex(intersectionPoint);
-                    if (edge.StartId != newVertex.Id)
-                    {
-                        AddEdge(edge.StartId, newVertex.Id);
-                    }
-                    if (edge.EndId != newVertex.Id)
-                    {
-                        AddEdge(edge.EndId, newVertex.Id);
-                    }
-
-                    DeleteEdge(edge);
-                }
-                else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
-                {
-                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
-                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
-                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
-                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
-                    // new edge is inside old edge
-                    if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge)
-                    {
-                        if (oldEdgeLine.Start.DistanceTo(newEdgeLine.Start) < oldEdgeLine.Start.DistanceTo(newEdgeLine.End))
-                        {
-                            AddEdge(edge.StartId, startVertex.Id);
-                            AddEdge(edge.EndId, endVertex.Id);
-                        }
-                        else
-                        {
-                            AddEdge(edge.StartId, endVertex.Id);
-                            AddEdge(edge.EndId, startVertex.Id);
-                        }
-                        DeleteEdge(edge);
-                    }
-                    // edges overlap
-                    else if (isNewEdgeStartOnOldEdge || isNewEdgeEndOnOldEdge)
-                    {
-                        if (isOldEdgeEndOnNewEdge)
-                        {
-                            intersectionPoints.Add(oldEdgeLine.End);
-                            if (oldEdgeLine.Start.DistanceTo(newEdgeLine.Start) < oldEdgeLine.Start.DistanceTo(newEdgeLine.End))
-                            {
-                                AddEdge(edge.StartId, startVertex.Id);
-                            }
-                            else
-                            {
-                                AddEdge(edge.StartId, endVertex.Id);
-                            }
-                        }
-                        else if (isOldEdgeStartOnNewEdge)
-                        {
-                            intersectionPoints.Add(oldEdgeLine.Start);
-                            if (oldEdgeLine.End.DistanceTo(newEdgeLine.Start) < oldEdgeLine.End.DistanceTo(newEdgeLine.End))
-                            {
-                                AddEdge(edge.EndId, startVertex.Id);
-                            }
-                            else
-                            {
-                                AddEdge(edge.EndId, endVertex.Id);
-                            }
-                        }
-                        DeleteEdge(edge);
-                    }
-                    // old edge is inside new edge
-                    else if (isOldEdgeStartOnNewEdge && isOldEdgeEndOnNewEdge)
-                    {
-                        intersectionPoints.Add(oldEdgeLine.Start);
-                        intersectionPoints.Add(oldEdgeLine.End);
-                        DeleteEdge(edge);
-                    }
-                }
-            }
-            if (intersectionPoints.Any())
-            {
-                intersectionPoints = intersectionPoints.OrderBy(p => p.DistanceTo(startVertex.Point)).ToList();
-                intersectionPoints.Insert(0, startVertex.Point);
-                intersectionPoints.Add(endVertex.Point);
-                intersectionPoints = intersectionPoints.Distinct().ToList();
-                for (var i = 0; i < intersectionPoints.Count - 1; i++)
-                {
-                    var v1 = AddVertex(intersectionPoints[i]);
-                    var v2 = AddVertex(intersectionPoints[i + 1]);
-                    addedEdges.Add(AddEdge(v1.Id, v2.Id));
-                }
-            }
-            else
-            {
-                addedEdges.Add(AddEdge(startVertex.Id, endVertex.Id));
-            }
-
-            return addedEdges;
-        }
-
         private Edge AddEdge(ulong vertexId1, ulong vertexId2)
         {
             if (vertexId1 == vertexId2)
@@ -598,8 +469,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var edge in edgeCandidates)
             {
-                var edges = AddEdge(edge.Item1, edge.Item2, edgesToIntersect);
-                edges.ForEach(e => addedEdges.Add(e));
+                addedEdges.Add(AddEdge(edge.Item1, edge.Item2));
             }
 
             return addedEdges;

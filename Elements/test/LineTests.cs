@@ -149,6 +149,16 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void DivideIntoEqualSegmentsSingle()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(100, 0));
+            var segments = l.DivideIntoEqualSegments(1);
+            Assert.Single(segments);
+            Assert.True(segments.First().Start.IsAlmostEqualTo(l.Start, 1e-10));
+            Assert.True(segments.First().End.IsAlmostEqualTo(l.End, 1e-10));
+        }
+
+        [Fact]
         public void DivideByLength()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
@@ -241,6 +251,7 @@ namespace Elements.Geometry.Tests
             Line startsOutsideAndLandsOnEdge = new Line(new Vector3(-2, 4, 0), new Vector3(4, 5, 0));
             Line crossesAtVertexStaysOutside = new Line(new Vector3(6, 2, 0), new Vector3(4, 0));
             Line passesThroughAtVertex = new Line(new Vector3(6, 0, 0), new Vector3(4, 2, 0));
+            Line passesThroughEdge = new Line(new Vector3(0, 5, 0), new Vector3(10, 5, 0));
             var Polygon = new Polygon(new[]
             {
                 new Vector3(1,1,0),
@@ -270,6 +281,9 @@ namespace Elements.Geometry.Tests
             var i7 = passesThroughAtVertex.Trim(Polygon, out var o7);
             Assert.Single(i7);
             Assert.Single(o7);
+            var i8 = passesThroughEdge.Trim(Polygon, out var o8, true);
+            Assert.Single(i8);
+            Assert.Equal(2, o8.Count);
         }
 
         [Fact]
@@ -432,6 +446,23 @@ namespace Elements.Geometry.Tests
             var l1 = new Line(a, b);
             var l2 = new Line(b, a);
             Assert.NotEqual(l1.GetHashCode(), l2.GetHashCode());
+        }
+
+        [Fact]
+        public void FitLineAndCollinearity()
+        {
+            var points1 = new List<Vector3> {
+                (0,0,0),
+                (5,Vector3.EPSILON * 0.5,0),
+                (8,0,Vector3.EPSILON * 0.5),
+                (-4, 0, 0)
+            };
+            Assert.True(points1.AreCollinear());
+
+            points1.Add(
+                  (-6, Vector3.EPSILON * 2, 0)
+            );
+            Assert.False(points1.AreCollinear());
         }
     }
 }

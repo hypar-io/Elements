@@ -33,10 +33,15 @@ namespace Elements.Geometry
                 }
 
                 this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-                var segments = Polygon.SegmentsInternal(this.Vertices);
-                Polyline.CheckSegmentLengthAndThrow(segments);
-                var t = this.Vertices.ToTransform();
-                Polyline.CheckSelfIntersectionAndThrow(t, segments);
+                DeleteVerticesForOverlappingEdges(this.Vertices);
+                if (this.Vertices.Count < 3)
+                {
+                    throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
+                }
+
+                CheckSegmentLengthAndThrow(Edges());
+                var t = Vertices.ToTransform();
+                CheckSelfIntersectionAndThrow(t, Edges());
             }
         }
 
@@ -96,7 +101,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
         /// </summary>
         /// <param name="vector">The Vector3 to compare to this Polygon.</param>
         /// <returns>
@@ -1599,15 +1604,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Project the specified vector onto the plane.
+        /// Project this polygon onto the plane.
         /// </summary>
-        /// <param name="p"></param>
-        public Polygon Project(Plane p)
+        /// <param name="plane">The plane of the returned polygon.</param>
+        public new Polygon Project(Plane plane)
         {
             var projected = new Vector3[this.Vertices.Count];
             for (var i = 0; i < projected.Length; i++)
             {
-                projected[i] = this.Vertices[i].Project(p);
+                projected[i] = this.Vertices[i].Project(plane);
             }
             return new Polygon(projected);
         }
@@ -1884,7 +1889,7 @@ namespace Elements.Geometry
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges()
         {
             for (var i = 0; i < this.Vertices.Count; i++)
             {
@@ -1930,6 +1935,36 @@ namespace Elements.Geometry
             var verts = new List<Vector3>(this.Vertices);
             verts.Add(this.Start);
             return verts;
+        }
+
+        /// <summary>
+        /// Deletes Vertices that are out on overloping Edges
+        /// D__________C
+        ///  |         |
+        ///  |         |
+        /// E|_________|B_____A
+        /// Vertex A will be deleted
+        /// </summary>
+        /// <param name="vertices"></param>
+        private void DeleteVerticesForOverlappingEdges(IList<Vector3> vertices)
+        {
+            if (vertices.Count < 4)
+            {
+                return;
+            }
+
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var a = vertices[i];
+                var b = vertices[(i + 1) % vertices.Count];
+                var c = vertices[(i + 2) % vertices.Count];
+                bool invalid = (a - b).Unitized().Dot((b - c).Unitized()) < (Vector3.EPSILON - 1);
+                if (invalid)
+                {
+                    vertices.Remove(b);
+                    i--;
+                }
+            }
         }
     }
 
@@ -2040,7 +2075,7 @@ namespace Elements.Geometry
             return polygons.Select(p => p.Reversed()).ToArray();
         }
 
-        internal static ContourVertex[] ToContourVertexArray(this Polygon poly)
+        internal static ContourVertex[] ToContourVertexArray(this Polyline poly)
         {
             var contour = new ContourVertex[poly.Vertices.Count];
             for (var i = 0; i < poly.Vertices.Count; i++)

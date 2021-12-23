@@ -408,8 +408,7 @@ namespace Elements.Validators
             }
             var polyline = obj as Polyline;
             polyline.Vertices = Vector3.RemoveSequentialDuplicates(polyline.Vertices);
-            var segments = Polyline.SegmentsInternal(polyline.Vertices);
-            Polyline.CheckSegmentLengthAndThrow(segments);
+            Polyline.CheckSegmentLengthAndThrow(polyline.Edges());
             return;
         }
 
@@ -428,10 +427,9 @@ namespace Elements.Validators
         {
             var polygon = obj as Polygon;
             polygon.Vertices = Vector3.RemoveSequentialDuplicates(polygon.Vertices, true);
-            var segments = Polygon.SegmentsInternal(polygon.Vertices);
-            Polyline.CheckSegmentLengthAndThrow(segments);
+            Polyline.CheckSegmentLengthAndThrow(polygon.Edges());
             var t = polygon.Vertices.ToTransform();
-            Polyline.CheckSelfIntersectionAndThrow(t, segments);
+            Polyline.CheckSelfIntersectionAndThrow(t, polygon.Edges());
             return;
         }
 

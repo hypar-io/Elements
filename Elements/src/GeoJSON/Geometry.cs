@@ -198,7 +198,7 @@ namespace Elements.GeoJSON
         /// The last position of the polygon is dropped.
         /// </summary>
         /// <returns></returns>
-        public Elements.Geometry.Polygon[] ToPolygons()
+        public Elements.Geometry.Polygon[] ToPolygons(Position relativeToOrigin)
         {
             var plineArr = new Elements.Geometry.Polygon[Coordinates.Length];
             for (var i = 0; i < plineArr.Length; i++)
@@ -208,7 +208,7 @@ namespace Elements.GeoJSON
                 // Drop the last position.
                 for (var j = 0; j < coords.Length - 1; j++)
                 {
-                    verts[j] = coords[j].ToVectorMeters();
+                    verts[j] = coords[j].ToVectorMeters(relativeToOrigin);
                 }
                 var pline = new Elements.Geometry.Polygon(verts);
                 plineArr[i] = pline;

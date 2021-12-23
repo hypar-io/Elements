@@ -60,7 +60,10 @@ namespace Elements
             this.Profile = @profile;
             this.Thickness = @thickness;
             this.Centerline = @centerline;
-            this.Openings.AddRange(@openings);
+            if (@openings != null && @openings.Count > 0)
+            {
+                this.Openings.AddRange(@openings);
+            }
         }
 
         /// <summary>
