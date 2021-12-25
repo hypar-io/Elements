@@ -396,6 +396,15 @@ namespace Elements.Search
                 {
                     break;
                 }
+
+                if (path.Contains(currentIndex))
+                {
+                    // if we have already passed two elements in the same order, we've achieved a loop
+                    if (path.IndexOf(path[path.Count - 1]) == path.IndexOf(currentIndex) - 1)
+                    {
+                        break;
+                    }
+                }
             }
 
             // Allow closing a loop.
