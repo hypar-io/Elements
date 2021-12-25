@@ -382,6 +382,62 @@ model.AddElement(new ModelCurve(${this.id}));
     }
 }
 
+class Grid2dNode extends Node {
+    #uSlider;
+    #vSlider;
+    #uId = `u${getNextIndex()}`;
+    #vId = `v${getNextIndex()}`;
+    #rectangle
+    constructor(posx, posy, onConnect, onChange) {
+        super('grid2d', posx, posy, 300);
+        this.node.add(new Flow.TitleElement('Grid2d').setStyle('gray').setOutput(1));
+        this.#uSlider = new Flow.SliderInput(5);
+        this.#uSlider.onChange(() => {
+            onChange();
+        });
+        this.#vSlider = new Flow.SliderInput(5);
+        this.#vSlider.onChange(() => {
+            onChange();
+        });
+        this.#rectangle = new Flow.LabelElement('rectangle');
+        this.#rectangle.onConnect(() => {
+            onConnect();
+        });
+        this.#rectangle.setInput(1);
+
+        const u = new Flow.LabelElement('u').add(this.#uSlider);
+        const v = new Flow.LabelElement('v').add(this.#vSlider);
+        this.node.add(u);
+        this.node.add(v);
+        this.node.add(this.#rectangle)
+    }
+
+    compile() {
+        var rectangleId = this.#rectangle.linkedElement ? this.#rectangle.linkedElement.node.wrapper.id : 'null';
+        var code = `
+var ${this.id} = new Grid2d(${rectangleId});
+${this.id}.U.DivideByCount((int)Inputs["${this.#uId}"]);
+${this.id}.V.DivideByCount((int)Inputs["${this.#vId}"]);
+foreach(var s in ${this.id}.GetCellSeparators(GridDirection.U))
+{
+    model.AddElement(new ModelCurve((Line)s));
+}
+foreach(var s in ${this.id}.GetCellSeparators(GridDirection.V))
+{
+    model.AddElement(new ModelCurve((Line)s));
+}
+`;
+        return code;
+    }
+
+    getData() {
+        var data = {};
+        data[this.#uId] = this.#uSlider.getValue();
+        data[this.#vId] = this.#vSlider.getValue();
+        return data;
+    }
+}
+
 function compileGraph(canvas) {
     let code = `
 var model = new Model();
@@ -464,6 +520,9 @@ function addNode(nodeType) {
             break;
         case 'Intersects':
             graphNode = new IntersectNode(startX, startY, onConnect, onChange);
+            break;
+        case 'Grid2d':
+            graphNode = new Grid2dNode(startX, startY, onConnect, onChange);
             break;
     }
     canvas.add(graphNode.node);

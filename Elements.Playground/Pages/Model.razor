@@ -28,6 +28,7 @@
             <option>Rectangle</option>
             <option>Material</option>
             <option>Beam</option>
+            <option>Grid2d</option>
         </select>
     </div>
 </div>
@@ -63,8 +64,8 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        
-        if(firstRender)
+
+        if (firstRender)
         {
             @* await JSRuntime.InvokeVoidAsync("model.initializeEditor"); *@
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");

@@ -95,6 +95,7 @@ namespace Elements.Playground
 "Elements",
 "Elements.Geometry",
 "Elements.Geometry.Profiles",
+"Elements.Spatial",
 "Elements.Validators"
         }, concurrentBuild: false), globalsType: typeof(Globals));
 
