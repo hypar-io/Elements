@@ -1,6 +1,5 @@
 @page "/"
-@using System.IO
-@using System.Web
+@using System.Reflection
 
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
@@ -20,22 +19,30 @@
     </div>
     <div id="graph">
         <select id="node-types" @onchange="AddNode">
-            <option disabled selected>Select a node type...</option>
-            <option>Vector3</option>
-            <option>TransformAt</option>
-            <option>Line</option>
-            <option>Intersects</option>
-            <option>Rectangle</option>
-            <option>Material</option>
-            <option>Beam</option>
-            <option>Grid2d</option>
+            <option>Number</option>
+            @foreach (var typeGroup in nodeData.GroupBy(nd => nd.Value.TypeName)
+            )
+            {
+                @foreach (var methodGroup in typeGroup.GroupBy(g => g.Value.IsConstructor))
+                {
+                    var label = $"{typeGroup.Key} - {(methodGroup.Key ? "Construct" : "Modify")}";
+                    <optgroup label="@label">
+                        @foreach (var method in methodGroup)
+                        {
+                            <option value="@method.Value.Id">@method.Value.DisplayName</option>
+                        }
+                    </optgroup>
+                }
+            }
         </select>
     </div>
 </div>
 
+
 @code {
 
     bool loading = true;
+    private Dictionary<string, NodeData> nodeData = new Dictionary<string, NodeData>();
     [Inject] private HttpClient Client { get; set; }
 
     protected override Task OnInitializedAsync()
@@ -62,20 +69,112 @@
             return Task.FromResult(0);
         });
     }
+
+    private async Task ConstructNodeData()
+    {
+        var model = new Elements.Model();
+        var acceptedNamespaces = new string[] { "Elements.Geometry", "Elements.Geometry.Solids" };
+        var acceptedTypes = new string[] {
+"Arc",
+"Bezier",
+"Box",
+"Circle",
+"Color",
+"Extrude",
+"Line",
+"Material",
+"Plane",
+"Polygon",
+"Polyline",
+"Profile",
+"Ray",
+"Rectangle",
+"Vector3",
+"Transform",
+"Sweep",
+};
+        var publicGeometryTypes = model.GetType().Assembly.ExportedTypes.Where(t =>
+        acceptedNamespaces.Contains(t.Namespace) && acceptedTypes.Contains(t.Name));
+        foreach (var g in publicGeometryTypes)
+        {
+            var publicConstructors = g.GetConstructors();
+            foreach (var c in publicConstructors)
+            {
+                var paramData = new Dictionary<string, ParameterData>();
+                var parameters = c.GetParameters();
+                if (parameters == null || parameters.Count() > 0)
+                {
+                    paramData = parameters.ToDictionary(p => p.Name, p => new ParameterData()
+                    {
+                        Name = p.Name,
+                        Type = p.ParameterType.Name,
+                        DefaultValue = p.HasDefaultValue ? p.DefaultValue == null ? "null" : p.DefaultValue.ToString() : null,
+                    });
+                }
+
+                var nd = new NodeData()
+                {
+                    TypeName = g.Name,
+                    DisplayName = paramData.Count > 0 ? $"{g.Name} by {string.Join(", ", paramData.Keys)}" : $"{g.Name}",
+                    Signature = $"{g.Name}_{string.Join("_", paramData.Keys)}",
+                    ParameterData = paramData,
+                    Id = Guid.NewGuid().ToString(),
+                    IsConstructor = true,
+                    ReturnType = g.Name
+                };
+                nodeData.Add(nd.Id, nd);
+            }
+
+            var skipMethods = new string[] { "ToString", "GetHashCode", "Equals", "GetType" };
+            var publicMethods = g.GetMethods(BindingFlags.Instance | BindingFlags.Public).Where(m => !m.IsSpecialName &&
+            !skipMethods.Contains(m.Name));
+            foreach (var m in publicMethods)
+            {
+
+                var paramData = new Dictionary<string, ParameterData>();
+                var parameters = m.GetParameters();
+                if (parameters == null || parameters.Count() > 0)
+                {
+                    paramData = m.GetParameters().ToDictionary(p => p.Name, p => new ParameterData()
+                    {
+                        Name = p.Name,
+                        Type = p.ParameterType.Name,
+                        DefaultValue = p.HasDefaultValue ? p.DefaultValue == null ? "null" : p.DefaultValue.ToString() : null,
+                    });
+                }
+
+                var nd = new NodeData()
+                {
+                    TypeName = g.Name,
+                    DisplayName = $"{m.Name}",
+                    Signature = $"{g.Name}_{string.Join("_", paramData.Keys)}",
+                    ParameterData = paramData,
+                    Id = Guid.NewGuid().ToString(),
+                    IsConstructor = false,
+                    MethodName = m.Name,
+                    ReturnType = m.ReturnType.Name
+                };
+                nodeData.Add(nd.Id, nd);
+            }
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-
         if (firstRender)
         {
             @* await JSRuntime.InvokeVoidAsync("model.initializeEditor"); *@
             await JSRuntime.InvokeVoidAsync("model.initializeGraph");
             await JSRuntime.InvokeVoidAsync("model.initialize3D");
+            await ConstructNodeData();
         }
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task AddNode(ChangeEventArgs args)
     {
-        await JSRuntime.InvokeVoidAsync("model.addNode", args.Value);
+        await JSRuntime.InvokeVoidAsync("model.addNode", args.Value.ToString() == "Number" ? "Number" :
+        nodeData[args.Value.ToString()]);
     }
 }

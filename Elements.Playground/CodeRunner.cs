@@ -1,13 +1,10 @@
 using System;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Scripting.Hosting;
 using Microsoft.JSInterop;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Diagnostics;
 using System.IO;
 using Elements.Serialization.glTF;
@@ -31,25 +28,19 @@ namespace Elements.Playground
         public static event Action ExecutionComplete;
         public static void OnExecutionComplete()
         {
-            if (ExecutionComplete != null)
-            {
-                ExecutionComplete();
-            }
+            ExecutionComplete?.Invoke();
         }
 
         public static event Action CompilationComplete;
         public static void OnCompilationComplete()
         {
-            if (CompilationComplete != null)
-            {
-                CompilationComplete();
-            }
+            CompilationComplete?.Invoke();
         }
 
         [JSInvokable]
         public static void SetCodeValue(string code)
         {
-            Console.WriteLine($"Setting code value to \n {code}");
+            Console.WriteLine(code);
             Code = code;
             OnCompilationComplete();
         }
@@ -75,7 +66,6 @@ namespace Elements.Playground
             var writer = new StringWriter();
             Console.SetOut(writer);
             var sw = Stopwatch.StartNew();
-            Exception exception = null;
             try
             {
                 asm = null;
@@ -86,7 +76,7 @@ namespace Elements.Playground
                     Error = string.Empty;
                     asm = newAsm;
                     compilation = newCompilation;
-                    CodeRunner.CompilationTime = sw.ElapsedMilliseconds;
+                    CompilationTime = sw.ElapsedMilliseconds;
                     await RunInternal();
                 }
                 else
@@ -124,7 +114,7 @@ namespace Elements.Playground
                 var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
                 var model = await (Task<object>)submission(new object[] { globals, null });
 
-                CodeRunner.ExecutionTime = sw.ElapsedMilliseconds;
+                ExecutionTime = sw.ElapsedMilliseconds;
                 sw.Reset();
 
                 await Task.Run(() =>
@@ -132,13 +122,17 @@ namespace Elements.Playground
                     sw.Start();
                     Error = string.Empty;
                     Output = string.Empty;
-                    var glb = ((Elements.Model)model).ToGlTF();
-                    CodeRunner.GeometryGenerationTime = sw.ElapsedMilliseconds;
-                    sw.Reset();
+                    var m = (Elements.Model)model;
+                    if (m.Elements.Count > 0)
+                    {
+                        var glb = m.ToGlTF();
+                        GeometryGenerationTime = sw.ElapsedMilliseconds;
+                        sw.Reset();
 
-                    sw.Start();
-                    Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                    DrawingTime = sw.ElapsedMilliseconds;
+                        sw.Start();
+                        Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+                        DrawingTime = sw.ElapsedMilliseconds;
+                    }
                 });
 
                 Output += writer.ToString();

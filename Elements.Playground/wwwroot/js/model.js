@@ -8,7 +8,7 @@ window.model = {
     initializeEditor: () => { initializeEditor(); },
     loadModel: (glb) => { loadModel(glb) },
     initializeGraph: () => { initializeGraph(); },
-    addNode: (nodeType) => { addNode(nodeType); },
+    addNode: (nodeData) => { addNode(nodeData); }
 };
 
 const scene = new THREE.Scene();
@@ -56,12 +56,19 @@ function loadModel(glb) {
 }
 
 class Node {
-    constructor(prefix, posx, posy, width) {
-        this.id = `${prefix}_${getNextIndex()}`;
+    constructor(title, posx, posy, width) {
+        this.id = `${title}_${getNextIndex()}`;
         this.node = new Flow.Node();
         this.node.setPosition(posx, posy);
         this.node.setWidth(width);
         this.node.wrapper = this;
+
+        const output = new Flow.TitleElement(title).setStyle('gray').setOutput(1);
+        this.node.add(output);
+    }
+
+    compile() {
+        return '';
     }
 
     getData() {
@@ -69,324 +76,104 @@ class Node {
     }
 }
 
-class MaterialNode extends Node {
-    #rSlider;
-    #gSlider;
-    #bSlider;
-    #aSlider;
-    #specSlider;
-    #glossSlider;
-    #rId = `r_${getNextIndex()}`;
-    #gId = `g_${getNextIndex()}`;
-    #bId = `b_${getNextIndex()}`;
-    #aId = `a_${getNextIndex()}`;
-    #specId = `spec_${getNextIndex()}`;
-    #glossId = `gloss_${getNextIndex()}`;
+class NumberNode extends Node {
 
+    #vId = `number_${getNextIndex()}`;
+    #vSlider
     constructor(posx, posy, onConnect, onChange) {
-        super('material', posx, posy, 300);
-        const output = new Flow.TitleElement('Material').setStyle('gray').setOutput(1);
-        this.node.add(output);
-
-        this.#rSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#rSlider.onChange(() => {
-            onChange();
-        });
-        this.#gSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#gSlider.onChange(() => {
-            onChange();
-        });
-        this.#bSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#bSlider.onChange(() => {
-            onChange();
-        });
-        this.#aSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#aSlider.onChange(() => {
-            onChange();
-        });
-        this.#specSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#specSlider.onChange(() => {
-            onChange();
-        });
-        this.#glossSlider = new Flow.SliderInput(0.5, 0, 1);
-        this.#glossSlider.onChange(() => {
+        super('Number', posx, posy, 300);
+        this.#vSlider = new Flow.SliderInput(5);
+        this.#vSlider.onChange(() => {
             onChange();
         });
 
-        const r = new Flow.LabelElement('r').add(this.#rSlider);
-        const g = new Flow.LabelElement('g').add(this.#gSlider);
-        const b = new Flow.LabelElement('b').add(this.#bSlider);
-        const a = new Flow.LabelElement('a').add(this.#aSlider);
-        const spec = new Flow.LabelElement('specular').add(this.#specSlider);
-        const gloss = new Flow.LabelElement('glossiness').add(this.#glossSlider);
-        this.node.add(r);
-        this.node.add(g);
-        this.node.add(b);
-        this.node.add(a);
-        this.node.add(spec);
-        this.node.add(gloss);
+        const v = new Flow.LabelElement('value').add(this.#vSlider);
+        this.node.add(v);
     }
 
     compile() {
-        var code = `
-var ${this.id}_color = new Color(Inputs["${this.#rId}"],Inputs["${this.#gId}"],Inputs["${this.#bId}"], Inputs["${this.#aId}"]);
-var ${this.id} = new Material("${this.id}_material", ${this.id}_color, Inputs["${this.#specId}"], Inputs["${this.#glossId}"]);
-model.AddElement(${this.id});
-`;
-        return code;
+        return `var ${this.id} = Inputs["${this.#vId}"];`;
     }
 
     getData() {
         var data = {};
-        data[this.#rId] = this.#rSlider.getValue();
-        data[this.#gId] = this.#gSlider.getValue();
-        data[this.#bId] = this.#bSlider.getValue();
-        data[this.#aId] = this.#aSlider.getValue();
-        data[this.#specId] = this.#specSlider.getValue();
-        data[this.#glossId] = this.#glossSlider.getValue();
+        data[this.#vId] = this.#vSlider.getValue();
         return data;
     }
 }
 
-class BeamNode extends Node {
+class NodeDataNode extends Node {
+    #typeName
+    #parameters = {}
+    #nodeData
+    constructor(nodeData, posx, posy, width, onConnect, onChange) {
+        super(nodeData.isConstructor ? nodeData.typeName : `${nodeData.typeName}_${nodeData.methodName}`, posx, posy, width);
+        this.#nodeData = nodeData
+        this.#typeName = nodeData.typeName;
 
-    #curveInput;
-    #materialInput;
+        if (!nodeData.isConstructor) {
+            this.#parameters["this"] = new Flow.LabelElement(nodeData.typeName).setInput(1);
+            this.#parameters["this"].onConnect(() => {
+                onConnect();
+            });
+            this.node.add(this.#parameters["this"]);
+        }
 
-    constructor(posx, posy, onConnect, onChange) {
-        super('beam', posx, posy, 200);
-        const title = new Flow.TitleElement('Beam').setStyle('gray');
-        this.node.add(title);
-
-        this.#curveInput = new Flow.LabelElement('curve').setInput(1);
-        this.#curveInput.onConnect(() => {
-            onConnect();
-        });
-        this.node.add(this.#curveInput);
-
-        this.#materialInput = new Flow.LabelElement('material').setInput(1);
-        this.#materialInput.onConnect(() => {
-            onConnect();
-        });
-        this.node.add(this.#materialInput);
-
+        if (nodeData.parameterData) {
+            Object.entries(nodeData.parameterData).forEach(([key, value]) => {
+                const parameterName = `${key}`; // `${pd.name}_${getNextIndex()}`;
+                this.#parameters[parameterName] = new Flow.LabelElement(`${key}`).setInput(1);
+                this.#parameters[parameterName].onConnect(() => {
+                    onConnect();
+                });
+                this.node.add(this.#parameters[parameterName]);
+            })
+        }
     }
 
     compile() {
-        var lineId = this.#curveInput.linkedElement ? this.#curveInput.linkedElement.node.wrapper.id : 'null';
-        var materialId = this.#materialInput.linkedElement ? this.#materialInput.linkedElement.node.wrapper.id : 'null';
-        var code = `
-var ${this.id} = new Beam(${lineId}, Polygon.Rectangle(0.5,0.5), material: ${materialId});
-model.AddElement(${this.id});
-`;
+        const params = Object.entries(this.#parameters).reduce((filtered, [key, value]) => {
+            if (key !== "this") {
+                if (!value.linkedElement) {
+                    if (this.#nodeData.parameterData[key].defaultValue) {
+                        filtered.push(`${key}: ${this.#nodeData.parameterData[key].defaultValue}`);
+                    } else {
+                        filtered.push(`${key}: null`);
+                    }
+                } else {
+                    filtered.push(`${key}: ${value.linkedElement ? value.linkedElement.node.wrapper.id : 'null'}`);
+                }
+            }
+            return filtered;
+        }, []);
+
+        let code = '';
+        if (this.#nodeData.isConstructor) {
+            code += `var ${this.id} = new ${this.#typeName}(${params.join(',')});\n`
+        } else {
+            code += `var ${this.id} = ${this.#parameters["this"].linkedElement ? this.#parameters["this"].linkedElement.node.wrapper.id : 'null'}.${this.#nodeData.methodName}(${params.join(',')});\n`
+        }
+
+        // Draw curves
+        const curveTypes = ['Line', 'Arc', 'Bezier', 'Circle', 'Polygon', 'Polyline'];
+        if (curveTypes.includes(this.#nodeData.returnType)) {
+            code += `model.AddElement(new ModelCurve(${this.id}));`;
+        }
+
+        // Draw transforms
+        if (this.#nodeData.returnType === 'Transform') {
+            code += `model.AddElements(${this.id}.ToModelCurves());`;
+        }
+
         return code;
-    }
-}
-
-class TransformAtNode extends Node {
-
-    #lineInput;
-    #tInput;
-    #tId = `x_${getNextIndex()}`;
-    constructor(posx, posy, onConnect, onChange) {
-        super('transformAt', posx, posy, 300);
-
-        const title = new Flow.TitleElement('TransformAt').setStyle('gray');
-        this.node.add(title);
-
-        this.#tInput = new Flow.SliderInput(0.5, 0.0, 1.0);
-        this.#tInput.onChange(() => {
-            onChange();
-        });
-
-        this.#lineInput = new Flow.LabelElement('line').setInput(1);
-        this.#lineInput.onConnect(() => {
-            onConnect();
-        });
-
-        const t = new Flow.LabelElement('t').add(this.#tInput);
-        this.node.add(this.#lineInput);
-        this.node.add(t);
-    }
-
-    compile() {
-        var lineId = this.#lineInput.linkedElement ? this.#lineInput.linkedElement.node.wrapper.id : 'null';
-        var code = `
-var ${this.id} = ${lineId}.TransformAt(Inputs["${this.#tId}"]);
-model.AddElements(${this.id}.ToModelCurves());
-`;
-        return code;
-    }
-
-    getData() {
-        var data = {};
-        data[this.#tId] = this.#tInput.getValue();
-        return data;
-    }
-}
-
-class Vector3Node extends Node {
-
-    #xSlider;
-    #ySlider;
-    #zSlider;
-    #xId = `x_${getNextIndex()}`;
-    #yId = `y_${getNextIndex()}`;
-    #zId = `z_${getNextIndex()}`;
-    constructor(posx, posy, onConnect, onChange) {
-        super('vector3', posx, posy, 300);
-        const vectorOutput = new Flow.TitleElement('Vector3').setStyle('gray').setOutput(1);
-        this.node.add(vectorOutput);
-        this.#xSlider = new Flow.SliderInput(5);
-        this.#xSlider.onChange(() => {
-            onChange();
-        });
-        this.#ySlider = new Flow.SliderInput(5);
-        this.#ySlider.onChange(() => {
-            onChange();
-        });
-        this.#zSlider = new Flow.SliderInput(5);
-        this.#zSlider.onChange(() => {
-            onChange();
-        });
-        const x = new Flow.LabelElement('x').add(this.#xSlider);
-        const y = new Flow.LabelElement('y').add(this.#ySlider);
-        const z = new Flow.LabelElement('z').add(this.#zSlider);
-        this.node.add(x);
-        this.node.add(y);
-        this.node.add(z);
-    }
-
-    compile() {
-        return `
-var ${this.id} = new Vector3(Inputs["${this.#xId}"],Inputs["${this.#yId}"],Inputs["${this.#zId}"]);
-`;
-    }
-
-    getData() {
-        var data = {};
-        data[this.#xId] = this.#xSlider.getValue();
-        data[this.#yId] = this.#ySlider.getValue();
-        data[this.#zId] = this.#zSlider.getValue();
-        return data;
-    }
-}
-
-class LineNode extends Node {
-    constructor(posx, posy, onConnect) {
-        super('line', posx, posy, 200);
-        this.node.add(new Flow.TitleElement('Line').setStyle('gray').setOutput(1));
-        const start = new Flow.LabelElement('start');
-        start.onConnect(() => {
-            onConnect();
-        });
-        const end = new Flow.LabelElement('end');
-        end.onConnect(() => {
-            onConnect();
-        });
-        this.node.add(start);
-        this.node.add(end);
-
-        start.setInput(1);
-        end.setInput(1);
-
-        this.start = start;
-        this.end = end;
-    }
-
-    compile() {
-        var startId = this.start.linkedElement ? this.start.linkedElement.node.wrapper.id : 'null';
-        var endId = this.end.linkedElement ? this.end.linkedElement.node.wrapper.id : null;
-        var code = `
-var ${this.id} = new Line(${startId}, ${endId});
-model.AddElement(new ModelCurve(${this.id}));
-`;
-        return code;
-    }
-}
-
-class IntersectNode extends Node {
-
-    #lineA;
-    #lineB
-    constructor(posx, posy, onConnect) {
-        super('intersect', posx, posy, 200);
-        this.node.add(new Flow.TitleElement('Intersects').setStyle('gray').setOutput(1));
-        const lineA = new Flow.LabelElement('Line A');
-        lineA.onConnect(() => {
-            onConnect();
-        });
-        const lineB = new Flow.LabelElement('Line B');
-        lineB.onConnect(() => {
-            onConnect();
-        });
-        this.node.add(lineA);
-        this.node.add(lineB);
-
-        lineA.setInput(1);
-        lineB.setInput(1);
-
-        this.#lineA = lineA;
-        this.#lineB = lineB;
-    }
-
-    compile() {
-        var startId = this.#lineA.linkedElement ? this.#lineA.linkedElement.node.wrapper.id : 'null';
-        var endId = this.#lineB.linkedElement ? this.#lineB.linkedElement.node.wrapper.id : null;
-        var code = `
-var ${this.id} = ${startId}.Intersects(${endId}, out Vector3 ${endId}_xsect);
-if( ${this.id} == true) {
-    model.AddElements(new Transform(${endId}_xsect).ToModelCurves());
-}`;
-        return code;
-    }
-}
-
-class RectangleNode extends Node {
-
-    #wSlider;
-    #lSlider;
-    #wId = `width_${getNextIndex()}`;
-    #lId = `length_${getNextIndex()}`;
-
-    constructor(posx, posy, onConnect, onChange) {
-        super('rectangle', posx, posy, 300);
-        this.node.add(new Flow.TitleElement('Rectangle').setStyle('gray').setOutput(1));
-        this.#wSlider = new Flow.SliderInput(5);
-        this.#wSlider.onChange(() => {
-            onChange();
-        });
-        this.#lSlider = new Flow.SliderInput(5);
-        this.#lSlider.onChange(() => {
-            onChange();
-        });
-        const w = new Flow.LabelElement('width').add(this.#wSlider);
-        const l = new Flow.LabelElement('length').add(this.#lSlider);
-        this.node.add(w);
-        this.node.add(l);
-    }
-
-    compile() {
-        var code = `
-var ${this.id} = Polygon.Rectangle(Inputs["${this.#wId}"],Inputs["${this.#lId}"]);
-model.AddElement(new ModelCurve(${this.id}));
-`;
-        return code;
-    }
-
-    getData() {
-        var data = {};
-        data[this.#wId] = this.#wSlider.getValue();
-        data[this.#lId] = this.#lSlider.getValue();
-        return data;
     }
 }
 
 class Grid2dNode extends Node {
     #uSlider;
     #vSlider;
-    #uId = `u${getNextIndex()}`;
-    #vId = `v${getNextIndex()}`;
+    #uId = `u${getNextIndex()} `;
+    #vId = `v${getNextIndex()} `;
     #rectangle
     constructor(posx, posy, onConnect, onChange) {
         super('grid2d', posx, posy, 300);
@@ -415,18 +202,18 @@ class Grid2dNode extends Node {
     compile() {
         var rectangleId = this.#rectangle.linkedElement ? this.#rectangle.linkedElement.node.wrapper.id : 'null';
         var code = `
-var ${this.id} = new Grid2d(${rectangleId});
+            var ${this.id} = new Grid2d(${rectangleId});
 ${this.id}.U.DivideByCount((int)Inputs["${this.#uId}"]);
 ${this.id}.V.DivideByCount((int)Inputs["${this.#vId}"]);
-foreach(var s in ${this.id}.GetCellSeparators(GridDirection.U))
-{
-    model.AddElement(new ModelCurve((Line)s));
-}
-foreach(var s in ${this.id}.GetCellSeparators(GridDirection.V))
-{
-    model.AddElement(new ModelCurve((Line)s));
-}
-`;
+            foreach(var s in ${this.id}.GetCellSeparators(GridDirection.U))
+            {
+                model.AddElement(new ModelCurve((Line)s));
+            }
+            foreach(var s in ${this.id}.GetCellSeparators(GridDirection.V))
+            {
+                model.AddElement(new ModelCurve((Line)s));
+            }
+            `;
         return code;
     }
 
@@ -438,10 +225,36 @@ foreach(var s in ${this.id}.GetCellSeparators(GridDirection.V))
     }
 }
 
+function addNode(nodeData) {
+
+    const onConnect = () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(canvas));
+        DotNet.invokeMethod('Elements.Playground', 'Compile');
+    };
+    const onChange = () => {
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
+        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
+    };
+
+    const startX = canvas.relativeX + 10;
+    const startY = canvas.relativeY + 50;
+
+    var graphNode = null;
+    if (nodeData == "Number") {
+        graphNode = new NumberNode(startX, startY, onConnect, onChange)
+    }
+    else {
+        graphNode = new NodeDataNode(nodeData, startX, startY, 200, onConnect, onChange);
+    }
+
+    canvas.add(graphNode.node);
+    graphNodes.push(graphNode);
+}
+
 function compileGraph(canvas) {
     let code = `
 var model = new Model();
-Validator.DisableValidationOnConstruction = false;
+Validator.DisableValidationOnConstruction = true;
 `;
 
     // TODO: Verify that links gives you a list of nodes in ordered fashion
@@ -454,7 +267,7 @@ Validator.DisableValidationOnConstruction = false;
     // The remainder nodes after this operation will be the leaves.
     links.forEach(link => {
         if (!processedNodes.includes(link.outputElement.node.wrapper.id)) {
-            console.log(`Compiling ${link.outputElement.node.wrapper.constructor.name}`);
+            console.debug(`Compiling ${link.outputElement.node.wrapper.constructor.name} `);
             code += link.outputElement.node.wrapper.compile() + '\n';
             processedNodes.push(link.outputElement.node.wrapper.id);
         }
@@ -463,7 +276,7 @@ Validator.DisableValidationOnConstruction = false;
     // Process all the leaves.
     links.forEach(link => {
         if (!processedNodes.includes(link.inputElement.node.wrapper.id)) {
-            console.log(`Compiling ${link.inputElement.node.wrapper.constructor.name}`);
+            console.log(`Compiling ${link.inputElement.node.wrapper.constructor.name} `);
             code += link.inputElement.node.wrapper.compile() + '\n';
             processedNodes.push(link.inputElement.node.wrapper.id);
         }
@@ -482,51 +295,6 @@ function getData(graphNodes) {
     });
 
     return data;
-}
-
-function addNode(nodeType) {
-
-    const onConnect = () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', compileGraph(canvas));
-        DotNet.invokeMethod('Elements.Playground', 'Compile');
-    };
-    const onChange = () => {
-        DotNet.invokeMethod('Elements.Playground', 'SetCodeContext', getData(graphNodes));
-        DotNet.invokeMethodAsync('Elements.Playground', 'Run');
-    };
-
-    let graphNode = null;
-
-    const startX = canvas.relativeX + 10;
-    const startY = canvas.relativeY + 50;
-    switch (nodeType) {
-        case 'Vector3':
-            graphNode = new Vector3Node(startX, startY, onConnect, onChange);
-            break;
-        case 'Line':
-            graphNode = new LineNode(startX, startY, onConnect, onChange);
-            break;
-        case 'Rectangle':
-            graphNode = new RectangleNode(startX, startY, onConnect, onChange);
-            break;
-        case 'Material':
-            graphNode = new MaterialNode(startX, startY, onConnect, onChange);
-            break;
-        case 'TransformAt':
-            graphNode = new TransformAtNode(startX, startY, onConnect, onChange);
-            break;
-        case 'Beam':
-            graphNode = new BeamNode(startX, startY, onConnect, onChange);
-            break;
-        case 'Intersects':
-            graphNode = new IntersectNode(startX, startY, onConnect, onChange);
-            break;
-        case 'Grid2d':
-            graphNode = new Grid2dNode(startX, startY, onConnect, onChange);
-            break;
-    }
-    canvas.add(graphNode.node);
-    graphNodes.push(graphNode);
 }
 
 function initializeGraph() {
