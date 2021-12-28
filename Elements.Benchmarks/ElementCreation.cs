@@ -45,12 +45,15 @@ namespace Elements.Benchmarks
             var x = 0.0;
             var z = 0.0;
             var model = new Model();
+            model.AddElement(BuiltInMaterials.Steel, false);
             foreach (var profile in profiles)
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var beam = new Beam(line, profile);
-                model.AddElement(beam);
+                beam.Representation.SkipCSGUnion = true;
+                model.AddElement(profile, false);
+                model.AddElement(beam, false);
                 x += 2.0;
                 if (x > 20.0)
                 {
