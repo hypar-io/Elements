@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 // TODO: Get rid of System.Linq
 using System.Linq;
-using System.Reflection;
 using glTFLoader;
 using glTFLoader.Schema;
 using System.IO;
@@ -1290,8 +1289,6 @@ namespace Elements.Serialization.glTF
                                     bufferViews,
                                     accessors,
                                     meshes,
-                                    lines,
-                                    geometricElement.Transform,
                                     mergeVertices);
 
                 // If the id == -1, the mesh is malformed.
@@ -1319,8 +1316,6 @@ namespace Elements.Serialization.glTF
                                       List<BufferView> bufferViews,
                                       List<Accessor> accessors,
                                       List<glTFLoader.Schema.Mesh> meshes,
-                                      List<Vector3> lines,
-                                      Transform t = null,
                                       bool mergeVertices = false)
         {
             GraphicsBuffers buffers = null;
@@ -1329,8 +1324,11 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                var solids = geometricElement.GetSolids();
-                buffers = solids.Tessellate(mergeVertices, geometricElement.ModifyVertexAttributes);
+                buffers = new GraphicsBuffers();
+                Tessellation.Tessellate(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
+                                        buffers,
+                                        mergeVertices,
+                                        geometricElement.ModifyVertexAttributes);
             }
             else
             {

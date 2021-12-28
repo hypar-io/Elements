@@ -424,90 +424,15 @@ namespace Elements.Geometry.Solids
         /// <param name="mesh">The mesh to which the solid's tessellated data will be added.</param>
         /// <param name="transform">An optional transform used to transform the generated vertex coordinates.</param>
         /// <param name="color">An optional color to apply to the vertex.</param>
-        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))
+        public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default)
         {
-            foreach (var f in this.Faces.Values)
+            var tessProvider = new SolidTesselationTargetProvider(this);
+            foreach (var target in tessProvider.GetTessellationTargets())
             {
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-
-                tess.AddContour(f.Outer.ToContourVertexArray(f));
-
-                if (f.Inner != null)
-                {
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray(f));
-                    }
-                }
-
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-                var faceMesh = tess.ToMesh(transform, color, f.Plane().Normal);
+                var tess = target.GetTess();
+                var faceMesh = tess.ToMesh(transform, color);
                 mesh.AddMesh(faceMesh);
             }
-        }
-
-        /// <summary>
-        /// Triangulate this solid and pack the triangulated data into buffers
-        /// appropriate for use with gltf.
-        /// </summary>
-        public GraphicsBuffers Tessellate()
-        {
-            var tessellations = new Tess[this.Faces.Count];
-
-            var fi = 0;
-            foreach (var f in this.Faces.Values)
-            {
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
-                tess.AddContour(f.Outer.ToContourVertexArray(f));
-
-                if (f.Inner != null)
-                {
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray(f));
-                    }
-                }
-
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                tessellations[fi] = tess;
-                fi++;
-            }
-
-            var buffers = new GraphicsBuffers();
-
-            var iCursor = 0;
-            var imax = int.MinValue;
-
-            for (var i = 0; i < tessellations.Length; i++)
-            {
-                var tess = tessellations[i];
-
-                var a = tess.Vertices[tess.Elements[0]].Position.ToVector3();
-                var b = tess.Vertices[tess.Elements[1]].Position.ToVector3();
-                var c = tess.Vertices[tess.Elements[2]].Position.ToVector3();
-                var n = (b - a).Cross(c - a).Unitized();
-
-                for (var j = 0; j < tess.Vertices.Length; j++)
-                {
-                    var v = tess.Vertices[j];
-                    buffers.AddVertex(v.Position.ToVector3(), n, new UV());
-                }
-
-                for (var k = 0; k < tess.Elements.Length; k++)
-                {
-                    var t = tess.Elements[k];
-                    var index = (ushort)(t + iCursor);
-                    buffers.AddIndex(index);
-                    imax = Math.Max(imax, index);
-                }
-
-                iCursor = imax + 1;
-            }
-
-            return buffers;
         }
 
         /// <summary>
