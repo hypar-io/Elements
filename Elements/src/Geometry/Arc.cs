@@ -40,7 +40,7 @@ namespace Elements.Geometry
         /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
         /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle) : base()
+        public Arc(Vector3 @center, double @radius = 1.0, double @startAngle = 0.0, double @endAngle = 180.0) : base()
         {
             if (!Validator.DisableValidationOnConstruction)
             {
@@ -72,7 +72,7 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the arc.</param>
         /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
         /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
-        public Arc(double radius, double startAngle, double endAngle)
+        public Arc(double radius = 1.0, double startAngle = 0.0, double endAngle = 180.0)
             : base()
         {
             this.Center = Vector3.Origin;
@@ -131,7 +131,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u)
+        public override Transform TransformAt(double u = 0.5)
         {
             var p = PointAt(u);
             var x = (p - this.Center).Unitized();

@@ -26,7 +26,7 @@ namespace Elements.Geometry
         /// <param name="y">The y component.</param>
         /// <param name="z">The z component.</param>
         [Newtonsoft.Json.JsonConstructor]
-        public Vector3(double @x, double @y, double @z)
+        public Vector3(double @x = 0.0, double @y = 0.0, double @z = 0.0)
         {
             if (!Validator.DisableValidationOnConstruction)
             {
@@ -147,7 +147,7 @@ namespace Elements.Geometry
         /// <param name="x">The x coordinate of the vector.</param>
         /// <param name="y">Thy y coordinate of the vector.</param>
         /// <exception>Thrown if any components of the vector are NaN or Infinity.</exception>
-        public Vector3(double x, double y)
+        public Vector3(double x = 0.0, double y = 0.0)
         {
             if (Double.IsNaN(x) || Double.IsNaN(y))
             {
