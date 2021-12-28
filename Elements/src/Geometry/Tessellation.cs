@@ -10,7 +10,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which provides tessellation targets.
     /// </summary>
-    public interface ITessellationTargetProvider
+    internal interface ITessellationTargetProvider
     {
         /// <summary>
         /// Get the tessellation targets.
@@ -21,7 +21,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which provides tessellation targets for a solid.
     /// </summary>
-    public class SolidTesselationTargetProvider : ITessellationTargetProvider
+    internal class SolidTesselationTargetProvider : ITessellationTargetProvider
     {
         private readonly Solid solid;
         private readonly Transform transform;
@@ -52,7 +52,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which provides tessellation targets for a csg solid.
     /// </summary>
-    public class CsgTessellationTargetProvider : ITessellationTargetProvider
+    internal class CsgTessellationTargetProvider : ITessellationTargetProvider
     {
         private readonly Csg.Solid csg;
 
@@ -80,7 +80,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which creates a tessellation for a tessellation target.
     /// </summary>
-    public interface ITtessAdator
+    internal interface ITtessAdator
     {
         /// <summary>
         /// Does this target require tessellation?
@@ -96,7 +96,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which provides a tessellation for a csg polygon.
     /// </summary>
-    public class CsgPolygonTessAdaptor : ITtessAdator
+    internal class CsgPolygonTessAdaptor : ITtessAdator
     {
         private readonly Csg.Polygon polygon;
 
@@ -136,7 +136,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An object which provides a tessellation for a solid face.
     /// </summary>
-    public class SolidFaceTessAdaptor : ITtessAdator
+    internal class SolidFaceTessAdaptor : ITtessAdator
     {
         private readonly Face face;
         private readonly Transform transform;
@@ -187,7 +187,7 @@ namespace Elements.Geometry
     /// <summary>
     /// Methods for the tessellation of various objects.
     /// </summary>
-    public static class Tessellation
+    internal static class Tessellation
     {
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
