@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Elements.Geometry.Tessellation;
 
 namespace Elements.Tests
 {

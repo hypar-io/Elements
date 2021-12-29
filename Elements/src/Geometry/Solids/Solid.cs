@@ -1,5 +1,6 @@
 #pragma warning disable 1591
 
+using Elements.Geometry.Tessellation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,6 @@ using System.Text;
 using Elements.Geometry.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
-using LibTessDotNet.Double;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 

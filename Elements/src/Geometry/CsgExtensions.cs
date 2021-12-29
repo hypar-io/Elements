@@ -1,3 +1,4 @@
+using Elements.Geometry.Tessellation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Elements.Geometry
         {
             var buffers = new GraphicsBuffers();
 
-            Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
+            Tessellation.Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
                                     buffers,
                                     mergeVertices,
                                     modifyVertexAttributes);

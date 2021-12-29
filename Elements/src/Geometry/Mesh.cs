@@ -386,7 +386,7 @@ Triangles:{Triangles.Count}";
                     // for planar faces.
                     // TODO: Update this when we support non-planar faces.
                     // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                    basis = Tessellation.ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 naturalNormal);
+                    basis = Tessellation.Tessellation.ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 naturalNormal);
                     if (normal == default)
                     {
                         normal = naturalNormal;

@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Tessellation;
 using System;
 using System.Collections.Generic;
 // TODO: Get rid of System.Linq
