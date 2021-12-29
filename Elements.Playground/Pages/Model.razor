@@ -73,7 +73,7 @@
     private async Task ConstructNodeData()
     {
         var model = new Elements.Model();
-        var acceptedNamespaces = new string[] { "Elements.Geometry", "Elements.Geometry.Solids" };
+        var acceptedNamespaces = new string[] { "Elements.Geometry", "Elements.Geometry.Solids", "Elements" };
         var acceptedTypes = new string[] {
 "Arc",
 "Bezier",
@@ -92,6 +92,8 @@
 "Vector3",
 "Transform",
 "Sweep",
+"Beam",
+"Column"
 };
         var publicGeometryTypes = model.GetType().Assembly.ExportedTypes.Where(t =>
         acceptedNamespaces.Contains(t.Namespace) && acceptedTypes.Contains(t.Name));
@@ -126,11 +128,10 @@
             }
 
             var skipMethods = new string[] { "ToString", "GetHashCode", "Equals", "GetType" };
-            var publicMethods = g.GetMethods(BindingFlags.Instance | BindingFlags.Public).Where(m => !m.IsSpecialName &&
+            var publicMethods = g.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.Static).Where(m => !m.IsSpecialName &&
             !skipMethods.Contains(m.Name));
             foreach (var m in publicMethods)
             {
-
                 var paramData = new Dictionary<string, ParameterData>();
                 var parameters = m.GetParameters();
                 if (parameters == null || parameters.Count() > 0)
@@ -152,7 +153,8 @@
                     Id = Guid.NewGuid().ToString(),
                     IsConstructor = false,
                     MethodName = m.Name,
-                    ReturnType = m.ReturnType.Name
+                    ReturnType = m.ReturnType.Name,
+                    IsStatic = m.IsStatic
                 };
                 nodeData.Add(nd.Id, nd);
             }

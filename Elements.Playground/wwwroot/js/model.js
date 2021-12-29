@@ -111,7 +111,7 @@ class NodeDataNode extends Node {
         this.#nodeData = nodeData
         this.#typeName = nodeData.typeName;
 
-        if (!nodeData.isConstructor) {
+        if (!nodeData.isConstructor && !nodeData.isStatic) {
             this.#parameters["this"] = new Flow.LabelElement(nodeData.typeName).setInput(1);
             this.#parameters["this"].onConnect(() => {
                 onConnect();
@@ -150,8 +150,16 @@ class NodeDataNode extends Node {
         let code = '';
         if (this.#nodeData.isConstructor) {
             code += `var ${this.id} = new ${this.#typeName}(${params.join(',')});\n`
+        } else if (this.#nodeData.isStatic) {
+            code += `var ${this.id} = ${this.#typeName}.${this.#nodeData.methodName}(${params.join(',')});\n`
         } else {
             code += `var ${this.id} = ${this.#parameters["this"].linkedElement ? this.#parameters["this"].linkedElement.node.wrapper.id : 'null'}.${this.#nodeData.methodName}(${params.join(',')});\n`
+        }
+
+        // Draw elements
+        const elementTypes = ['Beam', 'Column'];
+        if (elementTypes.includes(this.#nodeData.returnType)) {
+            code += `model.AddElement(${this.id});`;
         }
 
         // Draw curves

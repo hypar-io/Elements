@@ -19,5 +19,6 @@ namespace Elements.Playground
         public bool IsConstructor { get; set; }
         public string MethodName { get; set; }
         public string ReturnType { get; set; }
+        public bool IsStatic { get; set; }
     }
 }
