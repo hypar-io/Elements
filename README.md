@@ -45,13 +45,13 @@ When we started [Hypar](https://www.hypar.io) we needed a library that would gen
 - The library must be written in a language that supports developer productivity through things like type safety, and which supports code re-use in other popular AEC applications like Dynamo, Grasshopper, Revit, and Unity.
 - Serialization and deserialization of types that extend `Element` should be possible provided that those types are made up of primitives defined in this library.
 
-We couldn't find anything quite right. So we started building this. 
+We couldn't find anything quite right. So we started building this.
 
 ## Design Principles
 - There is one base type: Element.
   - Elements have a unique identifier and a name.
-- Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties. 
-- The core Element types will be defined in exactly the same way that third-party types will be defined. 
+- Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C# (ex: attributes) to convey meaning of the types or their properties.
+- The core Element types will be defined in exactly the same way that third-party types will be defined.
   - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
 
 ## Geometry
@@ -63,7 +63,7 @@ We are often asked whether the Elements library supports the ____ geometry kerne
 Geometry operations in Elements use `Vector3.Epsilon=1e-05` to compare values that should be considered equal. This is important as geometric operations using floating point numbers are imprecise. In addition, .NET will return different values for these operations _on different systems_. We have seen intersection tests that pass on a mac and fail on linux. Please use the provided methods like `double.IsAlmostEqualTo(...)`, `Vector3.IsZero()`, and `Vector3.IsAlmostEqualTo(...)` which account for precision.
 
 ## Donate
-Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.  
+Hypar Elements is open source and will remain so **forever**. Your donation will directly support the development of the Hypar Elements. Hypar Elements has been demonstrated to work in Revit add-ins, Unity projects, and as Lambdas running on AWS. Send us a donation and open a feature request telling us what you'd like it to do.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 ## Build
@@ -92,7 +92,7 @@ docfx -f --serve
 
 ## Third Party Libraries and Specifications
 
-- [LibTessDotNet](https://github.com/speps/LibTessDotNet)  
+- [LibTessDotNet](https://github.com/speps/LibTessDotNet)
 - [Clipper](http://www.angusj.com/delphi/clipper.php)
 - [GeoJson](http://geojson.org/)
 - [glTF](https://www.khronos.org/gltf/).
@@ -100,7 +100,7 @@ docfx -f --serve
 - [SixLabors.ImageSharp.Drawing](https://github.com/SixLabors/ImageSharp.Drawing)
 - [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
-- [Csg](https://github.com/praeclarum/Csg)
+- [Csg](https://github.com/praeclarum/Csg) We work with a customized fork of this project.  Currently using branch `hypars-branch`
 - [NetOctree](https://github.com/mcserep/NetOctree)
 
 ## Updating the Changelog

@@ -398,6 +398,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Return a new transform which is a rotated copy of this transform.
+        /// </summary>
+        /// <param name="axis">The axis of rotation.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        /// <returns></returns>
+        public Transform Rotated(Vector3 axis, double angle)
+        {
+            var result = new Transform(this);
+            result.Rotate(axis, angle);
+            return result;
+        }
+
+        /// <summary>
         /// Apply a scale to the transform.
         /// </summary>
         /// <param name="amount">The amount to scale.</param>
@@ -488,15 +501,40 @@ namespace Elements.Geometry
         /// Create a transform that is oriented along 
         /// a curve at parameter t. The transform's +z axis will align with 
         /// the +z world axis, and the +x axis will align with the tangent
-        /// of the curve.
+        /// of the curve. If you want a perpendicular transform, use `Curve.TransformAt(t)` instead.
         /// </summary>
         /// <param name="curve">The curve along which to orient the transform.</param>
         /// <param name="t">A parameter value between 0.0 and 1.0.</param>
         /// <param name="up"></param>
+
+        [Obsolete]
         public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))
         {
             var temp = curve.TransformAt(t);
             return new Transform(temp.Origin, temp.ZAxis.Negate(), temp.XAxis.Negate(), Vector3.ZAxis);
+        }
+
+
+        /// <summary>
+        /// Create a transform that is oriented along 
+        /// a curve at parameter t. The transform's +z axis will align with 
+        /// the +z world axis, and the +x axis will align with the XY projection of the tangent
+        /// of the curve. If you want a perpendicular transform, use `Curve.TransformAt(t)` instead.
+        /// </summary>
+        /// <param name="curve">The curve along which to orient the transform.</param>
+        /// <param name="t">A parameter value between 0.0 and 1.0.</param>
+        /// <param name="up"></param>
+        public static Transform CreateHorizontalFrameAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))
+        {
+            var temp = curve.TransformAt(t);
+            var tangent = temp.XAxis.Negate();
+            var normal = Vector3.ZAxis;
+            if (tangent.Z > 1 - Vector3.EPSILON)
+            {
+                tangent = Vector3.XAxis;
+            }
+            tangent = (tangent.X, tangent.Y);
+            return new Transform(temp.Origin, tangent, normal);
         }
 
         /// <summary>

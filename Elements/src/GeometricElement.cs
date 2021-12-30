@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
@@ -153,9 +156,10 @@ namespace Elements
             {
                 return csg;
             }
+
             if (voids.Count() > 0)
             {
-                csg = csg.Substract(voids);
+                csg = csg.Subtract(voids);
             }
 
             if (Transform == null || transformed)
@@ -198,6 +202,21 @@ namespace Elements
             return op.LocalTransform != null
                         ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
                         : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
+        }
+
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        internal virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        {
+            id = null;
+            mode = null;
+            graphicsBuffers = new List<GraphicsBuffers>(); // this is intended to be discarded
+            return false;
         }
     }
 }

@@ -1,4 +1,5 @@
 using Elements.Validators;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +18,43 @@ namespace Elements.Geometry
         /// <summary>The maximum extent of the bounding box.</summary>
         [Newtonsoft.Json.JsonProperty("Max", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Max { get; set; }
+
+        /// <summary>
+        /// The x dimension of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public double XSize => Max.X - Min.X;
+
+        /// <summary>
+        /// The y dimension of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public double YSize => Max.Y - Min.Y;
+
+        /// <summary>
+        /// The z dimension of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public double ZSize => Max.Z - Min.Z;
+
+        /// <summary>
+        /// A domain representing the x extents of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public Domain1d XDomain => new Domain1d(Min.X, Max.X);
+
+        /// <summary>
+        /// A domain representing the y extents of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public Domain1d YDomain => new Domain1d(Min.Y, Max.Y);
+
+        /// <summary>
+        /// A domain representing the z extents of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public Domain1d ZDomain => new Domain1d(Min.Z, Max.Z);
+
 
         /// <summary>
         /// Create a bounding box.
@@ -42,13 +80,13 @@ namespace Elements.Geometry
         /// Construct a bounding box from an array of points.
         /// </summary>
         /// <param name="points">The points which are contained within the bounding box.</param>
-        public BBox3(IList<Vector3> points)
+        public BBox3(IEnumerable<Vector3> points)
         {
             this.Min = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
             this.Max = new Vector3(double.MinValue, double.MinValue, double.MinValue);
-            for (var i = 0; i < points.Count; i++)
+            foreach (Vector3 v in points)
             {
-                this.Extend(points[i]);
+                this.Extend(v);
             }
         }
 
@@ -217,6 +255,66 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get a point from this bounding box by supplying normalized parameters from 0 to 1.
+        /// A point at (0,0,0) will be the minimum point of the bounding box, a
+        /// point at (1,1,1) will be the maximum point, and a point at
+        /// (0.5,0.5,0.5) will be the center. 
+        /// </summary>
+        /// <param name="u">The u parameter at which to evaluate the box.</param>
+        /// <param name="v">The v parameter at which to evaluate the box.</param>
+        /// <param name="w">The w parameter at which to evaluate the box.</param>
+        /// <returns>A point in world coordinates.</returns>
+        public Vector3 PointAt(double u, double v, double w)
+        {
+            return new Vector3(u.MapToDomain(XDomain), v.MapToDomain(YDomain), w.MapToDomain(ZDomain));
+        }
+
+        /// <summary>
+        /// Get a point from this bounding box by supplying a vector specifying normalized parameters from 0 to 1.
+        /// A point at (0,0,0) will be the minimum point of the bounding box, a
+        /// point at (1,1,1) will be the maximum point, and a point at
+        /// (0.5,0.5,0.5) will be the center. 
+        /// </summary>
+        /// <param name="uvw">The vector in the box's parametric UVW coordinate space.</param>
+        /// <returns>A point in world coordinates.</returns>
+        public Vector3 PointAt(Vector3 uvw)
+        {
+            return PointAt(uvw.X, uvw.Y, uvw.Z);
+        }
+
+        /// <summary>
+        /// Get a transform from this bounding box by supplying normalized parameters from 0 to 1.
+        /// A point at (0,0,0) will be a transform at the minimum point of the bounding box, a
+        /// point at (1,1,1) will be at the maximum point, and a point at
+        /// (0.5,0.5,0.5) will be at the center. 
+        /// </summary>
+        /// <param name="u">The u parameter at which to evaluate the box.</param>
+        /// <param name="v">The v parameter at which to evaluate the box.</param>
+        /// <param name="w">The w parameter at which to evaluate the box.</param>
+        /// <returns></returns>
+        public Transform TransformAt(double u, double v, double w)
+        {
+            return new Transform(PointAt(u, v, w));
+        }
+
+        /// <summary>
+        /// For a point in world coordinates, get the corresponding vector
+        /// in the box's parametric UVW coordinate space.
+        /// </summary>
+        /// <param name="point">A point in world coordinates.</param>
+        /// <returns>A Vector3 representing the corresponding U,V,W coordinates in the box's coordinate space.</returns>
+        public Vector3 UVWAtPoint(Vector3 point)
+        {
+            return new Vector3(point.X.MapFromDomain(XDomain), point.Y.MapFromDomain(YDomain), point.Z.MapFromDomain(ZDomain));
+        }
+
+        /// <summary>
+        /// The volume of the bounding box.
+        /// </summary>
+        [JsonIgnore]
+        public double Volume => XSize * YSize * ZSize;
+
+        /// <summary>
         /// Is the provided object a bounding box? If so, is it
         /// equal to this bounding box within Epsilon?
         /// </summary>
@@ -247,7 +345,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return $"Min:{this.Min.ToString()}, Max:{this.Max.ToString()}";
+            return $"Min:{this.Min}, Max:{this.Max}";
         }
 
         /// <summary>

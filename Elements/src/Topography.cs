@@ -127,12 +127,13 @@ namespace Elements
             this.RowWidth = (int)Math.Sqrt(elevations.Length);
             this.CellWidth = width / (this.RowWidth - 1);
             this.CellHeight = this.CellWidth;
-
-            ConstructMeshesAndRegisterPropertyChangeHandlers();
+            ConstructMeshes();
+            RegisterPropertyChangeHandlers();
         }
 
         [JsonConstructor]
-        internal Topography(double[] elevations,
+        internal Topography(Mesh mesh,
+                            double[] elevations,
                             Vector3 origin,
                             int rowWidth,
                             double cellWidth,
@@ -151,41 +152,103 @@ namespace Elements
             this.RowWidth = rowWidth;
             this.CellWidth = cellWidth;
             this.CellHeight = cellHeight;
-
-            ConstructMeshesAndRegisterPropertyChangeHandlers();
+            if (mesh == null)
+            {
+                ConstructMeshes();
+            }
+            else
+            {
+                this.Mesh = mesh;
+                var bbox = new BBox3(mesh.Vertices.Select(v => v.Position));
+                this._minElevation = bbox.Min.Z;
+                this._maxElevation = bbox.Max.Z;
+            }
+            RegisterPropertyChangeHandlers();
         }
 
-        internal void ConstructMeshesAndRegisterPropertyChangeHandlers()
+        /// <summary>
+        /// Create a topography from a custom mesh. It is assumed that the mesh is an open mesh that's roughly parallel to the XY plane.
+        /// </summary>
+        /// <param name="mesh">The mesh geometry of the topography.</param>
+        /// <param name="material">The topography's material.</param>
+        /// <param name="transform">The topography's transform.</param>
+        /// <param name="id">The topography's id.</param>
+        /// <param name="name">The topography's name.</param>
+        /// <returns></returns>
+        public Topography(Mesh mesh, Material material, Transform transform, Guid id, string name) : base(material,
+                                                                                                            transform,
+                                                                                                            false,
+                                                                                                            id,
+                                                                                                            name)
         {
-            GenerateMeshAndSetInternals();
-            double absoluteMinimumElevation = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
+            var newMesh = new Mesh(mesh);
+            var bbox = new BBox3(mesh.Vertices.Select(v => v.Position));
+            this._minElevation = bbox.Min.Z;
+            this._maxElevation = bbox.Max.Z;
+            double absoluteMinimumElevation = this.AbsoluteMinimumElevation ?? this.MinElevation - this.DepthBelowMinimumElevation;
+            var nakedBoundaries = mesh.GetNakedBoundaries();
+            var basePlane = new Plane((0, 0, absoluteMinimumElevation), (0, 0, 1));
+            foreach (var polygon in nakedBoundaries)
+            {
+                // construct bottom
+                var bottomPolygon = polygon.Project(basePlane);
+                var tess = new Tess
+                {
+                    NoEmptyPolygons = true
+                };
+                tess.AddContour(bottomPolygon.Reversed().ToContourVertexArray());
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
+                var faceMesh = tess.ToMesh(normal: (0, 0, -1));
+                this._baseVerts = new List<Vertex>(faceMesh.Vertices);
+                newMesh.AddMesh(faceMesh);
+                // construct sides
+                var upperSegments = polygon.Segments();
+                var lowerSegments = bottomPolygon.Segments();
+                for (int i = 0; i < upperSegments.Count(); i++)
+                {
+                    var topEdge = upperSegments[i];
+                    var bottomEdge = lowerSegments[i];
+                    var normal = topEdge.Direction().Cross(Vector3.ZAxis).Unitized();
+                    var a = newMesh.AddVertex(topEdge.Start, normal: normal);
+                    var b = newMesh.AddVertex(topEdge.End, normal: normal);
+                    var c = newMesh.AddVertex(bottomEdge.End, normal: normal);
+                    var d = newMesh.AddVertex(bottomEdge.Start, normal: normal);
+                    newMesh.AddTriangle(a, c, b);
+                    newMesh.AddTriangle(a, d, c);
+                }
+            }
+            this.Mesh = newMesh;
+        }
+
+        internal void RegisterPropertyChangeHandlers()
+        {
+            this.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
+                {
+                    var minHeight = this.AbsoluteMinimumElevation ?? this.MinElevation - this.DepthBelowMinimumElevation;
+                    MoveBaseVerts(minHeight);
+                }
+            };
+        }
+        internal void ConstructMeshes()
+        {
+
+            var generatedMesh = GenerateMesh(this.Elevations,
+                                               this.Origin,
+                                               this.RowWidth,
+                                               this.CellWidth,
+                                               this.CellWidth);
+            this._mesh = generatedMesh.Mesh;
+            this._minElevation = generatedMesh.MinElevation;
+            this._maxElevation = generatedMesh.MaxElevation;
+            double absoluteMinimumElevation = this.AbsoluteMinimumElevation ?? this.MinElevation - this.DepthBelowMinimumElevation;
             CreateSidesAndBottomMesh(this._mesh,
                                      this.RowWidth,
                                      absoluteMinimumElevation,
                                      this.CellHeight,
                                      this.CellWidth,
                                      this.Origin);
-
-            this.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "DepthBelowMinimumElevation" || args.PropertyName == "AbsoluteMinimumElevation")
-                {
-                    var minHeight = this.AbsoluteMinimumElevation.HasValue ? this.AbsoluteMinimumElevation.Value : this.MinElevation - this.DepthBelowMinimumElevation;
-                    MoveBaseVerts(minHeight);
-                }
-            };
-        }
-
-        private void GenerateMeshAndSetInternals()
-        {
-            var mesh = GenerateMesh(this.Elevations,
-                                    this.Origin,
-                                    this.RowWidth,
-                                    this.CellWidth,
-                                    this.CellWidth);
-            this._mesh = mesh.Mesh;
-            this._minElevation = mesh.MinElevation;
-            this._maxElevation = mesh.MaxElevation;
         }
 
         private static (Mesh Mesh, double MaxElevation, double MinElevation) GenerateMesh(
@@ -224,7 +287,7 @@ namespace Elements
 
                     var uv = new UV(u, v);
 
-                    // Add the tiniest amount of fuzz to avoid the 
+                    // Add the tiniest amount of fuzz to avoid the
                     // triangles being identified as coplanar during
                     // operations like CSG.
                     var fuzz = r.NextDouble() * 0.0001;
@@ -419,7 +482,7 @@ namespace Elements
 
         /// <summary>
         /// Average the vertex placement along the specified edge
-        /// of this topography with the vertex placement along the 
+        /// of this topography with the vertex placement along the
         /// corresponding edge of a target topography.
         /// </summary>
         /// <param name="target"></param>
@@ -540,7 +603,7 @@ namespace Elements
             var sweep = new Sweep(profile, path, 0.0, 0.0, 0.0, false);
             var tunnelCsg = sweep._solid.ToCsg();
 
-            topoCsg = topoCsg.Substract(tunnelCsg);
+            topoCsg = topoCsg.Subtract(tunnelCsg);
             var mesh = new Mesh();
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
@@ -608,7 +671,7 @@ namespace Elements
                 cutXsect.Tessellate(ref cut);
                 cuts.Add(cut);
 
-                topoCsg = topoCsg.Substract(cutCsg);
+                topoCsg = topoCsg.Subtract(cutCsg);
             }
 
             if (elevation > this.MinElevation)
@@ -635,7 +698,7 @@ namespace Elements
                 var batterCsg = batterSweep.Solid.ToCsg().Transform(csgT);
                 fillCsg = fillCsg.Union(batterCsg);
 
-                var xsect = fillCsg.Substract(topoCsg);
+                var xsect = fillCsg.Subtract(topoCsg);
                 var fill = new Mesh();
                 xsect.Tessellate(ref fill);
                 fills.Add(fill);

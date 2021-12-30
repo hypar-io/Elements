@@ -78,6 +78,7 @@ namespace Elements.Generate
             "Sweep",
             "Arc",
             "BBox3",
+            "Box",
             "Color",
             "Curve",
             "CurveRepresentation",

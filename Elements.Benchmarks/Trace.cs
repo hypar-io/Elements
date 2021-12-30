@@ -2,12 +2,13 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Diagnosers;
 using Elements.Geometry.Profiles;
+using Elements.Serialization.glTF;
 
 namespace Elements.Benchmarks
 {
     [EventPipeProfiler(EventPipeProfile.CpuSampling)]
-    [SimpleJob(launchCount: 1, warmupCount: 0, targetCount: 1)]
-    public class Trace
+    [SimpleJob]
+    public class TraceJsonSerialization
     {
         [Benchmark(Description = "Create all HSS beams and serialize to JSON.")]
         public void TraceModelCreation()
@@ -15,7 +16,21 @@ namespace Elements.Benchmarks
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
             var model = ElementCreation.DrawAllBeams(hssProfiles);
-            var json = model.ToJson();
+            model.ToJson();
+        }
+    }
+
+    [EventPipeProfiler(EventPipeProfile.CpuSampling)]
+    [SimpleJob]
+    public class TraceGltfSerialization
+    {
+        [Benchmark(Description = "Create all HSS beams and serialize to glTF.")]
+        public void TraceModelCreation()
+        {
+            var factory = new HSSPipeProfileFactory();
+            var hssProfiles = factory.AllProfiles().ToList();
+            var model = ElementCreation.DrawAllBeams(hssProfiles);
+            model.ToGlTF();
         }
     }
 }

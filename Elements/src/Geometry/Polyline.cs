@@ -32,9 +32,8 @@ namespace Elements.Geometry
 
             if (!Validator.DisableValidationOnConstruction)
             {
-                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices);
-                var segments = Polyline.SegmentsInternal(this.Vertices);
-                Polyline.CheckSegmentLengthAndThrow(segments);
+                Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
+                CheckSegmentLengthAndThrow(Edges());
             }
         }
 
@@ -106,6 +105,17 @@ namespace Elements.Geometry
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
+        }
+
+        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        {
+            for (var i = 0; i < Vertices.Count - 1; i++)
+            {
+                var from = Vertices[i];
+                var to = Vertices[i + 1];
+                yield return (from, to);
+            }
         }
 
         /// <summary>
@@ -392,13 +402,13 @@ namespace Elements.Geometry
         /// <summary>
         /// Check if any of the polygon segments have zero length.
         /// </summary>
-        internal static void CheckSegmentLengthAndThrow(IList<Line> segments)
+        internal static void CheckSegmentLengthAndThrow(IEnumerable<(Vector3 from, Vector3 to)> segments)
         {
-            foreach (var s in segments)
+            foreach (var (from, to) in segments)
             {
-                if (s.Length() == 0)
+                if (from.DistanceTo(to) == 0)
                 {
-                    throw new ArgumentException("A segment fo the polyline has zero length.");
+                    throw new ArgumentException("A segment of the polyline has zero length.");
                 }
             }
         }
@@ -408,26 +418,27 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="t">The transform representing the plane of the polygon.</param>
         /// <param name="segments"></param>
-        internal static void CheckSelfIntersectionAndThrow(Transform t, IList<Line> segments)
+        internal static void CheckSelfIntersectionAndThrow(Transform t, IEnumerable<(Vector3 from, Vector3 to)> segments)
         {
-            var segmentsTrans = new List<Line>();
-
-            foreach (var l in segments)
+            var segmentsT = new List<(Vector3 from, Vector3 to)>();
+            foreach (var (from, to) in segments)
             {
-                segmentsTrans.Add(l.TransformedLine(t));
-            };
+                segmentsT.Add((t.OfPoint(from), t.OfPoint(to)));
+            }
 
-            for (var i = 0; i < segmentsTrans.Count; i++)
+            for (var i = 0; i < segmentsT.Count; i++)
             {
-                for (var j = 0; j < segmentsTrans.Count; j++)
+                for (var j = 0; j < segmentsT.Count; j++)
                 {
                     if (i == j)
                     {
                         // Don't check against itself.
                         continue;
                     }
+                    var s1 = segmentsT[i];
+                    var s2 = segmentsT[j];
 
-                    if (segmentsTrans[i].Intersects2D(segmentsTrans[j]))
+                    if (Line.Intersects2d(s1.from, s1.to, s2.from, s2.to))
                     {
                         throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
                     }
@@ -744,6 +755,58 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// A naïve control-point-only 2D open offset. This algorithm does not
+        /// do any self-intersection checking.
+        /// </summary>
+        /// <param name="offset">The offset distance.</param>
+        /// <returns>A new polyline with the same number of control points.</returns>
+        public Polyline OffsetOpen(double offset)
+        {
+            var newVertices = new List<Vector3>();
+            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
+            if (segments.Count == 1)
+            {
+                return new Polyline(segments[0].Start, segments[0].End);
+            }
+            for (int i = 0; i < segments.Count - 1; i++)
+            {
+                var currSegment = segments[i];
+                var nextSegment = segments[i + 1];
+                if (i == 0)
+                {
+                    newVertices.Add(currSegment.Start);
+                }
+
+                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
+                {
+                    newVertices.Add(currSegment.End);
+                }
+                else
+                {
+                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
+                    {
+                        newVertices.Add(intersection);
+                    }
+                    else
+                    {
+                        newVertices.Add(currSegment.End);
+                    }
+                }
+
+                if (i == segments.Count - 2)
+                {
+                    newVertices.Add(nextSegment.End);
+                }
+            }
+            var polyline = new Polyline(newVertices);
+            if (polyline.Vertices.Count < 2)
+            {
+                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
+            }
+            return polyline;
+        }
+
+        /// <summary>
         /// Does this polyline equal the provided polyline?
         /// </summary>
         /// <param name="other"></param>
@@ -762,6 +825,20 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Project this polyline onto the plane.
+        /// </summary>
+        /// <param name="plane">The plane of the returned polyline.</param>
+        public Polyline Project(Plane plane)
+        {
+            var projected = new Vector3[this.Vertices.Count];
+            for (var i = 0; i < projected.Length; i++)
+            {
+                projected[i] = this.Vertices[i].Project(plane);
+            }
+            return new Polyline(projected);
         }
 
         /// <summary>
