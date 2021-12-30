@@ -27,6 +27,7 @@
   - `Box.BoxToUVW`
   - `Box.TransformBetween`
 - `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
+- `Elements.Playground` project.
 
 ### Changed
 
