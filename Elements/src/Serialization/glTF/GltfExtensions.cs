@@ -900,7 +900,7 @@ namespace Elements.Serialization.glTF
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.Message);
+                    errors.Add($"{e.Id} : {ex.Message}");
                 }
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
