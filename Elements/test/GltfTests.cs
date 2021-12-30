@@ -100,5 +100,18 @@ namespace Elements.Tests
                 Assert.True(vertexCount == 12, $"The stored mesh should contain 12 vertices, instead it contains {vertexCount}");
             }
         }
+
+        [Fact]
+        public void GeometricElementWithError()
+        {
+            var model = new Model();
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(0.1, 0.2));
+            beam.Transform = new Transform().Scaled(new Vector3());
+            model.AddElement(beam);
+            var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
+            var gltfPath = Path.Combine(modelsDir, "Beam-with-errro.gltf");
+            model.ToGlTF(gltfPath, out var errors);
+            Assert.True(errors.Count == 1);
+        }
     }
 }
