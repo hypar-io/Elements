@@ -76,9 +76,9 @@ namespace Elements.Serialization.glTF
         /// <param name="errors">A collection of serialization errors</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, out List<string> errors, bool useBinarySerialization = true, bool drawEdges = false)
+        public static void ToGlTF(this Model model, string path, out List<BaseError> errors, bool useBinarySerialization = true, bool drawEdges = false)
         {
-            errors = new List<string>();
+            errors = new List<BaseError>();
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
@@ -743,7 +743,7 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, out List<string> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
             var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
@@ -758,7 +758,7 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, out List<string> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
             var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
@@ -774,11 +774,11 @@ namespace Elements.Serialization.glTF
 
         internal static Gltf InitializeGlTF(Model model,
                                             out List<byte[]> allBuffers,
-                                            out List<string> errors,
+                                            out List<BaseError> errors,
                                             bool drawEdges = false,
                                             bool mergeVertices = false)
         {
-            errors = new List<string>();
+            errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
             var buffer = new List<byte>();
@@ -900,7 +900,7 @@ namespace Elements.Serialization.glTF
                 }
                 catch (Exception ex)
                 {
-                    errors.Add($"{e.Id} : {ex.Message}");
+                    errors.Add(new ElementError(e.Id, ex));
                 }
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
