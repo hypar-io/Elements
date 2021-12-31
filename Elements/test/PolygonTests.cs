@@ -1925,5 +1925,24 @@ namespace Elements.Geometry.Tests
             Assert.True(trimmed.Sum(l => l.Length()) > 0);
 
         }
+
+        [Fact]
+        public void PolygonInsideAnotherPolygonTrimsAHole()
+        {
+            this.Name = nameof(PolygonInsideAnotherPolygonTrimsAHole);
+
+            var p1 = Polygon.Rectangle(2, 2);
+            var trims = Polygon.Star(0.75, 0.5, 5).Segments().Select(s => new Polygon(new[] {
+                s.Start - new Vector3(0,0,0.5),
+                s.End - new Vector3(0,0,0.5),
+                s.End + new Vector3(0,0,0.5),
+                s.Start + new Vector3(0,0,0.5)
+            })).ToList();
+            var polys = p1.IntersectOneToMany(trims, out _, out var trimEdges);
+
+            // In the disjoint scenario we expect one outer, and two inner
+            // wound in opposite directions.
+            Assert.Equal(3, polys.Count);
+        }
     }
 }

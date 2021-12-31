@@ -57,15 +57,43 @@ namespace Elements.Geometry.Solids
         /// <param name="aTransform"></param>
         /// <param name="b"></param>
         /// <param name="bTransform"></param>
-        /// <returns></returns>
         public static Solid Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var allFaces = Intersect(a, aTransform, b, bTransform);
 
             var s = new Solid();
-            foreach (var p in allFaces.Where(o => o.classification == SetClassification.AOutsideB).Select(o => o.polygon))
+
+            var outsideFaces = allFaces.Where(o => o.classification == SetClassification.AOutsideB).ToList();
+
+            // Group the faces according to their classification.
+            // AOutsideB for everything outside B which should remain.
+            // AInsideB for everything inside A which should become a hole.
+            foreach (var (polygon, classification, coplanarClassification) in outsideFaces)
             {
-                s.AddFace(p, mergeVerticesAndEdges: true);
+                // TODO: The following is a hack because our Polygon.IntersectOneToMany
+                // method returns overlapping polygons where there are disjoint polygons.
+                var insideFaces = allFaces.Where(i => i.classification == SetClassification.AInsideB).ToList();
+
+                if (insideFaces.Count == 0)
+                {
+                    s.AddFace(polygon, mergeVerticesAndEdges: true);
+                }
+                else
+                {
+                    var plane = polygon.Plane();
+                    var holes = new List<Polygon>();
+                    foreach (var insideFace in insideFaces)
+                    {
+                        if (insideFace.polygon.Plane().IsCoplanar(plane))
+                        {
+                            // if (polygon.Contains(insideFace.polygon))
+                            // {
+                            holes.Add(insideFace.polygon.Reversed());
+                            // }
+                        }
+                    }
+                    s.AddFace(polygon, holes, mergeVerticesAndEdges: true);
+                }
             }
 
             foreach (var p in allFaces.Where(o => o.classification == SetClassification.BInsideA).Select(o => o.polygon))
@@ -137,7 +165,10 @@ namespace Elements.Geometry.Solids
             return Intersection(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
         }
 
-        private static List<(Polygon polygon, SetClassification classification, CoplanarSetClassification coplanarClassification)> Intersect(Solid a, Transform aTransform, Solid b, Transform bTransform)
+        private static List<(Polygon polygon, SetClassification classification, CoplanarSetClassification coplanarClassification)> Intersect(Solid a,
+                                                                                                                                             Transform aTransform,
+                                                                                                                                             Solid b,
+                                                                                                                                             Transform bTransform)
         {
             var allFaces = new List<(Polygon, SetClassification, CoplanarSetClassification)>();
 

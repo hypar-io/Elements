@@ -980,7 +980,7 @@ namespace Elements.Geometry
             }).Select(p => p.Item1).ToList();
         }
 
-        private List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
+        internal List<Polygon> IntersectOneToMany(IList<Polygon> polygons,
                                                  out List<Vector3> intersections,
                                                  out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
         {
@@ -1135,6 +1135,27 @@ namespace Elements.Geometry
 
             var polys = heg.Polygonize(null, localPlane.Normal);
 
+            // TODO: Can we skip this culling step? This is required because
+            // we make two-way edged graphs which generate polygons on top of
+            // each other but facing in opposite directions. We really just need
+            // a single set of polygons which are facing in the same direction.
+            for (var i = polys.Count - 1; i >= 0; i--)
+            {
+                for (var j = polys.Count - 1; j >= 0; j--)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
+                    if (!polys[i].Normal().IsAlmostEqualTo(localPlane.Normal))
+                    {
+                        polys.Remove(polys[i]);
+                        break;
+                    }
+                }
+            }
+
             intersections = results.SelectMany(t => t).ToList();
 
             return polys;
@@ -1178,6 +1199,9 @@ namespace Elements.Geometry
             }
             else
             {
+                // TODO: This doesn't work right with disjoint polygons. It will
+                // return a -1 parent polygon index for the "outer" polygon.
+                // var compareEdges = trimEdges;
                 var compareEdges = trimEdges.Where(e => e.parentPolygonIndex != -1).ToList();
 
                 var n = this.Normal();
@@ -1205,8 +1229,12 @@ namespace Elements.Geometry
                         {
                             continue;
                         }
+
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
-                        var trimPoly = trimPolygons[trimPolyIndex];
+
+                        // During intersection of one to many, this polygon's 
+                        // edges are added and given the index -1.
+                        var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
                         var bn = trimPoly.Normal();
                         var d = (from - to).Unitized();
                         var dot = bn.Dot(n.Cross(d));
@@ -1227,6 +1255,11 @@ namespace Elements.Geometry
                     else if (inside > 0 && outside == 0)
                     {
                         classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
+                    }
+                    else if (inside == 0 && outside == 0)
+                    {
+                        // This will happen with disjoint polygons.
+                        classifications.Add((this, outsideClassification, CoplanarSetClassification.None));
                     }
                 }
             }

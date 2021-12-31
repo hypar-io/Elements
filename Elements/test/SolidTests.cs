@@ -566,6 +566,49 @@ namespace Elements.Tests
             Assert.Equal(6, result2.Faces.Count);
         }
 
+        [Fact]
+        public void DifferenceInCenterOfFaceCreatesVoid()
+        {
+            this.Name = nameof(DifferenceInCenterOfFaceCreatesVoid);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Star(0.5, 0.25, 5), 6, Vector3.ZAxis, false);
+            var result1 = Solid.Difference(s1.Solid, new Transform(new Vector3(0, 0, -1)), s2.Solid, new Transform(new Vector3(0, 0, -3)));
+
+            // var t = new Transform();
+            // t.Move(new Vector3(0, 0, -3));
+            // t.Rotate(Vector3.XAxis, 90);
+            // var s3 = new Extrude(Polygon.Rectangle(0.6, 0.6), 6, Vector3.ZAxis, false);
+            // var result2 = Solid.Difference(result1, null, s3.Solid, t);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+            this.Model.AddElements(DrawEdges(result1, null));
+        }
+
+        [Fact]
+        public void DifferenceWhichSplitsVolumeSucceeds()
+        {
+            this.Name = nameof(DifferenceWhichSplitsVolumeSucceeds);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 4), 3, Vector3.ZAxis, false);
+            var result1 = Solid.Difference(s1.Solid, new Transform(new Vector3(0, 0, -1)), s2.Solid, new Transform(new Vector3(0, 0, -3)));
+
+            var s3 = new Extrude(Polygon.Rectangle(4, 0.5), 6, Vector3.ZAxis, false);
+            result1 = Solid.Difference(result1, null, s3.Solid, new Transform(new Vector3(0, 0, -3)));
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result1, null));
+            Assert.Equal(12, result1.Faces.Count);
+            Assert.Equal(16, result1.Vertices.Count);
+            Assert.Equal(24, result1.Edges.Count);
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }
