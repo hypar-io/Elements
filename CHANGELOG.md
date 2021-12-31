@@ -18,6 +18,15 @@
 ## 0.9.7
 
 ### Added
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `SetClassification`
+- `LocalClassification`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
 
 - `GridLine.GetCircleTransform()`
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
