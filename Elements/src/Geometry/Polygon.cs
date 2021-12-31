@@ -1248,13 +1248,22 @@ namespace Elements.Geometry
                         }
                     }
 
-                    if (outside > 0 && inside == 0)
+                    // if (outside > 0 && inside == 0)
+                    // {
+                    //     classifications.Add((splitFace, outsideClassification, CoplanarSetClassification.None));
+                    // }
+                    // else if (inside > 0 && outside == 0)
+                    // {
+                    //     classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
+                    // }
+                    if (outside > inside)
                     {
                         classifications.Add((splitFace, outsideClassification, CoplanarSetClassification.None));
                     }
-                    else if (inside > 0 && outside == 0)
+                    else if (inside > outside)
                     {
                         classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
+
                     }
                     else if (inside == 0 && outside == 0)
                     {

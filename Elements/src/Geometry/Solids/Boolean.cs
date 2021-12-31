@@ -84,12 +84,26 @@ namespace Elements.Geometry.Solids
                     var holes = new List<Polygon>();
                     foreach (var insideFace in insideFaces)
                     {
-                        if (insideFace.polygon.Plane().IsCoplanar(plane))
+                        var plane1 = insideFace.polygon.Plane();
+                        if (plane1.IsCoplanar(plane))
                         {
-                            // if (polygon.Contains(insideFace.polygon))
-                            // {
-                            holes.Add(insideFace.polygon.Reversed());
-                            // }
+                            // We need to do this containment check to ensure
+                            // that we're not making a profile where the openings
+                            // overlaps the edges of the profile, creating a face
+                            // with zero thickness between the outer and inner
+                            // loops.
+
+                            if (polygon.Contains(insideFace.polygon))
+                            {
+                                if (plane.Normal.Dot(plane1.Normal).ApproximatelyEquals(1.0))
+                                {
+                                    holes.Add(insideFace.polygon.Reversed());
+                                }
+                                else
+                                {
+                                    holes.Add(insideFace.polygon);
+                                }
+                            }
                         }
                     }
                     s.AddFace(polygon, holes, mergeVerticesAndEdges: true);

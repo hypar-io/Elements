@@ -1942,7 +1942,62 @@ namespace Elements.Geometry.Tests
 
             // In the disjoint scenario we expect one outer, and two inner
             // wound in opposite directions.
-            Assert.Equal(3, polys.Count);
+            Assert.Equal(2, polys.Count);
+        }
+
+        [Fact]
+        public void PolygonAcrossPolygonTrimsIntoFour()
+        {
+            this.Name = nameof(PolygonAcrossPolygonTrimsIntoFour);
+
+            var p1 = Polygon.Rectangle(2, 2);
+            var p2 = Polygon.Rectangle(0.5, 4);
+            var p3 = Polygon.Rectangle(4.0, 0.5);
+            var trims = p2.Segments().Select(s => new Polygon(new[] {
+                s.Start - new Vector3(0,0,0.5),
+                s.End - new Vector3(0,0,0.5),
+                s.End + new Vector3(0,0,0.5),
+                s.Start + new Vector3(0,0,0.5)
+            })).ToList();
+            var trims2 = p3.Segments().Select(s => new Polygon(new[] {
+                s.Start - new Vector3(0,0,0.5),
+                s.End - new Vector3(0,0,0.5),
+                s.End + new Vector3(0,0,0.5),
+                s.Start + new Vector3(0,0,0.5)
+            })).ToList();
+            trims = trims.Concat(trims2).ToList();
+            var polys = p1.IntersectAndClassify(trims, out _, out var trimEdges);
+            var r = new Random();
+
+            var aInB = r.NextMaterial();
+            var aOutB = r.NextMaterial();
+            var bInA = r.NextMaterial();
+            var bOutA = r.NextMaterial();
+            foreach (var p in polys)
+            {
+                var m = BuiltInMaterials.Default;
+                switch (p.Item2)
+                {
+                    case SetClassification.AInsideB:
+                        m = aInB;
+                        break;
+                    case SetClassification.AOutsideB:
+                        m = aOutB;
+                        break;
+                    case SetClassification.BInsideA:
+                        m = bInA;
+                        break;
+                    case SetClassification.BOutsideA:
+                        m = bOutA;
+                        break;
+                }
+                Model.AddElement(new Panel(p.Item1, m));
+            }
+            // In the disjoint scenario we expect one outer, and two inner
+            // wound in opposite directions.
+            Assert.Equal(9, polys.Count);
+            Assert.Equal(4, polys.Where(p => p.Item2 == SetClassification.AOutsideB).Count());
+            Assert.Equal(5, polys.Where(p => p.Item2 == SetClassification.AInsideB).Count());
         }
     }
 }
