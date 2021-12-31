@@ -575,11 +575,11 @@ namespace Elements.Tests
             var s2 = new Extrude(Polygon.Star(0.5, 0.25, 5), 6, Vector3.ZAxis, false);
             var result1 = Solid.Difference(s1.Solid, new Transform(new Vector3(0, 0, -1)), s2.Solid, new Transform(new Vector3(0, 0, -3)));
 
-            var t = new Transform();
-            t.Move(new Vector3(0, 0, -3));
-            t.Rotate(Vector3.XAxis, 90);
-            var s3 = new Extrude(Polygon.Rectangle(0.6, 0.6), 6, Vector3.ZAxis, false);
-            result1 = Solid.Difference(result1, null, s3.Solid, t);
+            // var t = new Transform();
+            // t.Move(new Vector3(0, 0, -3));
+            // t.Rotate(Vector3.XAxis, 90);
+            // var s3 = new Extrude(Polygon.Rectangle(0.6, 0.6), 6, Vector3.ZAxis, false);
+            // result1 = Solid.Difference(result1, null, s3.Solid, t);
 
             var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
             var solidElement = new GeometricElement(representation: rep);

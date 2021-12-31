@@ -4,6 +4,7 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Serialization
 {
+    [SimpleJob]
     public class Solids
     {
         [Benchmark(Description = "Star shaped thing")]
