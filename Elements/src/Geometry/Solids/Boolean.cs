@@ -188,8 +188,8 @@ namespace Elements.Geometry.Solids
 
             // TODO: Don't create polygons. Operate on the loops and edges directly.
             // TODO: Support holes. We drop the inner loop information here currently.
-            var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(aTransform)).ToList();
-            var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon().TransformedPolygon(bTransform)).ToList();
+            var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon(aTransform)).ToList();
+            var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon(bTransform)).ToList();
 
             var aCoplanarFaces = aFaces.Where(af => bFaces.Any(bf => bf.Plane().IsCoplanar(af.Plane()))).ToList();
             var bCoplanarFaces = bFaces.Where(bf => aFaces.Any(af => af.Plane().IsCoplanar(bf.Plane()))).ToList();
