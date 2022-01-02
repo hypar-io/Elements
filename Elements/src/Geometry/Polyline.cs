@@ -15,6 +15,10 @@ namespace Elements.Geometry
     /// </example>
     public class Polyline : Curve, IEquatable<Polyline>
     {
+        /// <summary>
+        /// A bounding box created once during the polyline's construction.
+        /// This will not be updated when a polyline's vertices are changed.
+        /// </summary>
         internal BBox3 _bounds;
 
         /// <summary>The vertices of the polygon.</summary>

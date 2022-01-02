@@ -18,6 +18,10 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        /// <summary>
+        /// A plane created once during the polygon's construction.
+        /// This will not be updated when a polygon's vertices are changed.
+        /// </summary>
         internal Plane _plane;
 
         /// <summary>
