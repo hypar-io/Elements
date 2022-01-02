@@ -988,7 +988,7 @@ namespace Elements.Geometry
                                                  out List<Vector3> intersections,
                                                  out List<(Vector3 from, Vector3 to, int? index)> trimEdges)
         {
-            var localPlane = this.Plane();
+            var localPlane = _plane;
             var graphVertices = new List<Vector3>();
             var edges = new List<List<(int from, int to, int? index)>>();
 
@@ -998,7 +998,7 @@ namespace Elements.Geometry
 
             foreach (var polygon in polygons)
             {
-                planes.Add(polygon.Plane());
+                planes.Add(polygon._plane);
             }
 
             for (var i = 0; i < polygons.Count; i++)
@@ -1189,9 +1189,9 @@ namespace Elements.Geometry
                 // If there's only one face, we ray cast to test
                 // for inclusion.
                 var splitFace = splitFaces[0];
-                var splitFacePlane = splitFace.Plane();
+                var splitFacePlane = splitFace._plane;
                 var intersectionCount = 0;
-                var ray = Ray.GetTestRayInPlane(splitFace.Vertices[0], splitFace.Normal());
+                var ray = Ray.GetTestRayInPlane(splitFace.Vertices[0], splitFace._plane.Normal);
                 foreach (var trimPoly in trimPolygons)
                 {
                     if (ray.Intersects(trimPoly, out _))
@@ -1208,7 +1208,7 @@ namespace Elements.Geometry
                 // var compareEdges = trimEdges;
                 var compareEdges = trimEdges.Where(e => e.parentPolygonIndex != -1).ToList();
 
-                var n = this.Normal();
+                var n = _plane.Normal;
 
                 foreach (var splitFace in splitFaces)
                 {
@@ -1239,7 +1239,7 @@ namespace Elements.Geometry
                         // During intersection of one to many, this polygon's 
                         // edges are added and given the index -1.
                         var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
-                        var bn = trimPoly.Normal();
+                        var bn = trimPoly._plane.Normal;
                         var d = (from - to).Unitized();
                         var dot = bn.Dot(n.Cross(d));
                         if (dot <= 0.0)

@@ -254,8 +254,8 @@ namespace Elements.Geometry.Solids
         private static List<Polygon> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
                                                         Func<Polygon, Polygon, List<Polygon>> merge)
         {
-            var aCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.ACoplanarB).GroupBy(x => x.polygon.Normal());
-            var bCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.BCoplanarA).GroupBy(x => x.polygon.Normal());
+            var aCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.ACoplanarB).GroupBy(x => x.polygon._plane.Normal);
+            var bCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.BCoplanarA).GroupBy(x => x.polygon._plane.Normal);
 
             var results = new List<Polygon>();
 
