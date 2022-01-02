@@ -56,6 +56,7 @@ namespace Elements
             return new Ray(origin, v1);
         }
 
+        /// <summary>
         /// Generate a new random vector with an optional bounds.
         /// </summary>
         /// <param name="random">The `Random` object to generate from</param>
