@@ -18,6 +18,8 @@ namespace Elements.Geometry
     /// </example>
     public partial class Polygon : Polyline
     {
+        internal Plane _plane;
+
         /// <summary>
         /// Construct a polygon.
         /// </summary>
@@ -43,6 +45,8 @@ namespace Elements.Geometry
                 var t = Vertices.ToTransform();
                 CheckSelfIntersectionAndThrow(t, Edges());
             }
+
+            _plane = Plane();
         }
 
         /// <summary>

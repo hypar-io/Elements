@@ -15,6 +15,8 @@ namespace Elements.Geometry
     /// </example>
     public class Polyline : Curve, IEquatable<Polyline>
     {
+        internal BBox3 _bounds;
+
         /// <summary>The vertices of the polygon.</summary>
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -35,6 +37,7 @@ namespace Elements.Geometry
                 Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
                 CheckSegmentLengthAndThrow(Edges());
             }
+            _bounds = new BBox3(Vertices);
         }
 
         /// <summary>
