@@ -406,5 +406,20 @@ namespace Elements.Geometry
             }
             return false;
         }
+
+        /// <summary>
+        /// Does this bounding box intersect the other bounding box?
+        /// </summary>
+        /// <param name="other">The bounding box to test.</param>
+        /// <returns>True if an intersection occurs, otherwise false.</returns>
+        public bool Intersects(BBox3 other)
+        {
+            return !(other.Min.X > Max.X
+                     || other.Max.X < Min.X
+                     || other.Min.Y > Max.Y
+                     || other.Max.Y < Min.Y
+                     || other.Min.Z > Max.Z
+                     || other.Max.Z < Min.Z);
+        }
     }
 }
