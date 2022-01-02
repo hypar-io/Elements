@@ -32,6 +32,7 @@ scene.add(loaderScene);
 const width = WIDTH_VAR;
 const height = HEIGHT_VAR;
 const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+// TODO: Configure this lighting to match what we do on Hypar's web UI.
 const light = new THREE.AmbientLight(0xaaaaaa);
 scene.add(light);
 
