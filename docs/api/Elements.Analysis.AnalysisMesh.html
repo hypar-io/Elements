@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class AnalysisMesh
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -77,7 +77,8 @@
   
   <h1 id="Elements_Analysis_AnalysisMesh" data-uid="Elements.Analysis.AnalysisMesh" class="text-break">Class AnalysisMesh
   </h1>
-  <div class="markdown level0 summary"><p>A visualization of computed values at locations in space.</p>
+  <div class="markdown level0 summary"><p>A visualization of computed values at locations in space.
+A maximum of 65,535 analytical values is allowed. For an unlimited number of analytical values, use AnalysisImage.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -233,6 +234,7 @@ analysisMesh.Analyze();
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
     <div class="level3"><span class="xref">AnalysisMesh</span></div>
+      <div class="level4"><a class="xref" href="Elements.Analysis.AnalysisImage.html">AnalysisImage</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -254,10 +256,19 @@ analysisMesh.Analyze();
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a>
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -367,6 +378,100 @@ analysisMesh.Analyze();
       </tr>
     </tbody>
   </table>
+  <h3 id="fields">Fields
+  </h3>
+  <h4 id="Elements_Analysis_AnalysisMesh__analyze" data-uid="Elements.Analysis.AnalysisMesh._analyze">_analyze</h4>
+  <div class="markdown level1 summary"><p>A function that returns a numerical analysis result, given a point in space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Func&lt;Vector3, double&gt; _analyze</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <span class="xref">System.Double</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id="Elements_Analysis_AnalysisMesh__max" data-uid="Elements.Analysis.AnalysisMesh._max">_max</h4>
+  <div class="markdown level1 summary"><p>A computed maximum result value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected double _max</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id="Elements_Analysis_AnalysisMesh__min" data-uid="Elements.Analysis.AnalysisMesh._min">_min</h4>
+  <div class="markdown level1 summary"><p>A computed minimum result value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected double _min</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 id="Elements_Analysis_AnalysisMesh__results" data-uid="Elements.Analysis.AnalysisMesh._results">_results</h4>
+  <div class="markdown level1 summary"><p>A list of all the created cells and their resultant value via the _analyze function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected List&lt;(BBox3 cell, double value)&gt; _results</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a>, <span class="xref">System.Double</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Analysis_AnalysisMesh_ColorScale_" data-uid="Elements.Analysis.AnalysisMesh.ColorScale*"></a>
@@ -424,8 +529,7 @@ analysisMesh.Analyze();
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public double TotalAnalysisLocations { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double TotalAnalysisLocations { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -499,7 +603,7 @@ public double TotalAnalysisLocations { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Analyze()</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void Analyze()</code></pre>
   </div>
   <a id="Elements_Analysis_AnalysisMesh_Tessellate_" data-uid="Elements.Analysis.AnalysisMesh.Tessellate*"></a>
   <h4 id="Elements_Analysis_AnalysisMesh_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_" data-uid="Elements.Analysis.AnalysisMesh.Tessellate(Elements.Geometry.Mesh@,Elements.Geometry.Transform,Elements.Geometry.Color)">Tessellate(ref Mesh, Transform, Color)</h4>
@@ -508,7 +612,7 @@ public double TotalAnalysisLocations { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default(Color))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -543,6 +647,22 @@ public double TotalAnalysisLocations { get; }</code></pre>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITessellate.html">ITessellate</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
   </div>
 </article>
           </div>

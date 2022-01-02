@@ -1,24 +1,4 @@
-- name: Getting Started
+- name: What is Elements?
   href: index.md
-- name: Making Hypar Functions
-  href: Functions.md
-  items:
-    - name: C#
-      href: C-Sharp.md
-    - name: Hub
-      href: Hub.md
-    - name: Excel
-      href: Excel.md
-    - name: Grasshopper
-      href: Grasshopper.md
-    - name: Revit
-      href: Revit.md
-- name: Element Types
-  href: Types.md
-- name: Input Types
-  href: InputSchema.md
-- name: CLI Reference
-  href: Hypar-CLI-Reference.md
-- name: Elements
-  href: Elements/
-  homepage: Elements/WhatIsElements.md
+- name: API Documentation
+  href: api/

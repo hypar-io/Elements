@@ -24,15 +24,13 @@
           "toc.yml",
           "*.md",
           "api/**",
-          "Elements/**"
+          "Revit/**"
         ]
       }
     ],
     "resource": [
       {
-        "files": [
-          "images/**"
-        ]
+        "files": []
       },
       {
         "files": [
@@ -64,7 +62,7 @@
     "dest": "../docs/",
     "globalMetadata": {
       "_appTitle": "Hypar Docs",
-      "_appFooter": "Copyright © Hypar Inc., 2020",
+      "_appFooter": "Copyright © Hypar Inc., 2021",
       "_disableContribution": true,
       "_enableSearch": true,
       "_disableBreadcrumb": true,
