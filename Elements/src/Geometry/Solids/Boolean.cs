@@ -191,15 +191,15 @@ namespace Elements.Geometry.Solids
             var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon(aTransform)).ToList();
             var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon(bTransform)).ToList();
 
-            var aCoplanarFaces = aFaces.Where(af => bFaces.Any(bf => bf.Plane().IsCoplanar(af.Plane()))).ToList();
-            var bCoplanarFaces = bFaces.Where(bf => aFaces.Any(af => af.Plane().IsCoplanar(bf.Plane()))).ToList();
+            var aCoplanarFaces = aFaces.Where(af => bFaces.Any(bf => bf._plane.IsCoplanar(af._plane))).ToList();
+            var bCoplanarFaces = bFaces.Where(bf => aFaces.Any(af => af._plane.IsCoplanar(bf._plane))).ToList();
 
             var aNonCoplanar = aFaces.Except(aCoplanarFaces).ToList();
             var bNonCoplanar = bFaces.Except(bCoplanarFaces).ToList();
 
             foreach (var af in aNonCoplanar)
             {
-                var classifications = af.IntersectAndClassify(bNonCoplanar,
+                var classifications = af.IntersectAndClassify(bNonCoplanar.Where(bf => bf._bounds.Intersects(af._bounds)).ToList(),
                                                               out _,
                                                               out _,
                                                               SetClassification.AOutsideB,
@@ -209,7 +209,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bNonCoplanar)
             {
-                var classifications = bf.IntersectAndClassify(aNonCoplanar,
+                var classifications = bf.IntersectAndClassify(aNonCoplanar.Where(af => af._bounds.Intersects(bf._bounds)).ToList(),
                                                               out _,
                                                               out _,
                                                               SetClassification.BOutsideA,
@@ -217,8 +217,8 @@ namespace Elements.Geometry.Solids
                 allFaces.AddRange(classifications);
             }
 
-            var aCoplanarFaceSets = aCoplanarFaces.GroupBy(af => af.Normal());
-            var bCoplanarFaceSets = bCoplanarFaces.GroupBy(af => af.Normal());
+            var aCoplanarFaceSets = aCoplanarFaces.GroupBy(af => af._plane.Normal);
+            var bCoplanarFaceSets = bCoplanarFaces.GroupBy(af => af._plane.Normal);
 
             foreach (var aCoplanarFaceSet in aCoplanarFaceSets)
             {
@@ -230,6 +230,11 @@ namespace Elements.Geometry.Solids
                     {
                         foreach (var bFace in bCoplanarFaceSet)
                         {
+                            if (!aFace._bounds.Intersects(bFace._bounds))
+                            {
+                                continue;
+                            }
+
                             if (aFace.Intersects2d(bFace, out List<(Vector3 result, int aSegumentIndices, int bSegmentIndices)> planarIntersectionResults, false))
                             {
                                 var result = planarIntersectionResults.Select(r => r.result).ToList();
