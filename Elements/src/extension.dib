@@ -117,7 +117,7 @@ animate();
 
 if (KernelInvocationContext.Current is { } currentContext)
 {
-    currentContext.DisplayAs("Just add `return model;` at the end of a cell, or call `DisplayModel(model, width, height)` to display an Elements model.", "text/markdown");
+    currentContext.DisplayAs("Add `return model;` at the end of a cell or call `DisplayModel(model, width, height);` to display an Elements model.", "text/markdown");
 }
 
 string GetModelViewerSrc(Model model, double width=400, double height=400) {
