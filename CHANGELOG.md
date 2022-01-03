@@ -6,6 +6,9 @@
 
 - `Polyline.Edges()`
 
+### Fixed
+- Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
+
 ## 0.9.7
 
 ### Added
@@ -27,6 +30,7 @@
   - `Box.BoxToUVW`
   - `Box.TransformBetween`
 - `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
+- `Elements.Playground` project.
 
 ### Changed
 
