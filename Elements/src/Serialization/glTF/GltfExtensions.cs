@@ -125,7 +125,7 @@ namespace Elements.Serialization.glTF
         /// <returns>A byte array representing the model.</returns>
         public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out var errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return null;
@@ -150,7 +150,7 @@ namespace Elements.Serialization.glTF
         public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
             var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF(model, out var buffers, out var errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return "";

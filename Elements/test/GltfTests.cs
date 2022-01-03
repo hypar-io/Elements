@@ -109,7 +109,7 @@ namespace Elements.Tests
             beam.Transform = new Transform().Scaled(new Vector3());
             model.AddElement(beam);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
-            var gltfPath = Path.Combine(modelsDir, "Beam-with-errro.gltf");
+            var gltfPath = Path.Combine(modelsDir, "Beam-with-error.gltf");
             model.ToGlTF(gltfPath, out var errors);
             Assert.True(errors.Count == 1);
         }
