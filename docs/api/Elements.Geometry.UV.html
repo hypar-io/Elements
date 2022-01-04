@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct UV
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -102,12 +102,12 @@
   </h3>
   <a id="Elements_Geometry_UV__ctor_" data-uid="Elements.Geometry.UV.#ctor*"></a>
   <h4 id="Elements_Geometry_UV__ctor_System_Double_System_Double_" data-uid="Elements.Geometry.UV.#ctor(System.Double,System.Double)">UV(Double, Double)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a uv coordinate.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public UV(double u, double v)</code></pre>
+    <pre><code class="lang-csharp hljs">public UV(double u, double v)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -122,12 +122,14 @@ public UV(double u, double v)</code></pre>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td></td>
+        <td><p>The U coordinate.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">v</span></td>
-        <td></td>
+        <td><p>The V coordinate.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -140,8 +142,7 @@ public UV(double u, double v)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;U&quot;, Required = Required.Always)]
-public double U { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double U { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -165,8 +166,7 @@ public double U { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;V&quot;, Required = Required.Always)]
-public double V { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double V { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -324,6 +324,48 @@ public double V { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_UV_op_Implicit_" data-uid="Elements.Geometry.UV.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_UV_op_Implicit_System_ValueTuple_System_Double_System_Double___Elements_Geometry_UV" data-uid="Elements.Geometry.UV.op_Implicit(System.ValueTuple{System.Double,System.Double})~Elements.Geometry.UV">Implicit((Double u, Double v) to UV)</h4>
+  <div class="markdown level1 summary"><p>Automatically convert a tuple of two doubles into a UV.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator UV((double u, double v) uv)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Double</span>, <span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">uv</span></td>
+        <td><p>An (u,v) tuple of doubles.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.UV.html">UV</a></td>
         <td></td>
       </tr>
     </tbody>

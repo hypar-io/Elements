@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -216,8 +216,8 @@ var offset = pline.Offset(1, EndType.Square);
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -251,18 +251,46 @@ var offset = pline.Offset(1, EndType.Square);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ITransformable&lt;Curve&gt;, ICurve, IEquatable&lt;Polyline&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="Elements_Geometry_Polyline__ctor_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Polyline.#ctor(Elements.Geometry.Vector3[])">Polyline(Vector3[])</h4>
+  <div class="markdown level1 summary"><p>Construct a polyline from points. This is a convenience constructor
+that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</code></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polyline(params Vector3[] vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><span class="parametername">vertices</span></td>
+        <td><p>The vertices of the polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
+  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -277,7 +305,8 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
-        <td></td>
+        <td><p>A collection of vertex locations.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -290,8 +319,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,8 +343,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -340,10 +367,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
-[Required]
-[MinLength(2)]
-public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -719,7 +743,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Plane Plane()</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Plane Plane()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -936,6 +960,68 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_Split_" data-uid="Elements.Geometry.Polyline.Split*"></a>
+  <h4 id="Elements_Geometry_Polyline_Split_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.Split(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Split(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Insert a point into the polyline if it lies along one
+of the polyline's segments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Split(IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split the polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Split_" data-uid="Elements.Geometry.Polyline.Split*"></a>
+  <h4 id="Elements_Geometry_Polyline_Split_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Polyline.Split(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Boolean)">Split(IList&lt;Vector3&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Insert a point into the polyline if it lies along one
+of the polyline's segments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Split(IList&lt;Vector3&gt; points, bool closed = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split the polyline.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">closed</span></td>
+        <td><p>Is the polyline closed?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_ToString_" data-uid="Elements.Geometry.Polyline.ToString*"></a>
   <h4 id="Elements_Geometry_Polyline_ToString" data-uid="Elements.Geometry.Polyline.ToString">ToString()</h4>
   <div class="markdown level1 summary"><p>Get a string representation of this polyline.</p>
@@ -1140,10 +1226,10 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
