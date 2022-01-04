@@ -10,15 +10,18 @@ namespace Elements.Geometry.Solids
         /// Convert Loop to an array of ContourVertex.
         /// </summary>
         /// <param name="loop"></param>
-        /// <param name="face"></param>
-        internal static ContourVertex[] ToContourVertexArray(this Loop loop, Face face)
+        /// <param name="transform">An optional transform to apply to the contour.</param>
+        internal static ContourVertex[] ToContourVertexArray(this Loop loop, Transform transform = null)
         {
             var contour = new ContourVertex[loop.Edges.Count];
             for (var i = 0; i < loop.Edges.Count; i++)
             {
                 var edge = loop.Edges[i];
-                var cv = new ContourVertex();
-                cv.Position = new Vec3 { X = edge.Vertex.Point.X, Y = edge.Vertex.Point.Y, Z = edge.Vertex.Point.Z };
+                var p = transform == null ? edge.Vertex.Point : transform.OfPoint(edge.Vertex.Point);
+                var cv = new ContourVertex
+                {
+                    Position = new Vec3 { X = p.X, Y = p.Y, Z = p.Z }
+                };
                 contour[i] = cv;
             }
             return contour;
@@ -56,14 +59,16 @@ namespace Elements.Geometry.Solids
             {
                 if (f.Inner != null && f.Inner.Count() > 0)
                 {
-                    var tess = new Tess();
-                    tess.NoEmptyPolygons = true;
+                    var tess = new Tess
+                    {
+                        NoEmptyPolygons = true
+                    };
 
-                    tess.AddContour(f.Outer.ToContourVertexArray(f));
+                    tess.AddContour(f.Outer.ToContourVertexArray());
 
                     foreach (var loop in f.Inner)
                     {
-                        tess.AddContour(loop.ToContourVertexArray(f));
+                        tess.AddContour(loop.ToContourVertexArray());
                     }
 
                     tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);

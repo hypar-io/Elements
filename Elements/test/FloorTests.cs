@@ -56,11 +56,11 @@ namespace Elements.Tests
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
 
             floor1.UpdateRepresentations();
-            Assert.Single(floor1.GetSolids());
+            Assert.Single(floor1.GetCsgSolids());
             Assert.Equal(25, floor1.GetFinalCsgFromSolids().Polygons.Count);
 
             floor2.UpdateRepresentations();
-            Assert.Single(floor2.GetSolids());
+            Assert.Single(floor2.GetCsgSolids());
             Assert.Equal(8, floor2.GetFinalCsgFromSolids().Polygons.Count);
 
             this.Model.AddElements(new[] { floor1, floor2 });
