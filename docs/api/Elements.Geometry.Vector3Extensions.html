@@ -242,6 +242,52 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3Extensions_FitLine_" data-uid="Elements.Geometry.Vector3Extensions.FitLine*"></a>
+  <h4 id="Elements_Geometry_Vector3Extensions_FitLine_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.FitLine(System.Collections.Generic.IList{Elements.Geometry.Vector3})">FitLine(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Return an approximate fit line through a set of points.
+Not intended for statistical regression purposes.
+Note that the line is unit length: it shouldn't be expected
+to span the length of the points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Line FitLine(this IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to fit.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A line roughly running through the set of points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Vector3Extensions_Shrink_" data-uid="Elements.Geometry.Vector3Extensions.Shrink*"></a>
   <h4 id="Elements_Geometry_Vector3Extensions_Shrink_Elements_Geometry_Vector3___System_Double_" data-uid="Elements.Geometry.Vector3Extensions.Shrink(Elements.Geometry.Vector3[],System.Double)">Shrink(Vector3[], Double)</h4>
   <div class="markdown level1 summary"><p>Shrink a collection of Vector3 towards their average.</p>
