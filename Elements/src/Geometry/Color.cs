@@ -253,6 +253,10 @@ namespace Elements.Geometry
         /// <param name="hexOrName">The hex code (e.g. #F05C6D) or common color name (e.g. "Goldenrod") to turn into a color. (Recognized names are from the UNIX X11 named color values — see https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.colors?view=windowsdesktop-6.0 for a complete listing.)</param>
         public static implicit operator Color(string hexOrName)
         {
+            if (hexOrName == null)
+            {
+                return null;
+            }
             return new Color(hexOrName);
         }
     }
