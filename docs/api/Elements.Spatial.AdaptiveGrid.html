@@ -83,7 +83,10 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html">AdaptiveGrid</a></h4>
-      <section><p>A graph like edge-vertex structure with planar spaces connected by vertical edges</p>
+      <section><p>A graph like edge-vertex structure with planar spaces connected by vertical edges.
+The grid doesn't do any intersections when new sections are added, they are stitched
+only by common vertices. Make sure that regions that are added into the graph are
+aligned with respect to boundaries and split points.</p>
 </section>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></h4>
       <section><p>A unique edge in a adaptive grid, connecting two vertices. Don't have a particular direction.
