@@ -749,17 +749,74 @@ along up.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Transform_CreateHorizontalFrameAlongCurve_" data-uid="Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve*"></a>
+  <h4 id="Elements_Geometry_Transform_CreateHorizontalFrameAlongCurve_Elements_Geometry_Curve_System_Double_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(Elements.Geometry.Curve,System.Double,Elements.Geometry.Vector3)">CreateHorizontalFrameAlongCurve(Curve, Double, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create a transform that is oriented along
+a curve at parameter t. The transform's +z axis will align with
+the +z world axis, and the +x axis will align with the XY projection of the tangent
+of the curve. If you want a perpendicular transform, use <code>Curve.TransformAt(t)</code> instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transform CreateHorizontalFrameAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The curve along which to orient the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>A parameter value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">up</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_CreateOrientedAlongCurve_" data-uid="Elements.Geometry.Transform.CreateOrientedAlongCurve*"></a>
   <h4 id="Elements_Geometry_Transform_CreateOrientedAlongCurve_Elements_Geometry_Curve_System_Double_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.CreateOrientedAlongCurve(Elements.Geometry.Curve,System.Double,Elements.Geometry.Vector3)">CreateOrientedAlongCurve(Curve, Double, Vector3)</h4>
   <div class="markdown level1 summary"><p>Create a transform that is oriented along
 a curve at parameter t. The transform's +z axis will align with
 the +z world axis, and the +x axis will align with the tangent
-of the curve.</p>
+of the curve. If you want a perpendicular transform, use <code>Curve.TransformAt(t)</code> instead.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

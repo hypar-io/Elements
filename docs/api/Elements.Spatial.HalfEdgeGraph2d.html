@@ -217,6 +217,54 @@ bounded by intersecting or overlapping edges.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_HalfEdgeGraph2d_Construct_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct*"></a>
+  <h4 id="Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Line__System_Boolean_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Line},System.Boolean)">Construct(IEnumerable&lt;Line&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Construct a 2D half-edge graph from a collection of lines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static HalfEdgeGraph2d Construct(IEnumerable&lt;Line&gt; lines, bool bothWays = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>The line segments from which to construct the graph.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">bothWays</span></td>
+        <td><p>If true, each line will create two half edges — one running each way.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.HalfEdgeGraph2d.html">HalfEdgeGraph2d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_HalfEdgeGraph2d_Construct_" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct*"></a>
   <h4 id="Elements_Spatial_HalfEdgeGraph2d_Construct_System_Collections_Generic_IEnumerable_Elements_Geometry_Polygon__System_Collections_Generic_IEnumerable_Elements_Geometry_Polyline__" data-uid="Elements.Spatial.HalfEdgeGraph2d.Construct(System.Collections.Generic.IEnumerable{Elements.Geometry.Polygon},System.Collections.Generic.IEnumerable{Elements.Geometry.Polyline})">Construct(IEnumerable&lt;Polygon&gt;, IEnumerable&lt;Polyline&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a 2D Half Edge Graph from a collection of polygons and a collection of intersecting polylines.</p>
 </div>
