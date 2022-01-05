@@ -40,7 +40,7 @@ const directionalLight = new THREE.DirectionalLight(0xaaaaaa, 0.5);
 scene.add(directionalLight);
 
 
-const renderer = new THREE.WebGLRenderer({ alpha: true });
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 renderer.setSize(width, height);
 document.getElementById('main_DIV_ID').appendChild(renderer.domElement);
 
