@@ -92,9 +92,9 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement)
+            if (element is GeometricElement element1)
             {
-                ((GeometricElement)element).UpdateRepresentations();
+                element1.UpdateRepresentations();
             }
 
             if (gatherSubElements)
@@ -246,6 +246,12 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
+            var props = new Dictionary<Type, List<PropertyInfo>>();
+            return RecursiveGatherSubElementsInternal(obj, props);
+        }
+
+        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        {
             var elements = new List<Element>();
 
             if (obj == null)
@@ -272,8 +278,17 @@ namespace Elements
                 return elements;
             }
 
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any());
-            var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
+            List<PropertyInfo> constrainedProps;
+            if (properties.ContainsKey(t))
+            {
+                constrainedProps = properties[t];
+            }
+            else
+            {
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() != null).ToList();
+                properties.Add(t, constrainedProps);
+            }
+
             foreach (var p in constrainedProps)
             {
                 try
@@ -284,28 +299,26 @@ namespace Elements
                         continue;
                     }
 
-                    var elems = pValue as IList;
-                    if (elems != null)
+                    if (pValue is IList elems)
                     {
                         foreach (var item in elems)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(item));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties));
                         }
                         continue;
                     }
 
                     // Get the properties dictionaries.
-                    var dict = pValue as IDictionary;
-                    if (dict != null)
+                    if (pValue is IDictionary dict)
                     {
                         foreach (var value in dict.Values)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(value));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties));
                         }
                         continue;
                     }
 
-                    elements.AddRange(RecursiveGatherSubElements(pValue));
+                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties));
                 }
                 catch (Exception ex)
                 {
