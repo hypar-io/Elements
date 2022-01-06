@@ -234,15 +234,12 @@ namespace Elements.Serialization.JSON
             // converter, and the case where the JSON does not have a discriminator,
             // but the type is known during deserialization.
             Type subtype;
-            JToken discriminatorToken;
             string discriminator = null;
-            jObject.TryGetValue(_discriminator, out discriminatorToken);
+            jObject.TryGetValue(_discriminator, out JToken discriminatorToken);
             if (discriminatorToken != null)
             {
                 discriminator = Newtonsoft.Json.Linq.Extensions.Value<string>(discriminatorToken);
                 subtype = GetObjectSubtype(objectType, discriminator, jObject);
-
-                var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
             }
             else
             {
@@ -310,7 +307,7 @@ namespace Elements.Serialization.JSON
 
             // If it's not in the type cache see if it's got a representation.
             // Import it as a GeometricElement.
-            if (jObject.TryGetValue("Representation", out JToken representationToken))
+            if (jObject.TryGetValue("Representation", out _))
             {
                 return typeof(GeometricElement);
             }
