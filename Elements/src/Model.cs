@@ -11,6 +11,7 @@ using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
+using System.IO;
 
 namespace Elements
 {
@@ -192,7 +193,7 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson(bool indent = false)
+        public string ToJson(bool indent = false, bool gatherSubElements = true)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
@@ -201,11 +202,36 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                exportModel.AddElement(kvp.Value);
+                exportModel.AddElement(kvp.Value, gatherSubElements);
             }
             exportModel.Transform = this.Transform;
+
             return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
                                                            indent ? Formatting.Indented : Formatting.None);
+        }
+
+        /// <summary>
+        /// Serialize the model to a JSON file.
+        /// </summary>
+        /// <param name="path">The path of the file on disk.</param>
+        /// <param name="gatherSubElements"></param>
+        public void ToJson(string path, bool gatherSubElements)
+        {
+            var exportModel = new Model();
+            foreach (var kvp in this.Elements)
+            {
+                exportModel.AddElement(kvp.Value, gatherSubElements);
+            }
+            exportModel.Transform = this.Transform;
+
+            using (FileStream s = File.Create(path))
+            using (StreamWriter writer = new StreamWriter(s))
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, this);
+                jsonWriter.Flush();
+            }
         }
 
         /// <summary>
