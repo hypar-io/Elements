@@ -5,8 +5,11 @@
 ### Added
 
 - `Polyline.Edges()`
+- `new Color(string hexOrName)`
+- implicit conversion from string to Color
 
 ### Fixed
+
 - Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
 
 ## 0.9.7
