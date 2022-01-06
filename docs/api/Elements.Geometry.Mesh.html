@@ -124,6 +124,32 @@
     <pre><code class="lang-csharp hljs">public Mesh()</code></pre>
   </div>
   <a id="Elements_Geometry_Mesh__ctor_" data-uid="Elements.Geometry.Mesh.#ctor*"></a>
+  <h4 id="Elements_Geometry_Mesh__ctor_Elements_Geometry_Mesh_" data-uid="Elements.Geometry.Mesh.#ctor(Elements.Geometry.Mesh)">Mesh(Mesh)</h4>
+  <div class="markdown level1 summary"><p>Create a new mesh from another mesh by copying vertices and triangles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Mesh(Mesh mesh)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
+        <td><span class="parametername">mesh</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh__ctor_" data-uid="Elements.Geometry.Mesh.#ctor*"></a>
   <h4 id="Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__" data-uid="Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle})">Mesh(IList&lt;Vertex&gt;, IList&lt;Triangle&gt;)</h4>
   <div class="markdown level1 summary"><p>Construct a mesh.</p>
 </div>
@@ -499,6 +525,54 @@ the normals of the incident faces.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_GetNakedBoundaries_" data-uid="Elements.Geometry.Mesh.GetNakedBoundaries*"></a>
+  <h4 id="Elements_Geometry_Mesh_GetNakedBoundaries" data-uid="Elements.Geometry.Mesh.GetNakedBoundaries">GetNakedBoundaries()</h4>
+  <div class="markdown level1 summary"><p>Get the naked edges of this mesh as polylines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Polyline&gt; GetNakedBoundaries()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_GetNakedEdges_" data-uid="Elements.Geometry.Mesh.GetNakedEdges*"></a>
+  <h4 id="Elements_Geometry_Mesh_GetNakedEdges" data-uid="Elements.Geometry.Mesh.GetNakedEdges">GetNakedEdges()</h4>
+  <div class="markdown level1 summary"><p>Get the open edges of this mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; GetNakedEdges()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

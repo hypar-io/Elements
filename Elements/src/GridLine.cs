@@ -13,17 +13,26 @@ namespace Elements
         /// <summary>
         /// Line that runs from the start of the gridline to its end.
         /// </summary>
-        /// <value></value>
         [Obsolete("We now use 'Curve' instead.")]
-        public Line Line {
+        public Line Line
+        {
             get { return this.Curve as Line; }
-            set { this.Curve = Line; }
+            set { this.Curve = value; }
+        }
+
+        /// <summary>
+        /// The polyline that runs from the start of the gridline to its end.
+        /// </summary>
+        [Obsolete("We now use 'Curve' instead.")]
+        public Polyline Geometry
+        {
+            get { return this.Curve as Polyline; }
+            set { this.Curve = value; }
         }
 
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
-        /// <value></value>
         public Curve Curve { get; set; }
 
         /// <summary>

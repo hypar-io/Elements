@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ProfileFactory&lt;T, TProfile&gt;
+    <title>Class ParametricProfileFactory&lt;TProfileType, TProfile&gt;
    | Hypar Docs </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ProfileFactory&lt;T, TProfile&gt;
+    <meta name="title" content="Class ParametricProfileFactory&lt;TProfileType, TProfile&gt;
    | Hypar Docs ">
     <meta name="generator" content="docfx 2.56.6.0">
     
@@ -73,23 +73,24 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Elements.Geometry.Profiles.ProfileFactory`2">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2">
   
-  <h1 id="Elements_Geometry_Profiles_ProfileFactory_2" data-uid="Elements.Geometry.Profiles.ProfileFactory`2" class="text-break">Class ProfileFactory&lt;T, TProfile&gt;
+  <h1 id="Elements_Geometry_Profiles_ParametricProfileFactory_2" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2" class="text-break">Class ParametricProfileFactory&lt;TProfileType, TProfile&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Base class for profile factories.
-A profile factory is constructed with a table of data where each row
-represents a comma-delimited set of profile properties.</p>
+  <div class="markdown level0 summary"><p>A profile factory which creates parametric profiles.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">ProfileFactory&lt;T, TProfile&gt;</span></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.HSSPipeProfileFactory.html">HSSPipeProfileFactory</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.RHSProfileFactory.html">RHSProfileFactory</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.SHSProfileFactory.html">SHSProfileFactory</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfileFactory.html">WideFlangeProfileFactory</a></div>
+    <div class="level1"><span class="xref">ParametricProfileFactory&lt;TProfileType, TProfile&gt;</span></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.CProfileFactory.html">CProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.HSSProfileFactory.html">HSSProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.LProfileFactory.html">LProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.MCProfileFactory.html">MCProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.STProfileFactory.html">STProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.WProfileFactory.html">WProfileFactory</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Profiles.WTProfileFactory.html">WTProfileFactory</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -117,10 +118,10 @@ represents a comma-delimited set of profile properties.</p>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Profiles.html">Elements.Geometry.Profiles</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
-  <h5 id="Elements_Geometry_Profiles_ProfileFactory_2_syntax">Syntax</h5>
+  <h5 id="Elements_Geometry_Profiles_ParametricProfileFactory_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class ProfileFactory&lt;T, TProfile&gt;
-    where T : Enum</code></pre>
+    <pre><code class="lang-csharp hljs">public class ParametricProfileFactory&lt;TProfileType, TProfile&gt;
+    where TProfileType : Enum where TProfile : ParametricProfile</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -132,7 +133,7 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="parametername">T</span></td>
+        <td><span class="parametername">TProfileType</span></td>
         <td></td>
       </tr>
       <tr>
@@ -143,14 +144,14 @@ represents a comma-delimited set of profile properties.</p>
   </table>
   <h3 id="constructors">Constructors
   </h3>
-  <a id="Elements_Geometry_Profiles_ProfileFactory_2__ctor_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.#ctor*"></a>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2__ctor_System_String_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.#ctor(System.String)">ProfileFactory(String)</h4>
-  <div class="markdown level1 summary"><p>Construct a profile factory.</p>
+  <a id="Elements_Geometry_Profiles_ParametricProfileFactory_2__ctor_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.#ctor*"></a>
+  <h4 id="Elements_Geometry_Profiles_ParametricProfileFactory_2__ctor_System_String_System_Double_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.#ctor(System.String,System.Double)">ParametricProfileFactory(String, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a parametric profile factory by reading from a csv.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ProfileFactory(string data)</code></pre>
+    <pre><code class="lang-csharp hljs">public ParametricProfileFactory(string csvPath, double conversion)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,47 +165,30 @@ represents a comma-delimited set of profile properties.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">data</span></td>
-        <td><p>A comma separated data value representing the properties of the profiles.</p>
+        <td><span class="parametername">csvPath</span></td>
+        <td><p>The path of the csv. This can be an absolute
+path, a path relative to the current working directory, or a path
+relative to the location of the type's assembly.</p>
 </td>
       </tr>
-    </tbody>
-  </table>
-  <h3 id="fields">Fields
-  </h3>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2__profileData" data-uid="Elements.Geometry.Profiles.ProfileFactory`2._profileData">_profileData</h4>
-  <div class="markdown level1 summary"><p>A collection of profile data.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected List&lt;string[]&gt; _profileData</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
       <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.String</span>[]&gt;</td>
-        <td></td>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">conversion</span></td>
+        <td><p>The conversion factor applied to values in the catalogue.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_Geometry_Profiles_ProfileFactory_2_AllProfiles_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.AllProfiles*"></a>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2_AllProfiles" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.AllProfiles">AllProfiles()</h4>
-  <div class="markdown level1 summary"><p>Get all Profiles available in the factory.</p>
+  <a id="Elements_Geometry_Profiles_ParametricProfileFactory_2_AllProfilesAsync_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.AllProfilesAsync*"></a>
+  <h4 id="Elements_Geometry_Profiles_ParametricProfileFactory_2_AllProfilesAsync" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.AllProfilesAsync">AllProfilesAsync()</h4>
+  <div class="markdown level1 summary"><p>Get all profiles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TProfile&gt; AllProfiles()</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;IEnumerable&lt;TProfile&gt;&gt; AllProfilesAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -216,62 +200,19 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TProfile&gt;</td>
-        <td><p>A collection of all profiles available from the factory.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Profiles_ProfileFactory_2_CreateProfile_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.CreateProfile*"></a>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2_CreateProfile_System_Int32_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.CreateProfile(System.Int32)">CreateProfile(Int32)</h4>
-  <div class="markdown level1 summary"><p>Create the profile give a type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected abstract TProfile CreateProfile(int typeIndex)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">typeIndex</span></td>
-        <td><p>The index of the type of profile to create.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TProfile</span></td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TProfile&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByName_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.GetProfileByName*"></a>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByName_System_String_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.GetProfileByName(System.String)">GetProfileByName(String)</h4>
-  <div class="markdown level1 summary"><p>Get a profile by name from the factory.</p>
+  <a id="Elements_Geometry_Profiles_ParametricProfileFactory_2_GetProfileByNameAsync_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.GetProfileByNameAsync*"></a>
+  <h4 id="Elements_Geometry_Profiles_ParametricProfileFactory_2_GetProfileByNameAsync_System_String_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.GetProfileByNameAsync(System.String)">GetProfileByNameAsync(String)</h4>
+  <div class="markdown level1 summary"><p>Get a profile by name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract TProfile GetProfileByName(string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TProfile&gt; GetProfileByNameAsync(string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -301,20 +242,19 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TProfile</span></td>
-        <td><p>A profile. Throws an exception if a profile with the specified name cannot be found.</p>
-</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TProfile&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByType_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.GetProfileByType*"></a>
-  <h4 id="Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByType__0_" data-uid="Elements.Geometry.Profiles.ProfileFactory`2.GetProfileByType(`0)">GetProfileByType(T)</h4>
-  <div class="markdown level1 summary"><p>Get a profile by type enumeration from the factory.</p>
+  <a id="Elements_Geometry_Profiles_ParametricProfileFactory_2_GetProfileByTypeAsync_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.GetProfileByTypeAsync*"></a>
+  <h4 id="Elements_Geometry_Profiles_ParametricProfileFactory_2_GetProfileByTypeAsync__0_" data-uid="Elements.Geometry.Profiles.ParametricProfileFactory`2.GetProfileByTypeAsync(`0)">GetProfileByTypeAsync(TProfileType)</h4>
+  <div class="markdown level1 summary"><p>Get a profile by type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract TProfile GetProfileByType(T type)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;TProfile&gt; GetProfileByTypeAsync(TProfileType type)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -327,10 +267,9 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">T</span></td>
+        <td><span class="xref">TProfileType</span></td>
         <td><span class="parametername">type</span></td>
-        <td><p>The enumerated type of the profile.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -344,9 +283,8 @@ represents a comma-delimited set of profile properties.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TProfile</span></td>
-        <td><p>A profile. Throws an exception if a profile with the specified name cannot be found.</p>
-</td>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TProfile&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>

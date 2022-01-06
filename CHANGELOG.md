@@ -11,9 +11,15 @@
 - `Solid.Difference(SolidOperation a, SolidOperation b)`
 - `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
 - `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `SetClassification`
 - `LocalClassification`
-- `Solid.Intersects(Plane p, out List<Polygon> result)`
+- `new Color(string hexOrName)`
+- implicit conversion from string to Color
+
+### Fixed
+
+- Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
 
 ## 0.9.7
 

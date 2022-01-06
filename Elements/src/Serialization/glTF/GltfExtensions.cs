@@ -1,9 +1,9 @@
 using Elements.Geometry;
+using Elements.Geometry.Tessellation;
 using System;
 using System.Collections.Generic;
 // TODO: Get rid of System.Linq
 using System.Linq;
-using System.Reflection;
 using glTFLoader;
 using glTFLoader.Schema;
 using System.IO;
@@ -73,15 +73,17 @@ namespace Elements.Serialization.glTF
         /// </summary>
         /// <param name="model">The model to serialize.</param>
         /// <param name="path">The output path.</param>
+        /// <param name="errors">A collection of serialization errors</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false)
+        public static void ToGlTF(this Model model, string path, out List<BaseError> errors, bool useBinarySerialization = true, bool drawEdges = false)
         {
+            errors = new List<BaseError>();
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
                 {
-                    if (SaveGlb(model, path, drawEdges))
+                    if (SaveGlb(model, path, out errors, drawEdges))
                     {
                         return;
                     }
@@ -89,7 +91,7 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
-                    if (SaveGltf(model, path, drawEdges))
+                    if (SaveGltf(model, path, out errors, drawEdges))
                     {
                         return;
                     }
@@ -102,6 +104,19 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
+        /// Serialize the model to a gltf file on disk.
+        /// If there is no geometry, an empty GLTF will still be produced.
+        /// </summary>
+        /// <param name="model">The model to serialize.</param>
+        /// <param name="path">The output path.</param>
+        /// <param name="useBinarySerialization">Should binary serialization be used?</param>
+        /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
+        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false)
+        {
+            ToGlTF(model, path, out _, useBinarySerialization, drawEdges);
+        }
+
+        /// <summary>
         /// Serialize the model to a byte array.
         /// </summary>
         /// <param name="model">The model to serialize.</param>
@@ -110,7 +125,7 @@ namespace Elements.Serialization.glTF
         /// <returns>A byte array representing the model.</returns>
         public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return null;
@@ -135,7 +150,7 @@ namespace Elements.Serialization.glTF
         public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
             var tmp = Path.GetTempFileName();
-            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return "";
@@ -728,9 +743,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -743,9 +758,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out List<byte[]> buffers, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -759,9 +774,11 @@ namespace Elements.Serialization.glTF
 
         internal static Gltf InitializeGlTF(Model model,
                                             out List<byte[]> allBuffers,
+                                            out List<BaseError> errors,
                                             bool drawEdges = false,
                                             bool mergeVertices = false)
         {
+            errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
             var buffer = new List<byte>();
@@ -858,26 +875,33 @@ namespace Elements.Serialization.glTF
                     lines.Add(currLines);
                 }
 
-                GetRenderDataForElement(e,
-                                        gltf,
-                                        materialIndexMap,
-                                        buffer,
-                                        allBuffers,
-                                        schemaBuffers,
-                                        bufferViews,
-                                        accessors,
-                                        materials,
-                                        textures,
-                                        images,
-                                        samplers,
-                                        meshes,
-                                        nodes,
-                                        meshElementMap,
-                                        nodeElementMap,
-                                        meshTransformMap,
-                                        currLines,
-                                        drawEdges,
-                                        mergeVertices);
+                try
+                {
+                    GetRenderDataForElement(e,
+                                            gltf,
+                                            materialIndexMap,
+                                            buffer,
+                                            allBuffers,
+                                            schemaBuffers,
+                                            bufferViews,
+                                            accessors,
+                                            materials,
+                                            textures,
+                                            images,
+                                            samplers,
+                                            meshes,
+                                            nodes,
+                                            meshElementMap,
+                                            nodeElementMap,
+                                            meshTransformMap,
+                                            currLines,
+                                            drawEdges,
+                                            mergeVertices);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(new ElementError(e.Id, ex));
+                }
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
             {
@@ -1290,8 +1314,6 @@ namespace Elements.Serialization.glTF
                                     bufferViews,
                                     accessors,
                                     meshes,
-                                    lines,
-                                    geometricElement.Transform,
                                     mergeVertices);
 
                 // If the id == -1, the mesh is malformed.
@@ -1319,8 +1341,6 @@ namespace Elements.Serialization.glTF
                                       List<BufferView> bufferViews,
                                       List<Accessor> accessors,
                                       List<glTFLoader.Schema.Mesh> meshes,
-                                      List<Vector3> lines,
-                                      Transform t = null,
                                       bool mergeVertices = false)
         {
             GraphicsBuffers buffers = null;
@@ -1329,8 +1349,11 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                var solids = geometricElement.GetSolids();
-                buffers = solids.Tessellate(mergeVertices, geometricElement.ModifyVertexAttributes);
+                buffers = new GraphicsBuffers();
+                Tessellation.Tessellate(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
+                                        buffers,
+                                        mergeVertices,
+                                        geometricElement.ModifyVertexAttributes);
             }
             else
             {
