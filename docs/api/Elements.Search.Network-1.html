@@ -522,6 +522,54 @@ item of type T.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Search_Network_1_ToModelText_" data-uid="Elements.Search.Network`1.ToModelText*"></a>
+  <h4 id="Elements_Search_Network_1_ToModelText_System_Collections_Generic_List_Elements_Geometry_Vector3__Elements_Geometry_Color_" data-uid="Elements.Search.Network`1.ToModelText(System.Collections.Generic.List{Elements.Geometry.Vector3},Elements.Geometry.Color)">ToModelText(List&lt;Vector3&gt;, Color)</h4>
+  <div class="markdown level1 summary"><p>Draw node indices and connected node indices at each node.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;ModelText&gt; ToModelText(List&lt;Vector3&gt; nodeLocations, Color color)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">nodeLocations</span></td>
+        <td><p>A collection of node locations.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The color of the model text.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.ModelText.html">ModelText</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Search_Network_1_Traverse_" data-uid="Elements.Search.Network`1.Traverse*"></a>
   <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_List_System_Int32___System_Int32__System_Collections_Generic_List_System_Int32___" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.List{System.Int32}},System.Int32},System.Collections.Generic.List{System.Int32}@)">Traverse(Int32, Func&lt;(Int32 currentNodeIndex, Int32 previousNodeIndex, List&lt;Int32&gt; connectedNodes), Int32&gt;, out List&lt;Int32&gt;)</h4>
   <div class="markdown level1 summary"><p>Traverse the network from the specified node index.
