@@ -44,5 +44,14 @@ namespace Elements.Tests
             };
             Assert.Equal(1.0, material.Color.Green);
         }
+
+        [Fact]
+        public void ColorCantBeNull()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Color c = null;
+            });
+        }
     }
 }

@@ -255,7 +255,15 @@ namespace Elements.Geometry
         {
             if (hexOrName == null)
             {
-                return null;
+                // This is an unfortunate necessity — C# 7.0 does not support an explicit
+                // attribute on a function argument that specifies non-null. Ideally, a `null`
+                // wouldn't be assumed to be a string and fall into this implicit operator in the first place,
+                // but there's no way to say "I work on strings that are not null" (At least until later versions 
+                // of C#). In an ideal world we'd want this to be caught by the compiler instead of at runtime.
+                // (IOW, we'd love for a statement like `Color c = null;` to be rejected by static analysis,
+                // but this is not possible if we want to support an implicit string coversion, so we throw a 
+                // runtime exception instead.) 
+                throw new ArgumentNullException("Cannot convert null to a Color. Color is a non-nullable type.");
             }
             return new Color(hexOrName);
         }
