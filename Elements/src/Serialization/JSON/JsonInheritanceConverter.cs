@@ -144,17 +144,17 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
+                if (value is Element element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
                 {
-                    var ident = (Element)value;
+                    var ident = element;
                     writer.WriteValue(ident.Id);
                 }
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    if (jObject.TryGetValue(_discriminator, out _))
+                    if (jObject.TryGetValue(_discriminator, out JToken token))
                     {
-                        jObject[_discriminator] = GetDiscriminatorName(value);
+                        ((JProperty)token).Value = GetDiscriminatorName(value);
                     }
                     else
                     {
@@ -171,14 +171,15 @@ namespace Elements.Serialization.JSON
 
         private static string GetDiscriminatorName(object value)
         {
-            var discriminatorName = "";
             var t = value.GetType();
-            discriminatorName += t.FullName.Split('`').First();
             if (t.IsGenericType)
             {
-                discriminatorName += "<" + String.Join(",", t.GenericTypeArguments.Select(arg => arg.FullName)) + ">";
+                return $"{t.FullName.Split('`').First()}<{String.Join(",", t.GenericTypeArguments.Select(arg => arg.FullName))}>";
             }
-            return discriminatorName;
+            else
+            {
+                return t.FullName.Split('`').First();
+            }
         }
 
         public override bool CanWrite
