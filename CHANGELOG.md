@@ -5,6 +5,7 @@
 ### Added
 
 - `Polyline.Edges()`
+- `Model.ToJson(string path)`
 
 ### Fixed
 - Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
