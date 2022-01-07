@@ -205,7 +205,7 @@ namespace Elements
         /// </summary>
         /// <param name="path">The path of the file on disk.</param>
         /// <param name="gatherSubElements"></param>
-        public void ToJson(string path, bool gatherSubElements)
+        public void ToJson(string path, bool gatherSubElements = true)
         {
             var exportModel = CreateExportModel(gatherSubElements);
 
@@ -318,7 +318,7 @@ namespace Elements
             {
                 // This query had a nice little speed boost when we filtered for 
                 // valid types first then filtered for custom attributes.
-                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() != null).ToList();
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
                 properties.Add(t, constrainedProps);
             }
 
