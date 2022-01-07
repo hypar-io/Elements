@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GltfExtensions
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -328,6 +328,58 @@ If there is no geometry, an empty GLTF will still be produced.</p>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">path</span></td>
         <td><p>The output path.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">useBinarySerialization</span></td>
+        <td><p>Should binary serialization be used?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">drawEdges</span></td>
+        <td><p>Should the solid edges be written to the gltf?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF*"></a>
+  <h4 id="Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Collections_Generic_List_Elements_BaseError___System_Boolean_System_Boolean_" data-uid="Elements.Serialization.glTF.GltfExtensions.ToGlTF(Elements.Model,System.String,System.Collections.Generic.List{Elements.BaseError}@,System.Boolean,System.Boolean)">ToGlTF(Model, String, out List&lt;BaseError&gt;, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Serialize the model to a gltf file on disk.
+If there is no geometry, an empty GLTF will still be produced.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ToGlTF(this Model model, string path, out List&lt;BaseError&gt; errors, bool useBinarySerialization = true, bool drawEdges = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Model.html">Model</a></td>
+        <td><span class="parametername">model</span></td>
+        <td><p>The model to serialize.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">path</span></td>
+        <td><p>The output path.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.BaseError.html">BaseError</a>&gt;</td>
+        <td><span class="parametername">errors</span></td>
+        <td><p>A collection of serialization errors</p>
 </td>
       </tr>
       <tr>

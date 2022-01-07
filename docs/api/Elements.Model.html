@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Model
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -133,7 +133,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -207,7 +208,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
+[Required]
+public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -231,7 +234,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Transform instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+[Obsolete(&quot;Use Transform instead.&quot;)]
 public Position Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -256,7 +260,8 @@ public Position Origin { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
+public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -667,6 +672,9 @@ with the provided id.</p>
     </tbody>
   </table>
   <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Collections_Generic_List_Elements_BaseError___System_Boolean_System_Boolean_">GltfExtensions.ToGlTF(Model, String, out List&lt;BaseError&gt;, Boolean, Boolean)</a>
+  </div>
   <div>
       <a class="xref" href="Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Boolean_System_Boolean_">GltfExtensions.ToGlTF(Model, String, Boolean, Boolean)</a>
   </div>
