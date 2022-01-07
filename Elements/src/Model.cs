@@ -195,6 +195,34 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false, bool gatherSubElements = true)
         {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        }
+
+        /// <summary>
+        /// Serialize the model to a JSON file.
+        /// </summary>
+        /// <param name="path">The path of the file on disk.</param>
+        /// <param name="gatherSubElements"></param>
+        public void ToJson(string path, bool gatherSubElements)
+        {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
+            // https://www.newtonsoft.com/json/help/html/Performance.htm
+            using (FileStream s = File.Create(path))
+            using (StreamWriter writer = new StreamWriter(s))
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, exportModel);
+                jsonWriter.Flush();
+            }
+        }
+
+        internal Model CreateExportModel(bool gatherSubElements)
+        {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
             // may have been null when originally added, and we need to ensure
@@ -205,33 +233,7 @@ namespace Elements
                 exportModel.AddElement(kvp.Value, gatherSubElements);
             }
             exportModel.Transform = this.Transform;
-
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
-                                                           indent ? Formatting.Indented : Formatting.None);
-        }
-
-        /// <summary>
-        /// Serialize the model to a JSON file.
-        /// </summary>
-        /// <param name="path">The path of the file on disk.</param>
-        /// <param name="gatherSubElements"></param>
-        public void ToJson(string path, bool gatherSubElements)
-        {
-            var exportModel = new Model();
-            foreach (var kvp in this.Elements)
-            {
-                exportModel.AddElement(kvp.Value, gatherSubElements);
-            }
-            exportModel.Transform = this.Transform;
-
-            using (FileStream s = File.Create(path))
-            using (StreamWriter writer = new StreamWriter(s))
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(jsonWriter, this);
-                jsonWriter.Flush();
-            }
+            return exportModel;
         }
 
         /// <summary>
@@ -272,7 +274,10 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
+            // A dictionary created for the purpose of caching properties 
+            // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
+
             return RecursiveGatherSubElementsInternal(obj, props);
         }
 
@@ -311,6 +316,8 @@ namespace Elements
             }
             else
             {
+                // This query had a nice little speed boost when we filtered for 
+                // valid types first then filtered for custom attributes.
                 constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() != null).ToList();
                 properties.Add(t, constrainedProps);
             }
