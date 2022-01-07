@@ -77,7 +77,10 @@
   
   <h1 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid" class="text-break">Class AdaptiveGrid
   </h1>
-  <div class="markdown level0 summary"><p>A graph like edge-vertex structure with planar spaces connected by vertical edges</p>
+  <div class="markdown level0 summary"><p>A graph like edge-vertex structure with planar spaces connected by vertical edges.
+The grid doesn't do any intersections when new sections are added, they are stitched
+only by common vertices. Make sure that regions that are added into the graph are
+aligned with respect to boundaries and split points.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -149,12 +152,13 @@
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance">Tolerance</h4>
   <div class="markdown level1 summary"><p>Tolerance for points being considered the same.
-Applies individually to X, Y, and Z coordinates, not the cumulative difference!</p>
+Applies individually to X, Y, and Z coordinates, not the cumulative difference!
+Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Tolerance { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Tolerance { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -201,8 +205,8 @@ Applies individually to X, Y, and Z coordinates, not the cumulative difference!<
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromBbox(Elements.Geometry.BBox3,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromBbox(BBox3, List&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Add graph section using bounding box, divided by a set of key points.
 Key points don't respect &quot;MinimumResolution&quot; at the moment.
-If edges of new section are intersecting with edges of other existing regions -
-two regions are connected.</p>
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -236,8 +240,8 @@ two regions are connected.</p>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_Elements_Geometry_Polygon_Elements_Geometry_Vector3_System_Double_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude(Elements.Geometry.Polygon,Elements.Geometry.Vector3,System.Double,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromExtrude(Polygon, Vector3, Double, List&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Add graph section using polygon, extruded in given direction.
-If edges of new section are intersecting with edges of other existing regions -
-two regions are connected.</p>
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -283,8 +287,8 @@ two regions are connected.</p>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromPolygon_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromPolygon*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromPolygon_Elements_Geometry_Polygon_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromPolygon(Elements.Geometry.Polygon,System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">AddFromPolygon(Polygon, IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Add single planar region to the graph section using polygon.
-If edges of new section are intersecting with edges of other existing regions -
-two regions are connected.</p>
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
