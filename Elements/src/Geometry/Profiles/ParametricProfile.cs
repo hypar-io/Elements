@@ -135,6 +135,7 @@ namespace Elements.Geometry.Profiles
         /// to the values contained in the supplied dictionary.
         /// </summary>
         /// <param name="profileData">A dictionary of property values.</param>
+        /// <param name="name">The name of the profile.</param>
         public void SetPropertiesFromProfileData(Dictionary<string, double> profileData, string name)
         {
             var t = GetType();
