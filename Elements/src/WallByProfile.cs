@@ -90,7 +90,9 @@ namespace Elements
             this.Thickness = @thickness;
             this.Centerline = @centerline;
             this.Perimeter = @perimeter.Project(GetCenterPlane());
+#pragma warning disable 612, 618
             this.Profile = GetProfile();
+#pragma warning restore 612, 618
         }
 
         /// <summary>
@@ -99,10 +101,12 @@ namespace Elements
         /// <returns></returns>
         public Profile GetProfile()
         {
+#pragma warning disable 612, 618
             if (Perimeter == null && Profile != null) // this might be a legacy style WallByProfile, we should check for Profile directly
             {
                 return Profile;
             }
+#pragma warning restore 612, 618
             return new Profile(Perimeter, Openings.Select(o => o.Perimeter).ToList());
         }
 
@@ -147,7 +151,9 @@ namespace Elements
 
             // TODO remove when we remove Profile.
             var perpendicularToWall = Centerline.Direction().Cross(Vector3.ZAxis);
+#pragma warning disable 612, 618
             this.Profile = GetProfile().Transformed(new Transform(perpendicularToWall * this.Thickness / 2));
+#pragma warning restore 612, 618
         }
 
         /// <summary>
