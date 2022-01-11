@@ -113,7 +113,7 @@ namespace Elements.Tests
             var grid = new Grid2d(polygons);
             var profiles = grid.GetTrimmedCellProfiles();
 
-            Assert.Equal(1, profiles.Count());
+            Assert.Single(profiles);
             var profile = profiles.FirstOrDefault();
             Assert.Equal(3, profile.Voids.Count());
             Assert.Equal(100, profile.Perimeter.Area());
@@ -143,19 +143,19 @@ namespace Elements.Tests
 
             var cell = cells[0];
             var profiles = cell.GetTrimmedCellProfiles();
-            Assert.Equal(1, profiles.Count());
-            Assert.Equal(1, profiles.First().Voids.Count());
+            Assert.Single(profiles);
+            Assert.Single(profiles.First().Voids);
 
             cell = cells[1];
             profiles = cell.GetTrimmedCellProfiles();
             Assert.Equal(2, profiles.Count());
-            Assert.Equal(0, profiles.First().Voids.Count());
-            Assert.Equal(0, profiles.Last().Voids.Count());
+            Assert.Empty(profiles.First().Voids);
+            Assert.Empty(profiles.Last().Voids);
 
             cell = cells[2];
             profiles = cell.GetTrimmedCellProfiles();
-            Assert.Equal(1, profiles.Count());
-            Assert.Equal(1, profiles.First().Voids.Count());
+            Assert.Single(profiles);
+            Assert.Single(profiles.First().Voids);
         }
 
 
