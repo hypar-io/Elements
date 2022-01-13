@@ -48,8 +48,6 @@ namespace Hypar.Tests
 
             var targetLength = 0;
             Assert.Equal(targetLength, bezier.Length());
-            var polylineLength = bezier.ToPolyline(2).Length();
-            Assert.Equal(polylineLength, bezier.Length());
         }
 
         [Fact]
