@@ -3,6 +3,13 @@
 ## 0.9.9
 
 ### Added
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
 
 ### Changed
 
@@ -14,13 +21,6 @@
 ### Added
 
 - `Polyline.Edges()`
-- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Union(SolidOperation a, SolidOperation b)`
-- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Difference(SolidOperation a, SolidOperation b)`
-- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
-- `Solid.Intersection(SolidOperation a, SolidOperation b)`
-- `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `SetClassification`
 - `LocalClassification`
 - `new Color(string hexOrName)`
