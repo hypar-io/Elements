@@ -59,9 +59,10 @@ namespace Elements
             {
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
-
+#pragma warning disable 612, 618
             this.Profile = profile;
             this.Height = height;
+#pragma warning restore 612, 618
         }
 
         /// <summary>
@@ -70,7 +71,9 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
+#pragma warning disable 612, 618
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+#pragma warning restore 612, 618
         }
 
         /// <summary>

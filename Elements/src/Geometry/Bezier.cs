@@ -99,6 +99,7 @@ namespace Elements.Geometry
                 var pt = PointAt(t);
                 if (t == 0.0)
                 {
+                    last = pt;
                     continue;
                 }
                 length += pt.DistanceTo(last);
