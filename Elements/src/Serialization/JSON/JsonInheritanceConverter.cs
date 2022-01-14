@@ -154,7 +154,7 @@ namespace Elements.Serialization.JSON
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
                     if (jObject.TryGetValue(_discriminator, out JToken token))
                     {
-                        ((JProperty)token).Value = GetDiscriminatorName(value);
+                        ((JValue)token).Value = GetDiscriminatorName(value);
                     }
                     else
                     {
