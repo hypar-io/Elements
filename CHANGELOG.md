@@ -7,6 +7,7 @@
 ### Changed
 
 ### Fixed
+- Under some circumstances `Bezier.Length()` would return incorrect results
 
 ## 0.9.8
 
