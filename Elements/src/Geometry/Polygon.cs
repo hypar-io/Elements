@@ -494,12 +494,9 @@ namespace Elements.Geometry
             var ray = new Ray(point, t.XAxis);
             var intersects = 0;
             var xsects = new List<Vector3>();
-            foreach (var e in this.Edges())
+            foreach (var (from, to) in this.Edges())
             {
-                var result = default(Vector3);
-                if (e.from.IsAlmostEqualTo(point) ||
-                    e.to.IsAlmostEqualTo(point) ||
-                    ray.Intersects(e.from, e.to, out result))
+                if (ray.Intersects(from, to, out Vector3 result))
                 {
                     if (unique)
                     {
@@ -1130,13 +1127,19 @@ namespace Elements.Geometry
             trimEdges = new List<(Vector3 from, Vector3 to, int? index)>();
             foreach (var edgeSet in edges)
             {
-                foreach (var e in edgeSet)
+                foreach (var (from, to, index) in edgeSet)
                 {
-                    var a = graphVertices[e.from];
-                    var b = graphVertices[e.to];
+                    var a = graphVertices[from];
+                    var b = graphVertices[to];
                     if (!a.IsAlmostEqualTo(b))
                     {
-                        trimEdges.Add((a, b, e.index));
+                        // Don't return duplicate edges
+                        // TODO: The half edge graph should not require these
+                        // duplicate edges. Can we remove them there?
+                        if (!trimEdges.Contains((a, b, index)) && !trimEdges.Contains((b, a, index)))
+                        {
+                            trimEdges.Add((a, b, index));
+                        }
                     }
                 }
             }
@@ -1256,28 +1259,23 @@ namespace Elements.Geometry
                         }
                     }
 
-                    // if (outside > 0 && inside == 0)
-                    // {
-                    //     classifications.Add((splitFace, outsideClassification, CoplanarSetClassification.None));
-                    // }
-                    // else if (inside > 0 && outside == 0)
-                    // {
-                    //     classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
-                    // }
-                    if (outside > inside)
+                    if (outside > 0 && inside == 0)
                     {
                         classifications.Add((splitFace, outsideClassification, CoplanarSetClassification.None));
                     }
-                    else if (inside > outside)
+                    else if (inside > 0 && outside == 0)
                     {
                         classifications.Add((splitFace, insideClassification, CoplanarSetClassification.None));
-
                     }
                     else if (inside == 0 && outside == 0)
                     {
                         // This will happen with disjoint polygons.
                         classifications.Add((this, outsideClassification, CoplanarSetClassification.None));
                     }
+                    // else
+                    // {
+                    //     throw new Exception("A polygon could not be classified.");
+                    // }
                 }
             }
 
