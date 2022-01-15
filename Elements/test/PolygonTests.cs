@@ -1943,12 +1943,17 @@ namespace Elements.Geometry.Tests
             // In the disjoint scenario we expect one outer, and two inner
             // wound in opposite directions.
             Assert.Equal(2, polys.Count);
+            var r = new Random();
+            foreach (var p in polys)
+            {
+                Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
         }
 
         [Fact]
-        public void PolygonAcrossPolygonTrimsIntoFour()
+        public void PolygonAcrossPolygonTrimsIntoThree()
         {
-            this.Name = nameof(PolygonAcrossPolygonTrimsIntoFour);
+            this.Name = nameof(PolygonAcrossPolygonTrimsIntoThree);
 
             var p1 = Polygon.Rectangle(2, 2);
             var p2 = Polygon.Rectangle(0.5, 4);
@@ -1959,13 +1964,7 @@ namespace Elements.Geometry.Tests
                 s.End + new Vector3(0,0,0.5),
                 s.Start + new Vector3(0,0,0.5)
             })).ToList();
-            var trims2 = p3.Segments().Select(s => new Polygon(new[] {
-                s.Start - new Vector3(0,0,0.5),
-                s.End - new Vector3(0,0,0.5),
-                s.End + new Vector3(0,0,0.5),
-                s.Start + new Vector3(0,0,0.5)
-            })).ToList();
-            trims = trims.Concat(trims2).ToList();
+
             var polys = p1.IntersectAndClassify(trims, out _, out var trimEdges);
             var r = new Random();
 
@@ -1995,9 +1994,9 @@ namespace Elements.Geometry.Tests
             }
             // In the disjoint scenario we expect one outer, and two inner
             // wound in opposite directions.
-            Assert.Equal(9, polys.Count);
-            Assert.Equal(4, polys.Where(p => p.Item2 == SetClassification.AOutsideB).Count());
-            Assert.Equal(5, polys.Where(p => p.Item2 == SetClassification.AInsideB).Count());
+            Assert.Equal(3, polys.Count);
+            Assert.Equal(2, polys.Where(p => p.Item2 == SetClassification.AOutsideB).Count());
+            Assert.Single(polys.Where(p => p.Item2 == SetClassification.AInsideB));
         }
     }
 }
