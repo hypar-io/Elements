@@ -191,11 +191,19 @@ namespace Elements.Geometry
         public bool Intersects(Polygon polygon, out Vector3 result)
         {
             var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
-            if (Intersects(plane, out result))
+            if (Intersects(plane, out Vector3 test))
             {
-                return polygon.Contains3D(result);
+                // Check the intersection against all the polygon's vertices.
+                // If the intrsection is at a vertex, the point is contained.
+                if (polygon.Vertices.Any(v => v.IsAlmostEqualTo(test)))
+                {
+                    result = test;
+                    return true;
+                }
+                result = test;
+                return polygon.Contains3D(test);
             }
-            result = default(Vector3);
+            result = default;
             return false;
         }
 
