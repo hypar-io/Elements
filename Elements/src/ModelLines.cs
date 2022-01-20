@@ -22,9 +22,9 @@ namespace Elements
         private bool _isSelectable = false;
 
         /// <summary>
-        /// Create a model lines. They share Material, Transformation and other parameters.
+        /// Create a collection of lines. They share Material, Transformation and other parameters.
         /// </summary>
-        /// <param name="lines">The lines</param>
+        /// <param name="lines">The lines.</param>
         /// <param name="material">The material. Specular and glossiness components will be ignored.</param>
         /// <param name="transform">The model lines transform.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
@@ -48,7 +48,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Set whether this model curve should be selectable in the web UI.
+        /// Set whether these model lines should be selectable in the web UI.
         /// Lines are not selectable by default.
         /// </summary>
         /// <param name="selectable"></param>
