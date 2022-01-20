@@ -15,6 +15,7 @@
 ### Added
 
 - `Polyline.Edges()`
+- `Model.ToJson(string path)`
 - `new Color(string hexOrName)`
 - implicit conversion from string to Color
 
