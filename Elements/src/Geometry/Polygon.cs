@@ -516,6 +516,11 @@ namespace Elements.Geometry
             return intersects % 2 != 0;
         }
 
+        internal bool Contains3D(Polygon polygon)
+        {
+            return polygon.Vertices.All(v => this.Contains3D(v));
+        }
+
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
         internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {

@@ -609,6 +609,46 @@ namespace Elements.Tests
             Assert.Equal(48, result1.Edges.Count);
         }
 
+        [Fact]
+        public void BlindHoleHasBottomFace()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(BlindHoleHasBottomFace);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 6, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, new Transform(new Vector3(0, 0, 0.5)));
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(11, result.Faces.Count);
+        }
+
+        [Fact]
+        public void HorizontalThroughHole()
+        {
+            this.Name = nameof(HorizontalThroughHole);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 6, Vector3.ZAxis, false);
+            var t = new Transform();
+            t.Rotate(Vector3.YAxis, 90);
+            t.Move(new Vector3(-2, 0, 1));
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, t);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }

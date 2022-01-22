@@ -63,39 +63,50 @@ namespace Elements.Geometry.Solids
 
             var s = new Solid();
 
-            var outsideFaces = allFaces.Where(o => o.classification == SetClassification.AOutsideB).ToList();
-
             // Group the faces according to their classification.
             // AOutsideB for everything outside B which should remain.
             // AInsideB for everything inside A which should become a hole.
+            var outsideFaces = allFaces.Where(o => o.classification == SetClassification.AOutsideB).ToList();
+
+            // TODO: The following is a hack because our Polygon.IntersectOneToMany
+            // method returns overlapping polygons where there are disjoint polygons.
+            var insideFaces = allFaces.Where(i => i.classification == SetClassification.AInsideB).ToList();
+
             foreach (var (polygon, classification, coplanarClassification) in outsideFaces)
             {
-                // TODO: The following is a hack because our Polygon.IntersectOneToMany
-                // method returns overlapping polygons where there are disjoint polygons.
-                var insideFaces = allFaces.Where(i => i.classification == SetClassification.AInsideB).ToList();
-
                 if (insideFaces.Count == 0)
                 {
                     s.AddFace(polygon, mergeVerticesAndEdges: true);
                 }
                 else
                 {
-                    var plane = polygon.Plane();
+                    var plane = polygon._plane;
                     var holes = new List<Polygon>();
                     foreach (var insideFace in insideFaces)
                     {
-                        var plane1 = insideFace.polygon.Plane();
-                        if (plane1.IsCoplanar(plane))
+                        if (polygon.Contains3D(insideFace.polygon))
                         {
-                            // We need to do this containment check to ensure
+                            // We need to do this edge overlap check to ensure
                             // that we're not making a profile where the openings
-                            // overlaps the edges of the profile, creating a face
+                            // overlaps the edges of the perimeter, creating a face
                             // with zero thickness between the outer and inner
                             // loops.
-
-                            if (polygon.Contains(insideFace.polygon))
+                            var hasEdgeOverlap = false;
+                            foreach (var (from, to) in polygon.Edges())
                             {
-                                if (plane.Normal.Dot(plane1.Normal).ApproximatelyEquals(1.0))
+                                foreach (var edge in insideFace.polygon.Edges())
+                                {
+                                    if (from.DistanceTo(edge, out _).ApproximatelyEquals(0) && to.DistanceTo(edge, out _).ApproximatelyEquals(0))
+                                    {
+                                        hasEdgeOverlap = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!hasEdgeOverlap)
+                            {
+                                if (plane.Normal.Dot(insideFace.polygon._plane.Normal).ApproximatelyEquals(1.0))
                                 {
                                     holes.Add(insideFace.polygon.Reversed());
                                 }
@@ -110,6 +121,7 @@ namespace Elements.Geometry.Solids
                 }
             }
 
+            // TODO: Can we invert the faces first? 
             foreach (var p in allFaces.Where(o => o.classification == SetClassification.BInsideA).Select(o => o.polygon))
             {
                 s.AddFace(p.Reversed(), mergeVerticesAndEdges: true);
@@ -199,7 +211,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var af in aNonCoplanar)
             {
-                var classifications = af.IntersectAndClassify(bNonCoplanar.Where(bf => bf._bounds.Intersects(af._bounds)).ToList(),
+                var classifications = af.IntersectAndClassify(bNonCoplanar,
                                                               out _,
                                                               out _,
                                                               SetClassification.AOutsideB,
@@ -209,7 +221,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bNonCoplanar)
             {
-                var classifications = bf.IntersectAndClassify(aNonCoplanar.Where(af => af._bounds.Intersects(bf._bounds)).ToList(),
+                var classifications = bf.IntersectAndClassify(aNonCoplanar,
                                                               out _,
                                                               out _,
                                                               SetClassification.BOutsideA,
