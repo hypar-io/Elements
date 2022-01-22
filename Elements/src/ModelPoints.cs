@@ -23,10 +23,10 @@ namespace Elements
         /// </summary>
         /// <param name="locations">The locations of the points.</param>
         /// <param name="material">The material. Specular and glossiness components will be ignored.</param>
-        /// <param name="transform">The model curve's transform.</param>
+        /// <param name="transform">The model points transform.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
-        /// <param name="id">The id of the model curve.</param>
-        /// <param name="name">The name of the model curve.</param>
+        /// <param name="id">The id of the model points.</param>
+        /// <param name="name">The name of the model points.</param>
         [JsonConstructor]
         public ModelPoints(IList<Vector3> locations = null,
                           Material material = null,

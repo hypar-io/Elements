@@ -11,6 +11,7 @@ using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
+using System.IO;
 
 namespace Elements
 {
@@ -92,9 +93,9 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement)
+            if (element is GeometricElement element1)
             {
-                ((GeometricElement)element).UpdateRepresentations();
+                element1.UpdateRepresentations();
             }
 
             if (gatherSubElements)
@@ -192,7 +193,35 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson(bool indent = false)
+        public string ToJson(bool indent = false, bool gatherSubElements = true)
+        {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        }
+
+        /// <summary>
+        /// Serialize the model to a JSON file.
+        /// </summary>
+        /// <param name="path">The path of the file on disk.</param>
+        /// <param name="gatherSubElements"></param>
+        public void ToJson(string path, bool gatherSubElements = true)
+        {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
+            // https://www.newtonsoft.com/json/help/html/Performance.htm
+            using (FileStream s = File.Create(path))
+            using (StreamWriter writer = new StreamWriter(s))
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, exportModel);
+                jsonWriter.Flush();
+            }
+        }
+
+        internal Model CreateExportModel(bool gatherSubElements)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
@@ -201,11 +230,10 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                exportModel.AddElement(kvp.Value);
+                exportModel.AddElement(kvp.Value, gatherSubElements);
             }
             exportModel.Transform = this.Transform;
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
-                                                           indent ? Formatting.Indented : Formatting.None);
+            return exportModel;
         }
 
         /// <summary>
@@ -246,6 +274,15 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
+            // A dictionary created for the purpose of caching properties 
+            // that we need to recurse, for types that we've seen before.
+            var props = new Dictionary<Type, List<PropertyInfo>>();
+
+            return RecursiveGatherSubElementsInternal(obj, props);
+        }
+
+        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        {
             var elements = new List<Element>();
 
             if (obj == null)
@@ -272,8 +309,19 @@ namespace Elements
                 return elements;
             }
 
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any());
-            var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
+            List<PropertyInfo> constrainedProps;
+            if (properties.ContainsKey(t))
+            {
+                constrainedProps = properties[t];
+            }
+            else
+            {
+                // This query had a nice little speed boost when we filtered for 
+                // valid types first then filtered for custom attributes.
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
+                properties.Add(t, constrainedProps);
+            }
+
             foreach (var p in constrainedProps)
             {
                 try
@@ -284,28 +332,26 @@ namespace Elements
                         continue;
                     }
 
-                    var elems = pValue as IList;
-                    if (elems != null)
+                    if (pValue is IList elems)
                     {
                         foreach (var item in elems)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(item));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties));
                         }
                         continue;
                     }
 
                     // Get the properties dictionaries.
-                    var dict = pValue as IDictionary;
-                    if (dict != null)
+                    if (pValue is IDictionary dict)
                     {
                         foreach (var value in dict.Values)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(value));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties));
                         }
                         continue;
                     }
 
-                    elements.AddRange(RecursiveGatherSubElements(pValue));
+                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties));
                 }
                 catch (Exception ex)
                 {

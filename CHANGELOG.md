@@ -10,8 +10,7 @@
 - `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
 - `Solid.Intersection(SolidOperation a, SolidOperation b)`
 - `Solid.Intersects(Plane p, out List<Polygon> result)`
-
-### Changed
+- `ModelLines`
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
@@ -23,6 +22,7 @@
 - `Polyline.Edges()`
 - `SetClassification`
 - `LocalClassification`
+- `Model.ToJson(string path)`
 - `new Color(string hexOrName)`
 - implicit conversion from string to Color
 
