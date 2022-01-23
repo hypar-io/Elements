@@ -1703,17 +1703,6 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void ThrowsExceptionForCoplanarTrimPolygons()
-        {
-            var hex = Polygon.Ngon(6, 3);
-            var star = Polygon.Star(5, 2, 5);
-            Assert.Throws<Exception>(() =>
-            {
-                star.TrimmedTo(new[] { hex });
-            });
-        }
-
-        [Fact]
         public void PolygonContains3D()
         {
             var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
