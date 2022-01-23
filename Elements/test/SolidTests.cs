@@ -610,6 +610,26 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void UnionAcrossVolumeSucceeds()
+        {
+            // This tests the union of two crossing volumes which
+            // share top and bottom faces.
+            this.Name = nameof(UnionAcrossVolumeSucceeds);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 4), 2, Vector3.ZAxis, false);
+            var result1 = Solid.Union(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result1, null));
+            Assert.Equal(14, result1.Faces.Count);
+            Assert.Equal(24, result1.Vertices.Count);
+        }
+
+        [Fact]
         public void BlindHoleHasBottomFace()
         {
             // The bottom face of a blind hole is inside the main solid,
