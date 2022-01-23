@@ -32,7 +32,7 @@ namespace Elements.Geometry.Solids
             {
                 foreach (var p in result)
                 {
-                    s.AddFace(p, mergeVerticesAndEdges: true);
+                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -132,7 +132,7 @@ namespace Elements.Geometry.Solids
             {
                 foreach (var p in result)
                 {
-                    s.AddFace(p, mergeVerticesAndEdges: true);
+                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -173,7 +173,7 @@ namespace Elements.Geometry.Solids
             {
                 foreach (var p in result)
                 {
-                    s.AddFace(p, mergeVerticesAndEdges: true);
+                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -242,6 +242,13 @@ namespace Elements.Geometry.Solids
                     {
                         foreach (var bFace in bCoplanarFaceSet)
                         {
+                            if (aFace.Contains3D(bFace))
+                            {
+                                allFaces.Add((aFace, SetClassification.None, CoplanarSetClassification.ACoplanarB));
+                                allFaces.Add((bFace, SetClassification.None, CoplanarSetClassification.BCoplanarA));
+                                continue;
+                            }
+
                             if (!aFace._bounds.Intersects(bFace._bounds))
                             {
                                 continue;
@@ -263,29 +270,52 @@ namespace Elements.Geometry.Solids
             return allFaces;
         }
 
-        private static List<Polygon> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
+        private static List<(Polygon, List<Polygon>)> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
                                                         Func<Polygon, Polygon, List<Polygon>> merge)
         {
             var aCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.ACoplanarB).GroupBy(x => x.polygon._plane.Normal);
             var bCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.BCoplanarA).GroupBy(x => x.polygon._plane.Normal);
 
-            var results = new List<Polygon>();
+            var results = new List<(Polygon, List<Polygon>)>();
 
             foreach (var aCoplanarFaceSet in aCoplanar)
             {
                 foreach (var aFace in aCoplanarFaceSet)
                 {
+                    var plane = aFace.polygon._plane;
+
+                    // Find all the b faces that are coplanar with the a face.
                     var bCoplanarFaceSet = bCoplanar.FirstOrDefault(x => x.Key == aCoplanarFaceSet.Key);
 
                     if (bCoplanarFaceSet != null)
                     {
+                        var holes = new List<Polygon>();
                         foreach (var bFace in bCoplanarFaceSet)
                         {
-                            var mergeResults = merge(aFace.polygon, bFace.polygon);
-                            if (mergeResults != null)
+                            if (aFace.polygon.Contains3D(bFace.polygon))
                             {
-                                results.AddRange(mergeResults);
+                                if (plane.Normal.Dot(bFace.polygon._plane.Normal).ApproximatelyEquals(1.0))
+                                {
+                                    holes.Add(bFace.polygon.Reversed());
+                                }
+                                else
+                                {
+                                    holes.Add(bFace.polygon);
+                                }
                             }
+                            else
+                            {
+                                var mergeResults = merge(aFace.polygon, bFace.polygon);
+                                if (mergeResults != null)
+                                {
+                                    results.AddRange(mergeResults.Select(p => (p, new List<Polygon>())));
+                                }
+                            }
+                        }
+
+                        if (holes.Count > 0)
+                        {
+                            results.Add((aFace.polygon, holes));
                         }
                     }
                 }

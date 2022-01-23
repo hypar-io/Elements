@@ -1199,11 +1199,12 @@ namespace Elements.Geometry
             if (splitFaces.Count == 1)
             {
                 // If there's only one face, we ray cast to test
-                // for inclusion.
+                // for inclusion. This happens in a couple of scenarios:
+                // 1. A polygon is completely inside the trim polygons and wasn't trimmed.
+                // 2. A polygon is completely outside the trim polygons and wasn't trimmed.
                 var splitFace = splitFaces[0];
-                var splitFacePlane = splitFace._plane;
                 var intersectionCount = 0;
-                var ray = Ray.GetTestRayInPlane(splitFace.Vertices[0], splitFace._plane.Normal);
+                var ray = new Ray(splitFace.Vertices[0], splitFace._plane.Normal);
                 foreach (var trimPoly in trimPolygons)
                 {
                     if (ray.Intersects(trimPoly, out _))

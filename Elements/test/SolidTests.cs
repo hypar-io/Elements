@@ -649,6 +649,46 @@ namespace Elements.Tests
             Assert.Equal(10, result.Faces.Count);
         }
 
+        [Fact]
+        public void ThroughHoleWithEqualFaces()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(ThroughHoleWithEqualFaces);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 2, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
+        [Fact]
+        public void PassingHoleWithEqualFaces()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(PassingHoleWithEqualFaces);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5).TransformedPolygon(new Transform(new Vector3(0, 0.8))), 2, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }
