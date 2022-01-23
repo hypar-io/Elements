@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Validators;
+using Elements.Search;
 
 namespace Elements.Geometry
 {
@@ -924,31 +925,37 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                var edge = (a, b);
+
+                // An edge may have multiple split points. 
+                // We store these in a list and sort it along the
+                // direction of the edge, before inserting the points
+                // into the vertex list and incrementing i by the correct
+                // amount to move forward to the next edge.
+                var newEdgeVertices = new List<Vector3>();
+                var comparer = new DirectionComparer((edge.a - edge.b).Unitized());
 
                 for (var j = points.Count - 1; j >= 0; j--)
                 {
                     var point = points[j];
 
-                    if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                    if (point.IsAlmostEqualTo(edge.a) || point.IsAlmostEqualTo(edge.b))
                     {
                         // The split point is coincident with a vertex.
                         continue;
                     }
 
-                    if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                    if (point.DistanceTo(edge, out var newPoint).ApproximatelyEquals(0.0))
                     {
-                        if (i > this.Vertices.Count - 1)
+                        if (!newEdgeVertices.Contains(newPoint))
                         {
-                            this.Vertices.Add(point);
+                            newEdgeVertices.Add(newPoint);
                         }
-                        else
-                        {
-                            this.Vertices.Insert(i + 1, point);
-                        }
-
-                        break;
                     }
                 }
+                newEdgeVertices.Sort(comparer);
+                ((List<Vector3>)this.Vertices).InsertRange(i + 1, newEdgeVertices);
+                i += newEdgeVertices.Count;
             }
             return;
         }
