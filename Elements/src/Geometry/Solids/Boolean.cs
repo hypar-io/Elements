@@ -242,19 +242,20 @@ namespace Elements.Geometry.Solids
                     {
                         foreach (var bFace in bCoplanarFaceSet)
                         {
-                            if (aFace.Contains3D(bFace))
+                            if (aFace.Contains3D(bFace) || !aFace._bounds.Intersects(bFace._bounds))
                             {
-                                allFaces.Add((aFace, SetClassification.None, CoplanarSetClassification.ACoplanarB));
-                                allFaces.Add((bFace, SetClassification.None, CoplanarSetClassification.BCoplanarA));
-                                continue;
+                                var aa = (aFace, SetClassification.None, CoplanarSetClassification.ACoplanarB);
+                                var bb = (bFace, SetClassification.None, CoplanarSetClassification.BCoplanarA);
+                                if (!allFaces.Contains(aa))
+                                {
+                                    allFaces.Add(aa);
+                                }
+                                if (!allFaces.Contains(bb))
+                                {
+                                    allFaces.Add(bb);
+                                }
                             }
-
-                            if (!aFace._bounds.Intersects(bFace._bounds))
-                            {
-                                continue;
-                            }
-
-                            if (aFace.Intersects2d(bFace, out List<(Vector3 result, int aSegumentIndices, int bSegmentIndices)> planarIntersectionResults, false))
+                            else if (aFace.Intersects2d(bFace, out List<(Vector3 result, int aSegumentIndices, int bSegmentIndices)> planarIntersectionResults, false))
                             {
                                 var result = planarIntersectionResults.Select(r => r.result).ToList();
                                 aFace.Split(result);

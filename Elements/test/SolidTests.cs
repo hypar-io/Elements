@@ -709,6 +709,26 @@ namespace Elements.Tests
             Assert.Equal(10, result.Faces.Count);
         }
 
+        [Fact]
+        public void TwoHoles()
+        {
+            this.Name = nameof(TwoHoles);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.25, 0.25).TransformedPolygon(new Transform(new Vector3(0, 0.5))), 2.5, Vector3.ZAxis, false);
+            var s3 = new Extrude(Polygon.Rectangle(0.25, 0.25).TransformedPolygon(new Transform(new Vector3(0, -0.5))), 2.5, Vector3.ZAxis, false);
+            var result = Solid.Union(s2.Solid, null, s3.Solid, null);
+
+            result = Solid.Difference(s1.Solid, null, result, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(14, result.Faces.Count);
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }
