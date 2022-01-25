@@ -267,7 +267,7 @@ namespace Elements.Tests
             Assert.True(b1.Intersects(b2));
 
             // Coincident at face
-            b2 = new BBox3(new Vector3(0, -5, 0), new Vector3(5, 5, 5));
+            b2 = new BBox3(new Vector3(0, -5, 0), new Vector3(5, 0, 5));
             Assert.True(b1.Intersects(b2));
         }
     }
