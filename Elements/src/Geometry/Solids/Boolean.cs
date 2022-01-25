@@ -12,11 +12,11 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the union of two solids.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="aTransform"></param>
-        /// <param name="b"></param>
-        /// <param name="bTransform"></param>
-        /// <returns></returns>
+        /// <param name="a">The first solid.</param>
+        /// <param name="aTransform">A local transformation of a.</param>
+        /// <param name="b">The second solid.</param>
+        /// <param name="bTransform">A local transformation of b.</param>
+        /// <returns>A solid which is the union of a and b.</returns>
         public static Solid Union(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var allFaces = Intersect(a, aTransform, b, bTransform);
@@ -42,9 +42,9 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the union of two solid operations.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first solid.</param>
+        /// <param name="b">The second solid.</param>
+        /// <returns>A solid which is the union of a and b.</returns>
         public static Solid Union(SolidOperation a, SolidOperation b)
         {
             return Union(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
@@ -53,10 +53,11 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the difference of two solids.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="aTransform"></param>
-        /// <param name="b"></param>
-        /// <param name="bTransform"></param>
+        /// <param name="a">The first solid.</param>
+        /// <param name="aTransform">A local transformation of a.</param>
+        /// <param name="b">The second solid.</param>
+        /// <param name="bTransform">A local transformation of b.</param>
+        /// <returns>A solid which is the difference of a and b.</returns>
         public static Solid Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var allFaces = Intersect(a, aTransform, b, bTransform);
@@ -142,9 +143,9 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the difference of two solid operations.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first solid.</param>
+        /// <param name="b">The second solid.</param>
+        /// <returns>A solid which is the difference of a and b.</returns>
         public static Solid Difference(SolidOperation a, SolidOperation b)
         {
             return Difference(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
@@ -153,11 +154,11 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the intersection of two solids.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="aTransform"></param>
-        /// <param name="b"></param>
-        /// <param name="bTransform"></param>
-        /// <returns></returns>
+        /// <param name="a">The first solid.</param>
+        /// <param name="aTransform">A local transformation of a.</param>
+        /// <param name="b">The second solid.</param>
+        /// <param name="bTransform">A local transformation of b.</param>
+        /// <returns>A solid which is the the intersection of a and b.</returns>
         public static Solid Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)
         {
             var allFaces = Intersect(a, aTransform, b, bTransform);
@@ -183,9 +184,9 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Compute the intersection of two solid operations.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <param name="a">The first solid.</param>
+        /// <param name="b">The second solid.</param>
+        /// <returns>A solid which is the the intersection of a and b.</returns>
         public static Solid Intersection(SolidOperation a, SolidOperation b)
         {
             return Intersection(a.Solid, a.LocalTransform, b.Solid, b.LocalTransform);
