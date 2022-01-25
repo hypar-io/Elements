@@ -1194,6 +1194,16 @@ namespace Elements.Geometry
         {
             var classifications = new List<(Polygon, SetClassification, CoplanarSetClassification)>();
 
+            if (trimPolygons.Count == 0)
+            {
+                // Quick out if no trimming polygons are supplied.
+                var singleClassification = ClassifyByRayTest(this, trimPolygons, outsideClassification, insideClassification);
+                classifications.Add((this, singleClassification, CoplanarSetClassification.None));
+                intersections = null;
+                trimEdges = null;
+                return classifications;
+            }
+
             var splitFaces = this.IntersectOneToMany(trimPolygons, out intersections, out trimEdges);
 
             if (splitFaces.Count == 1)
@@ -1202,17 +1212,8 @@ namespace Elements.Geometry
                 // for inclusion. This happens in a couple of scenarios:
                 // 1. A polygon is completely inside the trim polygons and wasn't trimmed.
                 // 2. A polygon is completely outside the trim polygons and wasn't trimmed.
-                var splitFace = splitFaces[0];
-                var intersectionCount = 0;
-                var ray = new Ray(splitFace.Vertices[0], splitFace._plane.Normal);
-                foreach (var trimPoly in trimPolygons)
-                {
-                    if (ray.Intersects(trimPoly, out _))
-                    {
-                        intersectionCount++;
-                    }
-                }
-                classifications.Add((splitFace, intersectionCount % 2 == 0 ? outsideClassification : insideClassification, CoplanarSetClassification.None));
+                var singleClassification = ClassifyByRayTest(this, trimPolygons, outsideClassification, insideClassification);
+                classifications.Add((splitFaces[0], singleClassification, CoplanarSetClassification.None));
             }
             else
             {
@@ -1282,6 +1283,23 @@ namespace Elements.Geometry
             }
 
             return classifications;
+        }
+
+        private static SetClassification ClassifyByRayTest(Polygon p,
+                                                           IList<Polygon> trimPolygons,
+                                                           SetClassification outsideClassification,
+                                                           SetClassification insideClassification)
+        {
+            var intersectionCount = 0;
+            var ray = new Ray(p.Vertices[0], p._plane.Normal);
+            foreach (var trimPoly in trimPolygons)
+            {
+                if (ray.Intersects(trimPoly, out _))
+                {
+                    intersectionCount++;
+                }
+            }
+            return intersectionCount % 2 == 0 ? outsideClassification : insideClassification;
         }
 
         /// <summary>
