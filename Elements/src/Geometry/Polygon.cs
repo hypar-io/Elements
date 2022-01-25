@@ -348,9 +348,9 @@ namespace Elements.Geometry
         /// edge attached to the vertex.</returns>
         internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
         {
-            var p = this.Plane();
+            var p = this._plane;
             result = new List<Vector3>();
-            var targetP = polygon.Plane();
+            var targetP = polygon._plane;
 
             if (p.IsCoplanar(targetP))
             {

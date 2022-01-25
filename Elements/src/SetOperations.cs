@@ -20,8 +20,8 @@ namespace Elements
                                                                                                             Polygon b,
                                                                                                             Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)
         {
-            var ap = a.Plane();
-            var bp = b.Plane();
+            var ap = a._plane;
+            var bp = b._plane;
             if (!ap.IsCoplanar(bp))
             {
                 throw new System.Exception("Set classification failed. The polygons are not coplanar.");

@@ -212,6 +212,10 @@ namespace Elements.Geometry.Solids
 
             foreach (var af in aNonCoplanar)
             {
+                // TODO: We previously culled all bNonCoplanar faces that didn't intersect af,
+                // which resulted in a nice little speed boost. But we dropped b faces that
+                // were completely contained in a. We need to figure out how to test only
+                // faces that we really care about.
                 var classifications = af.IntersectAndClassify(bNonCoplanar,
                                                               out _,
                                                               out _,
@@ -222,6 +226,7 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bNonCoplanar)
             {
+                // TODO: See comment above about culling faces.
                 var classifications = bf.IntersectAndClassify(aNonCoplanar,
                                                               out _,
                                                               out _,
