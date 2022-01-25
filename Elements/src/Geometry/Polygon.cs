@@ -1278,10 +1278,6 @@ namespace Elements.Geometry
                         // This will happen with disjoint polygons.
                         classifications.Add((this, outsideClassification, CoplanarSetClassification.None));
                     }
-                    // else
-                    // {
-                    //     throw new Exception("A polygon could not be classified.");
-                    // }
                 }
             }
 
