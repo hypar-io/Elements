@@ -1180,7 +1180,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// 
+        /// Intersect a polygon against a set of trim polygons and identify the
+        /// resulting polygons as "inside" or "outside" of the set of trimming
+        /// polygons. Containment is done using edge direction comparison for 
+        /// polygons which intersect with their trims, or ray testing in the
+        /// case of polygons which do not intersect with their trims.
         /// </summary>
         /// <param name="trimPolygons">A collection of polygons to trim against.</param>
         /// <param name="rayTestPolygons">A collection of polygons to ray trace against.</param>

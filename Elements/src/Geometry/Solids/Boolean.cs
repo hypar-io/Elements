@@ -202,6 +202,24 @@ namespace Elements.Geometry.Solids
 
             // TODO: Don't create polygons. Operate on the loops and edges directly.
             // TODO: Support holes. We drop the inner loop information here currently.
+
+            // An explanation of what's going on here.
+            // At a high level, the act of intersecting two solids is the intersection and splitting
+            // of the solid's faces against those of the other solid, and the classification of the 
+            // split pieces as:
+            // A inside B (ex. a piece of A which is inside B)
+            // A outside B
+            // B inside A
+            // B outside A
+            // A coplanar B
+            // B coplanar A
+
+            // 1. Sort the faces of a and b into two collections -> non-coplanar faces, and co-planar faces.
+            // 2. Split and classify each non-coplanar face of a against all the faces of b which it intersects.
+            // 3. Split and classify each non-coplanar face of b against all the faces of a which it intersects.
+            // 3. Intersect coplanar faces or return faces which are contained in other coplanar faces. Coplanar faces
+            // contained within other faces, will become holes.
+
             var aFaces = a.Faces.Select(f => f.Value.Outer.ToPolygon(aTransform)).ToList();
             var bFaces = b.Faces.Select(f => f.Value.Outer.ToPolygon(bTransform)).ToList();
 
@@ -213,10 +231,6 @@ namespace Elements.Geometry.Solids
 
             foreach (var af in aNonCoplanar)
             {
-                // TODO: We previously culled all bNonCoplanar faces that didn't intersect af,
-                // which resulted in a nice little speed boost. But we dropped b faces that
-                // were completely contained in a. We need to figure out how to test only
-                // faces that we really care about.
                 var classifications = af.IntersectAndClassify(bNonCoplanar.Where(bf => bf._bounds.Intersects(af._bounds)).ToList(),
                                                               bFaces,
                                                               out _,
@@ -228,7 +242,6 @@ namespace Elements.Geometry.Solids
 
             foreach (var bf in bNonCoplanar)
             {
-                // TODO: See comment above about culling faces.
                 var classifications = bf.IntersectAndClassify(aNonCoplanar.Where(af => af._bounds.Intersects(bf._bounds)).ToList(),
                                                               aFaces,
                                                               out _,
@@ -251,6 +264,9 @@ namespace Elements.Geometry.Solids
                     {
                         foreach (var bFace in bCoplanarFaceSet)
                         {
+                            // The b face is completely contained within the a face, or is outside of it.
+                            // In the former case, we return the face to become a hole. In the latter case,
+                            // we return the face to become a stand-alone face.
                             if (aFace.Contains3D(bFace) || !aFace._bounds.Intersects(bFace._bounds))
                             {
                                 var aa = (aFace, SetClassification.None, CoplanarSetClassification.ACoplanarB);
@@ -264,6 +280,9 @@ namespace Elements.Geometry.Solids
                                     allFaces.Add(bb);
                                 }
                             }
+                            // The b face intersects the a face. We do a planar intersection of the two faces, which
+                            // adds new vertices to the a face and the b face. These faces are marked as coplanar,
+                            // for later 2D boolean operations.
                             else if (aFace.Intersects2d(bFace, out List<(Vector3 result, int aSegumentIndices, int bSegmentIndices)> planarIntersectionResults, false))
                             {
                                 var result = planarIntersectionResults.Select(r => r.result).ToList();
@@ -280,6 +299,11 @@ namespace Elements.Geometry.Solids
             return allFaces;
         }
 
+        /// <summary>
+        /// Merge all coplanar faces using the provided merge delegate.
+        /// </summary>
+        /// <param name="allFaces">A collection of tuples of coplanar polygon information.</param>
+        /// <param name="merge">The delegate that will be used to merge the two polygons.</param>
         private static List<(Polygon, List<Polygon>)> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
                                                         Func<Polygon, Polygon, List<Polygon>> merge)
         {
