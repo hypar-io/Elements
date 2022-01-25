@@ -101,16 +101,20 @@ namespace Elements
         /// Build a half edge graph from a collection of segments.
         /// </summary>
         /// <param name="set">A collection of classified segments.</param>
-        public static HalfEdgeGraph2d BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set)
+        /// <param name="boundaryClassifications">A list of boundary classifications where edges
+        /// will be created running in both directions. This is required for situations where the graph will
+        /// be expected to produce multiple polygons with shared edges.</param>
+        public static HalfEdgeGraph2d BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set,
+                                                 IList<SetClassification> boundaryClassifications = null)
         {
             var graphVertices = new List<Vector3>();
             var graphEdges = new List<List<(int from, int to, int? tag)>>();
 
             // Create edges
-            foreach (var edge in set)
+            foreach (var (from, to, classification) in set)
             {
-                var a = Solid.FindOrCreateGraphVertex(edge.from, graphVertices, graphEdges);
-                var b = Solid.FindOrCreateGraphVertex(edge.to, graphVertices, graphEdges);
+                var a = Solid.FindOrCreateGraphVertex(from, graphVertices, graphEdges);
+                var b = Solid.FindOrCreateGraphVertex(to, graphVertices, graphEdges);
                 var e1 = (a, b, 0);
                 var e2 = (b, a, 0);
                 if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
@@ -120,6 +124,10 @@ namespace Elements
                 else
                 {
                     graphEdges[a].Add(e1);
+                    if (boundaryClassifications != null && boundaryClassifications.Contains(classification))
+                    {
+                        graphEdges[b].Add(e2);
+                    }
                 }
             }
 
