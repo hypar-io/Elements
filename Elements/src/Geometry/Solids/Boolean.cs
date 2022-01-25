@@ -123,9 +123,10 @@ namespace Elements.Geometry.Solids
             }
 
             // TODO: Can we invert the faces first? 
-            foreach (var p in allFaces.Where(o => o.classification == SetClassification.BInsideA).Select(o => o.polygon))
+            var bInsideFaces = allFaces.Where(o => o.classification == SetClassification.BInsideA).ToList();
+            foreach (var (polygon, classification, coplanarClassification) in bInsideFaces)
             {
-                s.AddFace(p.Reversed(), mergeVerticesAndEdges: true);
+                s.AddFace(polygon.Reversed(), mergeVerticesAndEdges: true);
             }
 
             var result = MergeCoplanarFaces(allFaces, Difference);
@@ -216,7 +217,8 @@ namespace Elements.Geometry.Solids
                 // which resulted in a nice little speed boost. But we dropped b faces that
                 // were completely contained in a. We need to figure out how to test only
                 // faces that we really care about.
-                var classifications = af.IntersectAndClassify(bNonCoplanar,
+                var classifications = af.IntersectAndClassify(bNonCoplanar.Where(bf => bf._bounds.Intersects(af._bounds)).ToList(),
+                                                              bFaces,
                                                               out _,
                                                               out _,
                                                               SetClassification.AOutsideB,
@@ -227,7 +229,8 @@ namespace Elements.Geometry.Solids
             foreach (var bf in bNonCoplanar)
             {
                 // TODO: See comment above about culling faces.
-                var classifications = bf.IntersectAndClassify(aNonCoplanar,
+                var classifications = bf.IntersectAndClassify(aNonCoplanar.Where(af => af._bounds.Intersects(bf._bounds)).ToList(),
+                                                              aFaces,
                                                               out _,
                                                               out _,
                                                               SetClassification.BOutsideA,

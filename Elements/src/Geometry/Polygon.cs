@@ -941,6 +941,7 @@ namespace Elements.Geometry
         public List<Polygon> TrimmedTo(IList<Polygon> polygons, LocalClassification inOut = LocalClassification.Outside)
         {
             var polys = this.IntersectAndClassify(polygons,
+                                                  polygons,
                                                   out _,
                                                   out _);
             return polys.Where(p =>
@@ -974,6 +975,7 @@ namespace Elements.Geometry
                                        LocalClassification inOut = LocalClassification.Outside)
         {
             var polys = this.IntersectAndClassify(polygons,
+                                                  polygons,
                                                   out intersections,
                                                   out trimEdges);
             return polys.Where(p =>
@@ -1181,23 +1183,25 @@ namespace Elements.Geometry
         /// 
         /// </summary>
         /// <param name="trimPolygons">A collection of polygons to trim against.</param>
+        /// <param name="rayTestPolygons">A collection of polygons to ray trace against.</param>
         /// <param name="outsideClassification">The outside classification.</param>
         /// <param name="insideClassification">The inside classification.</param>
         /// <param name="intersections">A collection of intersection locations.</param>
         /// <param name="trimEdges">A collection of trim edge data.</param>
         /// <returns>A collection of polygons and their local classification.</returns>
         internal List<(Polygon, SetClassification, CoplanarSetClassification)> IntersectAndClassify(IList<Polygon> trimPolygons,
-                                                                         out List<Vector3> intersections,
-                                                                         out List<(Vector3 from, Vector3 to, int? parentPolygonIndex)> trimEdges,
-                                                                         SetClassification outsideClassification = SetClassification.AOutsideB,
-                                                                         SetClassification insideClassification = SetClassification.AInsideB)
+                                                                                                    IList<Polygon> rayTestPolygons,
+                                                                                                    out List<Vector3> intersections,
+                                                                                                    out List<(Vector3 from, Vector3 to, int? parentPolygonIndex)> trimEdges,
+                                                                                                    SetClassification outsideClassification = SetClassification.AOutsideB,
+                                                                                                    SetClassification insideClassification = SetClassification.AInsideB)
         {
             var classifications = new List<(Polygon, SetClassification, CoplanarSetClassification)>();
 
             if (trimPolygons.Count == 0)
             {
                 // Quick out if no trimming polygons are supplied.
-                var singleClassification = ClassifyByRayTest(this, trimPolygons, outsideClassification, insideClassification);
+                var singleClassification = ClassifyByRayTest(this, rayTestPolygons, outsideClassification, insideClassification);
                 classifications.Add((this, singleClassification, CoplanarSetClassification.None));
                 intersections = null;
                 trimEdges = null;

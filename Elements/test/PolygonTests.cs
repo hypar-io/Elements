@@ -1859,6 +1859,7 @@ namespace Elements.Geometry.Tests
                 polys.Add(newP);
             }
             var trims = p.IntersectAndClassify(polys,
+                                               polys,
                                                out _,
                                                out _,
                                                SetClassification.AOutsideB,
@@ -1954,7 +1955,7 @@ namespace Elements.Geometry.Tests
                 s.Start + new Vector3(0,0,0.5)
             })).ToList();
 
-            var polys = p1.IntersectAndClassify(trims, out _, out var trimEdges);
+            var polys = p1.IntersectAndClassify(trims, trims, out _, out var trimEdges);
             var r = new Random();
 
             var aInB = r.NextMaterial();
