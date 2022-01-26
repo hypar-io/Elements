@@ -6,6 +6,7 @@
 - `ModelLines`
 
 ### Changed
+- Add `AddVertex`, `DeleteVertex`, `AddEdge`, `DeleteEdge` to public interface of `AdaptiveGrid`
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
