@@ -310,11 +310,12 @@ namespace Elements.Spatial.AdaptiveGrid
             return TryGetValue(zDict, point.Z, out id, tolerance);
         }
 
-        #endregion
-
-        #region Private logic
-
-        private Vertex AddVertex(Vector3 point)
+        /// <summary>
+        /// Add a Vertex or return existing one if it's withing grid tolerance.
+        /// </summary>
+        /// <param name="point">Position of required vertex</param>
+        /// <returns>New or existing Vertex.</returns>
+        public Vertex AddVertex(Vector3 point)
         {
             if (!TryGetVertexIndex(point, out var id, Tolerance))
             {
@@ -329,7 +330,11 @@ namespace Elements.Spatial.AdaptiveGrid
             return GetVertex(id);
         }
 
-        private void DeleteVertex(ulong id)
+        /// <summary>
+        /// Remove the Vertex with specified id from the grid.
+        /// </summary>
+        /// <param name="id">Edge id to delete.</param>
+        public void DeleteVertex(ulong id)
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
@@ -351,7 +356,13 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private Edge AddEdge(ulong vertexId1, ulong vertexId2)
+        /// <summary>
+        /// Add an Edge or return the exiting one with given indexes.
+        /// </summary>
+        /// <param name="vertexId1">Index of the first Vertex</param>
+        /// <param name="vertexId2">Index of the second Vertex</param>
+        /// <returns>New or existing Edge.</returns>
+        public Edge AddEdge(ulong vertexId1, ulong vertexId2)
         {
             if (vertexId1 == vertexId2)
             {
@@ -381,7 +392,11 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private void DeleteEdge(Edge edge)
+        /// <summary>
+        /// Remove the Edge from the grid.
+        /// </summary>
+        /// <param name="edge">Edge to delete</param>
+        public void DeleteEdge(Edge edge)
         {
             var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
             this._edgesLookup.Remove(hash);
@@ -400,6 +415,10 @@ namespace Elements.Spatial.AdaptiveGrid
                 DeleteVertex(edge.EndId);
             }
         }
+
+        #endregion
+
+        #region Private logic
 
         private Grid2d CreateGridFromPolygon(Polygon boundingPolygon)
         {
