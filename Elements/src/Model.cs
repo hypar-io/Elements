@@ -201,11 +201,20 @@ namespace Elements
         }
 
         /// <summary>
-        /// Serialize the model to JSON using default arguments
+        /// Serialize the model to JSON using default arguments.
         /// </summary>
         public string ToJson()
         {
             return ToJson();
+        }
+
+        /// <summary>
+        /// Serialize the model to JSON to match default arguments.
+        /// TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.
+        /// </summary>
+        public string ToJson(bool indent = false)
+        {
+            return ToJson(false);
         }
 
         /// <summary>
