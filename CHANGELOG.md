@@ -4,9 +4,9 @@
 
 ### Added
 - `ModelLines`
+- `AdaptiveGrid.AddVertex(Vector3 point, List<Vertex> connections)`
 
 ### Changed
-- Add `AddVertex`, `DeleteVertex`, `AddEdge`, `DeleteEdge` to public interface of `AdaptiveGrid`
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
