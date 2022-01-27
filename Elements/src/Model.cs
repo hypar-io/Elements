@@ -205,7 +205,8 @@ namespace Elements
         /// </summary>
         public string ToJson()
         {
-            return ToJson();
+            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
+            return ToJson(false, true);
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false)
         {
-            return ToJson(false);
+            return ToJson(indent, true);
         }
 
         /// <summary>
