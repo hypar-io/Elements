@@ -50,6 +50,7 @@
 
 - Support non-linear gridlines by deprecating `GridLine.Line` and replacing it with `GridLine.Curve`.
 - Add use new CSG library and test it's effectiveness
+- Add parameter `removeCutEdges` to `AdaptiveGrid.SubstructBox` that control if cut parts of intersected edges need to be inserted into the graph.
 
 ### Fixed
 
