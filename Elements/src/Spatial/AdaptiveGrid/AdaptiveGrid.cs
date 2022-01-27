@@ -316,7 +316,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="point">Position of required Vertex.</param>
         /// <param name="connections">Ids of other vertices to connect new Vertex with.</param>
         /// <returns>New Vertex or existing one if it's withing grid tolerance.</returns>
-        public Vertex AddVertex(Vector3 point, List<ulong> connections)
+        public Vertex AddVertex(Vector3 point, List<Vertex> connections)
         {
             if (!connections.Any())
             {
@@ -326,7 +326,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Vertex v = AddVertex(point);
             foreach (var c in connections)
             {
-                AddEdge(v.Id, c);
+                AddEdge(v.Id, c.Id);
             }
 
             return v;

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
 
 namespace Elements.Tests
 {
@@ -97,7 +98,7 @@ namespace Elements.Tests
             var oldV = adaptiveGrid.GetVertex(id);
             var edgesBefore = oldV.Edges.Count;
 
-            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new List<ulong> { id });
+            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new List<Vertex> { oldV });
             Assert.NotNull(newV);
             Assert.False(newV.Id == 0);
             Assert.Single(newV.Edges);
