@@ -79,6 +79,34 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridAddVertex()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var points = new List<Vector3>()
+            {
+                new Vector3(-6, -4),
+                new Vector3(-2, -4),
+                new Vector3(3, -4),
+                new Vector3(1, 4.5, 3),
+                new Vector3(6, 3, -2),
+            };
+            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10), points);
+
+            ulong id;
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-2, -4), out id));
+            var oldV = adaptiveGrid.GetVertex(id);
+            var edgesBefore = oldV.Edges.Count;
+
+            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new List<ulong> { id });
+            Assert.NotNull(newV);
+            Assert.False(newV.Id == 0);
+            Assert.Single(newV.Edges);
+            Assert.True(newV.Edges.First().StartId == id || newV.Edges.First().EndId == id);
+            Assert.Equal(edgesBefore + 1, oldV.Edges.Count());
+            Assert.Contains(oldV.Edges, e => e.StartId == newV.Id || e.EndId == newV.Id);
+        }
+
+        [Fact]
         public void AdaptiveGridSubtractBox()
         {
             var adaptiveGrid = new AdaptiveGrid(new Transform());
