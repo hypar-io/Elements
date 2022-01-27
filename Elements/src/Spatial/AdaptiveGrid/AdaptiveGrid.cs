@@ -338,6 +338,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Add a Vertex or return existing one if it's withing grid tolerance.
+        /// Doesn't connect new Vertex to the grid with edges.
         /// </summary>
         /// <param name="point">Position of required vertex</param>
         /// <returns>New or existing Vertex.</returns>
