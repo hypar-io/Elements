@@ -201,6 +201,14 @@ namespace Elements
         }
 
         /// <summary>
+        /// Serialize the model to JSON using default arguments
+        /// </summary>
+        public string ToJson()
+        {
+            return ToJson();
+        }
+
+        /// <summary>
         /// Serialize the model to a JSON file.
         /// </summary>
         /// <param name="path">The path of the file on disk.</param>
@@ -274,7 +282,7 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
-            // A dictionary created for the purpose of caching properties 
+            // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
 
@@ -316,7 +324,7 @@ namespace Elements
             }
             else
             {
-                // This query had a nice little speed boost when we filtered for 
+                // This query had a nice little speed boost when we filtered for
                 // valid types first then filtered for custom attributes.
                 constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
                 properties.Add(t, constrainedProps);
