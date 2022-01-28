@@ -201,6 +201,24 @@ namespace Elements
         }
 
         /// <summary>
+        /// Serialize the model to JSON using default arguments.
+        /// </summary>
+        public string ToJson()
+        {
+            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
+            return ToJson(false, true);
+        }
+
+        /// <summary>
+        /// Serialize the model to JSON to match default arguments.
+        /// TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.
+        /// </summary>
+        public string ToJson(bool indent = false)
+        {
+            return ToJson(indent, true);
+        }
+
+        /// <summary>
         /// Serialize the model to a JSON file.
         /// </summary>
         /// <param name="path">The path of the file on disk.</param>
@@ -274,7 +292,7 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
-            // A dictionary created for the purpose of caching properties 
+            // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
 
@@ -316,7 +334,7 @@ namespace Elements
             }
             else
             {
-                // This query had a nice little speed boost when we filtered for 
+                // This query had a nice little speed boost when we filtered for
                 // valid types first then filtered for custom attributes.
                 constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
                 properties.Add(t, constrainedProps);
