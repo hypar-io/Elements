@@ -37,7 +37,6 @@ namespace Elements.Tests
             }
         }
 
-
         [Fact]
         public void AdaptiveGridBboxKeyPointsExample()
         {
@@ -108,7 +107,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void AdaptiveGridSubtractBox()
+        public void AdaptiveGridSubtractBoxKeepEdges()
         {
             var adaptiveGrid = new AdaptiveGrid(new Transform());
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
@@ -119,13 +118,52 @@ namespace Elements.Tests
                 points.Add(new Vector3(i, i, 1));
             }
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5), out _));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+            var numVertices = adaptiveGrid.GetVertices().Count;
 
             var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
-            adaptiveGrid.SubtractBox(box);
+            adaptiveGrid.SubtractBox(box, false);
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out var cutEdgeId));
+
+            var v = adaptiveGrid.GetVertex(cutEdgeId);
+            Assert.Single(v.Edges);
+            adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4, 1), out var borderId);
+            Assert.True(v.Edges.First().StartId == borderId || v.Edges.First().EndId == borderId);
+            //On each elevation one vertex is removed but 4 added
+            Assert.Equal(numVertices + (3 * (4 - 1)), adaptiveGrid.GetVertices().Count);
+        }
+
+        [Fact]
+        public void AdaptiveGridSubtractBoxCutEdges()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+
+            var points = new List<Vector3>();
+            for (int i = 1; i < 10; i++)
+            {
+                points.Add(new Vector3(i, i, 1));
+            }
+
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4, 1), out var borderId);
+            var borderV = adaptiveGrid.GetVertex(borderId);
+            var numEdges = borderV.Edges.Count;
+            var numVertices = adaptiveGrid.GetVertices().Count;
+
+            var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
+            adaptiveGrid.SubtractBox(box, true);
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            Assert.Equal(numEdges - 1, borderV.Edges.Count);
+            //On each elevation one vertex is removed and no added
+            Assert.Equal(numVertices - (3 * 1), adaptiveGrid.GetVertices().Count);
         }
 
         [Fact]
