@@ -315,10 +315,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="point">Position of required Vertex.</param>
         /// <param name="connections">Ids of other vertices to connect new Vertex with.</param>
-        /// <returns>New Vertex or existing one if it's withing grid tolerance.</returns>
+        /// <returns>New Vertex or existing one if it's within grid tolerance.</returns>
         public Vertex AddVertex(Vector3 point, List<Vertex> connections)
         {
-            if (!connections.Any())
+            if (connections == null || !connections.Any())
             {
                 throw new ArgumentException("Vertex should be connected to at least one other Vertex");
             }
