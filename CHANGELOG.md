@@ -4,8 +4,10 @@
 
 ### Added
 - `ModelLines`
+- `AdaptiveGrid.AddVertex(Vector3 point, List<Vertex> connections)`
 
 ### Changed
+- Add parameter `removeCutEdges` to `AdaptiveGrid.SubtructBox` that control if cut parts of intersected edges need to be inserted into the graph.
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
