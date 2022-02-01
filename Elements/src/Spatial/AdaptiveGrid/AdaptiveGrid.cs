@@ -166,7 +166,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// that is inside the box. Note that no new connections are created afterwards.
         /// </summary>
         /// <param name="box">Boding box to subtract</param>
-        public void SubtractBox(BBox3 box)
+        /// <param name="removeCutEdges">Should edge be removed or replaced by leftover pieces</param>
+        public void SubtractBox(BBox3 box, bool removeCutEdges = false)
         {
             List<Edge> edgesToDelete = new List<Edge>();
             foreach (var edge in GetEdges())
@@ -223,34 +224,43 @@ namespace Elements.Spatial.AdaptiveGrid
                         //If none - we just touched the corner
                         if (startInside)
                         {
-                            var v = AddVertex(intersections[0]);
-                            if (edge.EndId != v.Id)
+                            if (!removeCutEdges)
                             {
-                                AddEdge(v.Id, edge.EndId);
+                                var v = AddVertex(intersections[0]);
+                                if (edge.EndId != v.Id)
+                                {
+                                    AddEdge(v.Id, edge.EndId);
+                                }
                             }
                             edgesToDelete.Add(edge);
                         }
                         else if (endInside)
                         {
-                            var v = AddVertex(intersections[0]);
-                            if (edge.StartId != v.Id)
+                            if (!removeCutEdges)
                             {
-                                AddEdge(edge.StartId, v.Id);
+                                var v = AddVertex(intersections[0]);
+                                if (edge.StartId != v.Id)
+                                {
+                                    AddEdge(edge.StartId, v.Id);
+                                }
                             }
                             edgesToDelete.Add(edge);
                         }
                     }
                     if (intersections.Count == 2)
                     {
-                        var v0 = AddVertex(intersections[0]);
-                        var v1 = AddVertex(intersections[1]);
-                        if (edge.StartId != v0.Id)
+                        if (!removeCutEdges)
                         {
-                            AddEdge(edge.StartId, v0.Id);
-                        }
-                        if (edge.EndId != v1.Id)
-                        {
-                            AddEdge(v1.Id, edge.EndId);
+                            var v0 = AddVertex(intersections[0]);
+                            var v1 = AddVertex(intersections[1]);
+                            if (edge.StartId != v0.Id)
+                            {
+                                AddEdge(edge.StartId, v0.Id);
+                            }
+                            if (edge.EndId != v1.Id)
+                            {
+                                AddEdge(v1.Id, edge.EndId);
+                            }
                         }
                         edgesToDelete.Add(edge);
                     }
@@ -310,10 +320,38 @@ namespace Elements.Spatial.AdaptiveGrid
             return TryGetValue(zDict, point.Z, out id, tolerance);
         }
 
+        /// <summary>
+        /// Add a Vertex and connect in to one or more other vertices.
+        /// </summary>
+        /// <param name="point">Position of required Vertex.</param>
+        /// <param name="connections">Ids of other vertices to connect new Vertex with.</param>
+        /// <returns>New Vertex or existing one if it's within grid tolerance.</returns>
+        public Vertex AddVertex(Vector3 point, List<Vertex> connections)
+        {
+            if (connections == null || !connections.Any())
+            {
+                throw new ArgumentException("Vertex should be connected to at least one other Vertex");
+            }
+
+            Vertex v = AddVertex(point);
+            foreach (var c in connections)
+            {
+                AddEdge(v.Id, c.Id);
+            }
+
+            return v;
+        }
+
         #endregion
 
         #region Private logic
 
+        /// <summary>
+        /// Add a Vertex or return existing one if it's withing grid tolerance.
+        /// Doesn't connect new Vertex to the grid with edges.
+        /// </summary>
+        /// <param name="point">Position of required vertex</param>
+        /// <returns>New or existing Vertex.</returns>
         private Vertex AddVertex(Vector3 point)
         {
             if (!TryGetVertexIndex(point, out var id, Tolerance))
@@ -329,6 +367,10 @@ namespace Elements.Spatial.AdaptiveGrid
             return GetVertex(id);
         }
 
+        /// <summary>
+        /// Remove the Vertex with specified id from the grid.
+        /// </summary>
+        /// <param name="id">Vertex id to delete.</param>
         private void DeleteVertex(ulong id)
         {
             var vertex = _vertices[id];
@@ -351,6 +393,12 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
+        /// <summary>
+        /// Add an Edge or return the exiting one with given indexes.
+        /// </summary>
+        /// <param name="vertexId1">Index of the first Vertex</param>
+        /// <param name="vertexId2">Index of the second Vertex</param>
+        /// <returns>New or existing Edge.</returns>
         private Edge AddEdge(ulong vertexId1, ulong vertexId2)
         {
             if (vertexId1 == vertexId2)
@@ -381,6 +429,10 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
+        /// <summary>
+        /// Remove the Edge from the grid.
+        /// </summary>
+        /// <param name="edge">Edge to delete</param>
         private void DeleteEdge(Edge edge)
         {
             var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
