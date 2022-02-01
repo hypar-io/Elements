@@ -11,22 +11,12 @@ namespace Elements
     /// <summary>
     /// A ceiling defined by a planar profile extruded to a thickness.
     /// </summary>
-    public class Ceiling : GeometricElement, IHasOpenings
+    public class SolidCeiling : BaseCeiling, IHasOpenings
     {
         /// <summary>
         /// The thickness of the ceiling.
         /// </summary>
         public double Thickness { get; protected set; }
-
-        /// <summary>
-        /// The elevation of the ceiling.
-        /// </summary>
-        public double Elevation { get; protected set; }
-
-        /// <summary>
-        /// The perimeter of the ceiling.
-        /// </summary>
-        public Polygon Perimeter { get; protected set; }
 
         /// <summary>
         /// A collection of openings in the ceiling.
@@ -46,7 +36,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
         /// <param name="name">The name of the ceiling.</param>
-        public Ceiling(Polygon perimeter,
+        public SolidCeiling(Polygon perimeter,
                       double thickness,
                       double elevation,
                       Material material = null,
@@ -54,27 +44,15 @@ namespace Elements
                       Representation representation = null,
                       bool isElementDefinition = false,
                       Guid id = default(Guid),
-                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                 material != null ? material : BuiltInMaterials.Concrete,
-                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
-                                                 isElementDefinition,
-                                                 id != default(Guid) ? id : Guid.NewGuid(),
-                                                 name)
+                      string name = null)
+            : base(perimeter, elevation, material, transform, representation, isElementDefinition, id, name)
         {
             if (thickness <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException(nameof(thickness), "The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
             }
 
-            if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
-            {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
-            }
-
-            this.Elevation = elevation;
-            this.Perimeter = perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)); ;
             this.Thickness = thickness;
-            Transform.Move(Vector3.ZAxis * Elevation);
         }
 
         /// <summary>
@@ -89,35 +67,22 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the ceiling.</param>
         /// <param name="name">The name of the ceiling.</param>
-        public Ceiling(Polygon perimeter,
+        public SolidCeiling(Polygon perimeter,
                       double thickness,
                       Material material = null,
                       Transform transform = null,
                       Representation representation = null,
                       bool isElementDefinition = false,
                       Guid id = default(Guid),
-                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                 material != null ? material : BuiltInMaterials.Concrete,
-                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
-                                                 isElementDefinition,
-                                                 id != default(Guid) ? id : Guid.NewGuid(),
-                                                 name)
+                      string name = null)
+            : base(perimeter, material, transform, representation, isElementDefinition, id, name)
         {
             if (thickness <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException(nameof(thickness), "The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
             }
 
-            if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
-            {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
-            }
-
-            // we do not need null check cause id there is no vertices it will fail on calculating Normal
-            this.Elevation = perimeter.Vertices.First().Z;
-            this.Perimeter = perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis));
             this.Thickness = thickness;
-            Transform.Move(Vector3.ZAxis * Elevation);
         }
 
         /// <summary>
@@ -134,7 +99,7 @@ namespace Elements
         /// <param name="id">The id of the ceiling.</param>
         /// <param name="name">The name of the ceiling.</param>
         [JsonConstructor]
-        private Ceiling(Polygon perimeter,
+        protected SolidCeiling(Polygon perimeter,
                       double thickness,
                       double elevation,
                       Guid id = default(Guid),
@@ -142,25 +107,14 @@ namespace Elements
                       Transform transform = null,
                       Representation representation = null,
                       bool isElementDefinition = false,
-                      string name = null) : base(transform != null ? transform : new Transform(),
-                                                 material != null ? material : BuiltInMaterials.Concrete,
-                                                 representation != null ? representation : new Representation(new List<SolidOperation>()),
-                                                 isElementDefinition,
-                                                 id != default(Guid) ? id : Guid.NewGuid(),
-                                                 name)
+                      string name = null)
+            : base(perimeter, elevation, id, material, transform, representation, isElementDefinition, name)
         {
             if (thickness <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
+                throw new ArgumentOutOfRangeException(nameof(thickness), "The ceiling could not be created. The thickness of the ceiling must be greater than 0.0.");
             }
 
-            if (!perimeter.Normal().IsParallelTo(Vector3.ZAxis))
-            {
-                throw new ArgumentOutOfRangeException("The ceiling could not be created. The perimeter polygon must lie on the XY plane");
-            }
-
-            this.Elevation = elevation;
-            this.Perimeter = perimeter.Project(new Plane(Vector3.Origin, Vector3.ZAxis)); ;
             this.Thickness = thickness;
         }
 
@@ -206,24 +160,15 @@ namespace Elements
         /// <param name="geometry">The geometry of the ceiling.</param>
         /// <param name="transform">The ceiling's Transform.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
-        internal Ceiling(Solid geometry,
+        internal SolidCeiling(Solid geometry,
                       Transform transform = null,
-                      bool isElementDefinition = false) : base(transform != null ? transform : new Transform(),
-                                                         BuiltInMaterials.Default,
-                                                         new Representation(new List<SolidOperation>()),
-                                                         isElementDefinition,
-                                                         Guid.NewGuid(),
-                                                         null)
+                      bool isElementDefinition = false) : base(transform, isElementDefinition)
         {
             if (geometry == null)
             {
-                throw new ArgumentOutOfRangeException("You must supply one solid to construct a Ceiling.");
+                throw new ArgumentNullException(nameof(geometry), "You must supply one solid to construct a Ceiling.");
             }
 
-            if (transform != null)
-            {
-                this.Transform = transform;
-            }
             this.Representation.SolidOperations.Add(new ConstructedSolid(geometry));
         }
     }
