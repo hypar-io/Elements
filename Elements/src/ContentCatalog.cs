@@ -53,11 +53,11 @@ namespace Elements
         public static ContentCatalog FromJson(string json)
         {
             var catalogObject = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(json);
-            if (catalogObject.ContainsKey("discriminator"))
+            if (catalogObject.TryGetValue("discriminator", out _))
             {
                 return catalogObject.ToObject<ContentCatalog>();
             }
-            else if (catalogObject.ContainsKey("Elements") && catalogObject.ContainsKey("Transform")) // catalog is stored in a model
+            else if (catalogObject.TryGetValue("Elements", out _) && catalogObject.TryGetValue("Transform", out _)) // catalog is stored in a model
             {
                 var model = Model.FromJson(json);
                 return model.AllElementsOfType<ContentCatalog>().First();
