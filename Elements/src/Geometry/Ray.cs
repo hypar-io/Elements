@@ -187,23 +187,31 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The Polygon to intersect with.</param>
         /// <param name="result">The intersection result.</param>
+        /// <param name="containment">An enumeration detailing the type of intersection if one occurs.</param>
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
-        public bool Intersects(Polygon polygon, out Vector3 result)
+        public bool Intersects(Polygon polygon, out Vector3 result, out Containment containment)
         {
             var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
             if (Intersects(plane, out Vector3 test))
             {
                 // Check the intersection against all the polygon's vertices.
-                // If the intrsection is at a vertex, the point is contained.
+                // If the intersection is at a vertex, the point is contained.
                 if (polygon.Vertices.Any(v => v.IsAlmostEqualTo(test)))
                 {
                     result = test;
+                    containment = Containment.CoincidesAtVertex;
                     return true;
                 }
+
                 result = test;
-                return polygon.Contains3D(test);
+                if (polygon.Contains3D(test))
+                {
+                    containment = Containment.Inside;
+                    return true;
+                }
             }
             result = default;
+            containment = Containment.Outside;
             return false;
         }
 

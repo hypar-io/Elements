@@ -30,9 +30,9 @@ namespace Elements.Geometry.Solids
             var result = MergeCoplanarFaces(allFaces, Union);
             if (result != null)
             {
-                foreach (var p in result)
+                foreach (var (perimeter, holes) in result)
                 {
-                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
+                    s.AddFace(perimeter, holes, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -132,9 +132,9 @@ namespace Elements.Geometry.Solids
             var result = MergeCoplanarFaces(allFaces, Difference);
             if (result != null)
             {
-                foreach (var p in result)
+                foreach (var (perimeter, holes) in result)
                 {
-                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
+                    s.AddFace(perimeter, holes, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -173,9 +173,9 @@ namespace Elements.Geometry.Solids
             var result = MergeCoplanarFaces(allFaces, Intersect);
             if (result != null)
             {
-                foreach (var p in result)
+                foreach (var (perimeter, holes) in result)
                 {
-                    s.AddFace(p.Item1, p.Item2, mergeVerticesAndEdges: true);
+                    s.AddFace(perimeter, holes, mergeVerticesAndEdges: true);
                 }
             }
 
@@ -304,7 +304,7 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="allFaces">A collection of tuples of coplanar polygon information.</param>
         /// <param name="merge">The delegate that will be used to merge the two polygons.</param>
-        private static List<(Polygon, List<Polygon>)> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
+        private static List<(Polygon perimeter, List<Polygon> holes)> MergeCoplanarFaces(List<(Polygon polygon, SetClassification setClassification, CoplanarSetClassification coplanarClassification)> allFaces,
                                                         Func<Polygon, Polygon, List<Polygon>> merge)
         {
             var aCoplanar = allFaces.Where(f => f.coplanarClassification == CoplanarSetClassification.ACoplanarB).GroupBy(x => x.polygon._plane.Normal);
