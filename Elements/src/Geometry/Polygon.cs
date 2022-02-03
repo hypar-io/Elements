@@ -1302,7 +1302,7 @@ namespace Elements.Geometry
             var ray = new Ray(p.Vertices[0], p._plane.Normal);
             foreach (var trimPoly in trimPolygons)
             {
-                if (ray.Intersects(trimPoly, out _))
+                if (ray.Intersects(trimPoly, out _, out _))
                 {
                     intersectionCount++;
                 }
