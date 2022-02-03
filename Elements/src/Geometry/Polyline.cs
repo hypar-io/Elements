@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Validators;
+using Elements.Search;
 
 namespace Elements.Geometry
 {
@@ -15,6 +16,12 @@ namespace Elements.Geometry
     /// </example>
     public class Polyline : Curve, IEquatable<Polyline>
     {
+        /// <summary>
+        /// A bounding box created once during the polyline's construction.
+        /// This will not be updated when a polyline's vertices are changed.
+        /// </summary>
+        internal BBox3 _bounds;
+
         /// <summary>The vertices of the polygon.</summary>
         [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -35,6 +42,7 @@ namespace Elements.Geometry
                 Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
                 CheckSegmentLengthAndThrow(Edges());
             }
+            _bounds = new BBox3(Vertices);
         }
 
         /// <summary>
@@ -204,6 +212,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Polyline TransformedPolyline(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             var transformed = new Vector3[this.Vertices.Count];
             for (var i = 0; i < transformed.Length; i++)
             {
@@ -219,6 +232,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return TransformedPolyline(transform);
         }
 
@@ -907,31 +925,37 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                var edge = (a, b);
+
+                // An edge may have multiple split points. 
+                // We store these in a list and sort it along the
+                // direction of the edge, before inserting the points
+                // into the vertex list and incrementing i by the correct
+                // amount to move forward to the next edge.
+                var newEdgeVertices = new List<Vector3>();
+                var comparer = new DirectionComparer((edge.a - edge.b).Unitized());
 
                 for (var j = points.Count - 1; j >= 0; j--)
                 {
                     var point = points[j];
 
-                    if (point.IsAlmostEqualTo(a) || point.IsAlmostEqualTo(b))
+                    if (point.IsAlmostEqualTo(edge.a) || point.IsAlmostEqualTo(edge.b))
                     {
                         // The split point is coincident with a vertex.
                         continue;
                     }
 
-                    if (point.DistanceTo(new Line(a, b)).ApproximatelyEquals(0.0))
+                    if (point.DistanceTo(edge, out var newPoint).ApproximatelyEquals(0.0))
                     {
-                        if (i > this.Vertices.Count - 1)
+                        if (!newEdgeVertices.Contains(newPoint))
                         {
-                            this.Vertices.Add(point);
+                            newEdgeVertices.Add(newPoint);
                         }
-                        else
-                        {
-                            this.Vertices.Insert(i + 1, point);
-                        }
-
-                        break;
                     }
                 }
+                newEdgeVertices.Sort(comparer);
+                ((List<Vector3>)this.Vertices).InsertRange(i + 1, newEdgeVertices);
+                i += newEdgeVertices.Count;
             }
             return;
         }

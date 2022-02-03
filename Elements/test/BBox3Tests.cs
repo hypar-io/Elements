@@ -245,5 +245,30 @@ namespace Elements.Tests
             var pointInUVW2 = box4.UVWAtPoint(pointInBox2);
             Assert.Equal(uvw2, pointInUVW2);
         }
+
+        [Fact]
+        public void BoundingBoxIntersections()
+        {
+            // Contained
+            var b1 = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var b2 = new BBox3(new Vector3(1, 1, 1), new Vector3(6, 6, 6));
+            Assert.True(b1.Intersects(b2));
+
+            // Coincident at corner
+            b2 = new BBox3(new Vector3(-1, -1, -1), Vector3.Origin);
+            Assert.True(b1.Intersects(b2));
+
+            // Not contained or touching
+            b2 = new BBox3(new Vector3(6, 6, 6), new Vector3(10, 10, 10));
+            Assert.False(b1.Intersects(b2));
+
+            // Full overlap
+            b2 = b1;
+            Assert.True(b1.Intersects(b2));
+
+            // Coincident at face
+            b2 = new BBox3(new Vector3(0, -5, 0), new Vector3(5, 0, 5));
+            Assert.True(b1.Intersects(b2));
+        }
     }
 }

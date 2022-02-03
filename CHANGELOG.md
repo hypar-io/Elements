@@ -3,11 +3,20 @@
 ## 0.9.9
 
 ### Added
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
+- `SetClassification`
+- `LocalClassification`
 - `ModelLines`
 - `AdaptiveGrid.AddVertex(Vector3 point, List<Vertex> connections)`
 
 ### Changed
-- Add parameter `removeCutEdges` to `AdaptiveGrid.SubtructBox` that control if cut parts of intersected edges need to be inserted into the graph.
+- Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
@@ -28,7 +37,6 @@
 ## 0.9.7
 
 ### Added
-
 - `GridLine.GetCircleTransform()`
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
@@ -159,9 +167,13 @@
 
 ### Added
 
+- Support for DXF from many basic elements.
+- `SetOperations.ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
+- `SetOperations.BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set, SetClassification shared)`
+- `RandomExtensions.NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)`
+- `RandomExtensions.NextRay(this Random random, Vector3 origin)`
 - `ModelArrows`
 - `ModelText`
-- `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
 - `Transform.Inverted()`
 - `AdaptiveGrid`
