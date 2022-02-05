@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Transform
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -271,7 +271,8 @@ for (var i = 0.0; i &lt; 360.0; i += 360.0 / (double)count)
   </div>
   <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
   <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Matrix_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Matrix)">Transform(Matrix)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a transform.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -292,6 +293,33 @@ public Transform(Matrix matrix)</code></pre>
         <td><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></td>
         <td><span class="parametername">matrix</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform__ctor_" data-uid="Elements.Geometry.Transform.#ctor*"></a>
+  <h4 id="Elements_Geometry_Transform__ctor_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Transform.#ctor(Elements.Geometry.Plane)">Transform(Plane)</h4>
+  <div class="markdown level1 summary"><p>Create a transform using the provided plane's origin and normal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane used to orient the transform.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -728,17 +756,74 @@ public Vector3 ZAxis { get; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Transform_CreateHorizontalFrameAlongCurve_" data-uid="Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve*"></a>
+  <h4 id="Elements_Geometry_Transform_CreateHorizontalFrameAlongCurve_Elements_Geometry_Curve_System_Double_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(Elements.Geometry.Curve,System.Double,Elements.Geometry.Vector3)">CreateHorizontalFrameAlongCurve(Curve, Double, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create a transform that is oriented along
+a curve at parameter t. The transform's +z axis will align with
+the +z world axis, and the +x axis will align with the XY projection of the tangent
+of the curve. If you want a perpendicular transform, use <code>Curve.TransformAt(t)</code> instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Transform CreateHorizontalFrameAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The curve along which to orient the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">t</span></td>
+        <td><p>A parameter value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">up</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_CreateOrientedAlongCurve_" data-uid="Elements.Geometry.Transform.CreateOrientedAlongCurve*"></a>
   <h4 id="Elements_Geometry_Transform_CreateOrientedAlongCurve_Elements_Geometry_Curve_System_Double_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.CreateOrientedAlongCurve(Elements.Geometry.Curve,System.Double,Elements.Geometry.Vector3)">CreateOrientedAlongCurve(Curve, Double, Vector3)</h4>
   <div class="markdown level1 summary"><p>Create a transform that is oriented along
 a curve at parameter t. The transform's +z axis will align with
 the +z world axis, and the +x axis will align with the tangent
-of the curve.</p>
+of the curve. If you want a perpendicular transform, use <code>Curve.TransformAt(t)</code> instead.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public static Transform CreateOrientedAlongCurve(Curve curve, double t, Vector3 up = default(Vector3))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -836,6 +921,30 @@ of the curve.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Invert()</code></pre>
   </div>
+  <a id="Elements_Geometry_Transform_Inverted_" data-uid="Elements.Geometry.Transform.Inverted*"></a>
+  <h4 id="Elements_Geometry_Transform_Inverted" data-uid="Elements.Geometry.Transform.Inverted">Inverted()</h4>
+  <div class="markdown level1 summary"><p>Return a new transform which is the inverse of this transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Inverted()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Transform_Move_" data-uid="Elements.Geometry.Transform.Move*"></a>
   <h4 id="Elements_Geometry_Transform_Move_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.Move(Elements.Geometry.Vector3)">Move(Vector3)</h4>
   <div class="markdown level1 summary"><p>Apply a translation to the transform.</p>
@@ -1168,7 +1277,7 @@ public Line OfLine(Line line)</code></pre>
   </table>
   <a id="Elements_Geometry_Transform_OfPoint_" data-uid="Elements.Geometry.Transform.OfPoint*"></a>
   <h4 id="Elements_Geometry_Transform_OfPoint_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.OfPoint(Elements.Geometry.Vector3)">OfPoint(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform ignoring the translation.</p>
+  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1341,7 +1450,7 @@ public Polygon OfPolygon(Polygon polygon)</code></pre>
   </table>
   <a id="Elements_Geometry_Transform_OfVector_" data-uid="Elements.Geometry.Transform.OfVector*"></a>
   <h4 id="Elements_Geometry_Transform_OfVector_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Transform.OfVector(Elements.Geometry.Vector3)">OfVector(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform.</p>
+  <div class="markdown level1 summary"><p>Transform a vector into the coordinate space defined by this transform ignoring the translation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1466,6 +1575,54 @@ public Polygon OfPolygon(Polygon polygon)</code></pre>
         <td><span class="parametername">angle</span></td>
         <td><p>The angle of rotation in degrees.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Transform_Rotated_" data-uid="Elements.Geometry.Transform.Rotated*"></a>
+  <h4 id="Elements_Geometry_Transform_Rotated_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Transform.Rotated(Elements.Geometry.Vector3,System.Double)">Rotated(Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Return a new transform which is a rotated copy of this transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Rotated(Vector3 axis, double angle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">axis</span></td>
+        <td><p>The axis of rotation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">angle</span></td>
+        <td><p>The angle of rotation in degrees.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

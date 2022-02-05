@@ -87,8 +87,15 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            if (this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            }
+            else
+            {
+                var o = (Extrude)this.Representation.SolidOperations[0];
+                o.Height = this.Height;
+            }
         }
     }
 }

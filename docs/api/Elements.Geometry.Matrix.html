@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Matrix
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -77,7 +77,9 @@
   
   <h1 id="Elements_Geometry_Matrix" data-uid="Elements.Geometry.Matrix" class="text-break">Class Matrix
   </h1>
-  <div class="markdown level0 summary"><p>A column-ordered 4x3 matrix.</p>
+  <div class="markdown level0 summary"><p>A column-ordered 3x4 matrix.
+The first 3 columns represent the X, Y, and Z axes of the coordinate system.
+The fourth column represents the translation of the coordinate system.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -173,13 +175,14 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Matrix__ctor_" data-uid="Elements.Geometry.Matrix.#ctor*"></a>
-  <h4 id="Elements_Geometry_Matrix__ctor_System_Collections_Generic_IList_System_Double__" data-uid="Elements.Geometry.Matrix.#ctor(System.Collections.Generic.IList{System.Double})">Matrix(IList&lt;Double&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="Elements_Geometry_Matrix__ctor_System_Double___" data-uid="Elements.Geometry.Matrix.#ctor(System.Double[])">Matrix(Double[])</h4>
+  <div class="markdown level1 summary"><p>Construct a matrix.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Matrix(IList&lt;double&gt; components)</code></pre>
+public Matrix(double[] components)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -192,9 +195,10 @@ public Matrix(IList&lt;double&gt; components)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="xref">System.Double</span>[]</td>
         <td><span class="parametername">components</span></td>
-        <td></td>
+        <td><p>The components of the matrix.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -211,7 +215,7 @@ public Matrix(IList&lt;double&gt; components)</code></pre>
 [Required]
 [MinLength(12)]
 [MaxLength(12)]
-public IList&lt;double&gt; Components { get; set; }</code></pre>
+public double[] Components { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,7 +227,7 @@ public IList&lt;double&gt; Components { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="xref">System.Double</span>[]</td>
         <td></td>
       </tr>
     </tbody>
@@ -704,7 +708,32 @@ public Vector3 ZAxis { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Matrix Inverse()</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Matrix.Inverted() instead.&quot;)]
+public Matrix Inverse()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Matrix_Inverted_" data-uid="Elements.Geometry.Matrix.Inverted*"></a>
+  <h4 id="Elements_Geometry_Matrix_Inverted" data-uid="Elements.Geometry.Matrix.Inverted">Inverted()</h4>
+  <div class="markdown level1 summary"><p>Compute the inverse of the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Matrix Inverted()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">

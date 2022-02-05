@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Arc
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Geometry_Arc" data-uid="Elements.Geometry.Arc" class="text-break">Class Arc
   </h1>
-  <div class="markdown level0 summary"><p>An arc defined by a CCW rotation around a center between a start angle and an end angle.</p>
+  <div class="markdown level0 summary"><p>An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -216,8 +216,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Arc.html">Arc</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -257,13 +257,14 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Arc_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Arc : Curve, ITransformable&lt;Curve&gt;, ICurve, IEquatable&lt;Arc&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Arc : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Arc&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)">Arc(Vector3, Double, Double, Double)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Create an arc.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -283,28 +284,32 @@ public Arc(Vector3 center, double radius, double startAngle, double endAngle)</c
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">center</span></td>
-        <td></td>
+        <td><p>The center of the arc.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">radius</span></td>
-        <td></td>
+        <td><p>The radius of the arc.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">startAngle</span></td>
-        <td></td>
+        <td><p>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endAngle</span></td>
-        <td></td>
+        <td><p>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(System.Double,System.Double,System.Double)">Arc(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Construct an arc.</p>
+  <div class="markdown level1 summary"><p>Create an arc.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -845,10 +850,10 @@ public double StartAngle { get; set; }</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

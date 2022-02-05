@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Extrude
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -93,13 +93,19 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_IsVoid">SolidOperation.IsVoid</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_LocalTransform">SolidOperation.LocalTransform</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_Solid">SolidOperation.Solid</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_IsVoid">SolidOperation.IsVoid</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_PropertyChanged">SolidOperation.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Solids.SolidOperation.html#Elements_Geometry_Solids_SolidOperation_RaisePropertyChanged_System_String_">SolidOperation.RaisePropertyChanged(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -133,7 +139,8 @@
   </h3>
   <a id="Elements_Geometry_Solids_Extrude__ctor_" data-uid="Elements.Geometry.Solids.Extrude.#ctor*"></a>
   <h4 id="Elements_Geometry_Solids_Extrude__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Boolean)">Extrude(Profile, Double, Vector3, Boolean)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct an extrusion.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -246,57 +253,6 @@ public Profile Profile { get; set; }</code></pre>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-  </h3>
-  <a id="Elements_Geometry_Solids_Extrude_RaisePropertyChanged_" data-uid="Elements.Geometry.Solids.Extrude.RaisePropertyChanged*"></a>
-  <h4 id="Elements_Geometry_Solids_Extrude_RaisePropertyChanged_System_String_" data-uid="Elements.Geometry.Solids.Extrude.RaisePropertyChanged(System.String)">RaisePropertyChanged(String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void RaisePropertyChanged(string propertyName = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">propertyName</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="events">Events
-  </h3>
-  <h4 id="Elements_Geometry_Solids_Extrude_PropertyChanged" data-uid="Elements.Geometry.Solids.Extrude.PropertyChanged">PropertyChanged</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public event PropertyChangedEventHandler PropertyChanged</code></pre>
-  </div>
-  <h5 class="eventType">Event Type</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ComponentModel.PropertyChangedEventHandler</span></td>
         <td></td>
       </tr>
     </tbody>

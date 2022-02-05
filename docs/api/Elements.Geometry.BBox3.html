@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct BBox3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -102,6 +102,34 @@ public struct BBox3</code></pre>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
+  <h4 id="Elements_Geometry_BBox3__ctor_Elements_Element_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Element)">BBox3(Element)</h4>
+  <div class="markdown level1 summary"><p>Create the BBox3 for an Element. Elements without any geometry will return invalid boxes.
+Properties of the element that are themselves elements will not be considered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3(Element element)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Element.html">Element</a></td>
+        <td><span class="parametername">element</span></td>
+        <td><p>The element.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
   <h4 id="Elements_Geometry_BBox3__ctor_Elements_Geometry_Profile_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Geometry.Profile)">BBox3(Profile)</h4>
   <div class="markdown level1 summary"><p>Create the BBox3 for a Profile.</p>
 </div>
@@ -130,7 +158,8 @@ public struct BBox3</code></pre>
   </table>
   <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
   <h4 id="Elements_Geometry_BBox3__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">BBox3(Vector3, Vector3)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Create a bounding box.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -150,12 +179,41 @@ public BBox3(Vector3 min, Vector3 max)</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">min</span></td>
-        <td></td>
+        <td><p>The minimum point.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">max</span></td>
-        <td></td>
+        <td><p>The maximum point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
+  <h4 id="Elements_Geometry_BBox3__ctor_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">BBox3(IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a bounding box from an array of points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3(IEnumerable&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points which are contained within the bounding box.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -182,33 +240,6 @@ public BBox3(Vector3 min, Vector3 max)</code></pre>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><span class="parametername">polygons</span></td>
         <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_BBox3__ctor_" data-uid="Elements.Geometry.BBox3.#ctor*"></a>
-  <h4 id="Elements_Geometry_BBox3__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.BBox3.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">BBox3(IList&lt;Vector3&gt;)</h4>
-  <div class="markdown level1 summary"><p>Construct a bounding box from an array of points.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BBox3(IList&lt;Vector3&gt; points)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">points</span></td>
-        <td><p>The points which are contained within the bounding box.</p>
-</td>
       </tr>
     </tbody>
   </table>
@@ -264,6 +295,181 @@ public Vector3 Min { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_BBox3_Volume_" data-uid="Elements.Geometry.BBox3.Volume*"></a>
+  <h4 id="Elements_Geometry_BBox3_Volume" data-uid="Elements.Geometry.BBox3.Volume">Volume</h4>
+  <div class="markdown level1 summary"><p>The volume of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double Volume { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_XDomain_" data-uid="Elements.Geometry.BBox3.XDomain*"></a>
+  <h4 id="Elements_Geometry_BBox3_XDomain" data-uid="Elements.Geometry.BBox3.XDomain">XDomain</h4>
+  <div class="markdown level1 summary"><p>A domain representing the x extents of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d XDomain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_XSize_" data-uid="Elements.Geometry.BBox3.XSize*"></a>
+  <h4 id="Elements_Geometry_BBox3_XSize" data-uid="Elements.Geometry.BBox3.XSize">XSize</h4>
+  <div class="markdown level1 summary"><p>The x dimension of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double XSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_YDomain_" data-uid="Elements.Geometry.BBox3.YDomain*"></a>
+  <h4 id="Elements_Geometry_BBox3_YDomain" data-uid="Elements.Geometry.BBox3.YDomain">YDomain</h4>
+  <div class="markdown level1 summary"><p>A domain representing the y extents of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d YDomain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_YSize_" data-uid="Elements.Geometry.BBox3.YSize*"></a>
+  <h4 id="Elements_Geometry_BBox3_YSize" data-uid="Elements.Geometry.BBox3.YSize">YSize</h4>
+  <div class="markdown level1 summary"><p>The y dimension of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double YSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_ZDomain_" data-uid="Elements.Geometry.BBox3.ZDomain*"></a>
+  <h4 id="Elements_Geometry_BBox3_ZDomain" data-uid="Elements.Geometry.BBox3.ZDomain">ZDomain</h4>
+  <div class="markdown level1 summary"><p>A domain representing the z extents of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d ZDomain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_ZSize_" data-uid="Elements.Geometry.BBox3.ZSize*"></a>
+  <h4 id="Elements_Geometry_BBox3_ZSize" data-uid="Elements.Geometry.BBox3.ZSize">ZSize</h4>
+  <div class="markdown level1 summary"><p>The z dimension of the bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double ZSize { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_BBox3_Center_" data-uid="Elements.Geometry.BBox3.Center*"></a>
@@ -287,6 +493,77 @@ public Vector3 Min { get; set; }</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>The center of the bounding box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Contains_" data-uid="Elements.Geometry.BBox3.Contains*"></a>
+  <h4 id="Elements_Geometry_BBox3_Contains_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Contains(Elements.Geometry.Vector3)">Contains(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this bounding box contain the provided point?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the bounding box contains the point, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Corners_" data-uid="Elements.Geometry.BBox3.Corners*"></a>
+  <h4 id="Elements_Geometry_BBox3_Corners" data-uid="Elements.Geometry.BBox3.Corners">Corners()</h4>
+  <div class="markdown level1 summary"><p>Get all 8 corners of this bounding box.
+Ordering is CCW bottom, then CCW top, each starting from minimum (X,Y).
+For a unit cube this would be:
+(0,0,0),(1,0,0),(1,1,0),(0,1,0),(0,0,1),(1,0,1),(1,1,1),(0,1,1)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vector3&gt; Corners()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><p>The corners of the bounding box.</p>
 </td>
       </tr>
     </tbody>
@@ -409,6 +686,110 @@ equal to this bounding box within Epsilon?</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_BBox3_PointAt_" data-uid="Elements.Geometry.BBox3.PointAt*"></a>
+  <h4 id="Elements_Geometry_BBox3_PointAt_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.PointAt(Elements.Geometry.Vector3)">PointAt(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Get a point from this bounding box by supplying a vector specifying normalized parameters from 0 to 1.
+A point at (0,0,0) will be the minimum point of the bounding box, a
+point at (1,1,1) will be the maximum point, and a point at
+(0.5,0.5,0.5) will be the center.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 PointAt(Vector3 uvw)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">uvw</span></td>
+        <td><p>The vector in the box's parametric UVW coordinate space.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A point in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_PointAt_" data-uid="Elements.Geometry.BBox3.PointAt*"></a>
+  <h4 id="Elements_Geometry_BBox3_PointAt_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.BBox3.PointAt(System.Double,System.Double,System.Double)">PointAt(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get a point from this bounding box by supplying normalized parameters from 0 to 1.
+A point at (0,0,0) will be the minimum point of the bounding box, a
+point at (1,1,1) will be the maximum point, and a point at
+(0.5,0.5,0.5) will be the center.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 PointAt(double u, double v, double w)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The u parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The v parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">w</span></td>
+        <td><p>The w parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A point in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_BBox3_ToString_" data-uid="Elements.Geometry.BBox3.ToString*"></a>
   <h4 id="Elements_Geometry_BBox3_ToString" data-uid="Elements.Geometry.BBox3.ToString">ToString()</h4>
   <div class="markdown level1 summary"><p>The string representation of the bounding box.</p>
@@ -435,6 +816,63 @@ equal to this bounding box within Epsilon?</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.ValueType.ToString()</span></div>
+  <a id="Elements_Geometry_BBox3_TransformAt_" data-uid="Elements.Geometry.BBox3.TransformAt*"></a>
+  <h4 id="Elements_Geometry_BBox3_TransformAt_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.BBox3.TransformAt(System.Double,System.Double,System.Double)">TransformAt(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get a transform from this bounding box by supplying normalized parameters from 0 to 1.
+A point at (0,0,0) will be a transform at the minimum point of the bounding box, a
+point at (1,1,1) will be at the maximum point, and a point at
+(0.5,0.5,0.5) will be at the center.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform TransformAt(double u, double v, double w)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The u parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The v parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">w</span></td>
+        <td><p>The w parameter at which to evaluate the box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_BBox3_Translated_" data-uid="Elements.Geometry.BBox3.Translated*"></a>
   <h4 id="Elements_Geometry_BBox3_Translated_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Translated(Elements.Geometry.Vector3)">Translated(Vector3)</h4>
   <div class="markdown level1 summary"><p>Get a translated copy of the bounding box.</p>
@@ -474,6 +912,50 @@ equal to this bounding box within Epsilon?</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_UVWAtPoint_" data-uid="Elements.Geometry.BBox3.UVWAtPoint*"></a>
+  <h4 id="Elements_Geometry_BBox3_UVWAtPoint_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.UVWAtPoint(Elements.Geometry.Vector3)">UVWAtPoint(Vector3)</h4>
+  <div class="markdown level1 summary"><p>For a point in world coordinates, get the corresponding vector
+in the box's parametric UVW coordinate space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vector3 UVWAtPoint(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>A point in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A Vector3 representing the corresponding U,V,W coordinates in the box's coordinate space.</p>
+</td>
       </tr>
     </tbody>
   </table>

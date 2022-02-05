@@ -281,9 +281,9 @@ namespace Elements.Tests
             var min = new Vector3();
             var max = new Vector3(5, 5);
             var polygon = Polygon.Rectangle(min, max);
-            Assert.True(new Ray(new Vector3(0, 0, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
-            Assert.True(new Ray(new Vector3(2.5, 2.5, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
-            Assert.False(new Ray(new Vector3(-1, -1, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _));
+            Assert.True(new Ray(new Vector3(0, 0, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _, out _));
+            Assert.True(new Ray(new Vector3(2.5, 2.5, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _, out _));
+            Assert.False(new Ray(new Vector3(-1, -1, -1), new Vector3(0, 0, 1)).Intersects(polygon, out var _, out _));
         }
 
         [Fact]

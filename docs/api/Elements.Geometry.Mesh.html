@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Mesh
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -77,7 +77,7 @@
   
   <h1 id="Elements_Geometry_Mesh" data-uid="Elements.Geometry.Mesh" class="text-break">Class Mesh
   </h1>
-  <div class="markdown level0 summary"><p>A triangulated mesh.</p>
+  <div class="markdown level0 summary"><p>A triangle mesh.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -125,8 +125,35 @@ public class Mesh</code></pre>
     <pre><code class="lang-csharp hljs">public Mesh()</code></pre>
   </div>
   <a id="Elements_Geometry_Mesh__ctor_" data-uid="Elements.Geometry.Mesh.#ctor*"></a>
+  <h4 id="Elements_Geometry_Mesh__ctor_Elements_Geometry_Mesh_" data-uid="Elements.Geometry.Mesh.#ctor(Elements.Geometry.Mesh)">Mesh(Mesh)</h4>
+  <div class="markdown level1 summary"><p>Create a new mesh from another mesh by copying vertices and triangles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Mesh(Mesh mesh)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
+        <td><span class="parametername">mesh</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh__ctor_" data-uid="Elements.Geometry.Mesh.#ctor*"></a>
   <h4 id="Elements_Geometry_Mesh__ctor_System_Collections_Generic_IList_Elements_Geometry_Vertex__System_Collections_Generic_IList_Elements_Geometry_Triangle__" data-uid="Elements.Geometry.Mesh.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vertex},System.Collections.Generic.IList{Elements.Geometry.Triangle})">Mesh(IList&lt;Vertex&gt;, IList&lt;Triangle&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a mesh.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -146,12 +173,14 @@ public Mesh(IList&lt;Vertex&gt; vertices, IList&lt;Triangle&gt; triangles)</code
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vertex.html">Vertex</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
-        <td></td>
+        <td><p>The vertices of the mesh.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a>&gt;</td>
         <td><span class="parametername">triangles</span></td>
-        <td></td>
+        <td><p>The triangles of the mesh.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -306,13 +335,13 @@ public IList&lt;Vertex&gt; Vertices { get; set; }</code></pre>
     </tbody>
   </table>
   <a id="Elements_Geometry_Mesh_AddVertex_" data-uid="Elements.Geometry.Mesh.AddVertex*"></a>
-  <h4 id="Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_UV_Elements_Geometry_Vector3_Elements_Geometry_Color_" data-uid="Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color)">AddVertex(Vector3, UV, Vector3, Color)</h4>
+  <h4 id="Elements_Geometry_Mesh_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_UV_Elements_Geometry_Vector3_Elements_Geometry_Color_System_Boolean_System_Double_" data-uid="Elements.Geometry.Mesh.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.UV,Elements.Geometry.Vector3,Elements.Geometry.Color,System.Boolean,System.Double)">AddVertex(Vector3, UV, Vector3, Color, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Add a vertex to the mesh.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 position, UV uv = default(UV), Vector3 normal = default(Vector3), Color color = default(Color))</code></pre>
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 position, UV uv = default(UV), Vector3 normal = default(Vector3), Color color = default(Color), bool merge = false, double edgeAngle = 30)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -346,6 +375,20 @@ public IList&lt;Vertex&gt; Vertices { get; set; }</code></pre>
         <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
         <td><span class="parametername">color</span></td>
         <td><p>The vertex's color.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">merge</span></td>
+        <td><p>If true, and a vertex already exists with a
+position within Vector3.EPSILON, that vertex will be returned.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">edgeAngle</span></td>
+        <td><p>If merge is true, vertices will be
+merged if the angle between them is less than edgeAngle.</p>
 </td>
       </tr>
     </tbody>
@@ -467,97 +510,73 @@ the normals of the incident faces.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Mesh_GetBuffers_" data-uid="Elements.Geometry.Mesh.GetBuffers*"></a>
-  <h4 id="Elements_Geometry_Mesh_GetBuffers_System_Byte____System_Byte____System_Byte____System_Byte____System_Byte____System_Double____System_Double____System_Double____System_Double____System_Single____System_Single____System_UInt16__System_UInt16__System_Double____System_Double____" data-uid="Elements.Geometry.Mesh.GetBuffers(System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Byte[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Double[]@,System.Single[]@,System.Single[]@,System.UInt16@,System.UInt16@,System.Double[]@,System.Double[]@)">GetBuffers(out Byte[], out Byte[], out Byte[], out Byte[], out Byte[], out Double[], out Double[], out Double[], out Double[], out Single[], out Single[], out UInt16, out UInt16, out Double[], out Double[])</h4>
+  <h4 id="Elements_Geometry_Mesh_GetBuffers" data-uid="Elements.Geometry.Mesh.GetBuffers">GetBuffers()</h4>
   <div class="markdown level1 summary"><p>Get all buffers required for rendering.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void GetBuffers(out byte[] vertexBuffer, out byte[] indexBuffer, out byte[] normalBuffer, out byte[] colorBuffer, out byte[] uvBuffer, out double[] v_max, out double[] v_min, out double[] n_min, out double[] n_max, out float[] c_min, out float[] c_max, out ushort index_min, out ushort index_max, out double[] uv_min, out double[] uv_max)</code></pre>
+    <pre><code class="lang-csharp hljs">public GraphicsBuffers GetBuffers()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">vertexBuffer</span></td>
+        <td><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></td>
         <td></td>
       </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_GetNakedBoundaries_" data-uid="Elements.Geometry.Mesh.GetNakedBoundaries*"></a>
+  <h4 id="Elements_Geometry_Mesh_GetNakedBoundaries" data-uid="Elements.Geometry.Mesh.GetNakedBoundaries">GetNakedBoundaries()</h4>
+  <div class="markdown level1 summary"><p>Get the naked edges of this mesh as polylines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Polyline&gt; GetNakedBoundaries()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">indexBuffer</span></td>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
         <td></td>
       </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_GetNakedEdges_" data-uid="Elements.Geometry.Mesh.GetNakedEdges*"></a>
+  <h4 id="Elements_Geometry_Mesh_GetNakedEdges" data-uid="Elements.Geometry.Mesh.GetNakedEdges">GetNakedEdges()</h4>
+  <div class="markdown level1 summary"><p>Get the open edges of this mesh.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Line&gt; GetNakedEdges()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">normalBuffer</span></td>
-        <td></td>
+        <th>Type</th>
+        <th>Description</th>
       </tr>
+    </thead>
+    <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">colorBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Byte</span>[]</td>
-        <td><span class="parametername">uvBuffer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">v_max</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">v_min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">n_min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">n_max</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span>[]</td>
-        <td><span class="parametername">c_min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Single</span>[]</td>
-        <td><span class="parametername">c_max</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">index_min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.UInt16</span></td>
-        <td><span class="parametername">index_max</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">uv_min</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span>[]</td>
-        <td><span class="parametername">uv_max</span></td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -588,6 +607,32 @@ the normals of the incident faces.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.ToString()</span></div>
+  <a id="Elements_Geometry_Mesh_Volume_" data-uid="Elements.Geometry.Mesh.Volume*"></a>
+  <h4 id="Elements_Geometry_Mesh_Volume" data-uid="Elements.Geometry.Mesh.Volume">Volume()</h4>
+  <div class="markdown level1 summary"><p>Calculate the volume of the mesh.
+This value will be inexact for open meshes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Volume()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The volume of the mesh.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           

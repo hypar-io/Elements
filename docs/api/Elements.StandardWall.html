@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class StandardWall
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -221,9 +221,6 @@ wall.AddOpening(3, 1, 1, 2);
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Wall.html#Elements_Wall_Height">Wall.Height</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.Wall.html#Elements_Wall_Profile">Wall.Profile</a>
     </div>
     <div>
@@ -242,7 +239,16 @@ wall.AddOpening(3, 1, 1, 2);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -391,6 +397,30 @@ This transform will be concatenated to the transform created to describe the wal
       </tr>
     </tbody>
   </table>
+  <a id="Elements_StandardWall_Height_" data-uid="Elements.StandardWall.Height*"></a>
+  <h4 id="Elements_StandardWall_Height" data-uid="Elements.StandardWall.Height">Height</h4>
+  <div class="markdown level1 summary"><p>The height of the wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Height { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_StandardWall_Thickness_" data-uid="Elements.StandardWall.Thickness*"></a>
   <h4 id="Elements_StandardWall_Thickness" data-uid="Elements.StandardWall.Thickness">Thickness</h4>
   <div class="markdown level1 summary"><p>The thickness of the wall.</p>
@@ -419,7 +449,8 @@ This transform will be concatenated to the transform created to describe the wal
   </h3>
   <a id="Elements_StandardWall_AddOpening_" data-uid="Elements.StandardWall.AddOpening*"></a>
   <h4 id="Elements_StandardWall_AddOpening_Elements_Geometry_Polygon_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.StandardWall.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double,System.Double,System.Double)">AddOpening(Polygon, Double, Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Add an opening in the wall.</p>
+  <div class="markdown level1 summary"><p>Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
+in the wall elevation coordinate system.  The x and y will position the origin of the polygon opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -485,7 +516,8 @@ This transform will be concatenated to the transform created to describe the wal
   </table>
   <a id="Elements_StandardWall_AddOpening_" data-uid="Elements.StandardWall.AddOpening*"></a>
   <h4 id="Elements_StandardWall_AddOpening_System_Double_System_Double_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.StandardWall.AddOpening(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">AddOpening(Double, Double, Double, Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Add an opening in the wall.</p>
+  <div class="markdown level1 summary"><p>Add an Opening in the Wall. The Opening x and y sets the position relative to the Wall's Centerline.Start point
+in the wall elevation coordinate system.  The x and y will position origin of the rectangular opening.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -572,6 +604,22 @@ This transform will be concatenated to the transform created to describe the wal
   </div>
   <div>
       <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
   </div>
 </article>
           </div>

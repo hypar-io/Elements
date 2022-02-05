@@ -1,0 +1,648 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Network&lt;T&gt;
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Network&lt;T&gt;
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.58.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Search.Network`1">
+  
+  <h1 id="Elements_Search_Network_1" data-uid="Elements.Search.Network`1" class="text-break">Class Network&lt;T&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>A network composed of nodes and edges with associated data.
+A network does not store spatial information. A network can
+index into another collection of entities which have a spatial context.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Network&lt;T&gt;</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Search.html">Elements.Search</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Search_Network_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Network&lt;T&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The type of data associated with the graph's edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Search_Network_1__ctor_" data-uid="Elements.Search.Network`1.#ctor*"></a>
+  <h4 id="Elements_Search_Network_1__ctor" data-uid="Elements.Search.Network`1.#ctor">Network()</h4>
+  <div class="markdown level1 summary"><p>Create a network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Network()</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Search_Network_1_AddEdgeBothWays_" data-uid="Elements.Search.Network`1.AddEdgeBothWays*"></a>
+  <h4 id="Elements_Search_Network_1_AddEdgeBothWays_System_Int32_System_Int32__0_" data-uid="Elements.Search.Network`1.AddEdgeBothWays(System.Int32,System.Int32,`0)">AddEdgeBothWays(Int32, Int32, T)</h4>
+  <div class="markdown level1 summary"><p>Adds edges to the network both ways from-&gt;to and to-&gt;from.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddEdgeBothWays(int from, int to, T data)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">from</span></td>
+        <td><p>The index of the start node.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">to</span></td>
+        <td><p>The index of the end node.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">data</span></td>
+        <td><p>The data associated with the edge.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_AddEdgeOneWay_" data-uid="Elements.Search.Network`1.AddEdgeOneWay*"></a>
+  <h4 id="Elements_Search_Network_1_AddEdgeOneWay_System_Int32_System_Int32__0_" data-uid="Elements.Search.Network`1.AddEdgeOneWay(System.Int32,System.Int32,`0)">AddEdgeOneWay(Int32, Int32, T)</h4>
+  <div class="markdown level1 summary"><p>Adds an edge to the network from-&gt;to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddEdgeOneWay(int from, int to, T data)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">from</span></td>
+        <td><p>The index of the start node.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">to</span></td>
+        <td><p>The index of the end node.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">data</span></td>
+        <td><p>The data associated with the edge.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_AddVertex_" data-uid="Elements.Search.Network`1.AddVertex*"></a>
+  <h4 id="Elements_Search_Network_1_AddVertex" data-uid="Elements.Search.Network`1.AddVertex">AddVertex()</h4>
+  <div class="markdown level1 summary"><p>Add a vertex to the network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int AddVertex()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_BranchNodes_" data-uid="Elements.Search.Network`1.BranchNodes*"></a>
+  <h4 id="Elements_Search_Network_1_BranchNodes" data-uid="Elements.Search.Network`1.BranchNodes">BranchNodes()</h4>
+  <div class="markdown level1 summary"><p>All branch nodes of the network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;int&gt; BranchNodes()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>A collection of branch node indices.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_EdgesAt_" data-uid="Elements.Search.Network`1.EdgesAt*"></a>
+  <h4 id="Elements_Search_Network_1_EdgesAt_System_Int32_" data-uid="Elements.Search.Network`1.EdgesAt(System.Int32)">EdgesAt(Int32)</h4>
+  <div class="markdown level1 summary"><p>Get all edges at the specified index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;(int, T)&gt; EdgesAt(int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>The index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, T&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_FromSegmentableItems_" data-uid="Elements.Search.Network`1.FromSegmentableItems*"></a>
+  <h4 id="Elements_Search_Network_1_FromSegmentableItems_System_Collections_Generic_IList__0__System_Func__0_Elements_Geometry_Line__System_Collections_Generic_List_Elements_Geometry_Vector3___System_Collections_Generic_List_Elements_Geometry_Vector3___System_Boolean_" data-uid="Elements.Search.Network`1.FromSegmentableItems(System.Collections.Generic.IList{`0},System.Func{`0,Elements.Geometry.Line},System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Boolean)">FromSegmentableItems(IList&lt;T&gt;, Func&lt;T, Line&gt;, out List&lt;Vector3&gt;, out List&lt;Vector3&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Construct a network from the intersections of a collection
+of items which are segmentable.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Network&lt;T&gt; FromSegmentableItems(IList&lt;T&gt; items, Func&lt;T, Line&gt; getSegment, out List&lt;Vector3&gt; allNodeLocations, out List&lt;Vector3&gt; allIntersectionLocations, bool twoWayEdges = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;T&gt;</td>
+        <td><span class="parametername">items</span></td>
+        <td><p>A collection of segmentable items.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;T, <a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">getSegment</span></td>
+        <td><p>A delegate which returns a segment from an
+item of type T.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">allNodeLocations</span></td>
+        <td><p>A collection of all node locations.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">allIntersectionLocations</span></td>
+        <td><p>A collection of all intersection locations.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">twoWayEdges</span></td>
+        <td><p>Should edges be created in both directions?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Search.Network-1.html">Network</a>&lt;T&gt;</td>
+        <td><p>A network.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_LeafNodes_" data-uid="Elements.Search.Network`1.LeafNodes*"></a>
+  <h4 id="Elements_Search_Network_1_LeafNodes" data-uid="Elements.Search.Network`1.LeafNodes">LeafNodes()</h4>
+  <div class="markdown level1 summary"><p>All leaf nodes of the network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;int&gt; LeafNodes()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>A collection of leaf node indices.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_NodeCount_" data-uid="Elements.Search.Network`1.NodeCount*"></a>
+  <h4 id="Elements_Search_Network_1_NodeCount" data-uid="Elements.Search.Network`1.NodeCount">NodeCount()</h4>
+  <div class="markdown level1 summary"><p>The total number of nodes in the network.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int NodeCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_ToModelArrows_" data-uid="Elements.Search.Network`1.ToModelArrows*"></a>
+  <h4 id="Elements_Search_Network_1_ToModelArrows_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Nullable_Elements_Geometry_Color__" data-uid="Elements.Search.Network`1.ToModelArrows(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Nullable{Elements.Geometry.Color})">ToModelArrows(IList&lt;Vector3&gt;, Nullable&lt;Color&gt;)</h4>
+  <div class="markdown level1 summary"><p>Draw the network as model arrows.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ModelArrows ToModelArrows(IList&lt;Vector3&gt; nodeLocations, Color? color)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">nodeLocations</span></td>
+        <td><p>The locations of the network's nodes.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The color of the resulting model geometry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.ModelArrows.html">ModelArrows</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_ToModelCurves_" data-uid="Elements.Search.Network`1.ToModelCurves*"></a>
+  <h4 id="Elements_Search_Network_1_ToModelCurves_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Search.Network`1.ToModelCurves(System.Collections.Generic.List{Elements.Geometry.Vector3})">ToModelCurves(List&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Draw the network as model curves.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;ModelCurve&gt; ToModelCurves(List&lt;Vector3&gt; nodeLocations)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">nodeLocations</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.ModelCurve.html">ModelCurve</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_ToModelText_" data-uid="Elements.Search.Network`1.ToModelText*"></a>
+  <h4 id="Elements_Search_Network_1_ToModelText_System_Collections_Generic_List_Elements_Geometry_Vector3__Elements_Geometry_Color_" data-uid="Elements.Search.Network`1.ToModelText(System.Collections.Generic.List{Elements.Geometry.Vector3},Elements.Geometry.Color)">ToModelText(List&lt;Vector3&gt;, Color)</h4>
+  <div class="markdown level1 summary"><p>Draw node indices and connected node indices at each node.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;ModelText&gt; ToModelText(List&lt;Vector3&gt; nodeLocations, Color color)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">nodeLocations</span></td>
+        <td><p>A collection of node locations.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Color.html">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The color of the model text.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.ModelText.html">ModelText</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Search_Network_1_Traverse_" data-uid="Elements.Search.Network`1.Traverse*"></a>
+  <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_List_System_Int32___System_Int32__System_Collections_Generic_List_System_Int32___" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.List{System.Int32}},System.Int32},System.Collections.Generic.List{System.Int32}@)">Traverse(Int32, Func&lt;(Int32 currentNodeIndex, Int32 previousNodeIndex, List&lt;Int32&gt; connectedNodes), Int32&gt;, out List&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Traverse the network from the specified node index.
+Traversal concludes when there are no more
+available nodes to traverse.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;int&gt; Traverse(int start, Func&lt;(int currentNodeIndex, int previousNodeIndex, List&lt;int&gt; connectedNodes), int&gt; next, out List&lt;int&gt; visited)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The starting point of the traversal.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">next</span></td>
+        <td><p>The traversal step delegate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">visited</span></td>
+        <td><p>A collection of visited node indices.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><p>A list of indices of the traversed nodes.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class MercatorProjection
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -117,9 +117,66 @@
   </div>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Spatial_MercatorProjection_LatLonToMeters_" data-uid="Elements.Spatial.MercatorProjection.LatLonToMeters*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_LatLonToMeters_Elements_GeoJSON_Position_System_Double_System_Double_" data-uid="Elements.Spatial.MercatorProjection.LatLonToMeters(Elements.GeoJSON.Position,System.Double,System.Double)">LatLonToMeters(Position, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Convert Latitude and Longitude to meters relative to a base position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Vector3 LatLonToMeters(Position relativeToOrigin, double lat, double lon)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><span class="parametername">relativeToOrigin</span></td>
+        <td><p>A position marking the latitude and longitude of (0,0)</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">lat</span></td>
+        <td><p>The latitude in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">lon</span></td>
+        <td><p>The longitude in degrees</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A Vector3 in meters specifying the offset from the origin for this location.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_MercatorProjection_LatToY_" data-uid="Elements.Spatial.MercatorProjection.LatToY*"></a>
   <h4 id="Elements_Spatial_MercatorProjection_LatToY_System_Double_" data-uid="Elements.Spatial.MercatorProjection.LatToY(System.Double)">LatToY(Double)</h4>
-  <div class="markdown level1 summary"><p>Get the y coordinate, in meters, of the specified latitude.</p>
+  <div class="markdown level1 summary"><p>Get the y coordinate, in the Mercator projection, of the specified latitude.
+The units will be in meters at the equator, and distorted elsewhere. Utilize LatLonToMeters() for a conversion
+relative to a basepoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -139,7 +196,8 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">lat</span></td>
-        <td></td>
+        <td><p>The latitude to convert, within the range [-89.5, 89.5]. Values outside this range will be clamped.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -160,7 +218,9 @@
   </table>
   <a id="Elements_Spatial_MercatorProjection_LonToX_" data-uid="Elements.Spatial.MercatorProjection.LonToX*"></a>
   <h4 id="Elements_Spatial_MercatorProjection_LonToX_System_Double_" data-uid="Elements.Spatial.MercatorProjection.LonToX(System.Double)">LonToX(Double)</h4>
-  <div class="markdown level1 summary"><p>Get the x coordinate, in meters, of the specified longitude.</p>
+  <div class="markdown level1 summary"><p>Get the x coordinate, in the Mercator projection, of the specified longitude.
+The units will be in meters at the equator, and distorted elsewhere. Utilize LatLonToMeters() for a conversion
+relative to a basepoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -196,6 +256,55 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_MercatorProjection_MetersToLatLon_" data-uid="Elements.Spatial.MercatorProjection.MetersToLatLon*"></a>
+  <h4 id="Elements_Spatial_MercatorProjection_MetersToLatLon_Elements_GeoJSON_Position_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.MercatorProjection.MetersToLatLon(Elements.GeoJSON.Position,Elements.Geometry.Vector3)">MetersToLatLon(Position, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Convert a position in space to a latitude and longitude.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Position MetersToLatLon(Position relativeToOrigin, Vector3 location)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><span class="parametername">relativeToOrigin</span></td>
+        <td><p>A position marking the latitude and longitude of (0,0).</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The position to convert to latitude and longitude.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><p>A position indicating the latitude and longitude of the location.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -288,7 +397,7 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span>[]</td>
-        <td><p>An array of doubles containing the x, and y coordintes, in meters.</p>
+        <td><p>An array of doubles containing the x, and y coordintes, in the Mercator projection.</p>
 </td>
       </tr>
     </tbody>
@@ -315,7 +424,7 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">x</span></td>
-        <td><p>The x coordinate.</p>
+        <td><p>The x coordinate in the Mercator projection.</p>
 </td>
       </tr>
     </tbody>
@@ -358,7 +467,7 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">y</span></td>
-        <td><p>The y coordinate.</p>
+        <td><p>The y coordinate in the Mercator projection.</p>
 </td>
       </tr>
     </tbody>

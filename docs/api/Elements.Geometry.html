@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Geometry
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -83,10 +83,13 @@
     <h3 id="classes">Classes
   </h3>
       <h4><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></h4>
-      <section><p>An arc defined by a CCW rotation around a center between a start angle and an end angle.</p>
+      <section><p>An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Bezier.html">Bezier</a></h4>
       <section><p>A Bezier curve.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Box.html">Box</a></h4>
+      <section><p>A geometry type representing an oriented cuboid in space.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></h4>
       <section><p>An arc with a start angle of 0 (+X) and
@@ -104,17 +107,26 @@ an end angle of 360.0.</p>
       <h4><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></h4>
       <section><p>The abstract base class for all curves.</p>
 </section>
+      <h4><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></h4>
+      <section><p>A container for graphics data.
+The buffers used in this class align with webgl requirements.</p>
+</section>
       <h4><a class="xref" href="Elements.Geometry.Line.html">Line</a></h4>
-      <section><p>A line between two points. The line is parameterized from 0.0(start) to 1.0(end)</p>
+      <section><p>A linear curve between two points.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.LineSegmentExtensions.html">LineSegmentExtensions</a></h4>
+      <section><p>Line segment extension methods.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Matrix.html">Matrix</a></h4>
-      <section><p>A column-ordered 4x3 matrix.</p>
+      <section><p>A column-ordered 3x4 matrix.
+The first 3 columns represent the X, Y, and Z axes of the coordinate system.
+The fourth column represents the translation of the coordinate system.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></h4>
-      <section><p>A triangulated mesh.</p>
+      <section><p>A triangle mesh.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></h4>
-      <section><p>A plane.</p>
+      <section><p>A cartesian plane.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></h4>
       <section><p>A closed planar polygon.</p>
@@ -123,7 +135,7 @@ an end angle of 360.0.</p>
       <section><p>A continuous set of lines.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></h4>
-      <section><p>A profile comprised of an external boundary and one or several holes.</p>
+      <section><p>A polygonal perimeter with zero or more polygonal voids.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.ProfileExtensions.html">ProfileExtensions</a></h4>
       <section><p>Profile extension methods.</p>
@@ -178,6 +190,8 @@ a moving frame around the curve.</p>
       <h4><a class="xref" href="Elements.Geometry.VoidTreatment.html">VoidTreatment</a></h4>
       <section><p>Controls the handling of internal regions in a polygon boolean operation.</p>
 </section>
+      <h4><a class="xref" href="Elements.Geometry.WideFlangeProfileType.html">WideFlangeProfileType</a></h4>
+      <section></section>
 </article>
           </div>
           

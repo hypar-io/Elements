@@ -138,12 +138,7 @@ namespace Elements.Tests
             model.AddElement(mass1);
             model.AddElement(mass2);
 
-            // TODO: This was previously 2 profiles, one for the stand alone 
-            // profile in the ctor and one created for the representation. 
-            // After we moved UpdateReprensentations into AddElement, this
-            // became 1 again because as soon as AddElement is called, the
-            // representation's profile is overridden with the main profile.
-            Assert.True(model.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(model.AllElementsOfType<Profile>().Count() == 2);
             Assert.True(model.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(model.AllElementsOfType<Material>());
 
@@ -151,7 +146,7 @@ namespace Elements.Tests
             File.WriteAllText("./deepSerialize.json", json);
 
             var newModel = Model.FromJson(json);
-            Assert.True(newModel.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(newModel.AllElementsOfType<Profile>().Count() == 2);
             Assert.True(newModel.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(newModel.AllElementsOfType<Material>());
         }

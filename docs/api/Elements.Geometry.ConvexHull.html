@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ConvexHull
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -157,6 +157,55 @@ Adapted from <a href="https://rosettacode.org/wiki/Convex_hull#C.23">https://ros
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><p>A polygon representing the convex hull of the provided points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_ConvexHull_FromPointsInPlane_" data-uid="Elements.Geometry.ConvexHull.FromPointsInPlane*"></a>
+  <h4 id="Elements_Geometry_ConvexHull_FromPointsInPlane_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__Elements_Geometry_Vector3_" data-uid="Elements.Geometry.ConvexHull.FromPointsInPlane(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3},Elements.Geometry.Vector3)">FromPointsInPlane(IEnumerable&lt;Vector3&gt;, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Compute the 2D convex hull of a set of 3D points in a plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Polygon FromPointsInPlane(IEnumerable&lt;Vector3&gt; points, Vector3 planeNormal)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>A collection of points</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">planeNormal</span></td>
+        <td><p>The normal direction of the plane in which to compute the hull.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><p>A polygon representing the convex hull, projected along the normal vector to the average depth of the provided points.</p>
 </td>
       </tr>
     </tbody>

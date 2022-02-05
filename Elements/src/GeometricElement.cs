@@ -173,7 +173,7 @@ namespace Elements
             }
         }
 
-        internal Csg.Solid[] GetSolids(bool transformed = false)
+        internal Csg.Solid[] GetCsgSolids(bool transformed = false)
         {
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
                                                        .Select(op => TransformedSolidOperation(op))

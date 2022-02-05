@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Geometry.Profiles
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -82,16 +82,40 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.CProfile.html">CProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.CProfileFactory.html">CProfileFactory</a></h4>
+      <section><p>A factory for creation C profiles.</p>
+</section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.HSSPipeProfile.html">HSSPipeProfile</a></h4>
       <section><p>A hollow structural steel profile.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.HSSPipeProfileFactory.html">HSSPipeProfileFactory</a></h4>
       <section><p>A singleton class which serves every HSS pipe section as defined by AISC.</p>
 </section>
-      <h4><a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html">ProfileFactory&lt;T, TProfile&gt;</a></h4>
-      <section><p>Base class for profile factories.
-A profile factory is constructed with a table of data where each row
-represents a comma-delimited set of profile properties.</p>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.HSSProfile.html">HSSProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.HSSProfileFactory.html">HSSProfileFactory</a></h4>
+      <section><p>A factory for creation L profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.LProfile.html">LProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.LProfileFactory.html">LProfileFactory</a></h4>
+      <section><p>A factory for creation L profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.MCProfile.html">MCProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.MCProfileFactory.html">MCProfileFactory</a></h4>
+      <section><p>A factory for creation MC profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.ParametricProfile.html">ParametricProfile</a></h4>
+      <section><p>A profile whose vertex locations are defined by a parametric expression.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.ParametricProfileFactory-2.html">ParametricProfileFactory&lt;TProfileType, TProfile&gt;</a></h4>
+      <section><p>A profile factory which creates parametric profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html">ProfileFactoryBase&lt;TProfileType, TProfile&gt;</a></h4>
+      <section><p>Base class for profile factories.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.RHSProfile.html">RHSProfile</a></h4>
       <section><p>A rectangular hollow section profile.</p>
@@ -105,27 +129,58 @@ represents a comma-delimited set of profile properties.</p>
       <h4><a class="xref" href="Elements.Geometry.Profiles.SHSProfileFactory.html">SHSProfileFactory</a></h4>
       <section><p>A singleton class which serves every HSS pipe section as defined by AISC.</p>
 </section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.STProfile.html">STProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.STProfileFactory.html">STProfileFactory</a></h4>
+      <section><p>A factory for creation L profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.VectorExpression.html">VectorExpression</a></h4>
+      <section><p>A collection of expressions describing the X, Y, and Z coordinates
+of a vertex.</p>
+</section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfile.html">WideFlangeProfile</a></h4>
       <section><p>A wide flange profile.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfileFactory.html">WideFlangeProfileFactory</a></h4>
       <section><p>A profile factory for wide flange profiles.</p>
 </section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WProfile.html">WProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WProfileFactory.html">WProfileFactory</a></h4>
+      <section><p>A factory for creation W profiles.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WTProfile.html">WTProfile</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WTProfileFactory.html">WTProfileFactory</a></h4>
+      <section><p>A factory for creation WT profiles.</p>
+</section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.CProfileType.html">CProfileType</a></h4>
+      <section></section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.HorizontalAlignment.html">HorizontalAlignment</a></h4>
       <section><p>The horizontal alignment of a profile.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.HSSPipeProfileType.html">HSSPipeProfileType</a></h4>
       <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.HSSProfileType.html">HSSProfileType</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.LProfileType.html">LProfileType</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.MCProfileType.html">MCProfileType</a></h4>
+      <section></section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.RHSProfileType.html">RHSProfileType</a></h4>
       <section></section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.SHSProfileType.html">SHSProfileType</a></h4>
       <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.STProfileType.html">STProfileType</a></h4>
+      <section></section>
       <h4><a class="xref" href="Elements.Geometry.Profiles.VerticalAlignment.html">VerticalAlignment</a></h4>
       <section><p>The vertical alignment of a profile.</p>
 </section>
-      <h4><a class="xref" href="Elements.Geometry.Profiles.WideFlangeProfileType.html">WideFlangeProfileType</a></h4>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WProfileType.html">WProfileType</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.Geometry.Profiles.WTProfileType.html">WTProfileType</a></h4>
       <section></section>
 </article>
           </div>

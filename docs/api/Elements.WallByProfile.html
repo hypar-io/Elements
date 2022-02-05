@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class WallByProfile
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.58.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
@@ -85,14 +85,25 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
-    <div class="level3"><span class="xref">WallByProfile</span></div>
+    <div class="level3"><a class="xref" href="Elements.Wall.html">Wall</a></div>
+    <div class="level4"><span class="xref">WallByProfile</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+    <div><a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Height">Wall.Height</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Profile">Wall.Profile</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Wall.html#Elements_Wall_Openings">Wall.Openings</a>
+    </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
@@ -106,7 +117,16 @@
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -150,74 +170,20 @@
   <h5 id="Elements_WallByProfile_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class WallByProfile : GeometricElement, INotifyPropertyChanged</code></pre>
+public class WallByProfile : Wall, INotifyPropertyChanged, IHasOpenings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_WallByProfile__ctor_" data-uid="Elements.WallByProfile.#ctor*"></a>
-  <h4 id="Elements_WallByProfile__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_" data-uid="Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean)">WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Create a wall requiring only the profile, thickness and centerline.</p>
+  <h4 id="Elements_WallByProfile__ctor_Elements_Geometry_Polygon_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_System_Collections_Generic_List_Elements_Opening__Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.WallByProfile.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,System.Collections.Generic.List{Elements.Opening},Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">WallByProfile(Polygon, Profile, Double, Line, Transform, Material, List&lt;Opening&gt;, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a wall by profile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WallByProfile(Profile profile, double thickness, Line centerline, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
-        <td><span class="parametername">profile</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">thickness</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
-        <td><span class="parametername">centerline</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Material.html">Material</a></td>
-        <td><span class="parametername">material</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
-        <td><span class="parametername">representation</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">isElementDefinition</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_WallByProfile__ctor_" data-uid="Elements.WallByProfile.#ctor*"></a>
-  <h4 id="Elements_WallByProfile__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean, Guid, String)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public WallByProfile(Profile profile, double thickness, Line centerline, Transform transform, Material material, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
+[Obsolete(&quot;Do not use.  This constructor is only preserved to maintain backwards compatibility upon serialization/deserialization.&quot;)]
+public WallByProfile(Polygon perimeter, Profile profile, double thickness, Line centerline, Transform transform, Material material, List&lt;Opening&gt; openings, Representation representation, bool isElementDefinition, Guid id, string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -230,48 +196,196 @@ public WallByProfile(Profile profile, double thickness, Line centerline, Transfo
     </thead>
     <tbody>
       <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>The perimeter of the wall elevation.</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
         <td><span class="parametername">profile</span></td>
-        <td></td>
+        <td><p>This value should be left null.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">thickness</span></td>
-        <td></td>
+        <td><p>The thickness of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><span class="parametername">centerline</span></td>
-        <td></td>
+        <td><p>The centerline of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
-        <td></td>
+        <td><p>The transform of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
         <td><span class="parametername">material</span></td>
-        <td></td>
+        <td><p>The material of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Opening.html">Opening</a>&gt;</td>
+        <td><span class="parametername">openings</span></td>
+        <td><p>The openings of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
         <td><span class="parametername">representation</span></td>
-        <td></td>
+        <td><p>The representation of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">isElementDefinition</span></td>
-        <td></td>
+        <td><p>Is the wall an element definition?</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
-        <td></td>
+        <td><p>The id of the wall.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.String</span></td>
         <td><span class="parametername">name</span></td>
+        <td><p>The name of the wall.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_WallByProfile__ctor_" data-uid="Elements.WallByProfile.#ctor*"></a>
+  <h4 id="Elements_WallByProfile__ctor_Elements_Geometry_Polygon_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_String_" data-uid="Elements.WallByProfile.#ctor(Elements.Geometry.Polygon,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.String)">WallByProfile(Polygon, Double, Line, Transform, Material, Representation, Boolean, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a wall by profile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WallByProfile(Polygon perimeter, double thickness, Line centerline, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, string name = &quot;Wall by Profile&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>The perimeter of the wall elevation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td><p>The thickness of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">centerline</span></td>
+        <td><p>The centerline of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The material of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The representation of the wall.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is the wall an element definition?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the wall.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_WallByProfile__ctor_" data-uid="Elements.WallByProfile.#ctor*"></a>
+  <h4 id="Elements_WallByProfile__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Line_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_" data-uid="Elements.WallByProfile.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Line,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean)">WallByProfile(Profile, Double, Line, Transform, Material, Representation, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Create a Wall from a Profile and thickness.  If centerline is not included it will be
+computed from the Profile.  The Profile will be projected to the
+centerline Plane, and used to find Openings of the Wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WallByProfile(Profile profile, double thickness, Line centerline = null, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">centerline</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -303,15 +417,16 @@ public Line Centerline { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_WallByProfile_Profile_" data-uid="Elements.WallByProfile.Profile*"></a>
-  <h4 id="Elements_WallByProfile_Profile" data-uid="Elements.WallByProfile.Profile">Profile</h4>
-  <div class="markdown level1 summary"><p>The profile, which includes openings that will be extruded.</p>
+  <a id="Elements_WallByProfile_Perimeter_" data-uid="Elements.WallByProfile.Perimeter*"></a>
+  <h4 id="Elements_WallByProfile_Perimeter" data-uid="Elements.WallByProfile.Perimeter">Perimeter</h4>
+  <div class="markdown level1 summary"><p>The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
+and will often be projected to that Plane during internal operations.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Profile&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Perimeter&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public Polygon Perimeter { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -323,14 +438,14 @@ public Profile Profile { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_WallByProfile_Thickness_" data-uid="Elements.WallByProfile.Thickness*"></a>
   <h4 id="Elements_WallByProfile_Thickness" data-uid="Elements.WallByProfile.Thickness">Thickness</h4>
-  <div class="markdown level1 summary"><p>The overall thickness of the wall</p>
+  <div class="markdown level1 summary"><p>The overall thickness of the Wall</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -355,9 +470,93 @@ public double Thickness { get; set; }</code></pre>
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_WallByProfile_AddOpening_" data-uid="Elements.WallByProfile.AddOpening*"></a>
+  <h4 id="Elements_WallByProfile_AddOpening_Elements_Geometry_Polygon_System_Double_System_Double_" data-uid="Elements.WallByProfile.AddOpening(Elements.Geometry.Polygon,System.Double,System.Double)">AddOpening(Polygon, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Add an Opening to the Wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddOpening(Polygon perimeter, double depthFront = 1, double depthBack = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthFront</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">depthBack</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_WallByProfile_GetHeight_" data-uid="Elements.WallByProfile.GetHeight*"></a>
+  <h4 id="Elements_WallByProfile_GetHeight" data-uid="Elements.WallByProfile.GetHeight">GetHeight()</h4>
+  <div class="markdown level1 summary"><p>The computed height of the Wall.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double GetHeight()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_WallByProfile_GetProfile_" data-uid="Elements.WallByProfile.GetProfile*"></a>
+  <h4 id="Elements_WallByProfile_GetProfile" data-uid="Elements.WallByProfile.GetProfile">GetProfile()</h4>
+  <div class="markdown level1 summary"><p>The Profile of the Wall computed from its Perimeter and the Openings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Profile GetProfile()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_WallByProfile_UpdateRepresentations_" data-uid="Elements.WallByProfile.UpdateRepresentations*"></a>
   <h4 id="Elements_WallByProfile_UpdateRepresentations" data-uid="Elements.WallByProfile.UpdateRepresentations">UpdateRepresentations()</h4>
-  <div class="markdown level1 summary"><p>Update the geometric representation of this wall.</p>
+  <div class="markdown level1 summary"><p>Update the geometric representation of this Wall.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -365,10 +564,29 @@ public double Thickness { get; set; }</code></pre>
     <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
+  <div><a class="xref" href="Elements.Wall.html#Elements_Wall_UpdateRepresentations">Wall.UpdateRepresentations()</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Interfaces.IHasOpenings.html">IHasOpenings</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
   </div>
 </article>
           </div>

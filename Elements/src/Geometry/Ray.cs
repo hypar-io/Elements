@@ -187,26 +187,31 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="polygon">The Polygon to intersect with.</param>
         /// <param name="result">The intersection result.</param>
+        /// <param name="containment">An enumeration detailing the type of intersection if one occurs.</param>
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
-        public bool Intersects(Polygon polygon, out Vector3 result)
+        public bool Intersects(Polygon polygon, out Vector3 result, out Containment containment)
         {
             var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
-            if (Intersects(plane, out Vector3 intersection))
+            if (Intersects(plane, out Vector3 test))
             {
-                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
-                var transformFromPolygon = new Transform(transformToPolygon);
-                transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<(Vector3 from, Vector3 to)> curveList = polygon.Edges();
-                curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
-
-                if (Polygon.Contains(curveList, transformedIntersection, out _))
+                // Check the intersection against all the polygon's vertices.
+                // If the intersection is at a vertex, the point is contained.
+                if (polygon.Vertices.Any(v => v.IsAlmostEqualTo(test)))
                 {
-                    result = intersection;
+                    result = test;
+                    containment = Containment.CoincidesAtVertex;
+                    return true;
+                }
+
+                result = test;
+                if (polygon.Contains3D(test))
+                {
+                    containment = Containment.Inside;
                     return true;
                 }
             }
-            result = default(Vector3);
+            result = default;
+            containment = Containment.Outside;
             return false;
         }
 
@@ -326,17 +331,31 @@ namespace Elements.Geometry
         /// <returns>True if the rays intersect, otherwise false.</returns>
         public bool Intersects(Line line, out Vector3 result)
         {
-            var otherRay = new Ray(line.Start, line.Direction());
+            return Intersects(line.Start, line.End, out result);
+        }
+
+        /// <summary>
+        /// Does this ray intersect a line segment defined by start and end?
+        /// </summary>
+        /// <param name="start">The start of the line segment.</param>
+        /// <param name="end">The end of the line segment.</param>
+        /// <param name="result">The location of the intersection.</param>
+        /// <returns>True if the ray intersects, otherwise false.</returns>
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        {
+            var d = (end - start).Unitized();
+            var l = start.DistanceTo(end);
+            var otherRay = new Ray(start, d);
             if (Intersects(otherRay, out Vector3 rayResult))
             {
                 // Quick out if the result is exactly at the 
                 // start or the end of the line.
-                if (rayResult.IsAlmostEqualTo(line.Start) || rayResult.IsAlmostEqualTo(line.End))
+                if (rayResult.IsAlmostEqualTo(start) || rayResult.IsAlmostEqualTo(end))
                 {
                     result = rayResult;
                     return true;
                 }
-                else if ((rayResult - line.Start).Length() > line.Length())
+                else if ((rayResult - start).Length() > l)
                 {
                     result = default(Vector3);
                     return false;
@@ -359,6 +378,13 @@ namespace Elements.Geometry
         public bool Equals(Ray other)
         {
             return this.Origin.Equals(other.Origin) && this.Direction.Equals(other.Direction);
+        }
+
+        internal static Ray GetTestRayInPlane(Vector3 origin, Vector3 normal)
+        {
+            var v1 = normal.IsAlmostEqualTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis;
+            var d = v1.Cross(normal);
+            return new Ray(origin, d);
         }
     }
 }
