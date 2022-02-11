@@ -217,9 +217,9 @@ namespace Elements.Serialization.glTF
                     m.Extensions = new Dictionary<string, object>{
                         {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
                             {"diffuseFactor", new[]{
-                                Geometry.Color.LinearToSRGB(material.Color.Red),
-                                Geometry.Color.LinearToSRGB(material.Color.Green),
-                                Geometry.Color.LinearToSRGB(material.Color.Blue),
+                                Geometry.Color.SRGBToLinear(material.Color.Red),
+                                Geometry.Color.SRGBToLinear(material.Color.Green),
+                                Geometry.Color.SRGBToLinear(material.Color.Blue),
                                 material.Color.Alpha}},
                             {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
                             {"glossinessFactor", material.GlossinessFactor}
