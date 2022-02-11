@@ -14,6 +14,8 @@
 - `LocalClassification`
 - `ModelLines`
 - `AdaptiveGrid.AddVertex(Vector3 point, List<Vertex> connections)`
+- `Color.SRGBToLinear(double c)`
+- `Color.LinearToSRGB(double c)`
 
 ### Changed
 - Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
