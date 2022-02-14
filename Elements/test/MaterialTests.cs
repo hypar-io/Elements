@@ -8,6 +8,43 @@ namespace Elements.Tests
     public class MaterialTests : ModelTest
     {
         [Fact]
+        public void Example()
+        {
+            this.Name = "Elements_Material";
+
+            // <example>
+            var x = 0.0;
+            var y = 0.0;
+            var z = 0.0;
+            var specularFactor = 0.0;
+            var glossinessFactor = 0.0;
+
+            var rectangle = Polygon.Rectangle(0.5, 0.5);
+
+            for (var r = 0.0; r <= 1.0; r += 0.2)
+            {
+                for (var g = 0.0; g <= 1.0; g += 0.2)
+                {
+                    for (var b = 0.0; b <= 1.0; b += 0.2)
+                    {
+                        var color = new Color(r, g, b, 1.0);
+                        var material = new Material($"{r}_{g}_{b}", color, specularFactor, glossinessFactor);
+                        var mass = new Mass(rectangle, 0.5, material, new Transform(new Vector3(x, y, z)));
+                        this.Model.AddElement(mass);
+                        z += 2.0;
+                    }
+                    z = 0;
+                    y += 2.0;
+                }
+                y = 0;
+                x += 2.0;
+                specularFactor += 0.2;
+                glossinessFactor += 0.2;
+            }
+            // </example>
+        }
+
+        [Fact]
         public void Construct()
         {
             var material = new Material("test", new Color(1.0f, 1.0f, 1.0f, 1.0f), 1.0f, 1.0f);
