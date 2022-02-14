@@ -7,7 +7,7 @@ namespace Elements.Tests
 {
     public class MaterialTests : ModelTest
     {
-        [Fact]
+        [Fact, Trait("Category", "Examples")]
         public void Example()
         {
             this.Name = "Elements_Material";
