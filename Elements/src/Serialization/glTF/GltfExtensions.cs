@@ -196,9 +196,11 @@ namespace Elements.Serialization.glTF
                 var m = new glTFLoader.Schema.Material();
                 newMaterials.Add(m);
 
-                m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness();
-                m.PbrMetallicRoughness.BaseColorFactor = material.Color.ToArray();
-                m.PbrMetallicRoughness.MetallicFactor = 1.0f;
+                m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
+                {
+                    BaseColorFactor = material.Color.ToArray(true),
+                    MetallicFactor = 1.0f
+                };
                 m.DoubleSided = material.DoubleSided;
 
                 m.Name = material.Id.ToString();
@@ -211,9 +213,14 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
+                    // We convert to a linear color space
                     m.Extensions = new Dictionary<string, object>{
                         {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
-                            {"diffuseFactor", new[]{material.Color.Red,material.Color.Green,material.Color.Blue,material.Color.Alpha}},
+                            {"diffuseFactor", new[]{
+                                Geometry.Color.SRGBToLinear(material.Color.Red),
+                                Geometry.Color.SRGBToLinear(material.Color.Green),
+                                Geometry.Color.SRGBToLinear(material.Color.Blue),
+                                material.Color.Alpha}},
                             {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
                             {"glossinessFactor", material.GlossinessFactor}
                         }}
