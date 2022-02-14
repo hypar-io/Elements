@@ -19,6 +19,7 @@
 
 ### Changed
 - Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
+- Material colors are now exported to glTF using linear color space. Conversion from sRGB to linear color space happens during glTF export.
 
 ### Fixed
 - Under some circumstances `Bezier.Length()` would return incorrect results
