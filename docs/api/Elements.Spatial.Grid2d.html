@@ -1,0 +1,1414 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Grid2d
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Grid2d
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.Grid2d">
+  
+  <h1 id="Elements_Spatial_Grid2d" data-uid="Elements.Spatial.Grid2d" class="text-break">Class Grid2d
+  </h1>
+  <div class="markdown level0 summary"><p>Represents a 2-dimensional grid which can be subdivided</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+  
+    div.appendChild( renderer.domElement );
+  
+    var controls = new OrbitControls( camera, renderer.domElement );
+  
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
+  
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    // Instantiate a loader
+    var loader = new GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_Spatial_Grid2d.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+        scene.add( gltf.scene );
+        fitCameraToObject(scene, 2.0, controls);
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      },
+      // called when loading has errors
+      function ( error ) {
+        console.log( 'An error happened' );
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
+  
+      let center = new Vector3();
+      boundingBox.getCenter(center);
+      let size = new Vector3();
+      boundingBox.getSize(size);
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_Spatial_Grid2d"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">// Create a 2d grid that's 40 x 30 in size
+var grid = new Grid2d(40, 30);
+
+// Access the U and V axes directly and use 1d subdivision methods on them
+grid.U.DivideByFixedLength(7, FixedDivisionMode.RemainderAtBothEnds);
+grid.V.DivideByPattern(new[] { 2.0, 5.0 });
+
+// Get a row by index
+var fifthRow = grid.GetRowAtIndex(4);
+// Divide U axis of all cells in row into panels of approximate width 1
+fifthRow.ForEach(c =&gt; c.U.DivideByApproximateLength(1));
+
+// Get a cell by u, v indices
+var cell = grid[1, 1];
+// Divide the cell in the V direction
+cell.V.DivideByCount(4);
+
+// Create a floor from the entire grid's boundary
+var floor = new Floor(new Profile((Polygon)grid.GetCellGeometry()), 0.5, new Transform(0, 0, -0.51));
+
+// Create model curves from all subdivided cells of the grid
+var modelCurves = grid.ToModelCurves();
+</code></pre>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Grid2d</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.html">Elements.Spatial</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Spatial_Grid2d_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Grid2d</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor" data-uid="Elements.Spatial.Grid2d.#ctor">Grid2d()</h4>
+  <div class="markdown level1 summary"><p>Construct a Grid2d with default domain (0,0) to (1,1)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d()</code></pre>
+  </div>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Transform)">Grid2d(Polygon, Transform)</h4>
+  <div class="markdown level1 summary"><p>Create a Grid2d from a polygon and optional Transform.
+If the plane is null or not supplied, the identity transform will be used for the grid origin and orientation.
+Currently only transforms parallel to the supplied polygons are supported.
+The polygon's bounding box parallel to the supplied transform will be
+used as the grid extents.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Polygon boundary, Transform transform = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">boundary</span></td>
+        <td><p>The external boundary of this grid system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>A transform representing the alignment of the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Grid2d(Polygon, Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create a grid from a single boundary, an origin, and its U and V directions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Polygon boundary, Vector3 origin, Vector3 uDirection, Vector3 vDirection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">boundary</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">origin</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">uDirection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">vDirection</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Geometry_Polygon_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Geometry.Polygon,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(Polygon, Grid1d, Grid1d)</h4>
+  <div class="markdown level1 summary"><p>Create a grid from a boundary and custom U and V grids</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Polygon boundary, Grid1d u, Grid1d v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">boundary</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">u</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">v</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(Grid1d, Grid1d)</h4>
+  <div class="markdown level1 summary"><p>Construct a Grid2d from two Grid1ds in the U and V directions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Grid1d u, Grid1d v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">u</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">v</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid2d_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d)">Grid2d(Grid2d)</h4>
+  <div class="markdown level1 summary"><p>Construct a Grid2d from another Grid2d</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Grid2d other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_Elements_Spatial_Grid2d_Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(Elements.Spatial.Grid2d,Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(Grid2d, Grid1d, Grid1d)</h4>
+  <div class="markdown level1 summary"><p>Construct a Grid2d using another Grid2d as the base, but with different Grid1ds as its axes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(Grid2d other, Grid1d u, Grid1d v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The Grid2d to base this one on.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The Grid1d representing the U Axis.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The Grid1d representing the V Axis.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Transform_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Transform)">Grid2d(IList&lt;Polygon&gt;, Transform)</h4>
+  <div class="markdown level1 summary"><p>Create a Grid2d from a list of boundary polygons and an optional transform.
+If the transform is null or not supplied, a transform will be generated automatically from the boundaries' normal.
+Currently only transforms parallel to the supplied polygons are supported.
+The polygons' bounding box parallel to the supplied transform will be
+used as the grid extents.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(IList&lt;Polygon&gt; boundaries, Transform transform = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">boundaries</span></td>
+        <td><p>The external boundaries of this grid system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>A transform representing the alignment of the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Grid2d(IList&lt;Polygon&gt;, Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create a grid from a list of boundaries, an origin, and its U and V directions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(IList&lt;Polygon&gt; boundaries, Vector3 origin, Vector3 uDirection, Vector3 vDirection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">boundaries</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">origin</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">uDirection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">vDirection</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Spatial_Grid1d_Elements_Spatial_Grid1d_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Spatial.Grid1d,Elements.Spatial.Grid1d)">Grid2d(IList&lt;Polygon&gt;, Grid1d, Grid1d)</h4>
+  <div class="markdown level1 summary"><p>Create a grid from a list of boundaries and custom U and V grids</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(IList&lt;Polygon&gt; boundaries, Grid1d u, Grid1d v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
+        <td><span class="parametername">boundaries</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">u</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td><span class="parametername">v</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d__ctor_" data-uid="Elements.Spatial.Grid2d.#ctor*"></a>
+  <h4 id="Elements_Spatial_Grid2d__ctor_System_Double_System_Double_" data-uid="Elements.Spatial.Grid2d.#ctor(System.Double,System.Double)">Grid2d(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Construct a Grid2d with specified dimensions for the U and V direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d(double uDimension, double vDimension)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">uDimension</span></td>
+        <td><p>The size along the U axis</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">vDimension</span></td>
+        <td><p>The size along the V axis</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Spatial_Grid2d_Cells_" data-uid="Elements.Spatial.Grid2d.Cells*"></a>
+  <h4 id="Elements_Spatial_Grid2d_Cells" data-uid="Elements.Spatial.Grid2d.Cells">Cells</h4>
+  <div class="markdown level1 summary"><p>Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;List&lt;Grid2d&gt;&gt; Cells { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_CellsFlat_" data-uid="Elements.Spatial.Grid2d.CellsFlat*"></a>
+  <h4 id="Elements_Spatial_Grid2d_CellsFlat" data-uid="Elements.Spatial.Grid2d.CellsFlat">CellsFlat</h4>
+  <div class="markdown level1 summary"><p>A flat list of all the top-level cells in this grid. To get child cells as well, use Grid2d.GetCells() instead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Grid2d&gt; CellsFlat { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_IsSingleCell_" data-uid="Elements.Spatial.Grid2d.IsSingleCell*"></a>
+  <h4 id="Elements_Spatial_Grid2d_IsSingleCell" data-uid="Elements.Spatial.Grid2d.IsSingleCell">IsSingleCell</h4>
+  <div class="markdown level1 summary"><p>Returns true if this 2D Grid has no subdivisions / sub-grids.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsSingleCell { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_Item_" data-uid="Elements.Spatial.Grid2d.Item*"></a>
+  <h4 id="Elements_Spatial_Grid2d_Item_System_Int32_System_Int32_" data-uid="Elements.Spatial.Grid2d.Item(System.Int32,System.Int32)">Item[Int32, Int32]</h4>
+  <div class="markdown level1 summary"><p>Retrieve a single top-level cell at the specified [u,v] indices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d this[int u, int v] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The U index</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The V index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></td>
+        <td><p>The cell at these indices</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_Type_" data-uid="Elements.Spatial.Grid2d.Type*"></a>
+  <h4 id="Elements_Spatial_Grid2d_Type" data-uid="Elements.Spatial.Grid2d.Type">Type</h4>
+  <div class="markdown level1 summary"><p>An optional type designation for this cell.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Type { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_U_" data-uid="Elements.Spatial.Grid2d.U*"></a>
+  <h4 id="Elements_Spatial_Grid2d_U" data-uid="Elements.Spatial.Grid2d.U">U</h4>
+  <div class="markdown level1 summary"><p>The 1d Grid along the U dimension</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid1d U { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_V_" data-uid="Elements.Spatial.Grid2d.V*"></a>
+  <h4 id="Elements_Spatial_Grid2d_V" data-uid="Elements.Spatial.Grid2d.V">V</h4>
+  <div class="markdown level1 summary"><p>The 1d grid along the V dimension</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid1d V { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Spatial_Grid2d_FindCellAtPosition_" data-uid="Elements.Spatial.Grid2d.FindCellAtPosition*"></a>
+  <h4 id="Elements_Spatial_Grid2d_FindCellAtPosition_System_Double_System_Double_" data-uid="Elements.Spatial.Grid2d.FindCellAtPosition(System.Double,System.Double)">FindCellAtPosition(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Retrieve the grid cell (as a Grid1d) at a length along the U and V domains.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d FindCellAtPosition(double uPosition, double vPosition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">uPosition</span></td>
+        <td><p>U Position</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">vPosition</span></td>
+        <td><p>V Position</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetCellAtIndices_" data-uid="Elements.Spatial.Grid2d.GetCellAtIndices*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCellAtIndices_System_Int32_System_Int32_" data-uid="Elements.Spatial.Grid2d.GetCellAtIndices(System.Int32,System.Int32)">GetCellAtIndices(Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p>Retrieve a single top-level cell at the specified [u,v] indices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Grid2d GetCellAtIndices(int u, int v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The U index</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The V index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a></td>
+        <td><p>The cell at these indices</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetCellGeometry_" data-uid="Elements.Spatial.Grid2d.GetCellGeometry*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCellGeometry" data-uid="Elements.Spatial.Grid2d.GetCellGeometry">GetCellGeometry()</h4>
+  <div class="markdown level1 summary"><p>Get a rectangular polygon representing this untrimmed cell boundary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Curve GetCellGeometry()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><p>A rectangle representing this cell in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetCellNodes_" data-uid="Elements.Spatial.Grid2d.GetCellNodes*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCellNodes" data-uid="Elements.Spatial.Grid2d.GetCellNodes">GetCellNodes()</h4>
+  <div class="markdown level1 summary"><p>Get the points at the corners of all grid cells.
+///</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vector3&gt; GetCellNodes()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetCells_" data-uid="Elements.Spatial.Grid2d.GetCells*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCells" data-uid="Elements.Spatial.Grid2d.GetCells">GetCells()</h4>
+  <div class="markdown level1 summary"><p>Recursively retrieve all bottom-level cells from this grid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Grid2d&gt; GetCells()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><p>A list of all bottom-level cells in the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetCellSeparators_" data-uid="Elements.Spatial.Grid2d.GetCellSeparators*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetCellSeparators_Elements_Spatial_GridDirection_System_Boolean_" data-uid="Elements.Spatial.Grid2d.GetCellSeparators(Elements.Spatial.GridDirection,System.Boolean)">GetCellSeparators(GridDirection, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Get the top-level lines separating cells from one another.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;ICurve&gt; GetCellSeparators(GridDirection direction, bool trim = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.GridDirection.html">GridDirection</a></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The grid direction in which you want to get separators.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">trim</span></td>
+        <td><p>Whether or not to trim cell separators with the trimmed cell boundary</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>&gt;</td>
+        <td><p>The lines between cells, running parallel to the grid direction selected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetColumnAtIndex_" data-uid="Elements.Spatial.Grid2d.GetColumnAtIndex*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetColumnAtIndex_System_Int32_" data-uid="Elements.Spatial.Grid2d.GetColumnAtIndex(System.Int32)">GetColumnAtIndex(Int32)</h4>
+  <div class="markdown level1 summary"><p>Get a list of all the top-level cells at a given u index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Grid2d&gt; GetColumnAtIndex(int u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The u index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><p>A list of the column of all cells with this u index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetRowAtIndex_" data-uid="Elements.Spatial.Grid2d.GetRowAtIndex*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetRowAtIndex_System_Int32_" data-uid="Elements.Spatial.Grid2d.GetRowAtIndex(System.Int32)">GetRowAtIndex(Int32)</h4>
+  <div class="markdown level1 summary"><p>Get a list of all the top-level cells at a given v index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Grid2d&gt; GetRowAtIndex(int v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>The v index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.Grid2d.html">Grid2d</a>&gt;</td>
+        <td><p>A list of the row of all cells with this v index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetTrimmedCellGeometry_" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellGeometry*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetTrimmedCellGeometry" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellGeometry">GetTrimmedCellGeometry()</h4>
+  <div class="markdown level1 summary"><p>Get a list of polygons representing this cell boundary, trimmed by any polygon boundary.
+If the cell falls completely outside of the boundary, an empty array will be returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Curve[] GetTrimmedCellGeometry()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a>[]</td>
+        <td><p>Curves representing this cell in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_GetTrimmedCellProfiles_" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellProfiles*"></a>
+  <h4 id="Elements_Spatial_Grid2d_GetTrimmedCellProfiles" data-uid="Elements.Spatial.Grid2d.GetTrimmedCellProfiles">GetTrimmedCellProfiles()</h4>
+  <div class="markdown level1 summary"><p>Get a list of profiles representing this cell boundary, trimmed by any polygon boundary.
+Internal polygons that are completely inside the cell and are clockwise, will be added as profile voids.
+If the cell falls completely outside of the boundary, an empty array will be returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Profile&gt; GetTrimmedCellProfiles()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Profile.html">Profile</a>&gt;</td>
+        <td><p>Curves representing this cell in world coordinates.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_IsOutside_" data-uid="Elements.Spatial.Grid2d.IsOutside*"></a>
+  <h4 id="Elements_Spatial_Grid2d_IsOutside" data-uid="Elements.Spatial.Grid2d.IsOutside">IsOutside()</h4>
+  <div class="markdown level1 summary"><p>Test if the cell is fully outside the boundary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsOutside()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the grid cell is totally outside the boundary.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_IsTrimmed_" data-uid="Elements.Spatial.Grid2d.IsTrimmed*"></a>
+  <h4 id="Elements_Spatial_Grid2d_IsTrimmed_System_Boolean_" data-uid="Elements.Spatial.Grid2d.IsTrimmed(System.Boolean)">IsTrimmed(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Test if the cell is trimmed by a boundary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsTrimmed(bool treatFullyOutsideAsTrimmed = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">treatFullyOutsideAsTrimmed</span></td>
+        <td><p>Should cells that fall entirely outside of the boundary be treated as trimmed? True by default.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the cell is trimmed by the grid boundary.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_SplitAtPoint_" data-uid="Elements.Spatial.Grid2d.SplitAtPoint*"></a>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPoint_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.SplitAtPoint(Elements.Geometry.Vector3)">SplitAtPoint(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at a point in world space</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPoint(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point at which to split.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_SplitAtPoints_" data-uid="Elements.Spatial.Grid2d.SplitAtPoints*"></a>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">SplitAtPoints(IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at points in world space</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPoints(IEnumerable&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_SplitAtPosition_" data-uid="Elements.Spatial.Grid2d.SplitAtPosition*"></a>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPosition_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.Grid2d.SplitAtPosition(Elements.Geometry.Vector3)">SplitAtPosition(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at a position in the grid's coordinate system</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPosition(Vector3 position)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">position</span></td>
+        <td><p>The position at which to split, with X = U and Y = V.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_SplitAtPosition_" data-uid="Elements.Spatial.Grid2d.SplitAtPosition*"></a>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPosition_System_Double_System_Double_" data-uid="Elements.Spatial.Grid2d.SplitAtPosition(System.Double,System.Double)">SplitAtPosition(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at a position in the grid's coordinate system</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPosition(double uPosition, double vPosition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">uPosition</span></td>
+        <td><p>The U position</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">vPosition</span></td>
+        <td><p>The V position</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_Grid2d_SplitAtPositions_" data-uid="Elements.Spatial.Grid2d.SplitAtPositions*"></a>
+  <h4 id="Elements_Spatial_Grid2d_SplitAtPositions_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.Grid2d.SplitAtPositions(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">SplitAtPositions(IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Split the grid at positions in the grid's coordinate system</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SplitAtPositions(IEnumerable&lt;Vector3&gt; positions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">positions</span></td>
+        <td><p>The positions at which to split, with X = U and Y = V.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ModelCurveExtensions.html#Elements_ModelCurveExtensions_ToModelCurves_Elements_Spatial_Grid2d_Elements_Geometry_Transform_Elements_Material_">ModelCurveExtensions.ToModelCurves(Grid2d, Transform, Material)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

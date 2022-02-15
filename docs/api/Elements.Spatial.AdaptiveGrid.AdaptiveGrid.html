@@ -1,0 +1,589 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class AdaptiveGrid
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class AdaptiveGrid
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.56.6.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid">
+  
+  <h1 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid" class="text-break">Class AdaptiveGrid
+  </h1>
+  <div class="markdown level0 summary"><p>A graph like edge-vertex structure with planar spaces connected by vertical edges.
+The grid doesn't do any intersections when new sections are added, they are stitched
+only by common vertices. Make sure that regions that are added into the graph are
+aligned with respect to boundaries and split points.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">AdaptiveGrid</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Spatial.AdaptiveGrid.html">Elements.Spatial.AdaptiveGrid</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class AdaptiveGrid</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor_Elements_Geometry_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor(Elements.Geometry.Transform)">AdaptiveGrid(Transform)</h4>
+  <div class="markdown level1 summary"><p>Create an AdaptiveGrid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AdaptiveGrid(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>Transformation, grid is aligned with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance">Tolerance</h4>
+  <div class="markdown level1 summary"><p>Tolerance for points being considered the same.
+Applies individually to X, Y, and Z coordinates, not the cumulative difference!
+Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Tolerance { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Transform*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Transform" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Transform">Transform</h4>
+  <div class="markdown level1 summary"><p>Transformation with which planar spaces are aligned</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromBbox*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromBbox(Elements.Geometry.BBox3,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromBbox(BBox3, List&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add graph section using bounding box, divided by a set of key points.
+Key points don't respect &quot;MinimumResolution&quot; at the moment.
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddFromBbox(BBox3 bBox, List&lt;Vector3&gt; keyPoints)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">bBox</span></td>
+        <td><p>Box which region is populated with graph.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">keyPoints</span></td>
+        <td><p>Set of 3D points, region is split with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_Elements_Geometry_Polygon_Elements_Geometry_Vector3_System_Double_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude(Elements.Geometry.Polygon,Elements.Geometry.Vector3,System.Double,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromExtrude(Polygon, Vector3, Double, List&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add graph section using polygon, extruded in given direction.
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddFromExtrude(Polygon boundingPolygon, Vector3 extrusionAxis, double distance, List&lt;Vector3&gt; keyPoints)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">boundingPolygon</span></td>
+        <td><p>Base polygon</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">extrusionAxis</span></td>
+        <td><p>Extrusion direction</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>Height of polygon extrusion</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">keyPoints</span></td>
+        <td><p>Set of 3D points, region is split with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromPolygon_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromPolygon*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromPolygon_Elements_Geometry_Polygon_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromPolygon(Elements.Geometry.Polygon,System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">AddFromPolygon(Polygon, IEnumerable&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add single planar region to the graph section using polygon.
+Any vertices that already exist are not created but reused.
+This way new region is connected with the rest of the graph.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HashSet&lt;Edge&gt; AddFromPolygon(Polygon boundingPolygon, IEnumerable&lt;Vector3&gt; keyPoints)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">boundingPolygon</span></td>
+        <td><p>Base polygon</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">keyPoints</span></td>
+        <td><p>Set of 3D points, region is split with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_Elements_Geometry_Vector3_System_Collections_Generic_List_Elements_Spatial_AdaptiveGrid_Vertex__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex(Elements.Geometry.Vector3,System.Collections.Generic.List{Elements.Spatial.AdaptiveGrid.Vertex})">AddVertex(Vector3, List&lt;Vertex&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add a Vertex and connect in to one or more other vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 point, List&lt;Vertex&gt; connections)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Position of required Vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
+        <td><span class="parametername">connections</span></td>
+        <td><p>Ids of other vertices to connect new Vertex with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><p>New Vertex or existing one if it's within grid tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetEdges_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetEdges*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetEdges" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetEdges">GetEdges()</h4>
+  <div class="markdown level1 summary"><p>Get all Edges.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Edge&gt; GetEdges()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertex_System_UInt64_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertex(System.UInt64)">GetVertex(UInt64)</h4>
+  <div class="markdown level1 summary"><p>Get a Vertex by its ID.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex GetVertex(ulong vertexId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">vertexId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertices_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertices*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertices" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertices">GetVertices()</h4>
+  <div class="markdown level1 summary"><p>Get all Vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vertex&gt; GetVertices()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3,System.Boolean)">SubtractBox(BBox3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Intersect the box with existent edges and cut any portion of the edge, or whole edge,
+that is inside the box. Note that no new connections are created afterwards.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SubtractBox(BBox3 box, bool removeCutEdges = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>Boding box to subtract</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">removeCutEdges</span></td>
+        <td><p>Should edge be removed or replaced by leftover pieces</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_TryGetVertexIndex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.TryGetVertexIndex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_TryGetVertexIndex_Elements_Geometry_Vector3_System_UInt64__System_Nullable_System_Double__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.TryGetVertexIndex(Elements.Geometry.Vector3,System.UInt64@,System.Nullable{System.Double})">TryGetVertexIndex(Vector3, out UInt64, Nullable&lt;Double&gt;)</h4>
+  <div class="markdown level1 summary"><p>Whether a vertex location already exists in the AdaptiveGrid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = default(double? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The ID of the Vertex, if a match is found.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>Amount of tolerance in the search against each component of the coordinate.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
