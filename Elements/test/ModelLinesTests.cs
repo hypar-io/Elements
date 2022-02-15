@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Elements.Geometry;
 using Xunit;
 
@@ -16,7 +14,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Examples")]
         public void ModelLines()
         {
-            this.Name = "Elements_ModelCurve";
+            this.Name = "Elements_ModelLines";
 
             // <example>
             var lines = new List<Line>()
@@ -29,8 +27,8 @@ namespace Elements.Tests
             };
 
             var modelLines = new ModelLines(lines, new Material("Yellow", Colors.Yellow));
-            // </exmaple>
-            
+            // </example>
+
             this.Model.AddElement(modelLines);
         }
     }
