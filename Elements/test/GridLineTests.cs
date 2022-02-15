@@ -11,7 +11,7 @@ namespace Elements.Tests.Examples
             this.GenerateIfc = false;
         }
 
-        [Fact, Trait("Category", "Example")]
+        [Fact, Trait("Category", "Examples")]
         public void Example()
         {
             Name = "Elements_GridLine";
