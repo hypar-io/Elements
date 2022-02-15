@@ -272,10 +272,10 @@ namespace Elements.Tests
             }
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Examples")]
         public async void Joists()
         {
-            Name = nameof(Joists);
+            Name = "Elements_Joist";
 
             // <joist-example>
             var xSpacing = 10.0;
@@ -329,7 +329,7 @@ namespace Elements.Tests
                     Model.AddElement(innerJoistInstance);
                 }
             }
-            // <joist-example>
+            // </joist-example>
         }
     }
 }
