@@ -9,6 +9,9 @@ namespace Elements
     /// <summary>
     /// A material with red, green, blue, alpha, and metallic factor components.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/MaterialTests.cs?name=example)]
+    /// </example>
     public class Material : Element
     {
         /// <summary>The material's color.</summary>
