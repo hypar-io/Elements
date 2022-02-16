@@ -990,6 +990,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check if this line is collinear with other line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <returns></returns>
+        public bool IsCollinear(Line line)
+        {
+            return line.Direction().IsParallelTo(Direction());
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
