@@ -1000,6 +1000,38 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get overlapping line of this and other line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <returns>Returns line or null if lines are not collinear or do not overlap</returns>
+        public Line GetOverlap(Line line)
+        {
+            if(line == null)
+                return null;
+
+            if(!IsCollinear(line))
+                return null;
+
+            //order verticies of lines
+            var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
+            var orderedVectors = vectors.OrderBy(v => v.X + v.Y).ToList();
+
+            //check if 2nd point lies on both lines
+            if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
+                return null;
+
+            //check if 3rd point lies on both lines
+            if (!PointOnLine(orderedVectors[2], Start, End, true) || !PointOnLine(orderedVectors[2], line.Start, line.End, true))
+                return null;
+
+            //edge case when lines share only point
+            if(orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
+                return null;
+
+            return new Line(orderedVectors[1], orderedVectors[2]);
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
