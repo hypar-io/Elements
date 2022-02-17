@@ -1014,7 +1014,7 @@ namespace Elements.Geometry
 
             //order verticies of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
-            var orderedVectors = vectors.OrderBy(v => v.X + v.Y).ToList();
+            var orderedVectors = vectors.OrderBy(v => v.X + v.Y + v.Z).ToList();
 
             //check if 2nd point lies on both lines
             if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
