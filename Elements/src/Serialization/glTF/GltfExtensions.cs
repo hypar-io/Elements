@@ -149,7 +149,6 @@ namespace Elements.Serialization.glTF
         /// <returns>A Base64 string representing the model.</returns>
         public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
