@@ -1028,7 +1028,12 @@ namespace Elements.Geometry
             if(orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
                 return null;
 
-            return new Line(orderedVectors[1], orderedVectors[2]);
+            var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
+            
+            //keep the same direction as original line
+            return Direction().IsAlmostEqualTo(overlappingLine.Direction()) 
+                ? overlappingLine
+                : overlappingLine.Reversed();
         }
 
         /// <summary>
