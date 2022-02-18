@@ -68,7 +68,7 @@ namespace Elements.Serialization.JSON
         /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
-        private static Dictionary<string, Type> BuildAppDomainTypeCache(out List<string> failedAssemblyErrors)
+        internal static Dictionary<string, Type> BuildAppDomainTypeCache(out List<string> failedAssemblyErrors)
         {
             var typeCache = new Dictionary<string, Type>();
 

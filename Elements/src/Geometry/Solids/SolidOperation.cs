@@ -19,6 +19,7 @@ namespace Elements.Geometry.Solids
         /// The solid operation's solid.
         /// </summary>
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Solid Solid
         {
             get { return _solid; }
@@ -33,6 +34,7 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="isVoid"></param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public SolidOperation(bool @isVoid)
         {
             this.IsVoid = @isVoid;

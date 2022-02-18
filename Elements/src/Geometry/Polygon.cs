@@ -29,6 +29,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Polygon(IList<Vector3> @vertices) : base(vertices)
         {
             if (!Validator.DisableValidationOnConstruction)

@@ -66,6 +66,7 @@ namespace Elements.Geometry.Solids
         /// <param name="direction"></param>
         /// <param name="isVoid"></param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
             : base(isVoid)
         {

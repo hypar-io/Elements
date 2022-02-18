@@ -16,6 +16,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="solidOperations">A collection of solid operations.</param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Representation(IList<SolidOperation> @solidOperations)
         {
             this.SolidOperations = @solidOperations;

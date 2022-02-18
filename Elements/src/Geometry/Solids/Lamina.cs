@@ -49,6 +49,7 @@ namespace Elements.Geometry.Solids
         /// <param name="voids"></param>
         /// <param name="isVoid"></param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {

@@ -19,6 +19,7 @@ namespace Elements.Geometry.Solids
         /// <param name="profileRotation"></param>
         /// <param name="isVoid"></param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {

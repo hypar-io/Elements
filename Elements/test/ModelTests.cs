@@ -353,6 +353,15 @@ namespace Elements.Tests
             Assert.False(Model.IsValidForRecursiveAddition(typeof(object)));
         }
 
+        [Fact]
+        public void SerializesNew()
+        {
+            var model = QuadPanelModel();
+            var json = model.ToJsonNew();
+            _output.WriteLine(json);
+            var newModel = Model.FromJsonNew(json);
+        }
+
         private Model QuadPanelModel()
         {
             var model = new Model();

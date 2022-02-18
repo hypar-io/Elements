@@ -12,6 +12,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
+using System.Text.Json;
 
 namespace Elements
 {
@@ -233,7 +234,7 @@ namespace Elements
             using (StreamWriter writer = new StreamWriter(s))
             using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
             {
-                var serializer = new JsonSerializer();
+                var serializer = new Newtonsoft.Json.JsonSerializer();
                 serializer.Serialize(jsonWriter, exportModel);
                 jsonWriter.Flush();
             }
@@ -272,7 +273,7 @@ namespace Elements
                 deserializationErrors.AddRange(typeLoadErrors);
             }
 
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
+            var model = JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
             {
                 Error = (sender, args) =>
                 {
@@ -288,6 +289,63 @@ namespace Elements
         public static Model FromJson(string json, bool forceTypeReload = false)
         {
             return FromJson(json, out _, forceTypeReload);
+        }
+
+        /// <summary>
+        /// Deserialize a model from JSON
+        /// </summary>
+        public string ToJsonNew()
+        {
+            var serializerOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
+
+            var elements = new Dictionary<Guid, Element>();
+
+            var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+
+            serializerOptions.Converters.Add(new ElementConverterFactory(elements));
+            serializerOptions.Converters.Add(new ModelConverter());
+            serializerOptions.Converters.Add(new DiscriminatorConverterFactory());
+
+            return System.Text.Json.JsonSerializer.Serialize(this, serializerOptions);
+        }
+
+        public static Model FromJsonNew(string json)
+        {
+            var elements = new Dictionary<Guid, Element>();
+            var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+
+            var model = new Model();
+            using (var document = JsonDocument.Parse(json))
+            {
+                JsonElement root = document.RootElement;
+                var serializerOptions = new JsonSerializerOptions()
+                {
+                    WriteIndented = true,
+                    PropertyNameCaseInsensitive = true
+                };
+                JsonElement transformElement = root.GetProperty("Transform");
+                JsonElement elementsElement = root.GetProperty("Elements");
+
+                serializerOptions.Converters.Add(new ElementConverterFactory(elements, typeCache, elementsElement));
+                serializerOptions.Converters.Add(new DiscriminatorConverterFactory(typeCache));
+
+                // Set the transform
+                model.Transform = System.Text.Json.JsonSerializer.Deserialize<Transform>(transformElement.ToString(), serializerOptions);
+
+                // Create the elements
+                foreach (var elementElement in elementsElement.EnumerateObject())
+                {
+                    var discriminator = elementElement.Value.GetProperty("discriminator").GetString();
+                    var subType = PropertySerializationExtensions.GetObjectSubtype(typeof(Element), discriminator, typeCache);
+                    var element = (Element)System.Text.Json.JsonSerializer.Deserialize(elementElement.Value.ToString(), subType, serializerOptions);
+                    model.AddElement(element, false);
+                }
+            }
+
+            return model;
         }
 
         private List<Element> RecursiveGatherSubElements(object obj)

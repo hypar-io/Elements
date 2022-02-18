@@ -68,6 +68,7 @@ namespace Elements
         /// <param name="id">The id of the material.</param>
         /// <param name="name">The name of the material.</param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, bool @repeatTexture, string @normalTexture, bool @interpolateTexture, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
