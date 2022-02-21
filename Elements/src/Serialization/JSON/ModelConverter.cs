@@ -51,6 +51,15 @@ namespace Elements.Serialization.JSON
             }
         }
 
+        public static JsonSerializerOptions CopyAndRemoveConverter(this JsonSerializerOptions options, Type converterType)
+        {
+            var copy = new JsonSerializerOptions(options);
+            for (var i = copy.Converters.Count - 1; i >= 0; i--)
+                if (copy.Converters[i].GetType() == converterType)
+                    copy.Converters.RemoveAt(i);
+            return copy;
+        }
+
         public static Type GetObjectSubtype(Type objectType, string discriminator, Dictionary<string, Type> typeCache)
         {
             // Check the type cache.
@@ -152,14 +161,25 @@ namespace Elements.Serialization.JSON
 
     public class ElementConverterFactory : JsonConverterFactory
     {
-        private Dictionary<Guid, Element> _elements;
+        private readonly Dictionary<Guid, Element> _elements;
 
-        private Dictionary<string, Type> _typeCache;
+        private readonly Dictionary<string, Type> _typeCache;
 
-        JsonElement _documentElements;
+        /// <summary>
+        /// An element representing the Elements property on the 
+        /// model object being deserialized. This is used to do 
+        /// forward-looking deserialization of nested references.
+        /// </summary>
+        private readonly JsonElement _documentElements;
 
+        /// <summary>
+        /// Construct an element converter factory.
+        /// </summary>
+        /// <param name="elements">A cache of elements.</param>
+        /// <param name="typeCache">A cache of types.</param>
+        /// <param name="documentElements">The elements node of a model being deserialized.</param>
         public ElementConverterFactory(Dictionary<Guid, Element> elements,
-                                        Dictionary<string, Type> typeCache = null,
+                                       Dictionary<string, Type> typeCache = null,
                                        JsonElement documentElements = default)
         {
             _elements = elements;
@@ -193,11 +213,44 @@ namespace Elements.Serialization.JSON
         }
     }
 
+    public class ElementIdConverter<TElement> : JsonConverter<TElement> where TElement : Element
+    {
+        private readonly Dictionary<Guid, Element> _elements;
+
+        public ElementIdConverter()
+        {
+            _elements = new Dictionary<Guid, Element>();
+        }
+
+        public ElementIdConverter(Dictionary<Guid, Element> elements)
+        {
+            _elements = elements;
+        }
+
+        public override TElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var id = reader.GetGuid();
+            if (_elements.ContainsKey(id))
+            {
+                return (TElement)_elements[id];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, TElement value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.Id.ToString());
+        }
+    }
+
     public class ElementConverter<TElement> : JsonConverter<TElement> where TElement : Element
     {
-        private Dictionary<Guid, Element> _elements;
-        private Dictionary<string, Type> _typeCache;
-        JsonElement _documentElements;
+        private readonly Dictionary<Guid, Element> _elements;
+        private readonly Dictionary<string, Type> _typeCache;
+        private readonly JsonElement _documentElements;
 
         public ElementConverter(Dictionary<Guid, Element> elements,
                                 Dictionary<string, Type> typeCache,
@@ -210,38 +263,55 @@ namespace Elements.Serialization.JSON
 
         public override TElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            TElement e;
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                var id = reader.GetGuid();
-                if (_elements.ContainsKey(id))
-                {
-                    Console.WriteLine($"Found element {id} already in the cache.");
-                    e = (TElement)_elements[id];
-                    return e;
-                }
-                else
-                {
-                    Console.WriteLine($"Couldn't find element {id}. Building it.");
-                    // This element hasn't been built yet.
-                    // Pause and go build it.
-                    // This may be dangerous if circular references are introduced.
-                    if (_documentElements.TryGetProperty(reader.GetString(), out var element))
-                    {
-                        e = JsonSerializer.Deserialize<TElement>(element.ToString(), options);
-                        _elements.Add(e.Id, e);
-                        return e;
-                    }
-                }
-                throw new JsonException();
-            }
-
             using (var doc = JsonDocument.ParseValue(ref reader))
             {
                 var root = doc.RootElement;
+
                 var discriminator = root.GetProperty("discriminator").GetString();
                 var subType = _typeCache[discriminator];
-                e = (TElement)JsonSerializer.Deserialize(root, subType, options);
+
+                // Use the type info to get all properties which are Element
+                // references, and deserialize those first.
+
+                // TODO: This *should* support serialization of elements in
+                // any order, removing the requirement to do any kind of recursive
+                // sub-element searching. We can remove that code from the model.
+                var elementProperties = subType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => typeof(Element).IsAssignableFrom(p.PropertyType));
+                foreach (var elementProperty in elementProperties)
+                {
+                    var prop = root.GetProperty(elementProperty.Name);
+                    if (prop.TryGetGuid(out var referencedId))
+                    {
+                        if (_elements.ContainsKey(referencedId))
+                        {
+                            continue;
+                        }
+
+                        if (_documentElements.TryGetProperty(referencedId.ToString(), out var propertyBody))
+                        {
+                            if (propertyBody.TryGetProperty("discriminator", out var elementBody))
+                            {
+                                var referencedElement = (Element)prop.Deserialize(elementProperty.PropertyType);
+                                _elements[referencedId] = referencedElement;
+                            }
+                        }
+                        else
+                        {
+                            // The reference cannot be found. It's either not 
+                            // a direct reference, as in the case of a cross-model
+                            // reference, or it's just broken. 
+                            _elements[referencedId] = null;
+                        }
+                    }
+                }
+
+                // Deserialize without further specifying the converter to avoid an infinite loop.
+                var o = new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                o.Converters.Add(new DiscriminatorConverterFactory(_typeCache));
+                TElement e = (TElement)root.Deserialize(subType, o);
                 _elements.Add(e.Id, e);
                 return e;
             }

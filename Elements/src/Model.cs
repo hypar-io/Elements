@@ -303,8 +303,6 @@ namespace Elements
 
             var elements = new Dictionary<Guid, Element>();
 
-            var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
-
             serializerOptions.Converters.Add(new ElementConverterFactory(elements));
             serializerOptions.Converters.Add(new ModelConverter());
             serializerOptions.Converters.Add(new DiscriminatorConverterFactory());
@@ -321,26 +319,30 @@ namespace Elements
             using (var document = JsonDocument.Parse(json))
             {
                 JsonElement root = document.RootElement;
-                var serializerOptions = new JsonSerializerOptions()
+                JsonElement transformElement = root.GetProperty("Transform");
+                JsonElement elementsElement = root.GetProperty("Elements");
+
+                // Two converters are required. One that handles all element
+                // deserialization (including discriminator handling), and
+                // one that handles deserialization of types with discriminators.
+                var options = new JsonSerializerOptions()
                 {
                     WriteIndented = true,
                     PropertyNameCaseInsensitive = true
                 };
-                JsonElement transformElement = root.GetProperty("Transform");
-                JsonElement elementsElement = root.GetProperty("Elements");
 
-                serializerOptions.Converters.Add(new ElementConverterFactory(elements, typeCache, elementsElement));
-                serializerOptions.Converters.Add(new DiscriminatorConverterFactory(typeCache));
+                options.Converters.Add(new ElementConverterFactory(elements, typeCache, elementsElement));
+                options.Converters.Add(new DiscriminatorConverterFactory(typeCache));
 
                 // Set the transform
-                model.Transform = System.Text.Json.JsonSerializer.Deserialize<Transform>(transformElement.ToString(), serializerOptions);
+                model.Transform = System.Text.Json.JsonSerializer.Deserialize<Transform>(transformElement.ToString(), options);
 
                 // Create the elements
                 foreach (var elementElement in elementsElement.EnumerateObject())
                 {
                     var discriminator = elementElement.Value.GetProperty("discriminator").GetString();
                     var subType = PropertySerializationExtensions.GetObjectSubtype(typeof(Element), discriminator, typeCache);
-                    var element = (Element)System.Text.Json.JsonSerializer.Deserialize(elementElement.Value.ToString(), subType, serializerOptions);
+                    var element = (Element)System.Text.Json.JsonSerializer.Deserialize(elementElement.Value.ToString(), subType, options);
                     model.AddElement(element, false);
                 }
             }
