@@ -38,7 +38,7 @@ public static class ElementsAPI
         var model = new Model();
         var r = new Random();
         var size = 10;
-        var profile = Polygon.L(0.1, 0.1, 0.05);
+        var profile = new Profile(Polygon.L(0.1, 0.1, 0.05));
         for (var i = 0; i < 100; i++)
         {
             var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);

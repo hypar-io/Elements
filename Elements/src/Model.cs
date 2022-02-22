@@ -297,11 +297,7 @@ namespace Elements
         /// </summary>
         public string ToJsonNew()
         {
-            var serializerOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true
-            };
-
+            var serializerOptions = new JsonSerializerOptions();
             serializerOptions.Converters.Add(new ElementConverterFactory());
             return System.Text.Json.JsonSerializer.Serialize(this, serializerOptions);
         }
@@ -317,12 +313,10 @@ namespace Elements
             using (var document = JsonDocument.Parse(json))
             {
                 JsonElement root = document.RootElement;
-                JsonElement transformElement = root.GetProperty("Transform");
                 JsonElement elementsElement = root.GetProperty("Elements");
 
                 var options = new JsonSerializerOptions()
                 {
-                    WriteIndented = true,
                     PropertyNameCaseInsensitive = true
                 };
 
