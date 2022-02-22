@@ -1002,17 +1002,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get overlapping line of this and other line
+        /// Check if line overlap with other line
         /// </summary>
         /// <param name="line">Line to check</param>
-        /// <returns>Returns line or null if lines are not collinear or do not overlap</returns>
-        public Line GetOverlap(Line line)
+        /// <param name="overlap">Overlapping line or null when lines do not overlap</param>
+        /// <returns>Returns true when lines overlap and false when they do not</returns>
+        public bool TryGetOverlap(Line line, out Line overlap)
         {
+            overlap = null;
+
             if(line == null)
-                return null;
+                return false;
 
             if(!IsCollinear(line))
-                return null;
+                return false;
 
             //order vertices of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
@@ -1020,22 +1023,24 @@ namespace Elements.Geometry
 
             //check if 2nd point lies on both lines
             if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
-                return null;
+                return false;
 
             //check if 3rd point lies on both lines
             if (!PointOnLine(orderedVectors[2], Start, End, true) || !PointOnLine(orderedVectors[2], line.Start, line.End, true))
-                return null;
+                return false;
 
             //edge case when lines share only point
             if(orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
-                return null;
+                return false;
 
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
             
             //keep the same direction as original line
-            return Direction().IsAlmostEqualTo(overlappingLine.Direction()) 
+            overlap = Direction().IsAlmostEqualTo(overlappingLine.Direction()) 
                 ? overlappingLine
                 : overlappingLine.Reversed();
+
+            return true;
         }
 
         /// <summary>
