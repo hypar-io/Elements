@@ -1,4 +1,5 @@
 using System;
+using Elements.Serialization.JSON;
 using Elements.Validators;
 
 namespace Elements.Geometry.Solids
@@ -14,6 +15,7 @@ namespace Elements.Geometry.Solids
 
         /// <summary>The id of the profile to extrude.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }

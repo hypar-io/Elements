@@ -13,6 +13,7 @@ using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace Elements
 {
@@ -302,17 +303,17 @@ namespace Elements
             };
 
             serializerOptions.Converters.Add(new ElementConverterFactory());
-            serializerOptions.Converters.Add(new ModelConverter());
-            serializerOptions.Converters.Add(new DiscriminatorConverterFactory());
-
             return System.Text.Json.JsonSerializer.Serialize(this, serializerOptions);
         }
 
         public static Model FromJsonNew(string json)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating type cache.");
 
-            var model = new Model();
+            Model model = null;
             using (var document = JsonDocument.Parse(json))
             {
                 JsonElement root = document.RootElement;
@@ -325,32 +326,17 @@ namespace Elements
                     PropertyNameCaseInsensitive = true
                 };
 
-                // Two converters are required. One that handles all element
-                // deserialization (including discriminator handling), and
-                // one that handles only deserialization of types with discriminators.
-                options.Converters.Add(new ElementConverterFactory(typeCache, elementsElement));
-                options.Converters.Add(new DiscriminatorConverterFactory(typeCache));
-
                 // Our custom reference handler will cache elements by id as
                 // they are deserialized, supporting reading elements by id
                 // from JSON.
-                var refHandler = new ElementReferenceHandler();
+                var refHandler = new ElementReferenceHandler(typeCache, elementsElement);
                 options.ReferenceHandler = refHandler;
 
-                model.Transform = System.Text.Json.JsonSerializer.Deserialize<Transform>(transformElement.ToString(), options);
-
-                // Create the elements
-                foreach (var elementElement in elementsElement.EnumerateObject())
-                {
-                    var discriminator = elementElement.Value.GetProperty("discriminator").GetString();
-                    var subType = PropertySerializationExtensions.GetObjectSubtype(typeof(Element), discriminator, typeCache);
-                    var element = (Element)System.Text.Json.JsonSerializer.Deserialize(elementElement.Value.ToString(), subType, options);
-                    model.AddElement(element, false);
-                }
+                model = System.Text.Json.JsonSerializer.Deserialize<Model>(json, options);
 
                 // Resetting the reference handler, empties the internal
                 // elements cache.
-                refHandler.Reset();
+                refHandler.Reset(typeCache, elementsElement);
             }
 
             return model;

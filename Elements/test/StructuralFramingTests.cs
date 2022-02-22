@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 using System.Diagnostics;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -21,8 +22,11 @@ namespace Elements.Tests
 
         private WideFlangeProfile _testProfile;
 
-        public StructuralFramingTests()
+        private ITestOutputHelper _output;
+
+        public StructuralFramingTests(ITestOutputHelper output)
         {
+            _output = output;
             _testProfile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100);
         }
 
@@ -57,6 +61,10 @@ namespace Elements.Tests
             this.Model.AddElements(polyT);
             this.Model.AddElement(arcBeam);
             this.Model.AddElements(arcT);
+
+            var json = this.Model.ToJsonNew();
+            _output.WriteLine(json);
+            var newModel = Model.FromJsonNew(json);
         }
 
         [Theory]

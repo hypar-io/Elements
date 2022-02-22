@@ -11,6 +11,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Elements.Geometry.Profiles;
 
 namespace Elements.Tests
 {
@@ -357,6 +358,21 @@ namespace Elements.Tests
         public void SerializesNew()
         {
             var model = QuadPanelModel();
+            var json = model.ToJsonNew();
+            _output.WriteLine(json);
+            var newModel = Model.FromJsonNew(json);
+        }
+
+        [Fact]
+        public void SerializesOneBeamNew()
+        {
+            var profiles = new WideFlangeProfileFactory();
+            var w = profiles.GetProfileByType(WideFlangeProfileType.W44x335);
+
+            var line = new Line(Vector3.Origin, new Vector3(5, 5));
+            var beam = new Beam(line, w);
+            var model = new Model();
+            model.AddElement(beam);
             var json = model.ToJsonNew();
             _output.WriteLine(json);
             var newModel = Model.FromJsonNew(json);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 
 namespace Elements.Spatial
@@ -14,6 +15,7 @@ namespace Elements.Spatial
     /// [!code-csharp[Main](../../Elements/test/Grid1dTests.cs?name=example)]
     /// </example>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Grid1d>))]
     public class Grid1d
     {
         #region Properties

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -13,9 +14,18 @@ namespace Elements.Serialization.JSON
     // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-preserve-references?pivots=dotnet-6-0#persist-reference-metadata-across-multiple-serialization-and-deserialization-calls
     internal class ElementReferenceResolver : ReferenceResolver
     {
-        // private uint _referenceCount;
+        public Dictionary<string, Type> TypeCache { get; }
+        public JsonElement DocumentElements { get; }
+
         private readonly Dictionary<string, object> _referenceIdToObjectMap = new Dictionary<string, object>();
         private readonly Dictionary<object, string> _objectToReferenceIdMap = new Dictionary<object, string>();
+
+        public ElementReferenceResolver(Dictionary<string, Type> typeCache, JsonElement documentElements)
+        {
+            Console.WriteLine("Constructing a new reference resolver.");
+            TypeCache = typeCache;
+            DocumentElements = documentElements;
+        }
 
         public override void AddReference(string referenceId, object value)
         {
@@ -69,9 +79,9 @@ namespace Elements.Serialization.JSON
 
     internal class ElementReferenceHandler : ReferenceHandler
     {
-        public ElementReferenceHandler() => Reset();
+        public ElementReferenceHandler(Dictionary<string, Type> typeCache, JsonElement documentElements) => Reset(typeCache, documentElements);
         private ReferenceResolver _rootedResolver;
         public override ReferenceResolver CreateResolver() => _rootedResolver;
-        public void Reset() => _rootedResolver = new ElementReferenceResolver();
+        public void Reset(Dictionary<string, Type> typeCache, JsonElement documentElements) => _rootedResolver = new ElementReferenceResolver(typeCache, documentElements);
     }
 }

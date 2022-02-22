@@ -33,6 +33,7 @@ namespace Elements.Geometry
         /// <param name="id">The id of the profile.</param>
         /// <param name="name">The name of the profile.</param>
         [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Profile(Polygon @perimeter, IList<Polygon> @voids, Guid @id = default, string @name = null)
             : base(id, name)
         {

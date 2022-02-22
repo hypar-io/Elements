@@ -1,37 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Elements.Geometry;
 
 namespace Elements.Serialization.JSON
 {
     internal class ElementConverterFactory : JsonConverterFactory
     {
-
-        private readonly Dictionary<string, Type> _typeCache;
-
-        /// <summary>
-        /// An element representing the Elements property on the 
-        /// model object being deserialized. This is used to do 
-        /// forward-looking deserialization of nested references.
-        /// </summary>
-        private readonly JsonElement _documentElements;
-
-        /// <summary>
-        /// Construct an element converter factory.
-        /// </summary>
-        /// <param name="typeCache">A cache of types.</param>
-        /// <param name="documentElements">The elements node of a model being deserialized.</param>
-        public ElementConverterFactory(Dictionary<string, Type> typeCache = null,
-                                       JsonElement documentElements = default)
-        {
-            _documentElements = documentElements;
-            _typeCache = typeCache;
-        }
-
         public override bool CanConvert(Type typeToConvert)
         {
             return typeof(Element).IsAssignableFrom(typeToConvert);
@@ -39,47 +14,35 @@ namespace Elements.Serialization.JSON
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            if (typeToConvert == typeof(Material))
-            {
-                return new ElementConverter<Material>(_typeCache, _documentElements);
-            }
-            else if (typeToConvert == typeof(Profile))
-            {
-                return new ElementConverter<Profile>(_typeCache, _documentElements);
-            }
-            else if (typeToConvert == typeof(GeometricElement))
-            {
-                return new ElementConverter<GeometricElement>(_typeCache, _documentElements);
-            }
-            else
-            {
-                return new ElementConverter<Element>(_typeCache, _documentElements);
-            }
+            var elementConverter = typeof(ElementConverter<>);
+            var typeArgs = new[] { typeToConvert };
+            var converterType = elementConverter.MakeGenericType(typeArgs);
+            var converter = Activator.CreateInstance(converterType) as JsonConverter;
+            return converter;
         }
     }
 
-    internal class ElementConverter<TElement> : JsonConverter<TElement> where TElement : Element
+    internal class ElementConverter<T> : JsonConverter<T>
     {
-        private readonly Dictionary<string, Type> _typeCache;
-        private readonly JsonElement _documentElements;
-
-        public ElementConverter(Dictionary<string, Type> typeCache,
-                                JsonElement documentElements)
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            _typeCache = typeCache;
-            _documentElements = documentElements;
-        }
+            var sw = new Stopwatch();
+            sw.Start();
 
-        public override TElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
+            var resolver = options.ReferenceHandler.CreateResolver() as ElementReferenceResolver;
+
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                var id = reader.GetString();
+                return (T)resolver.ResolveReference(id.ToString());
+            }
+
             using (var doc = JsonDocument.ParseValue(ref reader))
             {
-                var resolver = options.ReferenceHandler.CreateResolver();
-
                 var root = doc.RootElement;
 
                 var discriminator = root.GetProperty("discriminator").GetString();
-                var subType = _typeCache[discriminator];
+                var derivedType = resolver.TypeCache[discriminator];
 
                 // Use the type info to get all properties which are Element
                 // references, and deserialize those first.
@@ -87,57 +50,24 @@ namespace Elements.Serialization.JSON
                 // TODO: This *should* support serialization of elements in
                 // any order, removing the requirement to do any kind of recursive
                 // sub-element searching. We can remove that code from the model.
-                var elementProperties = subType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => typeof(Element).IsAssignableFrom(p.PropertyType));
-                foreach (var elementProperty in elementProperties)
-                {
-                    var prop = root.GetProperty(elementProperty.Name);
-                    if (prop.TryGetGuid(out var referencedId))
-                    {
-                        if (resolver.ResolveReference(referencedId.ToString()) != null)
-                        {
-                            continue;
-                        }
+                PropertySerializationExtensions.DeserializeElementProperties(derivedType, root, resolver, resolver.DocumentElements);
 
-                        if (_documentElements.TryGetProperty(referencedId.ToString(), out var propertyBody))
-                        {
-                            if (propertyBody.TryGetProperty("discriminator", out var elementBody))
-                            {
-                                var referencedElement = (Element)prop.Deserialize(elementProperty.PropertyType);
-                                resolver.AddReference(referencedId.ToString(), referencedElement);
-                            }
-                        }
-                        else
-                        {
-                            // The reference cannot be found. It's either not 
-                            // a direct reference, as in the case of a cross-model
-                            // reference, or it's just broken.
-                            resolver.AddReference(referencedId.ToString(), null);
-                        }
-                    }
+                T e = (T)root.Deserialize(derivedType, options);
+                if (typeof(Element).IsAssignableFrom(derivedType))
+                {
+                    resolver.AddReference(((Element)(object)e).Id.ToString(), e);
                 }
-
-                // Create new JSON serializer options, reusing the existing 
-                // discriminator factory converter and reference resolver, 
-                // but don't pass the element converter because it will result
-                // in an infinite loop.
-                var o = new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                };
-                o.Converters.Add(options.Converters.First(c => c.GetType() == typeof(DiscriminatorConverterFactory)));
-                o.ReferenceHandler = options.ReferenceHandler;
-
-                TElement e = (TElement)root.Deserialize(subType, o);
-                resolver.AddReference(e.Id.ToString(), e);
+                Console.WriteLine($"{sw.ElapsedMilliseconds}ms for deserializing type.");
                 return e;
             }
         }
 
-        public override void Write(Utf8JsonWriter writer, TElement value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            if (writer.CurrentDepth > 2)
+            var isElement = typeof(Element).IsAssignableFrom(value.GetType());
+            if (writer.CurrentDepth > 2 && isElement)
             {
-                writer.WriteStringValue(value.Id.ToString());
+                writer.WriteStringValue(((Element)(object)value).Id.ToString());
             }
             else
             {

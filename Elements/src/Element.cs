@@ -1,4 +1,5 @@
 using System;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -6,6 +7,7 @@ namespace Elements
     /// An object which is identified with a unique identifier and a name.
     /// </summary>
     [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Element>))]
     public abstract class Element : System.ComponentModel.INotifyPropertyChanged
     {
         private System.Guid _id;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
@@ -23,7 +21,7 @@ namespace Elements
 
         /// <summary>The element's material.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(ElementIdConverter<Material>))]
+        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>

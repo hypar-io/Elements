@@ -86,5 +86,40 @@ namespace Elements.Serialization.JSON
             // is to return the base objectType if a derived type can't be found.
             return objectType;
         }
+
+        public static void DeserializeElementProperties(Type derivedType,
+                                                   JsonElement root,
+                                                   ReferenceResolver resolver,
+                                                   JsonElement documentElements)
+        {
+            var elementProperties = derivedType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => typeof(Element).IsAssignableFrom(p.PropertyType));
+            foreach (var elementProperty in elementProperties)
+            {
+                var prop = root.GetProperty(elementProperty.Name);
+                if (prop.TryGetGuid(out var referencedId))
+                {
+                    if (resolver.ResolveReference(referencedId.ToString()) != null)
+                    {
+                        continue;
+                    }
+
+                    if (documentElements.TryGetProperty(referencedId.ToString(), out var propertyBody))
+                    {
+                        if (propertyBody.TryGetProperty("discriminator", out var elementBody))
+                        {
+                            var referencedElement = (Element)prop.Deserialize(elementProperty.PropertyType);
+                            resolver.AddReference(referencedId.ToString(), referencedElement);
+                        }
+                    }
+                    else
+                    {
+                        // The reference cannot be found. It's either not 
+                        // a direct reference, as in the case of a cross-model
+                        // reference, or it's just broken.
+                        resolver.AddReference(referencedId.ToString(), null);
+                    }
+                }
+            }
+        }
     }
 }

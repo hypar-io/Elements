@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -28,6 +29,7 @@ namespace Elements
         /// <summary>
         /// The structural framing's profile.
         /// </summary>
+        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         /// <summary>

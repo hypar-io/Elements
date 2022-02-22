@@ -1,3 +1,5 @@
+using Elements.Serialization.JSON;
+
 namespace Elements.Geometry.Solids
 {
     /// <summary>A sweep of a profile along a curve.</summary>
@@ -35,6 +37,7 @@ namespace Elements.Geometry.Solids
 
         /// <summary>The id of the profile to be swept along the curve.</summary>
         [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }
