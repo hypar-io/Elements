@@ -23,7 +23,6 @@ namespace Elements
 
         /// <summary>The element's material.</summary>
         [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(ElementIdConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>

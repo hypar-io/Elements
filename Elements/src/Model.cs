@@ -322,15 +322,15 @@ namespace Elements
                 JsonElement transformElement = root.GetProperty("Transform");
                 JsonElement elementsElement = root.GetProperty("Elements");
 
-                // Two converters are required. One that handles all element
-                // deserialization (including discriminator handling), and
-                // one that handles deserialization of types with discriminators.
                 var options = new JsonSerializerOptions()
                 {
                     WriteIndented = true,
                     PropertyNameCaseInsensitive = true
                 };
 
+                // Two converters are required. One that handles all element
+                // deserialization (including discriminator handling), and
+                // one that handles only deserialization of types with discriminators.
                 options.Converters.Add(new ElementConverterFactory(elements, typeCache, elementsElement));
                 options.Converters.Add(new DiscriminatorConverterFactory(typeCache));
 
