@@ -1,3 +1,5 @@
+using System.Net.Sockets;
+using System.Numerics;
 using Elements.Validators;
 using System;
 using System.Collections.Generic;
@@ -996,7 +998,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool IsCollinear(Line line)
         {
-            return line.Direction().IsParallelTo(Direction());
+            return Vector3.AreCollinear(Start, End, line.Start) && Vector3.AreCollinear(Start, End, line.End);
         }
 
         /// <summary>
@@ -1012,7 +1014,7 @@ namespace Elements.Geometry
             if(!IsCollinear(line))
                 return null;
 
-            //order verticies of lines
+            //order vertices of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
             var orderedVectors = vectors.OrderBy(v => v.X + v.Y + v.Z).ToList();
 

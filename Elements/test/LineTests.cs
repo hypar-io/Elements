@@ -490,6 +490,10 @@ namespace Elements.Geometry.Tests
 
             var sharedEndLine = new Line(new Vector3(-5, 5, 5), new Vector3(5, 5, 5));
             Assert.False(line.IsCollinear(sharedEndLine));
+
+            //var parallelLine = new Line(new Vector3(3, 3, 0), new Vector3(8, 8, 5));
+            //Assert.True(line.Direction().IsParallelTo(parallelLine.Direction()));
+            //Assert.False(line.IsCollinear(parallelLine));
         }
 
         [Fact]
