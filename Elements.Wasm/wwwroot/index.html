@@ -11,8 +11,16 @@
 <body>
     <script type="module" src="js/Elements.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <button onclick="elements.modelToGlbBytes(JSON.stringify(beams)).then((model)=>{console.log(model)})"
-        type="button">Test!</button>
+    <script>
+        function reset() {
+            document.getElementById("result").innerHTML = "";
+        }
+        function runTest() {
+            elements.test().then((results) => { document.getElementById("result").innerHTML = results });
+        }
+    </script>
+    <button onmousedown="reset()" onclick="runTest()" type="button">Test!</button>
+    <div id="result"></div>
 </body>
 
 </html>

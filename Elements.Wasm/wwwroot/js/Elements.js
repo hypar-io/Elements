@@ -10,6 +10,10 @@ class Elements {
     async modelToGlbBytes(json) {
         return DotNet.invokeMethodAsync('Elements.Wasm', 'ModelToGlbBytes', json)
     }
+
+    async test() {
+        return DotNet.invokeMethodAsync('Elements.Wasm', 'Test')
+    }
 }
 
 window.elements = new Elements();
