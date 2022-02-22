@@ -27,8 +27,10 @@ public static class ElementsAPI
     }
 
     [JSInvokable]
-    public static Task<string> Test()
+    public static Task<TestResult> Test()
     {
+        Validator.DisableValidationOnConstruction = true;
+
         var sw = new Stopwatch();
         sw.Start();
         var sb = new StringBuilder();
@@ -36,12 +38,13 @@ public static class ElementsAPI
         var model = new Model();
         var r = new Random();
         var size = 10;
+        var profile = Polygon.L(0.1, 0.1, 0.05);
         for (var i = 0; i < 100; i++)
         {
             var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var end = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var line = new Line(start, end);
-            var beam = new Beam(line, Polygon.L(0.1, 0.1, 0.05));
+            var beam = new Beam(line, profile);
             model.AddElement(beam);
         }
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating test beams.");
@@ -55,10 +58,19 @@ public static class ElementsAPI
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for deserializing model.");
         sw.Restart();
 
-        var result = Task.FromResult(newModel.ToGlTF());
+        var result = newModel.ToGlTF();
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating the glb.");
-        return Task.FromResult<string>(sb.ToString());
+        return Task.FromResult<TestResult>(new TestResult()
+        {
+            Glb = result,
+            Results = sb.ToString()
+        });
+    }
 
+    public class TestResult
+    {
+        public byte[] Glb { get; set; }
+        public string Results { get; set; }
     }
 
     [JSInvokable]

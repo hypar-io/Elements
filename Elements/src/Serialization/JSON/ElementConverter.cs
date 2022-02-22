@@ -26,8 +26,8 @@ namespace Elements.Serialization.JSON
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            // var sw = new Stopwatch();
+            // sw.Start();
 
             var resolver = options.ReferenceHandler.CreateResolver() as ElementReferenceResolver;
 
@@ -57,7 +57,7 @@ namespace Elements.Serialization.JSON
                 {
                     resolver.AddReference(((Element)(object)e).Id.ToString(), e);
                 }
-                Console.WriteLine($"{sw.ElapsedMilliseconds}ms for deserializing type.");
+                // Console.WriteLine($"{sw.ElapsedMilliseconds}ms for deserializing type.");
                 return e;
             }
         }

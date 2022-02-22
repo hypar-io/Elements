@@ -1,3 +1,4 @@
+using System;
 using Elements.Serialization.JSON;
 
 namespace Elements.Geometry.Solids
