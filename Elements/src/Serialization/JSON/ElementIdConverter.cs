@@ -45,15 +45,17 @@ namespace Elements.Serialization.JSON
 
         public override TElement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var id = reader.GetGuid();
-            if (_elements.ContainsKey(id))
-            {
-                return (TElement)_elements[id];
-            }
-            else
-            {
-                return null;
-            }
+            var id = reader.GetString();
+            // if (_elements.ContainsKey(id))
+            // {
+            //     return (TElement)_elements[id];
+            // }
+            // else
+            // {
+            //     return null;
+            // }
+            var resolver = options.ReferenceHandler.CreateResolver();
+            return (TElement)resolver.ResolveReference(id.ToString());
         }
 
         public override void Write(Utf8JsonWriter writer, TElement value, JsonSerializerOptions options)

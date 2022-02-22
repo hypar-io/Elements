@@ -301,9 +301,7 @@ namespace Elements
                 WriteIndented = true
             };
 
-            var elements = new Dictionary<Guid, Element>();
-
-            serializerOptions.Converters.Add(new ElementConverterFactory(elements));
+            serializerOptions.Converters.Add(new ElementConverterFactory());
             serializerOptions.Converters.Add(new ModelConverter());
             serializerOptions.Converters.Add(new DiscriminatorConverterFactory());
 
@@ -312,7 +310,6 @@ namespace Elements
 
         public static Model FromJsonNew(string json)
         {
-            var elements = new Dictionary<Guid, Element>();
             var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
 
             var model = new Model();
@@ -331,10 +328,15 @@ namespace Elements
                 // Two converters are required. One that handles all element
                 // deserialization (including discriminator handling), and
                 // one that handles only deserialization of types with discriminators.
-                options.Converters.Add(new ElementConverterFactory(elements, typeCache, elementsElement));
+                options.Converters.Add(new ElementConverterFactory(typeCache, elementsElement));
                 options.Converters.Add(new DiscriminatorConverterFactory(typeCache));
 
-                // Set the transform
+                // Our custom reference handler will cache elements by id as
+                // they are deserialized, supporting reading elements by id
+                // from JSON.
+                var refHandler = new ElementReferenceHandler();
+                options.ReferenceHandler = refHandler;
+
                 model.Transform = System.Text.Json.JsonSerializer.Deserialize<Transform>(transformElement.ToString(), options);
 
                 // Create the elements
@@ -345,6 +347,10 @@ namespace Elements
                     var element = (Element)System.Text.Json.JsonSerializer.Deserialize(elementElement.Value.ToString(), subType, options);
                     model.AddElement(element, false);
                 }
+
+                // Resetting the reference handler, empties the internal
+                // elements cache.
+                refHandler.Reset();
             }
 
             return model;

@@ -10,7 +10,6 @@ namespace Elements.Serialization.JSON
 {
     internal class ElementConverterFactory : JsonConverterFactory
     {
-        private readonly Dictionary<Guid, Element> _elements;
 
         private readonly Dictionary<string, Type> _typeCache;
 
@@ -24,14 +23,11 @@ namespace Elements.Serialization.JSON
         /// <summary>
         /// Construct an element converter factory.
         /// </summary>
-        /// <param name="elements">A cache of elements.</param>
         /// <param name="typeCache">A cache of types.</param>
         /// <param name="documentElements">The elements node of a model being deserialized.</param>
-        public ElementConverterFactory(Dictionary<Guid, Element> elements,
-                                       Dictionary<string, Type> typeCache = null,
+        public ElementConverterFactory(Dictionary<string, Type> typeCache = null,
                                        JsonElement documentElements = default)
         {
-            _elements = elements;
             _documentElements = documentElements;
             _typeCache = typeCache;
         }
@@ -45,34 +41,31 @@ namespace Elements.Serialization.JSON
         {
             if (typeToConvert == typeof(Material))
             {
-                return new ElementConverter<Material>(_elements, _typeCache, _documentElements);
+                return new ElementConverter<Material>(_typeCache, _documentElements);
             }
             else if (typeToConvert == typeof(Profile))
             {
-                return new ElementConverter<Profile>(_elements, _typeCache, _documentElements);
+                return new ElementConverter<Profile>(_typeCache, _documentElements);
             }
             else if (typeToConvert == typeof(GeometricElement))
             {
-                return new ElementConverter<GeometricElement>(_elements, _typeCache, _documentElements);
+                return new ElementConverter<GeometricElement>(_typeCache, _documentElements);
             }
             else
             {
-                return new ElementConverter<Element>(_elements, _typeCache, _documentElements);
+                return new ElementConverter<Element>(_typeCache, _documentElements);
             }
         }
     }
 
     internal class ElementConverter<TElement> : JsonConverter<TElement> where TElement : Element
     {
-        private readonly Dictionary<Guid, Element> _elements;
         private readonly Dictionary<string, Type> _typeCache;
         private readonly JsonElement _documentElements;
 
-        public ElementConverter(Dictionary<Guid, Element> elements,
-                                Dictionary<string, Type> typeCache,
+        public ElementConverter(Dictionary<string, Type> typeCache,
                                 JsonElement documentElements)
         {
-            _elements = elements;
             _typeCache = typeCache;
             _documentElements = documentElements;
         }
@@ -81,6 +74,8 @@ namespace Elements.Serialization.JSON
         {
             using (var doc = JsonDocument.ParseValue(ref reader))
             {
+                var resolver = options.ReferenceHandler.CreateResolver();
+
                 var root = doc.RootElement;
 
                 var discriminator = root.GetProperty("discriminator").GetString();
@@ -98,7 +93,7 @@ namespace Elements.Serialization.JSON
                     var prop = root.GetProperty(elementProperty.Name);
                     if (prop.TryGetGuid(out var referencedId))
                     {
-                        if (_elements.ContainsKey(referencedId))
+                        if (resolver.ResolveReference(referencedId.ToString()) != null)
                         {
                             continue;
                         }
@@ -108,29 +103,32 @@ namespace Elements.Serialization.JSON
                             if (propertyBody.TryGetProperty("discriminator", out var elementBody))
                             {
                                 var referencedElement = (Element)prop.Deserialize(elementProperty.PropertyType);
-                                _elements[referencedId] = referencedElement;
+                                resolver.AddReference(referencedId.ToString(), referencedElement);
                             }
                         }
                         else
                         {
                             // The reference cannot be found. It's either not 
                             // a direct reference, as in the case of a cross-model
-                            // reference, or it's just broken. 
-                            _elements[referencedId] = null;
+                            // reference, or it's just broken.
+                            resolver.AddReference(referencedId.ToString(), null);
                         }
                     }
                 }
 
-                // Deserialize without further specifying the converter to avoid an infinite loop.
+                // Create new JSON serializer options, reusing the existing 
+                // discriminator factory converter and reference resolver, 
+                // but don't pass the element converter because it will result
+                // in an infinite loop.
                 var o = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                // Reuse the existing discriminator factory converter.
                 o.Converters.Add(options.Converters.First(c => c.GetType() == typeof(DiscriminatorConverterFactory)));
-                o.Converters.Add(new ElementIdConverterFactory(_elements));
+                o.ReferenceHandler = options.ReferenceHandler;
+
                 TElement e = (TElement)root.Deserialize(subType, o);
-                _elements.Add(e.Id, e);
+                resolver.AddReference(e.Id.ToString(), e);
                 return e;
             }
         }
