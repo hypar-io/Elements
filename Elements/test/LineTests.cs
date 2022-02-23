@@ -464,5 +464,71 @@ namespace Elements.Geometry.Tests
             );
             Assert.False(points1.AreCollinear());
         }
+
+        [Fact]
+        public void IsCollinear()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+
+            var collinearLine = new Line(new Vector3(10, 10, 10), new Vector3(20, 20, 20));
+            Assert.True(line.IsCollinear(collinearLine));
+
+            var nonCollinearLine = new Line(new Vector3(-5, 5, 5), new Vector3(10, 10, -5));
+            Assert.False(line.IsCollinear(nonCollinearLine));
+
+            var reversedLine = new Line(new Vector3(5, 5, 5), Vector3.Origin);
+            Assert.True(line.IsCollinear(reversedLine));
+
+            var sameLine = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            Assert.True(line.IsCollinear(sameLine));
+
+            var ovelappingLine = new Line(new Vector3(2, 2, 2), new Vector3(-10, -10, -10));
+            Assert.True(line.IsCollinear(ovelappingLine));
+
+            var sharedStartLine = new Line(Vector3.Origin, new Vector3(10, 10, -5));
+            Assert.False(line.IsCollinear(sharedStartLine));
+
+            var sharedEndLine = new Line(new Vector3(-5, 5, 5), new Vector3(5, 5, 5));
+            Assert.False(line.IsCollinear(sharedEndLine));
+
+            var parallelLine = new Line(new Vector3(3, 3, 0), new Vector3(8, 8, 5));
+            Assert.True(line.Direction().IsParallelTo(parallelLine.Direction()));
+            Assert.False(line.IsCollinear(parallelLine));
+        }
+
+        [Fact]
+        public void TryGetOverlap()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+
+            var nonCollinearLine = new Line(new Vector3(-5, 5, 5), new Vector3(10, 10, -5));
+            Assert.False(line.TryGetOverlap(nonCollinearLine, out Line nonCollinearOverlap));
+            Assert.Null(nonCollinearOverlap);
+
+            var sharedEndLine = new Line(new Vector3(10, 10, 10), new Vector3(5, 5, 5));
+            Assert.False(line.TryGetOverlap(sharedEndLine, out Line sharedEndOverlap));
+            Assert.Null(sharedEndOverlap);
+
+            var sharedStartLine = new Line(Vector3.Origin, new Vector3(-10, -10, -10));
+            Assert.False(line.TryGetOverlap(sharedStartLine, out Line sharedStartOverlap));
+            Assert.Null(sharedStartOverlap);
+
+            var collinearLine = new Line(new Vector3(10, 10, 10), new Vector3(20, 20, 20));
+            Assert.False(line.TryGetOverlap(collinearLine, out Line collinearOverlap));
+            Assert.Null(collinearOverlap);
+
+            var sameLine = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            Assert.True(line.TryGetOverlap(sameLine, out Line sameLineOverlap));
+            Assert.NotNull(sameLineOverlap);
+            Assert.True(sameLineOverlap.IsAlmostEqualTo(line, false));
+
+            var ovelappingLine = new Line(new Vector3(2, 2, 2), new Vector3(-10, -10, -10));
+            var expectedLine = new Line(Vector3.Origin, new Vector3(2, 2, 2));
+            Assert.True(line.TryGetOverlap(ovelappingLine, out Line overlapLine));
+            Assert.NotNull(overlapLine);
+            Assert.True(overlapLine.IsAlmostEqualTo(expectedLine, false));
+
+
+        }
     }
 }
