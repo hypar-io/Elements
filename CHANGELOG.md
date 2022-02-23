@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0
+
+### Added
+
+### Changed
+- Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+
+### Fixed
+
 ## 0.9.9
 
 ### Added
