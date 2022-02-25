@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -172,8 +181,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Vector3(double x, double y, double z)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3(double x, double y, double z)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -239,7 +247,7 @@ public Vector3(double x, double y, double z)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Vector3 Origin { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vector3 Origin { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -263,8 +271,7 @@ public Vector3(double x, double y, double z)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;X&quot;, Required = Required.Always)]
-public double X { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double X { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -288,7 +295,7 @@ public double X { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -312,8 +319,7 @@ public double X { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Y&quot;, Required = Required.Always)]
-public double Y { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Y { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -337,7 +343,7 @@ public double Y { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -361,8 +367,7 @@ public double Y { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Z&quot;, Required = Required.Always)]
-public double Z { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Z { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -386,7 +391,7 @@ public double Z { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static readonly Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1279,6 +1284,56 @@ polyline, and output the location of the closest point on that polyline.</p>
         <td><span class="xref">System.Double</span></td>
         <td><p>The distance between this vector and the provided vector.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_System_ValueTuple_Elements_Geometry_Vector3_Elements_Geometry_Vector3__Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(System.ValueTuple{Elements.Geometry.Vector3,Elements.Geometry.Vector3},Elements.Geometry.Vector3@)">DistanceTo((Vector3 from, Vector3 to), out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the distance from this point to the edge, and output the location
+of the closest point on that line.
+Using formula from <a href="https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd">https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo((Vector3 from, Vector3 to) edge, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">edge</span></td>
+        <td><p>The edge to find the distance to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>The point on the line that is closest to this point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

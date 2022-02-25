@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Model
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -133,8 +142,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -208,9 +216,7 @@ public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
-[Required]
-public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -234,8 +240,7 @@ public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-[Obsolete(&quot;Use Transform instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Transform instead.&quot;)]
 public Position Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -260,8 +265,7 @@ public Position Origin { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
-public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -631,8 +635,33 @@ with the provided id.</p>
     </tbody>
   </table>
   <a id="Elements_Model_ToJson_" data-uid="Elements.Model.ToJson*"></a>
+  <h4 id="Elements_Model_ToJson" data-uid="Elements.Model.ToJson">ToJson()</h4>
+  <div class="markdown level1 summary"><p>Serialize the model to JSON using default arguments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ToJson()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_ToJson_" data-uid="Elements.Model.ToJson*"></a>
   <h4 id="Elements_Model_ToJson_System_Boolean_" data-uid="Elements.Model.ToJson(System.Boolean)">ToJson(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Serialize the model to JSON.</p>
+  <div class="markdown level1 summary"><p>Serialize the model to JSON to match default arguments.
+TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -667,6 +696,84 @@ with the provided id.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_ToJson_" data-uid="Elements.Model.ToJson*"></a>
+  <h4 id="Elements_Model_ToJson_System_Boolean_System_Boolean_" data-uid="Elements.Model.ToJson(System.Boolean,System.Boolean)">ToJson(Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Serialize the model to JSON.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ToJson(bool indent = false, bool gatherSubElements = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">indent</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">gatherSubElements</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_ToJson_" data-uid="Elements.Model.ToJson*"></a>
+  <h4 id="Elements_Model_ToJson_System_String_System_Boolean_" data-uid="Elements.Model.ToJson(System.String,System.Boolean)">ToJson(String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Serialize the model to a JSON file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ToJson(string path, bool gatherSubElements = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">path</span></td>
+        <td><p>The path of the file on disk.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">gatherSubElements</span></td>
         <td></td>
       </tr>
     </tbody>

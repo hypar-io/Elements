@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ContentElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -158,8 +167,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ContentElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
-public class ContentElement : GeometricElement, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContentElement : GeometricElement, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -340,8 +348,7 @@ This is used in Revit Content workflows to store instance parameter data.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, IList&lt;Symbol&gt; symbols, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ContentElement(string gltfLocation, BBox3 boundingBox, double gltfScaleToMeters, Vector3 sourceDirection, IList&lt;Symbol&gt; symbols, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -514,8 +521,7 @@ This is used in Revit Content workflows to store instance parameter data.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Bounding Box&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public BBox3 BoundingBox { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public BBox3 BoundingBox { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -539,8 +545,7 @@ public BBox3 BoundingBox { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;gltfLocation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public string GltfLocation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string GltfLocation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -564,8 +569,7 @@ public string GltfLocation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Gltf Scale to Meters&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double GltfScaleToMeters { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GltfScaleToMeters { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -589,8 +593,7 @@ public double GltfScaleToMeters { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SourceDirection&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public Vector3 SourceDirection { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 SourceDirection { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -614,8 +617,7 @@ public Vector3 SourceDirection { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Symbols&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public IList&lt;Symbol&gt; Symbols { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Symbol&gt; Symbols { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
