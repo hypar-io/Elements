@@ -8,6 +8,9 @@ namespace Elements
     /// <summary>
     /// An architectural or structural gridline.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/GridLineTests.cs?name=example)]
+    /// </example>
     public class GridLine : GeometricElement
     {
         /// <summary>

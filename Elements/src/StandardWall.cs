@@ -117,7 +117,6 @@ namespace Elements
         private Transform GetOpeningTransform(double x, double y)
         {
             var xAxis = this.CenterLine.Direction();
-            var yAxis = xAxis.Cross(Vector3.ZAxis.Negate());
             var wallTransform = new Transform(this.CenterLine.Start, xAxis, Vector3.ZAxis);
 
             var m = wallTransform.OfPoint(new Vector3(x, 0, y));

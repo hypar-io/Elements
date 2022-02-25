@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Material
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -80,6 +89,143 @@
   <div class="markdown level0 summary"><p>A material with red, green, blue, alpha, and metallic factor components.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+  
+    div.appendChild( renderer.domElement );
+  
+    var controls = new OrbitControls( camera, renderer.domElement );
+  
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
+  
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    // Instantiate a loader
+    var loader = new GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_Material.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+        scene.add( gltf.scene );
+        fitCameraToObject(scene, 2.0, controls);
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      },
+      // called when loading has errors
+      function ( error ) {
+        console.log( 'An error happened' );
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
+  
+      const center = new Vector3();
+      boundingBox.getCenter(center);
+      const size = new Vector3();
+      boundingBox.getSize(size);
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_Material"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">var x = 0.0;
+var y = 0.0;
+var z = 0.0;
+var specularFactor = 0.0;
+var glossinessFactor = 0.0;
+
+var rectangle = Polygon.Rectangle(0.5, 0.5);
+
+for (var r = 0.0; r &lt;= 1.0; r += 0.2)
+{
+    for (var g = 0.0; g &lt;= 1.0; g += 0.2)
+    {
+        for (var b = 0.0; b &lt;= 1.0; b += 0.2)
+        {
+            var color = new Color(r, g, b, 1.0);
+            var material = new Material($&quot;{r}_{g}_{b}&quot;, color, specularFactor, glossinessFactor);
+            var mass = new Mass(rectangle, 0.5, material, new Transform(new Vector3(x, y, z)));
+            this.Model.AddElement(mass);
+            z += 2.0;
+        }
+        z = 0;
+        y += 2.0;
+    }
+    y = 0;
+    x += 2.0;
+    specularFactor += 0.2;
+    glossinessFactor += 0.2;
+}
+</code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -138,8 +284,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, bool repeatTexture, string normalTexture, bool interpolateTexture, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, bool repeatTexture, string normalTexture, bool interpolateTexture, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -348,9 +493,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, boo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
-[Required]
-public Color Color { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -374,8 +517,7 @@ public Color Color { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;DoubleSided&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool DoubleSided { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool DoubleSided { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -399,9 +541,7 @@ public bool DoubleSided { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;GlossinessFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double GlossinessFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double GlossinessFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -425,8 +565,7 @@ public double GlossinessFactor { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;InterpolateTexture&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool InterpolateTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool InterpolateTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -450,8 +589,7 @@ public bool InterpolateTexture { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;NormalTexture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public string NormalTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string NormalTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -475,8 +613,7 @@ public string NormalTexture { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;RepeatTexture&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool RepeatTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool RepeatTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -500,9 +637,7 @@ public bool RepeatTexture { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SpecularFactor&quot;, Required = Required.Always)]
-[Range(0, 1)]
-public double SpecularFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double SpecularFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -526,8 +661,7 @@ public double SpecularFactor { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Texture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-public string Texture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Texture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -551,8 +685,7 @@ public string Texture { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Unlit&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public bool Unlit { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Unlit { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
