@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -33,7 +32,6 @@ namespace Elements.Serialization.JSON
                 var id = reader.GetString();
                 return (T)resolver.ResolveReference(id.ToString());
             }
-
 
             using (var doc = JsonDocument.ParseValue(ref reader))
             {
