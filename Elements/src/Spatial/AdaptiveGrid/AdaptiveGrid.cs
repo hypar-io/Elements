@@ -166,8 +166,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// that is inside the box. Note that no new connections are created afterwards.
         /// </summary>
         /// <param name="box">Boding box to subtract</param>
-        /// <param name="removeCutEdges">Should edge be removed or replaced by leftover pieces</param>
-        public void SubtractBox(BBox3 box, bool removeCutEdges = false)
+        public void SubtractBox(BBox3 box)
         {
             List<Edge> edgesToDelete = new List<Edge>();
             foreach (var edge in GetEdges())
@@ -222,46 +221,13 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         //Need to find which end is inside the box. 
                         //If none - we just touched the corner
-                        if (startInside)
+                        if (startInside || endInside)
                         {
-                            if (!removeCutEdges)
-                            {
-                                var v = AddVertex(intersections[0]);
-                                if (edge.EndId != v.Id)
-                                {
-                                    AddEdge(v.Id, edge.EndId);
-                                }
-                            }
-                            edgesToDelete.Add(edge);
-                        }
-                        else if (endInside)
-                        {
-                            if (!removeCutEdges)
-                            {
-                                var v = AddVertex(intersections[0]);
-                                if (edge.StartId != v.Id)
-                                {
-                                    AddEdge(edge.StartId, v.Id);
-                                }
-                            }
                             edgesToDelete.Add(edge);
                         }
                     }
                     if (intersections.Count == 2)
                     {
-                        if (!removeCutEdges)
-                        {
-                            var v0 = AddVertex(intersections[0]);
-                            var v1 = AddVertex(intersections[1]);
-                            if (edge.StartId != v0.Id)
-                            {
-                                AddEdge(edge.StartId, v0.Id);
-                            }
-                            if (edge.EndId != v1.Id)
-                            {
-                                AddEdge(v1.Id, edge.EndId);
-                            }
-                        }
                         edgesToDelete.Add(edge);
                     }
                 }
