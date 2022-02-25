@@ -44,7 +44,9 @@ public static class ElementsAPI
             var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var end = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var line = new Line(start, end);
-            var beam = new Beam(line, profile);
+            var c = new Color(r.NextDouble(), r.NextDouble(), r.NextDouble(), 1.0);
+            var m = new Material(Guid.NewGuid().ToString(), c);
+            var beam = new Beam(line, profile, m);
             model.AddElement(beam);
         }
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating test beams.");
@@ -69,8 +71,8 @@ public static class ElementsAPI
 
     public class TestResult
     {
-        public byte[] Glb { get; set; }
-        public string Results { get; set; }
+        public byte[]? Glb { get; set; }
+        public string? Results { get; set; }
     }
 
     [JSInvokable]
