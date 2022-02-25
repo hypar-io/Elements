@@ -311,6 +311,28 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints.glb",
+      "output": {
+        "resource": {
+          "relative_path": "models/Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints.glb"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "../Elements/test/bin/debug/netcoreapp3.1/models/Elements_Spatial_CellComplex_CellComplex.glb",
       "output": {
         "resource": {
@@ -1077,7 +1099,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Geometry.Line.html",
-          "hash": "J5Lb8tTaXnoUNIUOAiniRg=="
+          "hash": "HkSY52WbdGGsDeXQq5BMqQ=="
         }
       },
       "is_incremental": false,
@@ -2469,7 +2491,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html",
-          "hash": "+VCiJ0S1tarTn8B25cGyjQ=="
+          "hash": "G4U5vHQ9oai4O5fkPUNkQQ=="
         }
       },
       "is_incremental": false,
@@ -3225,39 +3247,6 @@
         ".html": {
           "relative_path": "index.html",
           "hash": "oKWa4nmqn4CZHKQmBtH1/w=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "js/GLTFLoader.js",
-      "output": {
-        "resource": {
-          "relative_path": "js/GLTFLoader.js"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "js/OrbitControls.js",
-      "output": {
-        "resource": {
-          "relative_path": "js/OrbitControls.js"
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "js/three.js",
-      "output": {
-        "resource": {
-          "relative_path": "js/three.js"
         }
       },
       "is_incremental": false,

@@ -5185,6 +5185,19 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.IsAlmostEqualTo
   nameWithType: Line.IsAlmostEqualTo
+- uid: Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line)
+  name: IsCollinear(Line)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_IsCollinear_Elements_Geometry_Line_
+  commentId: M:Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line)
+  fullName: Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line)
+  nameWithType: Line.IsCollinear(Line)
+- uid: Elements.Geometry.Line.IsCollinear*
+  name: IsCollinear
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_IsCollinear_
+  commentId: Overload:Elements.Geometry.Line.IsCollinear
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.IsCollinear
+  nameWithType: Line.IsCollinear
 - uid: Elements.Geometry.Line.Length
   name: Length()
   href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_Length
@@ -5350,6 +5363,22 @@ references:
   isSpec: "True"
   fullName: Elements.Geometry.Line.TrimTo
   nameWithType: Line.TrimTo
+- uid: Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line,Elements.Geometry.Line@)
+  name: TryGetOverlap(Line, out Line)
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_TryGetOverlap_Elements_Geometry_Line_Elements_Geometry_Line__
+  commentId: M:Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line,Elements.Geometry.Line@)
+  name.vb: TryGetOverlap(Line, ByRef Line)
+  fullName: Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line, out Elements.Geometry.Line)
+  fullName.vb: Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line, ByRef Elements.Geometry.Line)
+  nameWithType: Line.TryGetOverlap(Line, out Line)
+  nameWithType.vb: Line.TryGetOverlap(Line, ByRef Line)
+- uid: Elements.Geometry.Line.TryGetOverlap*
+  name: TryGetOverlap
+  href: api/Elements.Geometry.Line.html#Elements_Geometry_Line_TryGetOverlap_
+  commentId: Overload:Elements.Geometry.Line.TryGetOverlap
+  isSpec: "True"
+  fullName: Elements.Geometry.Line.TryGetOverlap
+  nameWithType: Line.TryGetOverlap
 - uid: Elements.Geometry.LineSegmentExtensions
   name: LineSegmentExtensions
   href: api/Elements.Geometry.LineSegmentExtensions.html
@@ -29171,12 +29200,12 @@ references:
   isSpec: "True"
   fullName: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertices
   nameWithType: AdaptiveGrid.GetVertices
-- uid: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3,System.Boolean)
-  name: SubtractBox(BBox3, Boolean)
-  href: api/Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_System_Boolean_
-  commentId: M:Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3,System.Boolean)
-  fullName: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3, System.Boolean)
-  nameWithType: AdaptiveGrid.SubtractBox(BBox3, Boolean)
+- uid: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3)
+  name: SubtractBox(BBox3)
+  href: api/Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_
+  commentId: M:Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3)
+  fullName: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3)
+  nameWithType: AdaptiveGrid.SubtractBox(BBox3)
 - uid: Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox*
   name: SubtractBox
   href: api/Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_

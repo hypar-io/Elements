@@ -482,14 +482,14 @@ This way new region is connected with the rest of the graph.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3,System.Boolean)">SubtractBox(BBox3, Boolean)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3)">SubtractBox(BBox3)</h4>
   <div class="markdown level1 summary"><p>Intersect the box with existent edges and cut any portion of the edge, or whole edge,
 that is inside the box. Note that no new connections are created afterwards.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SubtractBox(BBox3 box, bool removeCutEdges = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public void SubtractBox(BBox3 box)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -505,12 +505,6 @@ that is inside the box. Note that no new connections are created afterwards.</p>
         <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
         <td><span class="parametername">box</span></td>
         <td><p>Boding box to subtract</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">removeCutEdges</span></td>
-        <td><p>Should edge be removed or replaced by leftover pieces</p>
 </td>
       </tr>
     </tbody>

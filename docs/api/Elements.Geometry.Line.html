@@ -1725,6 +1725,48 @@ false if the lines have coincident vertices or do not intersect.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Line_IsCollinear_" data-uid="Elements.Geometry.Line.IsCollinear*"></a>
+  <h4 id="Elements_Geometry_Line_IsCollinear_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line)">IsCollinear(Line)</h4>
+  <div class="markdown level1 summary"><p>Check if this line is collinear with other line</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsCollinear(Line line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>Line to check</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Line_Length_" data-uid="Elements.Geometry.Line.Length*"></a>
   <h4 id="Elements_Geometry_Line_Length" data-uid="Elements.Geometry.Line.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Calculate the length of the line.</p>
@@ -2250,6 +2292,55 @@ positive Z axis points along the curve.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><p>A new line, or null if this line does not intersect the trimming line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_TryGetOverlap_" data-uid="Elements.Geometry.Line.TryGetOverlap*"></a>
+  <h4 id="Elements_Geometry_Line_TryGetOverlap_Elements_Geometry_Line_Elements_Geometry_Line__" data-uid="Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line,Elements.Geometry.Line@)">TryGetOverlap(Line, out Line)</h4>
+  <div class="markdown level1 summary"><p>Check if line overlap with other line</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetOverlap(Line line, out Line overlap)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>Line to check</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">overlap</span></td>
+        <td><p>Overlapping line or null when lines do not overlap</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Returns true when lines overlap and false when they do not</p>
 </td>
       </tr>
     </tbody>
