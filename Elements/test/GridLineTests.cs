@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Xunit;
@@ -12,11 +11,12 @@ namespace Elements.Tests.Examples
             this.GenerateIfc = false;
         }
 
-        [Fact, Trait("Category", "Example")]
+        [Fact, Trait("Category", "Examples")]
         public void Example()
         {
-            this.Name = "Elements_GridLines";
+            Name = "Elements_GridLine";
 
+            // <example>
             var gridData = new List<(string name, Vector3 origin)>() {
                 ("A", new Vector3()),
                 ("B", new Vector3(10, 0, 0)),
@@ -26,18 +26,21 @@ namespace Elements.Tests.Examples
 
             var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
             var radius = 1;
-            var material = new Material("Red", new Color(1, 0, 0, 1));
+            var material = new Material("Red", Colors.Red);
 
             foreach (var (name, origin) in gridData)
             {
-                var gridline = new GridLine();
-                gridline.Name = name;
-                gridline.Curve = new Line(origin, origin + new Vector3(25, 25, 0));
-                gridline.Material = material;
-                gridline.Radius = radius;
-                gridline.AddTextToCollection(texts, Colors.White);
+                var gridline = new GridLine
+                {
+                    Name = name,
+                    Curve = new Line(origin, origin + new Vector3(25, 25, 0)),
+                    Material = material,
+                    Radius = radius
+                };
+                gridline.AddTextToCollection(texts, Colors.Black);
                 this.Model.AddElement(gridline);
             }
+            // </example>
 
             this.Model.AddElement(new ModelText(texts, FontSize.PT72, 50));
         }
@@ -45,7 +48,7 @@ namespace Elements.Tests.Examples
         [Fact]
         public void CurvedGridline()
         {
-            this.Name = "Elements_GridLinesCurved";
+            Name = nameof(CurvedGridline);
 
             var size = 10;
             var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();

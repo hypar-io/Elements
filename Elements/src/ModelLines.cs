@@ -10,7 +10,7 @@ namespace Elements
     /// A collection of lines which are visible in 3D.
     /// </summary>
     /// <example>
-    /// [!code-csharp[Main](../../Elements/test/ModelLinesTest.cs?name=example)]
+    /// [!code-csharp[Main](../../Elements/test/ModelLinesTests.cs?name=example)]
     /// </example>
     public class ModelLines : GeometricElement
     {
