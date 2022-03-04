@@ -1988,5 +1988,19 @@ namespace Elements.Geometry.Tests
             Assert.Equal(2, polys.Where(p => p.Item2 == SetClassification.AOutsideB).Count());
             Assert.Single(polys.Where(p => p.Item2 == SetClassification.AInsideB));
         }
+
+        [Fact]
+        public void ConstructWithSequentialDuplicates()
+        {
+            var polygon = new Polygon(new List<Vector3>()
+            {
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, -6.0),
+                new Vector3(0.0, -6.0),
+                Vector3.Origin,
+            });
+            Assert.True(true);
+        }
     }
 }
