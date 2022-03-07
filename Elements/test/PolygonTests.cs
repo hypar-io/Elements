@@ -2000,7 +2000,6 @@ namespace Elements.Geometry.Tests
                 new Vector3(0.0, -6.0),
                 Vector3.Origin,
             });
-            Assert.True(true);
         }
     }
 }
