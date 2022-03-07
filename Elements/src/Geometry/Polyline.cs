@@ -39,10 +39,15 @@ namespace Elements.Geometry
 
             if (!Validator.DisableValidationOnConstruction)
             {
-                Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
-                CheckSegmentLengthAndThrow(Edges());
+                ValidateVertices();
             }
             _bounds = new BBox3(Vertices);
+        }
+
+        protected virtual void ValidateVertices()
+        {
+            Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
+            CheckSegmentLengthAndThrow(Edges());
         }
 
         /// <summary>

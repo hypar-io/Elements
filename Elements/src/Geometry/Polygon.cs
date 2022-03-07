@@ -31,26 +31,26 @@ namespace Elements.Geometry
         [Newtonsoft.Json.JsonConstructor]
         public Polygon(IList<Vector3> @vertices) : base(vertices)
         {
-            if (!Validator.DisableValidationOnConstruction)
+            _plane = Plane();
+        }
+
+        protected override void ValidateVertices()
+        {
+            if (!Vertices.AreCoplanar())
             {
-                if (!vertices.AreCoplanar())
-                {
-                    throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
-                }
-
-                this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-                DeleteVerticesForOverlappingEdges(this.Vertices);
-                if (this.Vertices.Count < 3)
-                {
-                    throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
-                }
-
-                CheckSegmentLengthAndThrow(Edges());
-                var t = Vertices.ToTransform();
-                CheckSelfIntersectionAndThrow(t, Edges());
+                throw new ArgumentException("The polygon could not be created. The provided vertices are not coplanar.");
             }
 
-            _plane = Plane();
+            this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
+            DeleteVerticesForOverlappingEdges(this.Vertices);
+            if (this.Vertices.Count < 3)
+            {
+                throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
+            }
+
+            CheckSegmentLengthAndThrow(Edges());
+            var t = Vertices.ToTransform();
+            CheckSelfIntersectionAndThrow(t, Edges());
         }
 
         /// <summary>
