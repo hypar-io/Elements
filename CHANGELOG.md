@@ -3,6 +3,7 @@
 ## 1.0.0
 
 ### Added
+- `MeshPrimitives.Sphere(double radius, int divisions)`
 
 ### Changed
 - Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
