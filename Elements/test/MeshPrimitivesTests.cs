@@ -10,7 +10,7 @@ namespace Elements.Tests
         {
             Name = nameof(Sphere);
             var m = new Material("Test", Colors.White, unlit: true, texture: "./Textures/UV.jpg");
-            var s = MeshPrimitives.Sphere(3, 20);
+            var s = Mesh.Sphere(3, 20);
             Assert.Equal(401, s.Vertices.Count);
             Assert.Equal(760, s.Triangles.Count);
             Model.AddElement(new MeshElement(s, m));

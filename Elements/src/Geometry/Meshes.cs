@@ -3,7 +3,7 @@ namespace Elements.Geometry
     /// <summary>
     /// Create mesh primitives.
     /// </summary>
-    public static class MeshPrimitives
+    public partial class Mesh
     {
         /// <summary>
         /// A mesh sphere.
