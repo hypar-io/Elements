@@ -21,7 +21,7 @@ namespace Hypar.Tests
         public void Bezier()
         {
             this.Name = "Elements_Geometry_Bezier";
-            
+
             // <example>
             var a = Vector3.Origin;
             var b = new Vector3(5, 0, 1);
@@ -29,7 +29,7 @@ namespace Hypar.Tests
             var d = new Vector3(0, 5, 3);
             var e = new Vector3(0, 0, 4);
             var f = new Vector3(5, 0, 5);
-            var ctrlPts = new List<Vector3>{a,b,c,d,e,f};
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
 
             var bezier = new Bezier(ctrlPts);
             // </example>
@@ -43,7 +43,7 @@ namespace Hypar.Tests
             var a = Vector3.Origin;
             var b = Vector3.Origin;
             var c = Vector3.Origin;
-            var ctrlPts = new List<Vector3>{ a, b, c };
+            var ctrlPts = new List<Vector3> { a, b, c };
             var bezier = new Bezier(ctrlPts);
 
             var targetLength = 0;
@@ -58,10 +58,10 @@ namespace Hypar.Tests
             var d = new Vector3(0, 5, 3);
             var e = new Vector3(0, 0, 4);
             var f = new Vector3(5, 0, 5);
-            var ctrlPts = new List<Vector3>{b,c,d,e,f};
+            var ctrlPts = new List<Vector3> { b, c, d, e, f };
             var bezier = new Bezier(ctrlPts);
 
-            var expectedLength = 11.45;  // approximation as the linear interpolation used for calculating length is not hugely accurate
+            var expectedLength = 11.85;  // approximation as the linear interpolation used for calculating length is not hugely accurate
             Assert.Equal(expectedLength, bezier.Length(), 2);
             var divisions = 50; // brittle as it relies on number of samples within Bezier being unchanged
             var polylineLength = bezier.ToPolyline(divisions).Length();
