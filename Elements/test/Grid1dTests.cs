@@ -198,8 +198,7 @@ namespace Elements.Tests
             var grid = new Grid1d(bezier1);
             grid.DivideByApproximateLength(0.5, EvenDivisionMode.RoundUp);
             var cellGeometry = grid.GetCells().Select(cl => cl.GetCellGeometry());
-            Assert.Equal(25, cellGeometry.Count());
-
+            Assert.Equal(26, cellGeometry.Count());
 
             var r = 2.0;
             var a1 = new Arc(new Vector3(5, 0), r, -90.0, 90.0);
