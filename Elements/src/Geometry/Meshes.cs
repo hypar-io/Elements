@@ -1,3 +1,5 @@
+using System;
+
 namespace Elements.Geometry
 {
     /// <summary>
@@ -13,6 +15,11 @@ namespace Elements.Geometry
         /// <returns>A mesh.</returns>
         public static Mesh Sphere(double radius, int divisions = 10)
         {
+            if (divisions < 3)
+            {
+                throw new ArgumentException(nameof(divisions), "The number of divisions must be greater than 3.");
+            }
+
             var arc = new Arc(Vector3.Origin, radius, 0, 180).ToPolyline(divisions);
             var t = new Transform();
             var vertices = new Vertex[divisions + 1, divisions + 1];
