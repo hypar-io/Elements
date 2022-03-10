@@ -15,9 +15,9 @@ namespace Elements.Geometry
         /// <returns>A mesh.</returns>
         public static Mesh Sphere(double radius, int divisions = 10)
         {
-            if (divisions < 3)
+            if (divisions < 2)
             {
-                throw new ArgumentException(nameof(divisions), "The number of divisions must be greater than 3.");
+                throw new ArgumentException(nameof(divisions), "The number of divisions must be greater than 2.");
             }
 
             var arc = new Arc(Vector3.Origin, radius, 0, 180).ToPolyline(divisions);
