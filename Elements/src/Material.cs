@@ -67,6 +67,14 @@ namespace Elements
         /// <summary>
         /// Construct a material.
         /// </summary>
+        public Material()
+        {
+            this.Color = Colors.Gray;
+        }
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
         /// <param name="color">The color component.</param>
         /// <param name="specularFactor">The specular component.</param>
         /// <param name="glossinessFactor">The glossiness factor.</param>
