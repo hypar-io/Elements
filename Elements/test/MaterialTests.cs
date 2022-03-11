@@ -2,6 +2,7 @@ using Elements.Geometry;
 using System;
 using System.Linq;
 using Xunit;
+using Color = Elements.Geometry.Color;
 
 namespace Elements.Tests
 {
@@ -90,6 +91,16 @@ namespace Elements.Tests
             };
             var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
             this.Model.AddElement(mass);
+        }
+
+        [Fact]
+        public void EmissiveTextureTest()
+        {
+            Name = nameof(EmissiveTextureTest);
+
+            var m = new Material("test", Colors.Orange, emissiveTexture: "./Textures/Checkerboard.png", emissiveFactor: 0.5);
+            var sphere = Mesh.Sphere(2, 30);
+            Model.AddElement(new MeshElement(sphere, m));
         }
 
         [Fact]
