@@ -2219,6 +2219,11 @@ namespace Elements.Geometry
                 {
                     vertices.Remove(b);
                     i--;
+
+                    if (a.IsAlmostEqualTo(c))
+                    {
+                        vertices.Remove(c);
+                    }
                 }
             }
         }
