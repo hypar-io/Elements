@@ -58,15 +58,15 @@ namespace Elements.Search
             }
             else
             {
+                if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
+                {
+                    return 0;
+                }
                 if (aLeft.Y > bLeft.Y)
                 {
                     return -1;
                 }
-                else if (aLeft.Y < bLeft.Y)
-                {
-                    return 1;
-                }
-                return 0;
+                return 1;
             }
         }
     }
