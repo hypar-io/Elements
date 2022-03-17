@@ -8,9 +8,9 @@ namespace Elements.Search
     {
         public Vector3 Point;
 
-        public List<(int segmentId, bool isLeftMostPoint, T data)> Segments;
+        public IEnumerable<(int segmentId, bool isLeftMostPoint, T data)> Segments;
 
-        public LineSweepEvent(Vector3 point, List<(int segmentId, bool isLeftMostPoint, T data)> segments)
+        public LineSweepEvent(Vector3 point, IEnumerable<(int segmentId, bool isLeftMostPoint, T data)> segments)
         {
             this.Point = point;
             this.Segments = segments;

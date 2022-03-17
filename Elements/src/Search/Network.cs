@@ -13,7 +13,7 @@ namespace Elements.Search
     /// <typeparam name="T">The type of data associated with the graph's edges.</typeparam>
     public class Network<T>
     {
-        private AdjacencyList<T> _adjacencyList;
+        private readonly AdjacencyList<T> _adjacencyList;
 
         /// <summary>
         /// Add a vertex to the network.
@@ -94,9 +94,9 @@ namespace Elements.Search
         /// Get all edges at the specified index.
         /// </summary>
         /// <param name="i">The index.</param>
-        public List<(int, T)> EdgesAt(int i)
+        public IEnumerable<(int, T)> EdgesAt(int i)
         {
-            return this._adjacencyList[i].ToList();
+            return this._adjacencyList[i];
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Elements.Search
                     (segment.Start, i, segment.Start == leftMost, item),
                     (segment.End, i, segment.End == leftMost, item)
                 };
-            }).GroupBy(x => x.Item1).Select(g =>
+            }).GroupBy(x => x.location).Select(g =>
             {
                 // TODO: Is there a way to make this faster?
                 // We're grouping by coordinate which is SLOW and is 
@@ -137,10 +137,8 @@ namespace Elements.Search
 
                 // Group by the event coordinate as lines may share start 
                 // or end points.
-                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)).ToList());
-            }).ToList();
-
-            events.Sort();
+                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
+            }).OrderBy(e => e);
 
             var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
@@ -161,23 +159,23 @@ namespace Elements.Search
 
             foreach (var e in events)
             {
-                foreach (var sd in e.Segments)
+                foreach (var (segmentId, isLeftMostPoint, data) in e.Segments)
                 {
-                    var s = segments[sd.segmentId];
+                    var s = segments[segmentId];
 
-                    if (sd.isLeftMostPoint)
+                    if (isLeftMostPoint)
                     {
-                        segmentIntersections[sd.data].Add(e.Point);
+                        segmentIntersections[data].Add(e.Point);
 
-                        if (tree.Add(sd.data))
+                        if (tree.Add(data))
                         {
-                            tree.FindPredecessorSuccessors(sd.data, out List<BinaryTreeNode<T>> pres, out List<BinaryTreeNode<T>> sucs);
+                            tree.FindPredecessorSuccessors(data, out List<BinaryTreeNode<T>> pres, out List<BinaryTreeNode<T>> sucs);
 
                             foreach (var pre in pres)
                             {
                                 if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.data].Add(result);
+                                    segmentIntersections[data].Add(result);
                                     segmentIntersections[pre.Data].Add(result);
 
                                     // TODO: Come up with a better solution for
@@ -194,7 +192,7 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.data].Add(result);
+                                    segmentIntersections[data].Add(result);
                                     segmentIntersections[suc.Data].Add(result);
 
                                     if (!allIntersectionLocations.Contains(result))
@@ -207,7 +205,7 @@ namespace Elements.Search
                     }
                     else
                     {
-                        tree.FindPredecessorSuccessor(sd.data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
+                        tree.FindPredecessorSuccessor(data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
                         if (pre != null && suc != null)
                         {
                             if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
@@ -220,8 +218,8 @@ namespace Elements.Search
                                 }
                             }
                         }
-                        tree.Remove(sd.data);
-                        segmentIntersections[sd.data].Add(e.Point);
+                        tree.Remove(data);
+                        segmentIntersections[data].Add(e.Point);
                     }
                 }
             }
@@ -374,7 +372,7 @@ namespace Elements.Search
         /// <param name="visited">A collection of visited node indices.</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next,
+                                  Func<(int currentNodeIndex, int previousNodeIndex, IEnumerable<int> connectedNodes), int> next,
                                   out List<int> visited)
         {
             var path = new List<int>();
@@ -418,7 +416,7 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next)
+                             Func<(int currentNodeIndex, int previousNodeIndex, IEnumerable<int> connectedNodes), int> next)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -443,7 +441,7 @@ namespace Elements.Search
                 }
             }
 
-            return next((currentIndex, prevIndex, edges.Select(e => e.Item1).ToList()));
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)));
         }
     }
 }
