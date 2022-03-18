@@ -186,11 +186,22 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void PerpendicularLines()
+        public void FigureEight()
         {
-            var p = Polygon.Rectangle(5, 5);
-            var pts = p.Segments().Intersections();
-            Assert.Single(pts);
+            this.Name = nameof(FigureEight);
+            var t = new Transform();
+            t.Rotate(Vector3.ZAxis, 0.0);
+
+            var a = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(10, 0, 0)));
+            var b = new Line(t.OfPoint(new Vector3(0, 5, 0)), t.OfPoint(new Vector3(10, 5, 0)));
+            var c = new Line(t.OfPoint(new Vector3(0, 10, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var d = new Line(t.OfPoint(new Vector3(5, 0, 0)), t.OfPoint(new Vector3(5, 5, 0)));
+            var e = new Line(t.OfPoint(new Vector3(5, 5, 0)), t.OfPoint(new Vector3(5, 10, 0)));
+            var f = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(0, 10, 0)));
+            var g = new Line(t.OfPoint(new Vector3(10, 0, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b, c, d, e, f, g }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
+            Assert.Equal(9, network.BranchNodes().Count());
+            this.Model.AddElement(network.ToModelArrows(allNodeLocations, Colors.Black));
         }
 
         [Fact]

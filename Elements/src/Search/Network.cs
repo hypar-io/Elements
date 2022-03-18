@@ -119,8 +119,10 @@ namespace Elements.Search
             // Use a line sweep algorithm to identify intersection events.
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
 
-            // Sort left-most points left to right according 
-            // to their X coordinate.
+            // Order the linesweep events from top to bottom then left to right.
+            // The practical result of this is that the sweep line is not exactly
+            // horizontal but moves as if at a slight incline. This solves for
+            // all perpendicular cases.
             var events = items.SelectMany((item, i) =>
             {
                 var segment = getSegment(item);
@@ -138,7 +140,7 @@ namespace Elements.Search
                 // Group by the event coordinate as lines may share start 
                 // or end points.
                 return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
-            }).OrderBy(e => e);
+            }).OrderBy(e => -e.Point.Y).OrderBy(e => e.Point.X);
 
             var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
@@ -206,6 +208,7 @@ namespace Elements.Search
                     else
                     {
                         tree.FindPredecessorSuccessor(data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
+
                         if (pre != null && suc != null)
                         {
                             if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
@@ -218,6 +221,31 @@ namespace Elements.Search
                                 }
                             }
                         }
+
+                        if (pre != null)
+                        {
+                            if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
+                            {
+                                segmentIntersections[pre.Data].Add(result);
+                                if (!allIntersectionLocations.Contains(result))
+                                {
+                                    allIntersectionLocations.Add(result);
+                                }
+                            }
+                        }
+
+                        if (suc != null)
+                        {
+                            if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
+                            {
+                                segmentIntersections[suc.Data].Add(result);
+                                if (!allIntersectionLocations.Contains(result))
+                                {
+                                    allIntersectionLocations.Add(result);
+                                }
+                            }
+                        }
+
                         tree.Remove(data);
                         segmentIntersections[data].Add(e.Point);
                     }
