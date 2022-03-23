@@ -193,28 +193,28 @@ namespace Elements.Serialization.glTF
                     continue;
                 }
 
-                var m = new glTFLoader.Schema.Material();
-                newMaterials.Add(m);
+                var gltfMaterial = new glTFLoader.Schema.Material();
+                newMaterials.Add(gltfMaterial);
 
-                m.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
+                gltfMaterial.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
                 {
                     BaseColorFactor = material.Color.ToArray(true),
                     MetallicFactor = 1.0f
                 };
-                m.DoubleSided = material.DoubleSided;
+                gltfMaterial.DoubleSided = material.DoubleSided;
 
-                m.Name = material.Id.ToString();
+                gltfMaterial.Name = material.Id.ToString();
 
                 if (material.Unlit)
                 {
-                    m.Extensions = new Dictionary<string, object>{
+                    gltfMaterial.Extensions = new Dictionary<string, object>{
                         {"KHR_materials_unlit", new Dictionary<string, object>{}},
                     };
                 }
                 else
                 {
                     // We convert to a linear color space
-                    m.Extensions = new Dictionary<string, object>{
+                    gltfMaterial.Extensions = new Dictionary<string, object>{
                         {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
                             {"diffuseFactor", new[]{
                                 Geometry.Color.SRGBToLinear(material.Color.Red),
@@ -232,25 +232,25 @@ namespace Elements.Serialization.glTF
                 if (material.Texture != null && File.Exists(material.Texture))
                 {
                     // Add the texture
-                    var ti = new TextureInfo();
-                    m.PbrMetallicRoughness.BaseColorTexture = ti;
-                    ti.Index = texId;
-                    ti.TexCoord = 0;
+                    var textureInfo = new TextureInfo();
+                    gltfMaterial.PbrMetallicRoughness.BaseColorTexture = textureInfo;
+                    textureInfo.Index = texId;
+                    textureInfo.TexCoord = 0;
                     if (!material.Unlit)
                     {
-                        ((Dictionary<string, object>)m.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = ti;
+                        ((Dictionary<string, object>)gltfMaterial.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = textureInfo;
                     }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {
-                        ti.Index = textureDict[material.Texture];
+                        textureInfo.Index = textureDict[material.Texture];
                     }
                     else
                     {
-                        var tex = new Texture();
-                        textures.Add(tex);
+                        var texture = new Texture();
+                        textures.Add(texture);
                         var image = CreateImage(material.Texture, bufferViews, buffer, out textureHasTransparency);
-                        tex.Source = imageId;
+                        texture.Source = imageId;
                         images.Add(image);
 
                         var sampler = CreateSampler(material.RepeatTexture);
@@ -258,7 +258,7 @@ namespace Elements.Serialization.glTF
                         {
                             sampler.MagFilter = Sampler.MagFilterEnum.NEAREST;
                         }
-                        tex.Sampler = samplerId;
+                        texture.Sampler = samplerId;
                         samplers.Add(sampler);
 
                         textureDict.Add(material.Texture, texId);
@@ -271,24 +271,24 @@ namespace Elements.Serialization.glTF
 
                 if (material.NormalTexture != null && File.Exists(material.NormalTexture))
                 {
-                    var ti = new MaterialNormalTextureInfo();
-                    m.NormalTexture = ti;
-                    ti.Index = texId;
-                    ti.Scale = 1.0f;
+                    var textureInfo = new MaterialNormalTextureInfo();
+                    gltfMaterial.NormalTexture = textureInfo;
+                    textureInfo.Index = texId;
+                    textureInfo.Scale = 1.0f;
                     // Use the same texture coordinate as the
                     // base texture.
-                    ti.TexCoord = 0;
+                    textureInfo.TexCoord = 0;
 
                     if (textureDict.ContainsKey(material.NormalTexture))
                     {
-                        ti.Index = textureDict[material.NormalTexture];
+                        textureInfo.Index = textureDict[material.NormalTexture];
                     }
                     else
                     {
-                        var tex = new Texture();
-                        textures.Add(tex);
+                        var texture = new Texture();
+                        textures.Add(texture);
                         var image = CreateImage(material.NormalTexture, bufferViews, buffer, out _);
-                        tex.Source = imageId;
+                        texture.Source = imageId;
                         images.Add(image);
                         textureDict.Add(material.NormalTexture, texId);
 
@@ -297,7 +297,7 @@ namespace Elements.Serialization.glTF
                         {
                             sampler.MagFilter = Sampler.MagFilterEnum.NEAREST;
                         }
-                        tex.Sampler = samplerId;
+                        texture.Sampler = samplerId;
                         samplers.Add(sampler);
 
                         texId++;
@@ -308,25 +308,25 @@ namespace Elements.Serialization.glTF
 
                 if (material.EmissiveTexture != null && File.Exists(material.EmissiveTexture))
                 {
-                    var ti = new TextureInfo();
-                    m.EmissiveTexture = ti;
-                    ti.Index = texId;
-                    ti.TexCoord = 0;
+                    var textureInfo = new TextureInfo();
+                    gltfMaterial.EmissiveTexture = textureInfo;
+                    textureInfo.Index = texId;
+                    textureInfo.TexCoord = 0;
 
                     if (textureDict.ContainsKey(material.EmissiveTexture))
                     {
-                        ti.Index = textureDict[material.EmissiveTexture];
+                        textureInfo.Index = textureDict[material.EmissiveTexture];
                     }
                     else
                     {
-                        var tex = new Texture();
-                        textures.Add(tex);
+                        var texture = new Texture();
+                        textures.Add(texture);
                         var image = CreateImage(material.EmissiveTexture, bufferViews, buffer, out _);
-                        tex.Source = imageId;
+                        texture.Source = imageId;
                         images.Add(image);
 
                         var sampler = CreateSampler(material.RepeatTexture);
-                        tex.Sampler = samplerId;
+                        texture.Sampler = samplerId;
                         samplers.Add(sampler);
 
                         textureDict.Add(material.EmissiveTexture, texId);
@@ -336,19 +336,19 @@ namespace Elements.Serialization.glTF
                         samplerId++;
                     }
 
-                    m.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
+                    gltfMaterial.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
                 }
 
                 if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {
-                    m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
+                    gltfMaterial.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.BLEND;
                 }
                 else
                 {
-                    m.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.OPAQUE;
+                    gltfMaterial.AlphaMode = glTFLoader.Schema.Material.AlphaModeEnum.OPAQUE;
                 }
 
-                materialDict.Add(m.Name, matId);
+                materialDict.Add(gltfMaterial.Name, matId);
                 matId++;
             }
 
