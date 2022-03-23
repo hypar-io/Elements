@@ -11,6 +11,8 @@
 - Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
 
 ### Fixed
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
+- `Line.TryGetOverlap(Line line, out Line overlap)` would return incorrect results due to wrong internal sorting.
 
 ## 0.9.9
 
