@@ -69,10 +69,9 @@ namespace Elements.Geometry
         public virtual Polyline ToPolyline(int divisions = 10)
         {
             var pts = new List<Vector3>(divisions + 1);
-            var div = 1.0 / (double)divisions;
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0; t <= divisions; t++)
             {
-                pts.Add(PointAt(t));
+                pts.Add(PointAt(t * 1.0 / divisions));
             }
             return new Polyline(pts);
         }

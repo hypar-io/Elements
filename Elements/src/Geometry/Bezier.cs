@@ -91,12 +91,11 @@ namespace Elements.Geometry
         /// </summary>
         public override double Length()
         {
-            var div = 1.0 / _samples;
             Vector3 last = new Vector3();
             double length = 0.0;
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0; t <= _samples; t++)
             {
-                var pt = PointAt(t);
+                var pt = PointAt(t * 1.0 / _samples);
                 if (t == 0.0)
                 {
                     last = pt;

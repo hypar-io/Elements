@@ -14,7 +14,7 @@ namespace Elements.Geometry
     /// A triangle mesh.
     /// </summary>
     [JsonConverter(typeof(MeshConverter))]
-    public class Mesh
+    public partial class Mesh
     {
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
 

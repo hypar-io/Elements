@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using Elements.Geometry;
 using Elements.Validators;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -15,43 +16,61 @@ namespace Elements
     public class Material : Element
     {
         /// <summary>The material's color.</summary>
-        [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Color", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("SpecularFactor", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("SpecularFactor", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double SpecularFactor { get; set; } = 0.1D;
 
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("GlossinessFactor", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("GlossinessFactor", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double GlossinessFactor { get; set; } = 0.1D;
 
         /// <summary>Is this material affected by lights?</summary>
-        [Newtonsoft.Json.JsonProperty("Unlit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Unlit", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public bool Unlit { get; set; } = false;
 
         /// <summary>A relative file path to an image file to be used as a texture.</summary>
-        [Newtonsoft.Json.JsonProperty("Texture", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Texture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public string Texture { get; set; }
 
         /// <summary>Is this material to be rendered from both sides?</summary>
-        [Newtonsoft.Json.JsonProperty("DoubleSided", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("DoubleSided", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public bool DoubleSided { get; set; } = false;
 
         /// <summary>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</summary>
-        [Newtonsoft.Json.JsonProperty("RepeatTexture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("RepeatTexture", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public bool RepeatTexture { get; set; } = true;
 
         /// <summary>A relative path to a jpg or png image file to be used as a normal texture.</summary>
-        [Newtonsoft.Json.JsonProperty("NormalTexture", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("NormalTexture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public string NormalTexture { get; set; }
 
         /// <summary>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</summary>
-        [Newtonsoft.Json.JsonProperty("InterpolateTexture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("InterpolateTexture", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public bool InterpolateTexture { get; set; } = true;
+
+        /// <summary>A relative path to a jpg or png image file to be used as an emissive texture.</summary>
+        [JsonProperty("EmissiveTexture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public string EmissiveTexture { get; set; }
+
+        /// <summary>
+        /// The scale, between 0.0 and 1.0, of the emissive texture's components.
+        /// </summary>
+        [JsonProperty("EmissiveFactor", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public double EmissiveFactor { get; set; }
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
+        public Material()
+        {
+            this.Color = Colors.Gray;
+        }
 
         /// <summary>
         /// Construct a material.
@@ -65,11 +84,24 @@ namespace Elements
         /// <param name="repeatTexture">Does the texture repeat?</param>
         /// <param name="normalTexture">A path to an image texture for normal mapping.</param>
         /// <param name="interpolateTexture">Should the texture be interpolated?</param>
+        /// <param name="emissiveTexture">A path to an emissive image texture.</param>
+        /// <param name="emissiveFactor">The scale, between 0.0 and 1.0, of the emissive texture's components.</param>
         /// <param name="id">The id of the material.</param>
         /// <param name="name">The name of the material.</param>
-        [Newtonsoft.Json.JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
-        public Material(Color @color, double @specularFactor, double @glossinessFactor, bool @unlit, string @texture, bool @doubleSided, bool @repeatTexture, string @normalTexture, bool @interpolateTexture, System.Guid @id = default, string @name = null)
+        [JsonConstructor]
+        public Material(Color @color,
+                        double @specularFactor,
+                        double @glossinessFactor,
+                        bool @unlit,
+                        string @texture,
+                        bool @doubleSided,
+                        bool @repeatTexture,
+                        string @normalTexture,
+                        bool @interpolateTexture,
+                        string @emissiveTexture,
+                        double @emissiveFactor,
+                        Guid @id = default,
+                        string @name = null)
             : base(id, name)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -86,6 +118,11 @@ namespace Elements
                     // If the file doesn't exist, set the normalTexture to null,
                     // so the material is still created.
                     normalTexture = null;
+                }
+
+                if (emissiveTexture != null && !File.Exists(emissiveTexture))
+                {
+                    emissiveTexture = null;
                 }
 
                 if (specularFactor < 0.0 || glossinessFactor < 0.0)
@@ -108,6 +145,8 @@ namespace Elements
             this.RepeatTexture = @repeatTexture;
             this.NormalTexture = @normalTexture;
             this.InterpolateTexture = @interpolateTexture;
+            this.EmissiveTexture = @emissiveTexture;
+            this.EmissiveFactor = emissiveFactor;
         }
 
         /// <summary>
@@ -115,7 +154,7 @@ namespace Elements
         /// </summary>
         /// <param name="name">The name of the material.</param>
         /// <param name="id">The id of the material.</param>
-        public Material(string name, Guid id = default(Guid)) : base(id, name)
+        public Material(string name, Guid id = default) : base(id, name)
         {
             this.Color = Colors.Gray;
         }
@@ -133,6 +172,8 @@ namespace Elements
         /// <param name="repeatTexture">Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</param>
         /// <param name="normalTexture">A relative path to a jpg or png image file to be used as a normal texture.</param>
         /// <param name="interpolateTexture">Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</param>
+        /// <param name="emissiveTexture">A relative path to a jpg or png image file to be used as en emissive texture.</param>
+        /// <param name="emissiveFactor">The scale, between 0.0 and 1.0, of the emissive texture's components.</param>
         /// <param name="id">The id of the material.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
@@ -146,6 +187,8 @@ namespace Elements
                         bool repeatTexture = true,
                         string normalTexture = null,
                         bool interpolateTexture = true,
+                        string emissiveTexture = null,
+                        double emissiveFactor = 1.0,
                         Guid id = default) :
             this(color,
                  specularFactor,
@@ -156,6 +199,8 @@ namespace Elements
                  repeatTexture,
                  normalTexture,
                  interpolateTexture,
+                 emissiveTexture,
+                 emissiveFactor,
                  id != default ? id : Guid.NewGuid(),
                  name)
         { }
