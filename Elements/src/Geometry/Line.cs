@@ -1019,7 +1019,8 @@ namespace Elements.Geometry
 
             //order vertices of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
-            var orderedVectors = vectors.OrderBy(v => v.X + v.Y + v.Z).ToList();
+            var direction = Direction();
+            var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
 
             //check if 2nd point lies on both lines
             if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
@@ -1036,7 +1037,7 @@ namespace Elements.Geometry
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
             
             //keep the same direction as original line
-            overlap = Direction().IsAlmostEqualTo(overlappingLine.Direction()) 
+            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction()) 
                 ? overlappingLine
                 : overlappingLine.Reversed();
 
