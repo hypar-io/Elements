@@ -4,6 +4,7 @@
 
 ### Added
 - `Mesh.Sphere(double radius, int divisions)`
+- `Model.AllElementsDerivedFromType<T>()`
 
 ### Changed
 - Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
