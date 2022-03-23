@@ -532,7 +532,15 @@ namespace Elements.Geometry.Tests
             Assert.NotNull(overlapLine);
             Assert.True(overlapLine.IsAlmostEqualTo(expectedLine, false));
 
+            var almostSameLine = new Line(Vector3.Origin, new Vector3(5, 5.00000000001, 5));
+            Assert.True(line.IsAlmostEqualTo(almostSameLine, false));
+            Assert.True(line.TryGetOverlap(almostSameLine, out Line almostSameOverlap));
+            Assert.True(line.IsAlmostEqualTo(almostSameOverlap, false));
 
+            //This failed in previous iteration when coordinate sum was used for points sorting
+            var firstLineWihNearZeroSum = new Line(new Vector3(-3, 3, 0), new Vector3(-1, 1.00000002, 0));
+            var secondLineWihNearZeroSum = new Line(new Vector3(-2, 2.00000001, 0), new Vector3(0, 0, 0));
+            Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
         }
     }
 }
