@@ -494,6 +494,10 @@ namespace Elements.Geometry.Tests
             var parallelLine = new Line(new Vector3(3, 3, 0), new Vector3(8, 8, 5));
             Assert.True(line.Direction().IsParallelTo(parallelLine.Direction()));
             Assert.False(line.IsCollinear(parallelLine));
+
+            var almostSameLine = new Line(Vector3.Origin, new Vector3(5, 5.00000000001, 5));
+            Assert.True(line.IsAlmostEqualTo(almostSameLine, false));
+            Assert.True(line.IsCollinear(almostSameLine));
         }
 
         [Fact]
