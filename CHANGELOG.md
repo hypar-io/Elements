@@ -6,6 +6,7 @@
 - `Mesh.Sphere(double radius, int divisions)`
 - `Material.EmissiveTexture`
 - `Material.EmissiveFactor`
+- `Elements.IModel`
 
 ### Changed
 - Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
