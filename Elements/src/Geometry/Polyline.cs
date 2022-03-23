@@ -23,7 +23,7 @@ namespace Elements.Geometry
         internal BBox3 _bounds;
 
         /// <summary>The vertices of the polygon.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Vertices", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
         public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
@@ -32,7 +32,7 @@ namespace Elements.Geometry
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Polyline(IList<Vector3> @vertices) : base()
         {
             this.Vertices = @vertices;

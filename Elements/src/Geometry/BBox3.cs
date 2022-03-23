@@ -8,15 +8,15 @@ namespace Elements.Geometry
     /// <summary>
     /// An axis-aligned bounding box.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public struct BBox3
     {
         /// <summary>The minimum extent of the bounding box.</summary>
-        [Newtonsoft.Json.JsonProperty("Min", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Min", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Min { get; set; }
 
         /// <summary>The maximum extent of the bounding box.</summary>
-        [Newtonsoft.Json.JsonProperty("Max", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Max", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Max { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="min">The minimum point.</param>
         /// <param name="max">The maximum point.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public BBox3(Vector3 @min, Vector3 @max)
         {
             if (!Validator.DisableValidationOnConstruction)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Validators;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -10,11 +11,11 @@ namespace Elements.Geometry
     public partial class Plane : IEquatable<Plane>
     {
         /// <summary>The origin of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Origin", Required = Required.AllowNull)]
         public Vector3 Origin { get; set; }
 
         /// <summary>The normal of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="origin">The origin of the plane.</param>
         /// <param name="normal">The normal of the plane.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Plane(Vector3 @origin, Vector3 @normal)
         {
             if (!Validator.DisableValidationOnConstruction)
