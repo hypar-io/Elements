@@ -191,11 +191,12 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all elements derived from the specified type.
+        /// Get all elements assignable from the specified type. This will include
+        /// classes which a type derives and also interfaces which the type implements.
         /// </summary>
         /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
         /// <returns>A collection of elements derived from the specified type.</returns>
-        public IEnumerable<T> AllElementsDerivedFromType<T>()
+        public IEnumerable<T> AllElementsAssignableFromType<T>()
         {
             return this.Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }

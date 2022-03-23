@@ -354,14 +354,14 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void AllElementsDerivedFromType()
+        public void AllElementsAssignableFromType()
         {
             var column = new Column(new Vector3(5, 5, 5), 2.0, Polygon.Rectangle(1, 1));
             var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
             var brace = new Brace(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
             var model = new Model();
             model.AddElements(column, beam, brace);
-            Assert.Equal(3, model.AllElementsDerivedFromType<StructuralFraming>().Count());
+            Assert.Equal(3, model.AllElementsAssignableFromType<StructuralFraming>().Count());
         }
 
         private Model QuadPanelModel()
