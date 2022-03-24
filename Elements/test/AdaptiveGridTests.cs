@@ -16,7 +16,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Examples")]
         public void AdaptiveGridPolygonKeyPointsExample()
         {
-            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints";
+            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGrid";
             // <example>
             var random = new Random();
 
