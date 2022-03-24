@@ -17,6 +17,7 @@ namespace Elements.Tests
         public void AdaptiveGridPolygonKeyPointsExample()
         {
             this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints";
+            // <example>
             var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid(new Transform());
@@ -35,12 +36,14 @@ namespace Elements.Tests
             {
                 Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
             }
+            // </example>
         }
 
-        [Fact, Trait("Category", "Examples")]
+        [Fact]
         public void AdaptiveGridBboxKeyPointsExample()
         {
             this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints";
+            // <example2>
             var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid(new Transform());
@@ -76,6 +79,7 @@ namespace Elements.Tests
             {
                 Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
             }
+            // </example2>
         }
 
         [Fact]
@@ -167,7 +171,7 @@ namespace Elements.Tests
             var points = new List<Vector3>();
             points.Add(new Vector3(1, 5));
             points.Add(new Vector3(1999, 5));
- 
+
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
         }
 
@@ -206,7 +210,7 @@ namespace Elements.Tests
             var halfTol = adaptiveGrid.Tolerance / 2;
             var modified = vertex.Point + new Vector3(0, 0, halfTol);
             adaptiveGrid.TryGetVertexIndex(new Vector3(10, 0), out var otherId);
-            var newVertex = adaptiveGrid.AddVertex(modified, 
+            var newVertex = adaptiveGrid.AddVertex(modified,
                 new List<Vertex> { adaptiveGrid.GetVertex(otherId) });
             Assert.Equal(id, newVertex.Id);
             modified = vertex.Point + new Vector3(-halfTol, -halfTol, -halfTol);
