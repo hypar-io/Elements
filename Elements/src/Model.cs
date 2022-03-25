@@ -181,13 +181,25 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all entities of the specified Type.
+        /// Get all elements of the type T.
         /// </summary>
-        /// <typeparam name="T">The Type of element to return.</typeparam>
+        /// <typeparam name="T">The type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> AllElementsOfType<T>()
+        public IEnumerable<T> AllElementsOfType<T>() where T : Element
         {
-            return this.Elements.Values.OfType<T>();
+            return Elements.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Get all elements assignable from type T. This will include
+        /// types which derive from T and types which implement T if T 
+        /// is an interface.
+        /// </summary>
+        /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
+        /// <returns>A collection of elements derived from the specified type.</returns>
+        public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
+        {
+            return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }
 
         /// <summary>
