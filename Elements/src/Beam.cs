@@ -32,7 +32,7 @@ namespace Elements
                     double rotation = 0.0,
                     Transform transform = null,
                     bool isElementDefinition = false,
-                    Guid id = default(Guid),
+                    Guid id = default,
                     string name = null)
             : base(curve,
                    profile,
