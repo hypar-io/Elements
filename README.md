@@ -85,7 +85,7 @@ dotnet run -c release --filter '<benchmark class name>'
 ```
 
 ## Documentation
-When adding sample code you need to add a special block of text to the class or method where you want the code to appear.  The value of `name` at the end of the URI will be matched with open and close tags in the test file. see Joist.cs and StructuralFramingTests.cs for an sample.
+When adding sample code you need to add a special block of text to the class or method where you want the code to appear. The value of `name` at the end of the URI will be matched with open and close tags in the test file. See Joist.cs and StructuralFramingTests.cs for an sample.
 ```
         /// <example>
         /// [!code-csharp[Main](../../Elements/test/StructuralFramingTests.cs?name=example)]
