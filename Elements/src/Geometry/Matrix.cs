@@ -1,6 +1,7 @@
 using Elements.Validators;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -525,6 +526,20 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Get the hash code for the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            int hash = 19;
+            foreach (var component in Components)
+            {
+                hash = hash * 31 + component.GetHashCode();
+            }
+            return hash;
         }
     }
 }

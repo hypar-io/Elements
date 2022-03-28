@@ -550,5 +550,14 @@ namespace Elements.Geometry
             }
             return this.Matrix.Equals(other.Matrix);
         }
+
+        /// <summary>
+        /// Get the hash code for the transform.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return Matrix.GetHashCode();
+        }
     }
 }
