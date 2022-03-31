@@ -2222,7 +2222,7 @@ namespace Elements.Geometry
 
                     if (a.IsAlmostEqualTo(c))
                     {
-                        vertices.Remove(c);
+                        Vertices.Remove(c);
                     }
                 }
             }
