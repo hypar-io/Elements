@@ -2013,5 +2013,15 @@ namespace Elements.Geometry.Tests
                 Vector3.Origin,
             });
         }
+
+        [Fact]
+        public void ExceptionThrownDuringLoopProcessing()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/failing-loop-test.json");
+            var data = JsonConvert.DeserializeObject<Dictionary<string, List<Profile>>>(json);
+            var corridorProfiles = data["corridorProfiles"];
+            var subtractors = data["subtractors"];
+            Profile.Difference(corridorProfiles, subtractors);
+        }
     }
 }
