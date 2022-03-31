@@ -628,7 +628,35 @@ namespace Elements.Geometry
             {
                 return null;
             }
+
             List<Polygon> voidCrvs = new List<Polygon>();
+            var perimeterLoops = perimeter.SplitInternalLoops();
+
+            if (perimeterLoops.Count > 1)
+            {
+                Polygon largest = null;
+                double largestArea = 0;
+                foreach (var p in perimeterLoops)
+                {
+                    var area = Math.Abs(p.Area());
+                    if (area > largestArea)
+                    {
+                        largest = p;
+                        largestArea = area;
+                    }
+                }
+                perimeter = largest;
+                voidCrvs.AddRange(perimeterLoops.Where(p => p != largest));
+            }
+            else if (perimeterLoops.Any())
+            {
+                perimeter = perimeterLoops.First();
+            }
+            else
+            {
+                return null;
+            }
+
             if (node.ChildCount > 0)
             {
                 foreach (var child in node.Childs)
@@ -636,7 +664,7 @@ namespace Elements.Geometry
                     var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
                     if (voidCrv != null)
                     {
-                        voidCrvs.Add(voidCrv);
+                        voidCrvs.AddRange(voidCrv.SplitInternalLoops());
                     }
                 }
             }

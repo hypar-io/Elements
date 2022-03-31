@@ -42,7 +42,7 @@ namespace Elements.Geometry
             }
 
             this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-            DeleteVerticesForOverlappingEdges(this.Vertices);
+            DeleteVerticesForOverlappingEdges();
             if (this.Vertices.Count < 3)
             {
                 throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
@@ -2202,22 +2202,22 @@ namespace Elements.Geometry
         /// Vertex A will be deleted
         /// </summary>
         /// <param name="vertices"></param>
-        private void DeleteVerticesForOverlappingEdges(IList<Vector3> vertices)
+        private void DeleteVerticesForOverlappingEdges()
         {
-            if (vertices.Count < 4)
+            if (Vertices.Count < 4)
             {
                 return;
             }
 
-            for (var i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < Vertices.Count; i++)
             {
-                var a = vertices[i];
-                var b = vertices[(i + 1) % vertices.Count];
-                var c = vertices[(i + 2) % vertices.Count];
+                var a = Vertices[i];
+                var b = Vertices[(i + 1) % Vertices.Count];
+                var c = Vertices[(i + 2) % Vertices.Count];
                 bool invalid = (a - b).Unitized().Dot((b - c).Unitized()) < (Vector3.EPSILON - 1);
                 if (invalid)
                 {
-                    vertices.Remove(b);
+                    Vertices.Remove(b);
                     i--;
 
                     if (a.IsAlmostEqualTo(c))
@@ -2226,6 +2226,116 @@ namespace Elements.Geometry
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Polygon can't have self intersections but points still can lay on other lines.
+        /// This lead to hidden voids embedded in the perimeter.
+        /// This function checks if any points is on other line of the loop and do splits.
+        /// </summary>
+        /// <returns>List of simple polygons</returns>
+        internal List<Polygon> SplitInternalLoops()
+        {
+            List<Polygon> polygons = new List<Polygon>();
+
+            //Store accumulated vertices and lines between them.
+            List<Vector3> loopVertices = new List<Vector3>();
+            List<Line> openLoop = new List<Line>();
+
+            //Check if a point lay on active open loop lines. 
+            foreach (var v in Vertices)
+            {
+                bool intersectionFound = false;
+                for (int i = 0; i < openLoop.Count; i++)
+                {
+                    if (openLoop[i].PointOnLine(v) && v.DistanceTo(openLoop[i]) < Vector3.EPSILON)
+                    {
+                        //Remove points and lines from intersection points to this.
+                        var vertices = loopVertices.Skip(i + 1).ToList();
+                        loopVertices.RemoveRange(i + 1, vertices.Count);
+                        openLoop.RemoveRange(i + 1, vertices.Count - 1);
+                        //Cut intersected line and add this point to open loop.
+                        loopVertices.Add(v);
+                        openLoop[i] = new Line(openLoop[i].Start, v);
+
+                        //Loop can possibly be just two points connected forth and back.
+                        //Filter it early.
+                        vertices.Add(v);
+                        if(vertices.Count > 2)
+                        {
+                            var loop = new Polygon(vertices);
+                            polygons.Add(loop);
+                        }
+                        intersectionFound = true;
+                        break;
+                    }
+                }
+
+                //Then check if line (this plus last points) intersects with any accumulated points (going backward)
+                if (!intersectionFound)
+                {
+                    Line segment = loopVertices.Any() ? new Line(loopVertices.Last(), v) : null;
+                    for (int i = loopVertices.Count - 1; i >= 0; i--)
+                    {
+                        //Last point is already part of the line.
+                        if (i == loopVertices.Count)
+                        {
+                            continue;
+                        }
+
+                        if (segment.PointOnLine(loopVertices[i]) && loopVertices[i].DistanceTo(segment) < Vector3.EPSILON)
+                        {
+                            var vertices = loopVertices.Skip(i).ToList();
+                            segment = new Line(loopVertices[i], segment.End);
+
+                            loopVertices.RemoveRange(i + 1, vertices.Count - 1);
+                            openLoop.RemoveRange(i, vertices.Count - 1);
+
+                            if (vertices.Count > 2)
+                            {
+                                var loop = new Polygon(vertices);
+                                polygons.Add(loop);
+                            }
+                        }
+                    }
+
+                    //If no intersection found just add point and line to open loop.
+                    loopVertices.Add(v);
+                    if (segment != null)
+                    {
+                        openLoop.Add(segment);
+                    }
+                }
+            }
+
+            //Leftover points form last loop if it has enough points.
+            if (loopVertices.Count > 2)
+            {
+                var loop = new Polygon(loopVertices);
+                polygons.Add(loop);
+            }
+
+            var filteredPolygons = new List<Polygon>();
+            foreach (var p in polygons)
+            {
+                try
+                {
+                    //Do cleanup to removed any excess vertices.
+                    //This can lead to, again, having too little vertices for valid polygon.
+                    var loop = p.CollinearPointsRemoved();
+                    loop.DeleteVerticesForOverlappingEdges();
+                    if(loop.Vertices.Count > 2)
+                    {
+                        filteredPolygons.Add(p);
+                    }
+                }
+                catch
+                {
+                    //Just ignore polygons that failed check due to having less than 3 points.
+                }
+            }
+
+            return polygons;
         }
     }
 
