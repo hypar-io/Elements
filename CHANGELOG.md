@@ -13,7 +13,7 @@
 ### Fixed
 - `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
 - `Line.TryGetOverlap(Line line, out Line overlap)` would return incorrect results due to wrong internal sorting.
-
+- `Profile.UnionAll, Difference, Intersection, Offset` no longer produce internal loops in `Perimeter` or `Voids`.
 ## 0.9.9
 
 ### Added
