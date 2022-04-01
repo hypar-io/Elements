@@ -502,5 +502,17 @@ namespace Elements.Tests
                 Model.AddElement(new ModelCurve(s, rand.NextMaterial(), new Transform(0, 0, rand.NextDouble())));
             }
         }
+
+        [Fact]
+        public void ProfileInvalidWontThrow()
+        {
+            //This test shows that two non overlapping Polygons can still for a Profile
+            //without throwing exception, this is NOT showcase of correct behavior.
+            var p1 = Polygon.Rectangle(new Vector3(0, 0), new Vector3(2, 2));
+            var p2 = Polygon.Rectangle(new Vector3(3, 0), new Vector3(5, 2));
+            var profile = new Profile(p1, p2);
+            Assert.DoesNotContain(profile.Perimeter.Vertices, v => profile.Voids.First().Contains(v));
+            Assert.DoesNotContain(profile.Voids.First().Vertices, v => profile.Perimeter.Contains(v));
+        }
     }
 }

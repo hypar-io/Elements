@@ -629,6 +629,9 @@ namespace Elements.Geometry
                 return null;
             }
 
+            //It's expected that boolean operations wont produce more than one outer loop per profile.
+            //If this will happen - Profile will still be created without exception but will be incorrect.
+            //Additional `Contains` check should be added if required to handle this. 
             List<Polygon> voidCrvs = new List<Polygon>();
             var perimeterLoops = perimeter.SplitInternalLoops();
 
