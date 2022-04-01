@@ -2229,9 +2229,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Polygon can't have self intersections but points still can lay on other lines.
-        /// This lead to hidden voids embedded in the perimeter.
-        /// This function checks if any points is on other line of the loop and do splits.
+        /// A Polygon can't have self intersections, but points can still lay on other lines.
+        /// This leads to hidden voids embedded in the perimeter.
+        /// This function checks if any points are on another line of the loop and splits into distinct loops if found.
         /// </summary>
         /// <returns>List of simple polygons</returns>
         internal List<Polygon> SplitInternalLoops()
