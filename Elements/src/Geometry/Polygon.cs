@@ -2236,7 +2236,7 @@ namespace Elements.Geometry
         /// <returns>List of simple polygons</returns>
         internal List<Polygon> SplitInternalLoops()
         {
-            List<Polygon> polygons = new List<Polygon>();
+            List<List<Vector3>> polygonPresets = new List<List<Vector3>>();
 
             //Store accumulated vertices and lines between them.
             List<Vector3> loopVertices = new List<Vector3>();
@@ -2263,8 +2263,7 @@ namespace Elements.Geometry
                         vertices.Add(v);
                         if(vertices.Count > 2)
                         {
-                            var loop = new Polygon(vertices);
-                            polygons.Add(loop);
+                            polygonPresets.Add(vertices);
                         }
                         intersectionFound = true;
                         break;
@@ -2293,8 +2292,7 @@ namespace Elements.Geometry
 
                             if (vertices.Count > 2)
                             {
-                                var loop = new Polygon(vertices);
-                                polygons.Add(loop);
+                                polygonPresets.Add(vertices);
                             }
                         }
                     }
@@ -2311,30 +2309,24 @@ namespace Elements.Geometry
             //Leftover points form last loop if it has enough points.
             if (loopVertices.Count > 2)
             {
-                var loop = new Polygon(loopVertices);
-                polygons.Add(loop);
+                polygonPresets.Add(loopVertices);
             }
 
-            var filteredPolygons = new List<Polygon>();
-            foreach (var p in polygons)
+            List<Polygon> polygons = new List<Polygon>();
+            foreach (var preset in polygonPresets)
             {
                 try
                 {
-                    //Do cleanup to removed any excess vertices.
+                    //Polygon constructor cleanup removes any excess vertices and segments.
                     //This can lead to, again, having too little vertices for valid polygon.
-                    var loop = p.CollinearPointsRemoved();
-                    loop.DeleteVerticesForOverlappingEdges();
-                    if(loop.Vertices.Count > 2)
-                    {
-                        filteredPolygons.Add(p);
-                    }
+                    var loop = new Polygon(preset);
+                    polygons.Add(loop);
                 }
                 catch
                 {
                     //Just ignore polygons that failed check due to having less than 3 points.
                 }
             }
-
             return polygons;
         }
     }
