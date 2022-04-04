@@ -514,5 +514,17 @@ namespace Elements.Tests
             Assert.DoesNotContain(profile.Perimeter.Vertices, v => profile.Voids.First().Contains(v));
             Assert.DoesNotContain(profile.Voids.First().Vertices, v => profile.Perimeter.Contains(v));
         }
+
+        [Fact]
+        public void DifferenceToleratesBadGeometry()
+        {
+            Name = nameof(DifferenceToleratesBadGeometry);
+            var cp = JsonConvert.DeserializeObject<List<Profile>>(File.ReadAllText("../../../models/Geometry/corridorProfiles.json"));
+            var lb = JsonConvert.DeserializeObject<Profile>(File.ReadAllText("../../../models/Geometry/levelBoundary.json"));
+            var results = Elements.Geometry.Profile.Difference(new[] { lb }, cp);
+            Model.AddElements(results);
+            Model.AddElements(results.SelectMany(r => r.ToModelCurves()));
+            Assert.Equal(2115.667, results.Sum(r => Math.Abs(r.Area())), 3);
+        }
     }
 }
