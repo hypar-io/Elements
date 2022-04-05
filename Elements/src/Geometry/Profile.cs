@@ -621,39 +621,46 @@ namespace Elements.Geometry
             return clipperPaths;
         }
 
-        internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
+        internal static List<Profile> ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
-            var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
-            if (perimeter == null)
+            var combinedPerimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (combinedPerimeter == null)
             {
                 return null;
             }
 
-            //It's expected that boolean operations wont produce more than one outer loop per profile.
-            //If this will happen - Profile will still be created without exception but will be incorrect.
-            //Additional `Contains` check should be added if required to handle this. 
-            List<Polygon> voidCrvs = new List<Polygon>();
-            var perimeterLoops = perimeter.SplitInternalLoops();
+            //Single perimeter can be split not only into one simple perimeter and several voids,
+            //but also as several independent simple perimeters.
+            var simpleProfiles = new List<(Polygon Perimeter, List<Polygon> Voids)>();
+            var splitPerimeter = combinedPerimeter.SplitInternalLoops();
 
-            if (perimeterLoops.Count > 1)
+            if (splitPerimeter.Count > 1)
             {
-                Polygon largest = null;
-                double largestArea = 0;
-                foreach (var p in perimeterLoops)
+                //When polygons are sorted it's guaranteed that perimeters will be discovered before their voids.
+                var sortedPerimeters = splitPerimeter.OrderByDescending(p => Math.Abs(p.Area()));
+                simpleProfiles.Add((sortedPerimeters.First(), new List<Polygon>()));
+                foreach (var p in sortedPerimeters.Skip(1))
                 {
-                    var area = Math.Abs(p.Area());
-                    if (area > largestArea)
+                    bool inside = false;
+                    foreach(var shape in simpleProfiles)
                     {
-                        largest = p;
-                        largestArea = area;
+                        if(shape.Perimeter.Contains(p))
+                        {
+                            shape.Voids.Add(p);
+                            inside = true;
+                            break;
+                        }
+                    }
+
+                    if(!inside)
+                    {
+                        simpleProfiles.Add((p, new List<Polygon>()));
                     }
                 }
-                perimeter = largest;
-                voidCrvs.AddRange(perimeterLoops.Where(p => p != largest));
             }
-            else if (perimeterLoops.Any())
+            else if (splitPerimeter.Any())
             {
-                perimeter = perimeterLoops.First();
+                simpleProfiles.Add((splitPerimeter.First(), new List<Polygon>()));
             }
             else
             {
@@ -664,22 +671,47 @@ namespace Elements.Geometry
             {
                 foreach (var child in node.Childs)
                 {
+                    //Voids produced by boolean can still be split but it can't form another perimeter,
+                    //because this would lead to intersecting the perimeter.
                     var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
                     if (voidCrv != null)
                     {
-                        voidCrvs.AddRange(voidCrv.SplitInternalLoops());
+                        var simpleViods = voidCrv.SplitInternalLoops();
+                        if (simpleProfiles.Count == 1)
+                        {
+                            simpleProfiles[0].Voids.AddRange(simpleViods);
+                        }
+                        else
+                        {
+                            foreach (var v in simpleViods)
+                            {
+                                foreach (var p in simpleProfiles)
+                                {
+                                    if(p.Perimeter.Contains(v))
+                                    {
+                                        p.Voids.Add(v);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+            List<Profile> profiles = new List<Profile>();
             try
             {
-                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-                return profile;
+                foreach (var p in simpleProfiles)
+                {
+                    profiles.Add(new Profile(p.Perimeter, p.Voids, Guid.NewGuid(), null));
+                }
             }
             catch
             {
                 return null;
             }
+            return profiles;
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
@@ -688,10 +720,10 @@ namespace Elements.Geometry
 
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
-                var profile = node.ToProfile(tolerance);
-                if (profile != null)
+                var profiles = node.ToProfile(tolerance);
+                if (profiles != null && profiles.Any())
                 {
-                    joinedProfiles.Add(profile);
+                    joinedProfiles.AddRange(profiles);
                 }
             }
             foreach (var result in node.Childs)
