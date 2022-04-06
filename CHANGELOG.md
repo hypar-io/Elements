@@ -4,6 +4,7 @@
 
 ### Added
 - `Mesh.Sphere(double radius, int divisions)`
+- `Model.AllElementsAssignableFromType<T>()`
 - `Material.EmissiveTexture`
 - `Material.EmissiveFactor`
 

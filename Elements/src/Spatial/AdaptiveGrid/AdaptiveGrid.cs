@@ -8,10 +8,13 @@ namespace Elements.Spatial.AdaptiveGrid
 {
     /// <summary>
     /// A graph like edge-vertex structure with planar spaces connected by vertical edges.
-    /// The grid doesn't do any intersections when new sections are added, they are stitched 
-    /// only by common vertices. Make sure that regions that are added into the graph are 
+    /// The grid doesn't do any intersections when new sections are added, they are stitched
+    /// only by common vertices. Make sure that regions that are added into the graph are
     /// aligned with respect to boundaries and split points.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/AdaptiveGridTests.cs?name=example)]
+    /// </example>
     public class AdaptiveGrid
     {
         #region Private fields
@@ -87,13 +90,16 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Public logic
 
         /// <summary>
-        /// Add graph section using bounding box, divided by a set of key points. 
+        /// Add graph section using bounding box, divided by a set of key points.
         /// Key points don't respect "MinimumResolution" at the moment.
         /// Any vertices that already exist are not created but reused.
         /// This way new region is connected with the rest of the graph.
         /// </summary>
         /// <param name="bBox">Box which region is populated with graph.</param>
         /// <param name="keyPoints">Set of 3D points, region is split with.</param>
+        /// <example>
+        /// [!code-csharp[Main](../../Elements/test/AdaptiveGridTests.cs?name=example2)]
+        /// </example>
         public void AddFromBbox(BBox3 bBox, List<Vector3> keyPoints)
         {
             var height = bBox.Max.Z - bBox.Min.Z;
@@ -219,7 +225,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     // Intersections are sorted from the start point.
                     else if (intersections.Count == 1)
                     {
-                        //Need to find which end is inside the box. 
+                        //Need to find which end is inside the box.
                         //If none - we just touched the corner
                         if (startInside || endInside)
                         {
