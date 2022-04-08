@@ -155,10 +155,9 @@ namespace Elements.Generate
 
         }
 
-        private static GenerationResult ValidateAndWriteTypeToDisk(JsonSchema schema, string outputBaseDir)
+        private static GenerationResult ValidateAndWriteTypeToDisk(JsonSchema schema, string outputBaseDir, HashSet<string> excludedTypeNames = null)
         {
-            string ns;
-            if (!GetNamespace(schema, out ns))
+            if (!GetNamespace(schema, out string ns))
             {
                 return new GenerationResult
                 {
@@ -168,8 +167,8 @@ namespace Elements.Generate
             }
 
             var typeName = schema.Title;
-            var excludedTypeNames = _coreTypeNames.Where(n => n != typeName).ToArray();
-            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypeNames);
+            var excludedTypes = excludedTypeNames ?? new HashSet<string>(_coreTypeNames);
+            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypes);
         }
 
         /// <summary>
@@ -177,18 +176,22 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uri">The uri to the schema which defines the type. This can be a url or a relative file path.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
+        /// <param name="excludedTypeNames">An optional collection of type names to exclude from code
+        /// generation. NOTE: this list will be modified by the method, extended with the types
+        /// supplied in the URI list, including nested dependency types, in
+        /// order to prevent duplicate code generation.</param>
         /// <returns>
         /// A GenerationResult object containing info about the success or failure of generation,
         /// the file path of the generated code, and any errors that may have occurred during generation.
         /// </returns>
-        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir)
+        public static async Task<GenerationResult> GenerateUserElementTypeFromUriAsync(string uri, string outputBaseDir, HashSet<string> excludedTypeNames = null)
         {
             DotLiquid.Template.DefaultIsThreadSafe = true;
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var schema = await GetSchemaAsync(uri);
 
-            return ValidateAndWriteTypeToDisk(schema, outputBaseDir);
+            return ValidateAndWriteTypeToDisk(schema, outputBaseDir, excludedTypeNames);
         }
 
         /// <summary>
@@ -196,14 +199,18 @@ namespace Elements.Generate
         /// </summary>
         /// <param name="uris">An array of uris.</param>
         /// <param name="outputBaseDir">The base output directory.</param>
-        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir)
+        /// <param name="excludedTypeNames">An optional collection of type names to exclude from code
+        /// generation. NOTE: this list will be modified by the method, extended with the types
+        /// supplied in the URI list, including nested dependency types, in
+        /// order to prevent duplicate code generation.</param>
+        public static async Task<GenerationResult[]> GenerateUserElementTypesFromUrisAsync(string[] uris, string outputBaseDir, HashSet<string> excludedTypeNames = null)
         {
             DotLiquid.Template.DefaultIsThreadSafe = true;
             DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             var results = new List<Task<GenerationResult>>();
             foreach (var uri in uris)
             {
-                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir));
+                results.Add(GenerateUserElementTypeFromUriAsync(uri, outputBaseDir, excludedTypeNames));
             }
             var allResults = await Task.WhenAll(results);
             return allResults;
@@ -400,7 +407,7 @@ namespace Elements.Generate
                 Namespace = ns,
                 ArrayType = "IList",
                 ArrayInstanceType = "List",
-                ExcludedTypeNames = excludedTypes == null ? new string[] { } : excludedTypes,
+                ExcludedTypeNames = excludedTypes ?? (new string[] { }),
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
                 ClassStyle = (typeName == "Element" || solidOpTypes.Contains(typeName)) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
@@ -491,13 +498,19 @@ namespace Elements.Generate
             return false;
         }
 
-        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, string[] excludedTypes = null)
+        private static GenerationResult WriteTypeFromSchemaToDisk(JsonSchema schema, string outDirPath, string typeName, string ns, HashSet<string> excludedTypes = null)
         {
             var diagnosticMessages = new List<string>();
 
-            var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, excludedTypes);
+            var typeCodeDict = GetCodeForTypesFromSchema(schema, typeName, ns, excludedTypes?.ToArray());
             foreach (var kvp in typeCodeDict)
             {
+                // We don't want to generate types we've already generated, so
+                // we add types as we generate them.
+                if (excludedTypes != null)
+                {
+                    excludedTypes.Add(kvp.Key);
+                }
                 var path = Path.Combine(outDirPath, $"{kvp.Key}.g.cs");
 
                 Console.WriteLine($"Generating type {@ns}.{typeName} in {path}...");
