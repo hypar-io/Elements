@@ -408,6 +408,15 @@ namespace Elements.Tests
             Assert.DoesNotContain(edge, v0.Edges);
         }
 
+        /*           (4)
+         *          /   \
+         *         /     \
+         *        /       \
+         *       /   (5)   \
+         *      /     |     \
+         *     /      |      \
+         *   (1)-----(2)-----(3)
+         */
         private AdaptiveGrid SampleGrid()
         {
             AdaptiveGrid grid = new AdaptiveGrid();
