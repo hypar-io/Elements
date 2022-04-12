@@ -4,12 +4,21 @@
 
 ### Added
 - `Mesh.Sphere(double radius, int divisions)`
-- `Model.AllElementsAssignableFromType<T>()`
 - `Material.EmissiveTexture`
 - `Material.EmissiveFactor`
+- `PriorityQueue`
+- `AdaptiveGraphRouting`
+- `AdaptiveGrid` constructor with no parameters.
+- `AdaptiveGrid.AddVertexStrip(IList<Vector3> points)`
+- `AdaptiveGrid.CutEdge(Edge edge, Vector3 position)`
+- `AdaptiveGrid.ClosestVertex(Vector3 location)` and `AdaptiveGrid.ClosestEdge(Vector3 location)`
+- `AdaptiveGrid.RemoveEdge(Edge edge)`
 
 ### Changed
-- Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- Remove `removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- Remove `AdaptiveGrid` reference from `Edge` and `Vertex` Move `Edge.GetVertices` and `Edge.GetLine` to `AdaptiveGrid`.
+- Rename `AdaptiveGrid.DeleteEdge(Edge edge)` into `RemoveEdge` and is not public.
+- `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2)` is now public.
 
 ### Fixed
 - `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
