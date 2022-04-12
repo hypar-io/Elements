@@ -53,15 +53,24 @@ namespace Elements
                      Material material = null,
                      Representation representation = null,
                      bool isElementDefinition = false,
-                     Guid id = default(Guid),
-                     string name = null) : base(transform != null ? transform : new Transform(),
-                                                material != null ? material : BuiltInMaterials.Concrete,
-                                                representation != null ? representation : new Representation(new List<SolidOperation>()),
+                     Guid id = default,
+                     string name = null) : base(transform ?? new Transform(),
+                                                material ?? BuiltInMaterials.Concrete,
+                                                representation ?? new Representation(new List<SolidOperation>()),
                                                 isElementDefinition,
-                                                id != default(Guid) ? id : Guid.NewGuid(),
+                                                id != default ? id : Guid.NewGuid(),
                                                 name)
         {
             SetProperties(profile, thickness);
+        }
+
+        /// <summary>
+        /// Empty constructor for compatibility purposes. It is best to use the
+        /// structured constructor with arguments, to ensure the floor is correctly created.
+        /// </summary>
+        public Floor()
+        {
+
         }
 
         private void SetProperties(Profile profile, double thickness)
