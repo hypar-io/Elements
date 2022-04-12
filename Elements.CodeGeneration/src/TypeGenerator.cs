@@ -167,8 +167,7 @@ namespace Elements.Generate
             }
 
             var typeName = schema.Title;
-            var excludedTypes = excludedTypeNames ?? new HashSet<string>(_coreTypeNames);
-            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypes);
+            return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypeNames ?? new HashSet<string>(_coreTypeNames));
         }
 
         /// <summary>
@@ -407,7 +406,7 @@ namespace Elements.Generate
                 Namespace = ns,
                 ArrayType = "IList",
                 ArrayInstanceType = "List",
-                ExcludedTypeNames = excludedTypes ?? (new string[] { }),
+                ExcludedTypeNames = excludedTypes ?? new string[0],
                 TemplateDirectory = templates,
                 GenerateJsonMethods = false,
                 ClassStyle = (typeName == "Element" || solidOpTypes.Contains(typeName)) ? CSharpClassStyle.Inpc : CSharpClassStyle.Poco,
