@@ -267,7 +267,7 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
-            //Sometimes it's not wanted for routing to go through them.
+            //Sometimes it's not desired for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
             var allExcluded = new HashSet<ulong>();
             foreach (var item in excludedVertices)
@@ -289,7 +289,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var defaultHints = hintGroups.SingleOrDefault(hg => hg.Key == false);
             var hintVertices = NearbyVertices(userHints, leafVertices);
             var offsetVertices = NearbyVertices(defaultHints, leafVertices);
-            //Hint lines can go even through excluded vertices
+            //Hint lines can even go through excluded vertices
             allExcluded.ExceptWith(hintVertices.Select(hv => hv.Id));
 
             //1. Connect tail points, starting from exit point.
@@ -722,7 +722,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="leafVertices">Vertices to connect into the system with extra information attached.</param>
         /// <param name="exits">Possible exit vertices.</param>
-        /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line is required.</param>
+        /// <param name="hintLines">Collection of lines that routes are attracted to.</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSimpleNetwork(
             IList<RoutingVertex> leafVertices,
@@ -730,7 +730,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<RoutingHintLine> hintLines)
         {
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
-            //Sometimes it's not wanted for routing to go through them.
+            //Sometimes it's not desired for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
             var allExcluded = new HashSet<ulong>();
             foreach (var item in excludedVertices)
@@ -755,8 +755,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
             var defaultHints = hintGroups.SingleOrDefault(hg => hg.Key == false);
             var hintVertices = NearbyVertices(userHints, leafVertices);
-            var offsetVertices = NearbyVertices(defaultHints, leafVertices);
-            //Hint lines can go even through excluded vertices
+            //Hint lines can even go through excluded vertices
             allExcluded.ExceptWith(hintVertices.Select(hv => hv.Id));
 
 
