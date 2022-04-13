@@ -6,7 +6,7 @@ using System.Linq;
 namespace Elements
 {
     /// <summary>
-    /// PriorityQueue is a collection that allows to retrieve the item with the lowest
+    /// PriorityQueue is a collection that allows you to retrieve the item with the lowest
     /// priority in constant time and be able update priority of an item with log complexity.
     /// Items are unique within the collection but priorities can have duplicate values.
     /// </summary>

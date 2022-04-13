@@ -261,6 +261,11 @@ namespace Elements.Spatial.AdaptiveGrid
             IList<RoutingVertex> leafVertices,
             IList<ulong> trunkPathVertices, IEnumerable<RoutingHintLine> hintLines)
         {
+            if (!hintLines.Any())
+            {
+                throw new ArgumentException("At least one hint line is required to guide the tree");
+            }
+
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not wanted for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
@@ -470,11 +475,16 @@ namespace Elements.Spatial.AdaptiveGrid
             IList<List<RoutingVertex>> leafVertices, IList<ulong> localTails,
             IList<ulong> trunkPathVertices, IList<List<RoutingHintLine>> hintLines)
         {
+            if (!hintLines.Any() || hintLines.Any(hl => hl == null || !hl.Any()))
+            {
+                throw new ArgumentException("At least one hint line in each group is required to guide the tree");
+            }
+
             var allLeafs = leafVertices.SelectMany(l => l).ToList();
             var allHints = hintLines.SelectMany(h => h).ToList();
 
             //Excluded vertices includes inlets and vertices in certain around inlets
-            //Sometimes it's not wanted for routing to go through them.
+            //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(allLeafs);
             var allExcluded = new HashSet<ulong>();
             foreach (var item in excludedVertices)
@@ -485,7 +495,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var weights = CalculateWeights(allHints, allLeafs);
             var allUserHints = allHints.Where(h => h.UserDefined == true).ToList();
             var nearbyHints = NearbyVertices(allUserHints, allLeafs);
-            //Hint lines can go even through excluded vertices
+            //Hint lines can even go through excluded vertices
             allExcluded.ExceptWith(nearbyHints.Select(nh => nh.Id));
 
             var vertexTree = new Dictionary<ulong, ulong?>();

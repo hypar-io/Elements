@@ -418,6 +418,10 @@ namespace Elements.Tests
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
             var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints);
 
+            //Throws if no hint lines
+            Assert.Throws<ArgumentException>(() =>
+                alg.BuildSpanningTree(inputVertices, tailVertices, new List<RoutingHintLine>()));
+
             //Results visualization
             List<Line> lines = new List<Line>();
             foreach (var input in inputVertices)
@@ -564,6 +568,10 @@ namespace Elements.Tests
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
             var tree = alg.BuildSpanningTree(inputVertices, localTailVertices, tailVertices, hints);
 
+            //Throws if no hint lines
+            Assert.Throws<ArgumentException>(() =>
+                alg.BuildSpanningTree(inputVertices, localTailVertices, tailVertices, new List<List<RoutingHintLine>>()));
+
             //Result visualization
             List<Line> lines = new List<Line>();
             foreach (var input in inputVertices.SelectMany(iv => iv))
@@ -678,7 +686,7 @@ namespace Elements.Tests
 
             //6. Run routing with a hint line.
             var hint = new RoutingHintLine(
-                new Polyline(new Vector3[]{ new Vector3(2, 2, 0), new Vector3(2, 8, 0) }),
+                new Polyline(new Vector3[] { new Vector3(2, 2, 0), new Vector3(2, 8, 0) }),
                 0.1, 0.1, false);
             tree = alg.BuildSimpleNetwork(inputVertices, exits, new List<RoutingHintLine> { hint });
 

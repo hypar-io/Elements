@@ -289,6 +289,7 @@ namespace Elements.Tests
             var grid = SampleGrid();
             var vertex = grid.GetVertex(2);
             Assert.Null(vertex.GetEdge(4));
+            Assert.Null(vertex.GetEdge(2));
 
             var edge = vertex.GetEdge(1);
             Assert.True(edge.OtherVertexId(2) == 1);

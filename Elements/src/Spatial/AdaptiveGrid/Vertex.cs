@@ -29,6 +29,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Edge between this and Vertex with given ID. Null if not found.</returns>
         public Edge GetEdge(ulong otherId)
         {
+            if (otherId == this.Id)
+            {
+                return null;
+            }
             return Edges.Where(e => e.StartId == otherId || e.EndId == otherId).FirstOrDefault();
         }
 

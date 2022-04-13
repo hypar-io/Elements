@@ -325,13 +325,13 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Create connected chain of vertices. If chain intersects itself - intersection vertices are created as well.
-        /// New vertices are not connected with other vertices, except the case then one or more added vertices already exist in the grid.
+        /// New vertices are not connected with other vertices, except in the case then one or more added vertices already exist in the grid.
         /// </summary>
-        /// <param name="points">List of point to connect by edges. Must have at least two points.</param>
+        /// <param name="points">List of points to connect by edges. Must have at least two points.</param>
         /// <returns>New vertices in order. Vertices at intersection points are presented more than once.</returns>
         public List<Vertex> AddVertexStrip(IList<Vector3> points)
         {
-            if(points.Count < 2)
+            if (points.Count < 2)
             {
                 throw new ArgumentException("At least two points required");
             }
