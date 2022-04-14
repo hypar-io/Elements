@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class RHSProfileFactory
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -83,25 +92,25 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html">ProfileFactory</a>&lt;<a class="xref" href="Elements.Geometry.Profiles.RHSProfileType.html">RHSProfileType</a>, <a class="xref" href="Elements.Geometry.Profiles.RHSProfile.html">RHSProfile</a>&gt;</div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html">ProfileFactoryBase</a>&lt;<a class="xref" href="Elements.Geometry.Profiles.RHSProfileType.html">RHSProfileType</a>, <a class="xref" href="Elements.Geometry.Profiles.RHSProfile.html">RHSProfile</a>&gt;</div>
     <div class="level2"><span class="xref">RHSProfileFactory</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html#Elements_Geometry_Profiles_ProfileFactory_2__profileData">ProfileFactory&lt;RHSProfileType, RHSProfile&gt;._profileData</a>
+      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html#Elements_Geometry_Profiles_ProfileFactoryBase_2__profileData">ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;._profileData</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html#Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByName_System_String_">ProfileFactory&lt;RHSProfileType, RHSProfile&gt;.GetProfileByName(String)</a>
+      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html#Elements_Geometry_Profiles_ProfileFactoryBase_2_GetProfileByName_System_String_">ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;.GetProfileByName(String)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html#Elements_Geometry_Profiles_ProfileFactory_2_GetProfileByType__0_">ProfileFactory&lt;RHSProfileType, RHSProfile&gt;.GetProfileByType(RHSProfileType)</a>
+      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html#Elements_Geometry_Profiles_ProfileFactoryBase_2_GetProfileByType__0_">ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;.GetProfileByType(RHSProfileType)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html#Elements_Geometry_Profiles_ProfileFactory_2_AllProfiles">ProfileFactory&lt;RHSProfileType, RHSProfile&gt;.AllProfiles()</a>
+      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html#Elements_Geometry_Profiles_ProfileFactoryBase_2_AllProfiles">ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;.AllProfiles()</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactory-2.html#Elements_Geometry_Profiles_ProfileFactory_2_CreateProfile_System_Int32_">ProfileFactory&lt;RHSProfileType, RHSProfile&gt;.CreateProfile(Int32)</a>
+      <a class="xref" href="Elements.Geometry.Profiles.ProfileFactoryBase-2.html#Elements_Geometry_Profiles_ProfileFactoryBase_2_CreateProfile_System_Int32_">ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;.CreateProfile(Int32)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -129,7 +138,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Profiles_RHSProfileFactory_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class RHSProfileFactory : ProfileFactory&lt;RHSProfileType, RHSProfile&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class RHSProfileFactory : ProfileFactoryBase&lt;RHSProfileType, RHSProfile&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -184,7 +193,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactory&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.CreateProfile(System.Int32)</span></div>
+  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactoryBase&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.CreateProfile(System.Int32)</span></div>
   <a id="Elements_Geometry_Profiles_RHSProfileFactory_GetProfileByName_" data-uid="Elements.Geometry.Profiles.RHSProfileFactory.GetProfileByName*"></a>
   <h4 id="Elements_Geometry_Profiles_RHSProfileFactory_GetProfileByName_System_String_" data-uid="Elements.Geometry.Profiles.RHSProfileFactory.GetProfileByName(System.String)">GetProfileByName(String)</h4>
   <div class="markdown level1 summary"><p>Get a profile by name.</p>
@@ -229,7 +238,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactory&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.GetProfileByName(System.String)</span></div>
+  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactoryBase&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.GetProfileByName(System.String)</span></div>
   <a id="Elements_Geometry_Profiles_RHSProfileFactory_GetProfileByType_" data-uid="Elements.Geometry.Profiles.RHSProfileFactory.GetProfileByType*"></a>
   <h4 id="Elements_Geometry_Profiles_RHSProfileFactory_GetProfileByType_Elements_Geometry_Profiles_RHSProfileType_" data-uid="Elements.Geometry.Profiles.RHSProfileFactory.GetProfileByType(Elements.Geometry.Profiles.RHSProfileType)">GetProfileByType(RHSProfileType)</h4>
   <div class="markdown level1 summary"><p>Get a profile by type.</p>
@@ -274,7 +283,7 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactory&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.GetProfileByType(Elements.Geometry.Profiles.RHSProfileType)</span></div>
+  <div><span class="xref">Elements.Geometry.Profiles.ProfileFactoryBase&lt;Elements.Geometry.Profiles.RHSProfileType, Elements.Geometry.Profiles.RHSProfile&gt;.GetProfileByType(Elements.Geometry.Profiles.RHSProfileType)</span></div>
 </article>
           </div>
           

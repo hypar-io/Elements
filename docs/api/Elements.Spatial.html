@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Spatial
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -82,18 +91,6 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
-      <h4><a class="xref" href="Elements.Spatial.Cell.html">Cell</a></h4>
-      <section><p>A cell: a 3-dimensional closed cell within a complex</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.CellComplex.html">CellComplex</a></h4>
-      <section><p>A geometric voxel representation for structures and potential other</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.DirectedSegment.html">DirectedSegment</a></h4>
-      <section><p>A directed segment: a representation of a segment that has direction to it so that it can be used to traverse faces</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.Face.html">Face</a></h4>
-      <section><p>A face of a cell. Multiple cells can share the same face.</p>
-</section>
       <h4><a class="xref" href="Elements.Spatial.Grid1d.html">Grid1d</a></h4>
       <section><p>Represents a &quot;1-dimensional grid&quot;, akin to a number line that can be subdivided.</p>
 </section>
@@ -106,15 +103,6 @@ bounded by intersecting or overlapping edges.</p>
 </section>
       <h4><a class="xref" href="Elements.Spatial.MercatorProjection.html">MercatorProjection</a></h4>
       <section><p>Methods for computing geographic coordinates using the Mercator projection.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.Segment.html">Segment</a></h4>
-      <section><p>A unique segment in a cell complex.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.UV.html">UV</a></h4>
-      <section><p>A unique U or V direction in a cell complex</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.Vertex.html">Vertex</a></h4>
-      <section><p>A unique vertex in a cell complex</p>
 </section>
       <h4><a class="xref" href="Elements.Spatial.WebMercatorProjection.html">WebMercatorProjection</a></h4>
       <section><p>Methods for computing web mercator projection tiles and coordinates.</p>

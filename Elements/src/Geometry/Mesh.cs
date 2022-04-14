@@ -14,7 +14,7 @@ namespace Elements.Geometry
     /// A triangle mesh.
     /// </summary>
     [JsonConverter(typeof(MeshConverter))]
-    public class Mesh
+    public partial class Mesh
     {
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
 
@@ -358,9 +358,10 @@ Triangles:{Triangles.Count}";
             return new Vector3(v.X, v.Y, v.Z);
         }
 
-
-
-        internal static Mesh ToMesh(this Tess tess, Transform transform = null, Color color = default, Vector3 normal = default)
+        internal static Mesh ToMesh(this Tess tess,
+                                    Transform transform = null,
+                                    Color color = default,
+                                    Vector3 normal = default)
         {
             var faceMesh = new Mesh();
             (Vector3 U, Vector3 V) basis = (default(Vector3), default(Vector3));
@@ -385,7 +386,11 @@ Triangles:{Triangles.Count}";
                     // for planar faces.
                     // TODO: Update this when we support non-planar faces.
                     // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-                    basis = normal.ComputeDefaultBasisVectors();
+                    basis = Tessellation.Tessellation.ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 naturalNormal);
+                    if (normal == default)
+                    {
+                        normal = naturalNormal;
+                    }
                 }
 
                 var v1 = faceMesh.AddVertex(a, new UV(basis.U.Dot(a), basis.V.Dot(a)), normal, color: color);

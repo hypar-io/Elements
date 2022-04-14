@@ -24,7 +24,7 @@ namespace Elements
                                 double intensity = 1.0,
                                 Guid id = default(Guid),
                                 string name = "Sun") : base(intensity,
-                                                            color == null ? Colors.White : color,
+                                                            color,
                                                             transform == null ? new Transform() : transform,
                                                             id == default(Guid) ? Guid.NewGuid() : id,
                                                             name)

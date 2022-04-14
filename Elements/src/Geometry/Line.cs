@@ -1,3 +1,5 @@
+using System.Net.Sockets;
+using System.Numerics;
 using Elements.Validators;
 using System;
 using System.Collections.Generic;
@@ -102,6 +104,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return TransformedLine(transform);
         }
 
@@ -111,6 +118,11 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Line TransformedLine(Transform transform)
         {
+            if (transform == null)
+            {
+                return this;
+            }
+
             return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
@@ -977,6 +989,59 @@ namespace Elements.Geometry
             {
                 return complement;
             }
+        }
+
+        /// <summary>
+        /// Check if this line is collinear with other line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <returns></returns>
+        public bool IsCollinear(Line line)
+        {
+            return Vector3.AreCollinear(Start, End, line.Start) && Vector3.AreCollinear(Start, End, line.End);
+        }
+
+        /// <summary>
+        /// Check if line overlap with other line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <param name="overlap">Overlapping line or null when lines do not overlap</param>
+        /// <returns>Returns true when lines overlap and false when they do not</returns>
+        public bool TryGetOverlap(Line line, out Line overlap)
+        {
+            overlap = null;
+
+            if(line == null)
+                return false;
+
+            if(!IsCollinear(line))
+                return false;
+
+            //order vertices of lines
+            var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
+            var direction = Direction();
+            var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
+
+            //check if 2nd point lies on both lines
+            if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
+                return false;
+
+            //check if 3rd point lies on both lines
+            if (!PointOnLine(orderedVectors[2], Start, End, true) || !PointOnLine(orderedVectors[2], line.Start, line.End, true))
+                return false;
+
+            //edge case when lines share only point
+            if(orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
+                return false;
+
+            var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
+            
+            //keep the same direction as original line
+            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction()) 
+                ? overlappingLine
+                : overlappingLine.Reversed();
+
+            return true;
         }
 
         /// <summary>

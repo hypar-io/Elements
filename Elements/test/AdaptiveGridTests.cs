@@ -7,15 +7,17 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Xunit;
+using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
 
 namespace Elements.Tests
 {
     public class AdaptiveGridTests : ModelTest
-    {      
-        [Fact]
+    {
+        [Fact, Trait("Category", "Examples")]
         public void AdaptiveGridPolygonKeyPointsExample()
         {
-            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridPolygonKeyPoints";
+            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGrid";
+            // <example>
             var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid(new Transform());
@@ -34,13 +36,14 @@ namespace Elements.Tests
             {
                 Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
             }
+            // </example>
         }
-
 
         [Fact]
         public void AdaptiveGridBboxKeyPointsExample()
         {
             this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints";
+            // <example2>
             var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid(new Transform());
@@ -76,10 +79,39 @@ namespace Elements.Tests
             {
                 Model.AddElement(new ModelCurve(edge.GetGeometry(), material: random.NextMaterial()));
             }
+            // </example2>
         }
 
         [Fact]
-        public void AdaptiveGridSubtractBox()
+        public void AdaptiveGridAddVertex()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var points = new List<Vector3>()
+            {
+                new Vector3(-6, -4),
+                new Vector3(-2, -4),
+                new Vector3(3, -4),
+                new Vector3(1, 4.5, 3),
+                new Vector3(6, 3, -2),
+            };
+            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10), points);
+
+            ulong id;
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-2, -4), out id));
+            var oldV = adaptiveGrid.GetVertex(id);
+            var edgesBefore = oldV.Edges.Count;
+
+            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new List<Vertex> { oldV });
+            Assert.NotNull(newV);
+            Assert.False(newV.Id == 0);
+            Assert.Single(newV.Edges);
+            Assert.True(newV.Edges.First().StartId == id || newV.Edges.First().EndId == id);
+            Assert.Equal(edgesBefore + 1, oldV.Edges.Count());
+            Assert.Contains(oldV.Edges, e => e.StartId == newV.Id || e.EndId == newV.Id);
+        }
+
+        [Fact]
+        public void AdaptiveGridSubtractBoxCutEdges()
         {
             var adaptiveGrid = new AdaptiveGrid(new Transform());
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
@@ -89,14 +121,24 @@ namespace Elements.Tests
             {
                 points.Add(new Vector3(i, i, 1));
             }
+
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5), out _));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4, 1), out var borderId);
+            var borderV = adaptiveGrid.GetVertex(borderId);
+            var numEdges = borderV.Edges.Count;
+            var numVertices = adaptiveGrid.GetVertices().Count;
 
             var box = new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2));
             adaptiveGrid.SubtractBox(box);
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            Assert.Equal(numEdges - 1, borderV.Edges.Count);
+            //On each elevation one vertex is removed and no added
+            Assert.Equal(numVertices - (3 * 1), adaptiveGrid.GetVertices().Count);
         }
 
         [Fact]
@@ -129,7 +171,7 @@ namespace Elements.Tests
             var points = new List<Vector3>();
             points.Add(new Vector3(1, 5));
             points.Add(new Vector3(1999, 5));
- 
+
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
         }
 
@@ -155,6 +197,25 @@ namespace Elements.Tests
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(10, 10), out id));
             vertex = adaptiveGrid.GetVertex(id);
             Assert.Equal(5, vertex.Edges.Count);
+        }
+
+        [Fact]
+        public void AdaptiveGridDoesntAddTheSameVertex()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform());
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+            adaptiveGrid.AddFromPolygon(polygon, new List<Vector3>());
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(0, 10), out var id));
+            var vertex = adaptiveGrid.GetVertex(id);
+            var halfTol = adaptiveGrid.Tolerance / 2;
+            var modified = vertex.Point + new Vector3(0, 0, halfTol);
+            adaptiveGrid.TryGetVertexIndex(new Vector3(10, 0), out var otherId);
+            var newVertex = adaptiveGrid.AddVertex(modified,
+                new List<Vertex> { adaptiveGrid.GetVertex(otherId) });
+            Assert.Equal(id, newVertex.Id);
+            modified = vertex.Point + new Vector3(-halfTol, -halfTol, -halfTol);
+            adaptiveGrid.TryGetVertexIndex(modified, out otherId, adaptiveGrid.Tolerance);
+            Assert.Equal(id, otherId);
         }
     }
 }

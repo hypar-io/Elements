@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -82,6 +91,12 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="Elements.BaseCeiling.html">BaseCeiling</a></h4>
+      <section><p>The base class for all ceilings.</p>
+</section>
+      <h4><a class="xref" href="Elements.BaseError.html">BaseError</a></h4>
+      <section><p>Represents error that occur during application execution</p>
+</section>
       <h4><a class="xref" href="Elements.Beam.html">Beam</a></h4>
       <section><p>A structural framing element defined by a center line curve and a profile.</p>
 </section>
@@ -95,7 +110,7 @@
       <section><p>A vertical structural framing element.</p>
 </section>
       <h4><a class="xref" href="Elements.ContentCatalog.html">ContentCatalog</a></h4>
-      <section><p>A collection of ContentElements</p>
+      <section><p>A collection of content elements.</p>
 </section>
       <h4><a class="xref" href="Elements.ContentElement.html">ContentElement</a></h4>
       <section><p>An element representing user content.</p>
@@ -107,13 +122,27 @@
       <section><p>Extension and utility methods for mathematical operations.</p>
 </section>
       <h4><a class="xref" href="Elements.Element.html">Element</a></h4>
-      <section><p>An object which is identified
-with a unique identifier and a name.</p>
+      <section><p>An object which is identified with a unique identifier and a name.</p>
+</section>
+      <h4><a class="xref" href="Elements.ElementError.html">ElementError</a></h4>
+      <section><p>Represents error that occur inside an element during application execution</p>
 </section>
       <h4><a class="xref" href="Elements.ElementInstance.html">ElementInstance</a></h4>
       <section><p>An instance of an element in the model.
 Instances point to one instance of a type, but have
 individual ids and transforms.</p>
+</section>
+      <h4><a class="xref" href="Elements.ElementProxy.html">ElementProxy</a></h4>
+      <section><p>Wrapper/utilities for ElementProxy generics.</p>
+</section>
+      <h4><a class="xref" href="Elements.ElementProxy-1.html">ElementProxy&lt;T&gt;</a></h4>
+      <section><p>Proxy for an element from another function.
+This is used to attach additional information to upstream elements.
+Proxies created via Element.Proxy() are intended to be reused, so we are not creating multiple proxies for each element.
+Proxies deserialized from other functions are not added to the current proxy cache, so that each function will create its own, new proxies for each element.</p>
+</section>
+      <h4><a class="xref" href="Elements.ElementProxyExtensions.html">ElementProxyExtensions</a></h4>
+      <section><p>Extension methods for element proxies.</p>
 </section>
       <h4><a class="xref" href="Elements.Floor.html">Floor</a></h4>
       <section><p>A floor is a horizontal element defined by a profile.</p>
@@ -124,11 +153,20 @@ individual ids and transforms.</p>
       <h4><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></h4>
       <section><p>An element with a geometric representation.</p>
 </section>
+      <h4><a class="xref" href="Elements.GeometryReference.html">GeometryReference</a></h4>
+      <section><p>A reference to a model, hosted at a URL.</p>
+</section>
+      <h4><a class="xref" href="Elements.GridLine.html">GridLine</a></h4>
+      <section><p>An architectural or structural gridline.</p>
+</section>
       <h4><a class="xref" href="Elements.Identity.html">Identity</a></h4>
       <section><p>Methods for discovering and tracking stable identifiers for Elements.</p>
 </section>
       <h4><a class="xref" href="Elements.ImportMeshElement.html">ImportMeshElement</a></h4>
       <section><p>An element definition whose representation is provided by an imported mesh like an STL.</p>
+</section>
+      <h4><a class="xref" href="Elements.Joist.html">Joist</a></h4>
+      <section><p>A joist.</p>
 </section>
       <h4><a class="xref" href="Elements.Light.html">Light</a></h4>
       <section><p>Base class for all lights.</p>
@@ -137,13 +175,16 @@ individual ids and transforms.</p>
       <section><p>An extruded volume.</p>
 </section>
       <h4><a class="xref" href="Elements.Material.html">Material</a></h4>
-      <section><p>A material.</p>
+      <section><p>A material with red, green, blue, alpha, and metallic factor components.</p>
 </section>
       <h4><a class="xref" href="Elements.MeshElement.html">MeshElement</a></h4>
       <section><p>An element whose representation is provided by a mesh.</p>
 </section>
       <h4><a class="xref" href="Elements.Model.html">Model</a></h4>
-      <section><p>A container of elements.</p>
+      <section><p>A container for elements.</p>
+</section>
+      <h4><a class="xref" href="Elements.ModelArrows.html">ModelArrows</a></h4>
+      <section><p>A collection of arrows which are visible in 3D.</p>
 </section>
       <h4><a class="xref" href="Elements.ModelCurve.html">ModelCurve</a></h4>
       <section><p>A curve which is visible in 3D.</p>
@@ -151,8 +192,19 @@ individual ids and transforms.</p>
       <h4><a class="xref" href="Elements.ModelCurveExtensions.html">ModelCurveExtensions</a></h4>
       <section><p>Extension methods for model curves.</p>
 </section>
+      <h4><a class="xref" href="Elements.ModelExtensions.html">ModelExtensions</a></h4>
+      <section></section>
+      <h4><a class="xref" href="Elements.ModelLines.html">ModelLines</a></h4>
+      <section><p>A collection of lines which are visible in 3D.</p>
+</section>
       <h4><a class="xref" href="Elements.ModelPoints.html">ModelPoints</a></h4>
       <section><p>A collection of points which are visible in 3D.</p>
+</section>
+      <h4><a class="xref" href="Elements.ModelText.html">ModelText</a></h4>
+      <section><p>A collection of text tags which are visible in 3D.</p>
+</section>
+      <h4><a class="xref" href="Elements.OpenCeiling.html">OpenCeiling</a></h4>
+      <section><p>A ceiling that has no physical geometry, but still defines a perimeter and an elevation.</p>
 </section>
       <h4><a class="xref" href="Elements.Opening.html">Opening</a></h4>
       <section><p>A polygonal opening.
@@ -168,6 +220,12 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
       <h4><a class="xref" href="Elements.RandomExtensions.html">RandomExtensions</a></h4>
       <section><p>Extension methods for generating new random objects from an instance of System.Random.</p>
 </section>
+      <h4><a class="xref" href="Elements.SetOperations.html">SetOperations</a></h4>
+      <section><p>Operations on sets of edges.</p>
+</section>
+      <h4><a class="xref" href="Elements.SolidCeiling.html">SolidCeiling</a></h4>
+      <section><p>A ceiling defined by a planar profile extruded to a thickness.</p>
+</section>
       <h4><a class="xref" href="Elements.Space.html">Space</a></h4>
       <section><p>An extruded region of occupiable space.</p>
 </section>
@@ -182,6 +240,12 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
 </section>
       <h4><a class="xref" href="Elements.StructuralFraming.html">StructuralFraming</a></h4>
       <section><p>A structural element with a profile swept along a curve.</p>
+</section>
+      <h4><a class="xref" href="Elements.Symbol.html">Symbol</a></h4>
+      <section><p>An alternate representation of an object.</p>
+</section>
+      <h4><a class="xref" href="Elements.TiledCeiling.html">TiledCeiling</a></h4>
+      <section><p>A tiled ceiling.</p>
 </section>
       <h4><a class="xref" href="Elements.Topography.html">Topography</a></h4>
       <section><p>A topographic mesh defined by an array of elevation values.</p>
@@ -200,10 +264,30 @@ The direction of the opening corresponds to the +Z axis of the transform.</p>
       <h4><a class="xref" href="Elements.Domain1d.html">Domain1d</a></h4>
       <section><p>A 1 dimensional interval or domain.</p>
 </section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="Elements.IOverride.html">IOverride</a></h4>
+      <section><p>An override value object</p>
+</section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="Elements.CoplanarSetClassification.html">CoplanarSetClassification</a></h4>
+      <section><p>Coplanar classification.</p>
+</section>
+      <h4><a class="xref" href="Elements.FontSize.html">FontSize</a></h4>
+      <section><p>Model text font sizes.</p>
+</section>
       <h4><a class="xref" href="Elements.LightType.html">LightType</a></h4>
       <section><p>A light type.</p>
+</section>
+      <h4><a class="xref" href="Elements.LocalClassification.html">LocalClassification</a></h4>
+      <section><p>A local set classification.</p>
+</section>
+      <h4><a class="xref" href="Elements.SetClassification.html">SetClassification</a></h4>
+      <section><p>A set containment classification.</p>
+</section>
+      <h4><a class="xref" href="Elements.SymbolCameraPosition.html">SymbolCameraPosition</a></h4>
+      <section><p>An enumeration of typical camera positions.</p>
 </section>
       <h4><a class="xref" href="Elements.Units.CardinalDirection.html">Units.CardinalDirection</a></h4>
       <section><p>Cardinal directions.</p>

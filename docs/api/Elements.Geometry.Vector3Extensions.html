@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Vector3Extensions
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -200,13 +209,13 @@
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3Extensions_Average_" data-uid="Elements.Geometry.Vector3Extensions.Average*"></a>
-  <h4 id="Elements_Geometry_Vector3Extensions_Average_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Average(IList&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Vector3Extensions_Average_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">Average(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Find the average of a collection of Vector3.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Vector3 Average(this IList&lt;Vector3&gt; points)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Vector3 Average(this IEnumerable&lt;Vector3&gt; points)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -219,7 +228,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">points</span></td>
         <td><p>The Vector3 collection to average.</p>
 </td>
@@ -238,6 +247,52 @@
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><p>A Vector3 representing the average.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3Extensions_FitLine_" data-uid="Elements.Geometry.Vector3Extensions.FitLine*"></a>
+  <h4 id="Elements_Geometry_Vector3Extensions_FitLine_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.FitLine(System.Collections.Generic.IList{Elements.Geometry.Vector3})">FitLine(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Return an approximate fit line through a set of points.
+Not intended for statistical regression purposes.
+Note that the line is unit length: it shouldn't be expected
+to span the length of the points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Line FitLine(this IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to fit.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>A line roughly running through the set of points.</p>
 </td>
       </tr>
     </tbody>

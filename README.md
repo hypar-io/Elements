@@ -81,10 +81,18 @@ dotnet test
 ## Benchmark
 ```
 cd Elements.Benchmarks
-dotnet run -c Release
+dotnet run -c release --filter '<benchmark class name>'
 ```
 
-## Building the Documentation
+## Documentation
+When adding sample code you need to add a special block of text to the class or method where you want the code to appear. The value of `name` at the end of the URI will be matched with open and close tags in the test file. See Joist.cs and StructuralFramingTests.cs for an sample.
+```
+        /// <example>
+        /// [!code-csharp[Main](../../Elements/test/StructuralFramingTests.cs?name=example)]
+        /// </example>
+```
+You may add up to one sample glb file per class, and when you name it the name must match the namespace, and class you are trying to demonstrate with `_` instead of `.`.  For example `Elements.Spatial.Grid2d` sample glb is named `Elements_Spatial_Grid2d`.
+### Building the Documentation
 ```
 cd doc
 docfx -f --serve

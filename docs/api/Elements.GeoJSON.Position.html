@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Position
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,7 +86,7 @@
   
   <h1 id="Elements_GeoJSON_Position" data-uid="Elements.GeoJSON.Position" class="text-break">Class Position
   </h1>
-  <div class="markdown level0 summary"><p>A position.</p>
+  <div class="markdown level0 summary"><p>A GeoJSON position specified by longitude and latitude.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -107,19 +116,18 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_GeoJSON_Position_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(PositionConverter))]
-public class Position</code></pre>
+    <pre><code class="lang-csharp hljs">public class Position</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_GeoJSON_Position__ctor_" data-uid="Elements.GeoJSON.Position.#ctor*"></a>
   <h4 id="Elements_GeoJSON_Position__ctor_System_Double_System_Double_" data-uid="Elements.GeoJSON.Position.#ctor(System.Double,System.Double)">Position(Double, Double)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a position.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Position(double latitude, double longitude)</code></pre>
+    <pre><code class="lang-csharp hljs">public Position(double latitude, double longitude)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -134,12 +142,14 @@ public Position(double latitude, double longitude)</code></pre>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">latitude</span></td>
-        <td></td>
+        <td><p>The latitude.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">longitude</span></td>
-        <td></td>
+        <td><p>The longitude.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -152,8 +162,7 @@ public Position(double latitude, double longitude)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;latitude&quot;, Required = Required.Always)]
-public double Latitude { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Latitude { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -177,8 +186,7 @@ public double Latitude { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;longitude&quot;, Required = Required.Always)]
-public double Longitude { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Longitude { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -239,6 +247,54 @@ public double Longitude { get; set; }</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <a id="Elements_GeoJSON_Position_FromVectorMeters_" data-uid="Elements.GeoJSON.Position.FromVectorMeters*"></a>
+  <h4 id="Elements_GeoJSON_Position_FromVectorMeters_Elements_GeoJSON_Position_Elements_Geometry_Vector3_" data-uid="Elements.GeoJSON.Position.FromVectorMeters(Elements.GeoJSON.Position,Elements.Geometry.Vector3)">FromVectorMeters(Position, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Convert the position to a vector in meters relative to an origin position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Position FromVectorMeters(Position relativeToOrigin, Vector3 location)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><span class="parametername">relativeToOrigin</span></td>
+        <td><p>A position marking the latitude and longitude of (0,0)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The position to convert to latitude and longitude.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_GeoJSON_Position_GetHashCode_" data-uid="Elements.GeoJSON.Position.GetHashCode*"></a>
   <h4 id="Elements_GeoJSON_Position_GetHashCode" data-uid="Elements.GeoJSON.Position.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"></div>
@@ -265,14 +321,32 @@ public double Longitude { get; set; }</code></pre>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_GeoJSON_Position_ToVectorMeters_" data-uid="Elements.GeoJSON.Position.ToVectorMeters*"></a>
-  <h4 id="Elements_GeoJSON_Position_ToVectorMeters" data-uid="Elements.GeoJSON.Position.ToVectorMeters">ToVectorMeters()</h4>
-  <div class="markdown level1 summary"><p>Convert the position to a vector.</p>
+  <h4 id="Elements_GeoJSON_Position_ToVectorMeters_Elements_GeoJSON_Position_" data-uid="Elements.GeoJSON.Position.ToVectorMeters(Elements.GeoJSON.Position)">ToVectorMeters(Position)</h4>
+  <div class="markdown level1 summary"><p>Convert the position to a vector in meters relative to an origin position.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 ToVectorMeters()</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ToVectorMeters(Position relativeToOrigin)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.GeoJSON.Position.html">Position</a></td>
+        <td><span class="parametername">relativeToOrigin</span></td>
+        <td><p>A position marking the latitude and longitude of (0,0)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>

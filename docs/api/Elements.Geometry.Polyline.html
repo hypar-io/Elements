@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -81,40 +90,39 @@
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
-  <script type="text/javascript" src="../js/three.js"></script>
-  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
-  <script type="text/javascript" src="../js/OrbitControls.js"></script>
-  <script>
-    var scene = new THREE.Scene();
-    var div = document.getElementById("model")
-    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
   
-    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
     renderer.setSize( div.clientWidth, div.clientHeight );
     renderer.setClearColor( 0x000000, 0 );
+  
     div.appendChild( renderer.domElement );
   
-    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+    var controls = new OrbitControls( camera, renderer.domElement );
   
-    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add( light );
   
-    var axesHelper = new THREE.AxesHelper( 2 );
-    scene.add( axesHelper );
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
   
-    var size = 100;
-    var divisions = 100;
-    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
-    // var colorGrid = new THREE.Color( 0xdbdbdb );
-    // var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
-    // scene.add( gridHelper );
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
   
     window.addEventListener( 'resize', onWindowResize, false );
   
-    
-  
     // Instantiate a loader
-    var loader = new THREE.GLTFLoader();
+    var loader = new GLTFLoader();
   
     // Load a glTF resource
     loader.load(
@@ -122,28 +130,16 @@
       '../models/Elements_Geometry_Polyline.glb',
       // called when the resource is loaded
       function ( gltf ) {
-  
         scene.add( gltf.scene );
-  
-        gltf.animations; // Array<THREE.AnimationClip>
-        gltf.scene; // THREE.Scene
-        gltf.scenes; // Array<THREE.Scene>
-        gltf.cameras; // Array<THREE.Camera>
-        gltf.asset; // Object
-  
-        fitCameraToObject(gltf.scene, 2.0, controls)
+        fitCameraToObject(scene, 2.0, controls);
       },
       // called while loading is progressing
       function ( xhr ) {
-  
         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-  
       },
       // called when loading has errors
       function ( error ) {
-  
         console.log( 'An error happened' );
-  
       }
     );
   
@@ -161,15 +157,17 @@
   
     const fitCameraToObject = function ( object, offset, orbitControls ) {
   
-      const boundingBox = new THREE.Box3();
-      boundingBox.setFromObject( object );
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
   
-      const center = boundingBox.getCenter();
-      const size = boundingBox.getSize();
+      const center = new Vector3();
+      boundingBox.getCenter(center);
+      const size = new Vector3();
+      boundingBox.getSize(size);
   
       // get the max side of the bounding box
       const maxDim = Math.max( size.x, size.y, size.z ) * 3;
-      const fov = this.camera.fov * ( Math.PI / 180 );
+      const fov = camera.fov * ( Math.PI / 180 );
       let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
       
       // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
@@ -184,8 +182,8 @@
       const minZ = boundingBox.min.z;
       const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
   
-      this.camera.far = cameraToFarEdge * 3;
-      this.camera.updateProjectionMatrix();
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
   
       if ( orbitControls !== undefined ) {
   
@@ -216,8 +214,8 @@ var offset = pline.Offset(1, EndType.Square);
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
@@ -251,18 +249,46 @@ var offset = pline.Offset(1, EndType.Square);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ITransformable&lt;Curve&gt;, ICurve, IEquatable&lt;Polyline&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="Elements_Geometry_Polyline__ctor_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Polyline.#ctor(Elements.Geometry.Vector3[])">Polyline(Vector3[])</h4>
+  <div class="markdown level1 summary"><p>Construct a polyline from points. This is a convenience constructor
+that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</code></p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polyline(params Vector3[] vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><span class="parametername">vertices</span></td>
+        <td><p>The vertices of the polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
+  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Polyline(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Construct a polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -277,7 +303,8 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
-        <td></td>
+        <td><p>A collection of vertex locations.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -290,8 +317,7 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,8 +341,7 @@ public Vector3 End { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -340,10 +365,7 @@ public Vector3 Start { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
-[Required]
-[MinLength(2)]
-public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -712,6 +734,50 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   <h5 id="Elements_Geometry_Polyline_OffsetOnSide_System_Double_System_Boolean__remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>This blunts sharp corners to keep widths close to the target.</p>
 </div>
+  <a id="Elements_Geometry_Polyline_OffsetOpen_" data-uid="Elements.Geometry.Polyline.OffsetOpen*"></a>
+  <h4 id="Elements_Geometry_Polyline_OffsetOpen_System_Double_" data-uid="Elements.Geometry.Polyline.OffsetOpen(System.Double)">OffsetOpen(Double)</h4>
+  <div class="markdown level1 summary"><p>A naïve control-point-only 2D open offset. This algorithm does not
+do any self-intersection checking.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline OffsetOpen(double offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>The offset distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>A new polyline with the same number of control points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Plane_" data-uid="Elements.Geometry.Polyline.Plane*"></a>
   <h4 id="Elements_Geometry_Polyline_Plane" data-uid="Elements.Geometry.Polyline.Plane">Plane()</h4>
   <div class="markdown level1 summary"><p>Compute the Plane defined by the first three non-collinear vertices of the Polygon.</p>
@@ -719,7 +785,7 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Plane Plane()</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Plane Plane()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -831,6 +897,48 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_Project_" data-uid="Elements.Geometry.Polyline.Project*"></a>
+  <h4 id="Elements_Geometry_Polyline_Project_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Polyline.Project(Elements.Geometry.Plane)">Project(Plane)</h4>
+  <div class="markdown level1 summary"><p>Project this polyline onto the plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline Project(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane of the returned polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Reversed_" data-uid="Elements.Geometry.Polyline.Reversed*"></a>
   <h4 id="Elements_Geometry_Polyline_Reversed" data-uid="Elements.Geometry.Polyline.Reversed">Reversed()</h4>
   <div class="markdown level1 summary"><p>Reverse the direction of a polyline.</p>
@@ -932,6 +1040,68 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>&gt;&gt;</td>
         <td><p>Returns a list of tuples of indices for the segments that match in each polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Split_" data-uid="Elements.Geometry.Polyline.Split*"></a>
+  <h4 id="Elements_Geometry_Polyline_Split_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.Split(System.Collections.Generic.IList{Elements.Geometry.Vector3})">Split(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Insert a point into the polyline if it lies along one
+of the polyline's segments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Split(IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split the polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Split_" data-uid="Elements.Geometry.Polyline.Split*"></a>
+  <h4 id="Elements_Geometry_Polyline_Split_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Polyline.Split(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Boolean)">Split(IList&lt;Vector3&gt;, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Insert a point into the polyline if it lies along one
+of the polyline's segments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Split(IList&lt;Vector3&gt; points, bool closed = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points at which to split the polyline.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">closed</span></td>
+        <td><p>Is the polyline closed?</p>
 </td>
       </tr>
     </tbody>
@@ -1140,10 +1310,10 @@ public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

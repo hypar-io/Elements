@@ -1,5 +1,6 @@
 using Elements.Validators;
 using System;
+using System.Globalization;
 
 namespace Elements.Geometry
 {
@@ -56,11 +57,59 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Convert a hex code or an english name to a color. 
+        /// </summary>
+        /// <param name="hexOrName">The hex code (e.g. #F05C6D) or common color name (e.g. "Goldenrod") to turn into a color. (Recognized names are from the UNIX X11 named color values — see https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.colors?view=windowsdesktop-6.0 for a complete listing.)</param>
+        public Color(string hexOrName)
+        {
+            if (hexOrName.StartsWith("#"))
+            {
+                //replace # occurences
+                if (hexOrName.IndexOf('#') != -1)
+                    hexOrName = hexOrName.Replace("#", "");
+
+                var r = int.Parse(hexOrName.Substring(0, 2), NumberStyles.AllowHexSpecifier);
+                var g = int.Parse(hexOrName.Substring(2, 2), NumberStyles.AllowHexSpecifier);
+                var b = int.Parse(hexOrName.Substring(4, 2), NumberStyles.AllowHexSpecifier);
+                Red = r / 255.0;
+                Green = g / 255.0;
+                Blue = b / 255.0;
+                Alpha = 1.0;
+                return;
+            }
+            var sysColor = System.Drawing.Color.FromName(hexOrName);
+            if (sysColor.A + sysColor.R + sysColor.G + sysColor.B == 0)
+            {
+                throw new ArgumentException($"The color name '{hexOrName}' is not recognized.");
+            }
+            Red = sysColor.R / 255.0;
+            Green = sysColor.G / 255.0;
+            Blue = sysColor.B / 255.0;
+            Alpha = sysColor.A / 255.0;
+        }
+
+        /// <summary>
+        /// Create an Elements Color from a System.Drawing.Color
+        /// </summary>
+        /// <param name="color">A System.Drawing.Color value.</param>
+        public Color(System.Drawing.Color color)
+        {
+            Red = color.R / 255.0;
+            Green = color.G / 255.0;
+            Blue = color.B / 255.0;
+            Alpha = color.A / 255.0;
+        }
+
+        /// <summary>
         /// Get the color's components as an array.
         /// </summary>
         /// <returns>An array containing the color's components.</returns>
-        public float[] ToArray()
+        public float[] ToArray(bool convertToLinearColorSpace = false)
         {
+            if (convertToLinearColorSpace)
+            {
+                return new[] { (float)SRGBToLinear(Red), (float)SRGBToLinear(Green), (float)SRGBToLinear(Blue), (float)Alpha };
+            }
             return new[] { (float)Red, (float)Green, (float)Blue, (float)Alpha };
         }
 
@@ -200,6 +249,47 @@ namespace Elements.Geometry
         public static implicit operator Color((double R, double G, double B) color)
         {
             return new Color(color.R, color.G, color.B, 1.0);
+        }
+
+        /// <summary>
+        /// Automatically convert a hex code or an english name to a color.
+        /// </summary>
+        /// <param name="hexOrName">The hex code (e.g. #F05C6D) or common color name (e.g. "Goldenrod") to turn into a color. (Recognized names are from the UNIX X11 named color values — see https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.colors?view=windowsdesktop-6.0 for a complete listing.)</param>
+        public static implicit operator Color(string hexOrName)
+        {
+            if (hexOrName == null)
+            {
+                // This is an unfortunate necessity — C# 7.0 does not support an explicit
+                // attribute on a function argument that specifies non-null. Ideally, a `null`
+                // wouldn't be assumed to be a string and fall into this implicit operator in the first place,
+                // but there's no way to say "I work on strings that are not null" (At least until later versions 
+                // of C#). In an ideal world we'd want this to be caught by the compiler instead of at runtime.
+                // (IOW, we'd love for a statement like `Color c = null;` to be rejected by static analysis,
+                // but this is not possible if we want to support an implicit string coversion, so we throw a 
+                // runtime exception instead.) 
+                throw new ArgumentNullException("Cannot convert null to a Color. Color is a non-nullable type.");
+            }
+            return new Color(hexOrName);
+        }
+
+        /// <summary>
+        /// Convert a gamma color space component to a linear color space value.
+        /// </summary>
+        /// <param name="c">The gamma color component value.</param>
+        /// <returns>A linear color space component value.</returns>
+        public static double SRGBToLinear(double c)
+        {
+            return (c < 0.04045) ? c * 0.0773993808 : Math.Pow(c * 0.9478672986 + 0.0521327014, 2.4);
+        }
+
+        /// <summary>
+        /// Convert a linear color space component to a gamma color space value.
+        /// </summary>
+        /// <param name="c">The linear color component value.</param>
+        /// <returns>A gamma color space component value.</returns>
+        public static double LinearToSRGB(double c)
+        {
+            return (c < 0.0031308) ? 12.92 * c : (1.055 * Math.Pow(c, 0.41666)) - 0.055;
         }
     }
 }

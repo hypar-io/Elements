@@ -39,7 +39,7 @@ namespace Elements
                          double outerConeAngle = Math.PI / 4.0,
                          Guid id = default(Guid),
                          string name = null) : base(intensity,
-                                                    color == null ? Colors.White : color,
+                                                    color,
                                                     transform == null ? new Transform() : transform,
                                                     id == default(Guid) ? Guid.NewGuid() : id,
                                                     name)

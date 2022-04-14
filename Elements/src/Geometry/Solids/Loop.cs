@@ -43,10 +43,10 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Convert this loop to a polygon.
         /// </summary>
-        public Polygon ToPolygon()
+        public Polygon ToPolygon(Transform transform = null)
         {
             return new Polygon(
-                Edges.Select(e => e.Vertex.Point).ToList()
+                Edges.Select(e => transform != null ? transform.OfPoint(e.Vertex.Point) : e.Vertex.Point).ToList()
             );
         }
 

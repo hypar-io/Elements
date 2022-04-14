@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class StructuralFraming
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -89,6 +98,7 @@
       <div class="level4"><a class="xref" href="Elements.Beam.html">Beam</a></div>
       <div class="level4"><a class="xref" href="Elements.Brace.html">Brace</a></div>
       <div class="level4"><a class="xref" href="Elements.Column.html">Column</a></div>
+      <div class="level4"><a class="xref" href="Elements.Joist.html">Joist</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -109,7 +119,16 @@
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -429,6 +448,22 @@
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
   </div>
 </article>
           </div>

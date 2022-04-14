@@ -141,7 +141,8 @@ namespace Elements
                 openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
+                                                      .Select(op => TransformedSolidOperation(op, o.Transform))))
+                                                      .ToArray();
             }
             // Don't try CSG booleans if we only have one one solid and no voids.
             if (solids.Count() == 1 && voids.Count() == 0)
@@ -176,7 +177,7 @@ namespace Elements
             }
         }
 
-        internal Csg.Solid[] GetSolids(bool transformed = false)
+        internal Csg.Solid[] GetCsgSolids(bool transformed = false)
         {
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
                                                        .Select(op => TransformedSolidOperation(op))
@@ -193,15 +194,26 @@ namespace Elements
             }
         }
 
-        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op)
+        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op, Transform addTransform = null)
         {
             if (Transform == null)
             {
                 return op._solid.ToCsg();
             }
-            return op.LocalTransform != null
+
+            // Transform the solid operatioon by the the local transform AND the
+            // element's transform, or just by the element's transform.
+            var transformedOp = op.LocalTransform != null
                         ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
                         : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
+            if (addTransform == null)
+            {
+                return transformedOp;
+            }
+
+            // If an addition transform was proovided, don't forget
+            // to apply that as well.
+            return transformedOp.Transform(addTransform.ToMatrix4x4());
         }
 
         /// <summary>

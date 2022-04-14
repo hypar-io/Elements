@@ -369,20 +369,37 @@ namespace Elements.Geometry
         /// <param name="closestPoint">The point on the line that is closest to this point.</param>
         public double DistanceTo(Line line, out Vector3 closestPoint)
         {
-            var lambda = (this - line.Start).Dot(line.End - line.Start) / (line.End - line.Start).Dot(line.End - line.Start);
+            return DistanceToEdgeInternal(line.Start, line.End, out closestPoint);
+        }
+
+        /// <summary>
+        /// Find the distance from this point to the edge, and output the location
+        /// of the closest point on that line.
+        /// Using formula from https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd
+        /// </summary>
+        /// <param name="edge">The edge to find the distance to.</param>
+        /// <param name="closestPoint">The point on the line that is closest to this point.</param>
+        public double DistanceTo((Vector3 from, Vector3 to) edge, out Vector3 closestPoint)
+        {
+            return DistanceToEdgeInternal(edge.from, edge.to, out closestPoint);
+        }
+
+        private double DistanceToEdgeInternal(Vector3 start, Vector3 end, out Vector3 closestPoint)
+        {
+            var lambda = (this - start).Dot(end - start) / (end - start).Dot(end - start);
             if (lambda >= 1)
             {
-                closestPoint = line.End;
-                return this.DistanceTo(line.End);
+                closestPoint = end;
+                return this.DistanceTo(end);
             }
             else if (lambda <= 0)
             {
-                closestPoint = line.Start;
-                return this.DistanceTo(line.Start);
+                closestPoint = start;
+                return this.DistanceTo(start);
             }
             else
             {
-                closestPoint = (line.Start + lambda * (line.End - line.Start));
+                closestPoint = (start + lambda * (end - start));
                 return this.DistanceTo(closestPoint);
             }
         }
@@ -812,11 +829,14 @@ namespace Elements.Geometry
         /// <returns>True if the points are on the same line, false otherwise.</returns>
         public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
         {
-            var ba = (b - a).Unitized();
-            var cb = (c - b).Unitized();
+            var ba = b - a;
+            var cb = c - b;
 
             if (ba.IsZero() || cb.IsZero())
                 return true;
+
+            ba = ba.Unitized();
+            cb = cb.Unitized();
 
             return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
         }

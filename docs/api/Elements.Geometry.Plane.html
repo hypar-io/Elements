@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Plane
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.7.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="../styles/main.css">
     <link rel="stylesheet" href="../styles/vs2015.css">
     <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../Elements/toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
     
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,7 +86,7 @@
   
   <h1 id="Elements_Geometry_Plane" data-uid="Elements.Geometry.Plane" class="text-break">Class Plane
   </h1>
-  <div class="markdown level0 summary"><p>A plane.</p>
+  <div class="markdown level0 summary"><p>A cartesian plane.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -123,12 +132,12 @@
   </h3>
   <a id="Elements_Geometry_Plane__ctor_" data-uid="Elements.Geometry.Plane.#ctor*"></a>
   <h4 id="Elements_Geometry_Plane__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Plane.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Plane(Vector3, Vector3)</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Construct a plane.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Plane(Vector3 origin, Vector3 normal)</code></pre>
+    <pre><code class="lang-csharp hljs">public Plane(Vector3 origin, Vector3 normal)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -143,12 +152,14 @@ public Plane(Vector3 origin, Vector3 normal)</code></pre>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">origin</span></td>
-        <td></td>
+        <td><p>The origin of the plane.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">normal</span></td>
-        <td></td>
+        <td><p>The normal of the plane.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -232,8 +243,7 @@ Only the first three points of the points array will be used.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Normal&quot;, Required = Required.AllowNull)]
-public Vector3 Normal { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Normal { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -257,8 +267,7 @@ public Vector3 Normal { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.AllowNull)]
-public Vector3 Origin { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -359,6 +368,105 @@ public Vector3 Origin { get; set; }</code></pre>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>Returns true if the two planes are equal, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Plane_Intersects_" data-uid="Elements.Geometry.Plane.Intersects*"></a>
+  <h4 id="Elements_Geometry_Plane_Intersects_Elements_Geometry_Plane_Elements_Geometry_Plane_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Plane.Intersects(Elements.Geometry.Plane,Elements.Geometry.Plane,Elements.Geometry.Vector3@)">Intersects(Plane, Plane, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does this plane intersect the other two provided planes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane a, Plane b, out Vector3 result)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The second plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The third plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">result</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection exists, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Plane_IsCoplanar_" data-uid="Elements.Geometry.Plane.IsCoplanar*"></a>
+  <h4 id="Elements_Geometry_Plane_IsCoplanar_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Plane.IsCoplanar(Elements.Geometry.Plane)">IsCoplanar(Plane)</h4>
+  <div class="markdown level1 summary"><p>Is this plane coplanar with the provided plane?
+This method assumes that both planes have unit length normals.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsCoplanar(Plane plane)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane to test.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the plane is coplanar, otherwise false.</p>
 </td>
       </tr>
     </tbody>

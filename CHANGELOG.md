@@ -1,11 +1,66 @@
 # Changelog
 
+## 1.0.0
+
+### Added
+
+- `Mesh.Sphere(double radius, int divisions)`
+- `Model.AllElementsAssignableFromType<T>()`
+- `Material.EmissiveTexture`
+- `Material.EmissiveFactor`
+
+### Changed
+- Deserialization no longer uses throw to catch all missing type exceptions.
+- Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- `GenerateUserElementTypeFromUriAsync` now takes an optional `excludedTypes` argument.
+
+### Fixed
+
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
+- `Line.TryGetOverlap(Line line, out Line overlap)` would return incorrect results due to wrong internal sorting.
+- `Profile.UnionAll, Difference, Intersection, Offset` no longer produce internal loops in `Perimeter` or `Voids`.
+
+## 0.9.9
+
+### Added
+
+- `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Union(SolidOperation a, SolidOperation b)`
+- `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Difference(SolidOperation a, SolidOperation b)`
+- `Solid.Intersection(Solid a, Transform aTransform, Solid b, Transform bTransform)`
+- `Solid.Intersection(SolidOperation a, SolidOperation b)`
+- `Solid.Intersects(Plane p, out List<Polygon> result)`
+- `SetClassification`
+- `LocalClassification`
+- `ModelLines`
+- `AdaptiveGrid.AddVertex(Vector3 point, List<Vertex> connections)`
+- `Color.SRGBToLinear(double c)`
+- `Color.LinearToSRGB(double c)`
+- `Line.IsCollinear(Line line)`
+- `Line.GetOverlap(Line line)`
+
+### Changed
+
+- Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
+- Material colors are now exported to glTF using linear color space. Conversion from sRGB to linear color space happens during glTF export.
+
+### Fixed
+
+- Under some circumstances `Bezier.Length()` would return incorrect results
+
 ## 0.9.8
 
 ### Added
 
 - `Polyline.Edges()`
-- Deserialization no longer uses throw to catch all missing type exceptions.
+- `Model.ToJson(string path)`
+- `new Color(string hexOrName)`
+- implicit conversion from string to Color
+
+### Fixed
+
+- Fix `GridLine` deserialization from obsoleted values of either `Line` or `Geometry`.
 
 ## 0.9.7
 
@@ -28,6 +83,7 @@
   - `Box.BoxToUVW`
   - `Box.TransformBetween`
 - `ModelCurve.SetSelectable(bool selectable)` can be used to disable selectability of a model curve in the Hypar UI.
+- `Elements.Playground` project.
 
 ### Changed
 
@@ -140,9 +196,13 @@
 
 ### Added
 
+- Support for DXF from many basic elements.
+- `SetOperations.ClassifySegments2d(Polygon a, Polygon b, Func<(Vector3 from, Vector3 to, SetClassification classification), bool> filter = null)`
+- `SetOperations.BuildGraph(List<(Vector3 from, Vector3 to, SetClassification classification)> set, SetClassification shared)`
+- `RandomExtensions.NextRayInPlane(this Random random, Vector3 origin, Vector3 normal)`
+- `RandomExtensions.NextRay(this Random random, Vector3 origin)`
 - `ModelArrows`
 - `ModelText`
-- `Solid.Intersects(Plane p, out List<Polygon> result)`
 - `Vector3.IsUnitized()`
 - `Transform.Inverted()`
 - `AdaptiveGrid`
