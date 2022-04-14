@@ -267,7 +267,7 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
-            //Sometimes it's not desired for routing to go through them.
+            //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
             var allExcluded = new HashSet<ulong>();
             foreach (var item in excludedVertices)
@@ -730,7 +730,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<RoutingHintLine> hintLines)
         {
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
-            //Sometimes it's not desired for routing to go through them.
+            //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
             var allExcluded = new HashSet<ulong>();
             foreach (var item in excludedVertices)
