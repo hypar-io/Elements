@@ -275,7 +275,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(hintLines, leafVertices);
+            var weights = CalculateWeights(hintLines);
 
             var vertexTree = new Dictionary<ulong, ulong?>();
             vertexTree[trunkPathVertices.First()] = null;
@@ -492,7 +492,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(allHints, allLeafs);
+            var weights = CalculateWeights(allHints);
             var allUserHints = allHints.Where(h => h.UserDefined == true).ToList();
             var nearbyHints = NearbyVertices(allUserHints, allLeafs);
             //Hint lines can even go through excluded vertices
@@ -738,7 +738,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(hintLines, leafVertices);
+            var weights = CalculateWeights(hintLines);
 
             var vertexTree = new Dictionary<ulong, ulong?>();
             foreach (var trunk in exits)
@@ -751,13 +751,14 @@ namespace Elements.Spatial.AdaptiveGrid
                 vertexTree[inlet.Id] = null;
             }
 
-            var hintGroups = hintLines.GroupBy(h => h.UserDefined);
-            var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
-            var defaultHints = hintGroups.SingleOrDefault(hg => hg.Key == false);
-            var hintVertices = NearbyVertices(userHints, leafVertices);
-            //Hint lines can even go through excluded vertices
-            allExcluded.ExceptWith(hintVertices.Select(hv => hv.Id));
-
+            if (hintLines != null && hintLines.Any())
+            {
+                var hintGroups = hintLines.GroupBy(h => h.UserDefined);
+                var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
+                var hintVertices = NearbyVertices(userHints, leafVertices);
+                //Hint lines can even go through excluded vertices
+                allExcluded.ExceptWith(hintVertices.Select(hv => hv.Id));
+            }
 
             foreach (var inlet in leafVertices)
             {
@@ -779,11 +780,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Also some edges are not allowed at all by setting factor to infinity.
         /// </summary>
         /// <param name="hintLines">Lines that affect travel factor for edges</param>
-        /// <param name="inletTerminals">Vertices that are allowed to only travel vertically</param>
         /// <returns>For each edge - its length and extra traveling factor</returns>
         private Dictionary<ulong, (double Length, double Factor)> CalculateWeights(
-            IEnumerable<RoutingHintLine> hintLines,
-            IList<RoutingVertex> inletTerminals)
+            IEnumerable<RoutingHintLine> hintLines)
         {
             var weights = new Dictionary<ulong, (double Length, double Factor)>();
             foreach (var e in _grid.GetEdges())
@@ -794,7 +793,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 double hintFactor = 1;
                 double offsetFactor = 1;
                 double layerFactor = OnMainLayer(v0, v1) ? 1 : _configuration.LayerPenalty;
-                if (hintLines.Any())
+                if (hintLines != null && hintLines.Any())
                 {
                     foreach (var l in hintLines)
                     {
