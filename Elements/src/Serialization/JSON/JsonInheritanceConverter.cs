@@ -50,7 +50,7 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        private static List<string> _deserializationDiscriminatorWarnings = new List<string>();
+        private static List<string> _deserializationWarnings = new List<string>();
 
         public JsonInheritanceConverter()
         {
@@ -217,8 +217,8 @@ namespace Elements.Serialization.JSON
 
         public static List<string> GetAndClearDeserializationWarnings()
         {
-            var warnings = _deserializationDiscriminatorWarnings.ToList();
-            _deserializationDiscriminatorWarnings.Clear();
+            var warnings = _deserializationWarnings.ToList();
+            _deserializationWarnings.Clear();
             return warnings;
         }
 
@@ -231,7 +231,7 @@ namespace Elements.Serialization.JSON
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!Elements.ContainsKey(id))
                 {
-                    _deserializationDiscriminatorWarnings.Add($"Expected to find an element with id {id} but it was not found during deserialization.  Look for other deserialization errors.");
+                    _deserializationWarnings.Add($"Element {id} was not found during deserialization. Check for other deserialization errors.");
                     return null;
                 }
                 return Elements[id];
@@ -288,7 +288,7 @@ namespace Elements.Serialization.JSON
 
                 if (discriminator != null)
                 {
-                    _deserializationDiscriminatorWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
+                    _deserializationWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
                     return null;
                 }
                 else
