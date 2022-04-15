@@ -322,7 +322,7 @@ namespace Elements.Geometry
             for (var i = 0; i < result.Length; i++)
             {
                 // If this vertex has a bend, use the normal computed from the previous and next edges.
-                // Otherwise keep using the normal frnom the previous bend.
+                // Otherwise keep using the normal from the previous bend.
                 if (i < result.Length - 1)
                 {
                     var direction = (this.Vertices[i + 1] - this.Vertices[i]).Unitized();
