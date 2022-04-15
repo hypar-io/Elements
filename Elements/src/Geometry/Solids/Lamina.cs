@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -11,7 +12,7 @@ namespace Elements.Geometry.Solids
         private IList<Polygon> _voids;
 
         /// <summary>The perimeter.</summary>
-        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Perimeter", Required = Required.AllowNull)]
         public Polygon Perimeter
         {
             get { return _perimeter; }
@@ -28,7 +29,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// A collection of voids.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Voids", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Polygon> Voids
         {
             get { return _voids; }
@@ -48,7 +49,7 @@ namespace Elements.Geometry.Solids
         /// <param name="perimeter"></param>
         /// <param name="voids"></param>
         /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {

@@ -37,7 +37,7 @@ namespace Elements.Geometry
         public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>The transform's matrix.</summary>
-        [Newtonsoft.Json.JsonProperty("Matrix", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Matrix", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Matrix Matrix { get; set; } = new Matrix();
 
@@ -45,7 +45,7 @@ namespace Elements.Geometry
         /// Construct a transform.
         /// </summary>
         /// <param name="matrix"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Transform(Matrix @matrix)
         {
             this.Matrix = @matrix;

@@ -1,4 +1,5 @@
 using Elements.Validators;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +26,7 @@ namespace Elements.Geometry
         /// <param name="x">The x component.</param>
         /// <param name="y">The y component.</param>
         /// <param name="z">The z component.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Vector3(double @x, double @y, double @z)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -47,15 +48,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>The X component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("X", Required = Required.Always)]
         public double X { get; set; }
 
         /// <summary>The Y component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Y", Required = Required.Always)]
         public double Y { get; set; }
 
         /// <summary>The Z component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Z", Required = Required.Always)]
         public double Z { get; set; }
 
         /// <summary>
