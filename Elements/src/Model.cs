@@ -192,7 +192,7 @@ namespace Elements
 
         /// <summary>
         /// Get all elements assignable from type T. This will include
-        /// types which derive from T and types which implement T if T 
+        /// types which derive from T and types which implement T if T
         /// is an interface.
         /// </summary>
         /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
@@ -296,10 +296,15 @@ namespace Elements
             errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
             // Don't leave null elements in the model.
-            foreach (var e in model.Elements.Where(e => e.Value == null).ToList())
+            var goodElements = new Dictionary<Guid, Element>(model.Elements.Count());
+            foreach (var e in model.Elements)
             {
-                model.Elements.Remove(e.Key);
+                if (e.Value != null)
+                {
+                    goodElements.Add(e.Key, e.Value);
+                }
             }
+            model.Elements = goodElements;
             return model;
         }
 
