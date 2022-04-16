@@ -20,7 +20,7 @@ namespace Elements.Geometry.Solids
 
         // This is a hack to get the normally JsonIgnored
         // `Solid` property to serialize.
-        [JsonProperty("Solid")]
+        [JsonPropertyName("Solid")]
         [JsonConverter(typeof(SolidConverter))]
         internal Solid InternalSolid => base.Solid;
     }

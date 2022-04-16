@@ -12,11 +12,11 @@ namespace Elements.Geometry
     public struct BBox3
     {
         /// <summary>The minimum extent of the bounding box.</summary>
-        [JsonProperty("Min", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Min")]
         public Vector3 Min { get; set; }
 
         /// <summary>The maximum extent of the bounding box.</summary>
-        [JsonProperty("Max", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Max")]
         public Vector3 Max { get; set; }
 
         /// <summary>

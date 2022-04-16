@@ -32,7 +32,7 @@ namespace Elements
         }
 
         /// <summary>A unique id.</summary>
-        [JsonProperty("Id", Required = Required.Always)]
+        [JsonPropertyName("Id")]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id
         {
@@ -48,7 +48,7 @@ namespace Elements
         }
 
         /// <summary>A name.</summary>
-        [JsonProperty("Name", Required = Required.AllowNull)]
+        [JsonPropertyName("Name")]
         public string Name
         {
             get { return _name; }

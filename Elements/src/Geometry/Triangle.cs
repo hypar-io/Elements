@@ -12,12 +12,12 @@ namespace Elements.Geometry
     public class Triangle
     {
         /// <summary>The triangle's vertices.</summary>
-        [JsonProperty("Vertices", Required = Required.Always)]
+        [JsonPropertyName("Vertices")]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
 
         /// <summary>The triangle's normal.</summary>
-        [JsonProperty("Normal", Required = Required.AllowNull)]
+        [JsonPropertyName("Normal")]
         public Vector3 Normal { get; set; }
 
         /// <summary>

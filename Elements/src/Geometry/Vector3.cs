@@ -48,15 +48,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>The X component of the vector.</summary>
-        [JsonProperty("X", Required = Required.Always)]
+        [JsonPropertyName("X")]
         public double X { get; set; }
 
         /// <summary>The Y component of the vector.</summary>
-        [JsonProperty("Y", Required = Required.Always)]
+        [JsonPropertyName("Y")]
         public double Y { get; set; }
 
         /// <summary>The Z component of the vector.</summary>
-        [JsonProperty("Z", Required = Required.Always)]
+        [JsonPropertyName("Z")]
         public double Z { get; set; }
 
         /// <summary>

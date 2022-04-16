@@ -11,7 +11,7 @@ namespace Elements.GeoJSON
         /// <summary>
         /// The type of the feature.
         /// </summary>
-        [JsonProperty("type")]
+        [JsonPropertyName("type")]
         public string Type
         {
             get
@@ -23,20 +23,20 @@ namespace Elements.GeoJSON
         /// <summary>
         /// All properties of the feature.
         /// </summary>
-        [JsonProperty("properties", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("properties")]
         public Dictionary<string, object> Properties { get; set; }
 
         /// <summary>
         /// The geometry of the feature.
         /// </summary>
-        [JsonProperty("geometry")]
+        [JsonPropertyName("geometry")]
         [JsonConverter(typeof(GeometryConverter))]
         public Geometry Geometry { get; set; }
 
         /// <summary>
         /// The bounding box of the feature.
         /// </summary>
-        [JsonProperty("bbox", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("bbox")]
         public IEnumerable<double> BBox { get; }
 
         /// <summary>

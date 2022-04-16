@@ -16,52 +16,52 @@ namespace Elements
     public class Material : Element
     {
         /// <summary>The material's color.</summary>
-        [JsonProperty("Color", Required = Required.Always)]
+        [JsonPropertyName("Color")]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
-        [JsonProperty("SpecularFactor", Required = Required.Always)]
+        [JsonPropertyName("SpecularFactor")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double SpecularFactor { get; set; } = 0.1D;
 
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
-        [JsonProperty("GlossinessFactor", Required = Required.Always)]
+        [JsonPropertyName("GlossinessFactor")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double GlossinessFactor { get; set; } = 0.1D;
 
         /// <summary>Is this material affected by lights?</summary>
-        [JsonProperty("Unlit", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("Unlit")]
         public bool Unlit { get; set; } = false;
 
         /// <summary>A relative file path to an image file to be used as a texture.</summary>
-        [JsonProperty("Texture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("Texture")]
         public string Texture { get; set; }
 
         /// <summary>Is this material to be rendered from both sides?</summary>
-        [JsonProperty("DoubleSided", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("DoubleSided")]
         public bool DoubleSided { get; set; } = false;
 
         /// <summary>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</summary>
-        [JsonProperty("RepeatTexture", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("RepeatTexture")]
         public bool RepeatTexture { get; set; } = true;
 
         /// <summary>A relative path to a jpg or png image file to be used as a normal texture.</summary>
-        [JsonProperty("NormalTexture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("NormalTexture")]
         public string NormalTexture { get; set; }
 
         /// <summary>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</summary>
-        [JsonProperty("InterpolateTexture", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("InterpolateTexture")]
         public bool InterpolateTexture { get; set; } = true;
 
         /// <summary>A relative path to a jpg or png image file to be used as an emissive texture.</summary>
-        [JsonProperty("EmissiveTexture", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("EmissiveTexture")]
         public string EmissiveTexture { get; set; }
 
         /// <summary>
         /// The scale, between 0.0 and 1.0, of the emissive texture's components.
         /// </summary>
-        [JsonProperty("EmissiveFactor", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("EmissiveFactor")]
         public double EmissiveFactor { get; set; }
 
         /// <summary>

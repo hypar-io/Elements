@@ -11,11 +11,11 @@ namespace Elements.GeoJSON
     public class Position
     {
         /// <summary>The latitude in decimal degrees.</summary>
-        [JsonProperty("latitude", Required = Required.Always)]
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
         /// <summary>The longitude in decimal degrees.</summary>
-        [JsonProperty("longitude", Required = Required.Always)]
+        [JsonPropertyName("longitude")]
         public double Longitude { get; set; }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Elements
     public partial class Grid2dElement : Element
     {
         /// <summary>contains a grid</summary>
-        [JsonProperty("Grid", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Grid")]
         public Grid2d Grid { get; set; }
 
         [JsonConstructor]

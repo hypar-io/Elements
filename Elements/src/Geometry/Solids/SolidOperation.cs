@@ -21,14 +21,13 @@ namespace Elements.Geometry.Solids
         /// The solid operation's solid.
         /// </summary>
         [JsonIgnore]
-        [System.Text.Json.Serialization.JsonIgnore]
         public Solid Solid
         {
             get { return _solid; }
         }
 
         /// <summary>Is the solid operation a void operation?</summary>
-        [JsonProperty("IsVoid", Required = Required.Always)]
+        [JsonPropertyName("IsVoid")]
         public bool IsVoid { get; set; } = false;
 
         /// <summary>

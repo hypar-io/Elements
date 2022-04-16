@@ -8,11 +8,11 @@ namespace Elements
     public partial class GeometryReference
     {
         /// <summary>The URL where the referenced geometry is hosted.</summary>
-        [JsonProperty("GeometryUrl", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("GeometryUrl")]
         public string GeometryUrl { get; set; }
 
         /// <summary>Any geometric data directly contained in this reference.</summary>
-        [JsonProperty("InternalGeometry", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("InternalGeometry")]
         public IList<object> InternalGeometry { get; set; }
 
         /// <summary>

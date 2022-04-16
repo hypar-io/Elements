@@ -16,7 +16,7 @@ namespace Elements
     public class GeometricElement : Element
     {
         /// <summary>The element's transform.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
+        [JsonPropertyName("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
@@ -25,11 +25,11 @@ namespace Elements
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonProperty("Representation", Required = Required.AllowNull)]
+        [JsonPropertyName("Representation")]
         public Representation Representation { get; set; }
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("IsElementDefinition")]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>

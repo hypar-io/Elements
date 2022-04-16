@@ -14,18 +14,18 @@ namespace Elements
     public class WallByProfile : Wall
     {
         /// <summary>The overall thickness of the Wall</summary>
-        [JsonProperty("Thickness", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Thickness")]
         public double Thickness { get; set; }
 
         /// <summary>
         /// The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
         /// and will often be projected to that Plane during internal operations.
         /// </summary>
-        [JsonProperty("Perimeter", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Perimeter")]
         public Polygon Perimeter { get; set; }
 
         /// <summary>The Centerline of the wall</summary>
-        [JsonProperty("Centerline", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Centerline")]
         public Line Centerline { get; set; }
 
         /// <summary>

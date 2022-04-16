@@ -12,7 +12,7 @@ namespace Elements.Geometry
     public partial class Matrix : IEquatable<Matrix>
     {
         /// <summary>The components of the matrix.</summary>
-        [JsonProperty("Components", Required = Required.Always)]
+        [JsonPropertyName("Components")]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]

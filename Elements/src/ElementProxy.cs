@@ -58,13 +58,13 @@ namespace Elements
         /// <summary>
         /// ID of element that this is a proxy for.
         /// </summary>
-        [JsonProperty("elementId")]
+        [JsonPropertyName("elementId")]
         public Guid ElementId { get; set; }
 
         /// <summary>
         /// Dependency string for the dependency that this element came from.
         /// </summary>
-        [JsonProperty("dependency")]
+        [JsonPropertyName("dependency")]
         public string Dependency { get; set; }
 
         /// <summary>

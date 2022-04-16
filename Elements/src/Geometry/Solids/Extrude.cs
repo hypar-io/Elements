@@ -31,7 +31,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The height of the extrusion.</summary>
-        [JsonProperty("Height", Required = Required.Always)]
+        [JsonPropertyName("Height")]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
@@ -47,7 +47,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [JsonProperty("Direction", Required = Required.AllowNull)]
+        [JsonPropertyName("Direction")]
         public Vector3 Direction
         {
             get { return _direction; }

@@ -12,23 +12,23 @@ namespace Elements
     public class ContentElement : GeometricElement
     {
         /// <summary>The URI of the gltf for this element.</summary>
-        [JsonProperty("gltfLocation", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("gltfLocation")]
         public string GltfLocation { get; set; }
 
         /// <summary>The bounding box of the content.</summary>
-        [JsonProperty("Bounding Box", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Bounding Box")]
         public BBox3 BoundingBox { get; set; }
 
         /// <summary>The scale needed to convert the gltf to meters.</summary>
-        [JsonProperty("Gltf Scale to Meters", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Gltf Scale to Meters")]
         public double GltfScaleToMeters { get; set; }
 
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
-        [JsonProperty("SourceDirection", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("SourceDirection")]
         public Vector3 SourceDirection { get; set; }
 
         /// <summary>Alternate symbolic representations of the object.</summary>
-        [JsonProperty("Symbols", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Symbols")]
         public IList<Symbol> Symbols { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();

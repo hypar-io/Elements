@@ -53,7 +53,7 @@ namespace Elements.Tests
                 this.Mesh = @mesh;
             }
 
-            [JsonProperty("Mesh", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [JsonPropertyName("Mesh")]
             public Mesh Mesh { get; set; }
         }
     }

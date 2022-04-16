@@ -23,16 +23,16 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Origin")]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
+        [JsonPropertyName("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [JsonProperty("Elements", Required = Required.Always)]
+        [JsonPropertyName("Elements")]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 

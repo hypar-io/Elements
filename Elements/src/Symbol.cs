@@ -17,11 +17,11 @@ namespace Elements
         /// <summary>
         /// The geometry of the symbol.
         /// </summary>
-        [JsonProperty("Geometry", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Geometry")]
         public GeometryReference Geometry { get; set; }
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
-        [JsonProperty("CameraPosition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("CameraPosition")]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SymbolCameraPosition CameraPosition { get; set; }
 

@@ -51,29 +51,29 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
-        [JsonProperty("FromGrid")]
+        [JsonPropertyName("FromGrid")]
         internal Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
-        [JsonProperty("ToGrid")]
+        [JsonPropertyName("ToGrid")]
         internal Transform toGrid = new Transform();
 
-        [JsonProperty("UDomainInternal")]
+        [JsonPropertyName("UDomainInternal")]
         private Domain1d UDomainInternal = new Domain1d(0, 0);
 
-        [JsonProperty("VDomainInternal")]
+        [JsonPropertyName("VDomainInternal")]
         private Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
         /// Any boundary curves, transformed to grid space.
         /// </summary>
-        [JsonProperty("BoundariesInGridSpace", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("BoundariesInGridSpace")]
         private IList<Polygon> boundariesInGridSpace;
         private List<List<Grid2d>> cells;
 
-        [JsonProperty("ModifiedChildCells", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("ModifiedChildCells")]
         internal List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
 
         // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
