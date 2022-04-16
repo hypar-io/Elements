@@ -8,8 +8,7 @@ namespace Elements.Geometry
     /// <summary>
     /// The abstract base class for all curves.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Curve>))]
+    [JsonConverter(typeof(ElementConverter<Curve>))]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>

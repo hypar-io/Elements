@@ -5,8 +5,7 @@ using System.Text.Json.Serialization;
 namespace Elements
 {
     /// <summary>Just a test</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Grid2dElement>))]
+    [JsonConverter(typeof(ElementConverter<Grid2dElement>))]
     public partial class Grid2dElement : Element
     {
         /// <summary>contains a grid</summary>

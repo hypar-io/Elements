@@ -12,7 +12,7 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<GeometricElement>))]
     public class GeometricElement : Element
     {
         /// <summary>The element's transform.</summary>

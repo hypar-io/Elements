@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
     /// <summary>
     /// An element representing user content.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<ContentElement>))]
     public class ContentElement : GeometricElement
     {
         /// <summary>The URI of the gltf for this element.</summary>

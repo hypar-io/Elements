@@ -6,8 +6,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// The base class for all operations which create solids.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<SolidOperation>))]
+    [JsonConverter(typeof(ElementConverter<SolidOperation>))]
     public abstract class SolidOperation
     {
         internal Solid _solid;

@@ -14,8 +14,7 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
     /// </example>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Grid2d>))]
+    [JsonConverter(typeof(ElementConverter<Grid2d>))]
     public class Grid2d
     {
         #region Properties

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
     /// <summary>A reference to a model, hosted at a URL.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<GeometryReference>))]
     public partial class GeometryReference
     {
         /// <summary>The URL where the referenced geometry is hosted.</summary>

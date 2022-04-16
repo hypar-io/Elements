@@ -2,13 +2,14 @@ using Elements.Validators;
 using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// An axis-aligned bounding box.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<BBox3>))]
     public struct BBox3
     {
         /// <summary>The minimum extent of the bounding box.</summary>

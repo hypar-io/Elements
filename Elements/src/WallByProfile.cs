@@ -4,13 +4,14 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
     /// <summary>
     /// A wall drawn using the elevation profile
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<WallByProfile>))]
     public class WallByProfile : Wall
     {
         /// <summary>The overall thickness of the Wall</summary>
