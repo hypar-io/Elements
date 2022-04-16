@@ -3,6 +3,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System.Text.Json.Serialization;
 using Elements.Serialization.JSON;
+using System.Text.Json;
 
 namespace Elements
 {
@@ -89,7 +90,7 @@ namespace Elements
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, IList<Symbol> symbols, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
         : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, symbols, @transform, @material, @representation, @isElementDefinition, @id, @name)
         {
-            this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
+            this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace Elements
         public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
         : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, null, @transform, @material, @representation, @isElementDefinition, @id, @name)
         {
-            this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
+            this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
         }
 
         /// <summary>

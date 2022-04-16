@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using Elements.Geometry.Tessellation;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -94,7 +95,7 @@ namespace Elements.Tests
         [Fact]
         public void UnionWithProblematicPolygons()
         {
-            var profile1 = JsonConvert.DeserializeObject<Polygon>(
+            var profile1 = JsonSerializer.Deserialize<Polygon>(
                 @"{
                 ""Vertices"": [
                     {
@@ -129,7 +130,7 @@ namespace Elements.Tests
                     }
                 ]}
                 ");
-            var profile2 = JsonConvert.DeserializeObject<Polygon>(
+            var profile2 = JsonSerializer.Deserialize<Polygon>(
                 @"{
                 ""Vertices"": [
                     {

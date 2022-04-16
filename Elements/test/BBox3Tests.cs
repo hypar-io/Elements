@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
@@ -14,7 +15,7 @@ namespace Elements.Tests
         [Fact]
         public void Bbox3Calculates()
         {
-            var polygon = JsonConvert.DeserializeObject<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-30.52885,\"Y\":-5.09393,\"Z\":0.0},{\"X\":-48.41906,\"Y\":111.94723,\"Z\":0.0},{\"X\":-95.02982,\"Y\":70.39512,\"Z\":0.0},{\"X\":-72.98057,\"Y\":-34.12159,\"Z\":0.0}]}");
+            var polygon = JsonSerializer.Deserialize<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-30.52885,\"Y\":-5.09393,\"Z\":0.0},{\"X\":-48.41906,\"Y\":111.94723,\"Z\":0.0},{\"X\":-95.02982,\"Y\":70.39512,\"Z\":0.0},{\"X\":-72.98057,\"Y\":-34.12159,\"Z\":0.0}]}");
             var bbox = new BBox3(polygon);
             var diagonal = bbox.Max.DistanceTo(bbox.Min);
             Assert.Equal(159.676157, diagonal, 4);
@@ -144,7 +145,7 @@ namespace Elements.Tests
             ""Opaque"": 1
         }";
 
-            var contentElement = JsonConvert.DeserializeObject<ContentElement>(contentJson);
+            var contentElement = JsonSerializer.Deserialize<ContentElement>(contentJson);
             elements.Add(contentElement.CreateInstance(new Transform(-6, 0, 0), null));
             elements.Add(contentElement.CreateInstance(new Transform(new Vector3(-8, 0, 0), 45), null));
 

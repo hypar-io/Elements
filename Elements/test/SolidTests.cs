@@ -10,6 +10,7 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -270,7 +271,7 @@ namespace Elements.Tests
         public void ConstructedSolidProducesValidGlb()
         {
             Name = nameof(ConstructedSolidProducesValidGlb);
-            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
+            var allPolygons = System.Text.Json.JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
             var solid = new Solid();
             foreach (var face in allPolygons)
             {

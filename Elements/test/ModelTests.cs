@@ -12,6 +12,7 @@ using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using Elements.Geometry.Profiles;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -102,10 +103,10 @@ namespace Elements.Tests
             Assert.NotNull(facadePanelType);
             var envelopeType = asm.Assembly.GetType("Elements.Envelope");
             Assert.NotNull(envelopeType);
-            var model1 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
+            var model1 = JsonSerializer.Deserialize<Model>(File.ReadAllText("../../../models/Merge/facade.json"));
             var count1 = model1.Elements.Count;
 
-            var model2 = JsonConvert.DeserializeObject<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
+            var model2 = JsonSerializer.Deserialize<Model>(File.ReadAllText("../../../models/Merge/structure.json"));
             var count2 = model2.Elements.Count;
 
             var merge = new Model();

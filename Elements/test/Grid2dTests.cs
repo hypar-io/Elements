@@ -6,6 +6,7 @@ using Xunit;
 using System.Text.Json.Serialization;
 using Elements.Geometry;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -66,7 +67,7 @@ namespace Elements.Tests
         {
             Name = "TrimBehavior";
             var polygonjson = "[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-14.371519985751306,\"Y\":-4.8816304299427005,\"Z\":0.0},{\"X\":-17.661873645682569,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":9.2555712951713573,\"Z\":0.0},{\"X\":12.965610421927806,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":6.4046991240848143,\"Y\":3.5538269529982784,\"Z\":0.0},{\"X\":1.3278034769444158,\"Y\":-4.8816304299427005,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-9.4508365123690652,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":0.20473478280229102,\"Z\":0.0},{\"X\":-1.8745460850979974,\"Y\":5.4378426037008651,\"Z\":0.0},{\"X\":-9.4508365123690652,\"Y\":5.4378426037008651,\"Z\":0.0}]}]\r\n";
-            var polygons = JsonConvert.DeserializeObject<List<Polygon>>(polygonjson);
+            var polygons = JsonSerializer.Deserialize<List<Polygon>>(polygonjson);
             var grid = new Grid2d(polygons);
             foreach (var pt in polygons[1].Vertices)
             {
@@ -196,8 +197,8 @@ namespace Elements.Tests
             grid2d.U.DivideByCount(10);
             grid2d.V.DivideByCount(3);
             grid2d[2, 2].U.DivideByCount(4);
-            var json = JsonConvert.SerializeObject(grid2d);
-            var deserialized = JsonConvert.DeserializeObject<Grid2d>(json);
+            var json = JsonSerializer.Serialize(grid2d);
+            var deserialized = JsonSerializer.Deserialize<Grid2d>(json);
             Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
 
             var grid2dElem = new Grid2dElement(grid2d, Guid.NewGuid(), "Grid");
@@ -477,7 +478,7 @@ namespace Elements.Tests
                 ]
                 }
             }";
-            var transform = JsonConvert.DeserializeObject<Transform>(transformStr);
+            var transform = JsonSerializer.Deserialize<Transform>(transformStr);
             var origin = transform.Origin;
             var uDirection = transform.XAxis;
             var vDirection = transform.YAxis;
@@ -547,7 +548,7 @@ namespace Elements.Tests
         public void SeparatorsFromBadPolygon()
         {
             var json = File.ReadAllText("../../../models/Geometry/bad_grid.json");
-            var grid = JsonConvert.DeserializeObject<Grid2d>(json);
+            var grid = JsonSerializer.Deserialize<Grid2d>(json);
             var cellSeparators = grid.GetCellSeparators(GridDirection.V, true);
         }
     }
