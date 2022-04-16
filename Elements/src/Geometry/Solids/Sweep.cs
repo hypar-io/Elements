@@ -1,5 +1,6 @@
 using System;
 using Elements.Serialization.JSON;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -53,7 +54,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The curve along which the profile will be swept.</summary>
-        [Newtonsoft.Json.JsonProperty("Curve", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Curve", Required = Required.AllowNull)]
         public Curve Curve
         {
             get { return _curve; }
@@ -68,7 +69,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The amount to set back the resulting solid from the start of the curve.</summary>
-        [Newtonsoft.Json.JsonProperty("StartSetback", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("StartSetback", Required = Required.Always)]
         public double StartSetback
         {
             get { return _startSetback; }
@@ -83,7 +84,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The amount to set back the resulting solid from the end of the curve.</summary>
-        [Newtonsoft.Json.JsonProperty("EndSetback", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("EndSetback", Required = Required.Always)]
         public double EndSetback
         {
             get { return _endSetback; }
@@ -98,7 +99,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The rotation of the profile around the sweep's curve.</summary>
-        [Newtonsoft.Json.JsonProperty("ProfileRotation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("ProfileRotation", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ProfileRotation
         {
             get { return _profileRotation; }

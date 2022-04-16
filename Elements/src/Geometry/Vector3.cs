@@ -1,4 +1,5 @@
 using Elements.Validators;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +26,7 @@ namespace Elements.Geometry
         /// <param name="x">The x component.</param>
         /// <param name="y">The y component.</param>
         /// <param name="z">The z component.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Vector3(double @x, double @y, double @z)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -47,15 +48,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>The X component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("X", Required = Required.Always)]
         public double X { get; set; }
 
         /// <summary>The Y component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Y", Required = Required.Always)]
         public double Y { get; set; }
 
         /// <summary>The Z component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Z", Required = Required.Always)]
         public double Z { get; set; }
 
         /// <summary>
@@ -829,11 +830,14 @@ namespace Elements.Geometry
         /// <returns>True if the points are on the same line, false otherwise.</returns>
         public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
         {
-            var ba = (b - a).Unitized();
-            var cb = (c - b).Unitized();
+            var ba = b - a;
+            var cb = c - b;
 
             if (ba.IsZero() || cb.IsZero())
                 return true;
+
+            ba = ba.Unitized();
+            cb = cb.Unitized();
 
             return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
         }

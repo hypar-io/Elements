@@ -4,6 +4,7 @@ using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -16,11 +17,11 @@ namespace Elements.Geometry
     public class Line : Curve, IEquatable<Line>
     {
         /// <summary>The start of the line.</summary>
-        [Newtonsoft.Json.JsonProperty("Start", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Start", Required = Required.AllowNull)]
         public Vector3 Start { get; set; }
 
         /// <summary>The end of the line.</summary>
-        [Newtonsoft.Json.JsonProperty("End", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("End", Required = Required.AllowNull)]
         public Vector3 End { get; set; }
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Line(Vector3 @start, Vector3 @end) : base()
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -1011,15 +1012,16 @@ namespace Elements.Geometry
         {
             overlap = null;
 
-            if(line == null)
+            if (line == null)
                 return false;
 
-            if(!IsCollinear(line))
+            if (!IsCollinear(line))
                 return false;
 
             //order vertices of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
-            var orderedVectors = vectors.OrderBy(v => v.X + v.Y + v.Z).ToList();
+            var direction = Direction();
+            var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
 
             //check if 2nd point lies on both lines
             if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
@@ -1030,13 +1032,13 @@ namespace Elements.Geometry
                 return false;
 
             //edge case when lines share only point
-            if(orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
+            if (orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
                 return false;
 
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
-            
+
             //keep the same direction as original line
-            overlap = Direction().IsAlmostEqualTo(overlappingLine.Direction()) 
+            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction())
                 ? overlappingLine
                 : overlappingLine.Reversed();
 

@@ -3,18 +3,36 @@
 ## 1.0.0
 
 ### Added
+
 - `Mesh.Sphere(double radius, int divisions)`
 - `Material.EmissiveTexture`
 - `Material.EmissiveFactor`
+- `PriorityQueue`
+- `AdaptiveGraphRouting`
+- `AdaptiveGrid` constructor with no parameters.
+- `AdaptiveGrid.AddVertexStrip(IList<Vector3> points)`
+- `AdaptiveGrid.CutEdge(Edge edge, Vector3 position)`
+- `AdaptiveGrid.ClosestVertex(Vector3 location)` and `AdaptiveGrid.ClosestEdge(Vector3 location)`
+- `AdaptiveGrid.RemoveEdge(Edge edge)`
 
 ### Changed
+
 - Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- `GenerateUserElementTypeFromUriAsync` now takes an optional `excludedTypes` argument.
+- Remove `AdaptiveGrid` reference from `Edge` and `Vertex` Move `Edge.GetVertices` and `Edge.GetLine` to `AdaptiveGrid`.
+- Rename `AdaptiveGrid.DeleteEdge(Edge edge)` into `RemoveEdge` and is not public.
+- `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2)` is now public.
 
 ### Fixed
+
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
+- `Line.TryGetOverlap(Line line, out Line overlap)` would return incorrect results due to wrong internal sorting.
+- `Profile.UnionAll, Difference, Intersection, Offset` no longer produce internal loops in `Perimeter` or `Voids`.
 
 ## 0.9.9
 
 ### Added
+
 - `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
 - `Solid.Union(SolidOperation a, SolidOperation b)`
 - `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
@@ -32,10 +50,12 @@
 - `Line.GetOverlap(Line line)`
 
 ### Changed
+
 - Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
 - Material colors are now exported to glTF using linear color space. Conversion from sRGB to linear color space happens during glTF export.
 
 ### Fixed
+
 - Under some circumstances `Bezier.Length()` would return incorrect results
 
 ## 0.9.8
@@ -54,6 +74,7 @@
 ## 0.9.7
 
 ### Added
+
 - `GridLine.GetCircleTransform()`
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.
