@@ -131,7 +131,6 @@ namespace Elements.Geometry.Profiles
         /// <param name="tf"></param>
         /// <param name="tw"></param>
         [JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
         public WideFlangeProfile(string name,
                                  Guid id,
                                  double bf = 0.1,

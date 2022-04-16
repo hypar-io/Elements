@@ -22,8 +22,7 @@ namespace Elements.Geometry.Solids
         /// <param name="endSetback"></param>
         /// <param name="profileRotation"></param>
         /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
+        [JsonConstructor]
         public Sweep(Profile @profile, Curve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {
@@ -38,8 +37,8 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The id of the profile to be swept along the curve.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Profile>))]
+        [JsonPropertyName("Profile")]
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }

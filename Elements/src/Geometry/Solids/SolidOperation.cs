@@ -33,8 +33,7 @@ namespace Elements.Geometry.Solids
         /// Construct a solid operation.
         /// </summary>
         /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
+        [JsonConstructor]
         public SolidOperation(bool @isVoid)
         {
             this.IsVoid = @isVoid;

@@ -28,8 +28,7 @@ namespace Elements.Geometry
         /// Construct a polygon.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        [Newtonsoft.Json.JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
+        [JsonConstructor]
         public Polygon(IList<Vector3> @vertices) : base(vertices)
         {
             _plane = Plane();
