@@ -2,12 +2,12 @@
 
 using Elements.Geometry.Solids;
 using System;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Elements.Geometry;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Elements.Serialization.JSON
 {
