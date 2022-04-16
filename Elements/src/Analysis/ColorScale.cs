@@ -19,21 +19,18 @@ namespace Elements.Analysis
         /// <summary>
         /// The colors of the scale.
         /// </summary>
-        [JsonProperty]
         public List<Color> Colors { get; } = new List<Color>();
 
         /// <summary>
         /// The domain of the scale
         /// </summary>
-        [JsonProperty]
-        private List<Domain1d> Domains { get; } = null;
+        public List<Domain1d> Domains { get; } = null;
 
         /// <summary>
         /// Whether this scale is chunked into discrete bands.
         /// If false, values will be returned in a smooth gradient.
         /// </summary>
-        [JsonProperty]
-        private Boolean Discrete { get; } = false;
+        public Boolean Discrete { get; } = false;
 
         /// <summary>
         /// Create a ColorScale from a list of colors. The scale will automatically have a domain from 0 to 1.

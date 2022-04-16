@@ -19,14 +19,14 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID of U orientation.
         /// </summary>
-        [JsonProperty]
-        private ulong? _orientationUId;
+        [JsonPropertyName("_orientationUId")] // TODO: Backwards serialization capability. Update to align with property name in future.
+        public ulong? OrientationUId;
 
         /// <summary>
         /// ID of V orientation.
         /// </summary>
-        [JsonProperty]
-        private ulong? _orientationVId;
+        [JsonPropertyName("_orientationVId")] // TODO: Backwards serialization capability. Update to align with property name in future.
+        public ulong? OrientationVId;
 
         /// <summary>
         /// Cells that reference this Face.
@@ -48,11 +48,11 @@ namespace Elements.Spatial.CellComplex
             this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
             if (u != null)
             {
-                this._orientationUId = u.Id;
+                this.OrientationUId = u.Id;
             }
             if (v != null)
             {
-                this._orientationVId = v.Id;
+                this.OrientationVId = v.Id;
             }
         }
 
@@ -64,8 +64,8 @@ namespace Elements.Spatial.CellComplex
         {
             this.Id = id;
             this.DirectedEdgeIds = directedEdgeIds;
-            this._orientationUId = _orientationUId;
-            this._orientationVId = _orientationVId;
+            this.OrientationUId = _orientationUId;
+            this.OrientationVId = _orientationVId;
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public (Orientation U, Orientation V) GetOrientation()
         {
-            return (U: this.CellComplex.GetOrientation(this._orientationUId), V: this.CellComplex.GetOrientation(this._orientationVId));
+            return (U: this.CellComplex.GetOrientation(this.OrientationUId), V: this.CellComplex.GetOrientation(this.OrientationVId));
         }
 
         /// <summary>
