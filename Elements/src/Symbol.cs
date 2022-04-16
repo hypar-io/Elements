@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -22,7 +23,7 @@ namespace Elements
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
         [JsonPropertyName("CameraPosition")]
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SymbolCameraPosition CameraPosition { get; set; }
 
         /// <summary>
@@ -30,7 +31,8 @@ namespace Elements
         /// </summary>
         /// <param name="geometry">The geometry of the symbol.</param>
         /// <param name="cameraPosition">A named camera position for this representation.</param>
-        [JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Symbol(GeometryReference @geometry, SymbolCameraPosition @cameraPosition)
         {
             this.Geometry = @geometry;

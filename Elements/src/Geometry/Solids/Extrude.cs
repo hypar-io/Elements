@@ -15,8 +15,8 @@ namespace Elements.Geometry.Solids
         private Vector3 _direction;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Profile>))]
+        [JsonPropertyName("Profile")]
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }

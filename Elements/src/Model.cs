@@ -14,6 +14,7 @@ using Elements.GeoJSON;
 using System.IO;
 using System.Text.Json;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -42,7 +43,8 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
+        [System.Text.Json.Serialization.JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
             this.Origin = @origin;
@@ -394,7 +396,7 @@ namespace Elements
             {
                 // This query had a nice little speed boost when we filtered for
                 // valid types first then filtered for custom attributes.
-                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>() == null).ToList();
                 properties.Add(t, constrainedProps);
             }
 

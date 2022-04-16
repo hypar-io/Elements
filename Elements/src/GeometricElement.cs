@@ -20,8 +20,8 @@ namespace Elements
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
-        [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Material>))]
+        [JsonPropertyName("Material")]
+        [JsonConverter(typeof(ElementConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>

@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using System.Text.Json.Serialization;
-using Newtonsoft.Json.Linq;
 
 using System;
 
@@ -257,85 +256,6 @@ namespace Elements.GeoJSON
         public GeometryCollection(Geometry[] geometries)
         {
             this.Geometries = geometries;
-        }
-    }
-
-    class PositionConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            if (objectType == typeof(Position))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var lon = reader.ReadAsDouble();
-            var lat = reader.ReadAsDouble();
-            reader.Read();
-            return new Position(lat.Value, lon.Value);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var p = (Position)value;
-            writer.WriteStartArray();
-            writer.WriteValue(p.Longitude);
-            writer.WriteValue(p.Latitude);
-            writer.WriteEndArray();
-        }
-    }
-
-
-    class GeometryConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            if (typeof(Geometry).IsAssignableFrom(objectType))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var jsonObject = JObject.Load(reader);
-            string typeName = (jsonObject["type"]).ToString();
-            switch (typeName)
-            {
-                case "Point":
-                    return jsonObject.ToObject<Point>();
-                case "Line":
-                    return jsonObject.ToObject<Line>();
-                case "MultiPoint":
-                    return jsonObject.ToObject<MultiPoint>();
-                case "LineString":
-                    return jsonObject.ToObject<LineString>();
-                case "MultiLineString":
-                    return jsonObject.ToObject<MultiLineString>();
-                case "Polygon":
-                    return jsonObject.ToObject<Polygon>();
-                case "MultiPolygon":
-                    return jsonObject.ToObject<MultiPolygon>();
-                case "GeometryCollection":
-                    return jsonObject.ToObject<GeometryCollection>();
-                default:
-                    throw new Exception($"The type found in the GeoJSON, {typeName}, could not be resolved.");
-            }
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -7,8 +7,7 @@ namespace Elements
     /// <summary>
     /// An object which is identified with a unique identifier and a name.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(JsonInheritanceConverter), "discriminator")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(ElementConverter<Element>))]
+    [JsonConverter(typeof(ElementConverter<Element>))]
     public abstract class Element : System.ComponentModel.INotifyPropertyChanged
     {
         private System.Guid _id;
