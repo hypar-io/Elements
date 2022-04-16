@@ -5,7 +5,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {

@@ -2,7 +2,7 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Profiles;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using System;

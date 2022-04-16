@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;
 using Elements.Geometry;
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {

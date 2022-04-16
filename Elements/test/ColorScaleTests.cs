@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Elements.Analysis;
 using Elements.Geometry;
 using Xunit;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Tests
 {

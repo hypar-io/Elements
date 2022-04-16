@@ -1,5 +1,5 @@
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Globalization;
 

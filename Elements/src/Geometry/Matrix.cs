@@ -1,6 +1,6 @@
 using Elements.Validators;
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {

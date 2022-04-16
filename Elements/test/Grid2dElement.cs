@@ -1,6 +1,6 @@
 using Elements.Serialization.JSON;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {

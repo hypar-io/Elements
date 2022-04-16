@@ -7,7 +7,7 @@ using Xunit;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Geometry.Tessellation;
 
 namespace Elements.Tests

@@ -3,7 +3,7 @@ using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {

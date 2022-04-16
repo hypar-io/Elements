@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Collections;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;

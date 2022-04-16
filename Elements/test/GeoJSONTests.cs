@@ -1,14 +1,14 @@
 using Elements.GeoJSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using Xunit;
 using Line = Elements.GeoJSON.Line;
 
 namespace Elements.Tests
 {
-    
+
     public class GeoJSONTests
-    {   
+    {
         private const string feature = @"
 [
   {
@@ -70,19 +70,19 @@ namespace Elements.Tests
         [Fact]
         public void Point_Serialize_Valid()
         {
-            var p = new Point(new Position(10.0,5.0));
+            var p = new Point(new Position(10.0, 5.0));
             var json = JsonConvert.SerializeObject(p);
             var newP = JsonConvert.DeserializeObject<Point>(json);
             Assert.Equal("Point", newP.Type);
-            Assert.Equal(new Position(10.0,5.0), newP.Coordinates);
+            Assert.Equal(new Position(10.0, 5.0), newP.Coordinates);
         }
 
         [Fact]
         public void Line_Serialize_Valid()
         {
-            var a = new Position(0,0);
-            var b = new Position(5,5);
-            var l = new Line(new[]{a,b});
+            var a = new Position(0, 0);
+            var b = new Position(5, 5);
+            var l = new Line(new[] { a, b });
             var json = JsonConvert.SerializeObject(l);
             var newL = JsonConvert.DeserializeObject<Line>(json);
             Assert.Equal(a, newL.Coordinates[0]);
@@ -93,10 +93,10 @@ namespace Elements.Tests
         [Fact]
         public void LineString_Serialize_Valid()
         {
-            var a = new Position(0,0);
-            var b = new Position(5,5);
-            var c = new Position(10,10);
-            var ls = new LineString(new[]{a,b,c});
+            var a = new Position(0, 0);
+            var b = new Position(5, 5);
+            var c = new Position(10, 10);
+            var ls = new LineString(new[] { a, b, c });
             var json = JsonConvert.SerializeObject(ls);
             var newLs = JsonConvert.DeserializeObject<LineString>(json);
             Assert.Equal(a, newLs.Coordinates[0]);
@@ -108,25 +108,26 @@ namespace Elements.Tests
         [Fact]
         public void Polygon_Serialize_Valid()
         {
-            var a = new Position(0,0);
-            var b = new Position(5,5);
-            var c = new Position(10,10);
-            var p = new Polygon(new[]{new[]{a,b,c,a}});
+            var a = new Position(0, 0);
+            var b = new Position(5, 5);
+            var c = new Position(10, 10);
+            var p = new Polygon(new[] { new[] { a, b, c, a } });
             var json = JsonConvert.SerializeObject(p);
 
-            Assert.Throws<Exception>(()=>{
+            Assert.Throws<Exception>(() =>
+            {
                 // End point coincidence test.
-                var pFail = new Polygon(new[]{new[]{a,b,c}});
+                var pFail = new Polygon(new[] { new[] { a, b, c } });
             });
         }
 
         [Fact]
         public void MultiLineString_Serialize_Valid()
         {
-            var a = new Position(0,0);
-            var b = new Position(5,5);
-            var c = new Position(10,10);
-            var mls = new MultiLineString(new[]{new[]{a,b,c},new[]{c,b,a}});
+            var a = new Position(0, 0);
+            var b = new Position(5, 5);
+            var c = new Position(10, 10);
+            var mls = new MultiLineString(new[] { new[] { a, b, c }, new[] { c, b, a } });
             var json = JsonConvert.SerializeObject(mls);
             var newMls = JsonConvert.DeserializeObject<MultiLineString>(json);
             Assert.Equal(2, newMls.Coordinates.GetLength(0));
@@ -137,11 +138,11 @@ namespace Elements.Tests
         [Fact]
         public void FeatureCollection_SerializeValid()
         {
-            var p = new Point(new Position(0,0));
-            var l = new Line(new []{new Position(0,0), new Position(10,10)});
-            var f1 = new Feature(p,null);
-            var f2 = new Feature(l,null);
-            var fc = new FeatureCollection(new[]{f1,f2});
+            var p = new Point(new Position(0, 0));
+            var l = new Line(new[] { new Position(0, 0), new Position(10, 10) });
+            var f1 = new Feature(p, null);
+            var f2 = new Feature(l, null);
+            var fc = new FeatureCollection(new[] { f1, f2 });
             var json = JsonConvert.SerializeObject(fc);
         }
 

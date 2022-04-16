@@ -1,6 +1,6 @@
 using Elements.Geometry;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.GeoJSON
 {

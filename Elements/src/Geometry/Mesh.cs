@@ -1,6 +1,6 @@
 using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Octree;
 using System;
 using System.Collections.Generic;

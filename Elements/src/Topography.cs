@@ -5,7 +5,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements

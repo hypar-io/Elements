@@ -1,6 +1,6 @@
 using Elements.Spatial;
 using Xunit;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 
 namespace Elements.Tests

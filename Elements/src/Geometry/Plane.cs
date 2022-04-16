@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {

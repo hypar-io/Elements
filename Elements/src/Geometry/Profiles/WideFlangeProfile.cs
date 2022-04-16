@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Profiles
 {

@@ -5,7 +5,7 @@ using Elements.Geometry;
 using Elements.Serialization.glTF;
 using System.Collections.Generic;
 using Elements.Generate;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Geometry.Solids;
 using System.Linq;
 using Xunit.Abstractions;

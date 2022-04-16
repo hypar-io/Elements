@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Xunit;
 
 namespace Elements.Tests

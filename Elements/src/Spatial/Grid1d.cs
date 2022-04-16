@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Spatial
 {

@@ -1,7 +1,7 @@
 using Elements.Geometry;
 using System;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 

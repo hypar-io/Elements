@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
 
 namespace Elements

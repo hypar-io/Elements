@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Elements.Spatial;
 using Elements.Serialization.JSON;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Tests
 {
@@ -157,7 +157,7 @@ namespace Elements.Tests
                 new Vector3(73.8654, 42.1189)
             }));
             var unions = Geometry.Profile.UnionAll(new[] {
-                profile1, profile2, profile3, profile4, profile5, 
+                profile1, profile2, profile3, profile4, profile5,
                 profile6, profile7, profile8, profile9, profile10 });
             Assert.Single(unions);
             var union = unions.First();

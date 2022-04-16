@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using glTFLoader.Schema;
 using System;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Tests
 {

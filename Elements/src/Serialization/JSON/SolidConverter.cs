@@ -2,7 +2,7 @@
 
 using Elements.Geometry.Solids;
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Elements.Geometry;

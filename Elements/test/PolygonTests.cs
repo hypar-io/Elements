@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Xunit;
 using Xunit.Abstractions;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Tests;
 using System.IO;
 using System.Diagnostics;

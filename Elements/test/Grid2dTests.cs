@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Elements.Spatial;
 using Xunit;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using System.Collections.Generic;
 

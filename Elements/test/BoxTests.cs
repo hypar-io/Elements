@@ -4,7 +4,7 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Xunit;
 
 namespace Elements.Tests

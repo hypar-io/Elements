@@ -1,5 +1,5 @@
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Spatial.CellComplex
 {

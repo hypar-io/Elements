@@ -6,7 +6,7 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Xunit;

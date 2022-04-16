@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements;
 using System.Linq;
 
@@ -114,7 +114,7 @@ namespace Elements.Analysis
             {
                 if (i > 0 && values[i] <= values[i - 1])
                 {
-                    throw new ArgumentException($"Your list of custom values must be sorted numerically and contain no duplicate values. {values[i]} cannot come after {values[i-1]}.");
+                    throw new ArgumentException($"Your list of custom values must be sorted numerically and contain no duplicate values. {values[i]} cannot come after {values[i - 1]}.");
                 }
                 this.Domains.Add(new Domain1d(values[i], values[i + 1]));
             }

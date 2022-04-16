@@ -6,7 +6,7 @@ using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {

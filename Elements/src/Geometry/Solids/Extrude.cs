@@ -1,7 +1,7 @@
 using System;
 using Elements.Serialization.JSON;
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Solids
 {
