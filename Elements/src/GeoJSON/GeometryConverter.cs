@@ -1,55 +1,60 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.GeoJSON
 {
-    public class GeometryConverter : JsonConverter
+    /// <summary>
+    /// Convert geojson geometry.
+    /// </summary>
+    public class GeometryConverter : JsonConverter<object>
     {
-        public override bool CanConvert(Type objectType)
+        /// <summary>
+        /// Read geometry.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="typeToConvert"></param>
+        /// <param name="options"></param>
+        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (typeof(Geometry).IsAssignableFrom(objectType))
+            using (var doc = JsonDocument.ParseValue(ref reader))
             {
-                return true;
-            }
-            return false;
-        }
+                var root = doc.RootElement;
 
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var jsonObject = JObject.Load(reader);
-            string typeName = (jsonObject["type"]).ToString();
-            switch (typeName)
-            {
-                case "Point":
-                    return jsonObject.ToObject<Point>();
-                case "Line":
-                    return jsonObject.ToObject<Line>();
-                case "MultiPoint":
-                    return jsonObject.ToObject<MultiPoint>();
-                case "LineString":
-                    return jsonObject.ToObject<LineString>();
-                case "MultiLineString":
-                    return jsonObject.ToObject<MultiLineString>();
-                case "Polygon":
-                    return jsonObject.ToObject<Polygon>();
-                case "MultiPolygon":
-                    return jsonObject.ToObject<MultiPolygon>();
-                case "GeometryCollection":
-                    return jsonObject.ToObject<GeometryCollection>();
-                default:
-                    throw new Exception($"The type found in the GeoJSON, {typeName}, could not be resolved.");
+                var typeName = root.GetProperty("type").GetString();
+                switch (typeName)
+                {
+                    case "Point":
+                        return root.Deserialize<Point>();
+                    case "Line":
+                        return root.Deserialize<Line>();
+                    case "MultiPoint":
+                        return root.Deserialize<MultiPoint>();
+                    case "LineString":
+                        return root.Deserialize<LineString>();
+                    case "MultiLineString":
+                        return root.Deserialize<MultiLineString>();
+                    case "Polygon":
+                        return root.Deserialize<Polygon>();
+                    case "MultiPolygon":
+                        return root.Deserialize<MultiPolygon>();
+                    case "GeometryCollection":
+                        return root.Deserialize<GeometryCollection>();
+                    default:
+                        throw new Exception($"The type found in the GeoJSON, {typeName}, could not be resolved.");
+                }
             }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        /// <summary>
+        /// Write geometry.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
+        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            JsonSerializer.Serialize(writer, value);
         }
     }
 }

@@ -1,5 +1,4 @@
 using Elements.GeoJSON;
-using System.Text.Json.Serialization;
 using System;
 using Xunit;
 using Line = Elements.GeoJSON.Line;
@@ -144,6 +143,8 @@ namespace Elements.Tests
             var f1 = new Feature(p, null);
             var f2 = new Feature(l, null);
             var fc = new FeatureCollection(new[] { f1, f2 });
+            f1.Properties.Add("foo", "This is foo.");
+            f2.Properties.Add("bar", 42);
             var json = JsonSerializer.Serialize(fc);
         }
 

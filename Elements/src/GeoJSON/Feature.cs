@@ -24,6 +24,7 @@ namespace Elements.GeoJSON
         /// All properties of the feature.
         /// </summary>
         [JsonPropertyName("properties")]
+        [JsonConverter(typeof(PropertiesConverter))]
         public Dictionary<string, object> Properties { get; set; }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace Elements.GeoJSON
         /// </summary>
         [JsonPropertyName("geometry")]
         [JsonConverter(typeof(GeometryConverter))]
-        public Geometry Geometry { get; set; }
+        public object Geometry { get; set; }
 
         /// <summary>
         /// The bounding box of the feature.
@@ -44,10 +45,10 @@ namespace Elements.GeoJSON
         /// </summary>
         /// <param name="geometry"></param>
         /// <param name="properties"></param>
-        public Feature(Geometry geometry, Dictionary<string, object> properties)
+        public Feature(object geometry, Dictionary<string, object> properties)
         {
             this.Geometry = geometry;
-            this.Properties = properties;
+            this.Properties = properties ?? new Dictionary<string, object>();
         }
     }
 }

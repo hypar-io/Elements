@@ -240,22 +240,4 @@ namespace Elements.GeoJSON
             this.Coordinates = coordinates;
         }
     }
-
-    /// <summary>
-    /// A GeoJSON geometry collection.
-    /// </summary>
-    public class GeometryCollection
-    {
-        [JsonPropertyName("geometries")]
-        Geometry[] Geometries { get; }
-
-        /// <summary>
-        /// Construct a geometry collection.
-        /// </summary>
-        /// <param name="geometries">An array of geometries.</param>
-        public GeometryCollection(Geometry[] geometries)
-        {
-            this.Geometries = geometries;
-        }
-    }
 }

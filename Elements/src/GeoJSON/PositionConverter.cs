@@ -1,33 +1,41 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.GeoJSON
 {
-    public class PositionConverter : JsonConverter
+    /// <summary>
+    /// Convert a geojson position object to an array of coordinates.
+    /// </summary>
+    public class PositionConverter : JsonConverter<Position>
     {
-        public override bool CanConvert(Type objectType)
+        /// <summary>
+        /// Read a position.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="typeToConvert"></param>
+        /// <param name="options"></param>
+        public override Position Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (objectType == typeof(Position))
+            using (var doc = JsonDocument.ParseValue(ref reader))
             {
-                return true;
+                var root = doc.RootElement;
+                var values = root.Deserialize<double[]>();
+                return new Position(values[1], values[0]);
             }
-            return false;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        /// <summary>
+        /// Write a position.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="options"></param>
+        public override void Write(Utf8JsonWriter writer, Position value, JsonSerializerOptions options)
         {
-            var lon = reader.ReadAsDouble();
-            var lat = reader.ReadAsDouble();
-            reader.Read();
-            return new Position(lat.Value, lon.Value);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var p = (Position)value;
             writer.WriteStartArray();
-            writer.WriteValue(p.Longitude);
-            writer.WriteValue(p.Latitude);
+            writer.WriteNumberValue(value.Longitude);
+            writer.WriteNumberValue(value.Latitude);
             writer.WriteEndArray();
         }
     }
