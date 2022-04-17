@@ -5,7 +5,11 @@ This is a minimal web assembly project.
 `dotnet watch run`
 
 ### Publish
-`dotnet publish -c release`
+```
+dotnet publish -c release
+cd bin/release/net6.0/publish/wwwroot
+python3 -m http.server
+```
 
 ### Files
 `Elements.js`
