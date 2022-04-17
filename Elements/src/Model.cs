@@ -14,7 +14,6 @@ using Elements.GeoJSON;
 using System.IO;
 using System.Text.Json;
 using System.Diagnostics;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -213,25 +212,12 @@ namespace Elements
         {
             var exportModel = CreateExportModel(gatherSubElements);
 
-            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
-        }
-
-        /// <summary>
-        /// Serialize the model to JSON using default arguments.
-        /// </summary>
-        public string ToJson()
-        {
-            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
-            return ToJson(false, true);
-        }
-
-        /// <summary>
-        /// Serialize the model to JSON to match default arguments.
-        /// TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.
-        /// </summary>
-        public string ToJson(bool indent = false)
-        {
-            return ToJson(indent, true);
+            var serializerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = indent
+            };
+            serializerOptions.Converters.Add(new ElementConverterFactory());
+            return JsonSerializer.Serialize(exportModel, serializerOptions);
         }
 
         /// <summary>
@@ -246,12 +232,8 @@ namespace Elements
             // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
             // https://www.newtonsoft.com/json/help/html/Performance.htm
             using (FileStream s = File.Create(path))
-            using (StreamWriter writer = new StreamWriter(s))
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
             {
-                var serializer = new Newtonsoft.Json.JsonSerializer();
-                serializer.Serialize(jsonWriter, exportModel);
-                jsonWriter.Flush();
+                JsonSerializer.Serialize(s, exportModel);
             }
         }
 
@@ -274,49 +256,7 @@ namespace Elements
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
-        /// <param name="errors">A collection of deserialization errors.</param>
-        /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
-        public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
-        {
-            // When user elements have been loaded into the app domain, they haven't always been
-            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
-            // but is useful here, at the Model level, to ensure user types are available.
-            var deserializationErrors = new List<string>();
-            if (forceTypeReload)
-            {
-                JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
-                deserializationErrors.AddRange(typeLoadErrors);
-            }
-
-            var model = JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
-            {
-                Error = (sender, args) =>
-                {
-                    deserializationErrors.Add(args.ErrorContext.Error.Message);
-                    args.ErrorContext.Handled = true;
-                }
-            });
-            errors = deserializationErrors;
-            JsonInheritanceConverter.Elements.Clear();
-            return model;
-        }
-
-        public static Model FromJson(string json, bool forceTypeReload = false)
-        {
-            return FromJson(json, out _, forceTypeReload);
-        }
-
-        /// <summary>
-        /// Deserialize a model from JSON
-        /// </summary>
-        public string ToJsonNew()
-        {
-            var serializerOptions = new JsonSerializerOptions();
-            serializerOptions.Converters.Add(new ElementConverterFactory());
-            return System.Text.Json.JsonSerializer.Serialize(this, serializerOptions);
-        }
-
-        public static Model FromJsonNew(string json)
+        public static Model FromJson(string json)
         {
             var sw = new Stopwatch();
             sw.Start();
@@ -331,7 +271,7 @@ namespace Elements
 
                 var options = new JsonSerializerOptions()
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
                 };
 
                 // Our custom reference handler will cache elements by id as
@@ -340,7 +280,11 @@ namespace Elements
                 var refHandler = new ElementReferenceHandler(typeCache, elementsElement);
                 options.ReferenceHandler = refHandler;
 
-                model = System.Text.Json.JsonSerializer.Deserialize<Model>(json, options);
+                // We use the model converter here so that we have a chance to 
+                // intercept the creation of elements when things go wrong.
+                options.Converters.Add(new ModelConverter());
+
+                model = JsonSerializer.Deserialize<Model>(json, options);
 
                 // Resetting the reference handler, empties the internal
                 // elements cache.

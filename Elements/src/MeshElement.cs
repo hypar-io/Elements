@@ -2,6 +2,7 @@ using System;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -21,6 +22,7 @@ namespace Elements
         /// <summary>
         /// The element's mesh.
         /// </summary>
+        [JsonConverter(typeof(MeshConverter))]
         public Mesh Mesh
         {
             get { return this._mesh; }

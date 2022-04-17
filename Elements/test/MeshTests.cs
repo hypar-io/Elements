@@ -4,6 +4,7 @@ using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
 using System.Text.Json.Serialization;
 using Xunit;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -34,6 +35,7 @@ namespace Elements.Tests
             var a1 = l1.Area();
             Assert.Equal((l.Area() + l1.Area()) * 5, l1Mesh.Volume(), 5);
         }
+
         [Fact]
         public void ReadMeshSerializedAsNull()
         {
@@ -42,18 +44,24 @@ namespace Elements.Tests
   ""Mesh"": null,
 }
             ";
-            Newtonsoft.Json.JsonConvert.DeserializeObject<InputsWithMesh>(json, new[] { new MeshConverter() });
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true
+            };
+
+            JsonSerializer.Deserialize<InputsWithMesh>(json, options);
         }
 
         public class InputsWithMesh
         {
             [JsonConstructor]
-            public InputsWithMesh(Mesh @mesh, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey)
+            public InputsWithMesh(Mesh @mesh)
             {
                 this.Mesh = @mesh;
             }
 
             [JsonPropertyName("Mesh")]
+            [JsonConverter(typeof(MeshConverter))]
             public Mesh Mesh { get; set; }
         }
     }

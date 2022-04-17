@@ -3,6 +3,7 @@ using Elements.Geometry.Solids;
 using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -17,6 +18,7 @@ namespace Elements
         /// <summary>
         /// The profile of the mass.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         /// <summary>

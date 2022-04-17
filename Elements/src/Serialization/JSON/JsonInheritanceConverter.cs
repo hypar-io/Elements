@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -115,10 +117,14 @@ namespace Elements.Serialization.JSON
         {
             if (t.IsPublic && t.IsClass)
             {
-                var attrib = t.GetCustomAttribute<JsonConverterAttribute>();
-                if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
+                var attrib = t.GetCustomAttribute<System.Text.Json.Serialization.JsonConverterAttribute>();
+                if (attrib != null && attrib.ConverterType.GenericTypeArguments.Length > 0)
                 {
-                    return true;
+                    var valid = attrib.ConverterType.GenericTypeArguments[0] == t
+                        || attrib.ConverterType == typeof(ElementConverter<Element>)
+                        || attrib.ConverterType == typeof(ElementConverter<SolidOperation>)
+                        || attrib.ConverterType == typeof(ElementConverter<Curve>);
+                    return valid;
                 }
             }
 

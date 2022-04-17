@@ -17,7 +17,7 @@ namespace Elements.Benchmarks
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
             var model = ElementCreation.DrawAllBeams(hssProfiles);
-            model.ToJson(gatherSubElements: false);
+            model.ToJson();
         }
     }
 

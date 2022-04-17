@@ -54,7 +54,7 @@ namespace Elements.GeoJSON
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize(writer, value);
+            JsonSerializer.Serialize(writer, value, options);
         }
     }
 }

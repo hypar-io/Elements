@@ -4,6 +4,7 @@ using Elements.Interfaces;
 using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -21,6 +22,7 @@ namespace Elements
         /// <summary>
         /// The profile of the wall.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         [Obsolete("The profile property on the Wall base class is obsolete, check the methods of an inherited class like StandardWall or WallByProfile.")]
         public Profile Profile { get; protected set; }
 

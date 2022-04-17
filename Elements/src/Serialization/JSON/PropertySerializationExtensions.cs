@@ -96,6 +96,14 @@ namespace Elements.Serialization.JSON
             foreach (var elementProperty in elementProperties)
             {
                 var prop = root.GetProperty(elementProperty.Name);
+                if (prop.ValueKind == JsonValueKind.Null)
+                {
+                    // You'll get here when you've got a null reference to an element. 
+                    // Resolve to an empty id, causing the resolver to return null.
+                    resolver.ResolveReference(string.Empty);
+                    continue;
+                }
+
                 if (prop.TryGetGuid(out var referencedId))
                 {
                     if (resolver.ResolveReference(referencedId.ToString()) != null)

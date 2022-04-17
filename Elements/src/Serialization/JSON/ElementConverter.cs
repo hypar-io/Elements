@@ -38,7 +38,20 @@ namespace Elements.Serialization.JSON
                 var root = doc.RootElement;
 
                 var discriminator = root.GetProperty("discriminator").GetString();
-                var derivedType = resolver.TypeCache[discriminator];
+
+                if (!resolver.TypeCache.TryGetValue(discriminator, out var derivedType))
+                {
+                    // The type could not be found. See if it has the hallmarks
+                    // of a geometric element and deserialize it as such if possible.
+                    if (root.TryGetProperty("Representation", out _))
+                    {
+                        derivedType = typeof(GeometricElement);
+                    }
+                    else
+                    {
+                        return default;
+                    }
+                }
 
                 // Use the type info to get all properties which are Element
                 // references, and deserialize those first.

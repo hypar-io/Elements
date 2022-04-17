@@ -10,7 +10,6 @@ namespace Elements
     /// <summary>
     /// An element representing user content.
     /// </summary>
-    [JsonConverter(typeof(ElementConverter<ContentElement>))]
     public class ContentElement : GeometricElement
     {
         /// <summary>The URI of the gltf for this element.</summary>

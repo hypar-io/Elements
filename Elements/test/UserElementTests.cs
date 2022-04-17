@@ -81,8 +81,8 @@ namespace Elements.Tests
             this.Model.AddElement(ue);
 
             var json = this.Model.ToJson();
-            var newModel = Model.FromJson(json, out var errors);
-            Assert.Empty(errors);
+            var newModel = Model.FromJson(json);
+
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
             // Plus one because of the profile that will be added from

@@ -61,10 +61,6 @@ namespace Elements.Tests
             this.Model.AddElements(polyT);
             this.Model.AddElement(arcBeam);
             this.Model.AddElements(arcT);
-
-            var json = this.Model.ToJsonNew();
-            _output.WriteLine(json);
-            var newModel = Model.FromJsonNew(json);
         }
 
         [Theory]

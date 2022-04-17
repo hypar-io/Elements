@@ -1,36 +1,51 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Elements.Geometry;
 
 namespace Elements.Serialization.JSON
 {
     internal class ModelConverter : JsonConverter<Model>
     {
-
         public override Model Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            var elements = new Dictionary<Guid, Element>();
+            using (var doc = JsonDocument.ParseValue(ref reader))
+            {
+                var root = doc.RootElement;
+                var elementsElement = root.GetProperty("Elements");
+                var transform = JsonSerializer.Deserialize<Transform>(root.GetProperty("Transform"));
+
+                foreach (var element in elementsElement.EnumerateObject())
+                {
+                    // TODO: This try/catch is only here to protect against
+                    // situations like null property values when the serializer
+                    // expects a value. Unlike json.net, system.text.json doesn't
+                    // have null value handling on read. 
+                    try
+                    {
+                        var id = Guid.Parse(element.Name);
+                        var e = JsonSerializer.Deserialize<Element>(element.Value, options);
+                        if (e != null)
+                        {
+                            elements.Add(id, e);
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+
+                var model = new Model(transform, elements);
+                return model;
+            }
         }
 
         public override void Write(Utf8JsonWriter writer, Model value, JsonSerializerOptions options)
         {
-            writer.WriteStartObject();
-
-            // Write the transform
-            writer.WritePropertyName("Transform");
-            JsonSerializer.Serialize(writer, value.Transform);
-
-            //Write the elements dictionary
-            writer.WritePropertyName("Elements");
-            writer.WriteStartObject();
-            foreach (var kvp in value.Elements)
-            {
-                writer.WritePropertyName(kvp.Key.ToString());
-                JsonSerializer.Serialize(writer, kvp.Value, kvp.Value.GetType(), options);
-            }
-            writer.WriteEndObject();
-
-            writer.WriteEndObject();
+            JsonSerializer.Serialize(writer, value, options);
         }
     }
 }

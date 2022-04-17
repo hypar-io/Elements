@@ -9,7 +9,6 @@ namespace Elements
     /// <summary>
     /// A collection of content elements.
     /// </summary>
-    [JsonConverter(typeof(ElementConverter<ContentCatalog>))]
     public class ContentCatalog : Element
     {
         /// <summary>The content elements in this catalog.</summary>
