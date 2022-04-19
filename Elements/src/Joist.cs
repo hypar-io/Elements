@@ -7,6 +7,7 @@ using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
 using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -26,16 +27,19 @@ namespace Elements
         /// <summary>
         /// Profile of the top chord of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile TopChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the bottom chord of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile BottomChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the web of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile WebProfile { get; set; }
 
         /// <summary>

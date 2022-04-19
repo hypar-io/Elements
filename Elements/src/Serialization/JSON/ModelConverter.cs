@@ -32,8 +32,9 @@ namespace Elements.Serialization.JSON
                             elements.Add(id, e);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         continue;
                     }
                 }
