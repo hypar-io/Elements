@@ -51,12 +51,12 @@ When we started [Hypar](https://www.hypar.io) we needed a library that would gen
 We couldn't find anything quite right. So we started building this.
 
 ## Design Principles
-- An `Element` is a uniquely identifely piece of a building system.
+- An `Element` is a uniquely identifiable piece of a building system.
 - Elements can contain references to other elements. Consider a Truss which is made of individual structural framing elements.
 - Elements can be instanced. The original element is considered the "base definition". An element instance contains a reference to the base element, a transform, and a name.
 - Elements is a C# library presently, but we expect that Element types will be used in other languages in the future. Therefore, we shouldn't rely on capabilities of C#, like attributes, to convey meaning of the types or their properties.
 - The core Element types will be defined in exactly the same way that third-party types will be defined.
-  - It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
+- It is possible that over time these types (ex: Beam, Column, Wall, etc.) are removed from the library and only made available as schemas from which user elements can be derived.
 
 ## Why Not Use IFC?
 In IFC, Revit, and other "BIM" applications, the building element ontology is fixed. If you want to introduce a new element which is key to your work process, you need to find the most closely matching category and put your element there. In Revit you might use the "Generic" category. In IFC you might use the `IFCBuildingElementProxy` type. This makes it very difficult for the recipient of a model to reason about the model semantically. Elements enables the user to create "first class" element types in the system. If you want to create a Curtain Wall Bracket, you simply create a class `CurtainWallBracket : Element` and users can search for your element by its defined type.
@@ -64,7 +64,7 @@ In IFC, Revit, and other "BIM" applications, the building element ontology is fi
 ## Geometry
 Elements contains a very simple BREP geometry kernel, and a small set of geometric types like vectors, lines, and polygons. Elements uses a right-handed coordinate system with +Z "up". Elements is unitless except as indicated when calling a geometric method. For example, arcs requires angles in degrees.
 
-The geometry kernel that we've created for Elements is a very simple BREP kernel which does "flat stuff with holes in it" really well. We think Nurbs are sexy, and we'll definitely support more curvy stuff in the future, it's just that the effort required to support arbitrarily complex geometry for micro-services running in the cloud is not small. Good geometry kernels are also usually large, expensive, and not open source, so they introduce a lot of concerns which are orthogonal to why we built this library in the first place.
+The geometry kernel that we've created for Elements is a very simple BREP kernel which does "flat stuff with holes in it" really well. We think Nurbs are sexy, and we'll definitely support more curvy stuff in the future, it's just that the effort required to support arbitrarily complex geometry for micro-services running in the cloud is not small. Professional geometry kernels, like the kind found in mechanical modeling applications, are also usually large, expensive, and not open source. They introduce cost and complexity, and restrict the open nature of code that you write with Elements.
 
 ## Precision
 Geometry operations in Elements use `Vector3.Epsilon=1e-05` to compare values that should be considered equal. This is important as geometric operations using floating point numbers are imprecise. In addition, .NET will return different values for these operations _on different systems_. We have seen intersection tests that pass on a mac and fail on linux. Please use the provided methods like `double.IsAlmostEqualTo(...)`, `Vector3.IsZero()`, and `Vector3.IsAlmostEqualTo(...)` which account for precision.
