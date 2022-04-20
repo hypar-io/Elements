@@ -30,7 +30,7 @@ namespace Elements
         /// <summary>
         /// The expected file extension of the destination.
         /// </summary>
-        [JsonProperty("File Extension")]
+        [JsonProperty("Extension")]
         public string Extension { get; set; }
         private Stream _exportStream { get; set; }
 
