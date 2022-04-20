@@ -9,7 +9,7 @@
 {% assign sortedProperties = AllProperties | sort: "Name" -%}
 {% assign sortedParentProperties = parentProperties | sort: "Name" -%}
 
-[Newtonsoft.Json.JsonConstructor]
+[JsonConstructor]
 {% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | safeidentifierlower | defaultforelementargument: baseClassName }}{% endfor -%})
 {% assign skipComma = true -%}
 {% if HasInheritance -%}

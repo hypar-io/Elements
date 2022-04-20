@@ -10,7 +10,7 @@ namespace Elements.Search
     /// </summary>
     internal class LeftMostPointComparer<T> : IComparer<T>
     {
-        private Func<T, Line> _getSegment;
+        private readonly Func<T, Line> _getSegment;
 
         /// <summary>
         /// Construct a left most point comparer.

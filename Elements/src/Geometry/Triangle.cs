@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LibTessDotNet.Double;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -11,12 +12,12 @@ namespace Elements.Geometry
     public class Triangle
     {
         /// <summary>The triangle's vertices.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Vertices", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
 
         /// <summary>The triangle's normal.</summary>
-        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">The vertices of the triangle.</param>
         /// <param name="normal">The normal of the triangle.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Triangle(IList<Vertex> @vertices, Vector3 @normal)
         {
             this.Vertices = @vertices;
