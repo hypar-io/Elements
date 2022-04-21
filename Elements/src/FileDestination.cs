@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Elements
 {
     /// <summary>
-    /// Represents a location that a file is meant to be saved to.
+    /// A destination for an output file.
     /// </summary>
     public class FileDestination
     {
@@ -37,7 +37,7 @@ namespace Elements
         /// <summary>
         /// Assign a stream to be exported to the destination.
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="stream">The data stream that will be exported to a file.</param>
         public void SetExportStream(Stream stream)
         {
             _exportStream = stream;
@@ -46,12 +46,12 @@ namespace Elements
         /// <summary>
         /// Assign text to be exported to the destination.
         /// </summary>
-        /// <param name="textContents"></param>
-        public void SetExportTextContents(string textContents)
+        /// <param name="text">The text to be exported.</param>
+        public void SetExportTextContents(string text)
         {
             _exportStream = new System.IO.MemoryStream();
             var writer = new StreamWriter(_exportStream);
-            writer.Write(textContents);
+            writer.Write(text);
             writer.Flush();
             _exportStream.Position = 0;
         }
@@ -59,7 +59,6 @@ namespace Elements
         /// <summary>
         /// Retrieve the current stream to be exported to the destination.
         /// </summary>
-        /// <returns></returns>
         public Stream GetExportStream()
         {
             return _exportStream;
