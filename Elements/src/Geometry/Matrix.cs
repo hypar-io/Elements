@@ -12,7 +12,7 @@ namespace Elements.Geometry
     public partial class Matrix : IEquatable<Matrix>
     {
         /// <summary>The components of the matrix.</summary>
-        [Newtonsoft.Json.JsonProperty("Components", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Components", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]
@@ -22,7 +22,7 @@ namespace Elements.Geometry
         /// Construct a matrix.
         /// </summary>
         /// <param name="components">The components of the matrix.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Matrix(double[] @components)
         {
             if (!Validator.DisableValidationOnConstruction)

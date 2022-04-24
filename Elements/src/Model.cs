@@ -21,16 +21,16 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
@@ -40,7 +40,7 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
             this.Origin = @origin;
@@ -181,13 +181,25 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all entities of the specified Type.
+        /// Get all elements of the type T.
         /// </summary>
-        /// <typeparam name="T">The Type of element to return.</typeparam>
+        /// <typeparam name="T">The type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> AllElementsOfType<T>()
+        public IEnumerable<T> AllElementsOfType<T>() where T : Element
         {
-            return this.Elements.Values.OfType<T>();
+            return Elements.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Get all elements assignable from type T. This will include
+        /// types which derive from T and types which implement T if T 
+        /// is an interface.
+        /// </summary>
+        /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
+        /// <returns>A collection of elements derived from the specified type.</returns>
+        public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
+        {
+            return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }
 
         /// <summary>
