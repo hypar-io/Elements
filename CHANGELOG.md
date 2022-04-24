@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+### Added
+
+- `FileDestination` class representing a file destination for functions as exporters functionality.
+
 ## 1.0.0
 
 ### Added
@@ -17,8 +23,9 @@
 
 ### Changed
 
-- Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
-- `GenerateUserElementTypeFromUriAsync` now takes an optional `excludedTypes` argument.
+- Remove `removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- `GenerateUserElementTypeFromUriAsync` now takes an optional `excludedTypes`
+  argument.
 - Remove `AdaptiveGrid` reference from `Edge` and `Vertex` Move `Edge.GetVertices` and `Edge.GetLine` to `AdaptiveGrid`.
 - Rename `AdaptiveGrid.DeleteEdge(Edge edge)` into `RemoveEdge` and is not public.
 - `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2)` is now public.
