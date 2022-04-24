@@ -40,7 +40,15 @@ namespace Elements
         public double Rotation { get; set; }
 
         /// <summary>
-        /// Construct a beam.
+        /// Construct a structural framing element.
+        /// </summary>
+        public StructuralFraming()
+        {
+            // Empty construction for JSON serialization.
+        }
+
+        /// <summary>
+        /// Construct a structural framing element.
         /// </summary>
         /// <param name="curve">The center line of the beam.</param>
         /// <param name="profile">The structural framing's profile.</param>
