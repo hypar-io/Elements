@@ -66,7 +66,7 @@ namespace Elements
         /// <summary>
         /// A collection of additional properties.
         /// </summary>
-        [Newtonsoft.Json.JsonExtensionData]
+        [JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
