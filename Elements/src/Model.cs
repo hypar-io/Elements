@@ -210,14 +210,14 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false, bool gatherSubElements = true)
         {
-            var exportModel = CreateExportModel(gatherSubElements);
+            // var exportModel = CreateExportModel(gatherSubElements);
 
             var serializerOptions = new JsonSerializerOptions
             {
                 WriteIndented = indent
             };
             serializerOptions.Converters.Add(new ElementConverterFactory());
-            return JsonSerializer.Serialize(exportModel, serializerOptions);
+            return JsonSerializer.Serialize(this, serializerOptions);
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Elements
         {
             var sw = new Stopwatch();
             sw.Start();
-            var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+            var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
             Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating type cache.");
 
             Model model = null;

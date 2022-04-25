@@ -60,7 +60,7 @@ namespace Elements
                     {
                         PropertyNameCaseInsensitive = true,
                     };
-                    var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+                    var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
                     var refHandler = new ElementReferenceHandler(typeCache, root);
                     options.ReferenceHandler = refHandler;
                     return root.Deserialize<ContentCatalog>(options);
