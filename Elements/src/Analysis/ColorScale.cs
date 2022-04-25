@@ -50,7 +50,7 @@ namespace Elements.Analysis
         /// <param name="discrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        internal ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
+        public ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
             this.Discrete = discrete;
