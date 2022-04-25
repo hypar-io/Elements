@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Elements.Geometry;
-using Elements.Geometry.Profiles;
-using Elements.Geometry.Solids;
-using System.Text.Json.Serialization;
 using Xunit;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -72,10 +70,11 @@ namespace Elements.Tests
         {
             Name = nameof(BBoxesForElements);
 
-            var elements = new List<Element>();
-
-            // mass with weird transform
-            elements.Add(new Mass(Polygon.Star(5, 3, 5), 1, null, new Transform(new Vector3(4, 3, 2), new Vector3(1, 1, 1))));
+            var elements = new List<Element>
+            {
+                // mass with weird transform
+                new Mass(Polygon.Star(5, 3, 5), 1, null, new Transform(new Vector3(4, 3, 2), new Vector3(1, 1, 1)))
+            };
 
             // element instances
             var contentJson = @"
@@ -145,7 +144,21 @@ namespace Elements.Tests
             ""Opaque"": 1
         }";
 
-            var contentElement = JsonSerializer.Deserialize<ContentElement>(contentJson);
+            ContentElement contentElement;
+            using (var doc = JsonDocument.Parse(contentJson))
+            {
+                var root = doc.RootElement;
+                var options = new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                var typeCache = JsonInheritanceConverter.BuildAppDomainTypeCache(out _);
+                var refHandler = new ElementReferenceHandler(typeCache, root);
+                options.ReferenceHandler = refHandler;
+
+                contentElement = JsonSerializer.Deserialize<ContentElement>(contentJson, options);
+            }
+
             elements.Add(contentElement.CreateInstance(new Transform(-6, 0, 0), null));
             elements.Add(contentElement.CreateInstance(new Transform(new Vector3(-8, 0, 0), 45), null));
 
