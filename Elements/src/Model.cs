@@ -210,14 +210,17 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false, bool gatherSubElements = true)
         {
-            // var exportModel = CreateExportModel(gatherSubElements);
+            // TODO: Remove this excess model creation when the JSON serializer
+            // supports recursive write out and all receivers are capable of 
+            // receiving updated JSON.
+            var exportModel = CreateExportModel(gatherSubElements);
 
             var serializerOptions = new JsonSerializerOptions
             {
                 WriteIndented = indent
             };
             serializerOptions.Converters.Add(new ElementConverterFactory());
-            return JsonSerializer.Serialize(this, serializerOptions);
+            return JsonSerializer.Serialize(exportModel, serializerOptions);
         }
 
         /// <summary>
@@ -274,6 +277,7 @@ namespace Elements
                 var options = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true
                 };
 
                 // Our custom reference handler will cache elements by id as
