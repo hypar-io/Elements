@@ -280,9 +280,9 @@ namespace Elements
                 var refHandler = new ElementReferenceHandler(typeCache, elementsElement);
                 options.ReferenceHandler = refHandler;
 
-                // We use the model converter here so that we have a chance to 
+                // Use the model converter here so that we have a chance to 
                 // intercept the creation of elements when things go wrong.
-                options.Converters.Add(new ModelConverter());
+                // options.Converters.Add(new ModelConverter());
 
                 model = JsonSerializer.Deserialize<Model>(json, options);
 
