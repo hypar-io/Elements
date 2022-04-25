@@ -144,20 +144,7 @@ namespace Elements.Tests
             ""Opaque"": 1
         }";
 
-            ContentElement contentElement;
-            using (var doc = JsonDocument.Parse(contentJson))
-            {
-                var root = doc.RootElement;
-                var options = new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true,
-                };
-                var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
-                var refHandler = new ElementReferenceHandler(typeCache, root);
-                options.ReferenceHandler = refHandler;
-
-                contentElement = JsonSerializer.Deserialize<ContentElement>(contentJson, options);
-            }
+            var contentElement = Element.Deserialize<ContentElement>(contentJson);
 
             elements.Add(contentElement.CreateInstance(new Transform(-6, 0, 0), null));
             elements.Add(contentElement.CreateInstance(new Transform(new Vector3(-8, 0, 0), 45), null));

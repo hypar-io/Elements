@@ -548,7 +548,8 @@ namespace Elements.Tests
         public void SeparatorsFromBadPolygon()
         {
             var json = File.ReadAllText("../../../models/Geometry/bad_grid.json");
-            var grid = JsonSerializer.Deserialize<Grid2d>(json);
+
+            var grid = Element.Deserialize<Grid2d>(json);
             var cellSeparators = grid.GetCellSeparators(GridDirection.V, true);
         }
     }

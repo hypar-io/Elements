@@ -83,7 +83,7 @@ namespace Elements.Tests
         public void ThinObjectsGenerateCorrectly()
         {
             var json = File.ReadAllText("../../../models/Geometry/Single-Panel.json");
-            var panel = JsonSerializer.Deserialize<Panel>(json);
+            var panel = Element.Deserialize<Panel>(json);
             var model = new Model();
             model.AddElement(panel);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
