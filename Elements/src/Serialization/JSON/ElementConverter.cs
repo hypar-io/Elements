@@ -45,6 +45,11 @@ namespace Elements.Serialization.JSON
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            if (options.ReferenceHandler == null)
+            {
+                throw new Exception("You are deserializing an element, but you don't have a reference resolver. Try using Element.Deserialize<T> instead.");
+            }
+
             var resolver = options.ReferenceHandler.CreateResolver() as ElementReferenceResolver;
 
             if (reader.TokenType == JsonTokenType.String)

@@ -1,6 +1,7 @@
 using System;
 using Elements.Serialization.JSON;
 using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements
 {
@@ -88,6 +89,32 @@ namespace Elements
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Deserialize an element of type T using reference resolution
+        /// and discriminated type construction.
+        /// Do not use this method for the deserialization large numbers of
+        /// elements, as it needs to construct a reference handler and type cache
+        /// for each invocation.
+        /// </summary>
+        /// <param name="json">The JSON of the element.</param>
+        /// <returns>An element of type T.</returns>
+        public static T Deserialize<T>(string json)
+        {
+            using (var doc = JsonDocument.Parse(json))
+            {
+                var root = doc.RootElement;
+                var options = new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true
+                };
+                var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
+                var refHandler = new ElementReferenceHandler(typeCache, root);
+                options.ReferenceHandler = refHandler;
+                return JsonSerializer.Deserialize<T>(doc, options);
+            }
         }
 
     }
