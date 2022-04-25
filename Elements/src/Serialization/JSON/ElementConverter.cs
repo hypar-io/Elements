@@ -6,6 +6,18 @@ namespace Elements.Serialization.JSON
 {
     internal class ElementConverterFactory : JsonConverterFactory
     {
+        private readonly bool _elementwiseSerialization;
+
+        /// <summary>
+        /// Should the elements be serialized completely? If this option is false,
+        /// elements will be serialized to ids.
+        /// </summary>
+        /// <param name="elementwiseSerialization"></param>
+        public ElementConverterFactory(bool elementwiseSerialization = false)
+        {
+            _elementwiseSerialization = elementwiseSerialization;
+        }
+
         public override bool CanConvert(Type typeToConvert)
         {
             return typeof(Element).IsAssignableFrom(typeToConvert);
@@ -17,6 +29,8 @@ namespace Elements.Serialization.JSON
             var typeArgs = new[] { typeToConvert };
             var converterType = elementConverter.MakeGenericType(typeArgs);
             var converter = Activator.CreateInstance(converterType) as JsonConverter;
+            var pi = converterType.GetProperty("ElementwiseSerialization");
+            pi.SetValue(converter, _elementwiseSerialization);
             return converter;
         }
     }
@@ -27,6 +41,8 @@ namespace Elements.Serialization.JSON
     /// <typeparam name="T"></typeparam>
     internal class ElementConverter<T> : JsonConverter<T>
     {
+        public bool ElementwiseSerialization { get; internal set; } = false;
+
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var resolver = options.ReferenceHandler.CreateResolver() as ElementReferenceResolver;
@@ -125,7 +141,7 @@ namespace Elements.Serialization.JSON
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             var isElement = typeof(Element).IsAssignableFrom(value.GetType());
-            if (writer.CurrentDepth > 2 && isElement)
+            if (writer.CurrentDepth > 2 && isElement && !ElementwiseSerialization)
             {
                 writer.WriteStringValue(((Element)(object)value).Id.ToString());
             }
