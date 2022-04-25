@@ -32,8 +32,6 @@ namespace Elements
         [JsonPropertyName("Symbols")]
         public IList<Symbol> Symbols { get; set; }
 
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-
         /// <summary>
         /// Construct a content element.
         /// </summary>

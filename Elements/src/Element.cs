@@ -66,7 +66,8 @@ namespace Elements
         /// <summary>
         /// A collection of additional properties.
         /// </summary>
-        [JsonExtensionData]
+        // [JsonExtensionData]
+        [JsonConverter(typeof(AdditionalPropertiesConverter))]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
