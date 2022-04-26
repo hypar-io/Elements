@@ -271,14 +271,21 @@ namespace Elements.Tests
         public void ConstructedSolidProducesValidGlb()
         {
             Name = nameof(ConstructedSolidProducesValidGlb);
-            var allPolygons = System.Text.Json.JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
-            var solid = new Solid();
-            foreach (var face in allPolygons)
+
+            var options = new JsonSerializerOptions()
             {
-                solid.AddFace(face.outerLoop, face.innerLoops, true);
+                IncludeFields = true
+            };
+            var allPolygons = JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
+            var solid = new Solid();
+            foreach (var (outerLoop, innerLoops) in allPolygons)
+            {
+                solid.AddFace(outerLoop, innerLoops, true);
             }
-            var solidOp = new Elements.Geometry.Solids.ConstructedSolid(solid, false);
-            solidOp.LocalTransform = new Transform();
+            var solidOp = new ConstructedSolid(solid, false)
+            {
+                LocalTransform = new Transform()
+            };
             var geoElem = new GeometricElement(new Transform(), BuiltInMaterials.Concrete, new Representation(new[] { solidOp }), false, Guid.NewGuid(), null);
             var model = new Model();
             model.AddElement(geoElem);
@@ -518,7 +525,7 @@ namespace Elements.Tests
 
             var options = new JsonSerializerOptions();
             options.Converters.Add(new SolidConverter());
-            var di = JsonSerializer.Deserialize<DebugInfo>(File.ReadAllText(path));
+            var di = JsonSerializer.Deserialize<DebugInfo>(File.ReadAllText(path), options);
             foreach (var solid in di.Solid)
             {
                 Assert.True(di.Plane.Normal.IsUnitized());
