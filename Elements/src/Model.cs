@@ -220,6 +220,7 @@ namespace Elements
                 WriteIndented = indent
             };
             serializerOptions.Converters.Add(new ElementConverterFactory());
+            serializerOptions.Converters.Add(new SolidConverter());
             return JsonSerializer.Serialize(exportModel, serializerOptions);
         }
 
@@ -236,7 +237,10 @@ namespace Elements
             // https://www.newtonsoft.com/json/help/html/Performance.htm
             using (FileStream s = File.Create(path))
             {
-                JsonSerializer.Serialize(s, exportModel);
+                var serializerOptions = new JsonSerializerOptions();
+                serializerOptions.Converters.Add(new ElementConverterFactory());
+                serializerOptions.Converters.Add(new SolidConverter());
+                JsonSerializer.Serialize(s, exportModel, serializerOptions);
             }
         }
 
@@ -279,6 +283,7 @@ namespace Elements
                     PropertyNameCaseInsensitive = true,
                     AllowTrailingCommas = true
                 };
+                options.Converters.Add(new SolidConverter());
 
                 // Our custom reference handler will cache elements by id as
                 // they are deserialized, supporting reading elements by id

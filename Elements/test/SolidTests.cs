@@ -2,7 +2,6 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Profiles;
-using System.Text.Json.Serialization;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using System;
@@ -10,7 +9,7 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -196,15 +195,16 @@ namespace Elements.Tests
             var materials = new Dictionary<Guid, Material>();
             var defMaterial = BuiltInMaterials.Default;
             materials.Add(defMaterial.Id, defMaterial);
-            var json = JsonConvert.SerializeObject(solid, new JsonSerializerSettings()
+
+            var options = new JsonSerializerOptions()
             {
-                Converters = new[] { new SolidConverter(materials) },
-                Formatting = Formatting.Indented
-            });
-            var newSolid = JsonConvert.DeserializeObject<Solid>(json, new JsonSerializerSettings()
-            {
-                Converters = new[] { new SolidConverter(materials) }
-            });
+                WriteIndented = true
+            };
+            options.Converters.Add(new SolidConverter());
+
+            var json = JsonSerializer.Serialize(solid, options);
+            var newSolid = JsonSerializer.Deserialize<Solid>(json, options);
+
             Assert.Equal(8, newSolid.Vertices.Count);
             Assert.Equal(12, newSolid.Edges.Count);
             Assert.Equal(6, newSolid.Faces.Count);
@@ -516,7 +516,9 @@ namespace Elements.Tests
 
             var r = new Random();
 
-            var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(path), new[] { new SolidConverter() });
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new SolidConverter());
+            var di = JsonSerializer.Deserialize<DebugInfo>(File.ReadAllText(path));
             foreach (var solid in di.Solid)
             {
                 Assert.True(di.Plane.Normal.IsUnitized());
