@@ -53,6 +53,7 @@ namespace Elements
         /// </summary>
         /// <param name="min">The lower bound of the domain.</param>
         /// <param name="max">The upper bound of the domain.</param>
+        [JsonConstructor]
         public Domain1d(double min = 0.0, double max = 1.0)
         {
             Min = min;

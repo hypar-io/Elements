@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using System.Text.Json.Serialization;
-using Elements;
 using System.Linq;
 
 namespace Elements.Analysis
@@ -30,7 +29,7 @@ namespace Elements.Analysis
         /// Whether this scale is chunked into discrete bands.
         /// If false, values will be returned in a smooth gradient.
         /// </summary>
-        public Boolean Discrete { get; } = false;
+        public bool Discrete { get; } = false;
 
         /// <summary>
         /// Create a ColorScale from a list of colors. The scale will automatically have a domain from 0 to 1.
@@ -50,7 +49,7 @@ namespace Elements.Analysis
         /// <param name="discrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        public ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
+        public ColorScale(List<Color> colors, bool discrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
             this.Discrete = discrete;
