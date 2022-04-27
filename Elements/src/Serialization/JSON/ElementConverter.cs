@@ -68,14 +68,12 @@ namespace Elements.Serialization.JSON
                     {
                         case CollectionType.List:
                             // At this point we'll be at the start of an array.
-                            reader.Read();
-                            do
+                            while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
                             {
                                 var id = reader.GetString();
                                 mi.Invoke(elements, new[] { resolver.ResolveReference(id) });
-                                reader.Read();
                             }
-                            while (reader.TokenType != JsonTokenType.EndArray);
+
                             break;
                         case CollectionType.Dictionary:
                             var args = typeToConvert.GetGenericArguments();
