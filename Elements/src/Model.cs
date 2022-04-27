@@ -42,8 +42,7 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [Newtonsoft.Json.JsonConstructor]
-        [System.Text.Json.Serialization.JsonConstructor]
+        [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
             this.Origin = @origin;
@@ -233,8 +232,6 @@ namespace Elements
         {
             var exportModel = CreateExportModel(gatherSubElements);
 
-            // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
-            // https://www.newtonsoft.com/json/help/html/Performance.htm
             using (FileStream s = File.Create(path))
             {
                 var serializerOptions = new JsonSerializerOptions();

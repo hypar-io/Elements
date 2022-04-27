@@ -25,7 +25,7 @@ namespace Elements.Serialization.JSON
 
             failedAssemblyErrors = new List<string>();
 
-            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
+            var skipAssembliesPrefices = new[] { "System", "SixLabors" };
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
             {
                 var name = a.GetName().Name;

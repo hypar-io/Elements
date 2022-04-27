@@ -45,7 +45,7 @@ namespace Elements.Geometry
         /// A flag to disable CSG operations on this representation. Instead,
         /// all solids will be meshed, and all voids will be ignored.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public bool SkipCSGUnion { get; set; } = false;
     }
