@@ -34,7 +34,7 @@ namespace Elements
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
         [JsonPropertyName("Elements")]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+        public IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
         /// <summary>
         /// Construct a model.
@@ -290,7 +290,7 @@ namespace Elements
 
                 // Use the model converter here so that we have a chance to 
                 // intercept the creation of elements when things go wrong.
-                // options.Converters.Add(new ModelConverter());
+                options.Converters.Add(new ModelConverter());
 
                 model = JsonSerializer.Deserialize<Model>(json, options);
 
