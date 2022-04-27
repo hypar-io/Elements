@@ -218,7 +218,14 @@ namespace Elements.Tests
             Assert.Equal(Vector3.Origin, newColumn.Location);
         }
 
-        [Fact]
+        // With the move to System.Text.Json, this test is no longer valid.
+        // Previously we skipped elements that had properties that could not
+        // be converted to null. System.text.json handles this condition
+        // by using the default value. In this example, the column location
+        // is set to null in the json, but deserializes to (0,0,0), which is
+        // valid. This is a nicer way of handling this condition than not 
+        // creating an element at all.
+        [Fact(Skip = "Outdated")]
         public void DeserializationSkipsNullProperties()
         {
             var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
@@ -227,13 +234,15 @@ namespace Elements.Tests
             var json = model.ToJson(true);
 
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
-            var obj = JObject.Parse(json);
-            var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
-            // Nullify a property.
-            c.Property("Location").Value = null;
+            // var obj = JObject.Parse(json);
+            using var doc = JsonDocument.Parse(json);
+
+            var obj = doc.RootElement.Clone();
+            var elements = obj.GetProperty("Elements").EnumerateObject();
+            var c = elements.ElementAt(2).Value; // the column
 
             var newModel = Model.FromJson(obj.ToString());
+
             Assert.Empty(newModel.AllElementsOfType<Column>());
         }
 
