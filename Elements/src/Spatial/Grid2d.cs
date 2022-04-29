@@ -14,7 +14,6 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
     /// </example>
-    [JsonConverter(typeof(ElementConverter<Grid2d>))]
     public class Grid2d
     {
         #region Properties
@@ -28,11 +27,13 @@ namespace Elements.Spatial
         /// <summary>
         /// The 1d Grid along the U dimension
         /// </summary>
+        [JsonInclude]
         public Grid1d U { get; private set; }
 
         /// <summary>
         /// The 1d grid along the V dimension
         /// </summary>
+        [JsonInclude]
         public Grid1d V { get; private set; }
 
         /// <summary>
@@ -50,30 +51,34 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
+        [JsonInclude]
         [JsonPropertyName("FromGrid")]
-        internal Transform fromGrid = new Transform();
+        public Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
+        [JsonInclude]
         [JsonPropertyName("ToGrid")]
-        internal Transform toGrid = new Transform();
+        public Transform toGrid = new Transform();
 
-        [JsonPropertyName("UDomainInternal")]
-        private Domain1d UDomainInternal = new Domain1d(0, 0);
+        [JsonInclude]
+        public Domain1d UDomainInternal = new Domain1d(0, 0);
 
-        [JsonPropertyName("VDomainInternal")]
-        private Domain1d VDomainInternal = new Domain1d(0, 0);
+        [JsonInclude]
+        public Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
         /// Any boundary curves, transformed to grid space.
         /// </summary>
+        [JsonInclude]
         [JsonPropertyName("BoundariesInGridSpace")]
-        private IList<Polygon> boundariesInGridSpace;
+        public IList<Polygon> boundariesInGridSpace;
+
         private List<List<Grid2d>> cells;
 
-        [JsonPropertyName("ModifiedChildCells")]
-        internal List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
+        [JsonInclude]
+        public List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
 
         // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
         private List<IndexedCell> GetModifiedChildCells()
@@ -162,7 +167,15 @@ namespace Elements.Spatial
         /// <returns></returns>
         [JsonConstructor]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public Grid2d(Transform fromGrid, Transform toGrid, Domain1d uDomainInternal, Domain1d vDomainInternal, List<Polygon> boundariesInGridSpace, Grid1d u, Grid1d v, string type, List<IndexedCell> modifiedChildCells)
+        public Grid2d(Transform fromGrid,
+                      Transform toGrid,
+                      Domain1d uDomainInternal,
+                      Domain1d vDomainInternal,
+                      IList<Polygon> boundariesInGridSpace,
+                      Grid1d u,
+                      Grid1d v,
+                      string type,
+                      List<IndexedCell> modifiedChildCells)
         {
             this.fromGrid = fromGrid;
             this.toGrid = toGrid;

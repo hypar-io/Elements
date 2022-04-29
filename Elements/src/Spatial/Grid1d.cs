@@ -14,7 +14,6 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid1dTests.cs?name=example)]
     /// </example>
-    [JsonConverter(typeof(ElementConverter<Grid1d>))]
     public class Grid1d
     {
         #region Properties
@@ -27,11 +26,10 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
-        [JsonPropertyName("Cells")]
         public List<Grid1d> Cells
         {
             get => cells;
-            private set
+            set
             {
                 if (this.parent != null)
                 {
@@ -45,6 +43,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Numerical domain of this Grid
         /// </summary>
+        [JsonInclude]
         public Domain1d Domain { get; }
 
         /// <summary>
@@ -90,8 +89,9 @@ namespace Elements.Spatial
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
+        [JsonInclude]
         [JsonPropertyName("CurveDomain")]
-        internal readonly Domain1d curveDomain;
+        public readonly Domain1d curveDomain;
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
@@ -100,8 +100,9 @@ namespace Elements.Spatial
         // is useful in serialization so we only store the base curve once. 
         private Grid1d topLevelParentGrid;
 
+        [JsonInclude]
         [JsonPropertyName("TopLevelParentCurve")]
-        private Curve topLevelParentCurve
+        public Curve topLevelParentCurve
         {
             get
             {

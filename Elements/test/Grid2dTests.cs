@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Elements.Spatial;
 using Xunit;
-using System.Text.Json.Serialization;
 using Elements.Geometry;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -198,7 +197,7 @@ namespace Elements.Tests
             grid2d.V.DivideByCount(3);
             grid2d[2, 2].U.DivideByCount(4);
             var json = JsonSerializer.Serialize(grid2d);
-            var deserialized = JsonSerializer.Deserialize<Grid2d>(json);
+            var deserialized = Element.Deserialize<Grid2d>(json);
             Assert.Equal(grid2d.GetCells().Count, deserialized.GetCells().Count);
 
             var grid2dElem = new Grid2dElement(grid2d, Guid.NewGuid(), "Grid");
