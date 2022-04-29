@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements.Geometry;
 using System.Text.Json.Serialization;
+using Elements.Geometry;
 
 namespace Elements.Spatial.CellComplex
 {
@@ -35,38 +35,38 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Vertices by ID.
         /// </summary>
-        [JsonPropertyName("_vertices")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, Vertex> Vertices = new Dictionary<ulong, Vertex>();
+        [JsonInclude]
+        private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// U or V directions by ID.
         /// </summary>
-        [JsonPropertyName("_orientations")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, Orientation> Orientations = new Dictionary<ulong, Orientation>();
+        [JsonInclude]
+        private Dictionary<ulong, Orientation> _orientations = new Dictionary<ulong, Orientation>();
 
         /// <summary>
         /// Edges by ID.
         /// </summary>
-        [JsonPropertyName("_edges")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, Edge> Edges = new Dictionary<ulong, Edge>();
+        [JsonInclude]
+        private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
         /// DirectedEdges by ID.
         /// </summary>
-        [JsonPropertyName("_directedEdges")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, DirectedEdge> DirectedEdges = new Dictionary<ulong, DirectedEdge>();
+        [JsonInclude]
+        private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
 
         /// <summary>
         /// Faces by ID.
         /// </summary>
-        [JsonPropertyName("_faces")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, Face> Faces = new Dictionary<ulong, Face>();
+        [JsonInclude]
+        private Dictionary<ulong, Face> _faces = new Dictionary<ulong, Face>();
 
         /// <summary>
         /// Cells by ID.
         /// </summary>
-        [JsonPropertyName("_cells")] // TODO: Backwards serialization capability. Update to align with property name in future.
-        public Dictionary<ulong, Cell> Cells = new Dictionary<ulong, Cell>();
+        [JsonInclude]
+        private Dictionary<ulong, Cell> _cells = new Dictionary<ulong, Cell>();
 
         // Vertex lookup by x, y, z coordinate.
         private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
@@ -257,14 +257,14 @@ namespace Elements.Spatial.CellComplex
         /// <returns>Whether the cell was successfully added. Will be false if cellId already exists.</returns>
         private Boolean AddCell(ulong cellId, List<Face> faces, Face bottomFace, Face topFace, out Cell cell)
         {
-            if (this.Cells.ContainsKey(cellId))
+            if (this._cells.ContainsKey(cellId))
             {
                 cell = null;
                 return false;
             }
 
             cell = new Cell(this, cellId, faces, bottomFace, topFace);
-            this.Cells.Add(cell.Id, cell);
+            this._cells.Add(cell.Id, cell);
 
             foreach (var face in faces)
             {
@@ -300,7 +300,7 @@ namespace Elements.Spatial.CellComplex
                 face = new Face(this, idIfNew, directedEdges, u, v);
                 faceId = face.Id;
                 this._facesLookup.Add(hash, faceId);
-                this.Faces.Add(faceId, face);
+                this._faces.Add(faceId, face);
 
                 foreach (var directedEdge in directedEdges)
                 {
@@ -312,7 +312,7 @@ namespace Elements.Spatial.CellComplex
             }
             else
             {
-                this.Faces.TryGetValue(faceId, out face);
+                this._faces.TryGetValue(faceId, out face);
                 return false;
             }
         }
@@ -341,7 +341,7 @@ namespace Elements.Spatial.CellComplex
                 directedEdgeId = directedEdge.Id;
 
                 directedEdgeDict.Add(edgeTupleIsInOrder, directedEdgeId);
-                this.DirectedEdges.Add(directedEdgeId, directedEdge);
+                this._directedEdges.Add(directedEdgeId, directedEdge);
 
                 edge.DirectedEdges.Add(directedEdge);
 
@@ -351,7 +351,7 @@ namespace Elements.Spatial.CellComplex
             }
             else
             {
-                this.DirectedEdges.TryGetValue(directedEdgeId, out directedEdge);
+                this._directedEdges.TryGetValue(directedEdgeId, out directedEdge);
 
                 return false;
             }
@@ -374,7 +374,7 @@ namespace Elements.Spatial.CellComplex
                 edgeId = edge.Id;
 
                 this._edgesLookup[hash] = edgeId;
-                this.Edges.Add(edgeId, edge);
+                this._edges.Add(edgeId, edge);
 
                 this.GetVertex(edge.StartVertexId).Edges.Add(edge);
                 this.GetVertex(edge.EndVertexId).Edges.Add(edge);
@@ -385,7 +385,7 @@ namespace Elements.Spatial.CellComplex
             }
             else
             {
-                this.Edges.TryGetValue(edgeId, out edge);
+                this._edges.TryGetValue(edgeId, out edge);
                 return false;
             }
         }
@@ -401,7 +401,7 @@ namespace Elements.Spatial.CellComplex
             {
                 throw new Exception("Unsupported type provided, expected Vertex or Orientation");
             }
-            return typeof(T) == typeof(Orientation) ? this.Orientations as Dictionary<ulong, T> : this.Vertices as Dictionary<ulong, T>;
+            return typeof(T) == typeof(Orientation) ? this._orientations as Dictionary<ulong, T> : this._vertices as Dictionary<ulong, T>;
         }
 
         /// <summary>
@@ -496,7 +496,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public Vertex GetVertex(ulong vertexId)
         {
-            this.Vertices.TryGetValue(vertexId, out var vertex);
+            this._vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
         }
 
@@ -506,7 +506,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return this.Vertices.Values.ToList();
+            return this._vertices.Values.ToList();
         }
 
         /// <summary>
@@ -520,7 +520,7 @@ namespace Elements.Spatial.CellComplex
             {
                 return null;
             }
-            this.Orientations.TryGetValue((ulong)orientationId, out var orientation);
+            this._orientations.TryGetValue((ulong)orientationId, out var orientation);
             return orientation;
         }
 
@@ -530,7 +530,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         internal List<Orientation> GetOrientations()
         {
-            return this.Orientations.Values.ToList();
+            return this._orientations.Values.ToList();
         }
 
         /// <summary>
@@ -540,7 +540,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public Edge GetEdge(ulong edgeId)
         {
-            this.Edges.TryGetValue(edgeId, out var edge);
+            this._edges.TryGetValue(edgeId, out var edge);
             return edge;
         }
 
@@ -550,7 +550,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Edge> GetEdges()
         {
-            return this.Edges.Values.ToList();
+            return this._edges.Values.ToList();
         }
 
         /// <summary>
@@ -564,7 +564,7 @@ namespace Elements.Spatial.CellComplex
             {
                 return null;
             }
-            this.Faces.TryGetValue((ulong)faceId, out var face);
+            this._faces.TryGetValue((ulong)faceId, out var face);
             return face;
         }
 
@@ -574,7 +574,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Face> GetFaces()
         {
-            return this.Faces.Values.ToList();
+            return this._faces.Values.ToList();
         }
 
         /// <summary>
@@ -584,7 +584,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public Cell GetCell(ulong cellId)
         {
-            this.Cells.TryGetValue(cellId, out var cell);
+            this._cells.TryGetValue(cellId, out var cell);
             return cell;
         }
 
@@ -594,7 +594,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public List<Cell> GetCells()
         {
-            return this.Cells.Values.ToList();
+            return this._cells.Values.ToList();
         }
 
         /// <summary>
@@ -644,7 +644,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         internal DirectedEdge GetDirectedEdge(ulong directedEdgeId)
         {
-            this.DirectedEdges.TryGetValue(directedEdgeId, out var directedEdge);
+            this._directedEdges.TryGetValue(directedEdgeId, out var directedEdge);
             return directedEdge;
         }
 
@@ -654,7 +654,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         internal List<DirectedEdge> GetDirectedEdges()
         {
-            return this.DirectedEdges.Values.ToList();
+            return this._directedEdges.Values.ToList();
         }
 
         /// <summary>
