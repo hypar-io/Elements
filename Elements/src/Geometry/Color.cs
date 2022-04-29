@@ -9,22 +9,18 @@ namespace Elements.Geometry
     public struct Color : IEquatable<Color>
     {
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>
-        [JsonPropertyName("Red")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Red { get; set; }
 
         /// <summary>The green component of the color between 0.0 and 1.0.</summary>
-        [JsonPropertyName("Green")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Green { get; set; }
 
         /// <summary>The blue component of the color between 0.0 and 1.0.</summary>
-        [JsonPropertyName("Blue")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Blue { get; set; }
 
         /// <summary>The alpha component of the color between 0.0 and 1.0.</summary>
-        [JsonPropertyName("Alpha")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Alpha { get; set; }
 

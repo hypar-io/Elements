@@ -7,7 +7,6 @@ namespace Elements
     public partial class Grid2dElement : Element
     {
         /// <summary>contains a grid</summary>
-        [JsonPropertyName("Grid")]
         public Grid2d Grid { get; set; }
 
         [JsonConstructor]

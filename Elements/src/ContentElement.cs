@@ -17,7 +17,6 @@ namespace Elements
         public string GltfLocation { get; set; }
 
         /// <summary>The bounding box of the content.</summary>
-        [JsonPropertyName("Bounding Box")]
         public BBox3 BoundingBox { get; set; }
 
         /// <summary>The scale needed to convert the gltf to meters.</summary>
@@ -25,11 +24,9 @@ namespace Elements
         public double GltfScaleToMeters { get; set; }
 
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
-        [JsonPropertyName("SourceDirection")]
         public Vector3 SourceDirection { get; set; }
 
         /// <summary>Alternate symbolic representations of the object.</summary>
-        [JsonPropertyName("Symbols")]
         public IList<Symbol> Symbols { get; set; }
 
         /// <summary>

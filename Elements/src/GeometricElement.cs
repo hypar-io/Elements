@@ -15,20 +15,16 @@ namespace Elements
     public class GeometricElement : Element
     {
         /// <summary>The element's transform.</summary>
-        [JsonPropertyName("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [JsonPropertyName("Material")]
         [JsonConverter(typeof(ElementConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonPropertyName("Representation")]
         public Representation Representation { get; set; }
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonPropertyName("IsElementDefinition")]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>

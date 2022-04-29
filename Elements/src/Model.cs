@@ -23,16 +23,13 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [JsonPropertyName("Origin")]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [JsonPropertyName("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [JsonPropertyName("Elements")]
         [System.ComponentModel.DataAnnotations.Required]
         public IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 

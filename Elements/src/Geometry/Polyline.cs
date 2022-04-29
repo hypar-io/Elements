@@ -23,7 +23,6 @@ namespace Elements.Geometry
         internal BBox3 _bounds;
 
         /// <summary>The vertices of the polygon.</summary>
-        [JsonPropertyName("Vertices")]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
         public IList<Vector3> Vertices { get; set; } = new List<Vector3>();

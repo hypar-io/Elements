@@ -19,11 +19,9 @@ namespace Elements.Geometry
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
 
         /// <summary>The mesh' vertices.</summary>
-        [JsonPropertyName("Vertices")]
         public IList<Vertex> Vertices { get; set; }
 
         /// <summary>The mesh' triangles.</summary>
-        [JsonPropertyName("Triangles")]
         public IList<Triangle> Triangles { get; set; }
 
         /// <summary>

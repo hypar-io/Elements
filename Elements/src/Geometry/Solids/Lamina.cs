@@ -12,7 +12,6 @@ namespace Elements.Geometry.Solids
         private IList<Polygon> _voids;
 
         /// <summary>The perimeter.</summary>
-        [JsonPropertyName("Perimeter")]
         public Polygon Perimeter
         {
             get { return _perimeter; }
@@ -29,7 +28,6 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// A collection of voids.
         /// </summary>
-        [JsonPropertyName("Voids")]
         public IList<Polygon> Voids
         {
             get { return _voids; }

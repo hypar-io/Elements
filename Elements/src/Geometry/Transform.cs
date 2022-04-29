@@ -37,7 +37,6 @@ namespace Elements.Geometry
         public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>The transform's matrix.</summary>
-        [JsonPropertyName("Matrix")]
         [System.ComponentModel.DataAnnotations.Required]
         public Matrix Matrix { get; set; } = new Matrix();
 

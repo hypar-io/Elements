@@ -16,52 +16,41 @@ namespace Elements
     public class Material : Element
     {
         /// <summary>The material's color.</summary>
-        [JsonPropertyName("Color")]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
-        [JsonPropertyName("SpecularFactor")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double SpecularFactor { get; set; } = 0.1D;
 
         /// <summary>The glossiness factor between 0.0 and 1.0.</summary>
-        [JsonPropertyName("GlossinessFactor")]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double GlossinessFactor { get; set; } = 0.1D;
 
         /// <summary>Is this material affected by lights?</summary>
-        [JsonPropertyName("Unlit")]
         public bool Unlit { get; set; } = false;
 
         /// <summary>A relative file path to an image file to be used as a texture.</summary>
-        [JsonPropertyName("Texture")]
         public string Texture { get; set; }
 
         /// <summary>Is this material to be rendered from both sides?</summary>
-        [JsonPropertyName("DoubleSided")]
         public bool DoubleSided { get; set; } = false;
 
         /// <summary>Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]-&gt;[1,1] range or repeat continuously.</summary>
-        [JsonPropertyName("RepeatTexture")]
         public bool RepeatTexture { get; set; } = true;
 
         /// <summary>A relative path to a jpg or png image file to be used as a normal texture.</summary>
-        [JsonPropertyName("NormalTexture")]
         public string NormalTexture { get; set; }
 
         /// <summary>Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</summary>
-        [JsonPropertyName("InterpolateTexture")]
         public bool InterpolateTexture { get; set; } = true;
 
         /// <summary>A relative path to a jpg or png image file to be used as an emissive texture.</summary>
-        [JsonPropertyName("EmissiveTexture")]
         public string EmissiveTexture { get; set; }
 
         /// <summary>
         /// The scale, between 0.0 and 1.0, of the emissive texture's components.
         /// </summary>
-        [JsonPropertyName("EmissiveFactor")]
         public double EmissiveFactor { get; set; }
 
         /// <summary>

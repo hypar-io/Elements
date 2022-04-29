@@ -13,11 +13,9 @@ namespace Elements.Geometry
     public class Profile : Element, IEquatable<Profile>
     {
         /// <summary>The perimeter of the profile.</summary>
-        [JsonPropertyName("Perimeter")]
         public Polygon Perimeter { get; set; }
 
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [JsonPropertyName("Voids")]
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>

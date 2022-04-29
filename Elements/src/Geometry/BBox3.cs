@@ -13,11 +13,9 @@ namespace Elements.Geometry
     public struct BBox3
     {
         /// <summary>The minimum extent of the bounding box.</summary>
-        [JsonPropertyName("Min")]
         public Vector3 Min { get; set; }
 
         /// <summary>The maximum extent of the bounding box.</summary>
-        [JsonPropertyName("Max")]
         public Vector3 Max { get; set; }
 
         /// <summary>

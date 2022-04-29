@@ -9,11 +9,9 @@ namespace Elements
     public partial class GeometryReference
     {
         /// <summary>The URL where the referenced geometry is hosted.</summary>
-        [JsonPropertyName("GeometryUrl")]
         public string GeometryUrl { get; set; }
 
         /// <summary>Any geometric data directly contained in this reference.</summary>
-        [JsonPropertyName("InternalGeometry")]
         public IList<object> InternalGeometry { get; set; }
 
         /// <summary>

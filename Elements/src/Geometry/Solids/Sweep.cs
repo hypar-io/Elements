@@ -37,7 +37,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The id of the profile to be swept along the curve.</summary>
-        [JsonPropertyName("Profile")]
         [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
@@ -53,7 +52,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The curve along which the profile will be swept.</summary>
-        [JsonPropertyName("Curve")]
         public Curve Curve
         {
             get { return _curve; }
@@ -68,7 +66,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The amount to set back the resulting solid from the start of the curve.</summary>
-        [JsonPropertyName("StartSetback")]
         public double StartSetback
         {
             get { return _startSetback; }
@@ -83,7 +80,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The amount to set back the resulting solid from the end of the curve.</summary>
-        [JsonPropertyName("EndSetback")]
         public double EndSetback
         {
             get { return _endSetback; }
@@ -98,7 +94,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The rotation of the profile around the sweep's curve.</summary>
-        [JsonPropertyName("ProfileRotation")]
         public double ProfileRotation
         {
             get { return _profileRotation; }

@@ -11,11 +11,9 @@ namespace Elements.Geometry
     public partial class Plane : IEquatable<Plane>
     {
         /// <summary>The origin of the plane.</summary>
-        [JsonPropertyName("Origin")]
         public Vector3 Origin { get; set; }
 
         /// <summary>The normal of the plane.</summary>
-        [JsonPropertyName("Normal")]
         public Vector3 Normal { get; set; }
 
         /// <summary>

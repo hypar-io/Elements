@@ -17,11 +17,9 @@ namespace Elements
         /// <summary>
         /// The geometry of the symbol.
         /// </summary>
-        [JsonPropertyName("Geometry")]
         public GeometryReference Geometry { get; set; }
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
-        [JsonPropertyName("CameraPosition")]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public SymbolCameraPosition CameraPosition { get; set; }
 

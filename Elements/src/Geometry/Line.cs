@@ -17,11 +17,9 @@ namespace Elements.Geometry
     public class Line : Curve, IEquatable<Line>
     {
         /// <summary>The start of the line.</summary>
-        [JsonPropertyName("Start")]
         public Vector3 Start { get; set; }
 
         /// <summary>The end of the line.</summary>
-        [JsonPropertyName("End")]
         public Vector3 End { get; set; }
 
         /// <summary>

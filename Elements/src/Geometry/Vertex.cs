@@ -9,24 +9,19 @@ namespace Elements.Geometry
     public class Vertex
     {
         /// <summary>The vertex's position.</summary>
-        [JsonPropertyName("Position")]
         public Vector3 Position { get; set; }
 
         /// <summary>The vertex's normal.</summary>
-        [JsonPropertyName("Normal")]
         public Vector3 Normal { get; set; }
 
         /// <summary>The vertex's color.</summary>
-        [JsonPropertyName("Color")]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The index of the vertex within a mesh.</summary>
-        [JsonPropertyName("Index")]
         public int Index { get; set; }
 
         /// <summary>The vertex's texture coordinate.</summary>
-        [JsonPropertyName("UV")]
         [System.ComponentModel.DataAnnotations.Required]
         public UV UV { get; set; } = new UV();
 
@@ -53,7 +48,6 @@ namespace Elements.Geometry
         // during serialization.
 
         /// <summary>The triangles associated with this vertex.</summary>
-        [JsonPropertyName("Triangles")]
         [System.ComponentModel.DataAnnotations.Required]
         [JsonIgnore]
         public IList<Triangle> Triangles { get; set; } = new List<Triangle>();

@@ -60,7 +60,6 @@ namespace Elements.Tests
                 this.Mesh = @mesh;
             }
 
-            [JsonPropertyName("Mesh")]
             [JsonConverter(typeof(MeshConverter))]
             public Mesh Mesh { get; set; }
         }

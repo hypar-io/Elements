@@ -28,7 +28,6 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Is the solid operation a void operation?
         /// </summary>
-        [JsonPropertyName("IsVoid")]
         public bool IsVoid { get; set; } = false;
 
         /// <summary>

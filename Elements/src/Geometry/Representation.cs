@@ -8,7 +8,6 @@ namespace Elements.Geometry
     public class Representation
     {
         /// <summary>A collection of solid operations.</summary>
-        [JsonPropertyName("SolidOperations")]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
 

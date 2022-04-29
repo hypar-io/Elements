@@ -8,11 +8,9 @@ namespace Elements.Geometry
     public struct UV
     {
         /// <summary>The U coordinate.</summary>
-        [JsonPropertyName("U")]
         public double U { get; set; }
 
         /// <summary>The V coordinate.</summary>
-        [JsonPropertyName("V")]
         public double V { get; set; }
 
         /// <summary>

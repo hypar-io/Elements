@@ -13,18 +13,15 @@ namespace Elements
     public class WallByProfile : Wall
     {
         /// <summary>The overall thickness of the Wall</summary>
-        [JsonPropertyName("Thickness")]
         public double Thickness { get; set; }
 
         /// <summary>
         /// The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
         /// and will often be projected to that Plane during internal operations.
         /// </summary>
-        [JsonPropertyName("Perimeter")]
         public Polygon Perimeter { get; set; }
 
         /// <summary>The Centerline of the wall</summary>
-        [JsonPropertyName("Centerline")]
         public Line Centerline { get; set; }
 
         /// <summary>

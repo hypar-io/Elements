@@ -12,12 +12,10 @@ namespace Elements
     public class ContentCatalog : Element
     {
         /// <summary>The content elements in this catalog.</summary>
-        [JsonPropertyName("Content")]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
 
         /// <summary>An example arrangement of the elements contained in this catalog.</summary>
-        [JsonPropertyName("ReferenceConfiguration")]
         public IList<Element> ReferenceConfiguration { get; set; }
 
         /// <summary>
