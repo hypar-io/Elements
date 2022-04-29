@@ -1,11 +1,8 @@
 ﻿using Elements.Geometry;
 using Elements.Spatial.AdaptiveGrid;
-using Elements.Tests;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Xunit;
 using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
 
