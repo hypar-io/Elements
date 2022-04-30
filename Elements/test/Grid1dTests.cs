@@ -4,7 +4,6 @@ using Elements.Spatial;
 using Xunit;
 using Elements.Geometry;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using System.Text.Json;
 
 namespace Elements.Tests
@@ -162,7 +161,7 @@ namespace Elements.Tests
             grid.DivideByCount(4);
             grid[3].DivideByFixedLength(0.4);
             var json = JsonSerializer.Serialize(grid);
-            var deserialized = JsonSerializer.Deserialize<Grid1d>(json);
+            var deserialized = Element.Deserialize<Grid1d>(json);
             Assert.Equal(grid.GetCells().Count, deserialized.GetCells().Count);
             Assert.Equal(0, (grid.Curve as Polyline).Start.DistanceTo((deserialized.Curve as Polyline).Start));
         }
