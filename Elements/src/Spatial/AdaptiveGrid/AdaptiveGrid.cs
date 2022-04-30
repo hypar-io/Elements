@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -26,14 +25,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Vertices by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
+        public Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// Edges by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
+        public Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         // See Edge.GetHash for how edges are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();

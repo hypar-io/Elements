@@ -43,7 +43,6 @@ namespace Elements.Spatial
         /// <summary>
         /// Numerical domain of this Grid
         /// </summary>
-        [JsonInclude]
         public Domain1d Domain { get; }
 
         /// <summary>
@@ -89,7 +88,6 @@ namespace Elements.Spatial
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        [JsonInclude]
         [JsonPropertyName("CurveDomain")]
         public readonly Domain1d curveDomain;
 
@@ -100,7 +98,6 @@ namespace Elements.Spatial
         // is useful in serialization so we only store the base curve once. 
         private Grid1d topLevelParentGrid;
 
-        [JsonInclude]
         [JsonPropertyName("TopLevelParentCurve")]
         public Curve topLevelParentCurve
         {

@@ -19,14 +19,12 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID of U orientation.
         /// </summary>
-        [JsonInclude]
-        private ulong? _orientationUId;
+        public ulong? _orientationUId;
 
         /// <summary>
         /// ID of V orientation.
         /// </summary>
-        [JsonInclude]
-        private ulong? _orientationVId;
+        public ulong? _orientationVId;
 
         /// <summary>
         /// Cells that reference this Face.

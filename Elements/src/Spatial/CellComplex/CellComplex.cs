@@ -35,38 +35,32 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// Vertices by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
+        public Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// U or V directions by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Orientation> _orientations = new Dictionary<ulong, Orientation>();
+        public Dictionary<ulong, Orientation> _orientations = new Dictionary<ulong, Orientation>();
 
         /// <summary>
         /// Edges by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
+        public Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
 
         /// <summary>
         /// DirectedEdges by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
+        public Dictionary<ulong, DirectedEdge> _directedEdges = new Dictionary<ulong, DirectedEdge>();
 
         /// <summary>
         /// Faces by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Face> _faces = new Dictionary<ulong, Face>();
+        public Dictionary<ulong, Face> _faces = new Dictionary<ulong, Face>();
 
         /// <summary>
         /// Cells by ID.
         /// </summary>
-        [JsonInclude]
-        private Dictionary<ulong, Cell> _cells = new Dictionary<ulong, Cell>();
+        public Dictionary<ulong, Cell> _cells = new Dictionary<ulong, Cell>();
 
         // Vertex lookup by x, y, z coordinate.
         private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();

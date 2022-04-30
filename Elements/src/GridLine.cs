@@ -44,19 +44,16 @@ namespace Elements
         /// <summary>
         /// Radius of the gridline head.
         /// </summary>
-        [JsonInclude]
         public double Radius = 1;
 
         /// <summary>
         /// How far to extend the gridline from the beginning to the start of the circle.
         /// </summary>
-        [JsonInclude]
         public double ExtensionBeginning = 1;
 
         /// <summary>
         /// How far to extend the gridline past the end of the circle.
         /// </summary>
-        [JsonInclude]
         public double ExtensionEnd = 1;
 
         internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)

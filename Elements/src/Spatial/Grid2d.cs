@@ -27,13 +27,11 @@ namespace Elements.Spatial
         /// <summary>
         /// The 1d Grid along the U dimension
         /// </summary>
-        [JsonInclude]
         public Grid1d U { get; private set; }
 
         /// <summary>
         /// The 1d grid along the V dimension
         /// </summary>
-        [JsonInclude]
         public Grid1d V { get; private set; }
 
         /// <summary>
@@ -51,33 +49,27 @@ namespace Elements.Spatial
         /// <summary>
         /// A transform from grid space to world space
         /// </summary>
-        [JsonInclude]
         [JsonPropertyName("FromGrid")]
         public Transform fromGrid = new Transform();
 
         /// <summary>
         /// A transform from world space to grid space
         /// </summary>
-        [JsonInclude]
         [JsonPropertyName("ToGrid")]
         public Transform toGrid = new Transform();
 
-        [JsonInclude]
         public Domain1d UDomainInternal = new Domain1d(0, 0);
 
-        [JsonInclude]
         public Domain1d VDomainInternal = new Domain1d(0, 0);
 
         /// <summary>
         /// Any boundary curves, transformed to grid space.
         /// </summary>
-        [JsonInclude]
         [JsonPropertyName("BoundariesInGridSpace")]
         public IList<Polygon> boundariesInGridSpace;
 
         private List<List<Grid2d>> cells;
 
-        [JsonInclude]
         public List<IndexedCell> ModifiedChildCells => GetModifiedChildCells();
 
         // for serialization purposes, we store only those cells that are not a natural consequence of the U and V 1d grids composing this grid.
