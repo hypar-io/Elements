@@ -12,6 +12,9 @@ namespace Elements.Geometry.Profiles
         public double Ht;
         public double h;
         public double B;
+
+        // Ignore to avoid serialization clash with 'B'
+        [JsonIgnore]
         public double b;
         public double tnom;
         public double tdes;
