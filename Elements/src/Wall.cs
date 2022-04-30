@@ -29,6 +29,7 @@ namespace Elements
         /// <summary>
         /// A collection of openings in the wall.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<List<Opening>>))]
         public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
