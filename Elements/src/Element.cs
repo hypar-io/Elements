@@ -106,7 +106,8 @@ namespace Elements
                 var options = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
-                    AllowTrailingCommas = true
+                    AllowTrailingCommas = true,
+                    IncludeFields = true
                 };
                 var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
                 var refHandler = new ElementReferenceHandler(typeCache, root);
