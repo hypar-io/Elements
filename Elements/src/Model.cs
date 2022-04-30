@@ -213,7 +213,8 @@ namespace Elements
 
             var serializerOptions = new JsonSerializerOptions
             {
-                WriteIndented = indent
+                WriteIndented = indent,
+                IncludeFields = true // needed for tuple support
             };
             serializerOptions.Converters.Add(new ElementConverterFactory());
             serializerOptions.Converters.Add(new SolidConverter());
@@ -275,7 +276,8 @@ namespace Elements
                 var options = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
-                    AllowTrailingCommas = true
+                    AllowTrailingCommas = true,
+                    IncludeFields = true // needed for tuples
                 };
                 options.Converters.Add(new SolidConverter());
 
