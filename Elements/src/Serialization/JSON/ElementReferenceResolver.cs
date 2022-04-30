@@ -22,9 +22,6 @@ namespace Elements.Serialization.JSON
 
         public ElementReferenceResolver(Dictionary<string, Type> typeCache, JsonElement documentElements)
         {
-#if DEBUG
-            Console.WriteLine("Constructing a new reference resolver.");
-#endif
             TypeCache = typeCache;
             DocumentElements = documentElements;
         }

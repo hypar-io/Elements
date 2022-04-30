@@ -263,9 +263,6 @@ namespace Elements
             var sw = new Stopwatch();
             sw.Start();
             var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
-#if DEBUG
-            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating type cache.");
-#endif
 
             Model model = null;
             using (var document = JsonDocument.Parse(json))
