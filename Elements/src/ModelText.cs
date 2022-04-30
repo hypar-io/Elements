@@ -68,7 +68,6 @@ namespace Elements
         /// A collection of text data objects which specify the location,
         /// direction, content, and color of the text.
         /// </summary>
-        [JsonInclude]
         public IList<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)> Texts { get; set; }
 
         /// <summary>
