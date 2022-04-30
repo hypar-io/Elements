@@ -276,7 +276,7 @@ namespace Elements.Tests
             {
                 IncludeFields = true
             };
-            var allPolygons = JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
+            var allPolygons = JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"), options);
             var solid = new Solid();
             foreach (var (outerLoop, innerLoops) in allPolygons)
             {
