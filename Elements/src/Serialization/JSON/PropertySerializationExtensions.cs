@@ -56,10 +56,11 @@ namespace Elements.Serialization.JSON
 
             foreach (var elementProperty in elementProperties)
             {
-                var prop = root.GetProperty(elementProperty.Name);
-                if (prop.ValueKind == JsonValueKind.Null)
+                if (!root.TryGetProperty(elementProperty.Name, out var prop) ||
+                prop.ValueKind == JsonValueKind.Null)
                 {
-                    // You'll get here when you've got a null reference to an element. 
+                    // You'll get here when you've got a null reference to an element,
+                    // or you've got no element at all in the json. 
                     // Resolve to an empty id, causing the resolver to return null.
                     elementReferenceResolver.ResolveReference(string.Empty);
                     continue;
