@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System.Text.Json.Serialization;
-using Elements.Serialization.JSON;
 using System.Text.Json;
 
 namespace Elements
@@ -81,10 +80,34 @@ namespace Elements
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, IList<Symbol> symbols, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, symbols, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              IList<Symbol> symbols,
+                              Transform @transform,
+                              Material @material,
+                              Representation @representation,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties)
+        : this(@gltfLocation,
+               @boundingBox,
+               @gltfScaleToMeters,
+               @sourceDirection,
+               symbols,
+               @transform,
+               @material,
+               @representation,
+               @isElementDefinition,
+               @id,
+               @name)
         {
-            this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            if (additionalProperties != null && additionalProperties != string.Empty)
+            {
+                this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            }
         }
 
         /// <summary>
@@ -103,10 +126,33 @@ namespace Elements
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, null, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              Transform @transform,
+                              Material @material,
+                              Representation @representation,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties)
+        : this(@gltfLocation,
+               @boundingBox,
+               @gltfScaleToMeters,
+               @sourceDirection,
+               null,
+               @transform,
+               @material,
+               @representation,
+               @isElementDefinition,
+               @id,
+               @name)
         {
-            this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            if (additionalProperties != null && additionalProperties != string.Empty)
+            {
+                this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            }
         }
 
         /// <summary>
