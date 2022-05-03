@@ -214,7 +214,8 @@ namespace Elements
             var serializerOptions = new JsonSerializerOptions
             {
                 WriteIndented = indent,
-                IncludeFields = true // needed for tuple support
+                IncludeFields = true, // needed for tuple support
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
             serializerOptions.Converters.Add(new ElementConverterFactory());
             serializerOptions.Converters.Add(new SolidConverter());
@@ -286,7 +287,7 @@ namespace Elements
 
                 // Use the model converter here so that we have a chance to 
                 // intercept the creation of elements when things go wrong.
-                options.Converters.Add(new ModelConverter());
+                // options.Converters.Add(new ModelConverter());
 
                 model = JsonSerializer.Deserialize<Model>(json, options);
 
