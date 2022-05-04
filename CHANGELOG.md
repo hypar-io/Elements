@@ -4,8 +4,6 @@
 
 ### Added
 
-- `FileDestination` class representing a file destination for functions as exporters functionality.
-
 ## 1.0.0
 
 ### Added

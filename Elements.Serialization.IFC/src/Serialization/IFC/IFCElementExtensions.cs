@@ -276,7 +276,7 @@ namespace Elements.Serialization.IFC
                 {
                     e = ((Beam)element).ToIfc(id, localPlacement, shape);
                 }
-                if (element is Brace)
+                else if (element is Brace)
                 {
                     e = ((Brace)element).ToIfc(id, localPlacement, shape);
                 }
@@ -517,10 +517,10 @@ namespace Elements.Serialization.IFC
             return ifcWall;
         }
 
-        private static IfcBeam ToIfc(this Beam beam,
+        private static IfcBeam ToIfc(this Beam beam, Guid id,
             IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
         {
-            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(beam.Id), null,
+            var ifcBeam = new IfcBeam(IfcGuid.ToIfcGuid(id), null,
                 null, null, null, localPlacement, shape, null, IfcBeamTypeEnum.BEAM);
             return ifcBeam;
         }
