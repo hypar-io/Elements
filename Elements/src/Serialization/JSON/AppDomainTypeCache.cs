@@ -48,7 +48,13 @@ namespace Elements.Serialization.JSON
                     {
                         if (IsValidTypeForElements(t) && !typeCache.ContainsKey(t.FullName))
                         {
-                            typeCache.Add(t.FullName, t);
+                            // At this point we don't know the generic type arguments,
+                            // so we key the type in the cache as Elements.ProxyElement<>
+                            // Later, when we set the discriminator, we include the
+                            // type argument like Elements.ProxyElement<Elements.Mass>, and
+                            // we do some string deconstruction to match the two and to
+                            // extract the type arguments.
+                            typeCache.Add(t.IsGenericType ? $"{t.FullName.Split('`').First()}<>" : t.FullName, t.IsGenericType ? t.GetGenericTypeDefinition() : t);
                         }
                     }
                     catch (TypeLoadException)

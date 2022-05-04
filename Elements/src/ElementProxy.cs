@@ -52,7 +52,6 @@ namespace Elements
     /// </summary>
     public class ElementProxy<T> : Element where T : Element
     {
-        [JsonIgnore]
         private T _element = null;
 
         /// <summary>
@@ -82,18 +81,16 @@ namespace Elements
         /// <summary>
         /// JSON constructor only for deserializing other models.
         /// </summary>
-        /// <returns></returns>
         [JsonConstructor]
-        internal ElementProxy(Guid elementId, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
+        public ElementProxy(Guid elementId, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
         {
             this.ElementId = elementId;
             this.Dependency = dependencyName;
         }
 
         /// <summary>
-        /// Create a new proxy within this function. Not intended to be used anywhere outside of ELementProxy.GetProxy().
+        /// Create a new proxy within this function. Not intended to be used anywhere outside of ElementProxy.GetProxy().
         /// </summary>
-        /// <returns></returns>
         internal ElementProxy(T element, string dependencyName, Guid id = default(Guid), string name = null) : base(id, name)
         {
             this.ElementId = element.Id;

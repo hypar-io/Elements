@@ -100,42 +100,94 @@ namespace Elements.Serialization.JSON
                 }
                 else
                 {
-
                     using (var doc = JsonDocument.ParseValue(ref reader))
                     {
                         // Deserialize an element.
                         var root = doc.RootElement;
 
                         var discriminator = root.GetProperty("discriminator").GetString();
+                        Type derivedType;
 
-                        if (!resolver.TypeCache.TryGetValue(discriminator, out var derivedType))
+                        // Handle discriminators like ElementProxy<Elements.Mass>
+                        if (discriminator.Contains("<"))
                         {
-                            // The type could not be found. See if it has the hallmarks
-                            // of a geometric element and deserialize it as such if possible.
-                            if (root.TryGetProperty("Representation", out _))
+                            // Strip the element type from the discriminator.
+                            int start = discriminator.LastIndexOf("<") + 1;
+                            int end = discriminator.IndexOf(">", start);
+                            string result = discriminator.Remove(start, end - start);
+                            if (!resolver.TypeCache.TryGetValue(result, out derivedType))
                             {
-                                derivedType = typeof(GeometricElement);
+                                if (root.TryGetProperty("Representation", out _))
+                                {
+                                    derivedType = typeof(GeometricElement);
+                                }
+                                else
+                                {
+                                    return default;
+                                }
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (!resolver.TypeCache.TryGetValue(discriminator, out derivedType))
                             {
-                                return default;
+                                // The type could not be found. See if it has the hallmarks
+                                // of a geometric element and deserialize it as such if possible.
+                                if (root.TryGetProperty("Representation", out _))
+                                {
+                                    derivedType = typeof(GeometricElement);
+                                }
+                                else
+                                {
+                                    return default;
+                                }
                             }
                         }
 
-                        // Use the type info to get all properties which are Element
-                        // references, and deserialize those first.
-
-                        // TODO: This *should* support serialization of elements in
-                        // any order, removing the requirement to do any kind of recursive
-                        // sub-element searching. We can remove that code from the model.
-                        PropertySerializationExtensions.DeserializeElementProperties(derivedType, root, resolver, resolver.DocumentElements);
-
-                        T e = (T)root.Deserialize(derivedType, options);
-                        if (typeof(Element).IsAssignableFrom(derivedType))
+                        if (derivedType.IsGenericType)
                         {
-                            resolver.AddReference(((Element)(object)e).Id.ToString(), e);
+                            // Recover the type argument from the discriminator.
+                            // TODO: Support multiple type arguments.
+                            int start = discriminator.LastIndexOf("<") + 1;
+                            int end = discriminator.IndexOf(">", start);
+                            string elementType = discriminator.Substring(start, end - start);
+                            if (!resolver.TypeCache.TryGetValue(elementType, out var genericType))
+                            {
+                                throw new Exception($"The type {elementType} could not be found in the type cache. It can not be used as a generic type argument.");
+                            }
+                            var typeArgs = new[] { genericType };
+                            var genericElementType = derivedType.MakeGenericType(typeArgs);
+
+                            if (discriminator.Contains("Elements.ElementProxy"))
+                            {
+                                var id = root.GetProperty("Id").GetGuid();
+                                var name = root.GetProperty("Name").GetString();
+                                var elementId = root.GetProperty("elementId").GetGuid();
+                                var dependency = root.GetProperty("dependency").GetString();
+                                var genericElement = (T)Activator.CreateInstance(genericElementType, new object[] { elementId, dependency, id, name });
+
+                                return genericElement;
+                            }
+
+                            throw new Exception("Generic element types other than ElementProxy<T> are not currently supported.");
                         }
-                        return e;
+                        else
+                        {
+                            // Use the type info to get all properties which are Element
+                            // references, and deserialize those first.
+
+                            // TODO: This *should* support serialization of elements in
+                            // any order, removing the requirement to do any kind of recursive
+                            // sub-element searching. We can remove that code from the model.
+                            PropertySerializationExtensions.DeserializeElementProperties(derivedType, root, resolver, resolver.DocumentElements);
+
+                            T e = (T)root.Deserialize(derivedType, options);
+                            if (typeof(Element).IsAssignableFrom(derivedType))
+                            {
+                                resolver.AddReference(((Element)(object)e).Id.ToString(), e);
+                            }
+                            return e;
+                        }
                     }
                 }
             }

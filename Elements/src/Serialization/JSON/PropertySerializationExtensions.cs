@@ -25,13 +25,16 @@ namespace Elements.Serialization.JSON
             foreach (var pinfo in pinfos)
             {
                 // Skip ignored properties
-                var attrib = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
-                if (attrib != null)
+                var ignoreAttrib = pinfo.GetCustomAttribute<JsonIgnoreAttribute>();
+                if (ignoreAttrib != null)
                 {
                     continue;
                 }
 
-                writer.WritePropertyName(pinfo.Name);
+                // Honor the renaming of a property
+                var nameAttrib = pinfo.GetCustomAttribute<JsonPropertyNameAttribute>();
+
+                writer.WritePropertyName(nameAttrib != null ? nameAttrib.Name : pinfo.Name);
                 JsonSerializer.Serialize(writer, pinfo.GetValue(value), pinfo.PropertyType, options);
             }
         }
