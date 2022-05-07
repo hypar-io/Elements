@@ -233,7 +233,11 @@ namespace Elements
 
             using (FileStream s = File.Create(path))
             {
-                var serializerOptions = new JsonSerializerOptions();
+                var serializerOptions = new JsonSerializerOptions()
+                {
+                    IncludeFields = true, // needed for tuple support
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
                 serializerOptions.Converters.Add(new ElementConverterFactory());
                 serializerOptions.Converters.Add(new SolidConverter());
                 JsonSerializer.Serialize(s, exportModel, serializerOptions);
