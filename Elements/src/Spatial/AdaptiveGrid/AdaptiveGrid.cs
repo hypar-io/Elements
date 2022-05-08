@@ -25,12 +25,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Vertices by ID.
         /// </summary>
-        public Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
+        public Dictionary<ulong, Vertex> Vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// Edges by ID.
         /// </summary>
-        public Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
+        public Dictionary<ulong, Edge> Edges = new Dictionary<ulong, Edge>();
 
         // See Edge.GetHash for how edges are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
@@ -258,7 +258,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public Vertex GetVertex(ulong vertexId)
         {
-            this._vertices.TryGetValue(vertexId, out var vertex);
+            this.Vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
         }
 
@@ -268,7 +268,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return this._vertices.Values.ToList();
+            return this.Vertices.Values.ToList();
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Edge> GetEdges()
         {
-            return this._edges.Values.ToList();
+            return this.Edges.Values.ToList();
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 edgeId = edge.Id;
 
                 this._edgesLookup[hash] = edgeId;
-                this._edges.Add(edgeId, edge);
+                this.Edges.Add(edgeId, edge);
 
                 this.GetVertex(edge.StartId).Edges.Add(edge);
                 this.GetVertex(edge.EndId).Edges.Add(edge);
@@ -473,7 +473,7 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             else
             {
-                this._edges.TryGetValue(edgeId, out var edge);
+                this.Edges.TryGetValue(edgeId, out var edge);
                 return edge;
             }
         }
@@ -508,7 +508,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
             this._edgesLookup.Remove(hash);
-            this._edges.Remove(edge.Id);
+            this.Edges.Remove(edge.Id);
 
             var startVertexEdges = this.GetVertex(edge.StartId).Edges;
             startVertexEdges.Remove(edge);
@@ -542,7 +542,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
                 zDict[point.Z] = id;
-                _vertices[id] = vertex;
+                Vertices[id] = vertex;
                 this._vertexId++;
             }
 
@@ -551,8 +551,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private void DeleteVertex(ulong id)
         {
-            var vertex = _vertices[id];
-            _vertices.Remove(id);
+            var vertex = Vertices[id];
+            Vertices.Remove(id);
             var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance);
             if (zDict == null)
             {
