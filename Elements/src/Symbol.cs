@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -17,6 +18,7 @@ namespace Elements
         /// <summary>
         /// The geometry of the symbol.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<GeometryReference>))]
         public GeometryReference Geometry { get; set; }
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
