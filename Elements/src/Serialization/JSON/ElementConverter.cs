@@ -181,6 +181,12 @@ namespace Elements.Serialization.JSON
                             // sub-element searching. We can remove that code from the model.
                             PropertySerializationExtensions.DeserializeElementProperties(derivedType, root, resolver, resolver.DocumentElements);
 
+                            // if (root.TryGetProperty("Id", out var id))
+                            // {
+                            //     var strId = id.GetString();
+                            //     Console.WriteLine($"Deserializing element {strId}");
+                            // }
+
                             T e = (T)root.Deserialize(derivedType, options);
                             if (typeof(Element).IsAssignableFrom(derivedType))
                             {
