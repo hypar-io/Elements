@@ -19,12 +19,12 @@ namespace Elements.Spatial.CellComplex
         /// <summary>
         /// ID of U orientation.
         /// </summary>
-        public ulong? _orientationUId;
+        public ulong? OrientationUId;
 
         /// <summary>
         /// ID of V orientation.
         /// </summary>
-        public ulong? _orientationVId;
+        public ulong? OrientationVId;
 
         /// <summary>
         /// Cells that reference this Face.
@@ -46,11 +46,11 @@ namespace Elements.Spatial.CellComplex
             this.DirectedEdgeIds = directedEdges.Select(ds => ds.Id).ToList();
             if (u != null)
             {
-                this._orientationUId = u.Id;
+                this.OrientationUId = u.Id;
             }
             if (v != null)
             {
-                this._orientationVId = v.Id;
+                this.OrientationVId = v.Id;
             }
         }
 
@@ -58,12 +58,12 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Face(ulong id, List<ulong> directedEdgeIds, ulong? _orientationUId = null, ulong? _orientationVId = null) : base(id, null)
+        public Face(ulong id, List<ulong> directedEdgeIds, ulong? orientationUId, ulong? orientationVId) : base(id, null)
         {
             this.Id = id;
             this.DirectedEdgeIds = directedEdgeIds;
-            this._orientationUId = _orientationUId;
-            this._orientationVId = _orientationVId;
+            this.OrientationUId = orientationUId;
+            this.OrientationVId = orientationVId;
         }
 
         /// <summary>
@@ -190,7 +190,7 @@ namespace Elements.Spatial.CellComplex
         /// <returns></returns>
         public (Orientation U, Orientation V) GetOrientation()
         {
-            return (U: this.CellComplex.GetOrientation(this._orientationUId), V: this.CellComplex.GetOrientation(this._orientationVId));
+            return (U: this.CellComplex.GetOrientation(this.OrientationUId), V: this.CellComplex.GetOrientation(this.OrientationVId));
         }
 
         /// <summary>

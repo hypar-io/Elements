@@ -39,9 +39,8 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="startVertexId"></param>
         /// <param name="endVertexId"></param>
-        /// <returns></returns>
         [JsonConstructor]
-        internal Edge(ulong id, ulong startVertexId, ulong endVertexId) : base(id, null)
+        public Edge(ulong id, ulong startVertexId, ulong endVertexId) : base(id, null)
         {
             this.SetVerticesFromIds(startVertexId, endVertexId);
         }

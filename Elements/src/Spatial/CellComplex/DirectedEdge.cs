@@ -54,7 +54,7 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal DirectedEdge(ulong id, ulong edgeId, ulong startVertexId, ulong endVertexId) : base(id, null)
+        public DirectedEdge(ulong id, ulong edgeId, ulong startVertexId, ulong endVertexId) : base(id, null)
         {
             this.EdgeId = edgeId;
             this.StartVertexId = startVertexId;
