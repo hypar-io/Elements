@@ -37,6 +37,16 @@ namespace Elements.Serialization.JSON
                 writer.WritePropertyName(nameAttrib != null ? nameAttrib.Name : pinfo.Name);
                 JsonSerializer.Serialize(writer, pinfo.GetValue(value), pinfo.PropertyType, options);
             }
+
+            // Support public fields.
+            var finfos = value.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var finfo in finfos)
+            {
+                var nameAttrib = finfo.GetCustomAttribute<JsonPropertyNameAttribute>();
+
+                writer.WritePropertyName(nameAttrib != null ? nameAttrib.Name : finfo.Name);
+                JsonSerializer.Serialize(writer, finfo.GetValue(value), finfo.FieldType, options);
+            }
         }
 
         public static void DeserializeElementProperties(Type derivedType,
