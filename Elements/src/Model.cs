@@ -291,6 +291,9 @@ namespace Elements
 
                 // Use the model converter here so that we have a chance to 
                 // intercept the creation of elements when things go wrong.
+                // Using the model converter adds 100ms because it has to
+                // call deserialize for each element and trap if the element
+                // is null and report an error.
                 // options.Converters.Add(new ModelConverter());
 
                 model = JsonSerializer.Deserialize<Model>(json, options);
@@ -298,6 +301,13 @@ namespace Elements
                 // Resetting the reference handler, empties the internal
                 // elements cache.
                 refHandler.Reset(typeCache, elementsElement);
+            }
+
+            // Remove null elements that are the result of the deserializer
+            // not being able to handle an element.
+            foreach (var nullElement in model.Elements.Where(e => e.Value == null).ToList())
+            {
+                model.Elements.Remove(nullElement);
             }
 
             return model;
