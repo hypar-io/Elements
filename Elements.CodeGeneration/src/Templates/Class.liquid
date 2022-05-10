@@ -50,7 +50,7 @@
     [System.ComponentModel.DataAnnotations.RegularExpression(@"{{ property.RegularExpressionValue }}")]
 {%   endif -%}
 {%   if property.IsStringEnum -%}
-    [JsonConverter(typeof(Converters.StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
 {%   endif -%}
 {%   if property.IsDate and UseDateFormatConverter -%}
     [JsonConverter(typeof(DateFormatConverter))]
