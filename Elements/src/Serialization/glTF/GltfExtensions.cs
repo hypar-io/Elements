@@ -227,6 +227,22 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
+                if (material.LineDisplaySettings != null)
+                {
+                    if (gltfMaterial.Extensions == null)
+                    {
+                        gltfMaterial.Extensions = new Dictionary<string, object>();
+                    }
+                    if (!gltf.ExtensionsUsed.Contains("HYPAR_materials_edgesettings"))
+                    {
+                        gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edgesettings" }.ToArray();
+                    }
+                    gltfMaterial.Extensions.Add("HYPAR_materials_edgesettings", new Dictionary<string, object>{
+                        {"lineWidth", material.LineDisplaySettings.Width},
+                        {"sizeMode", (int)material.LineDisplaySettings.Mode},
+                    });
+                }
+
                 var textureHasTransparency = false;
 
                 if (material.Texture != null && File.Exists(material.Texture))
