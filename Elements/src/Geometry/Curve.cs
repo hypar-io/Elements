@@ -97,9 +97,9 @@ namespace Elements.Geometry
         /// <param name="c">The curve to convert.</param>
         public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
 
-        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        internal GraphicsBuffers ToGraphicsBuffers()
         {
-            return this.RenderVertices().ToGraphicsBuffers(lineLoop);
+            return this.RenderVertices().ToGraphicsBuffers();
         }
     }
 }

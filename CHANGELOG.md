@@ -4,6 +4,11 @@
 
 ### Added
 
+### Changed
+
+- Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
+- `TryToGraphicsBuffers` is now public
+
 ## 1.0.0
 
 ### Added
