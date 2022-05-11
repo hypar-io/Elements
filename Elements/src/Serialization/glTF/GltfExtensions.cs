@@ -233,11 +233,11 @@ namespace Elements.Serialization.glTF
                     {
                         gltfMaterial.Extensions = new Dictionary<string, object>();
                     }
-                    if (!gltf.ExtensionsUsed.Contains("HYPAR_materials_edgesettings"))
+                    if (!gltf.ExtensionsUsed.Contains("HYPAR_materials_edge_settings"))
                     {
-                        gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edgesettings" }.ToArray();
+                        gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edge_settings" }.ToArray();
                     }
-                    gltfMaterial.Extensions.Add("HYPAR_materials_edgesettings", new Dictionary<string, object>{
+                    gltfMaterial.Extensions.Add("HYPAR_materials_edge_settings", new Dictionary<string, object>{
                         {"lineWidth", material.LineDisplaySettings.Width},
                         {"sizeMode", (int)material.LineDisplaySettings.Mode},
                     });
