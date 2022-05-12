@@ -11,8 +11,8 @@ class Elements {
         return DotNet.invokeMethodAsync('Elements.Wasm', 'ModelToGlbBytes', json)
     }
 
-    async test() {
-        return DotNet.invokeMethodAsync('Elements.Wasm', 'Test')
+    async test(value) {
+        return DotNet.invokeMethodAsync('Elements.Wasm', 'Test', value)
     }
 }
 
