@@ -2,7 +2,7 @@
 /// <summary>{{ Description | csharpdocs }}</summary>
 {% endif -%}
 {% if HasDiscriminator -%}
-[JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "{{ Discriminator }}")]
+[JsonConverter(typeof(ElementConverter<{{ClassName}}>))]
 {% endif -%}
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
 {% if InheritsExceptionSchema -%}
