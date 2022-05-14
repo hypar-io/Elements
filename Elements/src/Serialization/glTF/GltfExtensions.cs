@@ -86,7 +86,7 @@ namespace Elements.Serialization.glTF
                     if (SaveGlb(model, path, out errors, drawEdges))
                     {
                         return;
-                    }
+                }
                     // Else fall through to produce an empty GLTF.
                 }
                 else

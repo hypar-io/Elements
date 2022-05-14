@@ -34,6 +34,10 @@ namespace Elements.Geometry
             _plane = Plane();
         }
 
+        /// <summary>
+        /// Validate that this Polygon's vertices are coplanar, clean up any
+        /// duplicate vertices, and fix any overlapping edges.
+        /// </summary>
         protected override void ValidateVertices()
         {
             if (!Vertices.AreCoplanar())
@@ -2201,7 +2205,6 @@ namespace Elements.Geometry
         /// E|_________|B_____A
         /// Vertex A will be deleted
         /// </summary>
-        /// <param name="vertices"></param>
         private void DeleteVerticesForOverlappingEdges()
         {
             if (Vertices.Count < 4)

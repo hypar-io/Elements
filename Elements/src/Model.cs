@@ -42,7 +42,10 @@ namespace Elements
         [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
+
+#pragma warning disable CS0618
             this.Origin = @origin;
+#pragma warning restore CS0618
             this.Transform = @transform;
             this.Elements = @elements;
         }
