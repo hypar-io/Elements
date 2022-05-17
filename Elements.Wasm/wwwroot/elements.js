@@ -22,6 +22,7 @@ class Elements {
 Blazor.start({
     loadBootResource: function (type, name, defaultUri, integrity) {
         // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
+        const root = window.location.protocol + '//' + window.location.host
         switch (type) {
             case 'manifest':
             case 'assembly':
@@ -29,7 +30,7 @@ Blazor.start({
             case 'dotnetjs':
             case 'dotnetwasm':
             case 'timezonedata':
-                return `elements/_framework/${name}`;
+                return `${root}/elements/_framework/${name}`;
         }
     }
 });
