@@ -18,8 +18,8 @@
 </head>
 
 <body>
-    <script type="module" src="js/Elements.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script type="module" src="elements/elements.js"></script>
+    <script src="elements/_framework/blazor.webassembly.js" autostart="false"></script>
     <script type="module-shim">
         function loadModel(glb) {
             const blob = new Blob([new Uint8Array(glb)], { type: "application/octet-stream" });
@@ -96,8 +96,6 @@
 
         animate();
     </script>
-    <!-- <button onmousedown="model.reset()" onclick="model.runTest()" type="button"
-        style="position: absolute; left: 50vw; top: 20px">Test!</button> -->
     <input type="range" min="1" max="100" value="1" class="slider" id="myRange" oninput="model.reset()"
         onchange="console.debug(this.value);model.runTest(parseFloat(this.value))">
     <div id="result" style="white-space: pre-line; position: absolute; left: 20px; bottom: 20px"></div>

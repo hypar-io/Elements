@@ -2,13 +2,8 @@
 This is a minimal web assembly project.
 
 ### Run
-`dotnet watch run`
-
-### Publish
 ```
-dotnet publish -c release
-cd bin/release/net6.0/publish/wwwroot
-python3 -m http.server
+./deploy.sh
 ```
 
 ### Files
