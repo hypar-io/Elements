@@ -4,6 +4,8 @@
 
 ### Added
 
+- `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+
 ### Changed
 
 - Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
