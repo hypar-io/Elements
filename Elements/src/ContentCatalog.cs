@@ -37,7 +37,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Convert the ContentCatalog into it's JSON representation.
+        /// Convert the ContentCatalog into its JSON representation.
         /// </summary>
         public string ToJson()
         {

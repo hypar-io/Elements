@@ -44,6 +44,9 @@ namespace Elements.Geometry
             _bounds = new BBox3(Vertices);
         }
 
+        /// <summary>
+        /// Clean up any duplicate vertices, and warn about any vertices that are too close to each other.
+        /// </summary>
         protected virtual void ValidateVertices()
         {
             Vertices = Vector3.RemoveSequentialDuplicates(Vertices);

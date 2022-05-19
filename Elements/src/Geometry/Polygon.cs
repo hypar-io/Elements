@@ -34,6 +34,10 @@ namespace Elements.Geometry
             _plane = Plane();
         }
 
+        /// <summary>
+        /// Validate that this Polygon's vertices are coplanar, clean up any
+        /// duplicate vertices, and fix any overlapping edges.
+        /// </summary>
         protected override void ValidateVertices()
         {
             if (!Vertices.AreCoplanar())
@@ -2201,7 +2205,6 @@ namespace Elements.Geometry
         /// E|_________|B_____A
         /// Vertex A will be deleted
         /// </summary>
-        /// <param name="vertices"></param>
         private void DeleteVerticesForOverlappingEdges()
         {
             if (Vertices.Count < 4)
@@ -2261,7 +2264,7 @@ namespace Elements.Geometry
                         //Loop can possibly be just two points connected forth and back.
                         //Filter it early.
                         vertices.Add(v);
-                        if(vertices.Count > 2)
+                        if (vertices.Count > 2)
                         {
                             polygonPresets.Add(vertices);
                         }
