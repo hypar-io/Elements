@@ -227,7 +227,7 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
-                if (material.LineDisplaySettings != null)
+                if (material.EdgeDisplaySettings != null)
                 {
                     if (gltfMaterial.Extensions == null)
                     {
@@ -238,8 +238,8 @@ namespace Elements.Serialization.glTF
                         gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edge_settings" }.ToArray();
                     }
                     gltfMaterial.Extensions.Add("HYPAR_materials_edge_settings", new Dictionary<string, object>{
-                        {"lineWidth", material.LineDisplaySettings.Width},
-                        {"sizeMode", (int)material.LineDisplaySettings.Mode},
+                        {"lineWidth", material.EdgeDisplaySettings.LineWidth},
+                        {"widthMode", (int)material.EdgeDisplaySettings.WidthMode},
                     });
                 }
 

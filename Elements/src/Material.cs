@@ -67,7 +67,7 @@ namespace Elements
         /// <summary>
         /// If provided, this controls how curves and lines will be drawn in the 3D view for supported viewers. This will not affect mesh / solid-based elements.
         /// </summary>
-        public LineDisplaySettings LineDisplaySettings { get; set; } = null;
+        public EdgeDisplaySettings EdgeDisplaySettings { get; set; } = null;
 
         /// <summary>
         /// Construct a material.

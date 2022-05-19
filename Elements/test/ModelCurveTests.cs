@@ -71,10 +71,10 @@ namespace Elements.Tests
             var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
             var bezier = new Bezier(ctrlPts);
 
-            var lineModelCurve = new ModelCurve(line, new Material("Red", Colors.Red) { LineDisplaySettings = new LineDisplaySettings { Width = 5 } });
-            var arcModelCurve = new ModelCurve(arc, new Material("Orange", Colors.Orange) { LineDisplaySettings = new LineDisplaySettings { Width = 0.1, Mode = LineDisplayWidthMode.WorldUnits } }, new Transform(5, 0, 0));
-            var plineModelCurve = new ModelCurve(pline, new Material("Purple", Colors.Purple) { LineDisplaySettings = new LineDisplaySettings { Width = 10, Mode = LineDisplayWidthMode.ScreenUnits } }, new Transform(10, 0, 0));
-            var bezierModelCurve = new ModelCurve(bezier, new Material("Green", Colors.Green) { LineDisplaySettings = new LineDisplaySettings { Width = 1, Mode = LineDisplayWidthMode.WorldUnits } }, new Transform(15, 0, 0));
+            var lineModelCurve = new ModelCurve(line, new Material("Red", Colors.Red) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 5 } });
+            var arcModelCurve = new ModelCurve(arc, new Material("Orange", Colors.Orange) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 0.1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(5, 0, 0));
+            var plineModelCurve = new ModelCurve(pline, new Material("Purple", Colors.Purple) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 10, WidthMode = EdgeDisplayWidthMode.ScreenUnits } }, new Transform(10, 0, 0));
+            var bezierModelCurve = new ModelCurve(bezier, new Material("Green", Colors.Green) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(15, 0, 0));
             // </example>
 
             this.Model.AddElements(new[] { lineModelCurve, arcModelCurve, plineModelCurve, bezierModelCurve });

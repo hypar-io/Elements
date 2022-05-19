@@ -4,7 +4,7 @@
 
 ### Added
 
-`LineDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+`EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
 
 ## 1.0.0
 
