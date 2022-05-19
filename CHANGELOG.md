@@ -4,6 +4,8 @@
 
 ### Added
 
+`EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+
 ## 1.0.0
 
 ### Added
