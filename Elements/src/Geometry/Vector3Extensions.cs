@@ -182,21 +182,20 @@ namespace Elements.Geometry
             return arr;
         }
 
-        internal static GraphicsBuffers ToGraphicsBuffers(this IList<Vector3> vertices, bool lineLoop)
+        /// <summary>
+        /// Convert a list of vertices to a GraphicsBuffers object.
+        /// </summary>
+        /// <param name="vertices">The vertices to convert.</param>
+        /// <returns></returns>
+        public static GraphicsBuffers ToGraphicsBuffers(this IList<Vector3> vertices)
         {
             var gb = new GraphicsBuffers();
 
             for (var i = 0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
-                gb.AddVertex(v, default(Vector3), default(UV), null);
-
-                var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
-                if (write)
-                {
-                    gb.AddIndex((ushort)i);
-                    gb.AddIndex((ushort)(i + 1));
-                }
+                gb.AddVertex(v, default, default, null);
+                gb.AddIndex((ushort)i);
             }
             return gb;
         }
