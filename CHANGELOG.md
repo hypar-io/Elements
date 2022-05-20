@@ -5,6 +5,7 @@
 ### Added
 
 - `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+- `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices 
 
 ### Changed
 
