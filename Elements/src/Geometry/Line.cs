@@ -1046,6 +1046,30 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Creates new line with verticies of current and joined line
+        /// </summary>
+        /// <param name="line">Collinear line</param>
+        /// <returns>New line containing verticies of all merged lines</returns>
+        /// <exception cref="ArgumentException">Throws exception when lines are not collinear</exception>
+        public Line MergeCollinearLine(Line line)
+        {
+            if (!IsCollinear(line))
+                throw new ArgumentException("Lines needs to be collinear");
+
+            //order vertices of lines
+            var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
+            var direction = Direction();
+            var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
+
+            var joinedLine = new Line(orderedVectors.First(), orderedVectors.Last());
+
+            //keep the same direction as original line
+            return joinedLine.Direction().IsAlmostEqualTo(Direction())
+                ? joinedLine
+                : joinedLine.Reversed();
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
