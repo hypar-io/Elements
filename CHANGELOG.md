@@ -5,6 +5,7 @@
 ### Added
 
 - `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+- `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 
 ### Changed
 
