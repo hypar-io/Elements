@@ -839,7 +839,7 @@ namespace Elements.Geometry
             ba = ba.Unitized();
             cb = cb.Unitized();
 
-            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+            return Math.Abs(cb.Dot(ba)) > (1 - Math.Pow(Vector3.EPSILON, 2));
         }
 
         /// <summary>
