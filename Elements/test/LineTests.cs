@@ -542,5 +542,30 @@ namespace Elements.Geometry.Tests
             var secondLineWihNearZeroSum = new Line(new Vector3(-2, 2.00000001, 0), new Vector3(0, 0, 0));
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
         }
+
+        [Fact]
+        public void GetUValue()
+        {
+            var end = new Vector3(5, 5, 5);
+            var line = new Line(Vector3.Origin, end);
+
+            var start = Vector3.Origin;
+            Assert.Equal(0, line.GetUValue(start));
+
+            Assert.Equal(1, line.GetUValue(end));
+
+            var vectorOutsideLine = new Vector3(1, 2, 3);
+            Assert.False(line.PointOnLine(vectorOutsideLine, true));
+            Assert.Equal(-1, line.GetUValue(vectorOutsideLine));
+
+            var middle = new Vector3(2.5, 2.5, 2.5);
+            Assert.Equal(0.5, line.GetUValue(middle));
+
+            var vector = new Vector3(3.2, 3.2, 3.2);
+            var uValue = line.GetUValue(vector);
+            var expectedVector = line.PointAt(uValue);
+            Assert.InRange(uValue, 0, 1);
+            Assert.True(vector.IsAlmostEqualTo(expectedVector));
+        }
     }
 }
