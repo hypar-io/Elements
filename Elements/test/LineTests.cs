@@ -542,5 +542,25 @@ namespace Elements.Geometry.Tests
             var secondLineWihNearZeroSum = new Line(new Vector3(-2, 2.00000001, 0), new Vector3(0, 0, 0));
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
         }
+
+        [Theory]
+        [MemberData(nameof(ProjectData))]
+        public void Project(Line line, Plane plane, Line expectedLine)
+        {
+            var result = line.Project(plane);
+            Assert.Equal(expectedLine, result);
+        }
+
+        public static IEnumerable<object[]> ProjectData()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            return new List<object[]>
+            {
+                new object[] {line, new Plane(Vector3.Origin, Vector3.ZAxis), new Line(Vector3.Origin, new Vector3(5, 5, 0))},
+                new object[] {line, new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+                new object[] {line, new Plane(new Vector3(2, 2, 2), Vector3.YAxis), new Line(new Vector3(0, 2, 0), new Vector3(5, 2, 5))},
+                new object[] {new Line(Vector3.Origin, new Vector3(0, 5, 5)), new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+            };
+        }
     }
 }
