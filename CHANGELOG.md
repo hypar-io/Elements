@@ -4,6 +4,10 @@
 
 ### Added
 
+### Fixed 
+- `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear 
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if points coordinates difference is larger than `Vector3.EPSILON`
+
 ## 1.0.0
 
 ### Added
