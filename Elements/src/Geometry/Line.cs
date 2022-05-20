@@ -1046,6 +1046,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculate U parameter for point on line
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns>Returns U parameter for point on line</returns>
+        public double GetUValue(Vector3 point)
+        { 
+            if (!PointOnLine(point, true))
+                return -1;
+
+            var distance = Start.DistanceTo(point);
+
+            return distance / Length();
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
