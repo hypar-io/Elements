@@ -1046,6 +1046,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Projects current line onto a plane
+        /// </summary>
+        /// <param name="plane">Plane to project</param>
+        /// <returns>New line on a plane</returns>
+        public Line Project(Plane plane)
+        {
+            var start = Start.Project(plane);
+            var end = End.Project(plane);
+            return new Line(start, end);
+        }
+
+        /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
