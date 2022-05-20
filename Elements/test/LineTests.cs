@@ -550,19 +550,19 @@ namespace Elements.Geometry.Tests
             var line = new Line(Vector3.Origin, end);
 
             var start = Vector3.Origin;
-            Assert.Equal(0, line.GetUValue(start));
+            Assert.Equal(0, line.GetUParameter(start));
 
-            Assert.Equal(1, line.GetUValue(end));
+            Assert.Equal(1, line.GetUParameter(end));
 
             var vectorOutsideLine = new Vector3(1, 2, 3);
             Assert.False(line.PointOnLine(vectorOutsideLine, true));
-            Assert.Equal(-1, line.GetUValue(vectorOutsideLine));
+            Assert.Equal(-1, line.GetUParameter(vectorOutsideLine));
 
             var middle = new Vector3(2.5, 2.5, 2.5);
-            Assert.Equal(0.5, line.GetUValue(middle));
+            Assert.Equal(0.5, line.GetUParameter(middle));
 
             var vector = new Vector3(3.2, 3.2, 3.2);
-            var uValue = line.GetUValue(vector);
+            var uValue = line.GetUParameter(vector);
             var expectedVector = line.PointAt(uValue);
             Assert.InRange(uValue, 0, 1);
             Assert.True(vector.IsAlmostEqualTo(expectedVector));

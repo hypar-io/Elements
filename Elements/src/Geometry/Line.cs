@@ -1050,7 +1050,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="point"></param>
         /// <returns>Returns U parameter for point on line</returns>
-        public double GetUValue(Vector3 point)
+        public double GetUParameter(Vector3 point)
         { 
             if (!PointOnLine(point, true))
                 return -1;
