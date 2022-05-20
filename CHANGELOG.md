@@ -5,6 +5,7 @@
 ### Added
 
 - `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+- `Line.Project(Plane plane)` create new line projected onto plane
 
 ### Changed
 
