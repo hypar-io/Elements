@@ -40,6 +40,10 @@ rsync -av  --exclude=*.gz --exclude=*.br $source deploy/elements
 cp ./wwwroot/elements.js deploy/elements/elements.js 
 cp ./wwwroot/index.html deploy/index.html
 
+echo "Uploading assets to s3"
+# aws s3 cp "$source" s3://elements-wasm/ --recursive --exclude "*.dll" --exclude "*.br" --exclude "*.dat" --exclude "*.wasm" --exclude "*.json" --exclude "*.js" --exclude "*.blat" --content-type "gzip"
+aws s3 cp "$source" s3://elements-wasm/ --recursive --exclude "*.br" --exclude "*.gz"
+
 # echo 'Running the test application.'
-cd deploy
-python3 -m http.server
+# cd deploy
+# python3 -m http.server
