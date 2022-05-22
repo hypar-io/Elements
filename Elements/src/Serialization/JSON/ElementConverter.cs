@@ -89,32 +89,16 @@ namespace Elements.Serialization.JSON
                             int start = discriminator.LastIndexOf("<") + 1;
                             int end = discriminator.IndexOf(">", start);
                             string result = discriminator.Remove(start, end - start);
-                            if (!resolver.TypeCache.TryGetValue(result, out derivedType))
+                            if (!TryGetElementTypeWithFallbackToGeometricElement(resolver, result, root, out derivedType))
                             {
-                                if (root.TryGetProperty("Representation", out _))
-                                {
-                                    derivedType = typeof(GeometricElement);
-                                }
-                                else
-                                {
-                                    return default;
-                                }
+                                return default;
                             }
                         }
                         else
                         {
-                            if (!resolver.TypeCache.TryGetValue(discriminator, out derivedType))
+                            if (!TryGetElementTypeWithFallbackToGeometricElement(resolver, discriminator, root, out derivedType))
                             {
-                                // The type could not be found. See if it has the hallmarks
-                                // of a geometric element and deserialize it as such if possible.
-                                if (root.TryGetProperty("Representation", out _))
-                                {
-                                    derivedType = typeof(GeometricElement);
-                                }
-                                else
-                                {
-                                    return default;
-                                }
+                                return default;
                             }
                         }
 
@@ -178,6 +162,33 @@ namespace Elements.Serialization.JSON
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// The type could not be found. See if it has the hallmarks
+        /// of a geometric element and deserialize it as such if possible.
+        /// </summary>
+        /// <param name="resolver">The element reference resolver.</param>
+        /// <param name="discriminator">The discriminator.</param>
+        /// <param name="root">The json element within which we'll search for geometric element properties.</param>
+        /// <param name="derivedType">The found derived type.</param>
+        /// <returns>True if the element is a geometric element, otherwise false.</returns>
+        private bool TryGetElementTypeWithFallbackToGeometricElement(ElementReferenceResolver resolver, string discriminator, JsonElement root, out Type derivedType)
+        {
+            if (!resolver.TypeCache.TryGetValue(discriminator, out derivedType))
+            {
+                if (root.TryGetProperty("Representation", out _))
+                {
+                    derivedType = typeof(GeometricElement);
+                    return true;
+                }
+                else
+                {
+                    derivedType = null;
+                    return false;
+                }
+            }
+            return true;
         }
 
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
