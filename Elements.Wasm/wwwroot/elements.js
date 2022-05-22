@@ -16,23 +16,4 @@ class Elements {
     }
 }
 
-// We don't autostart blazor so that we can capture
-// the load paths and redirect them to the correct location.
-// https://docs.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-6.0
-Blazor.start({
-    loadBootResource: function (type, name, defaultUri, integrity) {
-        // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
-        const root = window.location.protocol + '//' + window.location.host
-        switch (type) {
-            case 'manifest':
-            case 'assembly':
-            case 'globalization':
-            case 'dotnetjs':
-            case 'dotnetwasm':
-            case 'timezonedata':
-                return `${root}/elements/_framework/${name}`;
-        }
-    }
-});
-
 window.elements = new Elements();
