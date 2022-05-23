@@ -544,25 +544,25 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void GetUValue()
+        public void GetParameterAt()
         {
             var end = new Vector3(5, 5, 5);
             var line = new Line(Vector3.Origin, end);
 
             var start = Vector3.Origin;
-            Assert.Equal(0, line.GetUParameter(start));
+            Assert.Equal(0, line.GetParameterAt(start));
 
-            Assert.Equal(1, line.GetUParameter(end));
+            Assert.Equal(1, line.GetParameterAt(end));
 
             var vectorOutsideLine = new Vector3(1, 2, 3);
             Assert.False(line.PointOnLine(vectorOutsideLine, true));
-            Assert.Equal(-1, line.GetUParameter(vectorOutsideLine));
+            Assert.Equal(-1, line.GetParameterAt(vectorOutsideLine));
 
             var middle = new Vector3(2.5, 2.5, 2.5);
-            Assert.Equal(0.5, line.GetUParameter(middle));
+            Assert.Equal(0.5, line.GetParameterAt(middle));
 
             var vector = new Vector3(3.2, 3.2, 3.2);
-            var uValue = line.GetUParameter(vector);
+            var uValue = line.GetParameterAt(vector);
             var expectedVector = line.PointAt(uValue);
             Assert.InRange(uValue, 0, 1);
             Assert.True(vector.IsAlmostEqualTo(expectedVector));
