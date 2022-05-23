@@ -1050,7 +1050,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="plane">Plane to project</param>
         /// <returns>New line on a plane</returns>
-        public Line Project(Plane plane)
+        public Line Projected(Plane plane)
         {
             var start = Start.Project(plane);
             var end = End.Project(plane);

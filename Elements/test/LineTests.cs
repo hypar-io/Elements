@@ -544,14 +544,14 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
-        [MemberData(nameof(ProjectData))]
-        public void Project(Line line, Plane plane, Line expectedLine)
+        [MemberData(nameof(ProjectedData))]
+        public void Projected(Line line, Plane plane, Line expectedLine)
         {
-            var result = line.Project(plane);
+            var result = line.Projected(plane);
             Assert.Equal(expectedLine, result);
         }
 
-        public static IEnumerable<object[]> ProjectData()
+        public static IEnumerable<object[]> ProjectedData()
         {
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             return new List<object[]>
