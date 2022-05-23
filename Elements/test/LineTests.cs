@@ -544,15 +544,15 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
-        [MemberData(nameof(MergeCollinearLineData))]
-        public void MergeCollinearLine(Line line, Line lineToMerge, Line expectedResult)
+        [MemberData(nameof(MergedCollinearLineData))]
+        public void MergedCollinearLine(Line line, Line lineToMerge, Line expectedResult)
         {
-            var result = line.MergeCollinearLine(lineToMerge);
+            var result = line.MergedCollinearLine(lineToMerge);
             Assert.True(expectedResult.IsAlmostEqualTo(result, true));
             Assert.True(line.Direction().IsAlmostEqualTo(result.Direction()));
         }
 
-        public static IEnumerable<object[]> MergeCollinearLineData()
+        public static IEnumerable<object[]> MergedCollinearLineData()
         {
             var start = Vector3.Origin;
             var end = new Vector3(5, 5, 5);
@@ -571,11 +571,11 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void MergeCollinearLineThrowsException()
+        public void MergedCollinearLineThrowsException()
         {
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var nonCollinearLine = new Line(new Vector3(-5, 5, 5), new Vector3(10, 10, -5));
-            Assert.Throws<ArgumentException>(() => line.MergeCollinearLine(nonCollinearLine));
+            Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
         }
     }
 }

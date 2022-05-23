@@ -1051,7 +1051,7 @@ namespace Elements.Geometry
         /// <param name="line">Collinear line</param>
         /// <returns>New line containing vertices of all merged lines</returns>
         /// <exception cref="ArgumentException">Throws exception when lines are not collinear</exception>
-        public Line MergeCollinearLine(Line line)
+        public Line MergedCollinearLine(Line line)
         {
             if (!IsCollinear(line))
                 throw new ArgumentException("Lines needs to be collinear");
