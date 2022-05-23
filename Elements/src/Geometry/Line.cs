@@ -1046,10 +1046,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Creates new line with verticies of current and joined line
+        /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
-        /// <returns>New line containing verticies of all merged lines</returns>
+        /// <returns>New line containing vertices of all merged lines</returns>
         /// <exception cref="ArgumentException">Throws exception when lines are not collinear</exception>
         public Line MergeCollinearLine(Line line)
         {
