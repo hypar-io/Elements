@@ -30,7 +30,7 @@
 {%   if property.HasDescription -%}
     /// <summary>{{ property.Description | csharpdocs }}</summary>
 {%   endif -%}
-    [JsonProperty("{{ property.Name }}", Required = {{ property.JsonPropertyRequiredCode }}{% if property.IsStringEnumArray %}, ItemConverterType = typeof(Converters.StringEnumConverter){% endif %})]
+    [JsonProperty("{{ property.Name }}", Required = {{ property.JsonPropertyRequiredCode }}{% if property.IsStringEnumArray %}, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter){% endif %})]
 {%   if property.RenderRequiredAttribute -%}
     [System.ComponentModel.DataAnnotations.Required{% if property.AllowEmptyStrings %}(AllowEmptyStrings = true){% endif %}]
 {%   endif -%}
@@ -50,7 +50,7 @@
     [System.ComponentModel.DataAnnotations.RegularExpression(@"{{ property.RegularExpressionValue }}")]
 {%   endif -%}
 {%   if property.IsStringEnum -%}
-    [JsonConverter(typeof(Converters.StringEnumConverter))]
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
 {%   endif -%}
 {%   if property.IsDate and UseDateFormatConverter -%}
     [JsonConverter(typeof(DateFormatConverter))]
