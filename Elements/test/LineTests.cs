@@ -498,6 +498,10 @@ namespace Elements.Geometry.Tests
             var almostSameLine = new Line(Vector3.Origin, new Vector3(5, 5.00000000001, 5));
             Assert.True(line.IsAlmostEqualTo(almostSameLine, false));
             Assert.True(line.IsCollinear(almostSameLine));
+
+            var longLine = new Line(new Vector3(458.8830, -118.7170, 13.8152), new Vector3(458.8830, -80.4465, 13.8152));
+            var nearlySameLine = new Line(new Vector3(458.9005, 29.6573, 13.7977), new Vector3(458.9005, 33.5632, 13.7977));
+            Assert.False(longLine.IsCollinear(nearlySameLine));
         }
 
         [Fact]

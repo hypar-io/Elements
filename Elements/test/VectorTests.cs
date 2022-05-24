@@ -427,8 +427,19 @@ namespace Elements.Tests
             Vector3 p2 = new Vector3(20, 20, 20);
             Vector3 p3 = new Vector3(15, 5, 20);
 
+            var p4 = new Vector3(0, -118.7170, 13.8152);
+            var p5 = new Vector3(0, -80.4465, 13.8152);
+            var p6 = new Vector3(0, -118.7170, 13.8173);
+            var p7 = new Vector3(0, 33.5632, 13.8173);
+
+
             Assert.True(Vector3.AreCollinear(p0, p1, p2));
             Assert.False(Vector3.AreCollinear(p0, p1, p3));
+
+            var zeroPlane = new Plane(Vector3.Origin, Vector3.YAxis);
+            Assert.False(p4.Project(zeroPlane).IsAlmostEqualTo(p6.Project(zeroPlane)));
+            Assert.False(Vector3.AreCollinear(p4, p5, p6));
+            Assert.False(Vector3.AreCollinear(p4, p5, p7));
         }
 
         [Fact]
