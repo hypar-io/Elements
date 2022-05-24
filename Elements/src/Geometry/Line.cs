@@ -1054,7 +1054,9 @@ namespace Elements.Geometry
         public Line MergedCollinearLine(Line line)
         {
             if (!IsCollinear(line))
+            {
                 throw new ArgumentException("Lines needs to be collinear");
+            }
 
             //order vertices of lines
             var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
