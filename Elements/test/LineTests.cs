@@ -546,13 +546,21 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void GetParameterAt()
         {
-            var end = new Vector3(5, 5, 5);
-            var line = new Line(Vector3.Origin, end);
-
             var start = Vector3.Origin;
+            var end = new Vector3(5, 5, 5);
+            var line = new Line(start, end);
+
             Assert.Equal(0, line.GetParameterAt(start));
 
+            var almostEqualStart = new Vector3(0.000001, 0.000005, 0);
+            Assert.True(start.IsAlmostEqualTo(almostEqualStart));
+            Assert.Equal(0, line.GetParameterAt(almostEqualStart));
+
             Assert.Equal(1, line.GetParameterAt(end));
+
+            var almostEqualEnd = new Vector3(5.0000005, 5.000001, 5);
+            Assert.True(end.IsAlmostEqualTo(almostEqualEnd));
+            Assert.Equal(1, line.GetParameterAt(almostEqualEnd));
 
             var vectorOutsideLine = new Vector3(1, 2, 3);
             Assert.False(line.PointOnLine(vectorOutsideLine, true));
