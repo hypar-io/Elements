@@ -548,6 +548,7 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
+
         [MemberData(nameof(MergedCollinearLineData))]
         public void MergedCollinearLine(Line line, Line lineToMerge, Line expectedResult)
         {
@@ -580,6 +581,25 @@ namespace Elements.Geometry.Tests
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
             var nonCollinearLine = new Line(new Vector3(-5, 5, 5), new Vector3(10, 10, -5));
             Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
+        }
+
+        [MemberData(nameof(ProjectedData))]
+        public void Projected(Line line, Plane plane, Line expectedLine)
+        {
+            var result = line.Projected(plane);
+            Assert.Equal(expectedLine, result);
+        }
+
+        public static IEnumerable<object[]> ProjectedData()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            return new List<object[]>
+            {
+                new object[] {line, new Plane(Vector3.Origin, Vector3.ZAxis), new Line(Vector3.Origin, new Vector3(5, 5, 0))},
+                new object[] {line, new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+                new object[] {line, new Plane(new Vector3(2, 2, 2), Vector3.YAxis), new Line(new Vector3(0, 2, 0), new Vector3(5, 2, 5))},
+                new object[] {new Line(Vector3.Origin, new Vector3(0, 5, 5)), new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+            };
         }
     }
 }

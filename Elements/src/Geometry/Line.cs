@@ -1072,6 +1072,17 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// Projects current line onto a plane
+        /// </summary>
+        /// <param name="plane">Plane to project</param>
+        /// <returns>New line on a plane</returns>
+        public Line Projected(Plane plane)
+        {
+            var start = Start.Project(plane);
+            var end = End.Project(plane);
+            return new Line(start, end);
+        }
+
         /// <summary>
         /// A list of vertices describing the arc for rendering.
         /// </summary>
