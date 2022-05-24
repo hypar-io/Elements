@@ -999,7 +999,8 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool IsCollinear(Line line)
         {
-            return Vector3.AreCollinear(Start, End, line.Start) && Vector3.AreCollinear(Start, End, line.End);
+            var vectors = new Vector3[] { Start, End, line.Start, line.End };
+            return vectors.AreCollinear();
         }
 
         /// <summary>
@@ -1085,6 +1086,16 @@ namespace Elements.Geometry
             }
 
             return (point - start).Length() / (end - start).Length();
+
+        /// Projects current line onto a plane
+        /// </summary>
+        /// <param name="plane">Plane to project</param>
+        /// <returns>New line on a plane</returns>
+        public Line Projected(Plane plane)
+        {
+            var start = Start.Project(plane);
+            var end = End.Project(plane);
+            return new Line(start, end);
         }
 
         /// <summary>

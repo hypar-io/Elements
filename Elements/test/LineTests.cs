@@ -498,6 +498,10 @@ namespace Elements.Geometry.Tests
             var almostSameLine = new Line(Vector3.Origin, new Vector3(5, 5.00000000001, 5));
             Assert.True(line.IsAlmostEqualTo(almostSameLine, false));
             Assert.True(line.IsCollinear(almostSameLine));
+
+            var longLine = new Line(new Vector3(458.8830, -118.7170, 13.8152), new Vector3(458.8830, -80.4465, 13.8152));
+            var nearlySameLine = new Line(new Vector3(458.9005, 29.6573, 13.7977), new Vector3(458.9005, 33.5632, 13.7977));
+            Assert.False(longLine.IsCollinear(nearlySameLine));
         }
 
         [Fact]
@@ -543,6 +547,7 @@ namespace Elements.Geometry.Tests
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
         }
 
+
         [Fact]
         public void GetParameterAt()
         {
@@ -575,5 +580,24 @@ namespace Elements.Geometry.Tests
             Assert.InRange(uValue, 0, 1);
             Assert.True(vector.IsAlmostEqualTo(expectedVector));
         }
+
+        [Theory]
+        [MemberData(nameof(ProjectedData))]
+        public void Projected(Line line, Plane plane, Line expectedLine)
+        {
+            var result = line.Projected(plane);
+            Assert.Equal(expectedLine, result);
+        }
+
+        public static IEnumerable<object[]> ProjectedData()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            return new List<object[]>
+            {
+                new object[] {line, new Plane(Vector3.Origin, Vector3.ZAxis), new Line(Vector3.Origin, new Vector3(5, 5, 0))},
+                new object[] {line, new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+                new object[] {line, new Plane(new Vector3(2, 2, 2), Vector3.YAxis), new Line(new Vector3(0, 2, 0), new Vector3(5, 2, 5))},
+                new object[] {new Line(Vector3.Origin, new Vector3(0, 5, 5)), new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
+            };
+        }
     }
-}
