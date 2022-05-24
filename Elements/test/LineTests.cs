@@ -548,7 +548,6 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
-
         [MemberData(nameof(MergedCollinearLineData))]
         public void MergedCollinearLine(Line line, Line lineToMerge, Line expectedResult)
         {
@@ -583,6 +582,7 @@ namespace Elements.Geometry.Tests
             Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
         }
 
+        [Theory]
         [MemberData(nameof(ProjectedData))]
         public void Projected(Line line, Plane plane, Line expectedLine)
         {
