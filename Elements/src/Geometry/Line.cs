@@ -1053,11 +1053,6 @@ namespace Elements.Geometry
         /// <returns>Returns U parameter for point on line</returns>
         public double GetParameterAt(Vector3 point)
         {
-            if (!PointOnLine(point, true))
-            {
-                return -1;
-            }
-
             return GetParameterAt(point, Start, End);
         }
 
