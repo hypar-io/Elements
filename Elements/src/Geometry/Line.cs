@@ -1075,17 +1075,18 @@ namespace Elements.Geometry
                 return -1;
             }
 
-            if(point.IsAlmostEqualTo(start))
+            if (point.IsAlmostEqualTo(start))
             {
                 return 0;
             }
 
-            if(point.IsAlmostEqualTo(end))
+            if (point.IsAlmostEqualTo(end))
             {
                 return 1;
             }
 
             return (point - start).Length() / (end - start).Length();
+        }
 
         /// Projects current line onto a plane
         /// </summary>
