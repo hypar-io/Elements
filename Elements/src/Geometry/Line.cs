@@ -999,7 +999,8 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool IsCollinear(Line line)
         {
-            return Vector3.AreCollinear(Start, End, line.Start) && Vector3.AreCollinear(Start, End, line.End);
+            var vectors = new Vector3[] { Start, End, line.Start, line.End };
+            return vectors.AreCollinear();
         }
 
         /// <summary>
@@ -1043,6 +1044,43 @@ namespace Elements.Geometry
                 : overlappingLine.Reversed();
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates new line with vertices of current and joined line
+        /// </summary>
+        /// <param name="line">Collinear line</param>
+        /// <returns>New line containing vertices of all merged lines</returns>
+        /// <exception cref="ArgumentException">Throws exception when lines are not collinear</exception>
+        public Line MergedCollinearLine(Line line)
+        {
+            if (!IsCollinear(line))
+            {
+                throw new ArgumentException("Lines needs to be collinear");
+            }
+
+            //order vertices of lines
+            var vectors = new List<Vector3>() { Start, End, line.Start, line.End };
+            var direction = Direction();
+            var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
+
+            var joinedLine = new Line(orderedVectors.First(), orderedVectors.Last());
+
+            //keep the same direction as original line
+            return joinedLine.Direction().IsAlmostEqualTo(Direction())
+                ? joinedLine
+                : joinedLine.Reversed();
+        }
+
+        /// Projects current line onto a plane
+        /// </summary>
+        /// <param name="plane">Plane to project</param>
+        /// <returns>New line on a plane</returns>
+        public Line Projected(Plane plane)
+        {
+            var start = Start.Project(plane);
+            var end = End.Project(plane);
+            return new Line(start, end);
         }
 
         /// <summary>

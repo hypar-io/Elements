@@ -57,7 +57,14 @@ namespace Elements
             return gb;
         }
 
-        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        public override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             if (this.Locations.Count == 0)
             {
