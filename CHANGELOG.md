@@ -4,10 +4,12 @@
 
 ### Added
 
+### Fixed 
+- `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear 
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if points coordinates difference is larger than `Vector3.EPSILON`
 - `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
 
 ### Changed
-
 - Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
 - `TryToGraphicsBuffers` is now public
 

@@ -999,7 +999,8 @@ namespace Elements.Geometry
         /// <returns></returns>
         public bool IsCollinear(Line line)
         {
-            return Vector3.AreCollinear(Start, End, line.Start) && Vector3.AreCollinear(Start, End, line.End);
+            var vectors = new Vector3[] { Start, End, line.Start, line.End };
+            return vectors.AreCollinear();
         }
 
         /// <summary>
