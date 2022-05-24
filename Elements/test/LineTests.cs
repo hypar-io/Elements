@@ -548,6 +548,41 @@ namespace Elements.Geometry.Tests
         }
 
         [Theory]
+        [MemberData(nameof(MergedCollinearLineData))]
+        public void MergedCollinearLine(Line line, Line lineToMerge, Line expectedResult)
+        {
+            var result = line.MergedCollinearLine(lineToMerge);
+            Assert.True(expectedResult.IsAlmostEqualTo(result, true));
+            Assert.True(line.Direction().IsAlmostEqualTo(result.Direction()));
+        }
+
+        public static IEnumerable<object[]> MergedCollinearLineData()
+        {
+            var start = Vector3.Origin;
+            var end = new Vector3(5, 5, 5);
+            var line = new Line(start, end);
+            return new List<object[]>
+            {
+                new object[] {line, new Line(new Vector3(10, 10, 10), end), new Line(start, new Vector3(10, 10, 10))},
+                new object[] {line, new Line(start, new Vector3(-10, -10, -10)), new Line(new Vector3( -10, -10, -10), end)},
+                new object[] {line, new Line(new Vector3(10, 10, 10), new Vector3(20, 20, 20)), new Line(start, new Vector3(20, 20, 20))},
+                new object[] {line, line, line},
+                new object[] {line, new Line(new Vector3(2, 2, 2), new Vector3(-10, -10, -10)), new Line(new Vector3( -10, -10, -10), end)},
+                new object[] {line, new Line(start, new Vector3(5, 5.00000000001, 5)), line},
+                new object[] {line, new Line(new Vector3(2, 2, 2), new Vector3(-10, -10, -10)), new Line(new Vector3( -10, -10, -10), end)},
+                new object[] {new Line(new Vector3(-3, 3, 0), new Vector3(-1, 1.00000002, 0)), new Line(new Vector3(-2, 2.00000001, 0), Vector3.Origin), new Line(new Vector3(-3, 3, 0), Vector3.Origin)}
+            };
+        }
+
+        [Fact]
+        public void MergedCollinearLineThrowsException()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var nonCollinearLine = new Line(new Vector3(-5, 5, 5), new Vector3(10, 10, -5));
+            Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
+        }
+
+        [Theory]
         [MemberData(nameof(ProjectedData))]
         public void Projected(Line line, Plane plane, Line expectedLine)
         {
