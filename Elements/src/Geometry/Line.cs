@@ -1047,6 +1047,42 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculate U parameter for point on line
+        /// </summary>
+        /// <param name="point">Point on line</param>
+        /// <returns>Returns U parameter for point on line</returns>
+        public double GetParameterAt(Vector3 point)
+        {
+            return GetParameterAt(point, Start, End);
+        }
+
+        /// <summary>
+        /// Calculate U parameter for point between two other points
+        /// </summary>
+        /// <param name="point">Point for which parameter is calculated</param>
+        /// <param name="start">First point</param>
+        /// <param name="end">Second point</param>
+        /// <returns>Returns U parameter for point between two other points</returns>
+        public static double GetParameterAt(Vector3 point, Vector3 start, Vector3 end)
+        {
+            if (!PointOnLine(point, start, end, true))
+            {
+                return -1;
+            }
+
+            if (point.IsAlmostEqualTo(start))
+            {
+                return 0;
+            }
+
+            if (point.IsAlmostEqualTo(end))
+            {
+                return 1;
+            }
+
+            return (point - start).Length() / (end - start).Length();
+        }
+        
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>

@@ -547,6 +547,40 @@ namespace Elements.Geometry.Tests
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
         }
 
+
+        [Fact]
+        public void GetParameterAt()
+        {
+            var start = Vector3.Origin;
+            var end = new Vector3(5, 5, 5);
+            var line = new Line(start, end);
+
+            Assert.Equal(0, line.GetParameterAt(start));
+
+            var almostEqualStart = new Vector3(0.000001, 0.000005, 0);
+            Assert.True(start.IsAlmostEqualTo(almostEqualStart));
+            Assert.Equal(0, line.GetParameterAt(almostEqualStart));
+
+            Assert.Equal(1, line.GetParameterAt(end));
+
+            var almostEqualEnd = new Vector3(5.0000005, 5.000001, 5);
+            Assert.True(end.IsAlmostEqualTo(almostEqualEnd));
+            Assert.Equal(1, line.GetParameterAt(almostEqualEnd));
+
+            var vectorOutsideLine = new Vector3(1, 2, 3);
+            Assert.False(line.PointOnLine(vectorOutsideLine, true));
+            Assert.Equal(-1, line.GetParameterAt(vectorOutsideLine));
+
+            var middle = new Vector3(2.5, 2.5, 2.5);
+            Assert.Equal(0.5, line.GetParameterAt(middle));
+
+            var vector = new Vector3(3.2, 3.2, 3.2);
+            var uValue = line.GetParameterAt(vector);
+            var expectedVector = line.PointAt(uValue);
+            Assert.InRange(uValue, 0, 1);
+            Assert.True(vector.IsAlmostEqualTo(expectedVector));
+        }
+
         [Theory]
         [MemberData(nameof(MergedCollinearLineData))]
         public void MergedCollinearLine(Line line, Line lineToMerge, Line expectedResult)
