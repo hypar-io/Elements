@@ -2,7 +2,8 @@
 
 ## 1.0.1
 
-### Added
+### Fixed
+- #805
 
 ### Fixed 
 - `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear 
