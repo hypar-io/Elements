@@ -226,6 +226,22 @@ namespace Elements.Serialization.glTF
                     };
                 }
 
+                if (material.EdgeDisplaySettings != null)
+                {
+                    if (gltfMaterial.Extensions == null)
+                    {
+                        gltfMaterial.Extensions = new Dictionary<string, object>();
+                    }
+                    if (!gltf.ExtensionsUsed.Contains("HYPAR_materials_edge_settings"))
+                    {
+                        gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edge_settings" }.ToArray();
+                    }
+                    gltfMaterial.Extensions.Add("HYPAR_materials_edge_settings", new Dictionary<string, object>{
+                        {"lineWidth", material.EdgeDisplaySettings.LineWidth},
+                        {"widthMode", (int)material.EdgeDisplaySettings.WidthMode},
+                    });
+                }
+
                 var textureHasTransparency = false;
 
                 if (material.Texture != null && File.Exists(material.Texture))
@@ -782,7 +798,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw standard edges
                 var id = $"{100000}_curve";
-                var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers(false);
+                var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers();
                 gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
             }
 
@@ -790,7 +806,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
-                var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers(false);
+                var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers();
                 gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
             }
 
@@ -990,7 +1006,7 @@ namespace Elements.Serialization.glTF
                         continue;
                     }
                     var id = $"{GetNextId()}_edge";
-                    var gb = lineSet.ToGraphicsBuffers(false);
+                    var gb = lineSet.ToGraphicsBuffers();
                     gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
                 }
             }

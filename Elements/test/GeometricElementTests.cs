@@ -77,7 +77,7 @@ namespace Elements.Tests
     }
     class CustomGBClass : GeometricElement
     {
-        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = $"{this.Id}_customthing";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.TRIANGLE_FAN;
@@ -89,7 +89,7 @@ namespace Elements.Tests
                     (0.5, 1.5,0),
                     (0,1,0),
             };
-            graphicsBuffers = new List<GraphicsBuffers>() { vertices.ToGraphicsBuffers(false) };
+            graphicsBuffers = new List<GraphicsBuffers>() { vertices.ToGraphicsBuffers() };
             return true;
         }
     }

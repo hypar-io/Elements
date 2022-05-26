@@ -827,16 +827,8 @@ namespace Elements.Geometry
         /// <returns>True if the points are on the same line, false otherwise.</returns>
         public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
         {
-            var ba = b - a;
-            var cb = c - b;
-
-            if (ba.IsZero() || cb.IsZero())
-                return true;
-
-            ba = ba.Unitized();
-            cb = cb.Unitized();
-
-            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+            var vectorList = new List<Vector3> { a, b, c };
+            return vectorList.AreCollinear();
         }
 
         /// <summary>

@@ -56,7 +56,14 @@ namespace Elements
         /// </summary>
         public double ExtensionEnd = 1;
 
-        internal override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        public override Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             if (this.Curve == null)
             {
@@ -64,7 +71,7 @@ namespace Elements
             }
 
             id = $"{this.Id}_gridline";
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
             graphicsBuffers = new List<GraphicsBuffers>();
 
             var renderVertices = new List<Vector3>();
@@ -89,7 +96,7 @@ namespace Elements
                 renderVertices.Add(end.point + end.dir * ExtensionEnd);
             }
 
-            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers(true));
+            graphicsBuffers.Add(renderVertices.ToGraphicsBuffers());
             return true;
         }
 
