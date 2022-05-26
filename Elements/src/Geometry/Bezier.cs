@@ -74,13 +74,19 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        /// <returns></returns>
-        public override Transform[] Frames(double startSetback = 0, double endSetback = 0)
+        /// <param name="additionalRotation"></param>
+        public override Transform[] Frames(double startSetback = 0,
+                                           double endSetback = 0,
+                                           double additionalRotation = 0.0)
         {
             var transforms = new Transform[_samples + 1];
             for (var i = 0; i <= _samples; i++)
             {
                 transforms[i] = TransformAt(i * 1.0 / _samples);
+                if (additionalRotation != 0.0)
+                {
+                    transforms[i].Rotate(transforms[i].ZAxis, additionalRotation);
+                }
             }
             return transforms;
         }
