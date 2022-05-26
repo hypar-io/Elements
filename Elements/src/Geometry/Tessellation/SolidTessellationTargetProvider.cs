@@ -27,10 +27,7 @@ namespace Elements.Geometry.Tessellation
         /// </summary>
         public IEnumerable<ITessAdapter> GetTessellationTargets()
         {
-            foreach (var f in solid.Faces.Values)
-            {
-                yield return new SolidFaceTessAdapter(f, transform);
-            }
+            yield return new SolidTessAdapter(solid, transform);
         }
     }
 }

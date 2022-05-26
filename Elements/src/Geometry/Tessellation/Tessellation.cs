@@ -25,7 +25,7 @@ namespace Elements.Geometry.Tessellation
             {
                 foreach (var target in provider.GetTessellationTargets())
                 {
-                    TessellatePolygon(target.GetTess(), buffers, allVertices, mergeVertices);
+                    PackTessellationIntoBuffers(target.GetTess(), buffers, allVertices, mergeVertices);
                 }
             }
 
@@ -43,7 +43,7 @@ namespace Elements.Geometry.Tessellation
             }
         }
 
-        private static void TessellatePolygon(Tess tess,
+        private static void PackTessellationIntoBuffers(Tess tess,
                                               IGraphicsBuffers buffers,
                                               List<(Vector3 position, Vector3 normal, UV uv, Color color)> allVertices,
                                               bool mergeVertices = false)
