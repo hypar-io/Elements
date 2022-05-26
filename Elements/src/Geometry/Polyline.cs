@@ -32,8 +32,24 @@ namespace Elements.Geometry
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
         [JsonConstructor]
+        public Polyline(IList<Vector3> @vertices) : base()
+        {
+            this.Vertices = @vertices;
+
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                ValidateVertices();
+            }
+            _bounds = new BBox3(Vertices);
+        }
+
+
+        /// <summary>
+        /// Construct a polyline.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
         public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
         {
             this.Vertices = @vertices;

@@ -28,8 +28,17 @@ namespace Elements.Geometry
         /// Construct a polygon.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
         [JsonConstructor]
+        public Polygon(IList<Vector3> @vertices) : base(vertices)
+        {
+            _plane = Plane();
+        }
+
+        /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
         public Polygon(IList<Vector3> @vertices, bool disableValidation = false) : base(vertices, disableValidation)
         {
             _plane = Plane();
