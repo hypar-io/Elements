@@ -389,7 +389,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Apply a rotation around a to the transform around a point.
+        /// Apply a rotation to the transform around a point.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation in degrees.</param>
