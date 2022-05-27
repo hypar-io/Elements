@@ -2010,7 +2010,7 @@ namespace Elements.Geometry
                 result[i] = CreateMiterTransform(i, a, up);
                 if (additionalRotation != 0.0)
                 {
-                    result[i].Rotate(result[i].ZAxis, additionalRotation);
+                    result[i].Rotate(result[i].ZAxis, additionalRotation, result[i].Origin);
                 }
             }
             return result;

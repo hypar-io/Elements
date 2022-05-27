@@ -8,6 +8,7 @@
 - `Polygon(bool disableValidation, params Vector3[] vertices)`
 - `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
 - `Polyline(bool disableValidation, params Vector3[] vertices)`
+- `Transform.Rotate(Vector3 axis, double angle, Vector3 origin)`
 
 ### Fixed
 - #805

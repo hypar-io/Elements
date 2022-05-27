@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using LibTessDotNet.Double;
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -15,45 +16,41 @@ namespace Elements.Geometry.Tessellation
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(IEnumerable<ITessellationTargetProvider> providers,
-                                        IGraphicsBuffers buffers,
-                                        bool mergeVertices = false,
+        internal static GraphicsBuffers Tessellate(IEnumerable<ITessellationTargetProvider> providers,
                                         Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
-            var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color color)>();
+
+            // Gather all the tessellations
+            var tesses = new List<Tess>();
             foreach (var provider in providers)
             {
                 foreach (var target in provider.GetTessellationTargets())
                 {
-                    PackTessellationIntoBuffers(target.GetTess(), buffers, allVertices, mergeVertices);
+                    tesses.Add(target.GetTess());
                 }
             }
 
-            foreach (var v in allVertices)
+            // Pre-allocate a buffer big enough to hold all the tessellations
+            var buffers = new GraphicsBuffers(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
+            ushort indexOffset = 0;
+
+            foreach (var tess in tesses)
             {
-                if (modifyVertexAttributes != null)
-                {
-                    var mod = modifyVertexAttributes(v);
-                    buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
-                }
-                else
-                {
-                    buffers.AddVertex(v.position, v.normal, v.uv);
-                }
+                PackTessellationIntoBuffers(tess, buffers, modifyVertexAttributes, ref indexOffset);
             }
+
+            return buffers;
         }
 
         private static void PackTessellationIntoBuffers(Tess tess,
                                               IGraphicsBuffers buffers,
-                                              List<(Vector3 position, Vector3 normal, UV uv, Color color)> allVertices,
-                                              bool mergeVertices = false)
+                                              Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes,
+                                              ref ushort indexOffset)
         {
             if (tess.ElementCount == 0)
             {
                 return;
             }
-
-            var vertexIndices = new ushort[tess.Vertices.Length];
 
             // We pick the first triangle from the tesselator,
             // instead of the first three vertices, which are not guaranteed to be
@@ -75,18 +72,28 @@ namespace Elements.Geometry.Tessellation
                 var uu = U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
                 var vv = V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
 
-                vertexIndices[i] = (ushort)GetOrCreateVertex(new Vector3(v.Position.X, v.Position.Y, v.Position.Z),
-                                                             new Vector3(n.X, n.Y, n.Z),
-                                                             new UV(uu, vv),
-                                                             allVertices,
-                                                             mergeVertices);
+                var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
+                var uv1 = new UV(uu, vv);
+                var c1 = default(Color);
+
+                if (modifyVertexAttributes != null)
+                {
+                    var mod = modifyVertexAttributes((v1, n, uv1, c1));
+                    buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
+                }
+                else
+                {
+                    buffers.AddVertex(v1, n, uv1, c1);
+                }
             }
 
             for (var k = 0; k < tess.Elements.Length; k++)
             {
-                var index = vertexIndices[tess.Elements[k]];
+                var index = (ushort)(tess.Elements[k] + indexOffset);
                 buffers.AddIndex(index);
             }
+
+            indexOffset += (ushort)tess.Vertices.Length;
         }
 
         private static Vector3 ToElementsVector(this ContourVertex v)

@@ -85,7 +85,7 @@ namespace Elements.Geometry
                 transforms[i] = TransformAt(i * 1.0 / _samples);
                 if (additionalRotation != 0.0)
                 {
-                    transforms[i].Rotate(transforms[i].ZAxis, additionalRotation);
+                    transforms[i].Rotate(transforms[i].ZAxis, additionalRotation, transforms[i].Origin);
                 }
             }
             return transforms;

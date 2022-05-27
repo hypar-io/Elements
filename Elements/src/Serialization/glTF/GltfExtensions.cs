@@ -86,7 +86,7 @@ namespace Elements.Serialization.glTF
                     if (SaveGlb(model, path, out errors, drawEdges))
                     {
                         return;
-                }
+                    }
                     // Else fall through to produce an empty GLTF.
                 }
                 else
@@ -1425,16 +1425,13 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                buffers = new GraphicsBuffers();
-                Tessellation.Tessellate(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
-                                        buffers,
-                                        mergeVertices,
+                buffers = Tessellation.Tessellate(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
                                         geometricElement.ModifyVertexAttributes);
             }
             else
             {
                 var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(mergeVertices, geometricElement.ModifyVertexAttributes);
+                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)

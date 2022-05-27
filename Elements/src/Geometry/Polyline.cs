@@ -396,7 +396,7 @@ namespace Elements.Geometry
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
                 if (additionalRotation != 0.0)
                 {
-                    result[i].Rotate(result[i].ZAxis, additionalRotation);
+                    result[i].Rotate(result[i].ZAxis, additionalRotation, result[i].Origin);
                 }
             }
             return result;

@@ -146,6 +146,33 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct an empty graphics buffers object with pre-allocated collections.
+        /// </summary>
+        /// <param name="vertexCount"></param>
+        /// <param name="indexCount"></param>
+        public GraphicsBuffers(int vertexCount, int indexCount)
+        {
+            // Initialize everything
+            this.Vertices = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Normals = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Indices = new List<byte>(sizeof(ushort) * indexCount);
+            this.UVs = new List<byte>(sizeof(float) * 2 * vertexCount);
+            this.Colors = new List<byte>(sizeof(float) * 3 * vertexCount);
+
+            this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            this.VMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            this.VMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+
+            this.NMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            this.NMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            this.UVMin = new double[2] { double.MaxValue, double.MaxValue };
+            this.UVMax = new double[2] { double.MinValue, double.MinValue };
+        }
+
+        /// <summary>
         /// Add a vertex to the graphics buffers.
         /// </summary>
         /// <param name="position">The position of the vertex.</param>
@@ -201,7 +228,7 @@ namespace Elements.Geometry
             this.UVMin[0] = Math.Min(this.UVMin[0], u);
             this.UVMin[1] = Math.Min(this.UVMin[1], v);
 
-            if (color.HasValue && color.Value != default(Color))
+            if (color.HasValue && color.Value != default)
             {
                 this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
                 this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);

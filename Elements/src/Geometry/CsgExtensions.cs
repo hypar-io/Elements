@@ -25,10 +25,9 @@ namespace Elements.Geometry
         /// appropriate for use with gltf.
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid csg,
-                                                   bool mergeVertices = false,
                                                    Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
-            return Tessellate(new[] { csg }, mergeVertices, modifyVertexAttributes);
+            return Tessellate(new[] { csg }, modifyVertexAttributes);
         }
 
         /// <summary>
@@ -36,14 +35,9 @@ namespace Elements.Geometry
         /// buffers appropriate for use with gltf. 
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs,
-                                                   bool mergeVertices = false,
                                                    Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
-            var buffers = new GraphicsBuffers();
-
-            Tessellation.Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
-                                    buffers,
-                                    mergeVertices,
+            var buffers = Tessellation.Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
                                     modifyVertexAttributes);
             return buffers;
         }
