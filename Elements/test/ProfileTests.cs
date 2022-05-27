@@ -157,7 +157,7 @@ namespace Elements.Tests
                 new Vector3(73.8654, 42.1189)
             }));
             var unions = Geometry.Profile.UnionAll(new[] {
-                profile1, profile2, profile3, profile4, profile5, 
+                profile1, profile2, profile3, profile4, profile5,
                 profile6, profile7, profile8, profile9, profile10 });
             Assert.Single(unions);
             var union = unions.First();
@@ -525,6 +525,27 @@ namespace Elements.Tests
             Model.AddElements(results);
             Model.AddElements(results.SelectMany(r => r.ToModelCurves()));
             Assert.Equal(2115.667, results.Sum(r => Math.Abs(r.Area())), 3);
+        }
+
+        [Fact]
+        public void SplitComplexProfileWithInnerVoids()
+        {
+            Name = nameof(SplitComplexProfileWithInnerVoids);
+            var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
+            var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
+            var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
+            var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
+            var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
+            var random = new Random(11);
+            foreach (var s in splits)
+            {
+                var ge = new GeometricElement()
+                {
+                    Representation = new Geometry.Solids.Lamina(s),
+                    Material = random.NextMaterial()
+                };
+                Model.AddElement(ge);
+            }
         }
     }
 }
