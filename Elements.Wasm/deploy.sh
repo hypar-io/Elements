@@ -36,13 +36,12 @@ mkdir deploy/elements
 mkdir deploy/elements/_framework
 
 echo "Copying assets from $source"
-rsync -av  --exclude=*.gz --exclude=*.br $source deploy/elements
+rsync -av $source deploy/elements
 cp ./wwwroot/elements.js deploy/elements/elements.js 
 cp ./wwwroot/index.html deploy/index.html
 
 echo "Uploading assets to s3"
-# aws s3 cp "$source" s3://elements-wasm/ --recursive --exclude "*.dll" --exclude "*.br" --exclude "*.dat" --exclude "*.wasm" --exclude "*.json" --exclude "*.js" --exclude "*.blat" --content-type "gzip"
-aws s3 cp "$source" s3://elements-wasm/ --recursive --exclude "*.br" --exclude "*.gz"
+aws s3 sync "$source" s3://elements-wasm/ --exclude "*.gz" --exclude "*.br"
 
 # echo 'Running the test application.'
 # cd deploy
