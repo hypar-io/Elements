@@ -5,8 +5,6 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
 
@@ -174,40 +172,41 @@ namespace Elements.Tests
             var solid = element.GetFinalCsgFromSolids();
         }
 
-        // [Fact]
-        // public void TessellatorProducesCorrectVertexNormals()
-        // {
-        //     Name = nameof(TessellatorProducesCorrectVertexNormals);
-        //     var shape = new Polygon((4.96243, 50.58403), (5.78472, 50.58403), (5.78472, 65.83403), (-7.05727, 65.83403), (-7.05727, 50.57403), (4.96243, 50.57403));
+        [Fact]
+        public void TessellatorProducesCorrectVertexNormals()
+        {
+            Name = nameof(TessellatorProducesCorrectVertexNormals);
+            var shape = new Polygon((4.96243, 50.58403), (5.78472, 50.58403), (5.78472, 65.83403), (-7.05727, 65.83403), (-7.05727, 50.57403), (4.96243, 50.57403));
 
-        //     var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
-        //     Model.AddElement(geoElem);
-        //     var solid = geoElem.GetFinalCsgFromSolids();
-        //     var arrows = new ModelArrows();
-        //     var mgb = Tessellation.Tessellate(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
-        //     for (int i = 0; i < mgb.Indices.Count; i += 3)
-        //     {
-        //         var a = mgb.Indices[i];
-        //         var b = mgb.Indices[i + 1];
-        //         var c = mgb.Indices[i + 2];
-        //         var verts = new[] { mgb.Vertices[a], mgb.Vertices[b], mgb.Vertices[c] };
-        //         verts.ToList().ForEach((v) =>
-        //         {
-        //             arrows.Vectors.Add((v.position, v.normal, 0.2, Colors.Blue));
-        //         });
-        //         var triangle = new Polygon(verts.Select(v => v.position).ToList());
-        //         var normal = verts[0].normal;
-        //         Assert.True(triangle.Normal().Dot(normal.Unitized()) > 0, "The vertex normals are pointing in the opposite direction as their triangles' winding should suggest");
-        //         Model.AddElement(triangle.TransformedPolygon(new Transform(normal * 0.2)));
-        //     }
-        //     Model.AddElement(arrows);
-        // }
+            var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
+            Model.AddElement(geoElem);
+            var solid = geoElem.GetFinalCsgFromSolids();
+            var arrows = new ModelArrows();
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
+            for (int i = 0; i < mgb.Indices.Count; i += 3)
+            {
+                var a = mgb.Indices[i];
+                var b = mgb.Indices[i + 1];
+                var c = mgb.Indices[i + 2];
+                var verts = new[] { mgb.Vertices[a], mgb.Vertices[b], mgb.Vertices[c] };
+                verts.ToList().ForEach((v) =>
+                {
+                    arrows.Vectors.Add((v.position, v.normal, 0.2, Colors.Blue));
+                });
+                var triangle = new Polygon(verts.Select(v => v.position).ToList());
+                var normal = verts[0].normal;
+                Assert.True(triangle.Normal().Dot(normal.Unitized()) > 0, "The vertex normals are pointing in the opposite direction as their triangles' winding should suggest");
+                Model.AddElement(triangle.TransformedPolygon(new Transform(normal * 0.2)));
+            }
+            Model.AddElement(arrows);
+        }
 
         private class MockGraphicsBuffer : IGraphicsBuffers
         {
-            public List<ushort> Indices { get; set; } = new List<ushort>();
+            public List<ushort> Indices { get; set; }
 
-            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal)>();
+            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; }
+
             public void AddIndex(ushort index)
             {
                 Indices.Add(index);
@@ -221,6 +220,12 @@ namespace Elements.Tests
             public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
             {
                 Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+            }
+
+            public void Initialize(int vertexCount = 0, int indexCount = 0)
+            {
+                this.Vertices = new List<(Vector3 position, Vector3 normal)>();
+                this.Indices = new List<ushort>();
             }
         }
     }

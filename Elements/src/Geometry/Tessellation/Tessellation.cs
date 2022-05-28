@@ -16,8 +16,8 @@ namespace Elements.Geometry.Tessellation
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static GraphicsBuffers Tessellate(IEnumerable<ITessellationTargetProvider> providers,
-                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+        internal static T Tessellate<T>(IEnumerable<ITessellationTargetProvider> providers,
+                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null) where T : IGraphicsBuffers
         {
 
             // Gather all the tessellations
@@ -31,15 +31,16 @@ namespace Elements.Geometry.Tessellation
             }
 
             // Pre-allocate a buffer big enough to hold all the tessellations
-            var buffers = new GraphicsBuffers(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
-            ushort indexOffset = 0;
+            var buffers = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));
+            buffers.Initialize(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
 
+            ushort indexOffset = 0;
             foreach (var tess in tesses)
             {
                 PackTessellationIntoBuffers(tess, buffers, modifyVertexAttributes, ref indexOffset);
             }
 
-            return buffers;
+            return (T)buffers;
         }
 
         private static void PackTessellationIntoBuffers(Tess tess,

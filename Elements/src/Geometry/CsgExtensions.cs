@@ -37,7 +37,7 @@ namespace Elements.Geometry
         internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs,
                                                    Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
-            var buffers = Tessellation.Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
+            var buffers = Tessellation.Tessellation.Tessellate<GraphicsBuffers>(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
                                     modifyVertexAttributes);
             return buffers;
         }
