@@ -31,16 +31,16 @@ namespace Elements.Geometry.Tessellation
             }
 
             // Pre-allocate a buffer big enough to hold all the tessellations
-            var buffers = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));
-            buffers.Initialize(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
+            var buffer = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));
+            buffer.Initialize(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
 
             ushort indexOffset = 0;
             foreach (var tess in tesses)
             {
-                PackTessellationIntoBuffers(tess, buffers, modifyVertexAttributes, ref indexOffset);
+                PackTessellationIntoBuffers(tess, buffer, modifyVertexAttributes, ref indexOffset);
             }
 
-            return (T)buffers;
+            return (T)buffer;
         }
 
         private static void PackTessellationIntoBuffers(Tess tess,
@@ -100,28 +100,6 @@ namespace Elements.Geometry.Tessellation
         private static Vector3 ToElementsVector(this ContourVertex v)
         {
             return new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
-        }
-
-        private static int GetOrCreateVertex(Vector3 position,
-                                             Vector3 normal,
-                                             UV uv,
-                                             List<(Vector3 position, Vector3 normal, UV uv, Color color)> pts,
-                                             bool mergeVertices)
-        {
-            if (mergeVertices)
-            {
-                var index = pts.FindIndex(p =>
-                {
-                    return p.position.IsAlmostEqualTo(position) && p.normal.AngleTo(normal) < 45.0;
-                });
-                if (index != -1)
-                {
-                    return index;
-                }
-            }
-
-            pts.Add((position, normal, uv, default(Color)));
-            return pts.Count - 1;
         }
 
         internal static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)

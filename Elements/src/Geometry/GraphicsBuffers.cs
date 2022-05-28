@@ -10,6 +10,22 @@ namespace Elements.Geometry
     public class GraphicsBuffers : IGraphicsBuffers
     {
         /// <summary>
+        /// The number of vertices represented by the buffer.
+        /// </summary>
+        public int VertexCount
+        {
+            get { return this.Vertices.Count / sizeof(float) / 3; }
+        }
+
+        /// <summary>
+        /// The number of facets represeted by the buffer.
+        /// </summary>
+        public int FacetCount
+        {
+            get { return this.Indices.Count / sizeof(ushort) / 3; }
+        }
+
+        /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
         /// </summary>
         public List<byte> Vertices { get; private set; }
