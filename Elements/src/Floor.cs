@@ -115,8 +115,10 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            if (this.Representation.SolidOperations.Count == 0)
+            {
+                this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            }
         }
 
         /// <summary>

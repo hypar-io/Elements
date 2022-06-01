@@ -12,8 +12,10 @@ namespace Elements.Serialization.JSON
     public class JsonInheritanceConverter : JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
+        internal static readonly string DefaultDiscriminatorFallbackName = "discriminatorFallback";
 
         private readonly string _discriminator;
+        private readonly string _discriminatorFallback = DefaultDiscriminatorFallbackName;
 
         [System.ThreadStatic]
         private static bool _isReading;
@@ -159,6 +161,11 @@ namespace Elements.Serialization.JSON
                     else
                     {
                         jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetDiscriminatorName(value)));
+                        var fallback = GetDiscriminatorFallback(value);
+                        if (!string.IsNullOrEmpty(fallback))
+                        {
+                            jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminatorFallback, fallback));
+                        }
                     }
                     writer.WriteToken(jObject.CreateReader());
                 }
@@ -305,6 +312,15 @@ namespace Elements.Serialization.JSON
                 return proxy;
             }
 
+            if (jObject.TryGetValue(_discriminatorFallback, out JToken discriminatorFallbackToken) && discriminatorFallbackToken != null)
+            {
+                var discriminatorFallback = Newtonsoft.Json.Linq.Extensions.Value<string>(discriminatorFallbackToken);
+                if (TypeCache.ContainsKey(discriminatorFallback))
+                {
+                    return TypeCache[discriminatorFallback];
+                }
+            }
+
             // If it's not in the type cache see if it's got a representation.
             // Import it as a GeometricElement.
             if (jObject.TryGetValue("Representation", out _))
@@ -315,6 +331,17 @@ namespace Elements.Serialization.JSON
             // The default behavior for this converter, as provided by nJSONSchema
             // is to return the base objectType if a derived type can't be found.
             return objectType;
+        }
+
+        private string GetDiscriminatorFallback(object value)
+        {
+            var attribute = value.GetType().GetCustomAttribute<DiscriminatorFallbackAttribute>();
+            if (attribute == null || attribute.Type == null)
+            {
+                return string.Empty;
+            }
+
+            return attribute.Type.FullName;
         }
     }
 }
