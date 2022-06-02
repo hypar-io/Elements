@@ -33,7 +33,7 @@ namespace Elements
                     dimensions.Add(d);
                 }
             }
-
+            this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
         }
 
