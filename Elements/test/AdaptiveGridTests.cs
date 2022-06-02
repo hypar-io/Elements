@@ -219,7 +219,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void AdaptiveGridSubtractLoadJson()
+        public void AdaptiveGridSubtractMisalignedPolygon()
         {
             var boundary = new Polygon(
                 new Vector3(-15.0, 49.599999999999994, 8.37), //TODO: Root cause of an issue, coordinates of boundary vertices are slightly misaligned
