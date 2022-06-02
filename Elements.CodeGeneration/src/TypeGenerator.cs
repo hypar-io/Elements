@@ -238,7 +238,7 @@ namespace Elements.Generate
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-                    var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+                    var csharpFileContents = GenerateCSharpCodeForSchemaExcludingLoadedTypes(schema);
                     foreach (var csharp in csharpFileContents)
                     {
                         if (code.ContainsKey(csharp.Key))
@@ -303,7 +303,7 @@ namespace Elements.Generate
                 try
                 {
                     var schema = await GetSchemaAsync(uri);
-                    var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+                    var csharpFileContents = GenerateCSharpCodeForSchemaExcludingLoadedTypes(schema);
                     foreach (var csharp in csharpFileContents)
                     {
                         if (code.ContainsKey(csharp.Key))
@@ -584,7 +584,7 @@ namespace Elements.Generate
         /// <returns>Returns true if the dll was generated successfully, otherwise false.</returns>
         public static bool GenerateAndSaveDllForSchema(JsonSchema schema, string dllPath, out string[] diagnosticResults, bool frameworkBuild = false)
         {
-            var csharpFileContents = GenerateCSharpCodeForSchema(schema);
+            var csharpFileContents = GenerateCSharpCodeForSchemaExcludingLoadedTypes(schema);
             if (csharpFileContents == null)
             {
                 diagnosticResults = new string[] { };
@@ -594,7 +594,7 @@ namespace Elements.Generate
             return TryEmitAndSave(compilation, dllPath, out diagnosticResults);
         }
 
-        private static Dictionary<string, string> GenerateCSharpCodeForSchema(JsonSchema schema)
+        private static Dictionary<string, string> GenerateCSharpCodeForSchemaExcludingLoadedTypes(JsonSchema schema)
         {
             string ns;
             if (!GetNamespace(schema, out ns))
