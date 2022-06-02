@@ -2,6 +2,10 @@
 
 ## 1.0.1
 
+### Added
+- `Dimension`
+- `LinearDimension`
+
 ### Fixed
 
 - #805
