@@ -525,5 +525,30 @@ namespace Elements.Tests
             Model.AddElements(results.SelectMany(r => r.ToModelCurves()));
             Assert.Equal(2115.667, results.Sum(r => Math.Abs(r.Area())), 3);
         }
+
+        [Fact]
+        public void SplitComplexProfileWithInnerVoids()
+        {
+            Name = nameof(SplitComplexProfileWithInnerVoids);
+            var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
+            var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
+            var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
+            var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
+            var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
+            // Value determined experimentally. If this test breaks, verify output visually —
+            // it's not necessarily the end of the world if the number changes slightly, but we want to
+            // make sure the results look sensible.
+            Assert.Equal(444, splits.Count);
+            var random = new Random(11);
+            foreach (var s in splits)
+            {
+                var ge = new GeometricElement()
+                {
+                    Representation = new Geometry.Solids.Lamina(s),
+                    Material = random.NextMaterial()
+                };
+                Model.AddElement(ge);
+            }
+        }
     }
 }
