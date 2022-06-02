@@ -19,6 +19,7 @@ namespace Elements
 
             var offset = 0.125;
             m.UpdateRepresentations();
+            var dimensions = new List<LinearDimension>();
             foreach (var f in m.Representation.SolidOperations[0].Solid.Faces)
             {
                 var p = f.Value.Outer.ToPolygon();
@@ -28,13 +29,12 @@ namespace Elements
                 for (var i = 0; i < segs.Length; i++)
                 {
                     var a = segs[i];
-                    var right = a.Direction().Cross(plane.Normal);
-                    var b = new Line(a.Start + right * offset, a.End + right * offset);
-                    var d = new LinearDimension(a.Start, a.End, plane, b);
-                    var draw = d.ToModelArrowsAndText();
-                    this.Model.AddElements(draw);
+                    var d = new LinearDimension(a.Start, a.End, plane, offset);
+                    dimensions.Add(d);
                 }
             }
+
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
         }
 
         [Fact]
@@ -60,12 +60,15 @@ namespace Elements
             }
             pts.Sort(new DirectionComparer(Vector3.XAxis));
 
+            var dimensions = new List<LinearDimension>();
             var refLine = new Line(new Vector3(0, 7, 0), new Vector3(1, 7, 0));
             for (var i = 0; i < pts.Count - 1; i++)
             {
                 var d = new LinearDimension(pts[i], pts[i + 1], null, refLine);
-                this.Model.AddElements(d.ToModelArrowsAndText());
+                dimensions.Add(d);
             }
+
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
         }
     }
 }

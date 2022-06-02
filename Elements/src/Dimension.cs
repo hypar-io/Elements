@@ -111,45 +111,72 @@ namespace Elements
             this.Start = start.Project(this.Plane);
             this.End = end.Project(this.Plane);
             var vRef = (this.End - this.Start).Unitized();
-            var offsetDirection = this.Plane.Normal.Cross(vRef);
+            var offsetDirection = vRef.Cross(this.Plane.Normal);
             this.ReferencePlane = new Plane(this.Start + offsetDirection * offset, offsetDirection);
         }
 
         /// <summary>
         /// Draw the dimension.
         /// </summary>
-        /// <returns></returns>
-        public List<Element> ToModelArrowsAndText()
+        public List<Element> ToModelArrowsAndText(Color color)
+        {
+            var modelArrowData = new List<(Vector3, Vector3, double, Color?)>();
+            var textData = new List<(Vector3, Vector3, Vector3, string, Color?)>();
+            var modelCurves = new List<ModelCurve>();
+            Draw(color, modelArrowData, textData, modelCurves);
+            var elements = new List<Element>();
+            elements.AddRange(modelCurves);
+            elements.Add(new ModelText(textData, FontSize.PT24));
+            elements.Add(new ModelArrows(modelArrowData, true, true));
+            return elements;
+        }
+
+        private void Draw(Color color,
+                                   List<(Vector3, Vector3, double, Color?)> modelArrowData,
+                                   List<(Vector3, Vector3, Vector3, string, Color?)> textData,
+                                   List<ModelCurve> modelCurves)
         {
             var dimStart = this.Start.Project(this.ReferencePlane);
             var dimEnd = this.End.Project(this.ReferencePlane);
             var dimDirection = (dimEnd - dimStart).Unitized();
-            var ma = new ModelArrows(new (Vector3, Vector3, double, Color?)[] { (dimStart, dimDirection, dimStart.DistanceTo(dimEnd), null) }, true, true);
-            var elements = new List<Element>
-            {
-                ma
-            };
 
-            var c = new Material("Red", Colors.Red);
+            modelArrowData.Add((dimStart, dimDirection, dimStart.DistanceTo(dimEnd), color));
+
+            var c = new Material("Red", color, unlit: true);
 
             if (dimStart.DistanceTo(this.Start) > 0)
             {
-                elements.Add(new ModelCurve(new Line(this.Start, dimStart), c));
+                modelCurves.Add(new ModelCurve(new Line(this.Start, dimStart), c));
             }
             if (dimEnd.DistanceTo(this.End) > 0)
             {
-                elements.Add(new ModelCurve(new Line(this.End, dimEnd), c));
+                modelCurves.Add(new ModelCurve(new Line(this.End, dimEnd), c));
             }
 
             // Always try to make the direction vector point in positive x, y, and z.
             var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
-            var texts = new List<(Vector3, Vector3, Vector3, string, Color?)>
+            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, dimStart.DistanceTo(dimEnd).ToString("0.00"), color));
+        }
+
+        /// <summary>
+        /// Draw a set of dimensions.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="dimensions"></param>
+        public static List<Element> ToModelArrowsAndTexts(Color color, IList<LinearDimension> dimensions)
+        {
+            var modelArrows = new List<(Vector3, Vector3, double, Color?)>();
+            var texts = new List<(Vector3, Vector3, Vector3, string, Color?)>();
+            var modelCurves = new List<ModelCurve>();
+            foreach (var d in dimensions)
             {
-                (dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, dimStart.DistanceTo(dimEnd).ToString("0.00"), Colors.Black)
-            };
-            var mt = new ModelText(texts, FontSize.PT36);
-            elements.Add(mt);
+                d.Draw(color, modelArrows, texts, modelCurves);
+            }
+            var elements = new List<Element>();
+            elements.AddRange(modelCurves);
+            elements.Add(new ModelText(texts, FontSize.PT24));
+            elements.Add(new ModelArrows(modelArrows, true, true));
 
             return elements;
         }
