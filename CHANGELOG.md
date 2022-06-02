@@ -3,18 +3,21 @@
 ## 1.0.1
 
 ### Fixed
+
 - #805
 
-### Fixed 
-- `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear 
+### Fixed
+
+- `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear
 - `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if points coordinates difference is larger than `Vector3.EPSILON`
 - `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
-- `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices 
+- `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
-
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
+
 - Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
 - `TryToGraphicsBuffers` is now public
 
