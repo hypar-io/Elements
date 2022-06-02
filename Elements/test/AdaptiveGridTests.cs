@@ -170,6 +170,115 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridSubtractManyBoxesWithSmallDifference()
+        {
+            var columnsNumber = 10;
+            var height = 10;
+
+            var adaptiveGrid = new AdaptiveGrid();
+            var gridPolygon = new Polygon(new Vector3(-15, 0, height), new Vector3(15, 0 , height), new Vector3(15, 80, height), new Vector3(-15, 80, height));
+
+            var points = new List<Vector3>();
+            points.Add(new Vector3(-0.23, 0, 0));
+            points.Add(new Vector3(0.23, 0, 0));
+
+            var boxes = new List<BBox3>();
+
+            for (int i = 1; i <= columnsNumber; i++)
+            {
+                var column = Polygon.Rectangle(0.3, 0.6);
+                var offset = column.Offset(0.1).First();
+
+                var vector = new Vector3(0, 80 / (columnsNumber + 1) * i, 0);
+                var profile = new Polygon(offset.Vertices);
+                profile.Transform(new Transform(vector));
+                points.Add(vector);
+                points.AddRange(profile.Vertices);
+
+                var obstacle = offset.Bounds();
+                var box = obstacle.Translated(vector);
+                box.Extend(new Vector3(box.Max.X, box.Max.Y, height + 1));
+
+                boxes.Add(box);
+            }
+
+            adaptiveGrid.AddFromPolygon(gridPolygon, points);
+
+            var numberOfEdgesBeforeSubtract = (columnsNumber * 3 + 2) * 6 + (columnsNumber * 3 + 1) * 7;
+
+            Assert.Equal(numberOfEdgesBeforeSubtract, adaptiveGrid.GetEdges().Count);
+
+            foreach (var box in boxes)
+            {
+                var obstacle = box.Translated(new Vector3(0,0, height));
+                adaptiveGrid.SubtractBox(obstacle);
+            }
+
+            var numberAfterSubtract = numberOfEdgesBeforeSubtract - columnsNumber * 10;
+            Assert.Equal(numberAfterSubtract, adaptiveGrid.GetEdges().Count);
+        }
+
+        [Fact]
+        public void AdaptiveGridSubtractLoadJson()
+        {
+            var boundary = new Polygon(
+                new Vector3(-15.0, 49.599999999999994, 8.37), //TODO: Root cause of an issue, coordinates of boundary vertices are slightly misaligned
+                new Vector3(-45.0, 49.6, 8.37), 
+                new Vector3(-45.0, 0, 8.37), 
+                new Vector3(-15.0, 0, 8.37));
+
+            var obstacles = new List<BBox3>
+            { 
+                new BBox3(new Vector3( -30.41029, 19.60979, 8.37), new Vector3( -29.58971, 20.39021, 8.37)),
+                new BBox3(new Vector3( -30.41029, 39.60979, 8.37), new Vector3( -29.58971, 40.39021, 8.37)),
+                new BBox3(new Vector3( -22.08622, 17.62839, 8.37), new Vector3( -8.57565, 38.31022, 8.37))
+            };
+
+            var points = new List<Vector3>()
+            {
+                new Vector3(-29.8, 20.540211303259028, 10.0),
+                new Vector3(-29.8, 40.540211303259035, 10.0),
+                new Vector3(-29.0, 49.599999999999994, 8.37),
+                new Vector3(-30.0, 49.599999999999994, 8.37),
+                new Vector3(-29.0, 21.540211303259028, 0.0),
+                new Vector3(-29.8, 21.540211303259028, 8.37),
+                new Vector3(-29.0, 41.54021130325904, 0.0),
+                new Vector3(-29.8, 41.540211303259035, 8.37),
+                
+                //1st BBox vertices
+                new Vector3(-30.41029, 19.60979, 8.37),
+                new Vector3(-29.58971, 19.60979, 8.37),
+                new Vector3(-29.58971, 20.39021, 8.37),
+                new Vector3(-30.41029, 20.39021, 8.37),
+                
+                //2nd BBox vertices
+                new Vector3(-30.41029, 39.60979, 8.37),
+                new Vector3(-29.58971, 39.60979, 8.37),
+                new Vector3(-29.58971, 40.39021, 8.37),
+                new Vector3(-30.41029, 40.39021, 8.37),
+                
+                //3rd BBox vertices
+                new Vector3(-22.08622, 17.62839, 8.37),
+                new Vector3(-8.57565, 17.62839, 8.37),
+                new Vector3(-8.57565, 38.31022, 8.37),
+                new Vector3(-22.08622, 38.31022, 8.37)
+            };
+
+            var adaptiveGrid = new AdaptiveGrid();
+            adaptiveGrid.AddFromPolygon(boundary, points);
+
+            var edgesCount = adaptiveGrid.GetEdges().Count();
+            var verticiesCount = adaptiveGrid.GetVertices().Count();
+
+            foreach(var obstacle in obstacles)
+            {
+                adaptiveGrid.SubtractBox(obstacle);
+            }
+
+            Assert.Equal(edgesCount - 13, adaptiveGrid.GetEdges().Count);
+            Assert.Equal(verticiesCount - 4, adaptiveGrid.GetVertices().Count);
+        }
+        [Fact]
         public void AdaptiveGridLongSectionDoNowThrow()
         {
             var adaptiveGrid = new AdaptiveGrid();
