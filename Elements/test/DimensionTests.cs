@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Elements.Dimensions;
 using Elements.Geometry;
 using Elements.Search;
 using Elements.Tests;
@@ -29,7 +30,7 @@ namespace Elements
                 for (var i = 0; i < segs.Length; i++)
                 {
                     var a = segs[i];
-                    var d = new LinearDimension(a.Start, a.End, plane, offset);
+                    var d = new AlignedDimension(a.Start, a.End, plane, offset);
                     dimensions.Add(d);
                 }
             }
@@ -64,7 +65,7 @@ namespace Elements
             var refLine = new Line(new Vector3(0, 7, 0), new Vector3(1, 7, 0));
             for (var i = 0; i < pts.Count - 1; i++)
             {
-                var d = new LinearDimension(pts[i], pts[i + 1], null, refLine);
+                var d = new ContinuousDimension(pts[i], pts[i + 1], refLine, null);
                 dimensions.Add(d);
             }
 

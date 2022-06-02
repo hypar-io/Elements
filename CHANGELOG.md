@@ -5,6 +5,8 @@
 ### Added
 - `Dimension`
 - `LinearDimension`
+- `AlignedDimension`
+- `ContinuousDimension`
 
 ### Fixed
 
