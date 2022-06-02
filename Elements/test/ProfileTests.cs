@@ -536,6 +536,10 @@ namespace Elements.Tests
             var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
             var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
             var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
+            // Value determined experimentally. If this test breaks, verify output visually —
+            // it's not necessarily the end of the world if the number changes slightly, but we want to
+            // make sure the results look sensible.
+            Assert.Equal(444, splits.Count);
             var random = new Random(11);
             foreach (var s in splits)
             {
