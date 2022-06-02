@@ -608,7 +608,7 @@ namespace Elements.Generate
             {
                 return new Dictionary<string, string>();
             }
-            var localExcludes = _coreTypeNames.Where(n => n != typeName).ToArray();
+            var localExcludes = loadedTypes.Union(_coreTypeNames).Distinct().Where(n => n != typeName).ToArray();
 
             return GetCodeForTypesFromSchema(schema, typeName, ns, localExcludes);
         }
