@@ -144,6 +144,7 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridSubtractBoxSmallDifference()
         {
+            var edgesNumber = 75;
             var adaptiveGrid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(new Vector3(-41, -51), new Vector3(-39, -49));
 
@@ -152,14 +153,20 @@ namespace Elements.Tests
             points.Add(new Vector3(-40, -49.80979, 1));
 
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 0), out _));
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 1), out _));
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 2), out _));
+            Assert.Equal(edgesNumber, adaptiveGrid.GetEdges().Count);
 
             var box = new BBox3(new Vector3(-40.2, -50.190211303259034, 0),
                                 new Vector3(-39.8, -49.809788696740966, 2));
             adaptiveGrid.SubtractBox(box);
+
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 0), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 1), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 2), out _));
+            Assert.Equal(edgesNumber - 14, adaptiveGrid.GetEdges().Count);
         }
 
         [Fact]
