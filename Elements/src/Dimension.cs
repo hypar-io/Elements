@@ -61,9 +61,9 @@ namespace Elements
         /// points will be projected.</param>
         /// <returns></returns>
         [JsonConstructor]
-        public LinearDimension(Plane plane, Vector3 start, Vector3 end, Plane referencePlane) : base(plane)
+        public LinearDimension(Vector3 start, Vector3 end, Plane referencePlane, Plane plane = null) : base(plane)
         {
-            this.Plane = plane;
+            this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
             this.Start = start;
             this.End = end;
             this.ReferencePlane = referencePlane;
@@ -79,21 +79,21 @@ namespace Elements
         /// <param name="end">The end of the dimension.</param>
         /// <param name="referenceLine">A line on which the start and end points 
         /// will be projected.</param>
-        public LinearDimension(Plane plane, Vector3 start, Vector3 end, Line referenceLine = null) : base(plane)
+        public LinearDimension(Vector3 start, Vector3 end, Plane plane = null, Line referenceLine = null) : base(plane)
         {
-            this.Plane = plane;
-            this.Start = start.Project(plane);
-            this.End = end.Project(plane);
+            this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
+            this.Start = start.Project(this.Plane);
+            this.End = end.Project(this.Plane);
             Vector3 vRef;
             if (referenceLine != null)
             {
-                vRef = (referenceLine.End.Project(plane) - referenceLine.Start.Project(plane)).Unitized();
+                vRef = (referenceLine.End.Project(this.Plane) - referenceLine.Start.Project(this.Plane)).Unitized();
             }
             else
             {
                 vRef = (this.End - this.Start).Unitized();
             }
-            this.ReferencePlane = new Plane(referenceLine.Start, plane.Normal.Cross(vRef));
+            this.ReferencePlane = new Plane(referenceLine.Start, this.Plane.Normal.Cross(vRef));
         }
 
         /// <summary>
@@ -105,13 +105,13 @@ namespace Elements
         /// <param name="start">The start of the dimension.</param>
         /// <param name="end">The end of the dimension.</param>
         /// <param name="offset">The offset of the reference line.</param>
-        public LinearDimension(Plane plane, Vector3 start, Vector3 end, double offset = 0.0) : base(plane)
+        public LinearDimension(Vector3 start, Vector3 end, Plane plane = null, double offset = 0.0) : base(plane)
         {
-            this.Plane = plane;
-            this.Start = start.Project(plane);
-            this.End = end.Project(plane);
+            this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
+            this.Start = start.Project(this.Plane);
+            this.End = end.Project(this.Plane);
             var vRef = (this.End - this.Start).Unitized();
-            var offsetDirection = plane.Normal.Cross(vRef);
+            var offsetDirection = this.Plane.Normal.Cross(vRef);
             this.ReferencePlane = new Plane(this.Start + offsetDirection * offset, offsetDirection);
         }
 
@@ -141,7 +141,8 @@ namespace Elements
                 elements.Add(new ModelCurve(new Line(this.End, dimEnd), c));
             }
 
-            var lineDirection = this.Start.X > this.End.X ? dimDirection.Negate() : dimDirection;
+            // Always try to make the direction vector point in positive x, y, and z.
+            var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
             var texts = new List<(Vector3, Vector3, Vector3, string, Color?)>
             {
