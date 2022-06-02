@@ -48,12 +48,13 @@ namespace Elements.Geometry
             {
                 throw new ArgumentException("Cannot test collinearity of an empty list");
             }
-            if (points.Distinct(new Vector3Comparer()).Count() < 3)
-            {
-                return true;
-            }
 
             var fitLine = points.FitLine(out var directions);
+            if (fitLine == null)
+            {
+                // this will happen if all points are within tolerance of their average — if they're all basically coincident.
+                return true;
+            }
             var fitDir = fitLine.Direction();
             var epsilonSquared = Vector3.EPSILON * Vector3.EPSILON;
             return directions.All(d =>
@@ -71,7 +72,7 @@ namespace Elements.Geometry
         /// to span the length of the points.
         /// </summary>
         /// <param name="points">The points to fit.</param>
-        /// <returns>A line roughly running through the set of points.</returns>
+        /// <returns>A line roughly running through the set of points, or null if the points are nearly coincident.</returns>
         public static Line FitLine(this IList<Vector3> points)
         {
             return FitLine(points, out _);
@@ -84,7 +85,13 @@ namespace Elements.Geometry
             var ptsMinusMean = points.Select(pt => pt - meanPt);
             // pick any non-zero vector as an alignment guide, so that a set of directions
             // that's perfectly symmetrical about the mean doesn't average out to zero
-            var alignmentVector = ptsMinusMean.First(p => !p.IsZero());
+            var nonZeroPts = ptsMinusMean.Where(pt => !pt.IsZero());
+            if (nonZeroPts.Count() == 0)
+            {
+                directionsFromMean = new List<Vector3>();
+                return null;
+            }
+            var alignmentVector = nonZeroPts.First();
             // flip the directions so they're all pointing in the same direction as the alignment vector
             var ptsMinusMeanAligned = ptsMinusMean.Select(p => p.Dot(alignmentVector) < 0 ? p * -1 : p);
             // get average direction
@@ -220,6 +227,12 @@ namespace Elements.Geometry
         }
     }
 
+    /// <summary>
+    /// WARNING! do not use this Comparer in `Distinct()` or similar methods if you care about "equality within tolerance."
+    /// These methods will use `GetHashCode` rather than `Equals` to determine equality, which must necessarily
+    /// ignore tolerance. It is *impossible* to create a hashing algorithm that consistently returns identical values for
+    /// any two points within tolerance of each other.
+    /// </summary>
     internal class Vector3Comparer : EqualityComparer<Vector3>
     {
         public override bool Equals(Vector3 x, Vector3 y)
