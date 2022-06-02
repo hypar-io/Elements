@@ -7,7 +7,7 @@ namespace Elements
     /// <summary>
     /// A dimension.
     /// </summary>
-    public abstract class Dimension
+    public abstract class Dimension : Element
     {
         /// <summary>
         /// The plane in which the dimension is drawn.
