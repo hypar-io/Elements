@@ -63,6 +63,7 @@ namespace Elements
         [JsonConstructor]
         public LinearDimension(Plane plane, Vector3 start, Vector3 end, Plane referencePlane) : base(plane)
         {
+            this.Plane = plane;
             this.Start = start;
             this.End = end;
             this.ReferencePlane = referencePlane;
@@ -80,6 +81,7 @@ namespace Elements
         /// will be projected.</param>
         public LinearDimension(Plane plane, Vector3 start, Vector3 end, Line referenceLine = null) : base(plane)
         {
+            this.Plane = plane;
             this.Start = start.Project(plane);
             this.End = end.Project(plane);
             Vector3 vRef;
@@ -105,6 +107,7 @@ namespace Elements
         /// <param name="offset">The offset of the reference line.</param>
         public LinearDimension(Plane plane, Vector3 start, Vector3 end, double offset = 0.0) : base(plane)
         {
+            this.Plane = plane;
             this.Start = start.Project(plane);
             this.End = end.Project(plane);
             var vRef = (this.End - this.Start).Unitized();
@@ -127,14 +130,26 @@ namespace Elements
                 ma
             };
 
+            var c = new Material("Red", Colors.Red);
+
             if (dimStart.DistanceTo(this.Start) > 0)
             {
-                elements.Add(new ModelCurve(new Line(this.Start, dimStart)));
+                elements.Add(new ModelCurve(new Line(this.Start, dimStart), c));
             }
             if (dimEnd.DistanceTo(this.End) > 0)
             {
-                elements.Add(new ModelCurve(new Line(this.End, dimEnd)));
+                elements.Add(new ModelCurve(new Line(this.End, dimEnd), c));
             }
+
+            var lineDirection = this.Start.X > this.End.X ? dimDirection.Negate() : dimDirection;
+
+            var texts = new List<(Vector3, Vector3, Vector3, string, Color?)>
+            {
+                (dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, dimStart.DistanceTo(dimEnd).ToString("0.00"), Colors.Black)
+            };
+            var mt = new ModelText(texts, FontSize.PT36);
+            elements.Add(mt);
+
             return elements;
         }
     }
