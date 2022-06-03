@@ -17,7 +17,8 @@ namespace Elements.Serialization.IFC
         internal static List<IfcProduct> ToIfcProducts(this Element e,
                                                        IfcRepresentationContext context,
                                                        Document doc,
-                                                       Dictionary<Guid, List<IfcStyleAssignmentSelect>> styleAssignments)
+                                                       Dictionary<Guid, List<IfcStyleAssignmentSelect>> styleAssignments,
+                                                       bool updateElementRepresentation = true)
         {
             var products = new List<IfcProduct>();
 
@@ -44,7 +45,10 @@ namespace Elements.Serialization.IFC
                 trans = geoElement.Transform;
             }
 
-            geoElement.UpdateRepresentations();
+            if (updateElementRepresentation)
+            {
+                geoElement.UpdateRepresentations();
+            }
 
             var localPlacement = trans.ToIfcLocalPlacement(doc);
             doc.AddEntity(localPlacement);
