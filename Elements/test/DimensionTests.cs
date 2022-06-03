@@ -14,6 +14,7 @@ namespace Elements
         {
             this.Name = "Elements_Dimension_Aligned";
 
+            // <aligned_dimension_example>
             var l = Polygon.L(5, 5, 1);
             var m = new Mass(l, 1, BuiltInMaterials.Glass);
             this.Model.AddElement(m);
@@ -34,6 +35,7 @@ namespace Elements
                     dimensions.Add(d);
                 }
             }
+            // </aligned_dimension_example>
             this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
         }
@@ -43,6 +45,7 @@ namespace Elements
         {
             this.Name = "Elements_Dimension_Continuous";
 
+            // <continuous_dimension_example>
             var l = Polygon.L(5, 5, 1);
 
             var m = new Mass(l, 1, BuiltInMaterials.Glass);
@@ -68,7 +71,36 @@ namespace Elements
                 var d = new ContinuousDimension(pts[i], pts[i + 1], refLine, null);
                 dimensions.Add(d);
             }
+            // </continuous_dimension_example>
 
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
+        }
+
+        [Fact]
+        public void DimensionDisplayValue()
+        {
+            this.Name = nameof(DimensionDisplayValue);
+
+            var l = Polygon.L(5, 5, 1);
+            var m = new ModelCurve(l);
+            this.Model.AddElement(m);
+
+            var segs = l.Segments();
+            var dimensions = new List<LinearDimension>();
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var offset = 0.125;
+
+            for (var i = 0; i < segs.Length; i++)
+            {
+                var a = segs[i];
+                var d = new AlignedDimension(a.Start, a.End, plane, offset)
+                {
+                    DisplayValue = $"Polygon {i}"
+                };
+                dimensions.Add(d);
+            }
+
+            this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
         }
     }

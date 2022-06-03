@@ -6,6 +6,9 @@ namespace Elements.Dimensions
     /// <summary>
     /// A linear dimension aligned along the line between the specified start and end.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/DimensionTests.cs?name=aligned_dimension_example)]
+    /// </example>
     public class AlignedDimension : LinearDimension
     {
         /// <summary>

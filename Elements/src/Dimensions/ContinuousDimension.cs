@@ -6,6 +6,9 @@ namespace Elements.Dimensions
     /// <summary>
     /// A linear dimension where start and end are projected onto the dimension line.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/DimensionTests.cs?name=continuous_dimension_example)]
+    /// </example>
     public class ContinuousDimension : LinearDimension
     {
         /// <summary>

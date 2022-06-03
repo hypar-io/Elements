@@ -33,7 +33,10 @@ namespace Elements.Dimensions
         /// <param name="referencePlane">The plane on which the start and end
         /// points will be projected.</param>
         [JsonConstructor]
-        public LinearDimension(Vector3 start, Vector3 end, Plane referencePlane, Plane plane = null) : base()
+        public LinearDimension(Vector3 start,
+                               Vector3 end,
+                               Plane referencePlane,
+                               Plane plane = null) : base()
         {
             this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
             this.Start = start;
@@ -87,7 +90,7 @@ namespace Elements.Dimensions
             // Always try to make the direction vector point in positive x, y, and z.
             var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
-            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, dimStart.DistanceTo(dimEnd).ToString("0.00"), color));
+            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, this.DisplayValue ?? this.Start.DistanceTo(this.End).ToString("0.00"), color));
         }
 
         /// <summary>
