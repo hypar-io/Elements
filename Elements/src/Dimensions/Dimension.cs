@@ -13,10 +13,19 @@ namespace Elements.Dimensions
         public Plane Plane { get; protected set; } = new Plane(Vector3.Origin, Vector3.ZAxis);
 
         /// <summary>
-        /// If this property is not null, the display value will 
-        /// show instead of the computed value.
+        /// Text to be displayed in place of the dimension's value.
         /// </summary>
         public string DisplayValue { get; set; }
+
+        /// <summary>
+        /// Text to be displayed before the dimension's value.
+        /// </summary>
+        public string Prefix { get; set; }
+
+        /// <summary>
+        /// Text to be displayed after the dimension's value.
+        /// </summary>
+        public string Suffix { get; set; }
 
         /// <summary>
         /// Create a dimension.

@@ -95,7 +95,9 @@ namespace Elements
                 var a = segs[i];
                 var d = new AlignedDimension(a.Start, a.End, plane, offset)
                 {
-                    DisplayValue = $"Polygon {i}"
+                    Prefix = "Before ",
+                    DisplayValue = $"Polygon {i}",
+                    Suffix = " After"
                 };
                 dimensions.Add(d);
             }

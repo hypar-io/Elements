@@ -28,6 +28,9 @@ namespace Elements.Dimensions
         /// Create a linear dimension with a reference plane.
         /// </summary>
         /// <param name="plane">The plane in which the dimension is measured.</param>
+        /// <param name="prefix">Text to be displayed before the dimension's value.</param>
+        /// <param name="suffix">Text to be displayed after the dimension's value.</param>
+        /// <param name="displayValue">Text to be displayed in place of the dimension's value.</param>
         /// <param name="start">The start of the dimension.</param>
         /// <param name="end">The end of the dimension.</param>
         /// <param name="referencePlane">The plane on which the start and end
@@ -36,12 +39,18 @@ namespace Elements.Dimensions
         public LinearDimension(Vector3 start,
                                Vector3 end,
                                Plane referencePlane,
-                               Plane plane = null) : base()
+                               Plane plane = null,
+                               string prefix = null,
+                               string suffix = null,
+                               string displayValue = null) : base()
         {
             this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
             this.Start = start;
             this.End = end;
             this.ReferencePlane = referencePlane;
+            this.Prefix = prefix;
+            this.Suffix = suffix;
+            this.DisplayValue = displayValue;
         }
 
         /// <summary>
@@ -90,7 +99,8 @@ namespace Elements.Dimensions
             // Always try to make the direction vector point in positive x, y, and z.
             var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
-            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, this.DisplayValue ?? this.Start.DistanceTo(this.End).ToString("0.00"), color));
+            var value = $"{this.Prefix ?? string.Empty}{this.DisplayValue ?? this.Start.DistanceTo(this.End).ToString("0.00")}{this.Suffix ?? string.Empty}";
+            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, value, color));
         }
 
         /// <summary>

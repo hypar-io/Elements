@@ -18,14 +18,23 @@ namespace Elements.Dimensions
         /// <param name="end"></param>
         /// <param name="referencePlane"></param>
         /// <param name="plane"></param>
+        /// <param name="prefix"></param>
+        /// <param name="suffix"></param>
+        /// <param name="displayValue"></param>
         [JsonConstructor]
         public AlignedDimension(Vector3 start,
-                                   Vector3 end,
-                                   Plane referencePlane,
-                                   Plane plane = null) : base(start,
+                                Vector3 end,
+                                Plane referencePlane,
+                                Plane plane = null,
+                                string prefix = null,
+                                string suffix = null,
+                                string displayValue = null) : base(start,
                                                               end,
                                                               referencePlane,
-                                                              plane)
+                                                              plane,
+                                                              prefix,
+                                                              suffix,
+                                                              displayValue)
         { }
 
         /// <summary>
