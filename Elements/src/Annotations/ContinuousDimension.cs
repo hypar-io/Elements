@@ -1,7 +1,7 @@
 using Elements.Geometry;
 using Newtonsoft.Json;
 
-namespace Elements.Dimensions
+namespace Elements.Annotations
 {
     /// <summary>
     /// A linear dimension where start and end are projected onto the dimension line.

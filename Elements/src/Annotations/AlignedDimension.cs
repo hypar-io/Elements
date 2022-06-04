@@ -1,7 +1,7 @@
 using Elements.Geometry;
 using Newtonsoft.Json;
 
-namespace Elements.Dimensions
+namespace Elements.Annotations
 {
     /// <summary>
     /// A linear dimension aligned along the line between the specified start and end.
@@ -48,8 +48,8 @@ namespace Elements.Dimensions
         /// <param name="offset">The offset of the reference line.</param>
         public AlignedDimension(Vector3 start,
                                 Vector3 end,
-                                Plane plane = null,
-                                double offset = 0.0) : base()
+                                double offset = 0.0,
+                                Plane plane = null) : base()
         {
             this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
             this.Start = start.Project(this.Plane);

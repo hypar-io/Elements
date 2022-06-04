@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Newtonsoft.Json;
 
-namespace Elements.Dimensions
+namespace Elements.Annotations
 {
     /// <summary>
     /// A linear dimension.
     /// </summary>
-    public abstract class LinearDimension : Dimension
+    public abstract class LinearDimension : Annotation
     {
         /// <summary>
         /// The start of the dimension.
@@ -20,7 +20,7 @@ namespace Elements.Dimensions
         public Vector3 End { get; protected set; }
 
         /// <summary>
-        /// The line on which the start and end points are projected.
+        /// The plane on which the start and end points are projected.
         /// </summary>
         public Plane ReferencePlane { get; protected set; }
 
@@ -108,7 +108,7 @@ namespace Elements.Dimensions
         /// </summary>
         /// <param name="color"></param>
         /// <param name="dimensions"></param>
-        public static List<Element> ToModelArrowsAndTexts(Color color, IList<LinearDimension> dimensions)
+        public static List<Element> ToModelArrowsAndTexts(IList<LinearDimension> dimensions, Color color = default)
         {
             var modelArrows = new List<(Vector3, Vector3, double, Color?)>();
             var texts = new List<(Vector3, Vector3, Vector3, string, Color?)>();

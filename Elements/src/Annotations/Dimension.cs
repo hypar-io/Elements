@@ -1,11 +1,11 @@
 using Elements.Geometry;
 
-namespace Elements.Dimensions
+namespace Elements.Annotations
 {
     /// <summary>
     /// A dimension.
     /// </summary>
-    public abstract class Dimension : Element
+    public abstract class Annotation : Element
     {
         /// <summary>
         /// The plane in which the dimension is drawn.
@@ -30,6 +30,6 @@ namespace Elements.Dimensions
         /// <summary>
         /// Create a dimension.
         /// </summary>
-        public Dimension() { }
+        public Annotation() { }
     }
 }

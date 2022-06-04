@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Elements.Dimensions;
+using Elements.Annotations;
 using Elements.Geometry;
 using Elements.Search;
 using Elements.Tests;
@@ -31,13 +31,13 @@ namespace Elements
                 for (var i = 0; i < segs.Length; i++)
                 {
                     var a = segs[i];
-                    var d = new AlignedDimension(a.Start, a.End, plane, offset);
+                    var d = new AlignedDimension(a.Start, a.End, offset, plane);
                     dimensions.Add(d);
                 }
             }
             // </aligned_dimension_example>
             this.Model.AddElements(dimensions);
-            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Elements
             }
             // </continuous_dimension_example>
 
-            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Elements
             for (var i = 0; i < segs.Length; i++)
             {
                 var a = segs[i];
-                var d = new AlignedDimension(a.Start, a.End, plane, offset)
+                var d = new AlignedDimension(a.Start, a.End, offset, plane)
                 {
                     Prefix = "Before ",
                     DisplayValue = $"Polygon {i}",
@@ -103,7 +103,7 @@ namespace Elements
             }
 
             this.Model.AddElements(dimensions);
-            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(Colors.Granite, dimensions));
+            this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
         }
     }
 }
