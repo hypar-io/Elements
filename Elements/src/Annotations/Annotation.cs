@@ -8,11 +8,6 @@ namespace Elements.Annotations
     public abstract class Annotation : Element
     {
         /// <summary>
-        /// The plane in which the annotation is drawn.
-        /// </summary>
-        public Plane Plane { get; protected set; } = new Plane(Vector3.Origin, Vector3.ZAxis);
-
-        /// <summary>
         /// Text to be displayed in place of the annotation's value.
         /// </summary>
         public string DisplayValue { get; set; }

@@ -14,24 +14,21 @@ namespace Elements.Annotations
         /// <summary>
         /// Create an aligned dimension from JSON.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="referencePlane"></param>
-        /// <param name="plane"></param>
-        /// <param name="prefix"></param>
-        /// <param name="suffix"></param>
-        /// <param name="displayValue"></param>
+        /// <param name="start">The start of the dimension.</param>
+        /// <param name="end">The end of the dimension.</param>
+        /// <param name="referencePlane">The plane on which the dimension is projected.</param>
+        /// <param name="prefix">Text that appears before the dimension's value.</param>
+        /// <param name="suffix">Text that appears after the dimension's value.</param>
+        /// <param name="displayValue">Text that appears in place of the dimension's value.</param>
         [JsonConstructor]
         public AlignedDimension(Vector3 start,
                                 Vector3 end,
                                 Plane referencePlane,
-                                Plane plane = null,
                                 string prefix = null,
                                 string suffix = null,
                                 string displayValue = null) : base(start,
                                                               end,
                                                               referencePlane,
-                                                              plane,
                                                               prefix,
                                                               suffix,
                                                               displayValue)
@@ -51,11 +48,14 @@ namespace Elements.Annotations
                                 double offset = 0.0,
                                 Plane plane = null) : base()
         {
-            this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
-            this.Start = start.Project(this.Plane);
-            this.End = end.Project(this.Plane);
+            if (plane == null)
+            {
+                plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+            }
+            this.Start = start.Project(plane);
+            this.End = end.Project(plane);
             var vRef = (this.End - this.Start).Unitized();
-            var offsetDirection = vRef.Cross(this.Plane.Normal);
+            var offsetDirection = vRef.Cross(plane.Normal);
             this.ReferencePlane = new Plane(this.Start + offsetDirection * offset, offsetDirection);
         }
     }

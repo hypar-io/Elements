@@ -27,7 +27,6 @@ namespace Elements.Annotations
         /// <summary>
         /// Create a linear dimension with a reference plane.
         /// </summary>
-        /// <param name="plane">The plane in which the dimension is measured.</param>
         /// <param name="prefix">Text to be displayed before the dimension's value.</param>
         /// <param name="suffix">Text to be displayed after the dimension's value.</param>
         /// <param name="displayValue">Text to be displayed in place of the dimension's value.</param>
@@ -39,12 +38,10 @@ namespace Elements.Annotations
         public LinearDimension(Vector3 start,
                                Vector3 end,
                                Plane referencePlane,
-                               Plane plane = null,
                                string prefix = null,
                                string suffix = null,
                                string displayValue = null) : base()
         {
-            this.Plane = plane ?? new Plane(Vector3.Origin, Vector3.ZAxis);
             this.Start = start;
             this.End = end;
             this.ReferencePlane = referencePlane;
@@ -80,9 +77,9 @@ namespace Elements.Annotations
         }
 
         private void Draw(Color color,
-                                   List<(Vector3, Vector3, double, Color?)> modelArrowData,
-                                   List<(Vector3, Vector3, Vector3, string, Color?)> textData,
-                                   List<ModelCurve> modelCurves)
+                          List<(Vector3, Vector3, double, Color?)> modelArrowData,
+                          List<(Vector3, Vector3, Vector3, string, Color?)> textData,
+                          List<ModelCurve> modelCurves)
         {
             var dimStart = this.Start.Project(this.ReferencePlane);
             var dimEnd = this.End.Project(this.ReferencePlane);
@@ -105,7 +102,8 @@ namespace Elements.Annotations
             var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
             var value = $"{this.Prefix ?? string.Empty}{this.DisplayValue ?? this.Start.DistanceTo(this.End).ToString("0.00")}{this.Suffix ?? string.Empty}";
-            textData.Add((dimStart.Average(dimEnd), this.Plane.Normal, lineDirection, value, color));
+            var normal = this.ReferencePlane.Normal.Cross(dimDirection);
+            textData.Add((dimStart.Average(dimEnd), normal, lineDirection, value, color));
         }
 
         /// <summary>
