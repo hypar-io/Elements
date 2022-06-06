@@ -63,6 +63,11 @@ namespace Elements.Annotations
         /// </summary>
         public List<Element> ToModelArrowsAndText(Color color)
         {
+            if (color == default)
+            {
+                color = Colors.Black;
+            }
+
             var modelArrowData = new List<(Vector3, Vector3, double, Color?)>();
             var textData = new List<(Vector3, Vector3, Vector3, string, Color?)>();
             var modelCurves = new List<ModelCurve>();
