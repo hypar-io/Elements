@@ -36,11 +36,9 @@ namespace Elements.Serialization.IFC
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
                     var result = new Beam(cl.Transformed(solidTransform),
                                           new Profile(polygon),
-                                          BuiltInMaterials.Steel,
-                                          0.0,
-                                          0.0,
-                                          0.0,
                                           elementTransform,
+                                          BuiltInMaterials.Steel,
+                                          null,
                                           false,
                                           IfcGuid.FromIfcGUID(beam.GlobalId),
                                           beam.Name);
@@ -66,12 +64,11 @@ namespace Elements.Serialization.IFC
                 var c = solid.SweptArea.ToCurve();
                 var result = new Column(solidTransform.Origin,
                                         (IfcLengthMeasure)solid.Depth,
+                                        null,
                                         new Profile((Polygon)c),
-                                        BuiltInMaterials.Steel,
                                         elementTransform,
-                                        0.0,
-                                        0.0,
-                                        0.0,
+                                        BuiltInMaterials.Steel,
+                                        null,
                                         false,
                                         IfcGuid.FromIfcGUID(column.GlobalId),
                                         column.Name);

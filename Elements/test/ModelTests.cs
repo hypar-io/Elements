@@ -186,7 +186,7 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationSkipsUnknownProperties()
         {
-            var column = new Column(Vector3.Origin, 5, new Profile(Polygon.Rectangle(1, 1)));
+            var column = new Column(Vector3.Origin, 5, null, new Profile(Polygon.Rectangle(1, 1)));
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
@@ -207,7 +207,7 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationConstructsWithMissingProperties()
         {
-            var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
+            var column = new Column(new Vector3(5, 0), 5, null, new Profile(Polygon.Rectangle(1, 1)));
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
@@ -226,7 +226,7 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationSkipsNullProperties()
         {
-            var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
+            var column = new Column(new Vector3(5, 0), 5, null, new Profile(Polygon.Rectangle(1, 1)));
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
@@ -251,8 +251,8 @@ namespace Elements.Tests
             var profile = new Profile(Polygon.Rectangle(1, 1));
             var red = new Material("Red", Colors.Red);
             var green = new Material("Green", Colors.Green);
-            var column = new Column(new Vector3(5, 0), 5, profile, red);
-            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, green);
+            var column = new Column(new Vector3(5, 0), 5, null, profile, material: red);
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, material: green);
             var model = new Model();
             model.AddElements(beam, column);
             var json = model.ToJson(true);
@@ -356,7 +356,7 @@ namespace Elements.Tests
         [Fact]
         public void AllElementsAssignableFromType()
         {
-            var column = new Column(new Vector3(5, 5, 5), 2.0, Polygon.Rectangle(1, 1));
+            var column = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
             var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
             var brace = new Brace(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
             var model = new Model();
