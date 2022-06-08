@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Annotations;
 using Elements.Geometry;
@@ -109,8 +110,7 @@ namespace Elements
         [Fact]
         public void VerticalLineNoPlaneOffsetDirectionIsX()
         {
-            var d = new AlignedDimension(Vector3.Origin, new Vector3(0, 0, 1));
-            Assert.True(d.ReferencePlane.Normal.IsAlmostEqualTo(Vector3.XAxis));
+            Assert.Throws<Exception>(() => new AlignedDimension(Vector3.Origin, new Vector3(0, 0, 1)));
         }
     }
 }
