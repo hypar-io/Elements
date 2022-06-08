@@ -87,7 +87,7 @@ namespace Elements.Annotations
 
             modelArrowData.Add((dimStart, dimDirection, dimStart.DistanceTo(dimEnd), color));
 
-            var c = new Material("Red", color, unlit: true);
+            var c = new Material("Dimension", color, unlit: true);
 
             if (dimStart.DistanceTo(this.Start) > 0)
             {

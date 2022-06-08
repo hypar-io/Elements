@@ -105,5 +105,12 @@ namespace Elements
             this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
         }
+
+        [Fact]
+        public void VerticalLineNoPlaneOffsetDirectionIsX()
+        {
+            var d = new AlignedDimension(Vector3.Origin, new Vector3(0, 0, 1));
+            Assert.True(d.ReferencePlane.Normal.IsAlmostEqualTo(Vector3.XAxis));
+        }
     }
 }
