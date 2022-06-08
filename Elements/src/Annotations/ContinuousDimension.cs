@@ -55,6 +55,13 @@ namespace Elements.Annotations
             }
             this.Start = start.Project(plane);
             this.End = end.Project(plane);
+
+            if (this.Start.DistanceTo(this.End).ApproximatelyEquals(0.0))
+            {
+                // The vector was collapsed onto the plane.
+                throw new System.Exception("The start and end points of the dimension are equal when projected to the plane.");
+            }
+
             Vector3 vRef;
             if (dimensionLine != null)
             {
