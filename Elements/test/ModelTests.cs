@@ -226,24 +226,23 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationSkipsNullProperties()
         {
-            var column = new Column(new Vector3(5, 0), 5, null, new Profile(Polygon.Rectangle(1, 1)));
+            var material = BuiltInMaterials.Mass;
             var model = new Model();
-            model.AddElement(column);
+            model.AddElement(material);
             var json = model.ToJson(true);
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
+            var c = (JObject)elements.Values().ElementAt(0); // the material
 
             // Nullify a property.
-            c.Property("Location").Value = null;
+            c.Property("Color").Value = null;
             var newModel = Model.FromJson(obj.ToString(), out var errors);
             foreach (var e in errors)
             {
                 this._output.WriteLine(e);
             }
-            // TODO: this test cannot work, couse now Column has empty constructor
-            //Assert.Empty(newModel.AllElementsOfType<Column>());
+            Assert.Empty(newModel.AllElementsOfType<Material>());
         }
 
         [Fact]

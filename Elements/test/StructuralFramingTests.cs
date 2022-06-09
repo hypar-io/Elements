@@ -37,17 +37,17 @@ namespace Elements.Tests
 
             // Create a straight beam.
             var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
-            var linearBeam = new Beam(line, profile, material: BuiltInMaterials.Wood) { Rotation = 15 };
+            var linearBeam = new Beam(line, profile, 0, 0, 15, material: BuiltInMaterials.Wood);
             var lineT = line.TransformAt(0).ToModelCurves(linearBeam.Transform);
 
             // Create a polygon beam.
             var polygon = Polygon.Ngon(5, 2);
-            var polygonBeam = new Beam(polygon, profile, new Transform(6, 0, 0), BuiltInMaterials.Steel) { Rotation = 45 };
+            var polygonBeam = new Beam(polygon, profile, 0, 0, 45, new Transform(6, 0, 0), BuiltInMaterials.Steel);
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
             var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-            var arcBeam = new Beam(arc, profile, new Transform(12, 0, 0), BuiltInMaterials.Steel) { Rotation = 45 };
+            var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
             // </example>
 
@@ -237,7 +237,7 @@ namespace Elements.Tests
             var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc);
             // Normal setbacks
-            var beam = new Beam(line, this._testProfile, material: BuiltInMaterials.Steel) { StartSetback = 2, EndSetback = 2 };
+            var beam = new Beam(line, this._testProfile, 2, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam);
 
             var line1 = new Line(new Vector3(2, 0, 0), new Vector3(5, 3, 0));
@@ -248,7 +248,7 @@ namespace Elements.Tests
             // Setbacks longer in total than the beam.
             // We are testing to ensure that the beam gets created
             // without throwing. It will not have setbacks.
-            var beam1 = new Beam(line1, this._testProfile, material: BuiltInMaterials.Steel) { StartSetback = sb, EndSetback = sb };
+            var beam1 = new Beam(line1, this._testProfile, sb, sb, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam1);
         }
 
@@ -267,7 +267,7 @@ namespace Elements.Tests
             for (var x = 0.0; x <= 5.0; x += 1.0)
             {
                 var line = new Line(new Vector3(x, 0, 0), new Vector3(x, 5, x));
-                var straightBeam = new Beam(line, profile) { Rotation = x * (360.0 / 5.0) };
+                var straightBeam = new Beam(line, profile, 0, 0, x * (360.0 / 5.0));
                 this.Model.AddElement(straightBeam);
             }
         }
