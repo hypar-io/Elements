@@ -1,3 +1,4 @@
+using System;
 using Elements.Geometry;
 using Newtonsoft.Json;
 
@@ -36,42 +37,25 @@ namespace Elements.Annotations
 
         /// <summary>
         /// Create a continuous dimension with an optional reference line.
-        /// If a reference line is provided, the start and end points will
-        /// be projected onto the reference line.
+        /// The start and end points will be projected onto the dimension line.
         /// </summary>
-        /// <param name="plane">The plane in which the dimension is measured.</param>
         /// <param name="start">The start of the dimension.</param>
         /// <param name="end">The end of the dimension.</param>
         /// <param name="dimensionLine">A line on which the start and end points 
         /// will be projected.</param>
         public ContinuousDimension(Vector3 start,
                                    Vector3 end,
-                                   Line dimensionLine,
-                                   Plane plane = null) : base()
+                                   Line dimensionLine) : base()
         {
-            if (plane == null)
-            {
-                plane = new Plane(Vector3.Origin, Vector3.ZAxis);
-            }
-            this.Start = start.Project(plane);
-            this.End = end.Project(plane);
+            var refDirection = (dimensionLine.End - dimensionLine.Start).Unitized();
 
-            if (this.Start.DistanceTo(this.End).ApproximatelyEquals(0.0))
-            {
-                // The vector was collapsed onto the plane.
-                throw new System.Exception("The start and end points of the dimension are equal when projected to the plane.");
-            }
+            var temp = Math.Abs(refDirection.Dot(Vector3.ZAxis)).ApproximatelyEquals(1.0) ? Vector3.XAxis : Vector3.ZAxis;
+            var referenceNormal = refDirection.Cross(temp).Negate();
 
-            Vector3 vRef;
-            if (dimensionLine != null)
-            {
-                vRef = (dimensionLine.End.Project(plane) - dimensionLine.Start.Project(plane)).Unitized();
-            }
-            else
-            {
-                vRef = (this.End - this.Start).Unitized();
-            }
-            this.ReferencePlane = new Plane(dimensionLine.Start, plane.Normal.Cross(vRef));
+            this.Start = start;
+            this.End = end;
+
+            this.ReferencePlane = new Plane(dimensionLine.Start, referenceNormal);
         }
     }
 }

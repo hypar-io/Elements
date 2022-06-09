@@ -1,3 +1,4 @@
+using System;
 using Elements.Geometry;
 using Newtonsoft.Json;
 
@@ -39,31 +40,25 @@ namespace Elements.Annotations
         /// by offsetting from the line created between start and end 
         /// by the provided value.
         /// </summary>
-        /// <param name="plane">The plane in which the dimension is created.</param>
         /// <param name="start">The start of the dimension.</param>
         /// <param name="end">The end of the dimension.</param>
         /// <param name="offset">The offset of the reference line.</param>
+        /// <param name="offsetDirection">The direction in which the annotation will
+        /// be offset from the dimension line.</param>
         public AlignedDimension(Vector3 start,
                                 Vector3 end,
                                 double offset = 0.0,
-                                Plane plane = null) : base()
+                                Vector3 offsetDirection = default) : base()
         {
-            if (plane == null)
+            this.Start = start;
+            this.End = end;
+
+            var dimDirection = (end - start).Unitized();
+            if (offsetDirection == default)
             {
-                plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+                var temp = Math.Abs(dimDirection.Dot(Vector3.ZAxis)).ApproximatelyEquals(1.0) ? Vector3.XAxis : Vector3.ZAxis;
+                offsetDirection = dimDirection.Cross(temp);
             }
-
-            this.Start = start.Project(plane);
-            this.End = end.Project(plane);
-
-            if (this.Start.DistanceTo(this.End).ApproximatelyEquals(0.0))
-            {
-                // The vector was collapsed onto the plane.
-                throw new System.Exception("The start and end points of the dimension are equal when projected to the plane.");
-            }
-
-            var vRef = (this.End - this.Start).Unitized();
-            var offsetDirection = vRef.Cross(plane.Normal);
 
             this.ReferencePlane = new Plane(this.Start + offsetDirection * offset, offsetDirection);
         }

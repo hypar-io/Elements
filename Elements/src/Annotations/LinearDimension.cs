@@ -81,8 +81,11 @@ namespace Elements.Annotations
                           List<(Vector3, Vector3, Vector3, string, Color?)> textData,
                           List<ModelCurve> modelCurves)
         {
-            var dimStart = this.Start.Project(this.ReferencePlane);
-            var dimEnd = this.End.Project(this.ReferencePlane);
+            var measureLineDirection = (this.End - this.Start).Unitized();
+            var up = this.ReferencePlane.Normal.Cross(measureLineDirection);
+            var projectDirection = up.Cross(measureLineDirection);
+            var dimStart = this.Start.ProjectAlong(projectDirection, this.ReferencePlane);
+            var dimEnd = this.End.ProjectAlong(projectDirection, this.ReferencePlane);
             var dimDirection = (dimEnd - dimStart).Unitized();
 
             modelArrowData.Add((dimStart, dimDirection, dimStart.DistanceTo(dimEnd), color));
@@ -101,7 +104,7 @@ namespace Elements.Annotations
             // Always try to make the direction vector point in positive x, y, and z.
             var lineDirection = dimDirection.Dot(new Vector3(1, 1, 1)) > 0 ? dimDirection : dimDirection.Negate();
 
-            var value = $"{this.Prefix ?? string.Empty}{this.DisplayValue ?? this.Start.DistanceTo(this.End).ToString("0.00")}{this.Suffix ?? string.Empty}";
+            var value = $"{this.Prefix ?? string.Empty}{this.DisplayValue ?? dimStart.DistanceTo(dimEnd).ToString("0.00")}{this.Suffix ?? string.Empty}";
             var normal = this.ReferencePlane.Normal.Cross(dimDirection);
             textData.Add((dimStart.Average(dimEnd), normal, lineDirection, value, color));
         }

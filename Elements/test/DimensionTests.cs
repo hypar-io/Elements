@@ -32,7 +32,7 @@ namespace Elements
                 for (var i = 0; i < segs.Length; i++)
                 {
                     var a = segs[i];
-                    var d = new AlignedDimension(a.Start, a.End, offset, plane);
+                    var d = new AlignedDimension(a.Start, a.End, offset, a.Direction().Cross(plane.Normal));
                     dimensions.Add(d);
                 }
             }
@@ -66,10 +66,10 @@ namespace Elements
             pts.Sort(new DirectionComparer(Vector3.XAxis));
 
             var dimensions = new List<LinearDimension>();
-            var refLine = new Line(new Vector3(0, 7, 0), new Vector3(1, 7, 0));
+            var refLine = new Line(new Vector3(0, 7, 0), new Vector3(5, 10, 0));
             for (var i = 0; i < pts.Count - 1; i++)
             {
-                var d = new ContinuousDimension(pts[i], pts[i + 1], refLine, null);
+                var d = new ContinuousDimension(pts[i], pts[i + 1], refLine);
                 dimensions.Add(d);
             }
             // </continuous_dimension_example>
@@ -94,7 +94,7 @@ namespace Elements
             for (var i = 0; i < segs.Length; i++)
             {
                 var a = segs[i];
-                var d = new AlignedDimension(a.Start, a.End, offset, plane)
+                var d = new AlignedDimension(a.Start, a.End, offset)
                 {
                     Prefix = "Before ",
                     DisplayValue = $"Polygon {i}",
@@ -105,12 +105,6 @@ namespace Elements
 
             this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
-        }
-
-        [Fact]
-        public void VerticalLineNoPlaneOffsetDirectionIsX()
-        {
-            Assert.Throws<Exception>(() => new AlignedDimension(Vector3.Origin, new Vector3(0, 0, 1)));
         }
     }
 }
