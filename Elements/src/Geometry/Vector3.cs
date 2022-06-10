@@ -700,8 +700,7 @@ namespace Elements.Geometry
         {
             //Ax+By+Cz+d=0
             //p' = p - (n ⋅ (p - o)) * n
-            var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
-            var p1 = this - (p.Normal.Dot(this - p.Origin)) * p.Normal;
+            var p1 = this - p.Normal.Dot(this - p.Origin) * p.Normal;
             return p1;
         }
 

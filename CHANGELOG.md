@@ -12,6 +12,12 @@
 
 ## 1.0.1
 
+### Added
+- `Dimension`
+- `LinearDimension`
+- `AlignedDimension`
+- `ContinuousDimension`
+
 ### Fixed
 
 - #805
