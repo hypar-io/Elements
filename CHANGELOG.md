@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2
+
+### Changed
+
+- `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
+
+### Fixed
+
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
+
 ## 1.0.1
 
 ### Added
@@ -20,7 +30,6 @@
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 - `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
-- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
 
