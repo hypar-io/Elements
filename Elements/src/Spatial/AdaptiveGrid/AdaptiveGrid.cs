@@ -52,8 +52,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             Low,
             Inside,
-            Hi,
-            OnEdge
+            Hi
         }
 
         #endregion
@@ -184,7 +183,70 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="box">Boding box to subtract</param>
         public void SubtractBox(BBox3 box)
         {
-            var edgesToDelete = GetEdges().Where(x => ShouldDeleteEdge(x, box));
+            List<Edge> edgesToDelete = new List<Edge>();
+            foreach (var edge in GetEdges())
+            {
+                var start = GetVertex(edge.StartId);
+                var end = GetVertex(edge.EndId);
+                PointOrientation startZ = Orientation(start.Point.Z, box.Min.Z, box.Max.Z);
+                PointOrientation endZ = Orientation(end.Point.Z, box.Min.Z, box.Max.Z);
+                if (startZ == endZ && startZ != PointOrientation.Inside)
+                    continue;
+
+                //Z coordinates and X/Y are treated differently.
+                //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
+                //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
+                //This is because we don't want travel under or over obstacles on elevation where they start/end.
+                PointOrientation startX = OrientationTolerance(start.Point.X, box.Min.X, box.Max.X);
+                PointOrientation startY = OrientationTolerance(start.Point.Y, box.Min.Y, box.Max.Y);
+                PointOrientation endX = OrientationTolerance(end.Point.X, box.Min.X, box.Max.X);
+                PointOrientation endY = OrientationTolerance(end.Point.Y, box.Min.Y, box.Max.Y);
+
+                if ((startX == endX && startX != PointOrientation.Inside) ||
+                    (startY == endY && startY != PointOrientation.Inside))
+                    continue;
+
+                bool startInside = startZ == PointOrientation.Inside &&
+                                   startX == PointOrientation.Inside &&
+                                   startY == PointOrientation.Inside;
+
+                bool endInside = endZ == PointOrientation.Inside &&
+                                 endX == PointOrientation.Inside &&
+                                 endY == PointOrientation.Inside;
+
+
+                if (startInside && endInside)
+                {
+                    edgesToDelete.Add(edge);
+                }
+                else
+                {
+                    var edgeLine = GetLine(edge);
+                    List<Vector3> intersections;
+                    edgeLine.Intersects(box, out intersections);
+                    // If no intersection found than outside point is exactly within tolerance.
+                    // But since Intersects works on 0 to 1 range internally, mismatch in interpretation
+                    // is possible. Cut the edge in this case.
+                    if (intersections.Count == 0)
+                    {
+                        edgesToDelete.Add(edge);
+                    }
+                    // Intersections are sorted from the start point.
+                    else if (intersections.Count == 1)
+                    {
+                        //Need to find which end is inside the box.
+                        //If none - we just touched the corner
+                        if (startInside || endInside)
+                        {
+                            edgesToDelete.Add(edge);
+                        }
+                    }
+                    if (intersections.Count == 2)
+                    {
+                        edgesToDelete.Add(edge);
+                    }
+                }
+            }
 
             foreach (var e in edgesToDelete)
             {
@@ -596,61 +658,24 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private bool ShouldDeleteEdge(Edge edge, BBox3 box)
-        {
-            var start = GetVertex(edge.StartId).Point;
-            var end = GetVertex(edge.EndId).Point;
-
-            var startZ = OrientationTolerance(start.Z, box.Min.Z, box.Max.Z);
-            var endZ = OrientationTolerance(end.Z, box.Min.Z, box.Max.Z);
-            var startX = OrientationTolerance(start.X, box.Min.X, box.Max.X);
-            var startY = OrientationTolerance(start.Y, box.Min.Y, box.Max.Y);
-            var endX = OrientationTolerance(end.X, box.Min.X, box.Max.X);
-            var endY = OrientationTolerance(end.Y, box.Min.Y, box.Max.Y);
-
-            var startInside = (startZ == PointOrientation.Inside || startZ == PointOrientation.OnEdge) &&
-                               startX == PointOrientation.Inside &&
-                               startY == PointOrientation.Inside;
-
-            var endInside = (endZ == PointOrientation.Inside || endZ == PointOrientation.OnEdge) &&
-                             endX == PointOrientation.Inside &&
-                             endY == PointOrientation.Inside;
-
-            if (startInside || endInside)
-            {
-                return true;
-            }
-
-            var allOrientations = new List<PointOrientation> { startX, startY, endX, endY };
-            if (allOrientations.Any(x => x == PointOrientation.Low || x == PointOrientation.Hi))
-            {
-                return false;
-            }
-
-            if (startX == endX && startX == PointOrientation.OnEdge && start.X.ApproximatelyEquals(end.X))
-            {
-                return false;
-            }
-
-            if (startY == endY && startY == PointOrientation.OnEdge && start.Y.ApproximatelyEquals(end.Y))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private PointOrientation OrientationTolerance(double x, double start, double end)
         {
-            if (x.ApproximatelyEquals(start, Tolerance))
-                return PointOrientation.OnEdge;
-            if (x < start - Tolerance)
-                return PointOrientation.Low;
-            if (x.ApproximatelyEquals(end, Tolerance))
-                return PointOrientation.OnEdge;
-            if (x > end + Tolerance)
-                return PointOrientation.Hi;
-            return PointOrientation.Inside;
+            PointOrientation po = PointOrientation.Inside;
+            if (x - start < Tolerance)
+                po = PointOrientation.Low;
+            else if (x - end > -Tolerance)
+                po = PointOrientation.Hi;
+            return po;
+        }
+
+        private PointOrientation Orientation(double x, double start, double end)
+        {
+            PointOrientation po = PointOrientation.Inside;
+            if (x < start)
+                po = PointOrientation.Low;
+            else if (x > end)
+                po = PointOrientation.Hi;
+            return po;
         }
 
         /// <summary>
