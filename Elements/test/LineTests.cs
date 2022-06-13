@@ -396,6 +396,16 @@ namespace Elements.Geometry.Tests
             Assert.True(results.Count == 2);
             Assert.Equal(results[0], new Vector3(0, 0, 5));
             Assert.Equal(results[1], new Vector3(10, 0, 7));
+
+            //5. Line touches two sides of box and is misaligned slightly
+            var newBox = new BBox3(new Vector3(-30.41029, 19.60979, 8.37), new Vector3(-29.58971, 20.39021, 8.37));
+            l = new Line(new Vector3(-30, 19.609799999999993, 8.37), new Vector3(-30, 20.390219999999996, 8.37));
+            Assert.True(newBox.Min.Y.ApproximatelyEquals(l.Start.Y));
+            Assert.True(newBox.Max.Y.ApproximatelyEquals(l.End.Y));
+            l.Intersects(newBox, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.True(results[0].IsAlmostEqualTo(l.Start));
+            Assert.True(results[1].IsAlmostEqualTo(l.End));
         }
 
         [Fact]

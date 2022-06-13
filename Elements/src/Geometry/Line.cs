@@ -422,13 +422,13 @@ namespace Elements.Geometry
             }
 
             // Check if found parameters are within normalized line range.
-            if (infinite || (tMin > -Vector3.EPSILON && tMin < 1 + Vector3.EPSILON))
+            if (infinite || (tMin > -2 * Vector3.EPSILON && tMin < 1 + 2 * Vector3.EPSILON))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > Vector3.EPSILON &&
-                (infinite || (tMax > -Vector3.EPSILON && tMax < 1 + Vector3.EPSILON)))
+            if (Math.Abs(tMax - tMin) > 2 * Vector3.EPSILON &&
+                (infinite || (tMax > -2 * Vector3.EPSILON && tMax < 1 + 2 * Vector3.EPSILON)))
             {
                 results.Add(Start + d * tMax);
             }
