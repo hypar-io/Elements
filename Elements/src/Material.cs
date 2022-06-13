@@ -65,6 +65,12 @@ namespace Elements
         public double EmissiveFactor { get; set; }
 
         /// <summary>
+        /// Should objects with this material be drawn in front of all other objects?
+        /// </summary>
+        [JsonProperty("Draw In Front")]
+        public bool DrawInFront { get; set; } = false;
+
+        /// <summary>
         /// If provided, this controls how curves and lines will be drawn in the 3D view for supported viewers. This will not affect mesh / solid-based elements.
         /// </summary>
         public EdgeDisplaySettings EdgeDisplaySettings { get; set; } = null;
