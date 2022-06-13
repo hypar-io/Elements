@@ -1,6 +1,23 @@
 # Changelog
 
+## 1.0.2
+
+### Changed
+
+- `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
+
+### Fixed
+
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+
 ## 1.0.1
+
+### Added
+- `Dimension`
+- `LinearDimension`
+- `AlignedDimension`
+- `ContinuousDimension`
 
 ### Fixed
 
@@ -14,8 +31,6 @@
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 - `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
-- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
-- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
 
