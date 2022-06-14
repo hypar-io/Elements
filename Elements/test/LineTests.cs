@@ -398,6 +398,15 @@ namespace Elements.Geometry.Tests
             Assert.Equal(results[1], new Vector3(10, 0, 7));
 
             //5. Line touches two sides of box and is misaligned slightly
+            l = new Line(new Vector3(5, box.Min.Y + 0.00000999, box.Min.Z), new Vector3(5, box.Max.Y - 0.00000999, box.Min.Z));
+            Assert.True(box.Min.Y.ApproximatelyEquals(l.Start.Y));
+            Assert.True(box.Max.Y.ApproximatelyEquals(l.End.Y));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.True(results[0].IsAlmostEqualTo(l.Start));
+            Assert.True(results[1].IsAlmostEqualTo(l.End));
+
+            //6. Short line touches two sides of box and is misaligned slightly
             var newBox = new BBox3(new Vector3(-30.41029, 19.60979, 8.37), new Vector3(-29.58971, 20.39021, 8.37));
             l = new Line(new Vector3(-30, 19.609799999999993, 8.37), new Vector3(-30, 20.390219999999996, 8.37));
             Assert.True(newBox.Min.Y.ApproximatelyEquals(l.Start.Y));
