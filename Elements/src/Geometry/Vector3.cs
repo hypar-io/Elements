@@ -15,6 +15,11 @@ namespace Elements.Geometry
         /// </summary>
         public const double EPSILON = 1e-5;
 
+        /// <summary>
+        /// A tolerance for angle comparison operation of cos of 0.001 degrees.
+        /// </summary>
+        public const double COS_ANGLE_EPSILON = 0.99999999984769128;
+
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
@@ -821,16 +826,57 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Check whether three points are on the same line.
+        /// Check whether three points are on the same line withing certain distance.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
+        /// <param name="tolerance">Distance tolerance.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
-        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON) 
         {
             var vectorList = new List<Vector3> { a, b, c };
-            return vectorList.AreCollinear();
+            return vectorList.AreCollinearByDistance(tolerance);
+        }
+
+        /// <summary>
+        /// Check whether three points are on the same line withing certain angle.
+        /// Order is important since unsigned abc angle is checked.
+        /// This function is much faster than AreCollinearByDistance but angle deviation 
+        /// accumulates distance deviation and, if points are far away, position differences are noticeable.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <param name="tolerance">Angle tolerance as cos.</param>
+        /// <returns></returns>
+        public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.COS_ANGLE_EPSILON)
+        {
+            var baX = b.X - a.X;
+            var baY = b.Y - a.Y;
+            var baZ = b.Z - a.Z;
+            var baLength = Math.Sqrt(Math.Pow(baX, 2) + Math.Pow(baY, 2) + Math.Pow(baZ, 2));
+            if (baLength < Vector3.EPSILON)
+            {
+                return true;
+            }
+            baX = baX / baLength;
+            baY = baY / baLength;
+            baZ = baZ / baLength;
+
+            var cbX = c.X - b.X;
+            var cbY = c.Y - b.Y;
+            var cbZ = c.Z - b.Z;
+            var cbLength = Math.Sqrt(Math.Pow(cbX, 2) + Math.Pow(cbY, 2) + Math.Pow(cbZ, 2));
+            if (cbLength < Vector3.EPSILON)
+            {
+                return true;
+            }
+            cbX = cbX / cbLength;
+            cbY = cbY / cbLength;
+            cbZ = cbZ / cbLength;
+
+            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > tolerance;
         }
 
         /// <summary>

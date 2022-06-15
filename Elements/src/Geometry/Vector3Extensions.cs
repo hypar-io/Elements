@@ -39,10 +39,11 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Are the provided points along the same line?
+        /// Check whether three points are on the same line withing certain distance.
         /// </summary>
-        /// <param name="points"></param>
-        public static bool AreCollinear(this IList<Vector3> points)
+        /// <param name="points">List of points to check. Order is not important.</param>
+        /// <param name="tolerance">Distance tolerance.</param>
+        public static bool AreCollinearByDistance(this IList<Vector3> points, double tolerance = Vector3.EPSILON)
         {
             if (points == null || points.Count == 0)
             {
@@ -56,12 +57,15 @@ namespace Elements.Geometry
                 return true;
             }
             var fitDir = fitLine.Direction();
-            var epsilonSquared = Vector3.EPSILON * Vector3.EPSILON;
+            var toleranceSquared = tolerance * tolerance;
             return directions.All(d =>
             {
+                // Since fitDir is Unitized - dot give the length of projection d onto fitDir.
                 var dot = d.Dot(fitDir);
                 var lengthSquared = d.LengthSquared();
-                return lengthSquared - (dot * dot) < epsilonSquared;
+                // By Pythagoras' theorem d.Length()^2 = dot^2 + distance^2. 
+                // if it's less than tolerance squared - point is close enough to the fit line.
+                return lengthSquared - (dot * dot) < toleranceSquared;
             });
         }
 
