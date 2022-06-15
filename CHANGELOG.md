@@ -2,6 +2,9 @@
 
 ## 1.0.2
 
+### Added
+- `Material` now supports a `DrawInFront` property.
+
 ### Changed
 
 - `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
