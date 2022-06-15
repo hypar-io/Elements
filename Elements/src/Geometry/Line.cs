@@ -838,7 +838,7 @@ namespace Elements.Geometry
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
         /// <param name="includeCoincidenceAtEdge">Include coincidence at edge as inner segment.</param>
-        /// <param name="infinite"></param>
+        /// <param name="infinite">Treat the line as infinite?</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
         public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false, bool infinite = false)
         {
