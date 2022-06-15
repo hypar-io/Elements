@@ -819,14 +819,14 @@ namespace Elements.Geometry
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
-        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
+        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are collinear.</returns>
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
         }
 
         /// <summary>
-        /// Check whether three points are on the same line withing certain distance.
+        /// Check whether three points are on the same line within certain distance.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
@@ -840,7 +840,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Check whether three points are on the same line withing certain angle.
+        /// Check whether three points are on the same line within certain angle.
         /// Order is important since unsigned abc angle is checked.
         /// This function is much faster than AreCollinearByDistance but angle deviation 
         /// accumulates distance deviation and, if points are far away, position differences are noticeable.
