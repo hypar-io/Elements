@@ -54,6 +54,12 @@ namespace Elements
         public double EmissiveFactor { get; set; }
 
         /// <summary>
+        /// Should objects with this material be drawn in front of all other objects?
+        /// </summary>
+        [JsonProperty("Draw In Front", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public bool DrawInFront { get; set; } = false;
+
+        /// <summary>
         /// If provided, this controls how curves and lines will be drawn in the 3D view for supported viewers. This will not affect mesh / solid-based elements.
         /// </summary>
         public EdgeDisplaySettings EdgeDisplaySettings { get; set; } = null;
@@ -80,6 +86,7 @@ namespace Elements
         /// <param name="interpolateTexture">Should the texture be interpolated?</param>
         /// <param name="emissiveTexture">A path to an emissive image texture.</param>
         /// <param name="emissiveFactor">The scale, between 0.0 and 1.0, of the emissive texture's components.</param>
+        /// <param name="drawInFront">Should objects with this material be drawn in front of all other objects?</param>
         /// <param name="id">The id of the material.</param>
         /// <param name="name">The name of the material.</param>
         [JsonConstructor]
@@ -94,6 +101,7 @@ namespace Elements
                         bool @interpolateTexture,
                         string @emissiveTexture,
                         double @emissiveFactor,
+                        bool @drawInFront,
                         Guid @id = default,
                         string @name = null)
             : base(id, name)
@@ -141,6 +149,7 @@ namespace Elements
             this.InterpolateTexture = @interpolateTexture;
             this.EmissiveTexture = @emissiveTexture;
             this.EmissiveFactor = emissiveFactor;
+            this.DrawInFront = drawInFront;
         }
 
         /// <summary>
@@ -168,6 +177,7 @@ namespace Elements
         /// <param name="interpolateTexture">Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</param>
         /// <param name="emissiveTexture">A relative path to a jpg or png image file to be used as en emissive texture.</param>
         /// <param name="emissiveFactor">The scale, between 0.0 and 1.0, of the emissive texture's components.</param>
+        /// <param name="drawInFront">Should objects with this material be drawn in front of all other objects?</param>
         /// <param name="id">The id of the material.</param>
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
@@ -183,6 +193,7 @@ namespace Elements
                         bool interpolateTexture = true,
                         string emissiveTexture = null,
                         double emissiveFactor = 1.0,
+                        bool drawInFront = false,
                         Guid id = default) :
             this(color,
                  specularFactor,
@@ -195,6 +206,7 @@ namespace Elements
                  interpolateTexture,
                  emissiveTexture,
                  emissiveFactor,
+                 drawInFront,
                  id != default ? id : Guid.NewGuid(),
                  name)
         { }

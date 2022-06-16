@@ -490,12 +490,13 @@ namespace Elements.Geometry
                 var polygons = new List<Polygon>() {
                     inputProfile.Perimeter
                 };
+                var splitters = new List<Polyline>(splitLines);
                 if (inputProfile.Voids != null)
                 {
-                    polygons.AddRange(inputProfile.Voids);
+                    splitters.AddRange(inputProfile.Voids.Cast<Polyline>());
                 }
                 // construct a half-edge graph from all polygons and splitter polylines.
-                var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(polygons, splitLines);
+                var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(polygons, splitters);
                 // make sure all polygons are consistently wound - we reverse them if we need to treat them as voids.
                 var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
                 // for every resultant polygon, we can't be sure if it's a void, or should have a void,
