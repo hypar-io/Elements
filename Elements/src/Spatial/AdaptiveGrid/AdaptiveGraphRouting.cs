@@ -1246,21 +1246,65 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
         {
-            Func<Vector3, RoutingHintLine, bool> check = (Vector3 v, RoutingHintLine hl) =>
-            {
-                return v.DistanceTo(hl.Polyline) < hl.InfluenceDistance;
-            };
-
             var vs_2d = new Vector3(start.X, start.Y);
             var ve_2d = new Vector3(end.X, end.Y);
             //Vertical edges are not affected by hint lines
-            if (!vs_2d.IsAlmostEqualTo(ve_2d, _grid.Tolerance) && Math.Abs(start.Z - end.Z) < _grid.Tolerance)
+            if (!vs_2d.IsAlmostEqualTo(ve_2d, _grid.Tolerance) &&
+                Math.Abs(start.Z - end.Z) < _grid.Tolerance)
             {
-                //Start and End point of edge may be on hint line, but hint line itself
-                //can go around the edge. Need to check middle point additionally.
-                var vm_2d = new Vector3(vs_2d.X + (ve_2d.X - vs_2d.X) / 2.0,
-                                        vs_2d.Y + (ve_2d.Y - vs_2d.Y) / 2.0);
-                return check(vs_2d, hint) && check(ve_2d, hint) && check(vm_2d, hint);
+                foreach (var segment in hint.Polyline.Segments())
+                {
+                    double lowClosest = 1;
+                    double hiClosest = 0;
+
+                    var dot = segment.Direction().Dot((ve_2d - vs_2d).Unitized());
+                    if (!Math.Abs(dot).ApproximatelyEquals(1))
+                    {
+                        continue;
+                    }
+
+                    if (vs_2d.DistanceTo(segment) < hint.InfluenceDistance)
+                    {
+                        lowClosest = 0;
+                    }
+
+                    if (ve_2d.DistanceTo(segment) < hint.InfluenceDistance)
+                    {
+                        hiClosest = 1;
+                    }
+
+                    if (lowClosest < hiClosest)
+                    {
+                        return true;
+                    }
+
+                    var edgeLine2d = new Line(vs_2d, ve_2d);
+                    Action<Vector3> check = (Vector3 p) =>
+                    {
+                        if (p.DistanceTo(edgeLine2d, out var closest) < hint.InfluenceDistance)
+                        {
+                            var t = (closest - vs_2d).Length() / edgeLine2d.Length();
+                            if (t < lowClosest)
+                            {
+                                lowClosest = t;
+                            }
+
+                            if (t > hiClosest)
+                            {
+                                hiClosest = t;
+                            }
+                        }
+                    };
+
+                    check(segment.Start);
+                    check(segment.End);
+
+                    if (hiClosest > lowClosest &&
+                        (hiClosest - lowClosest) * edgeLine2d.Length() > _grid.Tolerance)
+                    {
+                        return true;
+                    }
+                }
             }
             return false;
         }
