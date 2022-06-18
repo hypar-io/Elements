@@ -729,6 +729,44 @@ namespace Elements.Tests
             Assert.Equal(14, result.Faces.Count);
         }
 
+        [Fact]
+        public void ModelIntersects()
+        {
+            this.Name = nameof(ModelIntersects);
+
+            var p = Polygon.Ngon(5, 10);
+            foreach (var l in p.Segments())
+            {
+                var w = new StandardWall(l, 0.1, 3.0, BuiltInMaterials.Glass);
+                w.AddOpening(1, 1, 1, 1.5);
+                w.AddOpening(1, 2, 3, 1);
+                w.AddOpening(Polygon.Ngon(3, 2.0), 8, 2, 1.0, 0.0);
+
+                w.UpdateRepresentations();
+                // this.Model.AddElement(w);
+                // this.Model.AddElements(w.Transform.ToModelCurves());
+
+                foreach (var o in w.Openings)
+                {
+                    o.UpdateRepresentations();
+                    // this.Model.AddElements(o.Transform.ToModelCurves());
+                }
+
+                var solid = w.GetFinalBooleanSolidFromSolids();
+                var tmp = new GeometricElement(null, BuiltInMaterials.Default, new Representation(new[] { new ConstructedSolid(solid) }));
+                this.Model.AddElement(tmp);
+            }
+
+            var xSectPlane = new Plane(new Vector3(0, 0, 1.5), new Vector3(0.005, 0.005, 0.1));
+            var results = this.Model.Intersect(xSectPlane);
+            var r = new Random(11);
+            foreach (var result in results)
+            {
+                var m = new Material(Guid.NewGuid().ToString(), r.NextColor());
+                this.Model.AddElement(new ModelCurve(result, m));
+            }
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }
