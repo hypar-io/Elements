@@ -12,6 +12,8 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
+using Elements.Search;
+using Elements.Spatial;
 
 namespace Elements
 {
@@ -254,41 +256,109 @@ namespace Elements
             }
         }
 
-        public List<Geometry.Line> Intersect(Plane plane)
+        public void Intersect(Plane plane, out List<Geometry.Line> lines, out List<Geometry.Polygon> polys)
         {
-            // var polys = new List<Geometry.Polygon>();
-            var lines = new List<Geometry.Line>();
+            polys = new List<Geometry.Polygon>();
+            lines = new List<Geometry.Line>();
+
             foreach (var e in this.Elements.Values)
             {
                 if (e is GeometricElement geo)
                 {
                     if (geo.Representation != null)
                     {
-                        var solid = geo.GetFinalBooleanSolidFromSolids();
-                        if (solid != null)
+                        var csg = geo.GetFinalCsgFromSolids();
+
+                        var graphVertices = new List<Vector3>();
+                        var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+                        foreach (var csgPoly in csg.Polygons)
                         {
-                            foreach (var face in solid.Faces.Values)
+                            var edgeResults = new List<Vector3>();
+                            for (var i = 0; i < csgPoly.Vertices.Count; i++)
                             {
-                                if (face.Intersects(plane, out var xSects))
+                                var a = csgPoly.Vertices[i].Pos.ToVector3();
+                                var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
+                                if ((a, b).Intersects(plane, out var xsect))
                                 {
-                                    lines.AddRange(xSects);
+                                    edgeResults.Add(xsect);
                                 }
                             }
 
-                            // Do this when we can figure out why some
-                            // intersection graphs don't work.
+                            if (edgeResults.Count < 2)
+                            {
+                                continue;
+                            }
 
-                            // if (solid.Intersects(plane, out var intersects))
-                            // {
-                            //     polys.AddRange(intersects);
-                            // }
+                            var d = csgPoly.Plane.Normal.ToVector3().Cross(plane.Normal).Unitized();
+                            edgeResults.Sort(new DirectionComparer(d));
+
+                            // Draw segments through the results and add to the 
+                            // half edge graph.
+                            for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                            {
+                                // Don't create zero-length edges.
+                                if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
+                                {
+                                    continue;
+                                }
+
+                                var a = Solid.FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
+                                var b = Solid.FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
+                                var e1 = (a, b, 0);
+                                var e2 = (b, a, 0);
+                                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    graphEdges[a].Add(e1);
+                                }
+                            }
                         }
+
+                        var heg = new HalfEdgeGraph2d()
+                        {
+                            Vertices = graphVertices,
+                            EdgesPerVertex = graphEdges
+                        };
+
+                        try
+                        {
+                            var rebuiltPolys = heg.Polygonize();
+                            if (rebuiltPolys == null || rebuiltPolys.Count == 0)
+                            {
+                                // if (edgeResults.Count > 2)
+                                // {
+                                //     for (var i = 0; i < edgeResults.Count; i += 2)
+                                //     {
+                                //         lines.Add(new Geometry.Line(edgeResults[i], edgeResults[i + 1]));
+                                //     }
+                                // }
+                                continue;
+                            }
+                            polys.AddRange(rebuiltPolys);
+                        }
+                        catch (Exception ex)
+                        {
+                            // TODO: We could test for known failure modes, but the
+                            // iteration over the edge graph before attempting to
+                            // graph to identify these modes, is as expensive as 
+                            // the graph attempt.
+                            // Known cases there the half edge graph will throw an
+                            // exception:
+                            // - Co-linear edges.
+                            // - Disconnected graphs.
+                            // - Graphs with one vertex.
+                            Console.WriteLine(ex.Message);
+
+                            continue;
+                        }
+
                     }
                 }
             }
-
-            return lines;
-            // return polys;
         }
 
         internal Model CreateExportModel(bool gatherSubElements)

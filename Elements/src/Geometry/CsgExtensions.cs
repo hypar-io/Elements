@@ -185,6 +185,11 @@ namespace Elements.Geometry
             return result;
         }
 
+        internal static Vector3 ToVector3(this Csg.Vector3D v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
         internal static Csg.Vector3D ToCsgVector3(this Vector3 v)
         {
             return new Csg.Vector3D(v.X, v.Y, v.Z);
