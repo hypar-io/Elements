@@ -199,5 +199,22 @@ namespace Elements.Geometry
         {
             return new Csg.Vector2D(uv.U, uv.V);
         }
+
+        internal static bool IsCoplanar(this Csg.Plane csgPlane, Plane plane)
+        {
+            var dot = Math.Abs(csgPlane.Normal.ToVector3().Dot(plane.Normal));
+            return dot.ApproximatelyEquals(1) && csgPlane.W.ApproximatelyEquals(plane.Origin.DistanceTo(Vector3.Origin));
+        }
+
+        internal static Polygon Project(this Csg.Polygon poly, Plane plane)
+        {
+            return new Polygon(poly.Vertices.Select(vtx => vtx.Pos.ToVector3().Project(plane)).ToList());
+        }
+
+        internal static bool IsBehind(this Csg.Plane csgPlane, Plane plane)
+        {
+            var p = (csgPlane.Normal * csgPlane.W).ToVector3();
+            return p.DistanceTo(plane) < 0;
+        }
     }
 }

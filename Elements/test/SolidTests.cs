@@ -736,10 +736,12 @@ namespace Elements.Tests
         {
             this.Name = nameof(ModelIntersects);
 
+            var material = new Material("Almost Gone", new Color(1, 1, 1, 0.1));
+
             var p = Polygon.Ngon(5, 10);
             foreach (var l in p.Segments())
             {
-                var w = new StandardWall(l, 0.1, 3.0, BuiltInMaterials.Mass);
+                var w = new StandardWall(l, 0.1, 3.0, material);
                 w.AddOpening(1, 1, 1, 1.5);
                 w.AddOpening(1, 2, 3, 1);
                 w.AddOpening(Polygon.Ngon(3, 2.0), 8, 2, 1.0, 0.0);
@@ -763,7 +765,7 @@ namespace Elements.Tests
                 {
                     continue;
                 }
-                var col = new Column(pt, 3.0, null, prof, material: BuiltInMaterials.Mass);
+                var col = new Column(pt, 3.0, null, prof, material: material);
                 this.Model.AddElement(col);
             }
 
@@ -782,11 +784,11 @@ namespace Elements.Tests
 
         private static void Section(Plane xSectPlane, Model model)
         {
-            model.Intersect(xSectPlane, out var lines, out var polys);
+            model.Intersect(xSectPlane, out var polys, out var behind);
 
-            foreach (var line in lines)
+            foreach (var behinder in behind)
             {
-                model.AddElement(new ModelCurve(line));
+                model.AddElement(new ModelCurve(behinder));
             }
 
             foreach (var poly in polys)

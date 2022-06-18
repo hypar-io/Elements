@@ -256,10 +256,10 @@ namespace Elements
             }
         }
 
-        public void Intersect(Plane plane, out List<Geometry.Line> lines, out List<Geometry.Polygon> polys)
+        public void Intersect(Plane plane, out List<Geometry.Polygon> polys, out List<Geometry.Polygon> behind)
         {
             polys = new List<Geometry.Polygon>();
-            lines = new List<Geometry.Line>();
+            behind = new List<Geometry.Polygon>();
 
             foreach (var e in this.Elements.Values)
             {
@@ -274,6 +274,14 @@ namespace Elements
 
                         foreach (var csgPoly in csg.Polygons)
                         {
+                            var csgNormal = csgPoly.Plane.Normal.ToVector3();
+
+                            if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
+                            {
+                                behind.Add(csgPoly.Project(plane));
+                                continue;
+                            }
+
                             var edgeResults = new List<Vector3>();
                             for (var i = 0; i < csgPoly.Vertices.Count; i++)
                             {
@@ -290,7 +298,7 @@ namespace Elements
                                 continue;
                             }
 
-                            var d = csgPoly.Plane.Normal.ToVector3().Cross(plane.Normal).Unitized();
+                            var d = csgNormal.Cross(plane.Normal).Unitized();
                             edgeResults.Sort(new DirectionComparer(d));
 
                             // Draw segments through the results and add to the 
@@ -329,30 +337,13 @@ namespace Elements
                             var rebuiltPolys = heg.Polygonize();
                             if (rebuiltPolys == null || rebuiltPolys.Count == 0)
                             {
-                                // if (edgeResults.Count > 2)
-                                // {
-                                //     for (var i = 0; i < edgeResults.Count; i += 2)
-                                //     {
-                                //         lines.Add(new Geometry.Line(edgeResults[i], edgeResults[i + 1]));
-                                //     }
-                                // }
                                 continue;
                             }
                             polys.AddRange(rebuiltPolys);
                         }
                         catch (Exception ex)
                         {
-                            // TODO: We could test for known failure modes, but the
-                            // iteration over the edge graph before attempting to
-                            // graph to identify these modes, is as expensive as 
-                            // the graph attempt.
-                            // Known cases there the half edge graph will throw an
-                            // exception:
-                            // - Co-linear edges.
-                            // - Disconnected graphs.
-                            // - Graphs with one vertex.
                             Console.WriteLine(ex.Message);
-
                             continue;
                         }
 
