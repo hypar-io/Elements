@@ -115,6 +115,61 @@ namespace Elements
         }
 
         /// <summary>
+        /// Get the element's axis-aligned bounding box.
+        /// </summary>
+        public BBox3 Bounds()
+        {
+            return new BBox3(this.Representation.SolidOperations.SelectMany(so => so._solid.Vertices.Select(v => v.Value.Point)));
+        }
+
+        internal Solid GetFinalBooleanSolidFromSolids()
+        {
+            if (this.Representation == null
+                || this.Representation.SolidOperations.Count == 0
+                || this is Opening)
+            {
+                return null;
+            }
+
+            var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
+                                                       .Select(op => op.LocalTransform != null ? (op.Solid, Transform.Concatenated(op.LocalTransform)) : (op.Solid, Transform))
+                                                       .ToList();
+            var voids = Representation.SolidOperations.Where(op => op.IsVoid == true)
+                                                      .Select(op => op.LocalTransform != null ? (op.Solid, Transform.Concatenated(op.LocalTransform)) : (op.Solid, Transform))
+                                                      .ToList();
+
+            if (this is IHasOpenings openingProvider)
+            {
+                var openingSolids = openingProvider.Openings.SelectMany(o => o.Representation.SolidOperations.Select(op => op.LocalTransform != null ? (op.Solid, Transform.Concatenated(op.LocalTransform).Concatenated(o.Transform)) : (op.Solid, o.Transform))).ToList();
+                voids.AddRange(openingSolids);
+            }
+
+            Solid solidResult = new Solid();
+            for (var i = 0; i < solids.Count; i++)
+            {
+                var b = solids[i].Solid;
+                var bt = solids[i].Item2;
+                solidResult = Solid.Union(solidResult, null, b, bt);
+            }
+
+            Solid voidResult = new Solid();
+            for (var i = 0; i < voids.Count; i++)
+            {
+                var b = voids[i].Solid;
+                var bt = voids[i].Item2;
+                voidResult = Solid.Union(voidResult, null, b, bt);
+            }
+
+            if (solidResult == null)
+            {
+                // All voids will result in an empty solid.
+                return new Solid();
+            }
+
+            return Solid.Difference(solidResult, null, voidResult, null);
+        }
+
+        /// <summary>
         /// Get the computed csg solid.
         /// The csg is centered on the origin by default.
         /// </summary>
