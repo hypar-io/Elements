@@ -254,6 +254,43 @@ namespace Elements
             }
         }
 
+        public List<Geometry.Line> Intersect(Plane plane)
+        {
+            // var polys = new List<Geometry.Polygon>();
+            var lines = new List<Geometry.Line>();
+            foreach (var e in this.Elements.Values)
+            {
+                if (e is GeometricElement geo)
+                {
+                    if (geo.Representation != null)
+                    {
+                        var solid = geo.GetFinalBooleanSolidFromSolids();
+                        if (solid != null)
+                        {
+                            foreach (var face in solid.Faces.Values)
+                            {
+                                if (face.Intersects(plane, out var xSects))
+                                {
+                                    lines.AddRange(xSects);
+                                }
+                            }
+
+                            // Do this when we can figure out why some
+                            // intersection graphs don't work.
+
+                            // if (solid.Intersects(plane, out var intersects))
+                            // {
+                            //     polys.AddRange(intersects);
+                            // }
+                        }
+                    }
+                }
+            }
+
+            return lines;
+            // return polys;
+        }
+
         internal Model CreateExportModel(bool gatherSubElements)
         {
             // Recursively add elements and sub elements in the correct
