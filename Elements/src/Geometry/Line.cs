@@ -421,14 +421,18 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var length = d.Length();
+            var dMin = tMin * length;
+            var dMax = tMax * length;
+
             // Check if found parameters are within normalized line range.
-            if (infinite || (tMin > -2 * Vector3.EPSILON && tMin < 1 + 2 * Vector3.EPSILON))
+            if (infinite || (dMin > -Vector3.EPSILON && dMin < length + Vector3.EPSILON))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > 2 * Vector3.EPSILON &&
-                (infinite || (tMax > -2 * Vector3.EPSILON && tMax < 1 + 2 * Vector3.EPSILON)))
+            if (Math.Abs(dMax - dMin) > Vector3.EPSILON &&
+                (infinite || (dMax > -Vector3.EPSILON && dMax < length + Vector3.EPSILON)))
             {
                 results.Add(Start + d * tMax);
             }
