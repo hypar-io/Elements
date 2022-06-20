@@ -826,7 +826,21 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check whether three points are on the same line.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        [Obsolete("Use AreCollinearByDistance or AreCollinearByAngle instead")]
+        public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
+        {
+            return AreCollinearByDistance(a, b, c);
+        }
+
+        /// <summary>
         /// Check whether three points are on the same line within certain distance.
+        /// This function is slower than AreCollinearByAngle and less suitable for high complexity code.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
@@ -842,15 +856,15 @@ namespace Elements.Geometry
         /// <summary>
         /// Check whether three points are on the same line within certain angle.
         /// Order is important since unsigned abc angle is checked.
-        /// This function is much faster than AreCollinearByDistance but angle deviation 
-        /// accumulates distance deviation and, if points are far away, position differences are noticeable.
+        /// This function is much faster than AreCollinearByDistance but angle deviation scales with the distance of points being compared.
+        /// If points are far away from each other they might appear collinear even if there are large distance offsets between them.
         /// </summary>
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <param name="tolerance">Angle tolerance as cos.</param>
         /// <returns></returns>
-        public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.COS_ANGLE_EPSILON)
+        public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = Vector3.COS_ANGLE_EPSILON)
         {
             var baX = b.X - a.X;
             var baY = b.Y - a.Y;
@@ -876,7 +890,7 @@ namespace Elements.Geometry
             cbY = cbY / cbLength;
             cbZ = cbZ / cbLength;
 
-            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > tolerance;
+            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > cosAngleTolerance;
         }
 
         /// <summary>

@@ -39,6 +39,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are the provided points along the same line?
+        /// </summary>
+        /// <param name="points"></param>
+        [Obsolete("Use AreCollinearByDistance instead")]
+        public static bool AreCollinear(this IList<Vector3> points)
+        {
+            return AreCollinearByDistance(points);
+        }
+
+        /// <summary>
         /// Check whether three points are on the same line withing certain distance.
         /// </summary>
         /// <param name="points">List of points to check. Order is not important.</param>
@@ -63,8 +73,8 @@ namespace Elements.Geometry
                 // Since fitDir is Unitized - dot give the length of projection d onto fitDir.
                 var dot = d.Dot(fitDir);
                 var lengthSquared = d.LengthSquared();
-                // By Pythagoras' theorem d.Length()^2 = dot^2 + distance^2. 
-                // if it's less than tolerance squared - point is close enough to the fit line.
+                // By Pythagoras' theorem d.Length()^2 = dot^2 + distance^2.
+                // If it's less than tolerance squared then the point is close enough to the fit line.
                 return lengthSquared - (dot * dot) < toleranceSquared;
             });
         }
