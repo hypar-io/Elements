@@ -95,6 +95,8 @@ namespace Elements
                 LocalTransform = new Transform(new Vector3(0, 0, -this.DepthBack))
             };
             this.Representation.SolidOperations.Add(op);
+
+            UpdateBoundsAndCsg();
         }
     }
 }

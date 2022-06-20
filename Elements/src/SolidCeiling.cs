@@ -152,6 +152,8 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             var extrude = new Extrude(GetProfile(), this.Thickness, Vector3.ZAxis, false);
             this.Representation.SolidOperations.Add(extrude);
+
+            UpdateBoundsAndCsg();
         }
 
         /// <summary>

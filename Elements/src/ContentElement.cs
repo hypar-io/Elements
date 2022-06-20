@@ -144,7 +144,6 @@ namespace Elements
             {
                 return;
             }
-            var vertices = new List<Vector3> { BoundingBox.Min, BoundingBox.Max };
             var bottomProfile = new Polygon(new List<Vector3>{
                             new Vector3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z),
                             new Vector3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z),
@@ -155,6 +154,8 @@ namespace Elements
             var height = BoundingBox.Max.Z - BoundingBox.Min.Z;
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
             this.Representation = new Representation(new List<SolidOperation> { boxSolid });
+
+            UpdateBoundsAndCsg();
         }
     }
 }

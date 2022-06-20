@@ -753,6 +753,10 @@ namespace Elements.Tests
                 }
             }
 
+            var floors = new Floor(p, Units.InchesToMeters(4), material: material);
+            this.Model.AddElement(floors);
+            floors.AddOpening(2, 2, 3, 1);
+
             var grid2d = new Grid2d(p);
             grid2d.U.DivideByFixedLength(Units.FeetToMeters(4));
             grid2d.V.DivideByFixedLength(Units.FeetToMeters(4));

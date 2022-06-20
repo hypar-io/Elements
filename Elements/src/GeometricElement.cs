@@ -11,9 +11,18 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
+        private BBox3 _bounds;
+        internal Csg.Solid _csg;
+
+        /// <summary>
+        /// The element's bounds.
+        /// </summary>
+        [JsonProperty("Bounds", Required = Required.AllowNull)]
+        public BBox3 Bounds => _bounds;
+
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
@@ -65,7 +74,16 @@ namespace Elements
         /// </summary>
         public virtual void UpdateRepresentations()
         {
-            // Override in derived classes.
+            // Override in derived classes
+        }
+
+        /// <summary>
+        /// Update the CSG and the associated bounds for an element.
+        /// </summary>
+        protected void UpdateBoundsAndCsg()
+        {
+            _bounds = new BBox3(Representation.SolidOperations.SelectMany(so => so._solid.Vertices.Select(v => v.Value.Point)));
+            _csg = GetFinalCsgFromSolids();
         }
 
         /// <summary>
@@ -110,14 +128,6 @@ namespace Elements
         public bool HasGeometry()
         {
             return Representation != null && Representation.SolidOperations != null && Representation.SolidOperations.Count > 0;
-        }
-
-        /// <summary>
-        /// Get the element's axis-aligned bounding box.
-        /// </summary>
-        public BBox3 Bounds()
-        {
-            return new BBox3(this.Representation.SolidOperations.SelectMany(so => so._solid.Vertices.Select(v => v.Value.Point)));
         }
 
         /// <summary>

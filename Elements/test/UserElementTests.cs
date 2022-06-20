@@ -60,6 +60,8 @@ namespace Elements.Tests
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, x, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, y, 0.0, 0.0, 0.0, false));
             this.Representation.SolidOperations.Add(new Extrude(profileInsideUpdate, 8, Vector3.ZAxis, false));
+
+            UpdateBoundsAndCsg();
         }
     }
 

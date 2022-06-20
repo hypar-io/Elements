@@ -183,6 +183,8 @@ namespace Elements
             var shiftedProfile = GetProfile().Transformed(new Transform(direction.Negate() * Thickness / 2));
 
             this.Representation.SolidOperations.Add(new Extrude(shiftedProfile, this.Thickness, direction, false));
+
+            UpdateBoundsAndCsg();
         }
 
         private Plane GetCenterPlane()

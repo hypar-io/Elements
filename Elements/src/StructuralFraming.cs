@@ -125,6 +125,8 @@ namespace Elements
                                                             this.Rotation,
                                                             false));
             }
+
+            UpdateBoundsAndCsg();
         }
     }
 }
