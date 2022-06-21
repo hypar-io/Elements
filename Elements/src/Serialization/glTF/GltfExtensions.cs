@@ -86,7 +86,7 @@ namespace Elements.Serialization.glTF
                     if (SaveGlb(model, path, out errors, drawEdges))
                     {
                         return;
-                }
+                    }
                     // Else fall through to produce an empty GLTF.
                 }
                 else
@@ -229,17 +229,16 @@ namespace Elements.Serialization.glTF
 
                 if (material.EdgeDisplaySettings != null)
                 {
-                    if (gltfMaterial.Extensions == null)
-                    {
-                        gltfMaterial.Extensions = new Dictionary<string, object>();
-                    }
-                    if (!gltf.ExtensionsUsed.Contains("HYPAR_materials_edge_settings"))
-                    {
-                        gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { "HYPAR_materials_edge_settings" }.ToArray();
-                    }
-                    gltfMaterial.Extensions.Add("HYPAR_materials_edge_settings", new Dictionary<string, object>{
+                    AddExtension(gltf, gltfMaterial, "HYPAR_materials_edge_settings", new Dictionary<string, object>{
                         {"lineWidth", material.EdgeDisplaySettings.LineWidth},
                         {"widthMode", (int)material.EdgeDisplaySettings.WidthMode},
+                    });
+                }
+
+                if (material.DrawInFront)
+                {
+                    AddExtension(gltf, gltfMaterial, "HYPAR_draw_in_front", new Dictionary<string, object>{
+                        {"drawInFront", true},
                     });
                 }
 
@@ -386,6 +385,19 @@ namespace Elements.Serialization.glTF
             }
 
             return materialDict;
+        }
+
+        private static void AddExtension(Gltf gltf, glTFLoader.Schema.Material gltfMaterial, string extensionName, Dictionary<string, object> extensionAttributes)
+        {
+            if (gltfMaterial.Extensions == null)
+            {
+                gltfMaterial.Extensions = new Dictionary<string, object>();
+            }
+            if (!gltf.ExtensionsUsed.Contains(extensionName))
+            {
+                gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { extensionName }.ToArray();
+            }
+            gltfMaterial.Extensions.Add(extensionName, extensionAttributes);
         }
 
         private static Image CreateImage(string path, List<BufferView> bufferViews, List<byte> buffer, out bool textureHasTransparency)
