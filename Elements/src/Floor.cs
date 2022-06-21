@@ -118,7 +118,7 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
 
         /// <summary>

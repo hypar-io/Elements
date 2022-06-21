@@ -80,7 +80,7 @@ namespace Elements
         /// <summary>
         /// Update the CSG and the associated bounds for an element.
         /// </summary>
-        protected void UpdateBoundsAndCsg()
+        protected void UpdateBoundsAndComputeSolid()
         {
             _bounds = new BBox3(Representation.SolidOperations.SelectMany(so => so._solid.Vertices.Select(v => v.Value.Point)));
             _csg = GetFinalCsgFromSolids();

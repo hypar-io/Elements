@@ -126,7 +126,7 @@ namespace Elements
                                                             false));
             }
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
     }
 }

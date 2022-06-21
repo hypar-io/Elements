@@ -184,7 +184,7 @@ namespace Elements
 
             this.Representation.SolidOperations.Add(new Extrude(shiftedProfile, this.Thickness, direction, false));
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
 
         private Plane GetCenterPlane()

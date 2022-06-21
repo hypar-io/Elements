@@ -96,7 +96,7 @@ namespace Elements
             };
             this.Representation.SolidOperations.Add(op);
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
     }
 }

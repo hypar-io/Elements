@@ -155,7 +155,7 @@ namespace Elements
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
             this.Representation = new Representation(new List<SolidOperation> { boxSolid });
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
     }
 }

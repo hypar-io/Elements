@@ -201,7 +201,7 @@ namespace Elements
                 Representation.SolidOperations.Add(new Lamina(tile));
             }
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
 
         /// <summary>

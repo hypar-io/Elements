@@ -97,7 +97,7 @@ namespace Elements
                 o.Height = this.Height;
             }
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
     }
 }

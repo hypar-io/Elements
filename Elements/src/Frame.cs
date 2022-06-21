@@ -64,7 +64,7 @@ namespace Elements
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Sweep(this.Profile, this.Curve, 0.0, 0.0, 0.0, false));
 
-            UpdateBoundsAndCsg();
+            UpdateBoundsAndComputeSolid();
         }
     }
 }
