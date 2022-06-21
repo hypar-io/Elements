@@ -8,6 +8,7 @@
 - `GeometricElement.UpdateBoundsAndCsg()`
 - `EdgeExtensions.Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)`
 - `RelationToPlane` enum.
+- `BBox3.Intersects(Plane plane, out RelationToPlane relationToPlane)`
 
 ### Changed
 
