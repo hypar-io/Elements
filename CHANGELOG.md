@@ -4,6 +4,10 @@
 
 ### Added
 - `Material` now supports a `DrawInFront` property.
+- `Model.Intersect(Plane plane, out List<Geometry.Polygon> intersectionPolygons, out List<Geometry.Polygon> beyondPolygons)`
+- `GeometricElement.UpdateBoundsAndCsg()`
+- `EdgeExtensions.Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)`
+- `RelationToPlane` enum.
 
 ### Changed
 

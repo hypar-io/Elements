@@ -14,11 +14,11 @@ namespace Elements.Geometry
         /// </summary>
         Intersects,
         /// <summary>
-        /// Above
+        /// On the normal-facing side of the plane.
         /// </summary>
         Above,
         /// <summary>
-        /// Below
+        /// On the non-normal-facing side of the plane.
         /// </summary>
         Below
     }
