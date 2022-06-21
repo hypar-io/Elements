@@ -917,7 +917,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (u == start)
                     {
                         if (startDirection.HasValue &&
-                            !AreCollinearInplace(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
+                            !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
                         }
@@ -925,13 +925,13 @@ namespace Elements.Spatial.AdaptiveGrid
                     else
                     {
                         var vertexBefore = _grid.GetVertex(path[u]);
-                        if (!AreCollinearInplace(vertexBefore.Point, vertex.Point, v.Point))
+                        if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, vertexBefore.Id, edgeWeights);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
-                            !AreCollinearInplace(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
+                            !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, v, vertexAfter.Value, edgeWeights);
                         }
@@ -1017,7 +1017,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (u == start)
                     {
                         if (startDirection.HasValue &&
-                            !AreCollinearInplace(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
+                            !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
                         }
@@ -1028,7 +1028,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         //Add turn cost if the direction is changed.
                         var before = path[u];
                         var leftBefore = _grid.GetVertex(before.Item1.Item1);
-                        var leftCollinear = AreCollinearInplace(leftBefore.Point, vertex.Point, v.Point);
+                        var leftCollinear = Vector3.AreCollinearByAngle(leftBefore.Point, vertex.Point, v.Point);
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
@@ -1041,7 +1041,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         {
                             var rigthBefore = _grid.GetVertex(before.Item2.Item1);
                             rigthCost = cost.Item2 + newWeight;
-                            if (!AreCollinearInplace(rigthBefore.Point, vertex.Point, v.Point))
+                            if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
                                 rigthCost += CalculateTurnCost(
                                     edgeWeight.Factor, vertex, rigthBefore.Id, edgeWeights);
@@ -1375,7 +1375,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (before1 != 0)
                         {
                             var beforeV1 = _grid.GetVertex(before.Item1.Item1);
-                            if (!AreCollinearInplace(beforeV1.Point, activeV.Point, nextV.Point))
+                            if (!Vector3.AreCollinearByAngle(beforeV1.Point, activeV.Point, nextV.Point))
                             {
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV1.Id || e.EndId == beforeV1.Id).First();
@@ -1387,7 +1387,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (before2 != 0)
                         {
                             var beforeV2 = _grid.GetVertex(before.Item2.Item1);
-                            if (!AreCollinearInplace(beforeV2.Point, activeV.Point, nextV.Point))
+                            if (!Vector3.AreCollinearByAngle(beforeV2.Point, activeV.Point, nextV.Point))
                             {
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV2.Id || e.EndId == beforeV2.Id).First();
@@ -1428,36 +1428,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 Compare(v, travelCost, ref bestCost, ref bestIndex);
             }
             return bestIndex;
-        }
-
-        //This is the same as Vector3.AreCollinear but avoiding all expensive validations.
-        private bool AreCollinearInplace(Vector3 a, Vector3 b, Vector3 c)
-        {
-            var baX = b.X - a.X;
-            var baY = b.Y - a.Y;
-            var baZ = b.Z - a.Z;
-            var baLength = Math.Sqrt(Math.Pow(baX, 2) + Math.Pow(baY, 2) + Math.Pow(baZ, 2));
-            if (baLength < Vector3.EPSILON)
-            {
-                return true;
-            }
-            baX = baX / baLength;
-            baY = baY / baLength;
-            baZ = baZ / baLength;
-
-            var cbX = c.X - b.X;
-            var cbY = c.Y - b.Y;
-            var cbZ = c.Z - b.Z;
-            var cbLength = Math.Sqrt(Math.Pow(cbX, 2) + Math.Pow(cbY, 2) + Math.Pow(cbZ, 2));
-            if (cbLength < Vector3.EPSILON)
-            {
-                return true;
-            }
-            cbX = cbX / cbLength;
-            cbY = cbY / cbLength;
-            cbZ = cbZ / cbLength;
-
-            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > (1 - Vector3.EPSILON);
         }
 
         private void CombinePath(List<ulong> mainPath, List<ulong> newPortion)
