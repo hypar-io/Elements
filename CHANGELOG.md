@@ -14,6 +14,7 @@
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
 
 ## 1.0.1
 
