@@ -172,39 +172,40 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridSubtractManyBoxesWithSmallDifference()
         {
-            var columnsNumber = 10;
+            var columnsNumber = 4;
             var height = 10;
 
             var adaptiveGrid = new AdaptiveGrid();
             var gridPolygon = new Polygon(new Vector3(-15, 0, height), new Vector3(15, 0 , height), new Vector3(15, 80, height), new Vector3(-15, 80, height));
 
-            var points = new List<Vector3>();
-            points.Add(new Vector3(-0.23, 0, 0));
-            points.Add(new Vector3(0.23, 0, 0));
+            var points = new List<Vector3>
+            {
+                new Vector3(-0.23, 0, 0),
+                new Vector3(0.23, 0, 0),
+                new Vector3(-15, 40, 0)
+            };
 
-            var boxes = new List<BBox3>();
+            var intersectingRectangle = Polygon.Rectangle(2, 2);
+            intersectingRectangle.Transform(new Transform(new Vector3(10, 40, 0)));
+            
+            var column = Polygon.Rectangle(0.3, 0.6);
+            var offset = column.Offset(0.1).First();
+
+            var rectangles = new List<Polygon> { intersectingRectangle, offset};
 
             for (int i = 1; i <= columnsNumber; i++)
             {
-                var column = Polygon.Rectangle(0.3, 0.6);
-                var offset = column.Offset(0.1).First();
-
                 var vector = new Vector3(0, 80 / (columnsNumber + 1) * i, 0);
                 var profile = new Polygon(offset.Vertices);
                 profile.Transform(new Transform(vector));
-                points.Add(vector);
                 points.AddRange(profile.Vertices);
-
-                var obstacle = offset.Bounds();
-                var box = obstacle.Translated(vector);
-                box.Extend(new Vector3(box.Max.X, box.Max.Y, height + 1));
-
-                boxes.Add(box);
+                rectangles.Add(profile);
             }
 
+            var boxes = rectangles.Select(x => x.Vertices).Select(x => new BBox3(x[0], x[2] + new Vector3(0,0, height + 1))).ToList();
             adaptiveGrid.AddFromPolygon(gridPolygon, points);
 
-            var numberOfEdgesBeforeSubtract = (columnsNumber * 3 + 2) * 6 + (columnsNumber * 3 + 1) * 7;
+            var numberOfEdgesBeforeSubtract = (columnsNumber * 2 + 3) * 5 + (columnsNumber * 2 + 2) * 6;
 
             Assert.Equal(numberOfEdgesBeforeSubtract, adaptiveGrid.GetEdges().Count);
 
@@ -214,7 +215,7 @@ namespace Elements.Tests
                 adaptiveGrid.SubtractBox(obstacle);
             }
 
-            var numberAfterSubtract = numberOfEdgesBeforeSubtract - columnsNumber * 10;
+            var numberAfterSubtract = numberOfEdgesBeforeSubtract - (columnsNumber * 2 + 6);
             Assert.Equal(numberAfterSubtract, adaptiveGrid.GetEdges().Count);
         }
 
