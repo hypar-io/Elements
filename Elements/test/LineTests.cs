@@ -287,6 +287,40 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void LineTrimWithPolygonInfinite()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(0, 0),
+                new Vector3(0, 5),
+                new Vector3(2, 5),
+                new Vector3(2, 2),
+                new Vector3(3, 3),
+                new Vector3(4, 2),
+                new Vector3(4, 5),
+                new Vector3(6, 5),
+                new Vector3(6, 0)
+            });
+
+            var line = new Line(new Vector3(10, 3), new Vector3(8, 3));
+            var inside = line.Trim(polygon, out var outside, infinite: true);
+            Assert.Equal(2, inside.Count);
+            // Sorted in line direction.
+            Assert.Equal(new Vector3(6, 3), inside[0].Start);
+            Assert.Equal(new Vector3(4, 3), inside[0].End);
+            Assert.Equal(new Vector3(2, 3), inside[1].Start);
+            Assert.Equal(new Vector3(0, 3), inside[1].End);
+
+            // (3; 3) point splits outside point into two segments.
+            // Outer outside segments are discarded when infinite is false.
+            Assert.Equal(2, outside.Count);
+            Assert.Equal(new Vector3(4, 3), outside[0].Start);
+            Assert.Equal(new Vector3(3, 3), outside[0].End);
+            Assert.Equal(new Vector3(3, 3), outside[1].Start);
+            Assert.Equal(new Vector3(2, 3), outside[1].End);
+        }
+
+        [Fact]
         public void ExtendToProfile()
         {
             Name = "ExtendToProfile";
@@ -457,12 +491,12 @@ namespace Elements.Geometry.Tests
                 (8,0,Vector3.EPSILON * 0.5),
                 (-4, 0, 0)
             };
-            Assert.True(points1.AreCollinear());
+            Assert.True(points1.AreCollinearByDistance());
 
             points1.Add(
                   (-6, Vector3.EPSILON * 2, 0)
             );
-            Assert.False(points1.AreCollinear());
+            Assert.False(points1.AreCollinearByDistance());
         }
 
         [Fact]
