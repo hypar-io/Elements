@@ -398,7 +398,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(results[1], new Vector3(10, 0, 7));
 
             //5. Line touches two sides of box and is misaligned slightly
-            l = new Line(new Vector3(5, box.Min.Y + 0.00000999, box.Min.Z), new Vector3(5, box.Max.Y - 0.00000999, box.Min.Z));
+            l = new Line(new Vector3(5, box.Min.Y + Vector3.EPSILON * 0.99, box.Min.Z), new Vector3(5, box.Max.Y - Vector3.EPSILON * 0.99, box.Min.Z));
             Assert.True(box.Min.Y.ApproximatelyEquals(l.Start.Y));
             Assert.True(box.Max.Y.ApproximatelyEquals(l.End.Y));
             l.Intersects(box, out results, infinite: false);
@@ -407,8 +407,8 @@ namespace Elements.Geometry.Tests
             Assert.True(results[1].IsAlmostEqualTo(l.End));
 
             //6. Short line touches two sides of box and is misaligned slightly (it requires increased tolerance to get correct results )
-            var newBox = new BBox3(new Vector3(-30.41029, 19.60979, 8.37), new Vector3(-29.58971, 20.39021, 8.37));
-            l = new Line(new Vector3(-30, 19.609799999999993, 8.37), new Vector3(-30, 20.390219999999996, 8.37));
+            var newBox = new BBox3(new Vector3(-30, 19.60979, 0), new Vector3(-29.5, 20.39021, 0));
+            l = new Line(new Vector3(-30, newBox.Min.Y + Vector3.EPSILON * 0.99, 0), new Vector3(-30, newBox.Max.Y - Vector3.EPSILON * 0.99, 0));
             Assert.True(newBox.Min.Y.ApproximatelyEquals(l.Start.Y));
             Assert.True(newBox.Max.Y.ApproximatelyEquals(l.End.Y));
             l.Intersects(newBox, out results, infinite: false);
