@@ -78,12 +78,12 @@ namespace Elements
         }
 
         /// <summary>
-        /// Update the CSG and the associated bounds for an element.
+        /// Update the computed solid and the bounding box of the element.
         /// </summary>
         protected void UpdateBoundsAndComputeSolid()
         {
-            _bounds = new BBox3(Representation.SolidOperations.SelectMany(so => so._solid.Vertices.Select(v => v.Value.Point)));
             _csg = GetFinalCsgFromSolids();
+            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())).ToList());
         }
 
         /// <summary>
