@@ -148,6 +148,9 @@ namespace Elements.Spatial.AdaptiveGrid
             Right
         }
 
+        public delegate bool RoutingFilter(Vertex start, Vertex end);
+        private List<RoutingFilter> _filters = new List<RoutingFilter>();
+
         /// <summary>
         /// Create AdaptiveGraphRouting objects and store core parameters for further use.
         /// </summary>
@@ -162,6 +165,11 @@ namespace Elements.Spatial.AdaptiveGrid
             //global information line boundaries, points, lines and obstacles.
             _grid = grid;
             _configuration = configuration;
+        }
+
+        public void AddRoutingFilter(RoutingFilter f)
+        {
+            _filters.Add(f);
         }
 
         /// <summary>
@@ -914,6 +922,12 @@ namespace Elements.Spatial.AdaptiveGrid
                         break;
                     }
 
+                    //User defined filter functions
+                    if (_filters.Any(f => !f(vertex, v)))
+                    {
+                        continue;
+                    }
+
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
                     var newWeight = travelCost[u] + edgeWeight.Length * edgeWeight.Factor;
 
@@ -1018,6 +1032,12 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (cost.Item1 == double.MaxValue)
                     {
                         break;
+                    }
+
+                    //User defined filter functions
+                    if(_filters.Any(f => !f(vertex, v)))
+                    {
+                        continue;
                     }
 
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
