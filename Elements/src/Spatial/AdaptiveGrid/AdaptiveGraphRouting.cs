@@ -899,6 +899,13 @@ namespace Elements.Spatial.AdaptiveGrid
                         continue;
                     }
 
+                    //Don't go back to where we just came from.
+                    var beforeId = path[u];
+                    if (beforeId == v.Id)
+                    {
+                        continue;
+                    }
+
                     //All vertices that can be reached from start vertex are visited.
                     //Ignore once only unreachable are left.
                     var cost = travelCost[u];
@@ -924,7 +931,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
                     else
                     {
-                        var vertexBefore = _grid.GetVertex(path[u]);
+                        var vertexBefore = _grid.GetVertex(beforeId);
                         if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, vertexBefore.Id, edgeWeights);
@@ -968,7 +975,7 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
             PriorityQueue<ulong> pq = PreparePriorityQueue(
-                start, out Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> path,
+                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Rigth)> path,
                 out travelCost);
 
             while (!pq.Empty())
@@ -994,6 +1001,13 @@ namespace Elements.Spatial.AdaptiveGrid
                     var v = _grid.GetVertex(id);
 
                     if ((excluded != null && excluded.Contains(id)) || !pq.Contains(id))
+                    {
+                        continue;
+                    }
+
+                    //Don't go back to where we just came from.
+                    var before = path[u];
+                    if (before.Left.Id == v.Id || before.Rigth.Id == v.Id)
                     {
                         continue;
                     }
@@ -1026,8 +1040,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         //For each of two stored branches - edges connected to active one.
                         //Add turn cost if the direction is changed.
-                        var before = path[u];
-                        var leftBefore = _grid.GetVertex(before.Item1.Item1);
+                        var leftBefore = _grid.GetVertex(before.Left.Id);
                         var leftCollinear = Vector3.AreCollinearByAngle(leftBefore.Point, vertex.Point, v.Point);
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
@@ -1037,9 +1050,9 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
 
                         var rigthCost = Double.MaxValue;
-                        if (before.Item2.Item1 != 0)
+                        if (before.Rigth.Id != 0)
                         {
-                            var rigthBefore = _grid.GetVertex(before.Item2.Item1);
+                            var rigthBefore = _grid.GetVertex(before.Rigth.Id);
                             rigthCost = cost.Item2 + newWeight;
                             if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
@@ -1069,7 +1082,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (newWeight < oldCost.Item1)
                     {
                         travelCost[id] = (newWeight, oldCost.Item1);
-                        path[id] = ((u, bestBranch), oldPath.Item1);
+                        path[id] = ((u, bestBranch), oldPath.Left);
                         if (oldCost.Item1 == double.MaxValue)
                         {
                             //When we first meet the vertex we need to slow it down to allow
