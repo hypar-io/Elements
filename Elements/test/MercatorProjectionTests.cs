@@ -27,8 +27,8 @@ namespace Elements.Tests
             var p2 = new Position(40.70974164658192, -73.9918450388025);
             var xy = p2.ToVectorMeters(p1);
             var p2ConvertedBack = Position.FromVectorMeters(p1, xy);
-            Assert.Equal(p2.Latitude, p2ConvertedBack.Latitude, 2);
-            Assert.Equal(p2.Longitude, p2ConvertedBack.Longitude, 2);
+            Assert.Equal(p2.Latitude, p2ConvertedBack.Latitude, 3);
+            Assert.Equal(p2.Longitude, p2ConvertedBack.Longitude, 3);
 
             var xy1 = new Vector3(50, 50, 0);
             var xy2 = new Vector3(100, 100, 0);
