@@ -20,7 +20,7 @@ namespace Elements
         /// <summary>
         /// The element's bounds.
         /// </summary>
-        [JsonProperty("Bounds", Required = Required.AllowNull)]
+        [JsonProperty("Bounds")]
         public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
