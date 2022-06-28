@@ -36,6 +36,8 @@ namespace Elements.Tests
             var xy2pos = Position.FromVectorMeters(p1, xy2);
             var xy1ConvertedBack = xy1pos.ToVectorMeters(p1);
             var xy2ConvertedBack = xy2pos.ToVectorMeters(p1);
+            // This tolerance seems large — we should investigate whether there
+            // are more accurate projections / methods for these conversions.
             Assert.True(xy1.DistanceTo(xy1ConvertedBack) < 0.5);
             Assert.True(xy2.DistanceTo(xy2ConvertedBack) < 0.5);
         }
