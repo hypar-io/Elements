@@ -792,12 +792,12 @@ namespace Elements.Tests
 
             foreach (var behinder in behind)
             {
-                model.AddElement(new ModelCurve(behinder));
+                model.AddElements(behinder.Value.Select(b => new ModelCurve(b)));
             }
 
             foreach (var poly in polys)
             {
-                model.AddElement(new Panel(poly, BuiltInMaterials.Black));
+                model.AddElements(poly.Value.Select(p => new Panel(p, BuiltInMaterials.Black)));
             }
         }
 

@@ -265,11 +265,11 @@ namespace Elements
         /// <param name="beyondPolygons">The polygons resulting from intersection
         /// of the beyond plane.</param>
         public void Intersect(Plane plane,
-                              out List<Geometry.Polygon> intersectionPolygons,
-                              out List<Geometry.Polygon> beyondPolygons)
+                              out Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
+                              out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons)
         {
-            intersectionPolygons = new List<Geometry.Polygon>();
-            beyondPolygons = new List<Geometry.Polygon>();
+            intersectionPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
 
             // var backPlane = new Plane(plane.Origin - plane.Normal * depth, plane.Normal);
             var geos = Elements.Values.Where(e => e is GeometricElement geo).Cast<GeometricElement>().ToList();
@@ -280,8 +280,8 @@ namespace Elements
 
         private void IntersectElementsWithPlane(Plane plane,
                                        List<GeometricElement> intersecting,
-                                       List<Geometry.Polygon> intersectionPolygons,
-                                       List<Geometry.Polygon> beyondPolygons)
+                                       Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
+                                       Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons)
         {
             foreach (var geo in intersecting)
             {
@@ -296,7 +296,15 @@ namespace Elements
 
                         if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
                         {
-                            beyondPolygons.Add(csgPoly.Project(plane));
+                            if (!beyondPolygons.ContainsKey(geo.Id))
+                            {
+                                beyondPolygons[geo.Id] = new List<Geometry.Polygon>() { csgPoly.Project(plane) };
+                            }
+                            else
+                            {
+                                beyondPolygons[geo.Id].Add(csgPoly.Project(plane));
+                            }
+
                             continue;
                         }
 
@@ -357,7 +365,15 @@ namespace Elements
                         {
                             continue;
                         }
-                        intersectionPolygons.AddRange(rebuiltPolys);
+
+                        if (!intersectionPolygons.ContainsKey(geo.Id))
+                        {
+                            intersectionPolygons[geo.Id] = new List<Geometry.Polygon>(rebuiltPolys);
+                        }
+                        else
+                        {
+                            intersectionPolygons[geo.Id].AddRange(rebuiltPolys);
+                        }
                     }
                     catch (Exception ex)
                     {
