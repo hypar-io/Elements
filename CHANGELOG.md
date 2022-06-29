@@ -4,6 +4,7 @@
 
 ### Added
 - `Material` now supports a `DrawInFront` property.
+- `TiledCeiling.GetTileCells()`
 
 ### Changed
 
