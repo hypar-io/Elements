@@ -399,8 +399,11 @@ namespace Elements
 
                     try
                     {
+                        // Elements with zero thickness sections.
                         if (heg.Vertices.Count == 2)
                         {
+                            // TODO: We're over-drawing here because we have edges
+                            // that are from->to and to->from.
                             foreach (var edges in heg.EdgesPerVertex)
                             {
                                 foreach (var (from, to, tag) in edges)
