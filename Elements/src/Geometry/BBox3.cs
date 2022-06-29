@@ -427,20 +427,30 @@ namespace Elements.Geometry
         /// Does the bounding box intersect the provided plane?
         /// </summary>
         /// <param name="plane">The plane.</param>
+        /// <param name="transform">An optional transform of the bounding box to apply before intersection.</param>
         /// <param name="relationToPlane">The relation of the bounding box to the plane.</param>
         /// <returns>True if the bounding box intersects, otherwise false.</returns>
-        public bool Intersects(Plane plane, out RelationToPlane relationToPlane)
+        public bool Intersects(Plane plane, out RelationToPlane relationToPlane, Transform transform = null)
         {
+            var transformedPlane = new Plane(plane.Origin, plane.Normal);
+            if (transform != null)
+            {
+                // Transform the plane into the space of the bounding box.
+                var inverse = transform.Inverted();
+                transformedPlane.Origin = inverse.OfPoint(transformedPlane.Origin);
+                transformedPlane.Normal = inverse.OfVector(transformedPlane.Normal);
+            }
+
             // https://gdbooks.gitbooks.io/3dcollisions/content/Chapter2/static_aabb_plane.html
             // Convert AABB to center-extents representation
             var c = (Max + Min) * 0.5; // Compute AABB center
             var e = Max - c; // Compute positive extents
 
             // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
-            var r = e.X * Math.Abs(plane.Normal.X) + e.Y * Math.Abs(plane.Normal.Y) + e.Z * Math.Abs(plane.Normal.Z);
+            var r = e.X * Math.Abs(transformedPlane.Normal.X) + e.Y * Math.Abs(transformedPlane.Normal.Y) + e.Z * Math.Abs(transformedPlane.Normal.Z);
 
             // Compute distance of box center from plane
-            var s = c.DistanceTo(plane);
+            var s = c.DistanceTo(transformedPlane);
 
             // Intersection occurs when distance s falls within [-r,+r] interval
             if (Math.Abs(s) <= r)
@@ -450,12 +460,12 @@ namespace Elements.Geometry
             }
 
             var corners = Corners();
-            if (corners.All(co => co.DistanceTo(plane) < 0))
+            if (corners.All(co => co.DistanceTo(transformedPlane) < 0))
             {
                 relationToPlane = RelationToPlane.Below;
                 return false;
             }
-            else if (corners.All(co => co.DistanceTo(plane) > 0))
+            else if (corners.All(co => co.DistanceTo(transformedPlane) > 0))
             {
                 relationToPlane = RelationToPlane.Above;
                 return false;

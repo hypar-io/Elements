@@ -272,37 +272,71 @@ namespace Elements
             beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
 
             // var backPlane = new Plane(plane.Origin - plane.Normal * depth, plane.Normal);
-            var geos = Elements.Values.Where(e => e is GeometricElement geo).Cast<GeometricElement>().ToList();
+            var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>().ToList();
             var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 
-            IntersectElementsWithPlane(plane, intersectingElements, intersectionPolygons, beyondPolygons);
+            var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>().ToList();
+            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition.Bounds.Intersects(plane, out _, geo.Transform)).ToList();
+
+            var allIntersectingElements = new List<Element>();
+            allIntersectingElements.AddRange(intersectingInstances);
+            allIntersectingElements.AddRange(intersectingElements);
+
+            IntersectElementsWithPlane(plane, allIntersectingElements, intersectionPolygons, beyondPolygons);
+        }
+
+        public void UpdateRepresentations()
+        {
+            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>().ToList())
+            {
+                geo.UpdateRepresentations();
+            }
         }
 
         private void IntersectElementsWithPlane(Plane plane,
-                                       List<GeometricElement> intersecting,
+                                       List<Element> intersecting,
                                        Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
                                        Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons)
         {
-            foreach (var geo in intersecting)
+            Transform localTransform = null;
+            foreach (var element in intersecting)
             {
+                GeometricElement geo = null;
+                if (element is GeometricElement)
+                {
+                    geo = element as GeometricElement;
+                    localTransform = geo.Transform;
+                }
+                else if (element is ElementInstance)
+                {
+                    var instance = element as ElementInstance;
+                    geo = instance.BaseDefinition;
+                    localTransform = instance.Transform;
+                }
+
                 if (geo.Representation != null)
                 {
                     var graphVertices = new List<Vector3>();
                     var graphEdges = new List<List<(int from, int to, int? tag)>>();
 
-                    foreach (var csgPoly in geo._csg.Polygons)
+                    // TODO: Can we avoid this copy? It seems to be the most straightforward
+                    // way to get the csg transformed for sectioning.
+                    var localCsg = geo._csg.Transform(localTransform.ToMatrix4x4());
+                    foreach (var csgPoly in localCsg.Polygons)
                     {
                         var csgNormal = csgPoly.Plane.Normal.ToVector3();
 
                         if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
                         {
+                            // TODO: We can cut out transformation if the element's transform is null.
+                            var backPoly = csgPoly.Project(plane);
                             if (!beyondPolygons.ContainsKey(geo.Id))
                             {
-                                beyondPolygons[geo.Id] = new List<Geometry.Polygon>() { csgPoly.Project(plane) };
+                                beyondPolygons[geo.Id] = new List<Geometry.Polygon>() { backPoly };
                             }
                             else
                             {
-                                beyondPolygons[geo.Id].Add(csgPoly.Project(plane));
+                                beyondPolygons[geo.Id].Add(backPoly);
                             }
 
                             continue;

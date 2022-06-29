@@ -736,68 +736,45 @@ namespace Elements.Tests
         {
             this.Name = nameof(ModelIntersects);
 
+            var json = File.ReadAllText("../../../models/Geometry/tower.json");
+            var model = Model.FromJson(json, out var errors);
+
+            model.UpdateRepresentations();
+
             var material = new Material("Almost Gone", new Color(1, 1, 1, 0.1));
 
-            var p = Polygon.Ngon(5, 10);
-            foreach (var l in p.Segments())
-            {
-                var w = new StandardWall(l, 0.1, 3.0, material);
-                w.AddOpening(1, 1, 1, 1.5);
-                w.AddOpening(1, 2, 3, 1);
-                w.AddOpening(Polygon.Ngon(3, 2.0), 8, 2, 1.0, 0.0);
-                this.Model.AddElement(w);
-
-                foreach (var o in w.Openings)
-                {
-                    o.UpdateRepresentations();
-                }
-            }
-
-            var floors = new Floor(p, Units.InchesToMeters(4), material: material);
-            this.Model.AddElement(floors);
-            floors.AddOpening(2, 2, 3, 1);
-
-            var grid2d = new Grid2d(p);
-            grid2d.U.DivideByFixedLength(Units.FeetToMeters(4));
-            grid2d.V.DivideByFixedLength(Units.FeetToMeters(4));
-
-            var wideFlanges = new WideFlangeProfileFactory();
-            var prof = wideFlanges.GetProfileByType(WideFlangeProfileType.W18x106);
-            foreach (var pt in grid2d.GetCellNodes())
-            {
-                if (!p.Contains(pt))
-                {
-                    continue;
-                }
-                var col = new Column(pt, 3.0, null, prof, material: material);
-                this.Model.AddElement(col);
-            }
-
             var xSectPlane = new Plane(new Vector3(0, 0, 1.5), Vector3.ZAxis);
-            Section(xSectPlane, this.Model);
-
-            // foreach (var s in p.Segments())
-            // {
-            //     var dim = new AlignedDimension(s.Start.Project(xSectPlane), s.End.Project(xSectPlane), 1.0);
-            //     this.Model.AddElements(dim.ToModelArrowsAndText(Colors.Black));
-            // }
-
-            // var sectionPlane = new Plane(Vector3.Origin, new Vector3(0.7, 1));
-            // Section(sectionPlane, this.Model);
+            Section(xSectPlane, model, this.Model);
         }
 
-        private static void Section(Plane xSectPlane, Model model)
+        private static void Section(Plane xSectPlane, Model sectionModel, Model outModel = null)
         {
-            model.Intersect(xSectPlane, out var polys, out var behind);
+            sectionModel.Intersect(xSectPlane, out var polys, out var behind);
 
             foreach (var behinder in behind)
             {
-                model.AddElements(behinder.Value.Select(b => new ModelCurve(b)));
+                var behindModelCurves = behinder.Value.Select(b => new ModelCurve(b));
+                if (outModel != null)
+                {
+                    outModel.AddElements(behindModelCurves);
+                }
+                else
+                {
+                    sectionModel.AddElements(behindModelCurves);
+                }
             }
 
             foreach (var poly in polys)
             {
-                model.AddElements(poly.Value.Select(p => new Panel(p, BuiltInMaterials.Black)));
+                var polyModelCurves = poly.Value.Select(p => new Panel(p, BuiltInMaterials.Black));
+                if (outModel != null)
+                {
+                    outModel.AddElements(polyModelCurves);
+                }
+                else
+                {
+                    sectionModel.AddElements(polyModelCurves);
+                }
             }
         }
 
