@@ -75,6 +75,10 @@ namespace Elements
         public virtual void UpdateRepresentations()
         {
             // Override in derived classes
+
+            // There is only one case when this should be called. When
+            // a geometric element has been deserialized for an unknown type.
+            UpdateBoundsAndComputeSolid();
         }
 
         /// <summary>
@@ -83,6 +87,10 @@ namespace Elements
         protected void UpdateBoundsAndComputeSolid()
         {
             _csg = GetFinalCsgFromSolids();
+            if (_csg == null)
+            {
+                return;
+            }
             _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())).ToList());
         }
 
@@ -137,6 +145,11 @@ namespace Elements
         /// <param name="transformed">Should the csg be transformed by the element's transform?</param>
         internal Csg.Solid GetFinalCsgFromSolids(bool transformed = false)
         {
+            if (Representation == null || Representation.SolidOperations.Count == 0)
+            {
+                return null;
+            }
+
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
             // can be computed and by default the final csg will have the inverse of the
