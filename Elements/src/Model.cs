@@ -260,16 +260,20 @@ namespace Elements
         /// Intersect the model with the provided plane.
         /// </summary>
         /// <param name="plane">The plane.</param>
-        /// <param name="intersectionPolygons">The polygons resulting from the 
-        /// intersection of the plane with all elements  </param>
-        /// <param name="beyondPolygons">The polygons resulting from intersection
-        /// of the beyond plane.</param>
+        /// <param name="intersectionPolygons">A collection of polygons resulting from the 
+        /// intersection of the plane with all elements in the model.</param>
+        /// <param name="beyondPolygons">A collection of polygons resulting from intersection
+        /// of the beyond plane with all elements in the model.</param>
+        /// <param name="lines">A collection of line segments resulting from intersection of the plane
+        /// with all elements in the model.</param>
         public void Intersect(Plane plane,
                               out Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
-                              out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons)
+                              out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
+                              out Dictionary<Guid, List<Geometry.Line>> lines)
         {
             intersectionPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
             beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            lines = new Dictionary<Guid, List<Geometry.Line>>();
 
             // var backPlane = new Plane(plane.Origin - plane.Normal * depth, plane.Normal);
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>().ToList();
@@ -282,7 +286,7 @@ namespace Elements
             allIntersectingElements.AddRange(intersectingInstances);
             allIntersectingElements.AddRange(intersectingElements);
 
-            IntersectElementsWithPlane(plane, allIntersectingElements, intersectionPolygons, beyondPolygons);
+            IntersectElementsWithPlane(plane, allIntersectingElements, intersectionPolygons, beyondPolygons, lines);
         }
 
         public void UpdateRepresentations()
@@ -296,7 +300,8 @@ namespace Elements
         private void IntersectElementsWithPlane(Plane plane,
                                        List<Element> intersecting,
                                        Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
-                                       Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons)
+                                       Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
+                                       Dictionary<Guid, List<Geometry.Line>> lines)
         {
             Transform localTransform = null;
             foreach (var element in intersecting)
@@ -394,6 +399,28 @@ namespace Elements
 
                     try
                     {
+                        if (heg.Vertices.Count == 2)
+                        {
+                            foreach (var edges in heg.EdgesPerVertex)
+                            {
+                                foreach (var (from, to, tag) in edges)
+                                {
+                                    var start = heg.Vertices[from];
+                                    var end = heg.Vertices[to];
+                                    var line = new Geometry.Line(start, end);
+                                    if (!lines.ContainsKey(geo.Id))
+                                    {
+                                        lines[geo.Id] = new List<Geometry.Line>() { line };
+                                    }
+                                    else
+                                    {
+                                        lines[geo.Id].Add(line);
+                                    }
+                                }
+                            }
+                            continue;
+                        }
+
                         var rebuiltPolys = heg.Polygonize();
                         if (rebuiltPolys == null || rebuiltPolys.Count == 0)
                         {

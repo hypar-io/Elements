@@ -741,15 +741,13 @@ namespace Elements.Tests
 
             model.UpdateRepresentations();
 
-            var material = new Material("Almost Gone", new Color(1, 1, 1, 0.1));
-
             var xSectPlane = new Plane(new Vector3(0, 0, 1.5), Vector3.ZAxis);
             Section(xSectPlane, model, this.Model);
         }
 
         private static void Section(Plane xSectPlane, Model sectionModel, Model outModel = null)
         {
-            sectionModel.Intersect(xSectPlane, out var polys, out var behind);
+            sectionModel.Intersect(xSectPlane, out var polys, out var behind, out var lines);
 
             foreach (var behinder in behind)
             {
@@ -774,6 +772,19 @@ namespace Elements.Tests
                 else
                 {
                     sectionModel.AddElements(polyModelCurves);
+                }
+            }
+
+            foreach (var line in lines)
+            {
+                var lineCurves = line.Value.Select(l => new ModelCurve(l));
+                if (outModel != null)
+                {
+                    outModel.AddElements(lineCurves);
+                }
+                else
+                {
+                    sectionModel.AddElements(lineCurves);
                 }
             }
         }
