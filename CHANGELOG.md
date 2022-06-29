@@ -11,6 +11,7 @@
 - `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
 - `Vector3.AreCollinear` are renamed into `Vector3.AreCollinearByDistance` and added `tolerance` parameter.
 - `Line.Trim` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 
 ### Fixed
 
