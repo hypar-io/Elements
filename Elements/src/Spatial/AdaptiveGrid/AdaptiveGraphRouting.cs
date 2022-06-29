@@ -106,12 +106,20 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <param name="turnCost">Travel cost penalty if route changes it's direction.</param>
             /// <param name="mainLayer">Elevation at which route prefers to travel.</param>
             /// <param name="layerPenalty">Penalty if route travels through an elevation different from MainLayer.</param>
-            public RoutingConfiguration(double turnCost, double mainLayer,
-                double layerPenalty)
+            /// <param name="supportedAngles">List of angles route can turn.</param>
+            public RoutingConfiguration(double turnCost = 1,
+                                        double mainLayer = 0,
+                                        double layerPenalty = 2,
+                                        List<double> supportedAngles = null)
             {
                 TurnCost = turnCost;
                 MainLayer = mainLayer;
                 LayerPenalty = layerPenalty;
+                SupportedAngles = supportedAngles;
+                if (SupportedAngles != null && !SupportedAngles.Contains(0))
+                {
+                    SupportedAngles.Add(0);
+                }
             }
 
             /// <summary>
@@ -128,6 +136,13 @@ namespace Elements.Spatial.AdaptiveGrid
             /// Travel cost penalty if route travels through an elevation different from MainLayer.
             /// </summary>
             public readonly double LayerPenalty;
+
+            /// <summary>
+            /// List of angles route can turn. Angles are between 0 and 90. 0 is auto-included.
+            /// For turn angle bigger than 90 degrees - 180 degrees minus angle is checked.
+            /// For example, 135 is the same as 45.
+            /// </summary>
+            public readonly List<double> SupportedAngles;
         }
 
         /// <summary>
@@ -148,6 +163,12 @@ namespace Elements.Spatial.AdaptiveGrid
             Right
         }
 
+        /// <summary>
+        /// Filter function definition.
+        /// </summary>
+        /// <param name="start">Last Vertex in the route.</param>
+        /// <param name="end">Candidate for the next Vertex in the route.</param>
+        /// <returns></returns>
         public delegate bool RoutingFilter(Vertex start, Vertex end);
         private List<RoutingFilter> _filters = new List<RoutingFilter>();
 
@@ -167,6 +188,11 @@ namespace Elements.Spatial.AdaptiveGrid
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Routing supports checking if a Vertex can be added to the path.
+        /// New vertex must pass all filter functions to be accepted. 
+        /// </summary>
+        /// <param name="f">New filter function.</param>
         public void AddRoutingFilter(RoutingFilter f)
         {
             _filters.Add(f);
@@ -793,37 +819,53 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<RoutingHintLine> hintLines)
         {
             var weights = new Dictionary<ulong, (double Length, double Factor)>();
+            var mainAxis = _grid.Transform.XAxis;
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
                 var v1 = _grid.GetVertex(e.EndId);
+                var vector = (v1.Point - v0.Point);
+                var w = vector.Length();
 
-                double hintFactor = 1;
-                double offsetFactor = 1;
-                double layerFactor = OnMainLayer(v0, v1) ? 1 : _configuration.LayerPenalty;
-                if (hintLines != null && hintLines.Any())
+                var angle = vector.AngleTo(mainAxis);
+                if (angle > 90)
                 {
-                    foreach (var l in hintLines)
+                    angle = 180 - angle;
+                }
+
+                if (_configuration.SupportedAngles != null && 
+                    !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle)))
+                {
+                    weights[e.Id] = (w, double.PositiveInfinity);
+                }
+                else
+                {
+                    double hintFactor = 1;
+                    double offsetFactor = 1;
+                    double layerFactor = OnMainLayer(v0, v1) ? 1 : _configuration.LayerPenalty;
+                    if (hintLines != null && hintLines.Any())
                     {
-                        if (IsAffectedBy(v0.Point, v1.Point, l))
+                        foreach (var l in hintLines)
                         {
-                            //If user defined and default hints are overlapped,
-                            //we want path to be aligned with default hints.
-                            //To achieve this to factors are combined.
-                            if (l.UserDefined)
+                            if (IsAffectedBy(v0.Point, v1.Point, l))
                             {
-                                hintFactor = Math.Min(l.Factor, hintFactor);
-                            }
-                            else
-                            {
-                                offsetFactor = Math.Min(l.Factor, offsetFactor);
+                                //If user defined and default hints are overlapped,
+                                //we want path to be aligned with default hints.
+                                //To achieve this to factors are combined.
+                                if (l.UserDefined)
+                                {
+                                    hintFactor = Math.Min(l.Factor, hintFactor);
+                                }
+                                else
+                                {
+                                    offsetFactor = Math.Min(l.Factor, offsetFactor);
+                                }
                             }
                         }
                     }
-                }
 
-                var w = (_grid.GetVertex(e.StartId).Point - _grid.GetVertex(e.EndId).Point).Length();
-                weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                    weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                }
             }
 
             return weights;
@@ -894,7 +936,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 foreach (var e in vertex.Edges)
                 {
                     var edgeWeight = edgeWeights[e.Id];
-                    if (edgeWeight.Length < 0)
+                    if (edgeWeight.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }
@@ -1006,7 +1048,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 foreach (var e in vertex.Edges)
                 {
                     var edgeWeight = edgeWeights[e.Id];
-                    if (edgeWeight.Length < 0)
+                    if (edgeWeight.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }

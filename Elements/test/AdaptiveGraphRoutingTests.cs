@@ -704,6 +704,121 @@ namespace Elements.Tests
             CheckTree(grid, inputVertices[1].Id, tree, expectedPath);
         }
 
+        [Fact]
+        public void AdaptiveGraphRoutingAngleCheck()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var strip = grid.AddVertexStrip(new Vector3[] {
+                new Vector3(0, 0),
+                new Vector3(5, 0),
+                new Vector3(10, 0),
+                new Vector3(10, 5),
+                new Vector3(10, 10),
+            });
+
+            //Create two shortcuts - small 45 degree and long 30 degree.
+            grid.AddEdge(strip[1].Id, strip[3].Id);
+            grid.AddEdge(strip[1].Id, strip[4].Id);
+
+            // With only 90 degree allowed - routing uses no shortcut.
+            var c = new RoutingConfiguration(turnCost: 0, supportedAngles: new List<double>() { 90 });
+            var routing = new AdaptiveGraphRouting(grid, c);
+            var start = new RoutingVertex(strip[0].Id, 0);
+            var route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip[4].Id }, new List<RoutingHintLine> { });
+            var expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0),
+                new Vector3(5, 0),
+                new Vector3(10, 0),
+                new Vector3(10, 5),
+                new Vector3(10, 10),
+            };
+            CheckTree(grid, start.Id, route, expectedPath);
+
+            // With 45 and 90 degree allowed - routing uses 45 degree shortcut.
+            c = new RoutingConfiguration(turnCost: 0, supportedAngles: new List<double>() { 45, 90 });
+            routing = new AdaptiveGraphRouting(grid, c);
+            route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip[4].Id }, new List<RoutingHintLine> { });
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0),
+                new Vector3(5, 0),
+                new Vector3(10, 5),
+                new Vector3(10, 10),
+            };
+            CheckTree(grid, start.Id, route, expectedPath);
+
+            // When angles are not specified - any is allowed. In this case routing uses the best 30 degree shortcut.
+            c = new RoutingConfiguration(turnCost: 0);
+            routing = new AdaptiveGraphRouting(grid, c);
+            route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip[4].Id }, new List<RoutingHintLine> { });
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0),
+                new Vector3(5, 0),
+                new Vector3(10, 10),
+            };
+            CheckTree(grid, start.Id, route, expectedPath);
+        }
+
+        [Fact]
+        public void AdaptiveGraphRoutingFilterCheck()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+
+            // Shorter path need to go down up and down 
+            var strip = grid.AddVertexStrip(new Vector3[] {
+                new Vector3(0, 0, 5),
+                new Vector3(0, 0, 0),
+                new Vector3(2, 0, 0),
+                new Vector3(2, 0, 1),
+                new Vector3(4, 0, 1),
+                new Vector3(4, 0, 0),
+                new Vector3(5, 0, 0)
+            });
+
+            // Longer path goes around.
+            var sideStrip = grid.AddVertexStrip(new Vector3[]
+            {
+                new Vector3(2, 0, 0),
+                new Vector3(2, 5, 0),
+                new Vector3(4, 5, 0),
+                new Vector3(4, 0, 0),
+            });
+
+            // Without any filters shortest path is taken.
+            var c = new RoutingConfiguration(turnCost: 0, layerPenalty: 1);
+            var routing = new AdaptiveGraphRouting(grid, c);
+            var start = new RoutingVertex(strip[0].Id, 0);
+            var route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip.Last().Id }, new List<RoutingHintLine> { });
+            var expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0, 5),
+                new Vector3(0, 0, 0),
+                new Vector3(2, 0, 0),
+                new Vector3(2, 0, 1),
+                new Vector3(4, 0, 1),
+                new Vector3(4, 0, 0),
+                new Vector3(5, 0, 0)
+            };
+            CheckTree(grid, start.Id, route, expectedPath);
+
+            // When simple filter is used to prevent routing to go up - it's forced to go around.
+            routing.AddRoutingFilter((Vertex start, Vertex end) => start.Point.Z > end.Point.Z - Vector3.EPSILON);
+            route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip.Last().Id }, new List<RoutingHintLine> { });
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0, 5),
+                new Vector3(0, 0, 0),
+                new Vector3(2, 0, 0),
+                new Vector3(2, 5, 0),
+                new Vector3(4, 5, 0),
+                new Vector3(4, 0, 0),
+                new Vector3(5, 0, 0)
+            };
+            CheckTree(grid, start.Id, route, expectedPath);
+        }
+
         private static void CheckTree(
             AdaptiveGrid grid, ulong startId, IDictionary<ulong, ulong?> tree, List<Vector3> expectedPath)
         {
