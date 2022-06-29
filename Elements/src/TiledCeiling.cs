@@ -249,7 +249,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get tiles cells as Grid2d.
+        /// Get the tile cells as Grid2d.
         /// </summary>
         /// <returns>List of tiles grids.</returns>
         public List<Grid2d> GetTileCells()
