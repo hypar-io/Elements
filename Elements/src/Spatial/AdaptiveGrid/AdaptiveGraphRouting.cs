@@ -107,9 +107,9 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <param name="mainLayer">Elevation at which route prefers to travel.</param>
             /// <param name="layerPenalty">Penalty if route travels through an elevation different from MainLayer.</param>
             /// <param name="supportedAngles">List of angles route can turn.</param>
-            public RoutingConfiguration(double turnCost = 1,
+            public RoutingConfiguration(double turnCost = 0,
                                         double mainLayer = 0,
-                                        double layerPenalty = 2,
+                                        double layerPenalty = 1,
                                         List<double> supportedAngles = null)
             {
                 TurnCost = turnCost;
@@ -833,7 +833,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     angle = 180 - angle;
                 }
 
-                if (_configuration.SupportedAngles != null && 
+                if (_configuration.SupportedAngles != null &&
                     !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle)))
                 {
                     weights[e.Id] = (w, double.PositiveInfinity);
@@ -842,7 +842,12 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     double hintFactor = 1;
                     double offsetFactor = 1;
-                    double layerFactor = OnMainLayer(v0, v1) ? 1 : _configuration.LayerPenalty;
+                    double layerFactor = 1;
+                    if (_configuration.LayerPenalty != 1 && !OnMainLayer(v0, v1))
+                    {
+                        layerFactor = _configuration.LayerPenalty;
+                    }
+
                     if (hintLines != null && hintLines.Any())
                     {
                         foreach (var l in hintLines)
@@ -1077,7 +1082,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     //User defined filter functions
-                    if(_filters.Any(f => !f(vertex, v)))
+                    if (_filters.Any(f => !f(vertex, v)))
                     {
                         continue;
                     }
