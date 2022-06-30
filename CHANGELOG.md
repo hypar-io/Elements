@@ -5,6 +5,7 @@
 ### Added
 - `Material` now supports a `DrawInFront` property.
 - `TiledCeiling.GetTileCells()`
+- `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 
 ### Changed
 
