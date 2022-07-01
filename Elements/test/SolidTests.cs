@@ -731,64 +731,6 @@ namespace Elements.Tests
             Assert.Equal(14, result.Faces.Count);
         }
 
-        [Fact]
-        public void ModelIntersects()
-        {
-            this.Name = nameof(ModelIntersects);
-
-            var json = File.ReadAllText("../../../models/Geometry/tower.json");
-            var model = Model.FromJson(json, out var errors);
-
-            model.UpdateRepresentations();
-
-            var xSectPlane = new Plane(new Vector3(0, 0, 1.5), Vector3.ZAxis);
-            Section(xSectPlane, model, this.Model);
-        }
-
-        private static void Section(Plane xSectPlane, Model sectionModel, Model outModel = null)
-        {
-            sectionModel.Intersect(xSectPlane, out var polys, out var behind, out var lines);
-
-            foreach (var behinder in behind)
-            {
-                var behindModelCurves = behinder.Value.Select(b => new ModelCurve(b));
-                if (outModel != null)
-                {
-                    outModel.AddElements(behindModelCurves);
-                }
-                else
-                {
-                    sectionModel.AddElements(behindModelCurves);
-                }
-            }
-
-            foreach (var poly in polys)
-            {
-                var polyModelCurves = poly.Value.Select(p => new Panel(p, BuiltInMaterials.Black));
-                if (outModel != null)
-                {
-                    outModel.AddElements(polyModelCurves);
-                }
-                else
-                {
-                    sectionModel.AddElements(polyModelCurves);
-                }
-            }
-
-            foreach (var line in lines)
-            {
-                var lineCurves = line.Value.Select(l => new ModelCurve(l));
-                if (outModel != null)
-                {
-                    outModel.AddElements(lineCurves);
-                }
-                else
-                {
-                    sectionModel.AddElements(lineCurves);
-                }
-            }
-        }
-
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }

@@ -117,6 +117,7 @@ docfx -f --serve
 - [NJsonSchema](https://github.com/RicoSuter/NJsonSchema)
 - [Csg](https://github.com/praeclarum/Csg) We work with a customized fork of this project.  Currently using branch `hypars-branch`
 - [NetOctree](https://github.com/mcserep/NetOctree)
+- [Svg.NET](https://github.com/svg-net/SVG)
 
 ## Updating the Changelog
 We use [`CHANGELOG.md`](CHANGELOG.md) to provide a list of changes to Elements. The easiest way to compile this log for new releases is to look at the commits that occurred between changes. This can be done as follows: `git log --pretty=oneline v0.3.6...v0.3.7`, where the tags are changed appropriately.
