@@ -9,6 +9,8 @@
 - `EdgeExtensions.Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)`
 - `RelationToPlane` enum.
 - `BBox3.Intersects(Plane plane, out RelationToPlane relationToPlane)`
+- `BBox3.Extend(Vector3 point)`
+- `BBox3.Extend(params Vector3[] points)`
 
 ### Changed
 
