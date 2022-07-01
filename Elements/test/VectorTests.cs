@@ -502,5 +502,19 @@ namespace Elements.Tests
             var b = new Vector3(3, 2, 1);
             Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
         }
+
+        [Fact]
+        public void ClosestPointOnInfiniteLine()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(10, 10));
+            
+            Assert.True(new Vector3(2, 8).ClosestPointOn(line, true).IsAlmostEqualTo(new Vector3(5, 5)));
+            
+            var vector = new Vector3(-2, -8);
+            var closestPointSegment = vector.ClosestPointOn(line);
+            var closestPointInfinite = vector.ClosestPointOn(line, true);
+            Assert.True(closestPointSegment.IsAlmostEqualTo(new Vector3(0, 0)));
+            Assert.True(closestPointInfinite.IsAlmostEqualTo(new Vector3(-5, -5)));
+        }
     }
 }
