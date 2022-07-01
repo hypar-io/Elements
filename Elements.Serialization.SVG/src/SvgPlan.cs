@@ -48,6 +48,42 @@ namespace Elements.Serialization.SVG
             doc.Write(stream);
         }
 
+        /// <summary>
+        /// Generate a plan of a model at the provided elevation.
+        /// </summary>
+        /// <param name="models">A collection of models to include in the plan.</param>
+        /// <param name="elevation">The elevation at which the plan will be cut.</param>
+        /// <param name="path">The location on disk to write the SVG file.</param>
+        /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
+        public static SvgDocument CreatePlanFromModels(IList<Model> models,
+                                                double elevation,
+                                                SvgContext frontContext,
+                                                SvgContext backContext,
+                                                bool showGrid = true,
+                                                double gridHeadExtension = 2.0,
+                                                double gridHeadRadius = 0.5)
+        {
+            var doc = new SvgDocument
+            {
+                Fill = SvgPaintServer.None
+            };
+
+            var sceneBounds = ComputeSceneBounds(models);
+
+            var plane = new Plane(new Vector3(0, 0, elevation), Vector3.ZAxis);
+            Draw(models,
+                 sceneBounds,
+                 plane,
+                 doc,
+                 frontContext,
+                 backContext,
+                 showGrid,
+                 gridHeadExtension,
+                 gridHeadRadius);
+
+            return doc;
+        }
+
         private static void Draw(IList<Model> models,
                                  BBox3 sceneBounds,
                                  Plane plane,
