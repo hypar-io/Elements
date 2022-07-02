@@ -31,7 +31,7 @@ namespace Elements.Serialization.SVG.Tests
                                             3,
                                             _frontContext,
                                             _backContext,
-                                            "ModelPlan.svg");
+                                            "ModelPlan.svg", planRotation: PlanRotation.None);
         }
     }
 }

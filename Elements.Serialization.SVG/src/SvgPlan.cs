@@ -8,6 +8,14 @@ using Colors = System.Drawing.Color;
 
 namespace Elements.Serialization.SVG
 {
+    public enum PlanRotation
+    {
+        LongestGridHorizontal,
+        LongestGridVertical,
+        None,
+        Angle,
+    }
+
     public static class SvgSection
     {
         /// <summary>
@@ -24,12 +32,17 @@ namespace Elements.Serialization.SVG
                                                 string path,
                                                 bool showGrid = true,
                                                 double gridHeadExtension = 2.0,
-                                                double gridHeadRadius = 0.5)
+                                                double gridHeadRadius = 0.5,
+                                                PlanRotation planRotation = PlanRotation.Angle,
+                                                double planRotationDegrees = 0.0)
         {
+            var rotation = GetRotationValueForPlan(models, planRotation, planRotationDegrees);
+
             var doc = new SvgDocument
             {
                 Fill = SvgPaintServer.None
             };
+            doc.CustomAttributes.Add("transform", $"rotate({rotation} 0 0)");
 
             var sceneBounds = ComputeSceneBounds(models);
 
@@ -42,7 +55,8 @@ namespace Elements.Serialization.SVG
                  backContext,
                  showGrid,
                  gridHeadExtension,
-                 gridHeadRadius);
+                 gridHeadRadius,
+                 rotation);
 
             using var stream = new FileStream(path, FileMode.Create, FileAccess.Write);
             doc.Write(stream);
@@ -61,12 +75,18 @@ namespace Elements.Serialization.SVG
                                                 SvgContext backContext,
                                                 bool showGrid = true,
                                                 double gridHeadExtension = 2.0,
-                                                double gridHeadRadius = 0.5)
+                                                double gridHeadRadius = 0.5,
+                                                PlanRotation planRotation = PlanRotation.Angle,
+                                                double planRotationDegrees = 0.0
+                                                )
         {
+            var rotation = GetRotationValueForPlan(models, planRotation, planRotationDegrees);
+
             var doc = new SvgDocument
             {
                 Fill = SvgPaintServer.None
             };
+            doc.CustomAttributes.Add("transform", $"rotate({rotation} 0 0)");
 
             var sceneBounds = ComputeSceneBounds(models);
 
@@ -79,9 +99,35 @@ namespace Elements.Serialization.SVG
                  backContext,
                  showGrid,
                  gridHeadExtension,
-                 gridHeadRadius);
+                 gridHeadRadius,
+                 rotation);
 
             return doc;
+        }
+
+        private static double GetRotationValueForPlan(IList<Model> models, PlanRotation rotation, double angle)
+        {
+            if (rotation == PlanRotation.Angle)
+            {
+                return angle;
+            }
+
+            var grids = models.SelectMany(m => m.AllElementsOfType<GridLine>()).Select(gl => gl.Curve).Where(gl => gl is Line).ToList();
+            if (!grids.Any())
+            {
+                return 0.0;
+            }
+
+            var longest = (Line)grids.OrderBy(g => g.Length()).First();
+
+            return rotation switch
+            {
+                PlanRotation.LongestGridHorizontal => -longest.Direction().PlaneAngleTo(Vector3.YAxis),
+                PlanRotation.LongestGridVertical => -longest.Direction().PlaneAngleTo(Vector3.XAxis),
+                PlanRotation.Angle => angle,
+                PlanRotation.None => 0.0,
+                _ => 0.0,
+            };
         }
 
         private static void Draw(IList<Model> models,
@@ -92,7 +138,8 @@ namespace Elements.Serialization.SVG
                                  SvgContext backContext,
                                  bool showGrid,
                                  double gridHeadExtension,
-                                 double gridHeadRadius)
+                                 double gridHeadRadius,
+                                 double rotation)
         {
             var gridContext = new SvgContext()
             {
@@ -130,10 +177,24 @@ namespace Elements.Serialization.SVG
             var w = (float)(sceneBounds.Max.X - sceneBounds.Min.X);
             var h = (float)(sceneBounds.Max.Y - sceneBounds.Min.Y);
 
-            foreach (var model in models)
+            if (rotation == 0.0)
             {
                 doc.ViewBox = new SvgViewBox(0, 0, w, h);
+            }
+            else
+            {
+                // Compute a new bounding box around the rotated
+                // bounding box, to ensure that we our viewbox isn't too small.
+                var t = new Transform(Vector3.Origin);
+                t.Rotate(rotation);
+                var bounds = new BBox3(sceneBounds.Corners().Select(v => t.OfPoint(v)));
+                w = (float)(bounds.Max.X - bounds.Min.X);
+                h = (float)(bounds.Max.Y - bounds.Min.Y);
+                doc.ViewBox = new SvgViewBox(0, 0, w, h);
+            }
 
+            foreach (var model in models)
+            {
                 model.Intersect(plane,
                                         out Dictionary<Guid, List<Polygon>> intersecting,
                                         out Dictionary<Guid, List<Polygon>> back,
@@ -179,17 +240,24 @@ namespace Elements.Serialization.SVG
                         StrokeWidth = gridContext.StrokeWidth
                     });
 
+                    var x = line.Value.Start.X.ToXUserUnit(sceneBounds.Min);
+                    var y = line.Value.Start.Y.ToYUserUnit(h, sceneBounds.Min);
+
                     var text = new SvgText(line.Key.ToString())
                     {
-                        X = new SvgUnitCollection() { line.Value.Start.X.ToXUserUnit(sceneBounds.Min) },
-                        Y = new SvgUnitCollection() { line.Value.Start.Y.ToYUserUnit(h, sceneBounds.Min) },
+                        X = new SvgUnitCollection() { x },
+                        Y = new SvgUnitCollection() { y },
                         FontStyle = SvgFontStyle.Normal,
                         FontSize = new SvgUnit(SvgUnitType.User, 0.5f),
                         FontFamily = "Arial",
                         Fill = new SvgColourServer(Colors.Black),
                         TextAnchor = SvgTextAnchor.Middle,
-                        BaselineShift = (-0.2).ToString()
+                        BaselineShift = (-0.2).ToString(), // TODO: Bit of a magic number here to center the text
                     };
+
+                    // TODO: Figure out how to add the transform-origin attribute
+                    // text.CustomAttributes.Add("transform-origin", $"{x * -1} {y * -1}");
+                    text.CustomAttributes.Add("transform", $"rotate({-1 * rotation} {x} {y})");
                     doc.Children.Add(text);
                 }
             }
