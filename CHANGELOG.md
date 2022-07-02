@@ -3,6 +3,7 @@
 ## 1.0.2
 
 ### Added
+
 - `Material` now supports a `DrawInFront` property.
 - `Model.Intersect(Plane plane, out List<Geometry.Polygon> intersectionPolygons, out List<Geometry.Polygon> beyondPolygons)`
 - `GeometricElement.UpdateBoundsAndCsg()`
@@ -11,21 +12,29 @@
 - `BBox3.Intersects(Plane plane, out RelationToPlane relationToPlane)`
 - `BBox3.Extend(Vector3 point)`
 - `BBox3.Extend(params Vector3[] points)`
+- `TiledCeiling.GetTileCells()`
+- `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
+- `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.
+- Default values for `AdaptiveGraphRouting.RoutingConfiguration` constructor.
 
 ### Changed
 
 - `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
 - `Vector3.AreCollinear` are renamed into `Vector3.AreCollinearByDistance` and added `tolerance` parameter.
 - `Line.Trim` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
 - `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
+- `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 
 ## 1.0.1
 
 ### Added
+
 - `Dimension`
 - `LinearDimension`
 - `AlignedDimension`
