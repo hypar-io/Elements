@@ -669,6 +669,64 @@ namespace Elements.Geometry.Tests
             Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
         }
 
+        [Fact]
+        public void BestFitLine()
+        {
+            // points symmetrical about the expected horizontal line
+            var points0 = new[]
+            {
+                new Vector3(0, 0),
+                new Vector3(0, 4),
+                new Vector3(2, 1),
+                new Vector3(2, 3),
+                new Vector3(4, 1),
+                new Vector3(4, 3),
+                new Vector3(6, 0),
+                new Vector3(6, 4)
+            };
+            var line0 = Line.BestFit(points0);
+            Assert.Equal(line0, new Line(new Vector3(0, 2), new Vector3(6, 2)));
+
+            // collinear points
+            var points1 = new[]
+            {
+                new Vector3(1, 1),
+                new Vector3(1.25, 2),
+                new Vector3(1.5, 3),
+                new Vector3(2, 5)
+            };
+            var line1 = Line.BestFit(points1);
+            Assert.Equal(new Line(points1[0], points1[3]), line1);
+
+            // points symmetrical about the expected vertical line
+            var points2 = new[]
+           {
+                new Vector3(0, 0),
+                new Vector3(0, 2),
+                new Vector3(0, 4),
+                new Vector3(2, 0),
+                new Vector3(2, 2),
+                new Vector3(2, 4)
+            };
+            var line2 = Line.BestFit(points2);
+            Assert.Equal(line2, new Line(new Vector3(1, 0), new Vector3(1, 4)));
+
+            // random points
+            var points3 = new[]
+            {
+                new Vector3(1.21,1.69),
+                new Vector3(3,5.89),
+                new Vector3(5.16,4.11),
+                new Vector3(8.31,5.49),
+                new Vector3(10.21,8.65)
+            };
+            var line3 = Line.BestFit(points3);
+            var mCoef = 0.5615;
+            var bCoef = 2.034;
+            Assert.True(line3.PointOnLine(new Vector3(2, mCoef * 2 + bCoef)));
+            Assert.True(line3.PointOnLine(new Vector3(7, mCoef * 7 + bCoef)));
+        }
+
         [Theory]
         [MemberData(nameof(ProjectedData))]
         public void Projected(Line line, Plane plane, Line expectedLine)

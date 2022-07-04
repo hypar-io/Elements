@@ -5,6 +5,8 @@
 ### Added
 - `Material` now supports a `DrawInFront` property.
 - `TiledCeiling.GetTileCells()`
+- `Line.BestFit(IList<Vector3> points)`
+- `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
 
 ### Changed
 
