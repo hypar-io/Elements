@@ -56,7 +56,6 @@ namespace Elements
         /// <summary>
         /// Should objects with this material be drawn in front of all other objects?
         /// </summary>
-        [JsonProperty("Draw In Front", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public bool DrawInFront { get; set; } = false;
 
         /// <summary>

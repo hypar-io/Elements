@@ -556,7 +556,7 @@ namespace Elements.Tests
         public void NoTrimmedCells()
         {
             var json = File.ReadAllText("../../../models/Geometry/badGridTrimmed.json");
-            var grid = JsonConvert.DeserializeObject<Grid2d>(json);
+            var grid = JsonSerializer.Deserialize<Grid2d>(json);
             foreach (var c in grid.GetCells())
             {
                 Assert.False(c.IsTrimmed());

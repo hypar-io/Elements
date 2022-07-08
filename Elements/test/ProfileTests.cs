@@ -532,8 +532,8 @@ namespace Elements.Tests
             Name = nameof(SplitComplexProfileWithInnerVoids);
             var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
             var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
-            var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
-            var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
+            var profiles = JsonSerializer.Deserialize<List<Profile>>(profileJson);
+            var segments = JsonSerializer.Deserialize<List<Line>>(segmentsJson);
             var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
             // Value determined experimentally. If this test breaks, verify output visually —
             // it's not necessarily the end of the world if the number changes slightly, but we want to
