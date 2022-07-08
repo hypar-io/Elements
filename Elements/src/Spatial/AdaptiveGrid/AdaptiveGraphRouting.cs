@@ -106,12 +106,20 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <param name="turnCost">Travel cost penalty if route changes it's direction.</param>
             /// <param name="mainLayer">Elevation at which route prefers to travel.</param>
             /// <param name="layerPenalty">Penalty if route travels through an elevation different from MainLayer.</param>
-            public RoutingConfiguration(double turnCost, double mainLayer,
-                double layerPenalty)
+            /// <param name="supportedAngles">List of angles route can turn.</param>
+            public RoutingConfiguration(double turnCost = 0,
+                                        double mainLayer = 0,
+                                        double layerPenalty = 1,
+                                        List<double> supportedAngles = null)
             {
                 TurnCost = turnCost;
                 MainLayer = mainLayer;
                 LayerPenalty = layerPenalty;
+                SupportedAngles = supportedAngles;
+                if (SupportedAngles != null && !SupportedAngles.Contains(0))
+                {
+                    SupportedAngles.Add(0);
+                }
             }
 
             /// <summary>
@@ -128,6 +136,13 @@ namespace Elements.Spatial.AdaptiveGrid
             /// Travel cost penalty if route travels through an elevation different from MainLayer.
             /// </summary>
             public readonly double LayerPenalty;
+
+            /// <summary>
+            /// List of angles route can turn. Angles are between 0 and 90. 0 is auto-included.
+            /// For turn angle bigger than 90 degrees - 180 degrees minus angle is checked.
+            /// For example, 135 is the same as 45.
+            /// </summary>
+            public readonly List<double> SupportedAngles;
         }
 
         /// <summary>
@@ -149,6 +164,15 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Filter function definition.
+        /// </summary>
+        /// <param name="start">Last Vertex in the route.</param>
+        /// <param name="end">Candidate for the next Vertex in the route.</param>
+        /// <returns></returns>
+        public delegate bool RoutingFilter(Vertex start, Vertex end);
+        private List<RoutingFilter> _filters = new List<RoutingFilter>();
+
+        /// <summary>
         /// Create AdaptiveGraphRouting objects and store core parameters for further use.
         /// </summary>
         /// <param name="grid">AdaptiveGrid the algorithm travels through.</param>
@@ -162,6 +186,16 @@ namespace Elements.Spatial.AdaptiveGrid
             //global information line boundaries, points, lines and obstacles.
             _grid = grid;
             _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Routing supports checking if a Vertex can be added to the path.
+        /// New vertex must pass all filter functions to be accepted. 
+        /// </summary>
+        /// <param name="f">New filter function.</param>
+        public void AddRoutingFilter(RoutingFilter f)
+        {
+            _filters.Add(f);
         }
 
         /// <summary>
@@ -785,37 +819,58 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<RoutingHintLine> hintLines)
         {
             var weights = new Dictionary<ulong, (double Length, double Factor)>();
+            var mainAxis = _grid.Transform.XAxis;
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
                 var v1 = _grid.GetVertex(e.EndId);
+                var vector = (v1.Point - v0.Point);
+                var w = vector.Length();
 
-                double hintFactor = 1;
-                double offsetFactor = 1;
-                double layerFactor = OnMainLayer(v0, v1) ? 1 : _configuration.LayerPenalty;
-                if (hintLines != null && hintLines.Any())
+                var angle = vector.AngleTo(mainAxis);
+                if (angle > 90)
                 {
-                    foreach (var l in hintLines)
+                    angle = 180 - angle;
+                }
+
+                if (_configuration.SupportedAngles != null &&
+                    !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle)))
+                {
+                    weights[e.Id] = (w, double.PositiveInfinity);
+                }
+                else
+                {
+                    double hintFactor = 1;
+                    double offsetFactor = 1;
+                    double layerFactor = 1;
+                    if (_configuration.LayerPenalty != 1 && !OnMainLayer(v0, v1))
                     {
-                        if (IsAffectedBy(v0.Point, v1.Point, l))
+                        layerFactor = _configuration.LayerPenalty;
+                    }
+
+                    if (hintLines != null && hintLines.Any())
+                    {
+                        foreach (var l in hintLines)
                         {
-                            //If user defined and default hints are overlapped,
-                            //we want path to be aligned with default hints.
-                            //To achieve this to factors are combined.
-                            if (l.UserDefined)
+                            if (IsAffectedBy(v0.Point, v1.Point, l))
                             {
-                                hintFactor = Math.Min(l.Factor, hintFactor);
-                            }
-                            else
-                            {
-                                offsetFactor = Math.Min(l.Factor, offsetFactor);
+                                //If user defined and default hints are overlapped,
+                                //we want path to be aligned with default hints.
+                                //To achieve this to factors are combined.
+                                if (l.UserDefined)
+                                {
+                                    hintFactor = Math.Min(l.Factor, hintFactor);
+                                }
+                                else
+                                {
+                                    offsetFactor = Math.Min(l.Factor, offsetFactor);
+                                }
                             }
                         }
                     }
-                }
 
-                var w = (_grid.GetVertex(e.StartId).Point - _grid.GetVertex(e.EndId).Point).Length();
-                weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                    weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                }
             }
 
             return weights;
@@ -886,7 +941,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 foreach (var e in vertex.Edges)
                 {
                     var edgeWeight = edgeWeights[e.Id];
-                    if (edgeWeight.Length < 0)
+                    if (edgeWeight.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }
@@ -899,12 +954,25 @@ namespace Elements.Spatial.AdaptiveGrid
                         continue;
                     }
 
+                    //Don't go back to where we just came from.
+                    var beforeId = path[u];
+                    if (beforeId == v.Id)
+                    {
+                        continue;
+                    }
+
                     //All vertices that can be reached from start vertex are visited.
                     //Ignore once only unreachable are left.
                     var cost = travelCost[u];
                     if (cost == double.MaxValue)
                     {
                         break;
+                    }
+
+                    //User defined filter functions
+                    if (_filters.Any(f => !f(vertex, v)))
+                    {
+                        continue;
                     }
 
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
@@ -917,21 +985,21 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (u == start)
                     {
                         if (startDirection.HasValue &&
-                            !AreCollinearInplace(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
+                            !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
                     {
-                        var vertexBefore = _grid.GetVertex(path[u]);
-                        if (!AreCollinearInplace(vertexBefore.Point, vertex.Point, v.Point))
+                        var vertexBefore = _grid.GetVertex(beforeId);
+                        if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, vertexBefore.Id, edgeWeights);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
-                            !AreCollinearInplace(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
+                            !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, v, vertexAfter.Value, edgeWeights);
                         }
@@ -968,7 +1036,7 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
             PriorityQueue<ulong> pq = PreparePriorityQueue(
-                start, out Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> path,
+                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Rigth)> path,
                 out travelCost);
 
             while (!pq.Empty())
@@ -985,7 +1053,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 foreach (var e in vertex.Edges)
                 {
                     var edgeWeight = edgeWeights[e.Id];
-                    if (edgeWeight.Length < 0)
+                    if (edgeWeight.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }
@@ -998,12 +1066,25 @@ namespace Elements.Spatial.AdaptiveGrid
                         continue;
                     }
 
+                    //Don't go back to where we just came from.
+                    var before = path[u];
+                    if (before.Left.Id == v.Id || before.Rigth.Id == v.Id)
+                    {
+                        continue;
+                    }
+
                     //All vertices that can be reached from start vertex are visited.
                     //Ignore once only unreachable are left.
                     var cost = travelCost[u];
                     if (cost.Item1 == double.MaxValue)
                     {
                         break;
+                    }
+
+                    //User defined filter functions
+                    if (_filters.Any(f => !f(vertex, v)))
+                    {
+                        continue;
                     }
 
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
@@ -1017,7 +1098,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (u == start)
                     {
                         if (startDirection.HasValue &&
-                            !AreCollinearInplace(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
+                            !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
                             newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
                         }
@@ -1026,9 +1107,8 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         //For each of two stored branches - edges connected to active one.
                         //Add turn cost if the direction is changed.
-                        var before = path[u];
-                        var leftBefore = _grid.GetVertex(before.Item1.Item1);
-                        var leftCollinear = AreCollinearInplace(leftBefore.Point, vertex.Point, v.Point);
+                        var leftBefore = _grid.GetVertex(before.Left.Id);
+                        var leftCollinear = Vector3.AreCollinearByAngle(leftBefore.Point, vertex.Point, v.Point);
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
@@ -1037,11 +1117,11 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
 
                         var rigthCost = Double.MaxValue;
-                        if (before.Item2.Item1 != 0)
+                        if (before.Rigth.Id != 0)
                         {
-                            var rigthBefore = _grid.GetVertex(before.Item2.Item1);
+                            var rigthBefore = _grid.GetVertex(before.Rigth.Id);
                             rigthCost = cost.Item2 + newWeight;
-                            if (!AreCollinearInplace(rigthBefore.Point, vertex.Point, v.Point))
+                            if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
                                 rigthCost += CalculateTurnCost(
                                     edgeWeight.Factor, vertex, rigthBefore.Id, edgeWeights);
@@ -1069,7 +1149,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (newWeight < oldCost.Item1)
                     {
                         travelCost[id] = (newWeight, oldCost.Item1);
-                        path[id] = ((u, bestBranch), oldPath.Item1);
+                        path[id] = ((u, bestBranch), oldPath.Left);
                         if (oldCost.Item1 == double.MaxValue)
                         {
                             //When we first meet the vertex we need to slow it down to allow
@@ -1375,7 +1455,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (before1 != 0)
                         {
                             var beforeV1 = _grid.GetVertex(before.Item1.Item1);
-                            if (!AreCollinearInplace(beforeV1.Point, activeV.Point, nextV.Point))
+                            if (!Vector3.AreCollinearByAngle(beforeV1.Point, activeV.Point, nextV.Point))
                             {
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV1.Id || e.EndId == beforeV1.Id).First();
@@ -1387,7 +1467,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (before2 != 0)
                         {
                             var beforeV2 = _grid.GetVertex(before.Item2.Item1);
-                            if (!AreCollinearInplace(beforeV2.Point, activeV.Point, nextV.Point))
+                            if (!Vector3.AreCollinearByAngle(beforeV2.Point, activeV.Point, nextV.Point))
                             {
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV2.Id || e.EndId == beforeV2.Id).First();
@@ -1428,36 +1508,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 Compare(v, travelCost, ref bestCost, ref bestIndex);
             }
             return bestIndex;
-        }
-
-        //This is the same as Vector3.AreCollinear but avoiding all expensive validations.
-        private bool AreCollinearInplace(Vector3 a, Vector3 b, Vector3 c)
-        {
-            var baX = b.X - a.X;
-            var baY = b.Y - a.Y;
-            var baZ = b.Z - a.Z;
-            var baLength = Math.Sqrt(Math.Pow(baX, 2) + Math.Pow(baY, 2) + Math.Pow(baZ, 2));
-            if (baLength < Vector3.EPSILON)
-            {
-                return true;
-            }
-            baX = baX / baLength;
-            baY = baY / baLength;
-            baZ = baZ / baLength;
-
-            var cbX = c.X - b.X;
-            var cbY = c.Y - b.Y;
-            var cbZ = c.Z - b.Z;
-            var cbLength = Math.Sqrt(Math.Pow(cbX, 2) + Math.Pow(cbY, 2) + Math.Pow(cbZ, 2));
-            if (cbLength < Vector3.EPSILON)
-            {
-                return true;
-            }
-            cbX = cbX / cbLength;
-            cbY = cbY / cbLength;
-            cbZ = cbZ / cbLength;
-
-            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > (1 - Vector3.EPSILON);
         }
 
         private void CombinePath(List<ulong> mainPath, List<ulong> newPortion)

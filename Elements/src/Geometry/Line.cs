@@ -305,13 +305,13 @@ namespace Elements.Geometry
             // construct a plane through this line and the start or end of the other line
             Plane plane;
             Vector3 testpoint;
-            if (!(new[] { start1, end1, start2 }).AreCollinear())
+            if (!(new[] { start1, end1, start2 }).AreCollinearByDistance())
             {
                 plane = new Plane(start1, end1, start2);
                 testpoint = end2;
 
             } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
-            else if (!(new[] { start1, end1, end2 }).AreCollinear())
+            else if (!(new[] { start1, end1, end2 }).AreCollinearByDistance())
             {
                 plane = new Plane(start1, end1, end2);
                 testpoint = start2;
@@ -419,14 +419,18 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var length = d.Length();
+            var dMin = tMin * length;
+            var dMax = tMax * length;
+
             // Check if found parameters are within normalized line range.
-            if (infinite || (tMin > -Vector3.EPSILON && tMin < 1 + Vector3.EPSILON))
+            if (infinite || (dMin > -Vector3.EPSILON && dMin < length + Vector3.EPSILON))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > Vector3.EPSILON &&
-                (infinite || (tMax > -Vector3.EPSILON && tMax < 1 + Vector3.EPSILON)))
+            if (Math.Abs(dMax - dMin) > Vector3.EPSILON &&
+                (infinite || (dMax > -Vector3.EPSILON && dMax < length + Vector3.EPSILON)))
             {
                 results.Add(Start + d * tMax);
             }
@@ -703,7 +707,7 @@ namespace Elements.Geometry
                 // We want to extend only to the first corner of the other lines,
                 // not all the way through to the other end
                 if (segment.Direction().IsParallelTo(testLine.Direction(), tolerance) && // if the two lines are parallel
-                    (new[] { segment.End, segment.Start, testLine.Start, testLine.End }).AreCollinear())// and collinear
+                    (new[] { segment.End, segment.Start, testLine.Start, testLine.End }).AreCollinearByDistance())// and collinear
                 {
                     if (!this.PointOnLine(segment.End, true))
                     {
@@ -836,19 +840,26 @@ namespace Elements.Geometry
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
         /// <param name="includeCoincidenceAtEdge">Include coincidence at edge as inner segment.</param>
+        /// <param name="infinite">Treat the line as infinite?</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
-        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false)
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false, bool infinite = false)
         {
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
             // Make lists to hold points of intersection
             var intersections = new List<Vector3>();
 
-            // Add the segment's starting point.
-            intersections.Add(this.Start);
-            polygon.Contains(this.Start, out var containment);
-            var StartsOutsidePolygon = containment == Containment.Outside;
+            var startsOutsidePolygon = false;
+            var hasVertexIntersections = false;
+            var containment = Containment.Outside;
 
-            var hasVertexIntersections = containment == Containment.CoincidesAtVertex;
+            if (!infinite)
+            {
+                // Add the segment's starting point.
+                intersections.Add(this.Start);
+                polygon.Contains(this.Start, out containment);
+                startsOutsidePolygon = containment == Containment.Outside;
+                hasVertexIntersections = containment == Containment.CoincidesAtVertex;
+            }
 
             // Examine the polygon's edges.
             for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
@@ -858,29 +869,47 @@ namespace Elements.Geometry
 
                 // See where the edge intersects the segment.
                 var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
-                var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
+                // This will return false for intersections exactly at an end if line is not infinite
+                var segmentsIntersect = Intersects(segment, out Vector3 intersection, infinite);
 
-                // See if the segment intersects the edge.
-                if (segmentsIntersect)
+                if (infinite)
                 {
-                    // Record this intersection.
-                    intersections.Add(intersection);
+                    if (segmentsIntersect)
+                    {
+                        intersections.Add(intersection);
+                        if (Vector3.AreCollinearByDistance(Start, End, polygon.Vertices[i1]))
+                        {
+                            hasVertexIntersections = true;
+                        }
+                    }
                 }
-                // see if the segment intersects at a vertex
-                else if (this.PointOnLine(polygon.Vertices[i1]))
+                else
                 {
-                    intersections.Add(polygon.Vertices[i1]);
-                    hasVertexIntersections = true;
+                    // See if the segment intersects the edge.
+                    if (segmentsIntersect)
+                    {
+                        // Record this intersection.
+                        intersections.Add(intersection);
+                    }
+                    // see if the segment intersects at a vertex
+                    else if (this.PointOnLine(polygon.Vertices[i1]))
+                    {
+                        intersections.Add(polygon.Vertices[i1]);
+                        hasVertexIntersections = true;
+                    }
                 }
             }
 
-            // Add the segment's ending point.
-            intersections.Add(End);
+            if (!infinite)
+            {
+                // Add the segment's ending point.
+                intersections.Add(End);
+            }
 
-            var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
+            var intersectionsOrdered = intersections.OrderBy(v => (v - Start).Dot(Direction())).ToArray();
             var inSegments = new List<Line>();
             outsideSegments = new List<Line>();
-            var currentlyIn = !StartsOutsidePolygon;
+            var currentlyIn = !startsOutsidePolygon;
             for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
             {
                 var A = intersectionsOrdered[i];
@@ -998,7 +1027,7 @@ namespace Elements.Geometry
         public bool IsCollinear(Line line)
         {
             var vectors = new Vector3[] { Start, End, line.Start, line.End };
-            return vectors.AreCollinear();
+            return vectors.AreCollinearByDistance();
         }
 
         /// <summary>

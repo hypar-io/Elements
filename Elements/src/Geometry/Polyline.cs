@@ -293,7 +293,7 @@ namespace Elements.Geometry
 
             // At the first point, use either the next non-collinear edge or a cardinal direction to choose a normal.
             var previousDirection = new Vector3();
-            if (Vector3Extensions.AreCollinear(this.Vertices))
+            if (Vector3Extensions.AreCollinearByDistance(this.Vertices))
             {
                 // If the polyline is collinear, use whichever cardinal direction isn't collinear with it.
                 if (Math.Abs(nextDirection.Dot(Vector3.YAxis)) < 1 - Vector3.EPSILON)
