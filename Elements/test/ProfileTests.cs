@@ -529,6 +529,8 @@ namespace Elements.Tests
         [Fact]
         public void SplitComplexProfileWithInnerVoids()
         {
+            throw new Exception("This test fails during deserialization validation, and it can't be caught because the new deserializer doesn't handle exceptions. We need to figure this out before we release.");
+
             Name = nameof(SplitComplexProfileWithInnerVoids);
             var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
             var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
