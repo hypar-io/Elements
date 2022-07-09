@@ -61,7 +61,7 @@ public static class ElementsAPI
             var line = new Line(start, end);
             var c = new Color(r.NextDouble(), r.NextDouble(), r.NextDouble(), 1.0);
             var m = new Material(Guid.NewGuid().ToString(), c);
-            var beam = new Beam(line, profile, m);
+            var beam = new Beam(line, profile, null, m);
             model.AddElement(beam);
         }
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating test beams.");
