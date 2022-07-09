@@ -13,7 +13,7 @@ namespace Elements.Serialization.JSON
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class ElementConverter<T> : JsonConverter<T>
+    public class ElementConverter<T> : JsonConverter<T>
     {
         public bool ElementwiseSerialization { get; internal set; } = false;
 
