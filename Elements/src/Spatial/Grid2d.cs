@@ -172,7 +172,7 @@ namespace Elements.Spatial
             this.fromGrid = fromGrid;
             this.toGrid = toGrid;
             this.UDomainInternal = uDomainInternal;
-            this.VDomainInternal = uDomainInternal;
+            this.VDomainInternal = vDomainInternal;
             this.boundariesInGridSpace = boundariesInGridSpace;
             this.U = u;
             this.V = v;

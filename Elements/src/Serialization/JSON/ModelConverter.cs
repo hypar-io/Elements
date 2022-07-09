@@ -21,7 +21,7 @@ namespace Elements.Serialization.JSON
                 {
                     // TODO: This try/catch is only here to protect against
                     // situations like null property values when the serializer
-                    // expects a value. Unlike json.net, system.text.json doesn't
+                    // expects a value, or validation errors. Unlike json.net, system.text.json doesn't
                     // have null value handling on read. 
                     try
                     {

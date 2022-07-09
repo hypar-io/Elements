@@ -115,6 +115,5 @@ namespace Elements
                 return JsonSerializer.Deserialize<T>(doc, options);
             }
         }
-
     }
 }
