@@ -11,10 +11,10 @@ done
 
 if [ $configuration == 'release' ]
 then
-    source='./bin/Release/net6.0/publish/wwwroot/_framework'
+    source='./bin/Release/net6.0/wwwroot/_framework'
 elif [ $configuration == 'debug'  ]
 then
-    source='./bin/Release/net6.0/wwwroot/_framework'
+    source='./bin/Debug/net6.0/wwwroot/_framework'
 else
     echo "The configuration, $configuration, is invalid. Only 'release' and 'debug' are supported."
     exit
