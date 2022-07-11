@@ -144,6 +144,7 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridSubtractBoxSmallDifference()
         {
+            var edgesNumber = 75;
             var adaptiveGrid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(new Vector3(-41, -51), new Vector3(-39, -49));
 
@@ -152,16 +153,73 @@ namespace Elements.Tests
             points.Add(new Vector3(-40, -49.80979, 1));
 
             adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 0), out _));
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 1), out _));
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 2), out _));
+            Assert.Equal(edgesNumber, adaptiveGrid.GetEdges().Count);
 
             var box = new BBox3(new Vector3(-40.2, -50.190211303259034, 0),
                                 new Vector3(-39.8, -49.809788696740966, 2));
             adaptiveGrid.SubtractBox(box);
+
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 0), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 1), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(-40, -49.9, 2), out _));
+            Assert.Equal(edgesNumber - 14, adaptiveGrid.GetEdges().Count);
         }
 
+        [Fact]
+        public void AdaptiveGridSubtractMisalignedPolygon()
+        {
+            var boundary = new Polygon(
+                new Vector3(-15.0, 49.599999999999994, 0), //TODO: Root cause of an issue, coordinates of boundary vertices are slightly misaligned
+                new Vector3(-45.0, 49.6, 0), 
+                new Vector3(-45.0, 0, 0), 
+                new Vector3(-15.0, 0, 0));
+
+            var obstacles = new List<BBox3>
+            { 
+                //Small box with x-axis aligned edges to subtract
+                new BBox3(new Vector3(-30.41029, 19.60979, 0), new Vector3(-29.58971, 20.39021, 0)),
+                //Big box intersecting one of the edges of boundary, it should remove edges and vertices 
+                new BBox3(new Vector3(-22.08622, 17.62839, 0), new Vector3(-8.57565, 38.31022, 0)),
+                //Small box with x-axis aligned edges to subtract and no vertices added to grid
+                new BBox3(new Vector3(-30.1, 40.79, 0), new Vector3(-29.7, 41.39021, 0)),
+            };
+
+            var points = new List<Vector3>()
+            {
+                new Vector3(-29.8, 40.540211303259035, 0),
+                new Vector3(-30.0, 49.599999999999994, 0),
+                new Vector3(-29.8, 41.540211303259035, 0),
+                
+                //1st BBox vertices
+                new Vector3(-30.41029, 19.60979, 0),
+                new Vector3(-29.58971, 19.60979, 0),
+                new Vector3(-29.58971, 20.39021, 0),
+                new Vector3(-30.41029, 20.39021, 0),
+                
+                //2nd BBox vertices inside polygon
+                new Vector3(-22.08622, 17.62839, 0),
+                new Vector3(-22.08622, 38.31022, 0)
+            };
+
+            var adaptiveGrid = new AdaptiveGrid();
+            adaptiveGrid.AddFromPolygon(boundary, points);
+
+            var edgesCount = adaptiveGrid.GetEdges().Count();
+            var verticiesCount = adaptiveGrid.GetVertices().Count();
+
+            foreach(var obstacle in obstacles)
+            {
+                adaptiveGrid.SubtractBox(obstacle);
+            }
+
+
+            Assert.Equal(edgesCount - 9, adaptiveGrid.GetEdges().Count);
+            Assert.Equal(verticiesCount - 2, adaptiveGrid.GetVertices().Count);
+        }
         [Fact]
         public void AdaptiveGridLongSectionDoNowThrow()
         {
