@@ -736,22 +736,21 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void FromAlignedBoundingBox2dAlongAxis()
         {
-            Name = "FromAlignedBoundingBox2dAlongAxis";
-            var rand = new Random();
-            for (var test = 0; test < 5; test++)
-            {
-                var basePt = new Vector3(test * 10, test * 10);
-                var pts = new List<Vector3>();
-                for (var i = 0; i < 20; i++)
-                {
-                    pts.Add(basePt + new Vector3(rand.NextDouble() * 10, rand.NextDouble() * 10));
-                }
-                var material = rand.NextMaterial();
-                var modelPts = pts.Select(p => new ModelCurve(new Circle(p, 0.2), material));
-                var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, new Vector3(1, test));
-                Model.AddElements(modelPts);
-                Model.AddElements(new ModelCurve(boundingRect, material));
-            }
+            Name = nameof(FromAlignedBoundingBox2dAlongAxis);
+            // handle random points test
+            var pts = new List<Vector3> {
+                new Vector3(2,1),
+                new Vector3(1,3),
+                new Vector3(5,5),
+                new Vector3(6,3),
+                new Vector3(2,2),
+                new Vector3(2.5,3),
+                new Vector3(4,3)
+            };
+            var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, pts[1] - pts[0]);
+            Assert.True(boundingRect.Area().ApproximatelyEquals(10));
+            Model.AddElements(pts.Select(p => new ModelCurve(new Circle(p, 0.2))));
+            Model.AddElements(new ModelCurve(boundingRect));
 
             // handle collinear points test
             var coPts = new List<Vector3> {

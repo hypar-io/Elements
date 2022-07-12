@@ -1832,7 +1832,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)
         {
-            if (minSideSize < 0 || minSideSize.ApproximatelyEquals(0))
+            if (minSideSize < Vector3.EPSILON)
             {
                 throw new ArgumentOutOfRangeException(nameof(minSideSize), "Must be greater than 0.");
             }
