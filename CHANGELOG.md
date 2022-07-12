@@ -3,8 +3,14 @@
 ## 1.0.2
 
 ### Added
+
 - `Material` now supports a `DrawInFront` property.
 - `TiledCeiling.GetTileCells()`
+- `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
+- `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.
+- Default values for `AdaptiveGraphRouting.RoutingConfiguration` constructor.
+- `Line.BestFit(IList<Vector3> points)`
+- `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 
 ### Changed
@@ -12,15 +18,19 @@
 - `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
 - `Vector3.AreCollinear` are renamed into `Vector3.AreCollinearByDistance` and added `tolerance` parameter.
 - `Line.Trim` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
 - `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
+- `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
+
 ## 1.0.1
 
 ### Added
+
 - `Dimension`
 - `LinearDimension`
 - `AlignedDimension`
