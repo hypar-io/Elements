@@ -26,18 +26,10 @@ namespace Elements.Serialization.JSON
 
                 foreach (var element in elementsElement.EnumerateObject())
                 {
-                    var discriminator = element.Value.GetProperty("discriminator").GetString();
-
-                    // TODO: This try/catch is only here to protect against
-                    // situations like null property values when the serializer
-                    // expects a value, or validation errors. Unlike json.net, system.text.json doesn't
-                    // have null value handling on read. 
-                    // try
-                    // {
-                    var id = Guid.Parse(element.Name);
                     Element e = null;
+                    var discriminator = element.Value.GetProperty("discriminator").GetString();
+                    var id = element.Value.GetProperty("Id").GetGuid();
                     element.Value.TryGetProperty("Name", out var nameProp);
-
                     string name;
                     {
                         name = nameProp.GetString();
@@ -132,12 +124,6 @@ namespace Elements.Serialization.JSON
                         elements.Add(id, e);
                         resolver.AddReference(id.ToString(), e);
                     }
-                    // }
-                    // catch (Exception ex)
-                    // {
-                    //     Console.WriteLine(ex.Message);
-                    //     continue;
-                    // }
                 }
 
                 var model = new Model(transform, elements);
@@ -145,7 +131,7 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        private Curve DeserializeCurve(JsonElement jsonCurve)
+        internal static Curve DeserializeCurve(JsonElement jsonCurve)
         {
             var discriminator = jsonCurve.GetProperty("discriminator").GetString();
             switch (discriminator)
