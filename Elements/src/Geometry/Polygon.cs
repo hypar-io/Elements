@@ -1857,9 +1857,9 @@ namespace Elements.Geometry
                 width = minSideSize / 2;
                 yOffset = minSideSize / 2;
             }
-            var boundary = Rectangle(new Vector3(box.Bounds.Min.X - xOffset, box.Bounds.Min.Y - yOffset, box.Bounds.Min.Z),
-                                     new Vector3(box.Bounds.Min.X + length, box.Bounds.Min.Y + width, box.Bounds.Min.Z))
-                           .TransformedPolygon(transform);
+            var boundary = Rectangle(new Vector3(box.Bounds.Min.X - xOffset, box.Bounds.Min.Y - yOffset),
+                                     new Vector3(box.Bounds.Min.X + length, box.Bounds.Min.Y + width))
+                          .TransformedPolygon(transform.Moved(new Vector3(0, 0, box.Bounds.Min.Z)));
             return boundary;
         }
 
