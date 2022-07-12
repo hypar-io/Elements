@@ -351,7 +351,7 @@ namespace Elements.Serialization.JSON
             return false;
         }
 
-        private void HandleReferenceId(JsonElement elementToDeserialize,
+        internal static void HandleReferenceId(JsonElement elementToDeserialize,
                                               Guid referencedId,
                                               ReferenceResolver resolver,
                                               JsonElement documentElements,

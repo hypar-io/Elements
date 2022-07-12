@@ -22,7 +22,7 @@ public static class ElementsAPI
     {
         Validator.DisableValidationOnConstruction = true;
 
-        var model = Model.FromJson(json);
+        var model = Model.GeometricElementModelFromJson(json);
         return Task.FromResult(model.ToBase64String());
     }
 
@@ -33,7 +33,7 @@ public static class ElementsAPI
 
         var sw = new Stopwatch();
         sw.Start();
-        var model = Model.FromJson(json);
+        var model = Model.GeometricElementModelFromJson(json);
         Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating the model from json.");
         sw.Restart();
         var result = Task.FromResult(model.ToGlTF());
@@ -59,21 +59,25 @@ public static class ElementsAPI
             var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var end = new Vector3(r.NextDouble() * size, r.NextDouble() * size, r.NextDouble() * size);
             var line = new Line(start, end);
-            var c = new Color(r.NextDouble(), r.NextDouble(), r.NextDouble(), 1.0);
-            var m = new Material(Guid.NewGuid().ToString(), c);
-            var beam = new Beam(line, profile, null, m);
+            // var c = new Color(r.NextDouble(), r.NextDouble(), r.NextDouble(), 1.0);
+            // var m = new Material(Guid.NewGuid().ToString(), c);
+            var beam = new Beam(line, profile, null, BuiltInMaterials.Steel);
             model.AddElement(beam);
         }
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating test beams.");
         sw.Restart();
 
-        // var json = model.ToJson();
-        // sb.AppendLine($"{sw.ElapsedMilliseconds}ms for serializing model.");
+        var json = model.ToJson();
+        sb.AppendLine($"{sw.ElapsedMilliseconds}ms for serializing model.");
+        sw.Restart();
+
+        // var baseModel = Model.FromJson(json);
+        // sb.AppendLine($"{sw.ElapsedMilliseconds}ms for deserializing model using base deserializer.");
         // sw.Restart();
 
-        // var newModel = Model.FromJson(json);
-        // sb.AppendLine($"{sw.ElapsedMilliseconds}ms for deserializing model.");
-        // sw.Restart();
+        var newModel = Model.GeometricElementModelFromJson(json);
+        sb.AppendLine($"{sw.ElapsedMilliseconds}ms for deserializing model using geometric elements");
+        sw.Restart();
 
         var result = model.ToGlTF();
         sb.AppendLine($"{sw.ElapsedMilliseconds}ms for creating the glb.");

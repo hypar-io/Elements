@@ -262,14 +262,45 @@ namespace Elements
             return exportModel;
         }
 
+        public static Model GeometricElementModelFromJson(string json)
+        {
+            Model model = null;
+            using (var document = JsonDocument.Parse(json))
+            {
+                JsonElement root = document.RootElement;
+                JsonElement elementsElement = root.GetProperty("Elements");
+
+                var options = new JsonSerializerOptions();
+
+                // Our custom reference handler will cache elements by id as
+                // they are deserialized, supporting reading elements by id
+                // from JSON.
+                var refHandler = new ElementReferenceHandler(null, elementsElement);
+                options.ReferenceHandler = refHandler;
+
+                // Use the model converter here so that we have a chance to 
+                // intercept the creation of elements when things go wrong.
+                // Using the model converter adds 100ms because it has to
+                // call deserialize for each element and trap if the element
+                // is null and report an error.
+                options.Converters.Add(new ModelToGeometricElementsConverter());
+
+                model = JsonSerializer.Deserialize<Model>(json, options);
+
+                // Resetting the reference handler, empties the internal
+                // elements cache.
+                refHandler.Reset(null, elementsElement);
+            }
+            
+            return model;
+        }
+
         /// <summary>
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
         public static Model FromJson(string json)
         {
-            var sw = new Stopwatch();
-            sw.Start();
             var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
 
             Model model = null;

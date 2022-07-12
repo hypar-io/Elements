@@ -8,11 +8,13 @@ namespace Elements.Benchmarks
     [MemoryDiagnoser]
     public class API
     {
+        private string _model;
+
         [Params(5, 50, 200, 500)]
         public int Value { get; set; }
 
-        [Benchmark(Description = "API Test Serialization")]
-        public void SerializeElementsToGlTF()
+        [GlobalSetup]
+        public void Setup()
         {
             var model = new Model();
             var r = new Random();
@@ -31,11 +33,13 @@ namespace Elements.Benchmarks
                 model.AddElement(beam);
             }
 
-            var json = model.ToJson();
+            _model = model.ToJson();
+        }
 
-            var newModel = Model.FromJson(json);
-
-            var result = model.ToGlTF();
+        [Benchmark(Description = "API Test Serialization")]
+        public void SerializeElementsToGlTF()
+        {
+            Model.GeometricElementModelFromJson(_model);
         }
     }
 }
