@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <!-- <RunAOTCompilation>true</RunAOTCompilation> -->
+    <RunAOTCompilation>false</RunAOTCompilation>
     <!-- Don't cache boot resources to avoid checksum failures for re-bundled files. -->
     <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
