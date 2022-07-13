@@ -186,11 +186,22 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void PerpendicularLines()
+        public void FigureEight()
         {
-            var p = Polygon.Rectangle(5, 5);
-            var pts = p.Segments().Intersections();
-            Assert.Single(pts);
+            this.Name = nameof(FigureEight);
+            var t = new Transform();
+            t.Rotate(Vector3.ZAxis, 0.0);
+
+            var a = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(10, 0, 0)));
+            var b = new Line(t.OfPoint(new Vector3(0, 5, 0)), t.OfPoint(new Vector3(10, 5, 0)));
+            var c = new Line(t.OfPoint(new Vector3(0, 10, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var d = new Line(t.OfPoint(new Vector3(5, 0, 0)), t.OfPoint(new Vector3(5, 5, 0)));
+            var e = new Line(t.OfPoint(new Vector3(5, 5, 0)), t.OfPoint(new Vector3(5, 10, 0)));
+            var f = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(0, 10, 0)));
+            var g = new Line(t.OfPoint(new Vector3(10, 0, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b, c, d, e, f, g }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
+            Assert.Equal(9, network.BranchNodes().Count());
+            this.Model.AddElement(network.ToModelArrows(allNodeLocations, Colors.Black));
         }
 
         [Fact]
@@ -202,39 +213,38 @@ namespace Elements.Tests
             var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
             var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
 
-            Func<(int currentIndex, int previousIndex, List<int> edgeIndices), int> next = (a) =>
+            int next((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) a)
+            {
+                var minAngle = double.MaxValue;
+                var minIndex = -1;
+                var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
+                foreach (var e in a.edgeIndices)
                 {
-                    var minAngle = double.MaxValue;
-                    var minIndex = -1;
-                    var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                    var localEdges = a.edgeIndices.Select(e => (e, allNodeLocations[a.currentIndex], allNodeLocations[e])).ToList();
-                    foreach (var e in a.edgeIndices)
+                    if (e == a.previousIndex)
                     {
-                        if (e == a.previousIndex)
-                        {
-                            continue;
-                        }
-
-                        var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                        var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                        // The angle of traversal is not actually zero here,
-                        // it's 180 (unless the path is invalid). We want to
-                        // ensure that traversal happens along the straight
-                        // edge if possible.
-                        if (angle == 0)
-                        {
-                            angle = 180.0;
-                        }
-
-                        if (angle < minAngle)
-                        {
-                            minAngle = angle;
-                            minIndex = e;
-                        }
+                        continue;
                     }
-                    return minIndex;
-                };
+
+                    var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
+                    var angle = baseEdge.PlaneAngleTo(localEdge);
+
+                    // The angle of traversal is not actually zero here,
+                    // it's 180 (unless the path is invalid). We want to
+                    // ensure that traversal happens along the straight
+                    // edge if possible.
+                    if (angle == 0)
+                    {
+                        angle = 180.0;
+                    }
+
+                    if (angle < minAngle)
+                    {
+                        minAngle = angle;
+                        minIndex = e;
+                    }
+                }
+                return minIndex;
+            }
 
             var leafIndices = new List<int>();
             for (var i = 0; i < network.NodeCount(); i++)

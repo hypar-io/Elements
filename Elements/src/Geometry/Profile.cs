@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -12,11 +13,11 @@ namespace Elements.Geometry
     public class Profile : Element, IEquatable<Profile>
     {
         /// <summary>The perimeter of the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Perimeter", Required = Required.AllowNull)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [Newtonsoft.Json.JsonProperty("Voids", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Voids", Required = Required.AllowNull)]
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace Elements.Geometry
         /// <param name="voids">A collection of voids in the profile.</param>
         /// <param name="id">The id of the profile.</param>
         /// <param name="name">The name of the profile.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Profile(Polygon @perimeter, IList<Polygon> @voids, Guid @id = default, string @name = null)
             : base(id, name)
         {
@@ -491,12 +492,13 @@ namespace Elements.Geometry
                 var polygons = new List<Polygon>() {
                     inputProfile.Perimeter
                 };
+                var splitters = new List<Polyline>(splitLines);
                 if (inputProfile.Voids != null)
                 {
-                    polygons.AddRange(inputProfile.Voids);
+                    splitters.AddRange(inputProfile.Voids.Cast<Polyline>());
                 }
                 // construct a half-edge graph from all polygons and splitter polylines.
-                var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(polygons, splitLines);
+                var graph = Elements.Spatial.HalfEdgeGraph2d.Construct(polygons, splitters);
                 // make sure all polygons are consistently wound - we reverse them if we need to treat them as voids.
                 var perimSplits = graph.Polygonize().Select(p => p.IsClockWise() ? p.Reversed() : p).ToList();
                 // for every resultant polygon, we can't be sure if it's a void, or should have a void,
@@ -621,34 +623,97 @@ namespace Elements.Geometry
             return clipperPaths;
         }
 
-        internal static Profile ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
+        internal static List<Profile> ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
-            var perimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
-            if (perimeter == null)
+            var combinedPerimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (combinedPerimeter == null)
             {
                 return null;
             }
-            List<Polygon> voidCrvs = new List<Polygon>();
+
+            //Single perimeter can be split not only into one simple perimeter and several voids,
+            //but also as several independent simple perimeters.
+            var simpleProfiles = new List<(Polygon Perimeter, List<Polygon> Voids)>();
+            var splitPerimeter = combinedPerimeter.SplitInternalLoops();
+
+            if (splitPerimeter.Count > 1)
+            {
+                //When polygons are sorted it's guaranteed that perimeters will be discovered before their voids.
+                var sortedPerimeters = splitPerimeter.OrderByDescending(p => Math.Abs(p.Area()));
+                simpleProfiles.Add((sortedPerimeters.First(), new List<Polygon>()));
+                foreach (var p in sortedPerimeters.Skip(1))
+                {
+                    bool inside = false;
+                    foreach (var shape in simpleProfiles)
+                    {
+                        if (shape.Perimeter.Contains(p))
+                        {
+                            shape.Voids.Add(p);
+                            inside = true;
+                            break;
+                        }
+                    }
+
+                    if (!inside)
+                    {
+                        simpleProfiles.Add((p, new List<Polygon>()));
+                    }
+                }
+            }
+            else if (splitPerimeter.Any())
+            {
+                simpleProfiles.Add((splitPerimeter.First(), new List<Polygon>()));
+            }
+            else
+            {
+                return null;
+            }
+
             if (node.ChildCount > 0)
             {
                 foreach (var child in node.Childs)
                 {
+                    //Voids produced by boolean can still be split but it can't form another perimeter,
+                    //because this would lead to intersecting the perimeter.
                     var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
                     if (voidCrv != null)
                     {
-                        voidCrvs.Add(voidCrv);
+                        var simpleViods = voidCrv.SplitInternalLoops();
+                        if (simpleProfiles.Count == 1)
+                        {
+                            simpleProfiles[0].Voids.AddRange(simpleViods);
+                        }
+                        else
+                        {
+                            foreach (var v in simpleViods)
+                            {
+                                foreach (var p in simpleProfiles)
+                                {
+                                    if (p.Perimeter.Contains(v))
+                                    {
+                                        p.Voids.Add(v);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
+            List<Profile> profiles = new List<Profile>();
             try
             {
-                var profile = new Profile(perimeter, voidCrvs, Guid.NewGuid(), null);
-                return profile;
+                foreach (var p in simpleProfiles)
+                {
+                    profiles.Add(new Profile(p.Perimeter, p.Voids, Guid.NewGuid(), null));
+                }
             }
             catch
             {
                 return null;
             }
+            return profiles;
         }
 
         internal static List<Profile> ToProfiles(this PolyNode node, double tolerance = Vector3.EPSILON)
@@ -657,10 +722,10 @@ namespace Elements.Geometry
 
             if (node.Contour != null && !node.IsHole) // the outermost PolyTree will have a null contour, and skip this.
             {
-                var profile = node.ToProfile(tolerance);
-                if (profile != null)
+                var profiles = node.ToProfile(tolerance);
+                if (profiles != null && profiles.Any())
                 {
-                    joinedProfiles.Add(profile);
+                    joinedProfiles.AddRange(profiles);
                 }
             }
             foreach (var result in node.Childs)

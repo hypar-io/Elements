@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
+    public class JsonInheritanceConverter : JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
 
@@ -64,7 +64,7 @@ namespace Elements.Serialization.JSON
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
         /// We use reflection to find all public types available in the app domain
-        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the
+        /// that have a JsonConverterAttribute whose converter type is the
         /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
