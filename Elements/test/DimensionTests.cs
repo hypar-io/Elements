@@ -106,5 +106,19 @@ namespace Elements
             this.Model.AddElements(dimensions);
             this.Model.AddElements(LinearDimension.ToModelArrowsAndTexts(dimensions, Colors.Granite));
         }
+
+        [Fact]
+        public void ZOrientedDirectionOffsetsInY()
+        {
+            var dim = new AlignedDimension(Vector3.Origin, new Vector3(0, 0, 1));
+            Assert.True(Math.Abs(dim.ReferencePlane.Normal.Dot(Vector3.YAxis)).ApproximatelyEquals(1));
+        }
+
+        [Fact]
+        public void XOrientedDirectionOffsetsInY()
+        {
+            var dim = new AlignedDimension(Vector3.Origin, new Vector3(1, 0, 0));
+            Assert.True(Math.Abs(dim.ReferencePlane.Normal.Dot(Vector3.YAxis)).ApproximatelyEquals(1));
+        }
     }
 }

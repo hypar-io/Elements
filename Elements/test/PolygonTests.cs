@@ -735,6 +735,37 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void FromAlignedBoundingBox2dAlongAxis()
+        {
+            Name = nameof(FromAlignedBoundingBox2dAlongAxis);
+            // handle random points test
+            var pts = new List<Vector3> {
+                new Vector3(2,1),
+                new Vector3(1,3),
+                new Vector3(5,5),
+                new Vector3(6,3),
+                new Vector3(2,2),
+                new Vector3(2.5,3),
+                new Vector3(4,3)
+            };
+            var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, pts[1] - pts[0]);
+            Assert.True(boundingRect.Area().ApproximatelyEquals(10));
+            Model.AddElements(pts.Select(p => new ModelCurve(new Circle(p, 0.2))));
+            Model.AddElements(new ModelCurve(boundingRect));
+
+            // handle collinear points test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0)
+            };
+            var coBoundingRect = Polygon.FromAlignedBoundingBox2d(coPts, new Vector3(1, 0));
+            Assert.Equal(1, coBoundingRect.Area());
+        }
+
+        [Fact]
         public void Reverse()
         {
             var a = Polygon.Ngon(3, 1.0);
