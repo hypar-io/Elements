@@ -677,6 +677,53 @@ namespace Elements.Geometry.Tests
             Assert.Equal(expectedLine, result);
         }
 
+        [Fact]
+        public void PointOnLine()
+        {
+            Vector3 start = new Vector3(0, 0, 0);
+            Vector3 end = new Vector3(10, 0, 0);
+
+            //1. End points
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.True(Line.PointOnLine(start, start, end, true));
+            Assert.True(Line.PointOnLine(start, start, end, true));
+
+            //2. Almost end point
+            Vector3 test = new Vector3(5e-6, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Midpoint
+            test = new Vector3(4, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Almost midpoint
+            test = new Vector3(4, 5e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //4. Point not on the line
+            test = new Vector3(5, 1, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+
+            //5. Large line
+            Vector3 farEnd = new Vector3(1000, 0, 0);
+            test = new Vector3(100, 0.1, 0);
+            Assert.False(Line.PointOnLine(test, start, farEnd));
+            Assert.False(Line.PointOnLine(test, start, farEnd, true));
+
+            //6. Collinear point outside line
+            test = new Vector3(15, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(-5, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+        }
+
         public static IEnumerable<object[]> ProjectedData()
         {
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
