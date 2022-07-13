@@ -34,10 +34,10 @@ public static class ElementsAPI
         var sw = new Stopwatch();
         sw.Start();
         var model = Model.GeometricElementModelFromJson(json);
-        Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating the model from json.");
+        Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for creating the model from json.");
         sw.Restart();
         var result = Task.FromResult(model.ToGlTF());
-        Console.WriteLine($"{sw.ElapsedMilliseconds}ms for creating the glb from json.");
+        Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for creating the glb from json.");
         return result;
     }
 
