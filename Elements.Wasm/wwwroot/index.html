@@ -18,8 +18,8 @@
 </head>
 
 <body>
-    <script type="module" src="elements.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script type="module" src="elements/elements.js"></script>
+    <script src="elements/_framework/blazor.webassembly.js" autostart="false"></script>
     <script type="module-shim">
         function loadModel(glb) {
             const blob = new Blob([new Uint8Array(glb)], { type: "application/octet-stream" });
@@ -71,6 +71,26 @@
                 model.loadModel(result)
             })
         }
+
+        async function startBlazor() {
+            await Blazor.start({
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
+                    const root = 'https://d2kpvuc6xe03st.cloudfront.net'
+                    switch (type) {
+                        case 'manifest':
+                        case 'assembly':
+                        case 'globalization':
+                        case 'dotnetjs':
+                        case 'dotnetwasm':
+                        case 'timezonedata':
+                            return `${root}/${name}`
+                    }
+                    return null
+                },
+            })
+        }
+        startBlazor()
 
         window.model = {
             reset: () => { reset(); },
