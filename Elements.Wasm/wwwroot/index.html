@@ -63,10 +63,20 @@
             });
         };
 
+        function loadTestModel() {
+            var request = new XMLHttpRequest();
+            request.open("GET", "model.json", false);
+            request.send(null)
+            elements.modelToGlbBytes(request.responseText).then((result) => {
+                model.loadModel(result)
+            })
+        }
+
         window.model = {
             reset: () => { reset(); },
             runTest: (value) => { runTest(value); },
             loadModel: (glb) => { loadModel(glb) },
+            loadTestModel: () => { loadTestModel() }
         };
 
         import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight, sRGBEncoding} from 'three';
@@ -98,6 +108,7 @@
     </script>
     <input type="range" min="1" max="500" value="1" class="slider" id="myRange" oninput="model.reset()"
         onchange="console.debug(this.value);model.runTest(parseFloat(this.value))">
+    <button type="button" id="loadButton" onclick="model.loadTestModel()">Load Test Model</button>
     <div id="result" style="white-space: pre-line; position: absolute; left: 20px; bottom: 20px"></div>
 </body>
 
