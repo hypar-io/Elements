@@ -21,7 +21,3 @@ aws s3 sync "$source" s3://elements-wasm/ --exclude "*.gz" --exclude "*.br"
 
 echo "Creating an invalidation..."
 aws cloudfront create-invalidation --distribution-id E19YQ16H2KTDNU --paths "/*"
-
-# echo 'Running the test application.'
-# cd deploy
-# python3 -m http.server

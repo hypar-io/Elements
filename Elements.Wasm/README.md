@@ -1,9 +1,17 @@
 # Elements.Wasm
 This is a minimal web assembly project.
 
-### Run
+### Deploy
+The elements web assembly assets are served from S3 via cloud front. The deploy script will copy and deploy all necessary files to that bucket.
 ```
 ./deploy.sh
+```
+
+### Run
+After using the deployment script above, you can run a local application against the deployed files by doing the following.
+```
+cd deploy
+python3 -m http.server
 ```
 
 ### Files
