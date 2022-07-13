@@ -11,6 +11,7 @@
 - Default values for `AdaptiveGraphRouting.RoutingConfiguration` constructor.
 - `Line.BestFit(IList<Vector3> points)`
 - `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
+- `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 
 ### Changed
 
