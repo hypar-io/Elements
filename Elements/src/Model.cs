@@ -278,7 +278,7 @@ namespace Elements
                 var elementsElement = root.GetProperty("Elements");
                 var transform = JsonSerializer.Deserialize<Transform>(root.GetProperty("Transform"));
 
-                Console.WriteLine($"{sw.ElapsedMilliseconds}ms for parsing json");
+                Debug.WriteLine($"JSON: {sw.ElapsedMilliseconds}ms for parsing json");
                 sw.Restart();
 
                 foreach (var element in elementsElement.EnumerateObject())
@@ -395,10 +395,10 @@ namespace Elements
                         elements.Add(id, e);
                         resolver.AddReference(id.ToString(), e);
                     }
-
-                    // Console.WriteLine($"{sw.ElapsedMilliseconds}ms for deserializing {id}:{discriminator}");
-                    // sw.Restart();
                 }
+
+                Debug.WriteLine($"JSON: {sw.ElapsedMilliseconds}ms for deserializing all elements.");
+                sw.Restart();
 
                 var model = new Model(transform, elements);
                 return model;
