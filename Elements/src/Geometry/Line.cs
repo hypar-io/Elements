@@ -1120,6 +1120,7 @@ namespace Elements.Geometry
             return (point - start).Length() / (end - start).Length();
         }
         
+        /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
@@ -1145,6 +1146,7 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// <summary>
         /// Projects current line onto a plane
         /// </summary>
         /// <param name="plane">Plane to project</param>

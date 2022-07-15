@@ -70,6 +70,9 @@ namespace Elements
             this.UpdateRepresentations();
         }
 
+        /// <summary>
+        /// Construct empty beam.
+        /// </summary>
         public StructuralFraming() { }
 
         private void SetProperties(Curve curve,
