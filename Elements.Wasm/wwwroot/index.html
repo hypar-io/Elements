@@ -18,8 +18,8 @@
 </head>
 
 <body>
-    <script type="module" src="elements/elements.js"></script>
-    <script src="elements/_framework/blazor.webassembly.js" autostart="false"></script>
+    <script type="module" src="elements.js"></script>
+    <script src="https://elements.hypar.io/blazor.webassembly.js" autostart="false"></script>
     <script type="module-shim">
         function loadModel(glb) {
             const blob = new Blob([new Uint8Array(glb)], { type: "application/octet-stream" });
@@ -76,7 +76,7 @@
             await Blazor.start({
                 loadBootResource: function (type, name, defaultUri, integrity) {
                     // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
-                    const root = 'https://d2kpvuc6xe03st.cloudfront.net'
+                    const root = 'https://elements.hypar.io'
                     switch (type) {
                         case 'manifest':
                         case 'assembly':
