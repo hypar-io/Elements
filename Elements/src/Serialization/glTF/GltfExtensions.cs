@@ -128,24 +128,26 @@ namespace Elements.Serialization.glTF
         {
             var sw = new Stopwatch();
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
-            Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing the glTF");
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing the glTF");
             sw.Restart();
 
             if (gltf == null)
             {
                 return null;
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
-            Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for merging the buffers");
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for merging the buffers");
             sw.Restart();
 
             byte[] bytes;
             using (var ms = new MemoryStream())
             {
                 gltf.SaveBinaryModel(mergedBuffer, ms);
-                bytes = ms.ToArray();
+                // Avoid a copy of this array by using GetBuffer() instead
+                // of ToArray()
+                bytes = ms.GetBuffer();
             }
-            Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for saving the binary model");
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for saving the binary model");
             sw.Restart();
 
             return bytes;
@@ -162,13 +164,12 @@ namespace Elements.Serialization.glTF
             {
                 return "";
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
             string b64;
             using (var ms = new MemoryStream())
-            using (var writer = new BinaryWriter(ms))
             {
-                gltf.SaveBinaryModel(mergedBuffer, writer);
-                b64 = Convert.ToBase64String(ms.ToArray());
+                gltf.SaveBinaryModel(mergedBuffer, ms);
+                b64 = Convert.ToBase64String(ms.GetBuffer());
             }
 
             return b64;
@@ -816,7 +817,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw standard edges
                 var id = $"{100000}_curve";
-                var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers();
+                var gb = vertices.ToGraphicsBuffers();
                 AddPointsOrLines(id,
                                  buffer,
                                  bufferViews,
@@ -833,7 +834,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
-                var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers();
+                var gb = verticesHighlighted.ToGraphicsBuffers();
                 AddPointsOrLines(id,
                                  buffer,
                                  bufferViews,
@@ -874,7 +875,7 @@ namespace Elements.Serialization.glTF
             }
 
             //TODO handle initializing multiple gltf buffers at once.
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             gltf.SaveBinaryModel(mergedBuffer, path);
 
@@ -1008,7 +1009,7 @@ namespace Elements.Serialization.glTF
             var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
 
-            Debug.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing.");
+            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing.");
             sw.Restart();
 
             foreach (var e in elements)
@@ -1051,10 +1052,10 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for gathering element geometry.");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for gathering element geometry.");
             sw.Restart();
 
-            if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
+            if (allBuffers.Sum(b => b.Length) + buffer.Count == 0 && lights.Count == 0)
             {
                 return null;
             }
@@ -1117,7 +1118,7 @@ namespace Elements.Serialization.glTF
 
             allBuffers[0] = buffer.ToArray(buffer.Count);
 
-            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for finalizing.");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for finalizing.");
             sw.Restart();
 
             return gltf;
