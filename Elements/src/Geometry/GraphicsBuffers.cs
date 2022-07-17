@@ -227,5 +227,13 @@ namespace Elements.Geometry
             this.IMin = Math.Min(this.IMin, index);
         }
 
+        internal static int PreallocationSize()
+        {
+            // Assume a fully vertex-colored mesh of the size required to contain 30k vertices.
+            // Postion, Normal, Color, Index, UV
+            var floatSize = sizeof(float);
+            var intSize = sizeof(int);
+            return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * 30000;
+        }
     }
 }
