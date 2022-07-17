@@ -536,8 +536,7 @@ namespace Elements.Serialization.glTF
             return bufferViews.Count - 1;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf,
-                                            string name,
+        internal static int AddTriangleMesh(string name,
                                             List<byte> buffer,
                                             List<BufferView> bufferViews,
                                             List<Accessor> accessors,
@@ -641,8 +640,7 @@ namespace Elements.Serialization.glTF
             return meshes.Count - 1;
         }
 
-        internal static int AddPointsOrLines(this Gltf gltf,
-                                        string name,
+        internal static int AddPointsOrLines(string name,
                                         List<byte> buffer,
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
@@ -779,7 +777,7 @@ namespace Elements.Serialization.glTF
                                               buffer,
                                               bufferViews);
 
-            var mesh = new Elements.Geometry.Mesh();
+            var mesh = new Geometry.Mesh();
             solid.Tessellate(ref mesh);
             mesh.ComputeNormals();
 
@@ -787,13 +785,13 @@ namespace Elements.Serialization.glTF
 
             var accessors = new List<Accessor>();
 
-            var meshId = gltf.AddTriangleMesh("mesh",
-                                              buffer,
-                                              bufferViews,
-                                              accessors,
-                                              materials[BuiltInMaterials.Default.Id.ToString()],
-                                              gbuffers,
-                                              meshes);
+            var meshId = AddTriangleMesh("mesh",
+                                         buffer,
+                                         bufferViews,
+                                         accessors,
+                                         materials[BuiltInMaterials.Default.Id.ToString()],
+                                         gbuffers,
+                                         meshes);
 
             NodeUtilities.CreateNodeForMesh(meshId, nodes, null);
 
@@ -819,7 +817,16 @@ namespace Elements.Serialization.glTF
                 // Draw standard edges
                 var id = $"{100000}_curve";
                 var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers();
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                AddPointsOrLines(id,
+                                 buffer,
+                                 bufferViews,
+                                 accessors,
+                                 materials[BuiltInMaterials.Edges.Id.ToString()],
+                                 new List<GraphicsBuffers>() { gb },
+                                 MeshPrimitive.ModeEnum.LINES,
+                                 meshes,
+                                 nodes,
+                                 null);
             }
 
             if (verticesHighlighted.Count > 0)
@@ -827,7 +834,16 @@ namespace Elements.Serialization.glTF
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
                 var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers();
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                AddPointsOrLines(id,
+                                 buffer,
+                                 bufferViews,
+                                 accessors,
+                                 materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()],
+                                 new List<GraphicsBuffers>() { gb },
+                                 MeshPrimitive.ModeEnum.LINES,
+                                 meshes,
+                                 nodes,
+                                 null);
             }
 
             var buff = new glTFLoader.Schema.Buffer
@@ -894,8 +910,18 @@ namespace Elements.Serialization.glTF
             errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
-            var buffer = new List<byte>();
-            allBuffers = new List<byte[]> { Array.Empty<byte>() };
+
+            // Attempt to pre-allocate these lists. This won't be perfect.
+            // Before processing the geometry of an element we can't know
+            // how much to allocate. In the worst case, this will reduce 
+            // the list resizing.
+            // TODO: In future work where we update element geometry during 
+            // UpdateRepresentations, we will know at this moment how big the
+            // geometry for an element is, and we should tighten this up.
+            var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
+            var buffer = new List<byte>(elementCount * GraphicsBuffers.PreallocationSize());
+            var contentElementCount = model.AllElementsAssignableFromType<ContentElement>().Count();
+            allBuffers = new List<byte[]>(contentElementCount * GraphicsBuffers.PreallocationSize()) { Array.Empty<byte>() };
 
             var gltf = new Gltf();
             var asset = new Asset
@@ -1043,7 +1069,16 @@ namespace Elements.Serialization.glTF
                     }
                     var id = $"{GetNextId()}_edge";
                     var gb = lineSet.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                    AddPointsOrLines(id,
+                                     buffer,
+                                     bufferViews,
+                                     accessors,
+                                     materialIndexMap[BuiltInMaterials.Edges.Id.ToString()],
+                                     new List<GraphicsBuffers>() { gb },
+                                     MeshPrimitive.ModeEnum.LINES,
+                                     meshes,
+                                     nodes,
+                                     null);
                 }
             }
 
@@ -1256,7 +1291,16 @@ namespace Elements.Serialization.glTF
             {
                 if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, (MeshPrimitive.ModeEnum)mode, meshes, nodes, ge.Transform);
+                    AddPointsOrLines(id,
+                                     buffer,
+                                     bufferViews,
+                                     accessors,
+                                     materialIndexMap[ge.Material.Id.ToString()],
+                                     gb,
+                                     (MeshPrimitive.ModeEnum)mode,
+                                     meshes,
+                                     nodes,
+                                     ge.Transform);
                 }
             }
 
@@ -1273,13 +1317,13 @@ namespace Elements.Serialization.glTF
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
-                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
-                                     buffer,
-                                     bufferViews,
-                                     accessors,
-                                     materialIndexMap[materialId],
-                                     gbuffers,
-                                     meshes);
+                meshId = AddTriangleMesh(e.Id + "_mesh",
+                                         buffer,
+                                         bufferViews,
+                                         accessors,
+                                         materialIndexMap[materialId],
+                                         gbuffers,
+                                         meshes);
 
                 if (!meshElementMap.ContainsKey(e.Id))
                 {
@@ -1480,13 +1524,13 @@ namespace Elements.Serialization.glTF
                 return -1;
             }
 
-            return gltf.AddTriangleMesh(id + "_mesh",
-                                        buffer,
-                                        bufferViews,
-                                        accessors,
-                                        materials[materialId],
-                                        buffers,
-                                        meshes);
+            return AddTriangleMesh(id + "_mesh",
+                                   buffer,
+                                   bufferViews,
+                                   accessors,
+                                   materials[materialId],
+                                   buffers,
+                                   meshes);
         }
     }
 }

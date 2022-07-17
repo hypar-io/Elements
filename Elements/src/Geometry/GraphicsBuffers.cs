@@ -45,6 +45,8 @@ namespace Elements.Geometry
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
+        private const int _preallocationVertexCount = 200;
+
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
         /// </summary>
@@ -126,11 +128,11 @@ namespace Elements.Geometry
         public GraphicsBuffers()
         {
             // Initialize everything
-            this.Vertices = new List<byte>();
-            this.Normals = new List<byte>();
-            this.Indices = new List<byte>();
-            this.UVs = new List<byte>();
-            this.Colors = new List<byte>();
+            this.Vertices = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Normals = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Indices = new List<byte>(_preallocationVertexCount * sizeof(int));
+            this.UVs = new List<byte>(_preallocationVertexCount * sizeof(float) * 2);
+            this.Colors = new List<byte>(_preallocationVertexCount * sizeof(float) * 4);
 
             this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
@@ -201,7 +203,7 @@ namespace Elements.Geometry
             this.UVMin[0] = Math.Min(this.UVMin[0], u);
             this.UVMin[1] = Math.Min(this.UVMin[1], v);
 
-            if (color.HasValue && color.Value != default(Color))
+            if (color.HasValue && color.Value != default)
             {
                 this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
                 this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);
@@ -227,5 +229,13 @@ namespace Elements.Geometry
             this.IMin = Math.Min(this.IMin, index);
         }
 
+        internal static int PreallocationSize()
+        {
+            // Assume a fully vertex-colored mesh of the size required to contain 30k vertices.
+            // Postion, Normal, Color, Index, UV
+            var floatSize = sizeof(float);
+            var intSize = sizeof(int);
+            return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
+        }
     }
 }
