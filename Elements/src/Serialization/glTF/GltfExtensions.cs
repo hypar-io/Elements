@@ -130,14 +130,16 @@ namespace Elements.Serialization.glTF
             {
                 return null;
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             byte[] bytes;
             using (var ms = new MemoryStream())
             using (var writer = new BinaryWriter(ms))
             {
-                gltf.SaveBinaryModel(mergedBuffer, writer);
-                bytes = ms.ToArray();
+                gltf.SaveBinaryModel(mergedBuffer, ms);
+                // Avoid a copy of this array by using GetBuffer() instead
+                // of ToArray()
+                bytes = ms.GetBuffer();
             }
 
             return bytes;
@@ -154,13 +156,12 @@ namespace Elements.Serialization.glTF
             {
                 return "";
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
             string b64;
             using (var ms = new MemoryStream())
-            using (var writer = new BinaryWriter(ms))
             {
-                gltf.SaveBinaryModel(mergedBuffer, writer);
-                b64 = Convert.ToBase64String(ms.ToArray());
+                gltf.SaveBinaryModel(mergedBuffer, ms);
+                b64 = Convert.ToBase64String(ms.GetBuffer());
             }
 
             return b64;
@@ -808,7 +809,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw standard edges
                 var id = $"{100000}_curve";
-                var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers();
+                var gb = vertices.ToGraphicsBuffers();
                 AddPointsOrLines(id,
                                  buffer,
                                  bufferViews,
@@ -825,7 +826,7 @@ namespace Elements.Serialization.glTF
             {
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
-                var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers();
+                var gb = verticesHighlighted.ToGraphicsBuffers();
                 AddPointsOrLines(id,
                                  buffer,
                                  bufferViews,
@@ -865,7 +866,8 @@ namespace Elements.Serialization.glTF
             }
 
             //TODO handle initializing multiple gltf buffers at once.
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
+
             gltf.SaveBinaryModel(mergedBuffer, path);
             return true;
         }
