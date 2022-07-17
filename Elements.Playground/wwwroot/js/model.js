@@ -58,18 +58,9 @@ function initializeEditor() {
         enableLiveAutocompletion: true
     });
 
-    let timer;
-    let runTimer = () => {
-        timer = setTimeout(() => {
-            invokeRun();
-        }, 2000);
-    }
-
     editor.getSession().on('change', function () {
         var code = editor.getValue();
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', code)
-        clearTimeout(timer);
-        runTimer();
     });
 }
 
