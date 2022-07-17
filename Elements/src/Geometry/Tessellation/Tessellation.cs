@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using LibTessDotNet.Double;
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -20,6 +21,9 @@ namespace Elements.Geometry.Tessellation
                                         bool mergeVertices = false,
                                         Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color color)>();
             foreach (var provider in providers)
             {
@@ -28,6 +32,8 @@ namespace Elements.Geometry.Tessellation
                     TessellatePolygon(target.GetTess(), buffers, allVertices, mergeVertices);
                 }
             }
+            Console.WriteLine($"tess: {sw.ElapsedMilliseconds}ms for tessellation.");
+            sw.Restart();
 
             foreach (var v in allVertices)
             {
@@ -41,6 +47,8 @@ namespace Elements.Geometry.Tessellation
                     buffers.AddVertex(v.position, v.normal, v.uv);
                 }
             }
+            Console.WriteLine($"tess: {sw.ElapsedMilliseconds}ms for packing graphics buffers.");
+            sw.Restart();
         }
 
         private static void TessellatePolygon(Tess tess,
