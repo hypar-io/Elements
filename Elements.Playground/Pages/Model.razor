@@ -11,12 +11,13 @@
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
 @inject NavigationManager MyNavigationManager
-
+@using System.Text.RegularExpressions;
 <div class="grid">
     <button class="run" disabled=@loading @onclick="Run">Run</button>
     <div id="editor">@csharp</div>
     <div id="model"></div>
-    <div class="output">@((MarkupString)Output)</div>
+    <div class="output">@((MarkupString)Regex.Replace(
+        HttpUtility.HtmlEncode(@Output), "\r?\n|\r", "<br />"))</div>
 </div>
 
 @code {
@@ -37,29 +38,29 @@ for(var i=0; i<1; i++)
 
     // The bottom chord
     var bottomChord = new Line(start, end);
-    var bottomChordBeam = new Beam(bottomChord, p, m);
+    var bottomChordBeam = new Beam(bottomChord, p, null, m);
     model.AddElement(bottomChordBeam);
 
     var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-    var topChordBeam = new Beam(topChord, p, m);
+    var topChordBeam = new Beam(topChord, p, null, m);
     model.AddElement(topChordBeam);
 
     Vector3 last = default(Vector3);
     for(var j=0.0; j<=1.0; j+=0.1)
     {
-        var pt = bottomChord.PointAt(j);
-        var top = pt + new Vector3(0,0,5);
-        var panelLine = new Line(pt, top);
-        var panelBeam = new Beam(panelLine, p, m);
-        model.AddElement(panelBeam);
+    var pt = bottomChord.PointAt(j);
+    var top = pt + new Vector3(0,0,5);
+    var panelLine = new Line(pt, top);
+    var panelBeam = new Beam(panelLine, p, null, m);
+    model.AddElement(panelBeam);
 
-        if(j > 0.0)
-        {
-            var braceLine = new Line(top, last);
-            var braceBeam = new Beam(braceLine, p, m);
-            model.AddElement(braceBeam);
-        }
-        last = pt;
+    if(j > 0.0)
+    {
+        var braceLine = new Line(top, last);
+        var braceBeam = new Beam(braceLine, p, null, m);
+        model.AddElement(braceBeam);
+    }
+    last = pt;
     }
 }
 return model;";
@@ -143,7 +144,6 @@ return model;";
         Output = writer.ToString();
         if (exception != null)
         {
-
             Output += "\r\n" + exception.ToString();
         }
         Console.SetOut(currentOut);
