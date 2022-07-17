@@ -45,7 +45,7 @@ namespace Elements.Geometry
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
-        private const int _preallocationVertexCount = 1000;
+        private const int _preallocationVertexCount = 200;
 
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
