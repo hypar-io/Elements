@@ -17,6 +17,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Diagnostics;
+using System.Reflection;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -1116,7 +1117,15 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
-            allBuffers[0] = buffer.ToArray(buffer.Count);
+            // This is a hack! For web assembly, the ToArray() call creates
+            // a copy of all items in the list, and is extremely slow. We
+            // get around this by accessing the underlying list directly.
+            // https://stackoverflow.com/a/4973060
+            // allBuffers[0] = buffer.ToArray(buffer.Count);
+            buffer.TrimExcess();
+            allBuffers[0] = (byte[])typeof(List<byte>)
+                   .GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)
+                   .GetValue(buffer);
 
             Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for finalizing.");
             sw.Restart();
