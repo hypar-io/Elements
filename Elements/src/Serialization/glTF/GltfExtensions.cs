@@ -1486,7 +1486,11 @@ namespace Elements.Serialization.glTF
                                       bool mergeVertices = false)
         {
             GraphicsBuffers buffers = null;
-            if (geometricElement.Representation.SkipCSGUnion)
+
+            // If we've explicitly skipped csg union or the element
+            // only has one solid operation, we can perform this micro-optimization
+            // of skipping CSG creation.
+            if (geometricElement.Representation.SkipCSGUnion || geometricElement.Representation.SolidOperations.Count == 1)
             {
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids

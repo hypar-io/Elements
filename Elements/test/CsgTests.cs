@@ -214,6 +214,11 @@ namespace Elements.Tests
                 Indices.Add(index);
             }
 
+            public void AddIndices(IList<ushort> indices)
+            {
+                throw new NotImplementedException();
+            }
+
             public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
             {
                 Vertices.Add((position, normal));
@@ -222,6 +227,11 @@ namespace Elements.Tests
             public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
             {
                 Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+            }
+
+            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+            {
+                throw new NotImplementedException();
             }
         }
     }
