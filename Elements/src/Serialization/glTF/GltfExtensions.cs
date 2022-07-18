@@ -131,7 +131,7 @@ namespace Elements.Serialization.glTF
             sw.Start();
 
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms total for initializing the glTF");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms total for initializing the glTF");
             sw.Restart();
 
             if (gltf == null)
@@ -139,7 +139,7 @@ namespace Elements.Serialization.glTF
                 return null;
             }
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for merging the buffers");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for merging the buffers");
             sw.Restart();
 
             byte[] bytes;
@@ -150,7 +150,7 @@ namespace Elements.Serialization.glTF
                 // of ToArray()
                 bytes = ms.GetBuffer();
             }
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for saving the binary model");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for saving the binary model");
             sw.Restart();
 
             return bytes;
@@ -1012,7 +1012,7 @@ namespace Elements.Serialization.glTF
             var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
 
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for creating glTF structure.");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for creating glTF structure.");
             sw.Restart();
 
             foreach (var e in elements)
@@ -1055,7 +1055,7 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for gathering element geometry.");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for gathering element geometry.");
             sw.Restart();
 
             if (allBuffers.Sum(b => b.Length) + buffer.Count == 0 && lights.Count == 0)
@@ -1129,7 +1129,7 @@ namespace Elements.Serialization.glTF
                    .GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)
                    .GetValue(buffer);
 
-            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for finalizing.");
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for finalizing.");
             sw.Restart();
 
             return gltf;
