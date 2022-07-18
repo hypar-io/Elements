@@ -82,11 +82,13 @@ namespace Elements.Geometry.Tessellation
                                                              mergeVertices);
             }
 
+            var indices = new ushort[tess.Elements.Length];
             for (var k = 0; k < tess.Elements.Length; k++)
             {
-                var index = vertexIndices[tess.Elements[k]];
-                buffers.AddIndex(index);
+                indices[k] = vertexIndices[tess.Elements[k]];
             }
+
+            buffers.AddIndices(indices);
         }
 
         private static Vector3 ToElementsVector(this ContourVertex v)

@@ -37,6 +37,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="index">The index to add.</param>
         void AddIndex(ushort index);
+
+        /// <summary>
+        /// Add multiple indices to the graphics buffers.
+        /// </summary>
+        /// <param name="indices">The indices to add.</param>
+        void AddIndices(IList<ushort> indices);
     }
 
     /// <summary>
@@ -45,7 +51,7 @@ namespace Elements.Geometry
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
-        private const int _preallocationVertexCount = 200;
+        private const int _preallocationVertexCount = 100;
 
         /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
@@ -227,6 +233,24 @@ namespace Elements.Geometry
             this.Indices.AddRange(BitConverter.GetBytes(index));
             this.IMax = Math.Max(this.IMax, index);
             this.IMin = Math.Min(this.IMin, index);
+        }
+
+        /// <summary>
+        /// Add indices to the graphics buffers.
+        /// </summary>
+        /// <param name="indices">The indices to add.</param>
+        public void AddIndices(IList<ushort> indices)
+        {
+            var newRange = new byte[indices.Count * sizeof(ushort)];
+            for (var i = 0; i < indices.Count; i++)
+            {
+                var index = indices[i];
+                this.IMax = Math.Max(this.IMax, index);
+                this.IMin = Math.Min(this.IMin, index);
+                var bytes = BitConverter.GetBytes(index);
+                Buffer.BlockCopy(bytes, 0, newRange, i * sizeof(ushort), sizeof(ushort));
+            }
+            this.Indices.AddRange(newRange);
         }
 
         internal static int PreallocationSize()
