@@ -128,8 +128,10 @@ namespace Elements.Serialization.glTF
         public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
             var sw = new Stopwatch();
+            sw.Start();
+
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
-            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing the glTF");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms total for initializing the glTF");
             sw.Restart();
 
             if (gltf == null)
@@ -137,7 +139,7 @@ namespace Elements.Serialization.glTF
                 return null;
             }
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
-            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for merging the buffers");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for merging the buffers");
             sw.Restart();
 
             byte[] bytes;
@@ -148,7 +150,7 @@ namespace Elements.Serialization.glTF
                 // of ToArray()
                 bytes = ms.GetBuffer();
             }
-            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for saving the binary model");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for saving the binary model");
             sw.Restart();
 
             return bytes;
@@ -1010,7 +1012,7 @@ namespace Elements.Serialization.glTF
             var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
 
-            Console.WriteLine($"{sw.ElapsedMilliseconds}ms for initializing.");
+            Console.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for creating glTF structure.");
             sw.Restart();
 
             foreach (var e in elements)
@@ -1512,7 +1514,11 @@ namespace Elements.Serialization.glTF
                                       bool mergeVertices = false)
         {
             GraphicsBuffers buffers = null;
-            if (geometricElement.Representation.SkipCSGUnion)
+
+            // If we've explicitly skipped csg union or the element
+            // only has one solid operation, we can perform this micro-optimization
+            // of skipping CSG creation.
+            if (geometricElement.Representation.SkipCSGUnion || geometricElement.Representation.SolidOperations.Count == 1)
             {
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
