@@ -253,6 +253,7 @@ namespace Elements.Tests
             var rectangleRotatedAboutCenter = rectangle.TransformedPolygon(new Transform().RotatedAboutPoint(center, Vector3.ZAxis, 90));
             Model.AddElement(rectangle);
             Model.AddElement(rectangleRotatedAboutCenter);
+            Assert.Equal(center, rectangleRotatedAboutCenter.Centroid());
         }
     }
 
