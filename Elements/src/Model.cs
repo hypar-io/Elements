@@ -18,10 +18,10 @@ namespace Elements
     /// <summary>
     /// A container for elements.
     /// </summary>
-    public class Model
+    public class Model : IModel
     {
         /// <summary>The origin of the model.</summary>
-        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
@@ -29,10 +29,10 @@ namespace Elements
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
-        /// <summary>A collection of Elements keyed by their identifiers.</summary>
+        /// <summary>A collection of elements keyed by their identifiers.</summary>
         [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+        public IDictionary<Guid, Element> Elements { get; set; } = new Dictionary<Guid, Element>();
 
         /// <summary>
         /// Construct a model.
@@ -41,7 +41,7 @@ namespace Elements
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
         [JsonConstructor]
-        public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
+        public Model(Position @origin, Transform @transform, IDictionary<Guid, Element> @elements)
         {
 
 #pragma warning disable CS0618
@@ -59,12 +59,12 @@ namespace Elements
             this.Transform = new Transform();
         }
 
-        /// <summary>
+        /// <summary>O
         /// Construct a model.
         /// </summary>
         /// <param name="transform">The model's transform.</param>
         /// <param name="elements">The model's elements.</param>
-        public Model(Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
+        public Model(Transform @transform, IDictionary<Guid, Element> @elements)
         {
             this.Transform = @transform;
             this.Elements = @elements;
@@ -153,10 +153,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get an entity by id from the Model.
+        /// Get an element by id from the Model.
         /// </summary>
         /// <param name="id">The identifier of the element.</param>
-        /// <returns>An entity or null if no entity can be found
+        /// <returns>An element or null if no element can be found
         /// with the provided id.</returns>
         public T GetElementOfType<T>(Guid id) where T : Element
         {
@@ -168,10 +168,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get the first entity with the specified name.
+        /// Get the first element with the specified name.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>An entity or null if no entity can be found
+        /// <returns>An element or null if no element can be found
         /// with the provided name.</returns>
         public T GetElementByName<T>(string name) where T : Element
         {
@@ -184,7 +184,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all elements of the type T.
+        /// Get all elements of the specified Type.
         /// </summary>
         /// <typeparam name="T">The type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
@@ -452,39 +452,6 @@ namespace Elements
         {
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
-        }
-    }
-
-    public static class ModelExtensions
-    {
-        /// <summary>
-        /// Get all elements of a certain type from a specific model name in a dictionary of models.
-        /// </summary>
-        /// <param name="models">Dictionary of models keyed by string.</param>
-        /// <param name="modelName">The name of the model.</param>
-        /// <typeparam name="T">The type of element we want to retrieve.</typeparam>
-        /// <returns></returns>
-        public static List<T> AllElementsOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
-        {
-            var elements = new List<T>();
-            models.TryGetValue(modelName, out var model);
-            if (model != null)
-            {
-                elements.AddRange(model.AllElementsOfType<T>());
-            }
-            return elements;
-        }
-
-        /// <summary>
-        /// Get all proxies of a certain type from a specific model name in a dictionary of models.
-        /// </summary>
-        /// <param name="models">Dictionary of models keyed by string</param>
-        /// <param name="modelName">The name of the model</param>
-        /// <typeparam name="T">The type of element we want to retrieve</typeparam>
-        /// <returns></returns>
-        public static List<ElementProxy<T>> AllProxiesOfType<T>(this Dictionary<string, Model> models, string modelName) where T : Element
-        {
-            return models.AllElementsOfType<T>(modelName).Proxies(modelName).ToList();
         }
     }
 }
