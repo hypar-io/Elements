@@ -398,15 +398,40 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Apply a rotation to the transform about a center.
+        /// </summary>
+        /// <param name="point">The center of rotation.</param>
+        /// <param name="axis">The axis direction.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        public void RotateAboutPoint(Vector3 point, Vector3 axis, double angle)
+        {
+            this.Move(point * -1);
+            this.Rotate(axis, angle);
+            this.Move(point);
+        }
+
+        /// <summary>
         /// Return a new transform which is a rotated copy of this transform.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation in degrees.</param>
-        /// <returns></returns>
         public Transform Rotated(Vector3 axis, double angle)
         {
             var result = new Transform(this);
             result.Rotate(axis, angle);
+            return result;
+        }
+
+        /// <summary>
+        /// Return a new Transform which is a rotated copy of this transform.
+        /// </summary>
+        /// <param name="point">The center of rotation.</param>
+        /// <param name="axis">The axis direction.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
+        public Transform RotatedAboutPoint(Vector3 point, Vector3 axis, double angle)
+        {
+            var result = new Transform(this);
+            result.RotateAboutPoint(point, axis, angle);
             return result;
         }
 
