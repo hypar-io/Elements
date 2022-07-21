@@ -34,8 +34,9 @@ namespace Elements.Tests
             //Remove center vertex leaving only 8 perimeter vertices
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromPolygon(region, keyPoints);
-            BBox3 obstacle = new BBox3(new Vector3(3, 3, 0), new Vector3(7, 7, 0));
-            grid.SubtractBox(obstacle);
+            var obstacle = Obstacle.FromBBox(new BBox3(
+                new Vector3(3, 3, 0), new Vector3(7, 7, 0)));
+            grid.SubtractObstacle(obstacle);
 
             //Each turn cost 1 additional "meter"
             var configuration = new AdaptiveGraphRouting.RoutingConfiguration(turnCost: 1);
@@ -248,8 +249,9 @@ namespace Elements.Tests
             hints.Add(new RoutingHintLine(hintPolyline, 0.1, 0.2, true));
             hints.Add(new RoutingHintLine(offsetPolyline, 0.5, 0.1, false));
 
-            BBox3 obstacle = new BBox3(new Vector3(3, 6, 0), new Vector3(7, 7, 3));
-            keyPoints.AddRange(obstacle.Corners());
+            var box = new BBox3(new Vector3(3, 6, 0), new Vector3(7, 7, 3));
+            var obstacle = Obstacle.FromBBox(box);
+            keyPoints.AddRange(box.Corners());
 
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromExtrude(mainRegionBoundary, Vector3.ZAxis, 1, keyPoints);
@@ -258,9 +260,9 @@ namespace Elements.Tests
             {
                 var p = new Vector3(input.X, input.Y, configuration.MainLayer);
                 Assert.True(grid.TryGetVertexIndex(p, out ulong down, grid.Tolerance));
-                grid.AddVertex(input, new List<Vertex> { grid.GetVertex(down) });
+                grid.AddVertex(input, new AddConnectVertex(grid.GetVertex(down)));
             }
-            grid.SubtractBox(obstacle);
+            grid.SubtractObstacle(obstacle);
 
             var inputVertices = new List<RoutingVertex>();
             foreach (var input in inputPoints)
@@ -280,7 +282,7 @@ namespace Elements.Tests
             }
 
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
-            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints);
+            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
 
             List<Vector3> expectedPath = new List<Vector3>()
             {
@@ -378,13 +380,14 @@ namespace Elements.Tests
             keyPoints.AddRange(hintPolyline.Vertices);
 
             //6. Define obstacles.
-            BBox3 obstacle = new BBox3(new Vector3(11, 14, 0), new Vector3(17, 18, 0));
-            keyPoints.AddRange(obstacle.Corners());
+            var box = new BBox3(new Vector3(11, 14, 0), new Vector3(17, 18, 0));
+            var obstacle = Obstacle.FromBBox(box);
+            keyPoints.AddRange(box.Corners());
 
             //7. Create grid.
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromPolygon(boundary, keyPoints);
-            grid.SubtractBox(obstacle);
+            grid.SubtractObstacle(obstacle);
 
             //8. Get indices's for start and end vertices
             var inputVertices = new List<RoutingVertex>();
@@ -414,11 +417,11 @@ namespace Elements.Tests
             //10. Run algorithm
             var config = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
-            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints);
+            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
 
             //Throws if no hint lines
             Assert.Throws<ArgumentException>(() =>
-                alg.BuildSpanningTree(inputVertices, tailVertices, new List<RoutingHintLine>()));
+                alg.BuildSpanningTree(inputVertices, tailVertices, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest));
 
             //Results visualization
             List<Line> lines = new List<Line>();
@@ -505,13 +508,14 @@ namespace Elements.Tests
             keyPoints.AddRange(hintPolyline.Vertices);
 
             //6. Define obstacles.
-            BBox3 obstacle = new BBox3(new Vector3(11, 14, 0), new Vector3(17, 18, 0));
-            keyPoints.AddRange(obstacle.Corners());
+            var box = new BBox3(new Vector3(11, 14, 0), new Vector3(17, 18, 0));
+            var obstacle = Obstacle.FromBBox(box);
+            keyPoints.AddRange(box.Corners());
 
             //7. Create grid.
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromPolygon(boundary, keyPoints);
-            grid.SubtractBox(obstacle);
+            grid.SubtractObstacle(obstacle);
 
             //8. Get indices's for start, end vertices, local tail vertices.
             //Split input vertices into groups.
@@ -564,11 +568,12 @@ namespace Elements.Tests
             //10. Run algorithm
             var config = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
-            var tree = alg.BuildSpanningTree(inputVertices, localTailVertices, tailVertices, hints);
+            var tree = alg.BuildSpanningTree(
+                inputVertices, localTailVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
 
             //Throws if no hint lines
-            Assert.Throws<ArgumentException>(() =>
-                alg.BuildSpanningTree(inputVertices, localTailVertices, tailVertices, new List<List<RoutingHintLine>>()));
+            Assert.Throws<ArgumentException>(() => alg.BuildSpanningTree(
+                    inputVertices, localTailVertices, tailVertices, new List<List<RoutingHintLine>>(), TreeOrder.ClosestToFurthest));
 
             //Result visualization
             List<Line> lines = new List<Line>();
