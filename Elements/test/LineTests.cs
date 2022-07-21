@@ -690,8 +690,11 @@ namespace Elements.Geometry.Tests
             Assert.True(Line.PointOnLine(start, start, end, true));
 
             //2. Almost end point
-            Vector3 test = new Vector3(5e-6, 0, 0);
-            Assert.False(Line.PointOnLine(test, start, end));
+            Vector3 test = new Vector3(1e-6, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(1e-6, 1e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
             Assert.True(Line.PointOnLine(test, start, end, true));
 
             //3. Midpoint
@@ -710,7 +713,7 @@ namespace Elements.Geometry.Tests
             Assert.False(Line.PointOnLine(test, start, end, true));
 
             //5. Large line
-            Vector3 farEnd = new Vector3(1000, 0, 0);
+            Vector3 farEnd = new Vector3(150, 0, 0);
             test = new Vector3(100, 0.1, 0);
             Assert.False(Line.PointOnLine(test, start, farEnd));
             Assert.False(Line.PointOnLine(test, start, farEnd, true));
