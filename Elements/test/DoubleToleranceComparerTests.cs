@@ -30,6 +30,13 @@ namespace Elements.Tests
             Assert.Equal(2, groups.Count());
             Assert.True(groups.FirstOrDefault(g => g.Key.ApproximatelyEquals(1)).Count() == 2);
             Assert.True(groups.FirstOrDefault(g => g.Key.ApproximatelyEquals(2)).Count() == 3);
+            
+            //First "unique" item is set as a key. 
+            List<double> firstIsKey = new List<double> { 1.000005, 1.00001, 1, 0.999995 };
+            groups = firstIsKey.GroupBy(n => n, new DoubleToleranceComparer(Vector3.EPSILON));
+            Assert.Equal(2, groups.Count());
+            Assert.True(groups.FirstOrDefault(g => g.Key == 1.000005).Count() == 3);
+            Assert.True(groups.FirstOrDefault(g => g.Key == 0.999995).Count() == 1);
         }
     }
 }
