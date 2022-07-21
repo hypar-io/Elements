@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.2
+## 1.1.0
 
 ### Added
 
@@ -22,6 +22,7 @@
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
+- `Line.PointOnLine` now uses distance to line instead of dot product. 
 
 ### Fixed
 
