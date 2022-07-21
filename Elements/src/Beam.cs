@@ -59,6 +59,9 @@ namespace Elements
                     string name = null) : base(curve, profile, material, startSetback, endSetback, rotation, transform, representation, isElementDefinition, id, name)
         { }
 
+        /// <summary>
+        /// Construct an empty beam.
+        /// </summary>
         public Beam() { }
     }
 }

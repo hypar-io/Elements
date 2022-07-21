@@ -83,6 +83,9 @@ namespace Elements
             this.Height = height;
         }
 
+        /// <summary>
+        /// Construct empty Column.
+        /// </summary>
         public Column()
         {
         }

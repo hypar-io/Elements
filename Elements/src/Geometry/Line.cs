@@ -1120,6 +1120,7 @@ namespace Elements.Geometry
             return (point - start).Length() / (end - start).Length();
         }
 
+        /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
@@ -1145,6 +1146,7 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// <summary>
         /// Projects current line onto a plane
         /// </summary>
         /// <param name="plane">Plane to project</param>
@@ -1244,6 +1246,7 @@ namespace Elements.Geometry
         /// Find the 'b' coefficient of the straight line equation (y = m * x + b) using the least squares method
         /// </summary>
         /// <param name="points">Points for which best fit line should be found.</param>
+        /// <param name="m">'m' coefficient of the straight line equation.</param>
         /// <returns>The 'b' coefficient of the straight line equation.</returns>
         private static double FindBCoefficient(IList<Vector3> points, double m)
         {
