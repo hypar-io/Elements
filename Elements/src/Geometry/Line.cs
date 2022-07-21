@@ -498,11 +498,19 @@ namespace Elements.Geometry
         /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
+            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
             {
                 return true;
             }
-            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
+
+            var delta = end - start;
+            var lambda = (point - start).Dot(delta) / (end - start).Dot(delta);
+            if( lambda > 0 && lambda < 1)
+            {
+                var pointOnLine = start + lambda * delta;
+                return pointOnLine.IsAlmostEqualTo(point);
+            }
+            return false;
         }
 
         /// <summary>
