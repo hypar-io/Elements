@@ -29,7 +29,7 @@ namespace Elements.Geometry
             {
                 var d = points[i];
                 var cd = d - a;
-                var tp = ab.Dot(ac.Cross(cd));
+                var tp = ab.Dot(ac.Cross(cd).Unitized());
                 if (Math.Abs(tp) > Vector3.EPSILON)
                 {
                     return false;
