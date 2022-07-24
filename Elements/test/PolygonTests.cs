@@ -2044,5 +2044,16 @@ namespace Elements.Geometry.Tests
                 Vector3.Origin,
             });
         }
+
+
+        [Fact]
+        public void CoplanarWithinTolerance()
+        {
+            // this polygon has some small amount of deviation from planar (6.3e-7)
+            var json = "{\n            \"discriminator\": \"Elements.Geometry.Polygon\",\n            \"Vertices\": [\n              {\n                \"X\": 30.00108,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5322999954223633,\n                \"Y\": -8.758851356437756,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": 7.8653690051598115,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 14.06867950383497,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 21.64777460957137,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 30.00108,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              }\n            ]\n          }";
+            // verify does not throw
+            var polygon = JsonConvert.DeserializeObject<Polygon>(json);
+            Assert.NotNull(polygon);
+        }
     }
 }
