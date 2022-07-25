@@ -721,8 +721,8 @@ namespace Elements.Geometry.Tests
                 new Vector3(10.21,8.65)
             };
             var line3 = Line.BestFit(points3);
-            var mCoef = 0.5615;
-            var bCoef = 2.034;
+            var mCoef = 0.56150040095236275;
+            var bCoef = 2.03395076348772;
             Assert.True(line3.PointOnLine(new Vector3(2, mCoef * 2 + bCoef)));
             Assert.True(line3.PointOnLine(new Vector3(7, mCoef * 7 + bCoef)));
         }
@@ -733,6 +733,55 @@ namespace Elements.Geometry.Tests
         {
             var result = line.Projected(plane);
             Assert.Equal(expectedLine, result);
+        }
+
+        [Fact]
+        public void PointOnLine()
+        {
+            Vector3 start = new Vector3(0, 0, 0);
+            Vector3 end = new Vector3(10, 0, 0);
+
+            //1. End points
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.True(Line.PointOnLine(start, start, end, true));
+
+            //2. Almost end point
+            Vector3 test = new Vector3(1e-6, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(1e-6, 1e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Midpoint
+            test = new Vector3(4, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Almost midpoint
+            test = new Vector3(4, 5e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //4. Point not on the line
+            test = new Vector3(5, 1, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+
+            //5. Large line
+            Vector3 farEnd = new Vector3(150, 0, 0);
+            test = new Vector3(100, 0.1, 0);
+            Assert.False(Line.PointOnLine(test, start, farEnd));
+            Assert.False(Line.PointOnLine(test, start, farEnd, true));
+
+            //6. Collinear point outside line
+            test = new Vector3(15, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(-5, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
         }
 
         public static IEnumerable<object[]> ProjectedData()
