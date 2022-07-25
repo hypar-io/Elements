@@ -84,7 +84,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Construct empty Column.
+        /// Construct a column.
         /// </summary>
         public Column()
         {

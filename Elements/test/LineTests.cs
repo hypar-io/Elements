@@ -745,7 +745,6 @@ namespace Elements.Geometry.Tests
             Assert.False(Line.PointOnLine(start, start, end));
             Assert.False(Line.PointOnLine(start, start, end));
             Assert.True(Line.PointOnLine(start, start, end, true));
-            Assert.True(Line.PointOnLine(start, start, end, true));
 
             //2. Almost end point
             Vector3 test = new Vector3(1e-6, 0, 0);

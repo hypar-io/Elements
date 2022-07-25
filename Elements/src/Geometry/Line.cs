@@ -480,26 +480,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Test if a point lies within a tolerance distance from given line segment
+        /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="includeEnds">Consider a point at the endpoint as on the line.
-        /// When true - point  tolerance away from end points considered on line.
-        /// When false - point should be inside the line, but not exactly above end points.</param>
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
             return Line.PointOnLine(point, Start, End, includeEnds);
         }
 
         /// <summary>
-        /// Test if a point lies within a tolerance distance from given line segment
+        /// Test if a point lies within tolerance of a given line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
         /// <param name="includeEnds">Consider a point at the endpoint as on the line.
-        /// When true - point  tolerance away from end points considered on line.
-        /// When false - point should be inside the line, but not exactly above end points.</param>
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
             if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
