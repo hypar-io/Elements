@@ -30,6 +30,7 @@
 - `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
+- `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
 
 ## 1.0.1
 
