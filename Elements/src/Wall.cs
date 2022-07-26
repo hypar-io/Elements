@@ -74,8 +74,6 @@ namespace Elements
 #pragma warning disable 612, 618
             this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
 #pragma warning restore 612, 618
-
-            UpdateBoundsAndComputeSolid();
         }
 
         /// <summary>

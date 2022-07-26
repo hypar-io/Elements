@@ -131,8 +131,6 @@ namespace Elements
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
             this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }

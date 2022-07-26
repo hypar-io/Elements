@@ -154,8 +154,6 @@ namespace Elements
             var height = BoundingBox.Max.Z - BoundingBox.Min.Z;
             var boxSolid = new Extrude(bottomProfile, height, Vector3.ZAxis, false);
             this.Representation = new Representation(new List<SolidOperation> { boxSolid });
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }

@@ -275,8 +275,6 @@ namespace Elements
             {
                 Representation = ConstructRepresentation();
             }
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }

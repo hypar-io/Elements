@@ -128,8 +128,6 @@ namespace Elements
                                                             this.Rotation,
                                                             false));
             }
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }

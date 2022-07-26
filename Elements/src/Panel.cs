@@ -69,8 +69,6 @@ namespace Elements
         {
             this.Representation.SolidOperations.Clear();
             this.Representation.SolidOperations.Add(new Lamina(this.Perimeter, false));
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }

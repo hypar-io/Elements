@@ -75,10 +75,6 @@ namespace Elements
         public virtual void UpdateRepresentations()
         {
             // Override in derived classes
-
-            // There is only one case when this should be called. When
-            // a geometric element has been deserialized for an unknown type.
-            UpdateBoundsAndComputeSolid();
         }
 
         /// <summary>

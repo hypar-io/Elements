@@ -96,8 +96,6 @@ namespace Elements
                 var o = (Extrude)this.Representation.SolidOperations[0];
                 o.Height = this.Height;
             }
-
-            UpdateBoundsAndComputeSolid();
         }
     }
 }
