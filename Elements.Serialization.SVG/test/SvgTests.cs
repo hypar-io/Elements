@@ -26,12 +26,13 @@ namespace Elements.Serialization.SVG.Tests
             var model = Model.FromJson(json, out var errors);
 
             model.UpdateRepresentations();
+            model.UpdateBoundsAndComputedSolids();
 
             SvgSection.CreatePlanFromModels(new[] { model },
                                             3,
                                             _frontContext,
                                             _backContext,
-                                            "ModelPlan.svg", planRotation: PlanRotation.None);
+                                            "ModelPlan.svg", planRotation: PlanRotation.LongestGridHorizontal);
         }
     }
 }

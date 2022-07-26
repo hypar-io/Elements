@@ -276,10 +276,10 @@ namespace Elements
             lines = new Dictionary<Guid, List<Geometry.Line>>();
 
             // var backPlane = new Plane(plane.Origin - plane.Normal * depth, plane.Normal);
-            var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>().ToList();
+            var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
             var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 
-            var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>().ToList();
+            var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>();
             var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition.Bounds.Intersects(plane, out _, geo.Transform)).ToList();
 
             var allIntersectingElements = new List<Element>();
@@ -289,11 +289,25 @@ namespace Elements
             IntersectElementsWithPlane(plane, allIntersectingElements, intersectionPolygons, beyondPolygons, lines);
         }
 
+        /// <summary>
+        /// Update the representations of all geometric elements in the model.
+        /// </summary>
         public void UpdateRepresentations()
         {
-            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>().ToList())
+            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
             {
                 geo.UpdateRepresentations();
+            }
+        }
+
+        /// <summary>
+        /// Update the bounds and computed solids of all geometric elements in the model.
+        /// </summary>
+        public void UpdateBoundsAndComputedSolids()
+        {
+            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
+            {
+                geo.UpdateBoundsAndComputeSolid();
             }
         }
 

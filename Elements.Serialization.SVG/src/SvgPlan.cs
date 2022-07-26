@@ -275,6 +275,8 @@ namespace Elements.Serialization.SVG
                     if (element.Value is GeometricElement geo)
                     {
                         geo.UpdateRepresentations();
+                        geo.UpdateBoundsAndComputeSolid();
+
                         if (geo.Bounds.Max.X > max.X)
                         {
                             max.X = geo.Bounds.Max.X;

@@ -80,14 +80,14 @@ namespace Elements
         /// <summary>
         /// Update the computed solid and the bounding box of the element.
         /// </summary>
-        protected void UpdateBoundsAndComputeSolid()
+        public void UpdateBoundsAndComputeSolid()
         {
             _csg = GetFinalCsgFromSolids();
             if (_csg == null)
             {
                 return;
             }
-            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())).ToList());
+            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
         }
 
         /// <summary>
