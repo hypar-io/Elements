@@ -802,14 +802,18 @@ namespace Elements.Geometry
         /// Get the closest point on the line from this point.
         /// </summary>
         /// <param name="line">The line on which to find the closest point.</param>
+        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
         /// <returns>The closest point on the line from this point.</returns>
-        public Vector3 ClosestPointOn(Line line)
+        public Vector3 ClosestPointOn(Line line, bool infinite = false)
         {
             var dir = line.Direction();
             var v = this - line.Start;
             var d = v.Dot(dir);
-            d = Math.Min(line.Length(), d);
-            d = Math.Max(d, 0);
+            if (!infinite)
+            {
+                d = Math.Min(line.Length(), d);
+                d = Math.Max(d, 0);
+            }
             return line.Start + dir * d;
         }
 
@@ -862,7 +866,7 @@ namespace Elements.Geometry
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
-        /// <param name="tolerance">Angle tolerance as cos.</param>
+        /// <param name="cosAngleTolerance">Angle tolerance as cos.</param>
         /// <returns></returns>
         public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = Vector3.COS_ANGLE_EPSILON)
         {

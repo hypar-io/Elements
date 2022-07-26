@@ -29,7 +29,7 @@ namespace Elements.Geometry
             {
                 var d = points[i];
                 var cd = d - a;
-                var tp = ab.Dot(ac.Cross(cd));
+                var tp = ab.Dot(ac.Cross(cd).Unitized());
                 if (Math.Abs(tp) > Vector3.EPSILON)
                 {
                     return false;
@@ -91,6 +91,7 @@ namespace Elements.Geometry
         {
             return FitLine(points, out _);
         }
+
         private static Line FitLine(this IList<Vector3> points, out IEnumerable<Vector3> directionsFromMean)
         {
             // get the mean point, presumably near the center of the pts
@@ -113,6 +114,17 @@ namespace Elements.Geometry
 
             directionsFromMean = ptsMinusMean;
             return new Line(meanPt, meanPt + averageDirFromMean.Unitized());
+        }
+
+        /// <summary>
+        /// Return an approximate fit line through a set of points using the least squares method.
+        /// </summary>
+        /// <param name="points">The points to fit. Should have at least 2 distinct points.</param>
+        /// <returns>An approximate fit line through a set of points using the least squares method.
+        /// If there is less than 2 distinct points, returns null.</returns>
+        public static Line BestFitLine(this IList<Vector3> points)
+        {
+            return Line.BestFit(points);
         }
 
         /// <summary>

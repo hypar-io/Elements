@@ -480,29 +480,41 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Test if a point lies within this line segment
+        /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
             return Line.PointOnLine(point, Start, End, includeEnds);
         }
 
         /// <summary>
-        /// Test if a point lies within a given line segment
+        /// Test if a point lies within tolerance of a given line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
+            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
             {
                 return true;
             }
-            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
+
+            var delta = end - start;
+            var lambda = (point - start).Dot(delta) / (end - start).Dot(delta);
+            if (lambda > 0 && lambda < 1)
+            {
+                var pointOnLine = start + lambda * delta;
+                return pointOnLine.IsAlmostEqualTo(point);
+            }
+            return false;
         }
 
         /// <summary>
@@ -1112,6 +1124,7 @@ namespace Elements.Geometry
             return (point - start).Length() / (end - start).Length();
         }
 
+        /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
@@ -1137,6 +1150,7 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// <summary>
         /// Projects current line onto a plane
         /// </summary>
         /// <param name="plane">Plane to project</param>
@@ -1154,6 +1168,96 @@ namespace Elements.Geometry
         internal override IList<Vector3> RenderVertices()
         {
             return new[] { this.Start, this.End };
+        }
+
+        /// <summary>
+        /// Return an approximate fit line through a set of points using the least squares method.
+        /// </summary>
+        /// <param name="points">The points to fit. Should have at least 2 distinct points.</param>
+        /// <returns>An approximate fit line through a set of points using the least squares method.
+        /// If there is less than 2 distinct points, returns null.</returns>
+        public static Line BestFit(IList<Vector3> points)
+        {
+            var distinctPoints = points.Distinct().ToList();
+            if (distinctPoints.Count < 2)
+            {
+                return null;
+            }
+            else if (distinctPoints.Count == 2)
+            {
+                return new Line(points[0], points[1]);
+            }
+
+            // find the coefficients of the straight line equation (y = m * x + b) using the least squares method
+            var m = FindMCoefficient(points);
+            var b = FindBCoefficient(points, m);
+            var areInfiniteCoefficients = double.IsInfinity(m) || double.IsInfinity(b);
+            Line line = null;
+            if (m.ApproximatelyEquals(0) || areInfiniteCoefficients)
+            {
+                // find the coefficients of the straight line equation (x = b0)
+                var b0 = FindBCoefficient(points.Select(t => new Vector3(t.Y, t.X)).ToList(), 0);
+                var currentLine = new Line(new Vector3(b0, 0), new Vector3(b0, 10));
+                if (areInfiniteCoefficients)
+                {
+                    line = currentLine;
+                }
+                else
+                {
+                    var sum1 = points.Sum(t => Math.Abs(t.Y - b));
+                    var sum2 = points.Sum(t => Math.Abs(t.X - b0));
+                    // select currentLine, if the sum of all distances from points to this line is minimal
+                    if (sum2 < sum1)
+                    {
+                        line = currentLine;
+                    }
+                }
+            }
+            // substitute the values x=0 and x=10 into the equation of a straight line for getting y value of points
+            line = line ?? new Line(new Vector3(0, b), new Vector3(10, m * 10 + b));
+
+            var closestPointsOnLine = points.Select(p => p.ClosestPointOn(line, true)).Select(p =>
+            {
+                var vector = p - line.Start;
+                var parameterizedPosition = vector.Length();
+                if (line.Direction().AngleTo(vector) > 90)
+                {
+                    parameterizedPosition *= -1;
+                }
+                return (p, parameterizedPosition);
+            }).OrderBy(t => t.parameterizedPosition);
+
+            var resultLine = new Line(closestPointsOnLine.First().p, closestPointsOnLine.Last().p);
+            return resultLine;
+        }
+
+        /// <summary>
+        /// Find the 'm' coefficient of the straight line equation (y = m * x + b) using the least squares method
+        /// </summary>
+        /// <param name="points">Points for which best fit line should be found.</param>
+        /// <returns>The 'm' coefficient of the straight line equation.</returns>
+        private static double FindMCoefficient(IList<Vector3> points)
+        {
+            double sumxy = points.Sum(p => p.X * p.Y);
+            var sumx = points.Sum(p => p.X);
+            var sumy = points.Sum(p => p.Y);
+            var sumx2 = points.Sum(p => p.X * p.X);
+            var m = (sumxy - sumx * sumy / points.Count) / (sumx2 - sumx * sumx / points.Count);
+            return m;
+        }
+
+        /// <summary>
+        /// Find the 'b' coefficient of the straight line equation (y = m * x + b) using the least squares method
+        /// </summary>
+        /// <param name="points">Points for which best fit line should be found.</param>
+        /// <param name="m">'m' coefficient of the straight line equation.</param>
+        /// <returns>The 'b' coefficient of the straight line equation.</returns>
+        private static double FindBCoefficient(IList<Vector3> points, double m)
+        {
+            var sumx = points.Sum(p => p.X);
+            var sumy = points.Sum(p => p.Y);
+            var b = (sumy - m * sumx) / points.Count;
+            return b;
         }
     }
 
