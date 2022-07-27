@@ -98,9 +98,9 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement element1)
+            if (element is GeometricElement geo)
             {
-                element1.UpdateRepresentations();
+                geo.UpdateRepresentations();
             }
 
             if (gatherSubElements)
