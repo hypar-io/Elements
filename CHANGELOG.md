@@ -9,6 +9,11 @@
 - `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
 - `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.
 - Default values for `AdaptiveGraphRouting.RoutingConfiguration` constructor.
+- `Line.BestFit(IList<Vector3> points)`
+- `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
+- `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
+- `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
+- `DoubleToleranceComparer`
 
 ### Changed
 
@@ -16,6 +21,8 @@
 - `Vector3.AreCollinear` are renamed into `Vector3.AreCollinearByDistance` and added `tolerance` parameter.
 - `Line.Trim` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Elements.Geometry.Solids.Edge` public constructor
+- `Elements.Geometry.Solids.Vertex` public constructor
 
 ### Fixed
 
