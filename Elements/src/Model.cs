@@ -259,7 +259,7 @@ namespace Elements
         /// <summary>
         /// Intersect the model with the provided plane.
         /// </summary>
-        /// <param name="plane">The plane.</param>
+        /// <param name="plane">The intersection plane.</param>
         /// <param name="intersectionPolygons">A collection of polygons resulting from the 
         /// intersection of the plane with all elements in the model.</param>
         /// <param name="beyondPolygons">A collection of polygons resulting from intersection
