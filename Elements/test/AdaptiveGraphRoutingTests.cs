@@ -260,7 +260,7 @@ namespace Elements.Tests
             {
                 var p = new Vector3(input.X, input.Y, configuration.MainLayer);
                 Assert.True(grid.TryGetVertexIndex(p, out ulong down, grid.Tolerance));
-                grid.AddVertex(input, new AddConnectVertex(grid.GetVertex(down)));
+                grid.AddVertex(input, new Connect(grid.GetVertex(down)));
             }
             grid.SubtractObstacle(obstacle);
 
@@ -599,16 +599,11 @@ namespace Elements.Tests
             this.Name = "Adaptive_Grid_Routing_Simple_Network";
 
             //1. Define grid skeleton.
-            //Intersections are not done automatically so lines are aligned manually.
             var c1 = new List<Vector3> {
                 new Vector3(2, 2, 0),
-                new Vector3(4, 2, 0),
                 new Vector3(8, 2, 0),
-                new Vector3(8, 5, 0),
                 new Vector3(8, 8, 0),
-                new Vector3(6, 8, 0),
                 new Vector3(2, 8, 0),
-                new Vector3(2, 5, 0),
                 new Vector3(2, 2, 0),
             };
             var c2 = new List<Vector3> {
@@ -633,7 +628,7 @@ namespace Elements.Tests
             var corridors = new List<List<Vector3>> { c1, c2, c3, c4, c5 };
             foreach (var c in corridors)
             {
-                grid.AddVertexStrip(c);
+                grid.AddVertices(c, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
             }
 
             //3. Define input vertices.
@@ -711,13 +706,14 @@ namespace Elements.Tests
         public void AdaptiveGraphRoutingAngleCheck()
         {
             AdaptiveGrid grid = new AdaptiveGrid();
-            var strip = grid.AddVertexStrip(new Vector3[] {
+            var vertices = new Vector3[] {
                 new Vector3(0, 0),
                 new Vector3(5, 0),
                 new Vector3(10, 0),
                 new Vector3(10, 5),
                 new Vector3(10, 10),
-            });
+            };
+            var strip = grid.AddVertices(vertices, AdaptiveGrid.VerticesInsertionMethod.Connect); 
 
             //Create two shortcuts - small 45 degree and long 30 degree.
             grid.AddEdge(strip[1].Id, strip[3].Id);
@@ -770,7 +766,7 @@ namespace Elements.Tests
             AdaptiveGrid grid = new AdaptiveGrid();
 
             // Shorter path need to go down up and down 
-            var strip = grid.AddVertexStrip(new Vector3[] {
+            var strip = grid.AddVertices(new Vector3[] {
                 new Vector3(0, 0, 5),
                 new Vector3(0, 0, 0),
                 new Vector3(2, 0, 0),
@@ -778,16 +774,16 @@ namespace Elements.Tests
                 new Vector3(4, 0, 1),
                 new Vector3(4, 0, 0),
                 new Vector3(5, 0, 0)
-            });
+            }, AdaptiveGrid.VerticesInsertionMethod.Connect);
 
             // Longer path goes around.
-            var sideStrip = grid.AddVertexStrip(new Vector3[]
+            var sideStrip = grid.AddVertices(new Vector3[]
             {
                 new Vector3(2, 0, 0),
                 new Vector3(2, 5, 0),
                 new Vector3(4, 5, 0),
                 new Vector3(4, 0, 0),
-            });
+            }, AdaptiveGrid.VerticesInsertionMethod.Connect);
 
             // Without any filters shortest path is taken.
             var c = new RoutingConfiguration();
