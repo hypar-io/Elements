@@ -481,22 +481,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Test if a point lies within this line segment
+        /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
             return Line.PointOnLine(point, Start, End, includeEnds);
         }
 
         /// <summary>
-        /// Test if a point lies within a given line segment
+        /// Test if a point lies within tolerance of a given line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
             if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
@@ -1120,7 +1124,7 @@ namespace Elements.Geometry
 
             return (point - start).Length() / (end - start).Length();
         }
-        
+
         /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
@@ -1247,6 +1251,7 @@ namespace Elements.Geometry
         /// Find the 'b' coefficient of the straight line equation (y = m * x + b) using the least squares method
         /// </summary>
         /// <param name="points">Points for which best fit line should be found.</param>
+        /// <param name="m">'m' coefficient of the straight line equation.</param>
         /// <returns>The 'b' coefficient of the straight line equation.</returns>
         private static double FindBCoefficient(IList<Vector3> points, double m)
         {

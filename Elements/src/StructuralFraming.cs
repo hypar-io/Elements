@@ -71,7 +71,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Construct empty beam.
+        /// Construct a framing element.
         /// </summary>
         public StructuralFraming() { }
 

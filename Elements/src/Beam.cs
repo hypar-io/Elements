@@ -60,7 +60,7 @@ namespace Elements
         { }
 
         /// <summary>
-        /// Construct an empty beam.
+        /// Construct a beam.
         /// </summary>
         public Beam() { }
     }

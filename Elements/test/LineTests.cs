@@ -721,8 +721,8 @@ namespace Elements.Geometry.Tests
                 new Vector3(10.21,8.65)
             };
             var line3 = Line.BestFit(points3);
-            var mCoef = 0.5615;
-            var bCoef = 2.034;
+            var mCoef = 0.56150040095236275;
+            var bCoef = 2.03395076348772;
             Assert.True(line3.PointOnLine(new Vector3(2, mCoef * 2 + bCoef)));
             Assert.True(line3.PointOnLine(new Vector3(7, mCoef * 7 + bCoef)));
         }
@@ -744,7 +744,6 @@ namespace Elements.Geometry.Tests
             //1. End points
             Assert.False(Line.PointOnLine(start, start, end));
             Assert.False(Line.PointOnLine(start, start, end));
-            Assert.True(Line.PointOnLine(start, start, end, true));
             Assert.True(Line.PointOnLine(start, start, end, true));
 
             //2. Almost end point
