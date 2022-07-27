@@ -923,7 +923,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// End points of each segment are extended until the next hit on both sides.
         /// </summary>
         /// <param name="points"></param>
-        public List<Vertex> AddExtendVertices(IList<Vector3> points)
+        private List<Vertex> AddExtendVertices(IList<Vector3> points)
         {
             List<Vertex> vertices = new List<Vertex>();
 
