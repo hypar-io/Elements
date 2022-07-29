@@ -1381,6 +1381,7 @@ namespace Elements.Serialization.glTF
                                                            bool mergeVertices = false)
         {
             geometricElement.UpdateRepresentations();
+            geometricElement.UpdateBoundsAndComputeSolid();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
