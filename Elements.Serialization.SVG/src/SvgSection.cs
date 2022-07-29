@@ -77,8 +77,7 @@ namespace Elements.Serialization.SVG
                                                 double gridHeadExtension = 2.0,
                                                 double gridHeadRadius = 0.5,
                                                 PlanRotation planRotation = PlanRotation.Angle,
-                                                double planRotationDegrees = 0.0
-                                                )
+                                                double planRotationDegrees = 0.0)
         {
             var rotation = GetRotationValueForPlan(models, planRotation, planRotationDegrees);
 
