@@ -36,28 +36,7 @@ namespace Elements.Serialization.SVG
                                                 PlanRotation planRotation = PlanRotation.Angle,
                                                 double planRotationDegrees = 0.0)
         {
-            var rotation = GetRotationValueForPlan(models, planRotation, planRotationDegrees);
-
-            var doc = new SvgDocument
-            {
-                Fill = SvgPaintServer.None
-            };
-            doc.CustomAttributes.Add("transform", $"rotate({rotation} 0 0)");
-
-            var sceneBounds = ComputeSceneBounds(models);
-
-            var plane = new Plane(new Vector3(0, 0, elevation), Vector3.ZAxis);
-            Draw(models,
-                 sceneBounds,
-                 plane,
-                 doc,
-                 frontContext,
-                 backContext,
-                 showGrid,
-                 gridHeadExtension,
-                 gridHeadRadius,
-                 rotation);
-
+            var doc = CreatePlanFromModels(models, elevation, frontContext, backContext, showGrid, gridHeadExtension, gridHeadRadius, planRotation, planRotationDegrees);
             using var stream = new FileStream(path, FileMode.Create, FileAccess.Write);
             doc.Write(stream);
         }
