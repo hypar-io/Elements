@@ -10,8 +10,6 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
-using Elements.Spatial;
-using Elements.Annotations;
 
 namespace Elements.Tests
 {

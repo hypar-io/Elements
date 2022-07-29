@@ -214,7 +214,7 @@ namespace Elements.Geometry
         internal static bool IsBehind(this Csg.Plane csgPlane, Plane plane)
         {
             var p = (csgPlane.Normal * csgPlane.W).ToVector3();
-            return p.DistanceTo(plane) < 0;
+            return plane.SignedDistanceTo(p) < 0;
         }
     }
 }

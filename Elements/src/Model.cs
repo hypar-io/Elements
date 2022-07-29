@@ -271,11 +271,6 @@ namespace Elements
                               out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
                               out Dictionary<Guid, List<Geometry.Line>> lines)
         {
-            intersectionPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
-            beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
-            lines = new Dictionary<Guid, List<Geometry.Line>>();
-
-            // var backPlane = new Plane(plane.Origin - plane.Normal * depth, plane.Normal);
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
             var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 
@@ -286,7 +281,7 @@ namespace Elements
             allIntersectingElements.AddRange(intersectingInstances);
             allIntersectingElements.AddRange(intersectingElements);
 
-            IntersectElementsWithPlane(plane, allIntersectingElements, intersectionPolygons, beyondPolygons, lines);
+            IntersectElementsWithPlane(plane, allIntersectingElements, out intersectionPolygons, out beyondPolygons, out lines);
         }
 
         /// <summary>
@@ -294,7 +289,7 @@ namespace Elements
         /// </summary>
         public void UpdateRepresentations()
         {
-            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
+            foreach (var geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
             {
                 geo.UpdateRepresentations();
             }
@@ -313,10 +308,14 @@ namespace Elements
 
         private void IntersectElementsWithPlane(Plane plane,
                                        List<Element> intersecting,
-                                       Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
-                                       Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
-                                       Dictionary<Guid, List<Geometry.Line>> lines)
+                                       out Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
+                                       out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
+                                       out Dictionary<Guid, List<Geometry.Line>> lines)
         {
+            intersectionPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            lines = new Dictionary<Guid, List<Geometry.Line>>();
+
             Transform localTransform = null;
             foreach (var element in intersecting)
             {
@@ -326,11 +325,15 @@ namespace Elements
                     geo = element as GeometricElement;
                     localTransform = geo.Transform;
                 }
-                else if (element is ElementInstance)
+                else if (element is ElementInstance instance)
                 {
-                    var instance = element as ElementInstance;
                     geo = instance.BaseDefinition;
                     localTransform = instance.Transform;
+                }
+
+                if (geo._csg == null)
+                {
+                    continue;
                 }
 
                 if (geo.Representation != null)
