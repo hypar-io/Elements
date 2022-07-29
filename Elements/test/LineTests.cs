@@ -784,6 +784,32 @@ namespace Elements.Geometry.Tests
             Assert.False(Line.PointOnLine(test, start, end, true));
         }
 
+        [Fact]
+        public void IsOnPlane()
+        {
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+
+            var lineOnPlane = new Line(new Vector3(1, 2), new Vector3(3, 2));
+            Assert.True(lineOnPlane.IsOnPlane(plane));
+
+            var tolerance = 0.001;
+            var lineOnPlaneWithTolerance = new Line(new Vector3(1, 2, 0.0009), new Vector3(3, 2, -0.0009));
+            Assert.True(lineOnPlaneWithTolerance.IsOnPlane(plane, tolerance));
+
+            var lineAbovePlane = new Line(new Vector3(1, 2, 3), new Vector3(3, 2, 3));
+            Assert.False(lineAbovePlane.IsOnPlane(plane));
+
+            var lineWithStartOnPlane = new Line(new Vector3(1, 2), new Vector3(3, 2, 3));
+            Assert.False(lineWithStartOnPlane.IsOnPlane(plane));
+
+            var lineWithEndOnPlane = new Line(new Vector3(1, 2, 3), new Vector3(3, 2));
+            Assert.False(lineWithEndOnPlane.IsOnPlane(plane));
+
+            var lineIntersectingPlane = new Line(new Vector3(1, 2, -3), new Vector3(3, 2, 3));
+            Assert.True(lineIntersectingPlane.Intersects(plane, out var _));
+            Assert.False(lineIntersectingPlane.IsOnPlane(plane));
+        }
+
         public static IEnumerable<object[]> ProjectedData()
         {
             var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
