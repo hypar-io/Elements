@@ -21,16 +21,16 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
@@ -40,10 +40,13 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
+
+#pragma warning disable CS0618
             this.Origin = @origin;
+#pragma warning restore CS0618
             this.Transform = @transform;
             this.Elements = @elements;
         }

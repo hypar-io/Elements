@@ -13,23 +13,23 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
         /// <summary>The element's transform.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Material", Required = Required.AllowNull)]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Elements
         /// <param name="isElementDefinition"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
@@ -223,7 +223,7 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        internal virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;

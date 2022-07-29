@@ -160,7 +160,7 @@ namespace Elements.Geometry.Tests
 
             await profile.SetGeometryAsync();
 
-            var beam = new Beam(new Line(Vector3.Origin, new Vector3(30, 0, 0)), profile, BuiltInMaterials.Concrete);
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(30, 0, 0)), profile, material: BuiltInMaterials.Concrete);
 
             Model.AddElement(beam);
         }

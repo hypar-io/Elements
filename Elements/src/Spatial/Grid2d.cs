@@ -13,7 +13,7 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid2dTests.cs?name=example)]
     /// </example>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class Grid2d
     {
         #region Properties
@@ -778,7 +778,8 @@ namespace Elements.Spatial
                 boundariesInGridSpace, PolygonIntersectionTolerance);
             if (trimmedRect == null || trimmedRect.Count < 1) { return false; }
             if (trimmedRect.Count > 1) { return true; }
-            return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON);
+            // we have to up the tolerance slightly for this to work consistently.
+            return !trimmedRect[0].IsAlmostEqualTo(baseRect, Vector3.EPSILON * 2, true);
         }
 
         /// <summary>

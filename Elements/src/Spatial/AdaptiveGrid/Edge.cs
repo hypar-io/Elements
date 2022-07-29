@@ -23,21 +23,35 @@ namespace Elements.Spatial.AdaptiveGrid
         public ulong EndId;
 
         /// <summary>
-        /// The AdaptiveGrid that this Vertex belongs to.
-        /// </summary>
-        public AdaptiveGrid AdaptiveGrid { get; private set; }
-
-        /// <summary>
         /// ID of this child.
         /// </summary>
         public ulong Id { get; internal set; }
 
         internal Edge(AdaptiveGrid adaptiveGrid, ulong id, ulong vertexId1, ulong vertexId2)
         {
-            AdaptiveGrid = adaptiveGrid;
             Id = id;
-
             this.SetVerticesFromIds(vertexId1, vertexId2);
+        }
+
+        /// <summary>
+        /// ID of other Vertex of this Edge.
+        /// </summary>
+        /// <param name="vertexId">ID of one of edge vertices. Exception is thrown if not present.</param>
+        /// <returns></returns>
+        public ulong OtherVertexId(ulong vertexId)
+        {
+            if (vertexId == StartId)
+            {
+                return EndId;
+            }
+            else if (vertexId == EndId)
+            {
+                return StartId;
+            }
+            else
+            {
+                throw new ArgumentException("Id is not present in the edge");
+            }
         }
 
         /// <summary>
@@ -88,30 +102,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 this.EndId = id1;
                 this.StartId = id2;
             }
-        }
-
-        /// <summary>
-        /// Get associated Vertices.
-        /// </summary>
-        /// <returns></returns>
-        public List<Vertex> GetVertices()
-        {
-            return new List<Vertex>() {
-                this.AdaptiveGrid.GetVertex(this.StartId),
-                this.AdaptiveGrid.GetVertex(this.EndId)
-            };
-        }
-
-        /// <summary>
-        /// Get the geometry that represents this Edge or DirectedEdge.
-        /// </summary>
-        /// <returns></returns>
-        public Line GetGeometry()
-        {
-            return new Line(
-                this.AdaptiveGrid.GetVertex(this.StartId).Point,
-                this.AdaptiveGrid.GetVertex(this.EndId).Point
-            );
         }
     }
 }

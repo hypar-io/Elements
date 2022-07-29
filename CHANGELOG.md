@@ -1,23 +1,102 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+
+- `Material` now supports a `DrawInFront` property.
+- `TiledCeiling.GetTileCells()`
+- `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
+- `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.
+- Default values for `AdaptiveGraphRouting.RoutingConfiguration` constructor.
+- `Line.BestFit(IList<Vector3> points)`
+- `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
+- `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
+- `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
+- `DoubleToleranceComparer`
+- `Line.IsOnPlane()` method
+
+### Changed
+
+- `AdaptiveGraphRouting` how recognizes edges as affected by hint line of the same direction if part of it is close enough.
+- `Vector3.AreCollinear` are renamed into `Vector3.AreCollinearByDistance` and added `tolerance` parameter.
+- `Line.Trim` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
+- `Elements.Geometry.Solids.Edge` public constructor
+- `Elements.Geometry.Solids.Vertex` public constructor
+- `Line.PointOnLine` now uses distance to line instead of dot product. 
+
+### Fixed
+
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
+- `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
+- `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
+
+## 1.0.1
+
+### Added
+
+- `Dimension`
+- `LinearDimension`
+- `AlignedDimension`
+- `ContinuousDimension`
+- `Vector3.AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double tolerance)`
+
+
+### Fixed
+
+- #805
+
+### Fixed
+
+- `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear
+- `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if points coordinates difference is larger than `Vector3.EPSILON`
+- `EdgeDisplaySettings` for materials to control the display of lines in supported viewers (like Hypar.io).
+- `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
+- `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
+- `Line.Projected(Plane plane)` create new line projected onto plane
+
+### Changed
+
+- Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
+- `TryToGraphicsBuffers` is now public
+
 ## 1.0.0
 
 ### Added
+
 - `Mesh.Sphere(double radius, int divisions)`
-- `Model.AllElementsAssignableFromType<T>()`
 - `Material.EmissiveTexture`
 - `Material.EmissiveFactor`
+- `PriorityQueue`
+- `AdaptiveGraphRouting`
+- `AdaptiveGrid` constructor with no parameters.
+- `AdaptiveGrid.AddVertexStrip(IList<Vector3> points)`
+- `AdaptiveGrid.CutEdge(Edge edge, Vector3 position)`
+- `AdaptiveGrid.ClosestVertex(Vector3 location)` and `AdaptiveGrid.ClosestEdge(Vector3 location)`
+- `AdaptiveGrid.RemoveEdge(Edge edge)`
 
 ### Changed
-- Remove ``removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+
+- Remove `removeCutEdges` from `AdaptiveGrid.SubtractBox` and always remove cut parts of intersected edges.
+- `GenerateUserElementTypeFromUriAsync` now takes an optional `excludedTypes`
+  argument.
+- Remove `AdaptiveGrid` reference from `Edge` and `Vertex` Move `Edge.GetVertices` and `Edge.GetLine` to `AdaptiveGrid`.
+- Rename `AdaptiveGrid.DeleteEdge(Edge edge)` into `RemoveEdge` and is not public.
+- `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2)` is now public.
 
 ### Fixed
+
 - `Vector3.AreCollinear(Vector3 a, Vector3 b, Vector3 c)` would return `false` if two points are coincident but not exactly.
 - `Line.TryGetOverlap(Line line, out Line overlap)` would return incorrect results due to wrong internal sorting.
+- `Profile.UnionAll, Difference, Intersection, Offset` no longer produce internal loops in `Perimeter` or `Voids`.
 
 ## 0.9.9
 
 ### Added
+
 - `Solid.Union(Solid a, Transform aTransform, Solid b, Transform bTransform)`
 - `Solid.Union(SolidOperation a, SolidOperation b)`
 - `Solid.Difference(Solid a, Transform aTransform, Solid b, Transform bTransform)`
@@ -35,10 +114,12 @@
 - `Line.GetOverlap(Line line)`
 
 ### Changed
+
 - Add parameter `removeCutEdges` to `AdaptiveGrid.SubtractBox` that control if cut parts of intersected edges need to be inserted into the graph.
 - Material colors are now exported to glTF using linear color space. Conversion from sRGB to linear color space happens during glTF export.
 
 ### Fixed
+
 - Under some circumstances `Bezier.Length()` would return incorrect results
 
 ## 0.9.8
@@ -57,6 +138,7 @@
 ## 0.9.7
 
 ### Added
+
 - `GridLine.GetCircleTransform()`
 - `Network.ToModelText(List<Vector3> nodeLocations, Color color)`
 - Content Elements can now use an optional disk cache when running locally for testing purposes, to speed up repeated tests or runs, by setting `GltfExtensions.GltfCachePath`.

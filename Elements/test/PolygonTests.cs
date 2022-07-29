@@ -619,6 +619,18 @@ namespace Elements.Geometry.Tests
             Assert.Equal(1.0, ta.Area());
             var tb = b.TransformedPolygon(t);
             Assert.Equal(4.0, tb.Area());
+
+            var concave = new Polygon(new[] {
+                new Vector3(5, 0, 0),
+                new Vector3(5, 1, 0),
+                new Vector3(3, 1, 0),
+                new Vector3(3, 4, 0),
+                new Vector3(5, 4, 0),
+                new Vector3(5, 5, 0),
+                new Vector3(0, 5, 0),
+                new Vector3(0, 0, 0),
+            });
+            Assert.Equal(19, concave.Area());
         }
 
         [Fact]
@@ -719,6 +731,37 @@ namespace Elements.Geometry.Tests
             };
             var coHull = ConvexHull.FromPoints(coPts);
             Assert.Equal(50, coHull.Area());
+        }
+
+        [Fact]
+        public void FromAlignedBoundingBox2dAlongAxis()
+        {
+            Name = nameof(FromAlignedBoundingBox2dAlongAxis);
+            // handle random points test
+            var pts = new List<Vector3> {
+                new Vector3(2,1),
+                new Vector3(1,3),
+                new Vector3(5,5),
+                new Vector3(6,3),
+                new Vector3(2,2),
+                new Vector3(2.5,3),
+                new Vector3(4,3)
+            };
+            var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, pts[1] - pts[0]);
+            Assert.True(boundingRect.Area().ApproximatelyEquals(10));
+            Model.AddElements(pts.Select(p => new ModelCurve(new Circle(p, 0.2))));
+            Model.AddElements(new ModelCurve(boundingRect));
+
+            // handle collinear points test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0)
+            };
+            var coBoundingRect = Polygon.FromAlignedBoundingBox2d(coPts, new Vector3(1, 0));
+            Assert.Equal(1, coBoundingRect.Area());
         }
 
         [Fact]
@@ -2000,6 +2043,17 @@ namespace Elements.Geometry.Tests
                 new Vector3(0.0, -6.0),
                 Vector3.Origin,
             });
+        }
+
+
+        [Fact]
+        public void CoplanarWithinTolerance()
+        {
+            // this polygon has some small amount of deviation from planar (6.3e-7)
+            var json = "{\n            \"discriminator\": \"Elements.Geometry.Polygon\",\n            \"Vertices\": [\n              {\n                \"X\": 30.00108,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5322999954223633,\n                \"Y\": -8.758851356437756,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": 7.8653690051598115,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 14.06867950383497,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 21.64777460957137,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 30.00108,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              }\n            ]\n          }";
+            // verify does not throw
+            var polygon = JsonConvert.DeserializeObject<Polygon>(json);
+            Assert.NotNull(polygon);
         }
     }
 }

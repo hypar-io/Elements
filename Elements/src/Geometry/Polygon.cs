@@ -28,12 +28,16 @@ namespace Elements.Geometry
         /// Construct a polygon.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Polygon(IList<Vector3> @vertices) : base(vertices)
         {
             _plane = Plane();
         }
 
+        /// <summary>
+        /// Validate that this Polygon's vertices are coplanar, clean up any
+        /// duplicate vertices, and fix any overlapping edges.
+        /// </summary>
         protected override void ValidateVertices()
         {
             if (!Vertices.AreCoplanar())
@@ -42,7 +46,7 @@ namespace Elements.Geometry
             }
 
             this.Vertices = Vector3.RemoveSequentialDuplicates(this.Vertices, true);
-            DeleteVerticesForOverlappingEdges(this.Vertices);
+            DeleteVerticesForOverlappingEdges();
             if (this.Vertices.Count < 3)
             {
                 throw new ArgumentException("The polygon could not be created. At least 3 vertices are required.");
@@ -1818,6 +1822,48 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the rectangle along axis containing a set of points,
+        /// calculated without regard for Z coordinate,
+        /// located at the height of points minimum Z coordinate.
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle.</param>
+        /// <param name="axis">The axis along which the rectangle is built. Must be a non-zero vector.</param>
+        /// <param name="minSideSize">The minimum size of a side of a polygon when all points lie on the same line and polygon cannot be constructed. Must be greater than 0.</param>
+        /// <returns></returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)
+        {
+            if (minSideSize < Vector3.EPSILON)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minSideSize), "Must be greater than 0.");
+            }
+
+            if (axis.IsZero())
+            {
+                throw new ArgumentException("Axis must be a non-zero vector.", nameof(axis));
+            }
+            var transform = new Transform(Vector3.Origin, axis, Vector3.ZAxis);
+            var box = new Box(points, transform);
+            var xOffset = 0.0;
+            var length = box.Bounds.Max.X - box.Bounds.Min.X;
+            var yOffset = 0.0;
+            var width = box.Bounds.Max.Y - box.Bounds.Min.Y;
+            if (length.ApproximatelyEquals(0))
+            {
+                length = minSideSize / 2;
+                xOffset = minSideSize / 2;
+            }
+            if (width.ApproximatelyEquals(0))
+            {
+                width = minSideSize / 2;
+                yOffset = minSideSize / 2;
+            }
+            var boundary = Rectangle(new Vector3(box.Bounds.Min.X - xOffset, box.Bounds.Min.Y - yOffset),
+                                     new Vector3(box.Bounds.Min.X + length, box.Bounds.Min.Y + width))
+                          .TransformedPolygon(transform.Moved(new Vector3(0, 0, box.Bounds.Min.Z)));
+            return boundary;
+        }
+
+        /// <summary>
         /// Find a point that is guaranteed to be internal to the polygon.
         /// </summary>
         public Vector3 PointInternal()
@@ -1951,16 +1997,16 @@ namespace Elements.Geometry
             int count = this.Vertices.Count;
             var unique = new List<Vector3>(count);
 
-            if (!Vector3.AreCollinear(Vertices[count - 1], Vertices[0], Vertices[1]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 1], Vertices[0], Vertices[1]))
                 unique.Add(Vertices[0]);
 
             for (int i = 1; i < count - 1; i++)
             {
-                if (!Vector3.AreCollinear(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                if (!Vector3.AreCollinearByDistance(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
                     unique.Add(Vertices[i]);
             }
 
-            if (!Vector3.AreCollinear(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
                 unique.Add(Vertices[count - 1]);
 
             return new Polygon(unique);
@@ -2201,31 +2247,132 @@ namespace Elements.Geometry
         /// E|_________|B_____A
         /// Vertex A will be deleted
         /// </summary>
-        /// <param name="vertices"></param>
-        private void DeleteVerticesForOverlappingEdges(IList<Vector3> vertices)
+        private void DeleteVerticesForOverlappingEdges()
         {
-            if (vertices.Count < 4)
+            if (Vertices.Count < 4)
             {
                 return;
             }
 
-            for (var i = 0; i < vertices.Count; i++)
+            for (var i = 0; i < Vertices.Count; i++)
             {
-                var a = vertices[i];
-                var b = vertices[(i + 1) % vertices.Count];
-                var c = vertices[(i + 2) % vertices.Count];
+                var a = Vertices[i];
+                var b = Vertices[(i + 1) % Vertices.Count];
+                var c = Vertices[(i + 2) % Vertices.Count];
                 bool invalid = (a - b).Unitized().Dot((b - c).Unitized()) < (Vector3.EPSILON - 1);
                 if (invalid)
                 {
-                    vertices.Remove(b);
+                    Vertices.Remove(b);
                     i--;
 
                     if (a.IsAlmostEqualTo(c))
                     {
-                        vertices.Remove(c);
+                        Vertices.Remove(c);
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// A Polygon can't have self intersections, but points can still lay on other lines.
+        /// This leads to hidden voids embedded in the perimeter.
+        /// This function checks if any points are on another line of the loop and splits into distinct loops if found.
+        /// </summary>
+        /// <returns>List of simple polygons</returns>
+        internal List<Polygon> SplitInternalLoops()
+        {
+            List<List<Vector3>> polygonPresets = new List<List<Vector3>>();
+
+            //Store accumulated vertices and lines between them.
+            List<Vector3> loopVertices = new List<Vector3>();
+            List<Line> openLoop = new List<Line>();
+
+            //Check if a point lay on active open loop lines. 
+            foreach (var v in Vertices)
+            {
+                bool intersectionFound = false;
+                for (int i = 0; i < openLoop.Count; i++)
+                {
+                    if (openLoop[i].PointOnLine(v) && v.DistanceTo(openLoop[i]) < Vector3.EPSILON)
+                    {
+                        //Remove points and lines from intersection points to this.
+                        var vertices = loopVertices.Skip(i + 1).ToList();
+                        loopVertices.RemoveRange(i + 1, vertices.Count);
+                        openLoop.RemoveRange(i + 1, vertices.Count - 1);
+                        //Cut intersected line and add this point to open loop.
+                        loopVertices.Add(v);
+                        openLoop[i] = new Line(openLoop[i].Start, v);
+
+                        //Loop can possibly be just two points connected forth and back.
+                        //Filter it early.
+                        vertices.Add(v);
+                        if (vertices.Count > 2)
+                        {
+                            polygonPresets.Add(vertices);
+                        }
+                        intersectionFound = true;
+                        break;
+                    }
+                }
+
+                //Then check if line (this plus last points) intersects with any accumulated points (going backward)
+                if (!intersectionFound)
+                {
+                    Line segment = loopVertices.Any() ? new Line(loopVertices.Last(), v) : null;
+                    for (int i = loopVertices.Count - 1; i >= 0; i--)
+                    {
+                        //Last point is already part of the line.
+                        if (i == loopVertices.Count)
+                        {
+                            continue;
+                        }
+
+                        if (segment.PointOnLine(loopVertices[i]) && loopVertices[i].DistanceTo(segment) < Vector3.EPSILON)
+                        {
+                            var vertices = loopVertices.Skip(i).ToList();
+                            segment = new Line(loopVertices[i], segment.End);
+
+                            loopVertices.RemoveRange(i + 1, vertices.Count - 1);
+                            openLoop.RemoveRange(i, vertices.Count - 1);
+
+                            if (vertices.Count > 2)
+                            {
+                                polygonPresets.Add(vertices);
+                            }
+                        }
+                    }
+
+                    //If no intersection found just add point and line to open loop.
+                    loopVertices.Add(v);
+                    if (segment != null)
+                    {
+                        openLoop.Add(segment);
+                    }
+                }
+            }
+
+            //Leftover points form last loop if it has enough points.
+            if (loopVertices.Count > 2)
+            {
+                polygonPresets.Add(loopVertices);
+            }
+
+            List<Polygon> polygons = new List<Polygon>();
+            foreach (var preset in polygonPresets)
+            {
+                try
+                {
+                    //Polygon constructor cleanup removes any excess vertices and segments.
+                    //This can lead to, again, having too little vertices for valid polygon.
+                    var loop = new Polygon(preset);
+                    polygons.Add(loop);
+                }
+                catch
+                {
+                    //Just ignore polygons that failed check due to having less than 3 points.
+                }
+            }
+            return polygons;
         }
     }
 

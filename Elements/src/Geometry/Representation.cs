@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -7,7 +8,7 @@ namespace Elements.Geometry
     public class Representation
     {
         /// <summary>A collection of solid operations.</summary>
-        [Newtonsoft.Json.JsonProperty("SolidOperations", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("SolidOperations", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
 
@@ -15,7 +16,7 @@ namespace Elements.Geometry
         /// Construct a representation.
         /// </summary>
         /// <param name="solidOperations">A collection of solid operations.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Representation(IList<SolidOperation> @solidOperations)
         {
             this.SolidOperations = @solidOperations;
