@@ -369,7 +369,7 @@ namespace Elements
                         {
                             var a = csgPoly.Vertices[i].Pos.ToVector3();
                             var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
-                            if ((a, b).Intersects(plane, out var xsect))
+                            if (plane.Intersects((a, b), out var xsect))
                             {
                                 edgeResults.Add(xsect);
                             }

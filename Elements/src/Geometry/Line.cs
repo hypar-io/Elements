@@ -1260,27 +1260,4 @@ namespace Elements.Geometry
             return b;
         }
     }
-
-    /// <summary>
-    /// Methods for processing edges.
-    /// </summary>
-    public static class EdgeExtensions
-    {
-        /// <summary>
-        /// Does this edge intersect the provided plane?
-        /// </summary>
-        /// <param name="edge">The end of the edge.</param>
-        /// <param name="plane">The intersection plane.</param>
-        /// <param name="result">The intersection.</param>
-        /// <returns>True if an intersection occurs, otherwise false.</returns>
-        public static bool Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)
-        {
-            if (Line.Intersects(plane, edge.from, edge.to, out result))
-            {
-                return true;
-            }
-            result = default;
-            return false;
-        }
-    }
 }
