@@ -101,6 +101,7 @@ namespace Elements
             if (element is GeometricElement geo)
             {
                 geo.UpdateRepresentations();
+                geo.UpdateBoundsAndComputeSolid();
             }
 
             if (gatherSubElements)
