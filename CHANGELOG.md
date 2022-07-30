@@ -21,6 +21,8 @@
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
+- `DoubleToleranceComparer`
+- `Line.IsOnPlane()` method
 
 ### Changed
 
