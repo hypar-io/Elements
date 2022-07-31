@@ -14,6 +14,8 @@
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `Solid.ToCSG()` extension method is now an instance method on `Solid`.
+- `DoubleToleranceComparer`
+- `Line.IsOnPlane()` method
 
 ### Changed
 
