@@ -13,6 +13,8 @@
 - `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
+- `DoubleToleranceComparer`
+- `Line.IsOnPlane()` method
 
 ### Changed
 
