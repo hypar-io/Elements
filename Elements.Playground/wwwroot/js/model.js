@@ -11,6 +11,8 @@ window.model = {
 const scene = new THREE.Scene();
 var gltfScene = null;
 var editor = null;
+var directionalLight = null;
+var renderer = null;
 
 function loadModel(glb) {
     const contentArray = Blazor.platform.toUint8Array(glb);
@@ -26,6 +28,13 @@ function loadModel(glb) {
             if (gltfScene != null) {
                 scene.remove(gltfScene);
             }
+
+            gltf.scene.traverse((o) => {
+                if (o instanceof THREE.Mesh) {
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                }
+            })
 
             scene.add(gltf.scene);
             gltfScene = gltf.scene;
@@ -66,26 +75,59 @@ function initializeEditor() {
 
 function initialize3D() {
     const div = document.getElementById("model");
-    const camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 300);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = THREE.sRGBEncoding
+    renderer.toneMappingExposure = 0.9
 
     renderer.setSize(div.clientWidth, div.clientHeight);
     div.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight.position.set(0.5, 0.5, 0);
+    directionalLight = new THREE.DirectionalLight(0xffffff, 0.8 * Math.PI);
+    directionalLight.position.set(-2, 10, 0);
+    directionalLight.castShadow = true; // default false
+    // directionalLight.shadow.radius = 12
     scene.add(directionalLight);
 
-    const size = 100;
-    const divisions = 20;
+    var side = 30
+    directionalLight.shadow.mapSize.width = 4096;
+    directionalLight.shadow.mapSize.height = 4096;
+    // directionalLight.shadow.camera.near = 1;
+    // directionalLight.shadow.camera.far = 20;
+    directionalLight.shadow.camera.left = -side
+    directionalLight.shadow.camera.right = side
+    directionalLight.shadow.camera.top = side
+    directionalLight.shadow.camera.bottom = -side
+    directionalLight.shadow.bias = -0.00001 // -r / 2000000.0
 
-    const gridHelper = new THREE.GridHelper(size, divisions, "darkgray", "lightgray");
-    scene.add(gridHelper);
+    // const size = 100;
+    // const divisions = 20;
 
-    const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1.0);
+    // const gridHelper = new THREE.GridHelper(size, divisions, "darkgray", "lightgray");
+    // scene.add(gridHelper);
+
+    // const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
+    // scene.add(helper);
+
+    // Create a shadow plane
+    var shadowMaterial = new THREE.ShadowMaterial();
+    shadowMaterial.opacity = 0.5;
+    const planeGeometry = new THREE.PlaneGeometry(50, 50, 32, 32);
+    const plane = new THREE.Mesh(planeGeometry, shadowMaterial);
+    plane.rotateX(-Math.PI / 2);
+    plane.receiveShadow = true;
+    scene.add(plane);
+
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+
+    const light = new THREE.AmbientLight(0x404040); // soft white light
     scene.add(light);
 
     camera.position.z = 5;
