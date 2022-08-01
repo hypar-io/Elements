@@ -116,14 +116,12 @@ return model;";
 
     public static async Task Run()
     {
-        Console.WriteLine("Running!");
         await RunInternal();
     }
 
     public static async Task UpdateGlobalsAndRun(string key, ChangeEventArgs args)
     {
         globals.Inputs[key] = double.Parse(args?.Value.ToString());
-        Console.WriteLine("Running!");
         await RunInternal();
     }
 
