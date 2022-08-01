@@ -15,6 +15,7 @@
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
+- `Polyline.GetParameterAt(Vector3 point)` method
 
 ### Changed
 
