@@ -8,7 +8,6 @@
 @using System.IO
 @using System.Threading
 @using System.Web
-@using System.Diagnostics
 
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
@@ -16,7 +15,13 @@
 @using System.Text.RegularExpressions;
 <div class="grid">
     <button class="run" disabled=@loading @onclick="CompileAndRun">Run</button>
-    <div id="inputs">Put inputs here!</div>
+    <div id="inputs">
+        @foreach (var parameter in globals.Inputs)
+{
+        <p>@parameter.Key</p>
+        <input type="range" min="1" max="100" value="50" class="slider" id="length" @onchange="e=>UpdateGlobalsAndRun(parameter.Key,e)">
+}
+    </div>
     <div id="editor">@csharp</div>
     <div id="model"></div>
     <div class="output">@((MarkupString)Regex.Replace(
@@ -25,8 +30,8 @@
 
 @code {
     bool loading = true;
+    private static Globals globals = new Globals();
     private static string csharp = @"var model = new Model();
-
 var length = 10;
 
 Validator.DisableValidationOnConstruction = true;
@@ -51,39 +56,38 @@ for(var i=0; i<1; i++)
     Vector3 last = default(Vector3);
     for(var j=0.0; j<=1.0; j+=0.1)
     {
-        var pt = bottomChord.PointAt(j);
-        var top = pt + new Vector3(0,0,5);
-        var panelLine = new Line(pt, top);
-        var panelBeam = new Beam(panelLine, p, null, m);
-        model.AddElement(panelBeam);
+    var pt = bottomChord.PointAt(j);
+    var top = pt + new Vector3(0,0,5);
+    var panelLine = new Line(pt, top);
+    var panelBeam = new Beam(panelLine, p, null, m);
+    model.AddElement(panelBeam);
 
-        if(j > 0.0)
-        {
-            var braceLine = new Line(top, last);
-            var braceBeam = new Beam(braceLine, p, null, m);
-            model.AddElement(braceBeam);
-        }
-        last = pt;
+    if(j > 0.0)
+    {
+    var braceLine = new Line(top, last);
+    var braceBeam = new Beam(braceLine, p, null, m);
+    model.AddElement(braceBeam);
+    }
+    last = pt;
     }
 }
 return model;";
     private static string Output = "";
     private static IJSUnmarshalledRuntime Runtime;
     [Inject] private HttpClient Client { get; set; }
+    private static Func<object[], Task> ExecutionDelegate;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Runtime = JSUnmarshalledRuntime;
+        await Compiler.InitializeMetadataReferences(Client);
+        await base.OnInitializedAsync();
+        loading = false;
 
-        Compiler.InitializeMetadataReferences(Client);
+        globals.Inputs["length"] = 5;
+        globals.Inputs["height"] = 10;
 
-        base.OnInitializedAsync();
-
-        return Compiler.WhenReady(() =>
-        {
-            loading = false;
-            return Task.FromResult(0);
-        });
+        await Task.FromResult(0);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -103,13 +107,61 @@ return model;";
     }
 
     [JSInvokable]
-    public static Task CompileAndRun()
+    public static async Task CompileAndRun()
     {
-        Console.WriteLine("Invoking run from c#...");
-        return Compiler.WhenReady(RunInternal);
+        Compile();
+        await Run();
     }
 
-    static async Task RunInternal()
+    public static async Task Run()
+    {
+        Console.WriteLine("Running!");
+        await RunInternal();
+    }
+
+    public static async Task UpdateGlobalsAndRun(string key, ChangeEventArgs args)
+    {
+        globals.Inputs[key] = double.Parse(args?.Value.ToString());
+        Console.WriteLine("Running!");
+        await RunInternal();
+    }
+
+    [JSInvokable]
+    public static async Task RunInternal()
+    {
+        var sw = Stopwatch.StartNew();
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        if(ExecutionDelegate == null)
+        {
+            Console.WriteLine("There is no execution method.");
+            Output += writer.ToString();
+            Console.SetOut(currentOut);
+            sw.Stop();
+            return;
+        }
+
+        var model = await (Task<object>)ExecutionDelegate(new object[] { globals, null });
+        Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
+
+        await Task.Run(() =>
+        {
+            sw.Start();
+            var glb = ((Elements.Model)model).ToGlTF();
+            Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+            Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
+        });
+
+        Output += writer.ToString();
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+    }
+
+    static void Compile()
     {
         Output = "";
         var sw = Stopwatch.StartNew();
@@ -122,37 +174,28 @@ return model;";
         Trace.Listeners.Clear();
         Trace.Listeners.Add(
         new TextWriterTraceListener(Console.Out));
+        
+        ExecutionDelegate = null;
 
-        try
+        // Compilation warnings will be written to console.out
+        // which is redirected here to the writer.
+        var (success, asm, compilation) = Compiler.LoadSource(csharp);
+        if (success)
         {
-            var (success, asm, compilation) = Compiler.LoadSource(csharp);
-            if (success)
-            {
-                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
-                var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
-                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
 
-                var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-                var model = await (Task<object>)submission(new object[] { null, null });
-                Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
-
-                await Task.Run(() =>
-                {
-                    var glb = ((Elements.Model)model).ToGlTF();
-                    Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                });
-            }
+            ExecutionDelegate = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+            Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine("Compilation failed with exception.");
-            Console.WriteLine(ex.ToString());
+            Console.WriteLine("Compilation was not successful. The execution will not run.");
         }
-        finally
-        {
-            Output += writer.ToString();
-            Console.SetOut(currentOut);
-        }
+        
+        Output += writer.ToString();
+        Console.SetOut(currentOut);
 
         sw.Stop();
     }

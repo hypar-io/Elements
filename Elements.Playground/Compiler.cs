@@ -12,6 +12,11 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Elements.Playground
 {
+    public class Globals
+    {
+        public Dictionary<string, double> Inputs = new Dictionary<string, double>();
+    }
+
     public static class Compiler
     {
         class BlazorBoot
@@ -31,41 +36,26 @@ namespace Elements.Playground
             public Dictionary<string, string> runtime { get; set; }
         }
 
-        private static Task InitializationTask;
         private static List<MetadataReference> References;
 
-        public static void InitializeMetadataReferences(HttpClient client)
+        public static async Task InitializeMetadataReferences(HttpClient client)
         {
-            async Task InitializeInternal()
-            {
-                var model = new Model();
-                Console.WriteLine("Initializing the code editor...");
+            // async Task InitializeInternal()
+            // {
+            var model = new Model();
+            Console.WriteLine("Initializing the code editor...");
 
-                // TODO: This loads every assembly that is available. We should
-                // see if we can limit this to just the ones that we need.
-                var response = await client.GetFromJsonAsync<BlazorBoot>("_framework/blazor.boot.json");
-                var assemblies = await Task.WhenAll(response.resources.assembly.Keys.Select(x => client.GetAsync("_framework/" + x)));
-                var references = new List<MetadataReference>(assemblies.Length);
-                foreach (var asm in assemblies)
-                {
-                    using var task = await asm.Content.ReadAsStreamAsync();
-                    references.Add(MetadataReference.CreateFromStream(task));
-                }
-                References = references;
-            }
-            InitializationTask = InitializeInternal();
-        }
-
-        public static Task WhenReady(Func<Task> action)
-        {
-            if (InitializationTask.Status != TaskStatus.RanToCompletion)
+            // TODO: This loads every assembly that is available. We should
+            // see if we can limit this to just the ones that we need.
+            var response = await client.GetFromJsonAsync<BlazorBoot>("_framework/blazor.boot.json");
+            var assemblies = await Task.WhenAll(response.resources.assembly.Keys.Select(x => client.GetAsync("_framework/" + x)));
+            var references = new List<MetadataReference>(assemblies.Length);
+            foreach (var asm in assemblies)
             {
-                return InitializationTask.ContinueWith(x => action());
+                using var task = await asm.Content.ReadAsStreamAsync();
+                references.Add(MetadataReference.CreateFromStream(task));
             }
-            else
-            {
-                return action();
-            }
+            References = references;
         }
 
         public static (bool success, Assembly asm, Compilation compilation) LoadSource(string source)
@@ -88,7 +78,7 @@ namespace Elements.Playground
 "Elements.Geometry.Solids",
 "Elements.Geometry.Profiles",
 "Elements.Validators"
-        }, concurrentBuild: false));
+        }, concurrentBuild: false), globalsType: typeof(Globals));
 
             ImmutableArray<Diagnostic> diagnostics = compilation.GetDiagnostics();
 
