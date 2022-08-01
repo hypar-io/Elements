@@ -29,18 +29,14 @@ namespace Elements.Geometry.Tessellation
                 }
             }
 
-            foreach (var v in allVertices)
+            if (modifyVertexAttributes != null)
             {
-                if (modifyVertexAttributes != null)
+                for (var i = 0; i < allVertices.Count; i++)
                 {
-                    var mod = modifyVertexAttributes(v);
-                    buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
-                }
-                else
-                {
-                    buffers.AddVertex(v.position, v.normal, v.uv);
+                    allVertices[i] = modifyVertexAttributes(allVertices[i]);
                 }
             }
+            buffers.AddVertices(allVertices);
         }
 
         private static void TessellatePolygon(Tess tess,
@@ -82,11 +78,13 @@ namespace Elements.Geometry.Tessellation
                                                              mergeVertices);
             }
 
+            var indices = new ushort[tess.Elements.Length];
             for (var k = 0; k < tess.Elements.Length; k++)
             {
-                var index = vertexIndices[tess.Elements[k]];
-                buffers.AddIndex(index);
+                indices[k] = vertexIndices[tess.Elements[k]];
             }
+
+            buffers.AddIndices(indices);
         }
 
         private static Vector3 ToElementsVector(this ContourVertex v)
