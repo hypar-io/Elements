@@ -989,6 +989,31 @@ namespace Elements.Geometry
 
             return pointLength / Length();
         }
+
+        /// <summary>
+        /// Check if polyline intersects with line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <param name="intersections">Intersections between polyline and line</param>
+        /// <param name="infinite">Threat the line as infinite?</param>
+        /// <param name="includeEnds">If the end of line lies exactly on the vertex of polyline, count it as an intersection? </param>
+        /// <returns>True if line intersects with polyline, false if they do not intersect</returns>
+        public bool Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)
+        {
+            var segments = Segments();
+
+            intersections = new List<Vector3>();
+
+            foreach (var segment in segments)
+            {
+                if (segment.Intersects(line, out var point, infinite: infinite, includeEnds: includeEnds))
+                {
+                    intersections.Add(point);
+                }
+            }
+
+            return intersections.Any();
+        }
     }
 
     /// <summary>

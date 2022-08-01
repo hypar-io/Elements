@@ -258,5 +258,40 @@ namespace Elements.Geometry.Tests
             Assert.True(result.ApproximatelyEquals(expectedResult));
             Assert.True(point.IsAlmostEqualTo(polyline.PointAt(result)));
         }
+
+        [Fact]
+        public void Intersects()
+        {
+            var polyline = new Polyline(
+                new Vector3(-5,-5), 
+                new Vector3(-5, 5), 
+                new Vector3(5,5), 
+                new Vector3(5, -5));
+
+            var notIntersectingLine = new Line(new Vector3(-3, 0), new Vector3(3, 0));
+
+            Assert.False(polyline.Intersects(notIntersectingLine, out var result));
+            Assert.Empty(result);
+
+            Assert.True(polyline.Intersects(notIntersectingLine, out result, infinite: true));
+            Assert.Collection(result,
+                x => Assert.True(x.IsAlmostEqualTo(new Vector3(-5, 0))),
+                x => Assert.True(x.IsAlmostEqualTo(new Vector3(5, 0))));
+
+            var sharedStartLine = new Line(new Vector3(-5, 0), new Vector3(3, 0));
+            Assert.False(polyline.Intersects(sharedStartLine, out result));
+            Assert.Empty(result);
+
+            Assert.True(polyline.Intersects(sharedStartLine, out result, includeEnds: true));
+            Assert.Collection(result,
+                x => Assert.True(x.IsAlmostEqualTo(sharedStartLine.Start)));
+
+            var collinearSegmentLine = new Line(new Vector3(-5, -5), new Vector3(-5, 5));
+            Assert.False(polyline.Intersects(collinearSegmentLine, out result));
+
+            Assert.True(polyline.Intersects(collinearSegmentLine, out result, includeEnds: true));
+            Assert.Collection(result,
+                x => Assert.True(x.IsAlmostEqualTo(collinearSegmentLine.End)));
+        }
     }
 }
