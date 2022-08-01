@@ -969,6 +969,28 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculate U parameter for point on polyline
+        /// </summary>
+        /// <param name="point">Point on polyline</param>
+        /// <returns>Returns U parameter for point on polyline</returns>
+        public double GetParameterAt(Vector3 point)
+        {
+            var segment = Segments().FirstOrDefault(x => x.PointOnLine(point, true));
+
+            if (segment == null)
+            {
+                return -1;
+            }
+
+            var segmentIndex = Segments().ToList().IndexOf(segment);
+
+            var segmentsLength = Segments().Where((x, i) => i < segmentIndex).Sum(x => x.Length());
+            var pointLength = segmentsLength + point.DistanceTo(segment.Start);
+
+            return pointLength / Length();
+        }
+
+        /// <summary>
         /// Check if polyline intersects with line
         /// </summary>
         /// <param name="line">Line to check</param>

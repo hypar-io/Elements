@@ -16,6 +16,7 @@
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
 - `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
+- `Polyline.GetParameterAt(Vector3 point)` method
 
 ### Changed
 
