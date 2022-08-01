@@ -2055,5 +2055,175 @@ namespace Elements.Geometry.Tests
             var polygon = JsonConvert.DeserializeObject<Polygon>(json);
             Assert.NotNull(polygon);
         }
+
+        [Fact]
+        public void GetSharedSegmentsEmptyWhenDoesNotIntersect()
+        {
+            var polygon = Polygon.Rectangle(2, 4);
+            var polyline = new Polyline(
+                new Vector3(-3, -2),
+                new Vector3(-3, 2),
+                new Vector3(3, 2),
+                new Vector3(3, -2));
+
+            var result = polygon.GetSharedSegments(polyline);
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsPolylineWhenIsInside()
+        {
+            var polygon = Polygon.Rectangle(4, 8);
+            var polyline = new Polyline(
+                new Vector3(-1, -2),
+                new Vector3(-1, 2),
+                new Vector3(1, 2),
+                new Vector3(1, -2));
+
+            var result = polygon.GetSharedSegments(polyline);
+
+            Assert.Single(result);
+            Assert.Collection(result, (x => Assert.Equal(polyline, x)));
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsNewSegmentWhenTwoIntersections()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+
+            var polyline = new Polyline(
+                new Vector3(-1, -3),
+                new Vector3(-1, 1),
+                new Vector3(1, 1),
+                new Vector3(1, -3));
+
+            var expectedResult = new Polyline(
+                new Vector3(-1, -2),
+                new Vector3(-1, 1),
+                new Vector3(1, 1),
+                new Vector3(1, -2));
+
+            var result = polygon.GetSharedSegments(polyline).ToList();
+
+            Assert.Single(result);
+            Assert.Collection(result, x => Assert.True(x.Equals(expectedResult)));
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsTwoSegmentsWhenThreeIntersectionsAndStartInside()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+
+            var polyline = new Polyline(
+                new Vector3(-1, -1),
+                new Vector3(-1, 3),
+                new Vector3(1, 3),
+                new Vector3(1, -3));
+
+            var result = polygon.GetSharedSegments(polyline).ToList();
+
+            var firstExpected = new Polyline(
+                new Vector3(-1, -1),
+                new Vector3(-1, 2));
+
+            var secondExpected = new Polyline(
+                new Vector3(1, 2),
+                new Vector3(1, -2));
+
+            Assert.True(polygon.Contains(polyline.Start));
+            Assert.Collection(result,
+                x => Assert.True(x.Equals(firstExpected)),
+                x => Assert.True(x.Equals(secondExpected)));
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsTwoSegmentsWhenThreeIntersectionsAndEndInside()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+
+            var polyline = new Polyline(
+                new Vector3(-1, -3),
+                new Vector3(-1, 3),
+                new Vector3(1, 3),
+                new Vector3(1, -1));
+
+            var result = polygon.GetSharedSegments(polyline).ToList();
+
+            var firstExpected = new Polyline(
+                new Vector3(-1, -2),
+                new Vector3(-1, 2));
+
+            var secondExpected = new Polyline(
+                new Vector3(1, 2),
+                new Vector3(1, -1));
+
+            Assert.True(polygon.Contains(polyline.End));
+            Assert.Collection(result,
+                x => Assert.True(x.Equals(firstExpected)),
+                x => Assert.True(x.Equals(secondExpected)));
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsTwoSegmentsWhenTwoIntersectionsAndBothEndsInside()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+
+            var polyline = new Polyline(
+                new Vector3(-1, -1),
+                new Vector3(-1, 3),
+                new Vector3(1, 3),
+                new Vector3(1, -1));
+
+            var result = polygon.GetSharedSegments(polyline).ToList();
+
+            var firstExpected = new Polyline(
+                new Vector3(-1, -1),
+                new Vector3(-1, 2));
+
+            var secondExpected = new Polyline(
+                new Vector3(1, 2),
+                new Vector3(1, -1));
+
+            Assert.True(polygon.Contains(polyline.Start));
+            Assert.True(polygon.Contains(polyline.End));
+            Assert.Collection(result,
+                x => Assert.True(x.Equals(firstExpected)),
+                x => Assert.True(x.Equals(secondExpected)));
+        }
+
+        [Fact]
+        public void GetSharedSegmentsReturnsThreeSegmentsWhenSixIntersections()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+
+            var polyline = new Polyline(
+                new Vector3(-2, -3),
+                new Vector3(-2, 3),
+                new Vector3(-1, 3),
+                new Vector3(-1, -3),
+                new Vector3(1, -3),
+                new Vector3(1, 3));
+
+            var result = polygon.GetSharedSegments(polyline).ToList();
+
+            var firstExpected = new Polyline(
+                new Vector3(-2, -2),
+                new Vector3(-2, 2));
+
+            var secondExpected = new Polyline(
+                new Vector3(-1, 2),
+                new Vector3(-1, -2));
+
+            var thirdExpected = new Polyline(
+               new Vector3(1, -2),
+               new Vector3(1, 2));
+
+
+            Assert.Collection(result,
+                x => Assert.True(x.Equals(firstExpected)),
+                x => Assert.True(x.Equals(secondExpected)),
+                x => Assert.True(x.Equals(thirdExpected)));
+        }
     }
 }
