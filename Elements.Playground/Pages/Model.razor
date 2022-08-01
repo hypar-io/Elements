@@ -17,10 +17,11 @@
     <button class="run" disabled=@loading @onclick="CompileAndRun">Run</button>
     <div id="inputs">
         @foreach (var parameter in globals.Inputs)
-{
-        <p>@parameter.Key</p>
-        <input type="range" min="1" max="100" value="50" class="slider" id="length" @onchange="e=>UpdateGlobalsAndRun(parameter.Key,e)">
-}
+        {
+            <p>@parameter.Key</p>
+            <input type="range" min="1" max="100" value="50" class="slider" id="length"
+            @onchange="e=>UpdateGlobalsAndRun(parameter.Key,e)">
+        }
     </div>
     <div id="editor">@csharp</div>
     <div id="model"></div>
@@ -41,35 +42,35 @@ var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
 
 for(var i=0; i<1; i++)
 {
-    var start = new Vector3(i, 0, 0);
-    var end = new Vector3(i, length, i);
+var start = new Vector3(i, 0, 0);
+var end = new Vector3(i, length, i);
 
-    // The bottom chord
-    var bottomChord = new Line(start, end);
-    var bottomChordBeam = new Beam(bottomChord, p, null, m);
-    model.AddElement(bottomChordBeam);
+// The bottom chord
+var bottomChord = new Line(start, end);
+var bottomChordBeam = new Beam(bottomChord, p, null, m);
+model.AddElement(bottomChordBeam);
 
-    var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-    var topChordBeam = new Beam(topChord, p, null, m);
-    model.AddElement(topChordBeam);
+var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
+var topChordBeam = new Beam(topChord, p, null, m);
+model.AddElement(topChordBeam);
 
-    Vector3 last = default(Vector3);
-    for(var j=0.0; j<=1.0; j+=0.1)
-    {
-    var pt = bottomChord.PointAt(j);
-    var top = pt + new Vector3(0,0,5);
-    var panelLine = new Line(pt, top);
-    var panelBeam = new Beam(panelLine, p, null, m);
-    model.AddElement(panelBeam);
+Vector3 last = default(Vector3);
+for(var j=0.0; j<=1.0; j+=0.1)
+{
+var pt = bottomChord.PointAt(j);
+var top = pt + new Vector3(0,0,5);
+var panelLine = new Line(pt, top);
+var panelBeam = new Beam(panelLine, p, null, m);
+model.AddElement(panelBeam);
 
-    if(j > 0.0)
-    {
-    var braceLine = new Line(top, last);
-    var braceBeam = new Beam(braceLine, p, null, m);
-    model.AddElement(braceBeam);
-    }
-    last = pt;
-    }
+if(j > 0.0)
+{
+var braceLine = new Line(top, last);
+var braceBeam = new Beam(braceLine, p, null, m);
+model.AddElement(braceBeam);
+}
+last = pt;
+}
 }
 return model;";
     private static string Output = "";
@@ -134,7 +135,7 @@ return model;";
         var writer = new StringWriter();
         Console.SetOut(writer);
 
-        if(ExecutionDelegate == null)
+        if (ExecutionDelegate == null)
         {
             Console.WriteLine("There is no execution method.");
             Output += writer.ToString();
@@ -174,7 +175,7 @@ return model;";
         Trace.Listeners.Clear();
         Trace.Listeners.Add(
         new TextWriterTraceListener(Console.Out));
-        
+
         ExecutionDelegate = null;
 
         // Compilation warnings will be written to console.out
@@ -193,7 +194,7 @@ return model;";
         {
             Console.WriteLine("Compilation was not successful. The execution will not run.");
         }
-        
+
         Output += writer.ToString();
         Console.SetOut(currentOut);
 
