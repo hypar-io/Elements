@@ -293,5 +293,41 @@ namespace Elements.Geometry.Tests
             Assert.Collection(result,
                 x => Assert.True(x.IsAlmostEqualTo(collinearSegmentLine.End)));
         }
+
+        [Fact]
+        public void GetSubsegment()
+        {
+            var polyline = new Polyline(
+                new Vector3(-5, -5),
+                new Vector3(-5, 5),
+                new Vector3(5, 5),
+                new Vector3(5, -5));
+
+            var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
+            
+            var expectedResult = new Polyline(new Vector3(-5, -3),
+                new Vector3(-5, 5),
+                new Vector3(5, 5),
+                new Vector3(5, 3));
+
+            Assert.Equal(expectedResult, result);
+
+            var reversedResult = polyline.GetSubsegment(new Vector3(5, 3), new Vector3(-5, -3));
+            Assert.Equal(expectedResult, reversedResult);
+
+            var pointOutsidePolyline = Vector3.Origin;
+            Assert.Equal(-1d, polyline.GetParameterAt(pointOutsidePolyline), 5);
+            Assert.Null(polyline.GetSubsegment(pointOutsidePolyline, new Vector3(-5, -3)));
+            Assert.Null(polyline.GetSubsegment(new Vector3(-5, -3), pointOutsidePolyline));
+
+            var middlePoint = new Vector3(0, 5);
+            var startSubsegment = polyline.GetSubsegment(polyline.Start, middlePoint);
+            var startSubsegmentExpected = new Polyline(polyline.Start, new Vector3(-5, 5), middlePoint);
+            Assert.Equal(startSubsegmentExpected, startSubsegment);
+
+            var endSubsegment = polyline.GetSubsegment(middlePoint, polyline.End);
+            var endSubsegmentExpected = new Polyline(middlePoint, new Vector3(5, 5), polyline.End);
+            Assert.Equal(endSubsegmentExpected, endSubsegment);
+        }
     }
 }

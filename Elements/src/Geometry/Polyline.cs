@@ -1014,6 +1014,59 @@ namespace Elements.Geometry
 
             return intersections.Any();
         }
+
+        /// <summary>
+        /// Get new polyline between two points
+        /// </summary>
+        /// <param name="start">Start point</param>
+        /// <param name="end">End point</param>
+        /// <returns>New polyline or null if any of points is not on polyline</returns>
+        public Polyline GetSubsegment(Vector3 start, Vector3 end)
+        {
+            if(start.IsAlmostEqualTo(end))
+            {
+                return null;
+            }
+
+            var startParameter = GetParameterAt(start);
+            var endParameter = GetParameterAt(end);
+
+            if(startParameter < 0 || endParameter < 0)
+            {
+                return null;
+            }
+
+            var firstParameter = 0d;
+            var lastParameter = 0d;
+            var vertices = new List<Vector3>();
+            var lastVertex = Vector3.Origin;
+
+            if(startParameter < endParameter)
+            {
+                firstParameter = startParameter;
+                lastParameter = endParameter;
+                vertices.Add(start);
+                lastVertex = end;
+            }
+            else
+            {
+                firstParameter = endParameter;
+                lastParameter = startParameter;
+                vertices.Add(end);
+                lastVertex = start;
+            }
+
+            var verticesToAdd = Vertices.Where(x =>
+            {
+                var parameter = GetParameterAt(x);
+                return parameter > firstParameter && parameter < lastParameter;
+            });
+
+            vertices.AddRange(verticesToAdd);
+            vertices.Add(lastVertex);
+
+            return new Polyline(vertices);
+        }
     }
 
     /// <summary>
