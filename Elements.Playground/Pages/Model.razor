@@ -3,20 +3,24 @@
 @using Microsoft.CodeAnalysis
 @using Microsoft.CodeAnalysis.CSharp
 @using Microsoft.CodeAnalysis.CSharp.Scripting.Hosting
+@using System.Diagnostics
 @using System.Reflection
 @using System.IO
 @using System.Threading
 @using System.Web
+@using System.Diagnostics
 
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
 @inject NavigationManager MyNavigationManager
-
+@using System.Text.RegularExpressions;
 <div class="grid">
     <button class="run" disabled=@loading @onclick="Run">Run</button>
+    <div id="inputs">Put inputs here!</div>
     <div id="editor">@csharp</div>
     <div id="model"></div>
-    <div class="output">@((MarkupString)Output)</div>
+    <div class="output">@((MarkupString)Regex.Replace(
+        HttpUtility.HtmlEncode(@Output), "\r?\n|\r", "<br />"))</div>
 </div>
 
 @code {
@@ -32,35 +36,35 @@ var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
 
 for(var i=0; i<1; i++)
 {
-    var start = new Vector3(i, 0, 0);
-    var end = new Vector3(i, length, i);
+var start = new Vector3(i, 0, 0);
+var end = new Vector3(i, length, i);
 
-    // The bottom chord
-    var bottomChord = new Line(start, end);
-    var bottomChordBeam = new Beam(bottomChord, p, m);
-    model.AddElement(bottomChordBeam);
+// The bottom chord
+var bottomChord = new Line(start, end);
+var bottomChordBeam = new Beam(bottomChord, p, null, m);
+model.AddElement(bottomChordBeam);
 
-    var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-    var topChordBeam = new Beam(topChord, p, m);
-    model.AddElement(topChordBeam);
+var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
+var topChordBeam = new Beam(topChord, p, null, m);
+model.AddElement(topChordBeam);
 
-    Vector3 last = default(Vector3);
-    for(var j=0.0; j<=1.0; j+=0.1)
-    {
-        var pt = bottomChord.PointAt(j);
-        var top = pt + new Vector3(0,0,5);
-        var panelLine = new Line(pt, top);
-        var panelBeam = new Beam(panelLine, p, m);
-        model.AddElement(panelBeam);
+Vector3 last = default(Vector3);
+for(var j=0.0; j<=1.0; j+=0.1)
+{
+var pt = bottomChord.PointAt(j);
+var top = pt + new Vector3(0,0,5);
+var panelLine = new Line(pt, top);
+var panelBeam = new Beam(panelLine, p, null, m);
+model.AddElement(panelBeam);
 
-        if(j > 0.0)
-        {
-            var braceLine = new Line(top, last);
-            var braceBeam = new Beam(braceLine, p, m);
-            model.AddElement(braceBeam);
-        }
-        last = pt;
-    }
+if(j > 0.0)
+{
+var braceLine = new Line(top, last);
+var braceBeam = new Beam(braceLine, p, null, m);
+model.AddElement(braceBeam);
+}
+last = pt;
+}
 }
 return model;";
     private static string Output = "";
@@ -101,21 +105,24 @@ return model;";
     [JSInvokable]
     public static Task Run()
     {
+        Console.WriteLine("Invoking run from c#...");
         return Compiler.WhenReady(RunInternal);
     }
 
     static async Task RunInternal()
     {
         Output = "";
-
-        Console.WriteLine("Compiling and Running code");
         var sw = Stopwatch.StartNew();
 
         var currentOut = Console.Out;
         var writer = new StringWriter();
         Console.SetOut(writer);
 
-        Exception exception = null;
+        // Redirect debug to the console.
+        Trace.Listeners.Clear();
+        Trace.Listeners.Add(
+        new TextWriterTraceListener(Console.Out));
+
         try
         {
             var (success, asm, compilation) = Compiler.LoadSource(csharp);
@@ -127,28 +134,26 @@ return model;";
 
                 var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
                 var model = await (Task<object>)submission(new object[] { null, null });
-                Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
+                Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
 
                 await Task.Run(() =>
                 {
                     var glb = ((Elements.Model)model).ToGlTF();
                     Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
                 });
-            }
+            }s
         }
         catch (Exception ex)
         {
-            exception = ex;
+            Console.WriteLine("Compilation failed with exception.");
+            Console.WriteLine(ex.ToString());
         }
-        Output = writer.ToString();
-        if (exception != null)
+        finally
         {
-
-            Output += "\r\n" + exception.ToString();
+            Output += writer.ToString();
+            Console.SetOut(currentOut);
         }
-        Console.SetOut(currentOut);
 
         sw.Stop();
-
     }
 }

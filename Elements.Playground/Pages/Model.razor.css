@@ -2,12 +2,18 @@
     position: relative;
     display: grid;
     grid-template-columns: 50% 50%;
-    grid-template-rows: auto 200px;
-    grid-template-areas: 
+    grid-template-rows: auto auto 200px;
+    grid-template-areas:
+        "inputs model"
         "code model"
-        "output output";
+        "output model";
     border: 1px solid lightgray;
     height: calc(100vh - 16px);
+}
+
+#inputs {
+    grid-area: inputs;
+    border-bottom: 1px solid lightgray;
 }
 
 #editor {
@@ -24,7 +30,7 @@
     overflow-y: auto;
     font-family: monospace;
     font-size: 10pt;
-    color: darkgray;
+    color: gray;
     grid-area: output;
     border-top: 1px solid lightgray;
     padding: 10px;

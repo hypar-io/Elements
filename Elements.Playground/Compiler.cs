@@ -85,6 +85,7 @@ namespace Elements.Playground
 "System.Linq",
 "Elements",
 "Elements.Geometry",
+"Elements.Geometry.Solids",
 "Elements.Geometry.Profiles",
 "Elements.Validators"
         }, concurrentBuild: false));
