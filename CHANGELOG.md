@@ -15,6 +15,7 @@
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
 
 ### Changed
 
