@@ -241,6 +241,25 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void GetParameterAt()
+        {
+            var start = new Vector3(1, 2);
+            var end = new Vector3(3, 4);
+
+            var polyline = new Polyline(new[] { start, new Vector3(1, 4), end });
+
+            Assert.Equal(0, polyline.GetParameterAt(start));
+            Assert.Equal(1, polyline.GetParameterAt(end));
+            Assert.Equal(-1, polyline.GetParameterAt(Vector3.Origin));
+
+            var point = new Vector3(2, 4);
+            var result = polyline.GetParameterAt(point);
+            var expectedResult = 0.75d;
+            Assert.True(result.ApproximatelyEquals(expectedResult));
+            Assert.True(point.IsAlmostEqualTo(polyline.PointAt(result)));
+        }
+
+        [Fact]
         public void Intersects()
         {
             var polyline = new Polyline(
@@ -273,7 +292,6 @@ namespace Elements.Geometry.Tests
             Assert.True(polyline.Intersects(collinearSegmentLine, out result, includeEnds: true));
             Assert.Collection(result,
                 x => Assert.True(x.IsAlmostEqualTo(collinearSegmentLine.End)));
-
         }
     }
 }
