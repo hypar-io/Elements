@@ -978,7 +978,9 @@ namespace Elements.Geometry
             var segment = Segments().FirstOrDefault(x => x.PointOnLine(point, true));
 
             if (segment == null)
+            {
                 return -1;
+            }
 
             var segmentIndex = Segments().ToList().IndexOf(segment);
 

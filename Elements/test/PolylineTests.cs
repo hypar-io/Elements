@@ -254,8 +254,8 @@ namespace Elements.Geometry.Tests
 
             var point = new Vector3(2, 4);
             var result = polyline.GetParameterAt(point);
-            var expedResult = 0.75d;
-            Assert.True(result.ApproximatelyEquals(expedResult));
+            var expectedResult = 0.75d;
+            Assert.True(result.ApproximatelyEquals(expectedResult));
             Assert.True(point.IsAlmostEqualTo(polyline.PointAt(result)));
         }
     }
