@@ -35,7 +35,10 @@ namespace Elements.Playground
     {
         public WideFlangeProfileFactory Factory { get; } = new WideFlangeProfileFactory();
 
-        public WideFlangeProfileInput(string name, WideFlangeProfile value) : base(name, value) { }
+        public WideFlangeProfileInput(string name) : base(name, null)
+        {
+            Value = Factory.AllProfiles().First();
+        }
     }
 
     public class Globals
