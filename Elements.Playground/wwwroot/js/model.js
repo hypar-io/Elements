@@ -1,7 +1,7 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.133.0/build/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/loaders/GLTFLoader.js';
-
+import { RGBELoader } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/loaders/RGBELoader.js'
 window.model = {
     initialize3D: () => { initialize3D(); },
     initializeEditor: () => { initializeEditor(); },
@@ -92,7 +92,6 @@ function initialize3D() {
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.8 * Math.PI);
     directionalLight.position.set(-2, 10, 0);
     directionalLight.castShadow = true; // default false
-    // directionalLight.shadow.radius = 12
     scene.add(directionalLight);
 
     var side = 30
@@ -114,6 +113,16 @@ function initialize3D() {
 
     // const helper = new THREE.CameraHelper(directionalLight.shadow.camera);
     // scene.add(helper);
+
+    // Environment
+    new RGBELoader()
+        .setPath('textures/equirectangular/')
+        .load('royal_esplanade_1k.hdr', function (texture) {
+
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            // scene.background = texture;
+            scene.environment = texture;
+        });
 
     // Create a shadow plane
     var shadowMaterial = new THREE.ShadowMaterial();
