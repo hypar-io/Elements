@@ -77,23 +77,23 @@ function initialize3D() {
     const div = document.getElementById("model");
     const camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 300);
 
+    // Renderer
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = THREE.sRGBEncoding
     renderer.toneMappingExposure = 0.9
-
     renderer.setSize(div.clientWidth, div.clientHeight);
     div.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
 
+    // Main light
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.8 * Math.PI);
     directionalLight.position.set(-2, 10, 0);
-    directionalLight.castShadow = true; // default false
+    directionalLight.castShadow = true;
     scene.add(directionalLight);
-
     var side = 30
     directionalLight.shadow.mapSize.width = 4096;
     directionalLight.shadow.mapSize.height = 4096;
@@ -107,7 +107,6 @@ function initialize3D() {
 
     // const size = 100;
     // const divisions = 20;
-
     // const gridHelper = new THREE.GridHelper(size, divisions, "darkgray", "lightgray");
     // scene.add(gridHelper);
 
@@ -124,7 +123,7 @@ function initialize3D() {
             scene.environment = texture;
         });
 
-    // Create a shadow plane
+    // Shadow plane
     var shadowMaterial = new THREE.ShadowMaterial();
     shadowMaterial.opacity = 0.5;
     const planeGeometry = new THREE.PlaneGeometry(50, 50, 32, 32);
@@ -133,11 +132,9 @@ function initialize3D() {
     plane.receiveShadow = true;
     scene.add(plane);
 
+    // Axes
     const axesHelper = new THREE.AxesHelper(5);
     scene.add(axesHelper);
-
-    const light = new THREE.AmbientLight(0x404040); // soft white light
-    scene.add(light);
 
     camera.position.z = 5;
     camera.position.y = 10;
