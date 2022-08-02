@@ -183,6 +183,21 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Intersect the grid with a list of obstacles.
+        /// </summary>
+        /// <param name="obstacles">List of obstacles.</param>
+        /// <returns>True if any obstacle intersects with any edge on the grid.</returns>
+        public bool SubtractObstacles(IEnumerable<Obstacle> obstacles)
+        {
+            bool intersected = false;
+            foreach (var obstacle in obstacles)
+            {
+                intersected &= SubtractObstacle(obstacle);
+            }
+            return intersected;
+        }
+
+        /// <summary>
         /// Intersect the grid with an obstacle, defined from a set of points with offset.
         /// </summary>
         /// <param name="obstacle">Obstacle object.</param>
@@ -427,44 +442,44 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Execution method for AddVertices function.
-        /// Each next perform more than previous one.
+        /// Execution style for AddVertices function.
+        /// Each option performs more operations than the previous one.
         /// </summary>
         public enum VerticesInsertionMethod
         {
             /// <summary>
             /// Just put vertices into the grid without connecting them.
-            /// Inserted vertices returned in order.
+            /// Inserted vertices are returned in order.
             /// </summary>
             Insert,
 
             /// <summary>
-            /// Insert vertices and connect them directly.
-            /// Inserted vertices returned in order.
+            /// Insert vertices and connect them to each other.
+            /// Inserted vertices are returned in order.
             /// </summary>
             Connect,
 
             /// <summary>
-            /// Insert vertices and connect them directly.
+            /// Insert vertices and connect them to each other.
             /// Find any intersections between new edges.
-            /// Inserted vertices returned in order including self intersection vertices twice. 
+            /// Inserted vertices are returned in order including self intersection vertices twice. 
             /// 
             /// </summary>
             ConnectAndSelfIntersect,
 
             /// <summary>
-            /// Insect vertices and connect them.
+            /// Insert vertices and connect them to each other.
             /// New vertices are inserted where new edges intersect with existing edges.
-            /// All vertices returned in order from first vertex to the last including all intersection vertices.
+            /// All vertices are returned in order from first vertex to the last including all intersection vertices.
             /// </summary>
             ConnectAndCut,
 
             /// <summary>
-            /// Insect vertices and connect them.
+            /// Insert vertices and connect them to each other.
             /// New vertices are inserted where new edges intersect with existing edges.
             /// Each vertex is extended in direction of two neighbor edges until first hit.
             /// Extensions are done even if vertex is already on an edge.
-            /// All vertices returned in order from first vertex to the last including all intersection and extension vertices.
+            /// All vertices are returned in order from first vertex to the last including all intersection and extension vertices.
             /// </summary>
             ConnectCutAndExtend
         }
@@ -512,7 +527,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                             vertices[j].Point, vertices[j + 1].Point,
                                             out var intersection))
                         {
-                            var cross = AddVertex(intersection, new Connect(
+                            var cross = AddVertex(intersection, new ConnectVertexStrategy(
                                 tailVertex, vertices.Last(), vertices[j], vertices[j + 1]), cut: false);
                             RemoveEdge(tailVertex.GetEdge(vertices.Last().Id));
                             RemoveEdge(vertices[j].GetEdge(vertices[j + 1].Id));
@@ -550,7 +565,7 @@ namespace Elements.Spatial.AdaptiveGrid
             if (!position.IsAlmostEqualTo(startVertex.Point, Tolerance) &&
                 !position.IsAlmostEqualTo(endVertex.Point, Tolerance))
             {
-                var newVertex = AddVertex(position, new Connect(startVertex, endVertex));
+                var newVertex = AddVertex(position, new ConnectVertexStrategy(startVertex, endVertex));
                 RemoveEdge(edge);
                 return newVertex;
             }

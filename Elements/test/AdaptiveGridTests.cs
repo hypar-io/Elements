@@ -101,7 +101,7 @@ namespace Elements.Tests
             var oldV = adaptiveGrid.GetVertex(id);
             var edgesBefore = oldV.Edges.Count;
 
-            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new Connect(oldV));
+            var newV = adaptiveGrid.AddVertex(new Vector3(-2, -4, 2), new ConnectVertexStrategy(oldV));
             Assert.NotNull(newV);
             Assert.False(newV.Id == 0);
             Assert.Single(newV.Edges);
@@ -216,11 +216,7 @@ namespace Elements.Tests
             var edgesCount = adaptiveGrid.GetEdges().Count();
             var verticiesCount = adaptiveGrid.GetVertices().Count();
 
-            foreach (var obstacle in obstacles)
-            {
-                adaptiveGrid.SubtractObstacle(obstacle);
-            }
-
+            adaptiveGrid.SubtractObstacles(obstacles);
 
             Assert.Equal(edgesCount - 9, adaptiveGrid.GetEdges().Count);
             Assert.Equal(verticiesCount - 2, adaptiveGrid.GetVertices().Count);
@@ -274,7 +270,7 @@ namespace Elements.Tests
             var modified = vertex.Point + new Vector3(0, 0, halfTol);
             adaptiveGrid.TryGetVertexIndex(new Vector3(10, 0), out var otherId);
             var newVertex = adaptiveGrid.AddVertex(modified,
-                new Connect(adaptiveGrid.GetVertex(otherId)));
+                new ConnectVertexStrategy(adaptiveGrid.GetVertex(otherId)));
             Assert.Equal(id, newVertex.Id);
             modified = vertex.Point + new Vector3(-halfTol, -halfTol, -halfTol);
             adaptiveGrid.TryGetVertexIndex(modified, out otherId, adaptiveGrid.Tolerance);
@@ -643,7 +639,7 @@ namespace Elements.Tests
             var grid = new AdaptiveGrid();
 
             //1. Aligned with direction. 0 vertices exist.
-            var s = new ConnectWithAngle(new Vector3(0, 5), new Vector3(0, 1), 45);
+            var s = new ConnectVertexWithAngleStrategy(new Vector3(0, 5), new Vector3(0, 1), 45);
             var startVertex = grid.AddVertex(new Vector3(0, 0), s);
             Assert.Null(s.MiddleVertex);
             Assert.Equal(new Vector3(0, 0), startVertex.Point);
@@ -652,7 +648,7 @@ namespace Elements.Tests
             var id05 = s.EndVertex.Id;
 
             //2. Ortho aligned with direction, 1 vertex exist.
-            s = new ConnectWithAngle(new Vector3(0, 0), new Vector3(0, 1), 45);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(0, 0), new Vector3(0, 1), 45);
             startVertex = grid.AddVertex(new Vector3(5, 0), s);
             Assert.Null(s.MiddleVertex);
             Assert.Equal(new Vector3(5, 0), startVertex.Point);
@@ -660,7 +656,7 @@ namespace Elements.Tests
             var id50 = startVertex.Id;
 
             //3. 0 degree, 2 vertices exist.
-            s = new ConnectWithAngle(new Vector3(5, 0), new Vector3(0, 1), 0);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(5, 0), new Vector3(0, 1), 0);
             startVertex = grid.AddVertex(new Vector3(0, 5), s);
             Assert.Equal(new Vector3(5, 5), s.MiddleVertex.Point);
             Assert.Equal(new Vector3(0, 5), startVertex.Point);
@@ -668,12 +664,12 @@ namespace Elements.Tests
             Assert.Equal(id50, s.EndVertex.Id);
 
             //4. 90 degrees, 0 vertices exist.
-            s = new ConnectWithAngle(new Vector3(10, 0), new Vector3(0, 1), 90);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(10, 0), new Vector3(0, 1), 90);
             startVertex = grid.AddVertex(new Vector3(15, 5), s);
             Assert.Equal(new Vector3(15, 0), s.MiddleVertex.Point);
 
             //5. 45 degrees, 1 intersection.
-            s = new ConnectWithAngle(new Vector3(13, -2), new Vector3(1, 0), 45);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(13, -2), new Vector3(1, 0), 45);
             startVertex = grid.AddVertex(new Vector3(10, 5), s);
             Assert.Equal(new Vector3(10, 1), s.MiddleVertex.Point);
             Assert.Equal(45.0, (s.EndVertex.Point - s.MiddleVertex.Point).AngleTo(s.MiddleVertex.Point - startVertex.Point), 3);
@@ -682,20 +678,20 @@ namespace Elements.Tests
                 e.EndId != s.MiddleVertex.Id && grid.GetVertex(e.EndId).Point.IsAlmostEqualTo(new Vector3(11, 0)));
 
             //5. 45 degrees, tilted direction.
-            s = new ConnectWithAngle(new Vector3(11, 15), new Vector3(1, 1), 45);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(11, 15), new Vector3(1, 1), 45);
             startVertex = grid.AddVertex(new Vector3(10, 10), s);
             Assert.Equal(new Vector3(11, 11), s.MiddleVertex.Point);
             Assert.Equal(45.0, (s.EndVertex.Point - s.MiddleVertex.Point).AngleTo(s.MiddleVertex.Point - startVertex.Point), 3);
 
             //6. 1 to 2 ration (26.565 degrees)
-            s = new ConnectWithAngle(new Vector3(15, 5), new Vector3(0, 1), 26.565);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(15, 5), new Vector3(0, 1), 26.565);
             startVertex = grid.AddVertex(new Vector3(20, 0), s);
             Assert.Equal(new Vector3(17.5, 0), s.MiddleVertex.Point);
             var angle = (s.EndVertex.Point - s.MiddleVertex.Point).AngleTo(s.MiddleVertex.Point - startVertex.Point);
             Assert.True(angle.ApproximatelyEquals(26.565) || angle.ApproximatelyEquals(90 - 26.565));
 
             //7.  1 to 2 ration (26.565 degrees) full length
-            s = new ConnectWithAngle(new Vector3(20, 0), new Vector3(1, 0), 26.565);
+            s = new ConnectVertexWithAngleStrategy(new Vector3(20, 0), new Vector3(1, 0), 26.565);
             startVertex = grid.AddVertex(new Vector3(30, 5), s);
             Assert.Null(s.MiddleVertex);
             Assert.Contains(startVertex.Edges, e => e.StartId == s.EndVertex.Id || e.EndId == s.EndVertex.Id);
@@ -719,8 +715,8 @@ namespace Elements.Tests
                 new Vector3(10, 0) //3
             }, AdaptiveGrid.VerticesInsertionMethod.Connect);
 
-            grid.AddVertex(new Vector3(5, 5), new Connect(strip[0], strip[2]), cut: false); //4
-            grid.AddVertex(new Vector3(5, 2), new Connect(strip[1]), cut: false); //5
+            grid.AddVertex(new Vector3(5, 5), new ConnectVertexStrategy(strip[0], strip[2]), cut: false); //4
+            grid.AddVertex(new Vector3(5, 2), new ConnectVertexStrategy(strip[1]), cut: false); //5
             return grid;
         }
     }

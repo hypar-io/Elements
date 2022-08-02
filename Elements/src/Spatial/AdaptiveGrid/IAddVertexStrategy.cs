@@ -24,13 +24,13 @@ namespace Elements.Spatial.AdaptiveGrid
     /// <summary>
     /// Connect strategy creates edges between new vertex created from base position and any number of given vertices.
     /// </summary>
-    public class Connect : IAddVertexStrategy 
+    public class ConnectVertexStrategy : IAddVertexStrategy 
     {
         /// <summary>
         /// Create new Connect strategy.
         /// </summary>
         /// <param name="connections">Vertices to connect with.</param>
-        public Connect(params Vertex[] connections)
+        public ConnectVertexStrategy(params Vertex[] connections)
         {
             _connections = connections;
         }
@@ -68,7 +68,7 @@ namespace Elements.Spatial.AdaptiveGrid
     /// ConnectWithAngle strategy that connects two points in a way so incoming edge of other vertex has certain angle with given direction.
     /// Creates one middle vertex to achieve this but it can be skipped if two points are already aligned.
     /// </summary>
-    public class ConnectWithAngle : IAddVertexStrategy
+    public class ConnectVertexWithAngleStrategy : IAddVertexStrategy
     {
         /// <summary>
         /// Create new ConnectWithAngle strategy.
@@ -76,7 +76,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="other">Other position to connect.</param>
         /// <param name="direction">Reference direction.</param>
         /// <param name="angle">Required angle between edge incoming into other vertex and referenced direction.</param>
-        public ConnectWithAngle(Vector3 other, Vector3 direction, double angle)
+        public ConnectVertexWithAngleStrategy(Vector3 other, Vector3 direction, double angle)
         {
             _other = other;
             _angle = angle;

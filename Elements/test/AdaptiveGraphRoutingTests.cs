@@ -260,7 +260,7 @@ namespace Elements.Tests
             {
                 var p = new Vector3(input.X, input.Y, configuration.MainLayer);
                 Assert.True(grid.TryGetVertexIndex(p, out ulong down, grid.Tolerance));
-                grid.AddVertex(input, new Connect(grid.GetVertex(down)));
+                grid.AddVertex(input, new ConnectVertexStrategy(grid.GetVertex(down)));
             }
             grid.SubtractObstacle(obstacle);
 
