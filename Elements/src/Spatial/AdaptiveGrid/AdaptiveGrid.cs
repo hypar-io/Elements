@@ -293,10 +293,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 foreach (var group in intersectionsByElevations)
                 {
                     var intersections = group.ToList();
-                    if (intersections.Count < 2)
-                    {
-                        continue;
-                    }
 
                     Action<Vector3, Vector3> formPerimeter = (start, end) =>
                     {
