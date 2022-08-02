@@ -338,7 +338,8 @@ namespace Elements.Spatial.AdaptiveGrid
                         {
                             if (!item.Anchor.Point.IsAlmostEqualTo(item.New, Tolerance))
                             {
-                                AddVertex(item.New, new Connect(item.Anchor));
+                                Vertex v = AddVertex(item.New);
+                                AddInsertEdge(v.Id, item.Anchor.Id);
                             }
                         }
                         else
