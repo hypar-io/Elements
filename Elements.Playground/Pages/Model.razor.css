@@ -38,6 +38,7 @@ label {
     grid-area: inputs;
     border-bottom: 1px solid lightgray;
     align-content: flex-start;
+    overflow-x: scroll;
 }
 
 #editor {
