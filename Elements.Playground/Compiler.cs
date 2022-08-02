@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -12,9 +13,51 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace Elements.Playground
 {
+    public abstract class InputBase
+    {
+        public string Name { get; set; }
+    }
+
+    public class Input<T> : InputBase
+    {
+        public T Value { get; set; }
+
+        public Input(string name, T value)
+        {
+            Name = name;
+            Value = value;
+        }
+    }
+
     public class Globals
     {
-        public Dictionary<string, double> Inputs = new Dictionary<string, double>();
+        public Inputs Inputs { get; set; } = new Inputs();
+    }
+
+    public class Inputs
+    {
+        public List<InputBase> Values { get; set; } = new List<InputBase>();
+
+        public double GetNumberInput(string name)
+        {
+            var input = Values.FirstOrDefault(i => i.Name == name);
+            if (input is Input<double> numberInput)
+            {
+                Console.WriteLine($"We found it! {numberInput.Value}");
+                return numberInput.Value;
+            }
+            return 0.0;
+        }
+
+        public Material GetMaterialInput(string name)
+        {
+            var input = Values.FirstOrDefault(i => i.Name == name);
+            if (input is Input<Material> materialInput)
+            {
+                return materialInput.Value;
+            }
+            return null;
+        }
     }
 
     public static class Compiler

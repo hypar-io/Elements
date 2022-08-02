@@ -16,11 +16,22 @@
 <div class="grid">
     <button class="run" disabled=@loading @onclick="CompileAndRun">Run</button>
     <div id="inputs">
-        @foreach (var parameter in globals.Inputs)
+        @foreach (var input in globals.Inputs.Values)
         {
-            <p>@parameter.Key</p>
-            <input type="range" min="1" max="100" value="50" class="slider" id="length"
-            @onchange="e=>UpdateGlobalsAndRun(parameter.Key,e)">
+            if(input is Input<double> numberInput)
+            {
+                <p>@numberInput.Name</p>
+                <input type="range" min="1" max="100" @bind="numberInput.Value" @bind:event="oninput" class="slider" id="length"
+                @onchange="Run">
+            }
+            else if(input is Input<Material> materialInput)
+            {
+                <p>@materialInput.Name</p>
+                <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.GlossinessFactor" @bind:event="oninput" class="slider" id="gloss"
+                @onchange="Run">
+                <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.SpecularFactor" @bind:event="oninput" class="slider" id="specular"
+                @onchange="Run">
+            }
         }
     </div>
     <div id="editor">@csharp</div>
@@ -33,10 +44,10 @@
     bool loading = true;
     private static Globals globals = new Globals();
     private static string csharp = @"var model = new Model();
-var length = 10;
+var length = Inputs.GetNumberInput(""length"");
 
 Validator.DisableValidationOnConstruction = true;
-var m = BuiltInMaterials.Concrete;
+var m = Inputs.GetMaterialInput(""test material"");
 var wf = new WideFlangeProfileFactory();
 var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
 
@@ -85,8 +96,10 @@ return model;";
         await base.OnInitializedAsync();
         loading = false;
 
-        globals.Inputs["length"] = 5;
-        globals.Inputs["height"] = 10;
+        globals.Inputs.Values.Add(new Input<double>("length", 5));
+        @* globals.Inputs.Values.Add(new Input<double>("height", 10)); *@
+        var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
+        globals.Inputs.Values.Add(new Input<Material>("test material", m));
 
         await CompileAndRun();
 
@@ -118,12 +131,6 @@ return model;";
 
     public static async Task Run()
     {
-        await RunInternal();
-    }
-
-    public static async Task UpdateGlobalsAndRun(string key, ChangeEventArgs args)
-    {
-        globals.Inputs[key] = double.Parse(args?.Value.ToString());
         await RunInternal();
     }
 
