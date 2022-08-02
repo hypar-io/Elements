@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Elements.Geometry;
+using Elements.Geometry.Profiles;
 
 namespace Elements.Playground
 {
@@ -28,6 +29,13 @@ namespace Elements.Playground
             Name = name;
             Value = value;
         }
+    }
+
+    public class WideFlangeProfileInput : Input<WideFlangeProfile>
+    {
+        public WideFlangeProfileFactory Factory { get; } = new WideFlangeProfileFactory();
+
+        public WideFlangeProfileInput(string name, WideFlangeProfile value) : base(name, value) { }
     }
 
     public class Globals
@@ -65,6 +73,16 @@ namespace Elements.Playground
             if (input is Input<Vector3> vectorInput)
             {
                 return vectorInput.Value;
+            }
+            return default;
+        }
+
+        public WideFlangeProfile GetProfileInput(string name)
+        {
+            var input = Values.FirstOrDefault(i => i.Name == name);
+            if (input is WideFlangeProfileInput wideFlangeProfileInput)
+            {
+                return wideFlangeProfileInput.Value;
             }
             return default;
         }

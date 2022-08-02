@@ -11,11 +11,16 @@
     height: calc(100vh - 16px);
 }
 
+label {
+    font-size: small;
+}
+
 .input {
     border: 1px solid lightgray;
     border-radius: 5px;
     padding: 10px;
-    width: 200px;
+    /* width: 200px; */
+    width: fit-content;
     margin: 5px;
 }
 

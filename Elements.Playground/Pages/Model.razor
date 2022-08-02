@@ -67,6 +67,18 @@
                     </div>
                 </div>
             }
+            else if(input is WideFlangeProfileInput wideFlangeProfileInput)
+            {
+                <div class="input">
+                    <div class="inputName">@wideFlangeProfileInput.Name</div>
+                    <select name="profile" id="profile" @onchange="(ChangeEventArgs args) => {wideFlangeProfileInput.Value = wideFlangeProfileInput.Factory.GetProfileByName(args.Value.ToString()); Run();}">
+                        @foreach (var profile in wideFlangeProfileInput.Factory.AllProfiles())
+                        {
+                            <option value="@profile.Name">@profile.Name</option>
+                        }
+                    </select>
+                </div>
+            }
         }
     </div>
     <div id="editor">@csharp</div>
@@ -136,6 +148,8 @@ return model;";
         var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
         globals.Inputs.Values.Add(new Input<Material>("test material", m));
         globals.Inputs.Values.Add(new Input<Vector3>("a point", new Vector3(5.0,2.0,3.0)));
+        globals.Inputs.Values.Add(new WideFlangeProfileInput("wide flanges", null));
+
         await CompileAndRun();
 
         await Task.FromResult(0);
