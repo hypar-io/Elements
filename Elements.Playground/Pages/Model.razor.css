@@ -11,9 +11,28 @@
     height: calc(100vh - 16px);
 }
 
+.input {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px;
+    margin: 5px;
+}
+
+.inputName {
+    font-weight: bold;
+    font-size: medium;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 #inputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     grid-area: inputs;
     border-bottom: 1px solid lightgray;
+    align-content: flex-start;
 }
 
 #editor {

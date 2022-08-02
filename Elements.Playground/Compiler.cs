@@ -43,7 +43,6 @@ namespace Elements.Playground
             var input = Values.FirstOrDefault(i => i.Name == name);
             if (input is Input<double> numberInput)
             {
-                Console.WriteLine($"We found it! {numberInput.Value}");
                 return numberInput.Value;
             }
             return 0.0;

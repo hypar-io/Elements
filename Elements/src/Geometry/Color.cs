@@ -292,5 +292,18 @@ namespace Elements.Geometry
         {
             return (c < 0.0031308) ? 12.92 * c : (1.055 * Math.Pow(c, 0.41666)) - 0.055;
         }
+
+        /// <summary>
+        /// Convert the color to hexadecimal.
+        /// </summary>
+        /// <returns></returns>
+        public string ToHex()
+        {
+            var r = (byte)(Red * 255.0);
+            var g = (byte)(Green * 255.0);
+            var b = (byte)(Blue * 255.0);
+            // var a = (byte)(Alpha * 255.0);
+            return "#" + r.ToString("X2") + g.ToString("X2") + b.ToString("X2"); // + a.ToString("X2");
+        }
     }
 }

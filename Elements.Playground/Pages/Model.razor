@@ -18,19 +18,36 @@
     <div id="inputs">
         @foreach (var input in globals.Inputs.Values)
         {
-            if(input is Input<double> numberInput)
+            if (input is Input<double> numberInput)
             {
-                <p>@numberInput.Name</p>
-                <input type="range" min="1" max="100" @bind="numberInput.Value" @bind:event="oninput" class="slider" id="length"
-                @onchange="Run">
+                <div class="input">
+                    <div class="inputName">@numberInput.Name</div>
+                    <div>
+                        <input type="range" min="1" max="100" @bind="numberInput.Value" @bind:event="oninput" class="slider"
+                    id="length" @onchange="Run">
+                    </div>
+                </div>
             }
-            else if(input is Input<Material> materialInput)
+            else if (input is Input<Material> materialInput)
             {
-                <p>@materialInput.Name</p>
-                <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.GlossinessFactor" @bind:event="oninput" class="slider" id="gloss"
-                @onchange="Run">
-                <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.SpecularFactor" @bind:event="oninput" class="slider" id="specular"
-                @onchange="Run">
+                <div class="input">
+                    <div class="inputName">@materialInput.Name</div>
+                    <div>
+                        <label for="gloss" style="display:block">Glossiness</label>
+                        <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.GlossinessFactor"
+                    @bind:event="oninput" class="slider" id="gloss" @onchange="Run">
+                    </div>
+                    <div>
+                        <label for="specular" style="display:block">Specular</label>
+                        <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.SpecularFactor"
+                    @bind:event="oninput" class="slider" id="specular" @onchange="Run">
+                    </div>
+                    <div>
+                        <label for="color" style="display:block">Color</label>
+                        <input type="color" id="color" name="color" value="@materialInput.Value.Color.ToHex()"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.Color = new Color(args.Value.ToString()); Run();}">
+                    </div>
+                </div>
             }
         }
     </div>
