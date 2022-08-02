@@ -1,12 +1,11 @@
 .grid {
     position: relative;
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 200px auto 200px;
+    grid-template-columns: 700px 230px auto;
+    grid-template-rows: auto 200px;
     grid-template-areas:
-        "inputs model"
-        "code model"
-        "output model";
+        "code inputs model"
+        "output inputs model";
     border: 1px solid lightgray;
     height: calc(100vh - 16px);
 }
@@ -16,12 +15,15 @@ label {
 }
 
 .input {
-    border: 1px solid lightgray;
+    border: 1px solid darkgray;
     border-radius: 5px;
     padding: 10px;
     /* width: 200px; */
     width: fit-content;
     margin: 5px;
+    background-color: lightgray;
+    /* box-shadow: 0px 0px 20px black; */
+
 }
 
 .inputName {
@@ -38,7 +40,10 @@ label {
     grid-area: inputs;
     border-bottom: 1px solid lightgray;
     align-content: flex-start;
-    overflow-x: scroll;
+    overflow-y: scroll;
+    background: linear-gradient(#b8b8b8, #ffffff);
+    border-right: 1px solid darkgray;
+    /* box-shadow: inset 0 0 20px black */
 }
 
 #editor {
