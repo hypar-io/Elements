@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Elements.Geometry;
 
 namespace Elements.Playground
 {
@@ -56,6 +57,16 @@ namespace Elements.Playground
                 return materialInput.Value;
             }
             return null;
+        }
+
+        public Vector3 GetVectorInput(string name)
+        {
+            var input = Values.FirstOrDefault(i => i.Name == name);
+            if (input is Input<Vector3> vectorInput)
+            {
+                return vectorInput.Value;
+            }
+            return default;
         }
     }
 

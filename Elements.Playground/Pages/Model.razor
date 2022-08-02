@@ -49,6 +49,24 @@
                     </div>
                 </div>
             }
+            else if(input is Input<Vector3> vectorInput)
+            {
+                <div class="input">
+                    <div class="inputName">@vectorInput.Name</div>
+                    <div>
+                        <label for="x" style="display:block">X</label>
+                        <input type="text" value="@vectorInput.Value.X" @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(double.Parse(args.Value.ToString()), vectorInput.Value.Y, vectorInput.Value.Z); Run();}">
+                    </div>
+                    <div>
+                        <label for="y" style="display:block">Y</label>
+                        <input type="text" value="@vectorInput.Value.Y" @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, double.Parse(args.Value.ToString()), vectorInput.Value.Z); Run();}">
+                    </div>
+                    <div>
+                        <label for="z" style="display:block">Z</label>
+                        <input type="text" value="@vectorInput.Value.Z" @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, vectorInput.Value.Y, double.Parse(args.Value.ToString())); Run();}">
+                    </div>
+                </div>
+            }
         }
     </div>
     <div id="editor">@csharp</div>
@@ -117,7 +135,7 @@ return model;";
         @* globals.Inputs.Values.Add(new Input<double>("height", 10)); *@
         var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
         globals.Inputs.Values.Add(new Input<Material>("test material", m));
-
+        globals.Inputs.Values.Add(new Input<Vector3>("a point", new Vector3(5.0,2.0,3.0)));
         await CompileAndRun();
 
         await Task.FromResult(0);
