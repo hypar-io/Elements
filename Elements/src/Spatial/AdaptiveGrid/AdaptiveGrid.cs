@@ -458,6 +458,11 @@ namespace Elements.Spatial.AdaptiveGrid
             vertices.Add(AddVertex(points[0]));
             for (int i = 1; i < points.Count; i++)
             {
+                if (points[i].IsAlmostEqualTo(vertices.Last().Point, Tolerance))
+                {
+                    continue;
+                }
+
                 var tailVertex = AddVertex(points[i]);
                 if (method == VerticesInsertionMethod.ConnectAndCut)
                 {

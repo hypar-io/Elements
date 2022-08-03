@@ -294,16 +294,21 @@ namespace Elements.Tests
             Assert.Empty(v1.Edges);
 
             //Add and connect
-            simpleLine = new Vector3[] { new Vector3(0, 0), new Vector3(5, 0) };
+            simpleLine = new Vector3[] { new Vector3(0, 0), new Vector3(2, 0), new Vector3(2, 0), new Vector3(5, 0) };
             added = grid.AddVertices(simpleLine, AdaptiveGrid.VerticesInsertionMethod.Connect);
-            Assert.Equal(2, added.Count);
+            //Duplicates are ignored
+            Assert.Equal(3, added.Count);
             Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0), out id0));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0), out id1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 0), out id1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0), out var id2));
             v0 = grid.GetVertex(id0);
             v1 = grid.GetVertex(id1);
+            var v2 = grid.GetVertex(id2);
             Assert.Single(v0.Edges);
-            Assert.Single(v1.Edges);
+            Assert.Equal(2, v1.Edges.Count);
+            Assert.Single(v2.Edges);
             Assert.Equal(v0.Edges.First().OtherVertexId(v0.Id), v1.Id);
+            Assert.Equal(v2.Edges.First().OtherVertexId(v2.Id), v1.Id);
 
             //Add, connect and self intersect
             var singleIntersection = new Vector3[] {
@@ -321,7 +326,7 @@ namespace Elements.Tests
             Assert.Equal(4, v.Edges.Count);
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5), out id0));
             Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5), out id1));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 10), out var id2));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 10), out id2));
             Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2), out var id3));
             Assert.Contains(v.Edges, e => e.StartId == id0 || e.EndId == id0);
             Assert.Contains(v.Edges, e => e.StartId == id1 || e.EndId == id1);
@@ -348,7 +353,7 @@ namespace Elements.Tests
             Assert.Contains(v0.Edges, e => e.StartId == id1 || e.EndId == id1);
             Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0), out id2));
             Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0), out id3));
-            var v2 = grid.GetVertex(id2);
+            v2 = grid.GetVertex(id2);
             var v3 = grid.GetVertex(id3);
             Assert.Single(v2.Edges);
             Assert.Equal(2, v3.Edges.Count);
