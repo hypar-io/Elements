@@ -756,14 +756,27 @@ namespace Elements.Spatial.AdaptiveGrid
 
             if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
             {
+                var startVertex = this.GetVertex(vertexId1);
+                var endVertex = this.GetVertex(vertexId2);
+
+                if (startVertex == null)
+                {
+                    throw new ArgumentException("Can't create edge. Start vertex id is not present in the grid.", $"{vertexId1}");
+                }
+
+                if (endVertex == null)
+                {
+                    throw new ArgumentException("Can't create edge. End vertex id is not present in the grid.", $"{vertexId2}");
+                }
+
                 var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
                 edgeId = edge.Id;
 
                 this._edgesLookup[hash] = edgeId;
                 this._edges.Add(edgeId, edge);
 
-                this.GetVertex(edge.StartId).Edges.Add(edge);
-                this.GetVertex(edge.EndId).Edges.Add(edge);
+                startVertex.Edges.Add(edge);
+                endVertex.Edges.Add(edge);
 
                 this._edgeId++;
                 return edge;
@@ -786,6 +799,17 @@ namespace Elements.Spatial.AdaptiveGrid
             var addedEdges = new List<Edge>();
             var startVertex = GetVertex(startId);
             var endVertex = GetVertex(endId);
+
+            if (startVertex == null)
+            {
+                throw new ArgumentException("Can't create edge. Start vertex id is not present in the grid.", $"{startId}");
+            }
+
+            if (endVertex == null)
+            {
+                throw new ArgumentException("Can't create edge. End vertex id is not present in the grid.", $"{endId}");
+            }
+
             var sp = startVertex.Point;
             var ep = endVertex.Point;
             List<Edge> edgesToRemove = new List<Edge>();
