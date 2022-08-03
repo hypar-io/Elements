@@ -1249,7 +1249,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="number">Number to check.</param>
         /// <param name="domain">Min-Max range.</param>
         /// <param name="tolerance">How far outside the range numbers are considered inside.
-        /// When tolerance positive - range is increased by it, when negative - decreased.<param>
+        /// When tolerance positive - range is increased by it, when negative - decreased.</param>
         /// <returns>Low, Inside or High.</returns>
         private PointOrientation NumberOrientation(
             double number,
