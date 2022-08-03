@@ -219,8 +219,12 @@ namespace Elements.Spatial.AdaptiveGrid
                 var localStartP = toGrid.OfPoint(start.Point);
                 var localEndP = toGrid.OfPoint(end.Point);
 
+                //Z coordinates and X/Y are treated differently.
+                //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
+                //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
+                //This is because we don't want travel under or over obstacles on elevation where they start/end.
                 if (!EdgeOrientation(localStartP, localEndP, localBox.Min, localBox.Max,
-                    out bool startInside, out bool endInside))
+                    -Tolerance, 0, out bool startInside, out bool endInside))
                 {
                     continue;
                 }
@@ -777,6 +781,19 @@ namespace Elements.Spatial.AdaptiveGrid
                     continue;
                 }
 
+                (double minX, double maxX) = edgeV0.Point.X < edgeV1.Point.X ?
+                    (edgeV0.Point.X, edgeV1.Point.X) : (edgeV1.Point.X, edgeV0.Point.X);
+                (double minY, double maxY) = edgeV0.Point.Y < edgeV1.Point.Y ?
+                    (edgeV0.Point.Y, edgeV1.Point.Y) : (edgeV1.Point.Y, edgeV0.Point.Y);
+                (double minZ, double maxZ) = edgeV0.Point.Z < edgeV1.Point.Z ?
+                    (edgeV0.Point.Z, edgeV1.Point.Z) : (edgeV1.Point.Z, edgeV0.Point.Z);
+                //Positive tolerance means that space, tolerance outside the min max box is still considered inside.
+                if (!EdgeOrientation(sp, ep, new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ),
+                    Tolerance, Tolerance, out _, out _))
+                {
+                    continue;
+                }
+
                 var newEdgeLine = new Line(sp, ep);
                 var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
                 if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint, includeEnds: true))
@@ -1179,22 +1196,13 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private PointOrientation OrientationTolerance(double x, double start, double end)
+        private PointOrientation OrientationTolerance(
+            double x, double start, double end, double tolerance)
         {
             PointOrientation po = PointOrientation.Inside;
-            if (x - start < Tolerance)
+            if (x - start < -tolerance)
                 po = PointOrientation.Low;
-            else if (x - end > -Tolerance)
-                po = PointOrientation.Hi;
-            return po;
-        }
-
-        private PointOrientation Orientation(double x, double start, double end)
-        {
-            PointOrientation po = PointOrientation.Inside;
-            if (x < start)
-                po = PointOrientation.Low;
-            else if (x > end)
+            else if (x - end > tolerance)
                 po = PointOrientation.Hi;
             return po;
         }
@@ -1202,25 +1210,22 @@ namespace Elements.Spatial.AdaptiveGrid
         private bool EdgeOrientation(
             Vector3 start, Vector3 end,
             Vector3 min, Vector3 max,
+            double xyTolerance, double zTolerance, 
             out bool startInside, out bool endInside)
         {
             startInside = false;
             endInside = false;
-            PointOrientation startZ = Orientation(start.Z, min.Z, max.Z);
-            PointOrientation endZ = Orientation(end.Z, min.Z, max.Z);
+            PointOrientation startZ = OrientationTolerance(start.Z, min.Z, max.Z, zTolerance);
+            PointOrientation endZ = OrientationTolerance(end.Z, min.Z, max.Z, zTolerance);
             if (startZ == endZ && startZ != PointOrientation.Inside)
             {
                 return false;
             }
 
-            //Z coordinates and X/Y are treated differently.
-            //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
-            //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
-            //This is because we don't want travel under or over obstacles on elevation where they start/end.
-            PointOrientation startX = OrientationTolerance(start.X, min.X, max.X);
-            PointOrientation startY = OrientationTolerance(start.Y, min.Y, max.Y);
-            PointOrientation endX = OrientationTolerance(end.X, min.X, max.X);
-            PointOrientation endY = OrientationTolerance(end.Y, min.Y, max.Y);
+            PointOrientation startX = OrientationTolerance(start.X, min.X, max.X, xyTolerance);
+            PointOrientation startY = OrientationTolerance(start.Y, min.Y, max.Y, xyTolerance);
+            PointOrientation endX = OrientationTolerance(end.X, min.X, max.X, xyTolerance);
+            PointOrientation endY = OrientationTolerance(end.Y, min.Y, max.Y, xyTolerance);
 
             if ((startX == endX && startX != PointOrientation.Inside) ||
                 (startY == endY && startY != PointOrientation.Inside))
