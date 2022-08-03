@@ -270,5 +270,26 @@ namespace Elements.Tests
             b2 = new BBox3(new Vector3(0, -5, 0), new Vector3(5, 0, 5));
             Assert.True(b1.Intersects(b2));
         }
+
+        [Fact]
+        public void BoundingBoxOffset()
+        {
+            BBox3 box = new BBox3(new Vector3(5, 5, 0), new Vector3(10, 10, 5));
+
+            // Zero offset
+            var offsetBox = box.Offset(0);
+            Assert.Equal(offsetBox.Min, new Vector3(5, 5, 0));
+            Assert.Equal(offsetBox.Max, new Vector3(10, 10, 5));
+
+            // Positive offset
+            offsetBox = box.Offset(0.5);
+            Assert.Equal(offsetBox.Min, new Vector3(4.5, 4.5, -0.5));
+            Assert.Equal(offsetBox.Max, new Vector3(10.5, 10.5, 5.5));
+
+            // Negative offset
+            offsetBox = box.Offset(-1);
+            Assert.Equal(offsetBox.Min, new Vector3(6, 6, 1));
+            Assert.Equal(offsetBox.Max, new Vector3(9, 9, 4));
+        }
     }
 }
