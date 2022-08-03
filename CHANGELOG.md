@@ -14,6 +14,11 @@
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `DoubleToleranceComparer`
+- `Line.IsOnPlane()` method
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
+- `Polyline.GetParameterAt(Vector3 point)` method
+- `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
+- `Polygon.GetSharedSegments(Polyline polyline)` method 
 - `BBox3.Offset(double amount)`
 - `Obstacle` in `Elements.Spatial.AdaptiveGrid`
 - `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`

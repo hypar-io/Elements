@@ -1260,5 +1260,17 @@ namespace Elements.Geometry
             var b = (sumy - m * sumx) / points.Count;
             return b;
         }
+
+        /// <summary>
+        /// Checks if line lays on plane
+        /// </summary>
+        /// <param name="plane">Plane to check</param>
+        /// <param name="tolerance">Optional tolerance value</param>
+        /// <returns>The result of check if line lays on plane</returns>
+        public bool IsOnPlane(Plane plane, double tolerance = 1E-05)
+        {
+            return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
+                && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
+        }
     }
 }
