@@ -148,10 +148,10 @@ return model;";
         loading = false;
 
         globals.Inputs.Values.Add(new Input<double>("length", 5));
-        @* globals.Inputs.Values.Add(new Input<double>("height", 10)); *@
         var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
         globals.Inputs.Values.Add(new Input<Material>("test material", m));
         globals.Inputs.Values.Add(new Input<Vector3>("a point", new Vector3(5.0, 2.0, 3.0)));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "a point");
         globals.Inputs.Values.Add(new WideFlangeProfileInput("wide flange"));
 
         await CompileAndRun();
@@ -184,7 +184,7 @@ return model;";
 
     public static async Task Run()
     {
-        await RunInternal();
+        RunInternal();
     }
 
     [JSInvokable]
@@ -220,6 +220,19 @@ return model;";
         Console.SetOut(currentOut);
 
         sw.Stop();
+    }
+
+    [JSInvokable]
+    public static async Task UpdatePointInput(string name, double x, double y, double z)
+    {
+        var input = globals.Inputs.Values.FirstOrDefault(v=>v.Name == name && v is Input<Vector3>);
+        if(input == null)
+        {
+            Console.WriteLine($"A vector input with the name {name} could not be found.");
+        }
+        var vectorInput = (Input<Vector3>)input;
+        vectorInput.Value = new Vector3(x,-y,z);
+        Run();
     }
 
     static void Compile()

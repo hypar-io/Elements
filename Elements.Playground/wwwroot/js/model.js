@@ -1,11 +1,14 @@
 import * as THREE from 'https://cdn.skypack.dev/three@0.133.0/build/three.module.js'
 import { OrbitControls } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/controls/OrbitControls.js';
+import { TransformControls } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/controls/TransformControls.js';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/loaders/GLTFLoader.js';
 import { RGBELoader } from 'https://cdn.skypack.dev/three@0.133.0/examples/jsm/loaders/RGBELoader.js'
+
 window.model = {
     initialize3D: () => { initialize3D(); },
     initializeEditor: () => { initializeEditor(); },
     loadModel: (glb) => { loadModel(glb) },
+    createTransformablePoint: (name) => { createTransformablePoint(name) }
 };
 
 const scene = new THREE.Scene();
@@ -13,6 +16,9 @@ var gltfScene = null;
 var editor = null;
 var directionalLight = null;
 var renderer = null;
+var camera = null;
+var pointMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+var orbitControl = null;
 
 function loadModel(glb) {
     const contentArray = Blazor.platform.toUint8Array(glb);
@@ -55,7 +61,7 @@ function loadModel(glb) {
 
 function initializeEditor() {
     ace.config.set("packaged", true)
-    ace.config.set("basePath", "https://pagecdn.io/lib/ace/1.4.12/")
+    ace.config.set("basePath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.8.1/")
     ace.require("ace/ext/language_tools");
     editor = ace.edit("editor");
     editor.setTheme("ace/theme/tomorrow");
@@ -75,7 +81,7 @@ function initializeEditor() {
 
 function initialize3D() {
     const div = document.getElementById("model");
-    const camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 300);
+    camera = new THREE.PerspectiveCamera(75, div.clientWidth / div.clientHeight, 0.1, 300);
 
     // Renderer
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -87,7 +93,7 @@ function initialize3D() {
     renderer.setSize(div.clientWidth, div.clientHeight);
     div.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    orbitControl = new OrbitControls(camera, renderer.domElement);
 
     // Main light
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.8 * Math.PI);
@@ -139,11 +145,11 @@ function initialize3D() {
     camera.position.z = 5;
     camera.position.y = 10;
 
-    controls.update();
+    orbitControl.update();
 
     const animate = function () {
         requestAnimationFrame(animate);
-        controls.update();
+        orbitControl.update();
         renderer.render(scene, camera);
     };
 
@@ -154,4 +160,30 @@ function initialize3D() {
     }, false);
 
     animate();
+}
+
+function createTransformablePoint(name) {
+    const geometry = new THREE.SphereGeometry(0.2, 16, 16);
+    const mesh = new THREE.Mesh(geometry, pointMaterial);
+    mesh.name = `${name}_mesh`;
+
+    scene.add(mesh);
+    var transformControl = new TransformControls(camera, renderer.domElement);
+    transformControl.addEventListener('mouseUp', () => {
+        mesh.updateMatrixWorld();
+        var position = new THREE.Vector3();
+        position.setFromMatrixPosition(mesh.matrixWorld);
+        DotNet.invokeMethodAsync('Elements.Playground', 'UpdatePointInput', name, position.x, position.z, position.y);
+        render();
+    });
+    transformControl.addEventListener('dragging-changed', function (event) {
+        orbitControl.enabled = !event.value;
+    });
+    transformControl.name = `${name}_control`;
+    transformControl.attach(mesh);
+    scene.add(transformControl);
+}
+
+function render() {
+    renderer.render(scene, camera)
 }
