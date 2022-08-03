@@ -223,7 +223,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
                 //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
                 //This is because we don't want travel under or over obstacles on elevation where they start/end.
-                if (!EdgeOrientation(localStartP, localEndP, localBox.Min, localBox.Max,
+                if (!IsLineInDomain((localStartP, localEndP), (localBox.Min, localBox.Max),
                     -Tolerance, 0, out bool startInside, out bool endInside))
                 {
                     continue;
@@ -792,7 +792,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 (double minZ, double maxZ) = edgeV0.Point.Z < edgeV1.Point.Z ?
                     (edgeV0.Point.Z, edgeV1.Point.Z) : (edgeV1.Point.Z, edgeV0.Point.Z);
                 //Positive tolerance means that space, tolerance outside the min max box is still considered inside.
-                if (!EdgeOrientation(sp, ep, new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ),
+                if (!IsLineInDomain((sp, ep), (new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ)),
                     Tolerance, Tolerance, out _, out _))
                 {
                     continue;
@@ -1243,36 +1243,58 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private PointOrientation OrientationTolerance(
-            double x, double start, double end, double tolerance)
+        /// <summary>
+        /// Check where number lies in comparison to given domain.
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <param name="domain">Min-Max range.</param>
+        /// <param name="tolerance">How far outside the range numbers are considered inside.
+        /// When tolerance positive - range is increased by it, when negative - decreased.<param>
+        /// <returns>Low, Inside or High.</returns>
+        private PointOrientation NumberOrientation(
+            double number,
+            (double Min, double Max) domain,
+            double tolerance)
         {
             PointOrientation po = PointOrientation.Inside;
-            if (x - start < -tolerance)
+            if (number - domain.Min < -tolerance)
                 po = PointOrientation.Low;
-            else if (x - end > tolerance)
+            else if (number - domain.Max > tolerance)
                 po = PointOrientation.Hi;
             return po;
         }
 
-        private bool EdgeOrientation(
-            Vector3 start, Vector3 end,
-            Vector3 min, Vector3 max,
+        /// <summary>
+        /// Check if line lies in certain domain.
+        /// This happens if any line point is Inside domain at any coordinate or
+        /// two points are on different sides on the domain - Hi and Low.
+        /// </summary>
+        /// <param name="line">Line to check.</param>
+        /// <param name="domain">Min-Max range in 3 coordinates.</param>
+        /// <param name="xyTolerance">Tolerance for X and Y coordinates.</param>
+        /// <param name="zTolerance">Tolerance for Z coordinate.</param>
+        /// <param name="startInside">Is start point of line inside the domain.</param>
+        /// <param name="endInside">Is end point of line inside the domain.</param>
+        /// <returns>Low, Inside or High.</returns>
+        private bool IsLineInDomain(
+            (Vector3 Start, Vector3 End) line,
+            (Vector3 Min, Vector3 Max) domain,
             double xyTolerance, double zTolerance, 
             out bool startInside, out bool endInside)
         {
             startInside = false;
             endInside = false;
-            PointOrientation startZ = OrientationTolerance(start.Z, min.Z, max.Z, zTolerance);
-            PointOrientation endZ = OrientationTolerance(end.Z, min.Z, max.Z, zTolerance);
+            PointOrientation startZ = NumberOrientation(line.Start.Z, (domain.Min.Z, domain.Max.Z), zTolerance);
+            PointOrientation endZ = NumberOrientation(line.End.Z, (domain.Min.Z, domain.Max.Z), zTolerance);
             if (startZ == endZ && startZ != PointOrientation.Inside)
             {
                 return false;
             }
 
-            PointOrientation startX = OrientationTolerance(start.X, min.X, max.X, xyTolerance);
-            PointOrientation startY = OrientationTolerance(start.Y, min.Y, max.Y, xyTolerance);
-            PointOrientation endX = OrientationTolerance(end.X, min.X, max.X, xyTolerance);
-            PointOrientation endY = OrientationTolerance(end.Y, min.Y, max.Y, xyTolerance);
+            PointOrientation startX = NumberOrientation(line.Start.X, (domain.Min.X, domain.Max.X), xyTolerance);
+            PointOrientation startY = NumberOrientation(line.Start.Y, (domain.Min.Y, domain.Max.Y), xyTolerance);
+            PointOrientation endX = NumberOrientation(line.End.X, (domain.Min.X, domain.Max.X), xyTolerance);
+            PointOrientation endY = NumberOrientation(line.End.Y, (domain.Min.Y, domain.Max.Y), xyTolerance);
 
             if ((startX == endX && startX != PointOrientation.Inside) ||
                 (startY == endY && startY != PointOrientation.Inside))
