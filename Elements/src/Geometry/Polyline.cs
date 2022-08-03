@@ -1016,6 +1016,59 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Checks if polyline intersects with polygon
+        /// </summary>
+        /// <param name="polygon">Polygon to check</param>
+        /// <param name="sharedSegments">List of shared subsegments</param>
+        /// <returns>Result of check if polyline and polygon intersects</returns>
+        public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
+        {
+            sharedSegments = new List<Polyline>();
+
+            var intersections = polygon.Segments()
+                .SelectMany(x =>
+                {
+                    Intersects(x, out var result);
+                    return result;
+                })
+                .OrderBy(x => GetParameterAt(x))
+                .ToList();
+
+            if (intersections.Count == 0)
+            {
+                if (polygon.Contains(Start) && polygon.Contains(End))
+                {
+                    sharedSegments.Add(this);
+                }
+                return sharedSegments.Any();
+            }
+
+            if (polygon.Contains(Start))
+            {
+                var intersection = intersections.First();
+                var startSegment = GetSubsegment(Start, intersection);
+                sharedSegments.Add(startSegment);
+                intersections.Remove(intersection);
+            }
+
+            for (int i = 1; i < intersections.Count; i += 2)
+            {
+                var subsegment = GetSubsegment(intersections[i - 1], intersections[i]);
+                sharedSegments.Add(subsegment);
+            }
+
+            if (polygon.Contains(End))
+            {
+                var intersection = intersections.Last();
+                var endSegment = GetSubsegment(intersection, End);
+                sharedSegments.Add(endSegment);
+                intersections.Remove(intersection);
+            }
+
+            return sharedSegments.Any();
+        }
+
+        /// <summary>
         /// Get new polyline between two points
         /// </summary>
         /// <param name="start">Start point</param>

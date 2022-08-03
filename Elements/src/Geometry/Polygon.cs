@@ -2374,51 +2374,6 @@ namespace Elements.Geometry
             }
             return polygons;
         }
-
-        /// <summary>
-        /// Get list of polyline subsegments which are inside of polyline
-        /// </summary>
-        /// <param name="polyline">Polyline to check</param>
-        /// <returns>List of shared polylines</returns>
-        public IEnumerable<Polyline> GetSharedSegments(Polyline polyline)
-        {
-            var intersections = Segments()
-                .SelectMany(x =>
-                {
-                    polyline.Intersects(x, out var result);
-                    return result;
-                })
-                .OrderBy(x => polyline.GetParameterAt(x))
-                .ToList();
-
-            if (intersections.Count == 0)
-            {
-                if (Contains(polyline.Start) && Contains(polyline.End))
-                {
-                    yield return polyline;
-                }
-                yield break;
-            }
-
-            if (Contains(polyline.Start))
-            {
-                var intersection = intersections.First();
-                yield return polyline.GetSubsegment(polyline.Start, intersection);
-                intersections.Remove(intersection);
-            }
-
-            for (int i = 1; i < intersections.Count; i += 2)
-            {
-                yield return polyline.GetSubsegment(intersections[i - 1], intersections[i]);
-            }
-
-            if (Contains(polyline.End))
-            {
-                var intersection = intersections.Last();
-                yield return polyline.GetSubsegment(intersection, polyline.End);
-                intersections.Remove(intersection);
-            }
-        }
     }
 
     /// <summary>
