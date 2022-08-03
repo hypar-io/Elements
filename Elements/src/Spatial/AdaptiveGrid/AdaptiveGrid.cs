@@ -282,10 +282,10 @@ namespace Elements.Spatial.AdaptiveGrid
                     var cornersAtElevation = corners.Select(
                         c => c.ProjectAlong(frame.ZAxis, plane)).ToList();
 
-                    AddLineWithPointsOnIt(cornersAtElevation[0], cornersAtElevation[1], intersections);
-                    AddLineWithPointsOnIt(cornersAtElevation[1], cornersAtElevation[2], intersections);
-                    AddLineWithPointsOnIt(cornersAtElevation[2], cornersAtElevation[3], intersections);
-                    AddLineWithPointsOnIt(cornersAtElevation[3], cornersAtElevation[0], intersections);
+                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections);
+                    AddEdgesOnLine(cornersAtElevation[1], cornersAtElevation[2], intersections);
+                    AddEdgesOnLine(cornersAtElevation[2], cornersAtElevation[3], intersections);
+                    AddEdgesOnLine(cornersAtElevation[3], cornersAtElevation[0], intersections);
 
                     foreach (var item in group)
                     {
@@ -756,7 +756,6 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Ordered list of edges between start and end vertices.</returns>
         private List<Edge> AddCutEdge(ulong startId, ulong endId)
         {
-            var addedEdges = new List<Edge>();
             var startVertex = GetVertex(startId);
             var endVertex = GetVertex(endId);
 
@@ -847,24 +846,16 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
                 }
             }
+
+            List<Edge> addedEdges = null;
             if (intersectionPoints.Any())
             {
-                intersectionPoints = intersectionPoints.OrderBy(p => p.DistanceTo(startVertex.Point)).ToList();
-                intersectionPoints.Insert(0, startVertex.Point);
-                intersectionPoints.Add(endVertex.Point);
-                for (var i = 0; i < intersectionPoints.Count - 1; i++)
-                {
-                    if (!intersectionPoints[i].IsAlmostEqualTo(intersectionPoints[i + 1], Tolerance))
-                    {
-                        var v1 = AddVertex(intersectionPoints[i]);
-                        var v2 = AddVertex(intersectionPoints[i + 1]);
-                        addedEdges.Add(AddInsertEdge(v1.Id, v2.Id));
-                    }
-                }
+                addedEdges = AddEdgesInBetween(startVertex, endVertex,
+                    intersectionPoints.OrderBy(p => p.DistanceTo(startVertex.Point)));
             }
             else
             {
-                addedEdges.Add(AddInsertEdge(startVertex.Id, endVertex.Id));
+                addedEdges = new List<Edge>() { AddInsertEdge(startVertex.Id, endVertex.Id) };
             }
 
             foreach (var edge in edgesToRemove)
@@ -935,6 +926,57 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
             return inserted;
+        }
+
+        private List<Edge> AddEdgesInBetween(Vertex start, Vertex end, IEnumerable<Vector3> points)
+        {
+            var addedEdges = new List<Edge>();
+            var v1 = start;
+            foreach (var p in points)
+            {
+                if (!v1.Point.IsAlmostEqualTo(p, Tolerance))
+                {
+                    var v2 = AddVertex(p);
+                    addedEdges.Add(AddInsertEdge(v1.Id, v2.Id));
+                    v1 = v2;
+                }
+            }
+
+            if (v1 != end)
+            {
+                addedEdges.Add(AddInsertEdge(v1.Id, end.Id));
+            }
+            return addedEdges;
+        }
+
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
+        {
+            var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(Boundaries, out var _);
+            if (!inside.Any())
+            {
+                return;
+            }
+
+            var fi = inside.First();
+            start = new Vector3(fi.Start.X, fi.Start.Y, start.Z);
+            end = new Vector3(fi.End.X, fi.End.Y, end.Z);
+
+            var onLine = candidates.Where(x => Line.PointOnLine(x, start, end));
+            var ordered = onLine.OrderBy(x => (x - start).Dot(end - start));
+            var strip = new List<Vector3>();
+            strip.Add(start);
+            foreach (var point in ordered)
+            {
+                if (!point.IsAlmostEqualTo(start, Tolerance) &&
+                    !point.IsAlmostEqualTo(end, Tolerance) &&
+                    !point.IsAlmostEqualTo(strip.Last(), Tolerance))
+                {
+                    strip.Add(point);
+                }
+            }
+            strip.Add(end);
+
+            AddVertices(strip, VerticesInsertionMethod.Connect);
         }
 
         /// <summary>
@@ -1246,36 +1288,6 @@ namespace Elements.Spatial.AdaptiveGrid
                         endX == PointOrientation.Inside &&
                         endY == PointOrientation.Inside;
             return true;
-        }
-
-        private void AddLineWithPointsOnIt(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
-        {
-            var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(Boundaries, out var _);
-            if (!inside.Any())
-            {
-                return;
-            }
-
-            var fi = inside.First();
-            start = new Vector3(fi.Start.X, fi.Start.Y, start.Z);
-            end = new Vector3(fi.End.X, fi.End.Y, end.Z);
-
-            var onLine = candidates.Where(x => Line.PointOnLine(x, start, end));
-            var ordered = onLine.OrderBy(x => (x - start).Dot(end - start));
-            var strip = new List<Vector3>();
-            strip.Add(start);
-            foreach (var point in ordered)
-            {
-                if (!point.IsAlmostEqualTo(start, Tolerance) &&
-                    !point.IsAlmostEqualTo(end, Tolerance) &&
-                    !point.IsAlmostEqualTo(strip.Last(), Tolerance))
-                {
-                    strip.Add(point);
-                }
-            }
-            strip.Add(end);
-
-            AddVertices(strip, VerticesInsertionMethod.Connect);
         }
 
         /// <summary>
