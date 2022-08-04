@@ -31,15 +31,17 @@ namespace Elements
         /// Construct an import mesh element.
         /// </summary>
         /// <param name="mesh">The element's mesh.</param>
-        /// <param name="material">The element's material.</param>
         /// <param name="transform">The element's transform.</param>
+        /// <param name="material">The element's material.</param>
+        /// <param name="representation">The element's representation.</param>
         /// <param name="isElementDefinition">Is this element a definition?</param>
         /// <param name="id">The element's id.</param>
         /// <param name="name">The element's name.</param>
         [JsonConstructor]
         public MeshElement(Mesh mesh,
-                            Material material = null,
                             Transform transform = null,
+                            Material material = null,
+                            Representation representation = null,
                             bool isElementDefinition = false,
                             Guid id = default(Guid),
                             string name = null) : base(transform == null ? new Transform() : transform,
@@ -50,33 +52,6 @@ namespace Elements
                                                        name)
         {
             this._mesh = mesh;
-        }
-
-        /// <summary>
-        /// Construct an import mesh element.  This constructor is necessary for compatibility with elements that
-        /// inherit from this class via json schema and code generation.
-        /// </summary>
-        /// <param name="mesh">The element's mesh.</param>
-        /// <param name="transform">The element's transform.</param>
-        /// <param name="material">The element's material.</param>
-        /// <param name="representation">The element's representation.</param>
-        /// <param name="isElementDefinition">Is this element a definition?</param>
-        /// <param name="id">The element's id.</param>
-        /// <param name="name">The element's name.</param>
-        public MeshElement(Mesh mesh,
-                            Transform transform = null,
-                            Material material = null,
-                            Representation representation = null,
-                            bool isElementDefinition = false,
-                            Guid id = default(Guid),
-                            string name = null) : this(mesh,
-                                                        material,
-                                                        transform,
-                                                        isElementDefinition,
-                                                        id,
-                                                        name)
-        {
-
         }
 
         /// <summary>
