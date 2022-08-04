@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+- MeshElement constructor signature modified to be compatible with code generation.
+
 ## 1.1.0
 
 ### Added
@@ -24,12 +29,12 @@
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
-- `Line.PointOnLine` now uses distance to line instead of dot product. 
+- `Line.PointOnLine` now uses distance to line instead of dot product.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
-- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
