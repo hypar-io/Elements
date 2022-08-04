@@ -20,6 +20,18 @@
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
+- `Polyline.GetParameterAt(Vector3 point)` method
+- `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
+- `Polygon.GetSharedSegments(Polyline polyline)` method
+- `BBox3.Offset(double amount)`
+- `Obstacle` in `Elements.Spatial.AdaptiveGrid`
+- `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`
+- `AdaptiveGrid.Boundaries`
+- `AdaptiveGrid.AddVertex(Vector3 point)`
+- `AdaptiveGrid.AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vertex a, Vertex b, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vector3 a, Vector3 b, bool cut = true)`
 
 ### Changed
 
