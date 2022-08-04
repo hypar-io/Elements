@@ -20,72 +20,72 @@
         {
             if (input is Input<double> numberInput)
             {
-                <div class="input">
-                    <div class="inputName">@numberInput.Name</div>
-                    <div>
-                        <input type="range" min="1" max="100" value="@numberInput.Value" class="slider" id="length"
+                        <div class="input">
+                            <div class="inputName">@numberInput.Name</div>
+                            <div>
+                                <input type="range" min="1" max="100" value="@numberInput.Value" class="slider" id="length"
                     @onchange="(ChangeEventArgs args) => {numberInput.Value = double.Parse(args.Value.ToString());Run();}">
-                    </div>
-                </div>
+                            </div>
+                        </div>
             }
             else if (input is Input<Material> materialInput)
             {
-                <div class=" input">
-                    <div class="inputName">@materialInput.Name</div>
-                    <div>
-                        <label for="gloss" style="display:block">Glossiness</label>
-                        <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.GlossinessFactor"
+                        <div class=" input">
+                            <div class="inputName">@materialInput.Name</div>
+                            <div>
+                                <label for="gloss" style="display:block">Glossiness</label>
+                                <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.GlossinessFactor"
                     class="slider" id="gloss"
                     @onchange="(ChangeEventArgs args) => {materialInput.Value.GlossinessFactor = double.Parse(args.Value.ToString());Run();}">
-                    </div>
-                    <div>
-                        <label for="specular" style="display:block">Specular</label>
-                        <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.SpecularFactor"
+                            </div>
+                            <div>
+                                <label for="specular" style="display:block">Specular</label>
+                                <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.SpecularFactor"
                     class="slider" id="specular"
                     @onchange="(ChangeEventArgs args) => {materialInput.Value.SpecularFactor = double.Parse(args.Value.ToString());Run();}">
-                    </div>
-                    <div>
-                        <label for="color" style="display:block">Color</label>
-                        <input type="color" id="color" name="color" value="@materialInput.Value.Color.ToHex()"
+                            </div>
+                            <div>
+                                <label for="color" style="display:block">Color</label>
+                                <input type="color" id="color" name="color" value="@materialInput.Value.Color.ToHex()"
                     @onchange="(ChangeEventArgs args) => {materialInput.Value.Color = new Color(args.Value.ToString()); Run();}">
-                    </div>
-                </div>
+                            </div>
+                        </div>
             }
             else if (input is Input<Vector3> vectorInput)
             {
-                <div class="input">
-                    <div class="inputName">@vectorInput.Name</div>
-                    <div style="display:flex;flex-direction:row;justify-content:space-between">
-                        <div>
-                            <label for="x" style="display:block">X</label>
-                            <input style="width:50px;" type="text" value="@vectorInput.Value.X"
+                        <div class="input">
+                            <div class="inputName">@vectorInput.Name</div>
+                            <div style="display:flex;flex-direction:row;justify-content:space-between">
+                                <div>
+                                    <label for="x" style="display:block">X</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.X"
                         @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(double.Parse(args.Value.ToString()), vectorInput.Value.Y, vectorInput.Value.Z); Run();}">
-                        </div>
-                        <div>
-                            <label for="y" style="display:block">Y</label>
-                            <input style="width:50px;" type="text" value="@vectorInput.Value.Y"
+                                </div>
+                                <div>
+                                    <label for="y" style="display:block">Y</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.Y"
                         @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, double.Parse(args.Value.ToString()), vectorInput.Value.Z); Run();}">
-                        </div>
-                        <div>
-                            <label for="z" style="display:block">Z</label>
-                            <input style="width:50px;" type="text" value="@vectorInput.Value.Z"
+                                </div>
+                                <div>
+                                    <label for="z" style="display:block">Z</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.Z"
                         @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, vectorInput.Value.Y, double.Parse(args.Value.ToString())); Run();}">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
             }
             else if (input is WideFlangeProfileInput wideFlangeProfileInput)
             {
-                <div class="input">
-                    <div class="inputName">@wideFlangeProfileInput.Name</div>
-                    <select style="display:block;" name="profile" id="profile"
+                        <div class="input">
+                            <div class="inputName">@wideFlangeProfileInput.Name</div>
+                            <select style="display:block;" name="profile" id="profile"
                 @onchange="(ChangeEventArgs args) => {wideFlangeProfileInput.Value = wideFlangeProfileInput.Factory.GetProfileByName(args.Value.ToString()); Run();}">
                         @foreach (var profile in wideFlangeProfileInput.Factory.AllProfiles())
                         {
-                            <option value="@profile.Name">@profile.Name</option>
+                                        <option value="@profile.Name">@profile.Name</option>
                         }
-                    </select>
-                </div>
+                            </select>
+                        </div>
             }
         }
     </div>
@@ -114,15 +114,17 @@
         loading = false;
 
         globals.Inputs.Values.Add(new Input<double>("length", 5));
-        
+
         var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
         globals.Inputs.Values.Add(new Input<Material>("test material", m));
 
-        globals.Inputs.Values.Add(new Input<Vector3>("a point", new Vector3(5.0, 2.0, 3.0)));
-        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "a point");
+        var a = new Vector3(5.0, 2.0, 3.0);
+        globals.Inputs.Values.Add(new Input<Vector3>("a point", a));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "a point", a);
 
-        @* globals.Inputs.Values.Add(new Input<Vector3>("b point", new Vector3(5.0, 2.0, 3.0)));
-        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "b point"); *@
+        var b = new Vector3(10.0, 2.0, 3.0);
+        globals.Inputs.Values.Add(new Input<Vector3>("b point", b));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "b point", b);
 
         globals.Inputs.Values.Add(new WideFlangeProfileInput("wide flange"));
 

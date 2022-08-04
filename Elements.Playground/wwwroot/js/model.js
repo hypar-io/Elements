@@ -8,7 +8,7 @@ window.model = {
     initialize3D: () => { initialize3D(); },
     initializeEditor: () => { initializeEditor(); },
     loadModel: (glb) => { loadModel(glb) },
-    createTransformablePoint: (name) => { createTransformablePoint(name) }
+    createTransformablePoint: (name, pt) => { createTransformablePoint(name, pt) }
 };
 
 const scene = new THREE.Scene();
@@ -169,7 +169,7 @@ function initialize3D() {
     animate();
 }
 
-function createTransformablePoint(name) {
+function createTransformablePoint(name, pt) {
     const geometry = new THREE.SphereGeometry(0.2, 16, 16);
     const mesh = new THREE.Mesh(geometry, pointMaterial);
     mesh.name = `${name}_mesh`;
@@ -186,6 +186,12 @@ function createTransformablePoint(name) {
     transformControl.addEventListener('dragging-changed', function (event) {
         orbitControl.enabled = !event.value;
     });
+
+    console.debug(pt);
+    mesh.position.setX(pt.x);
+    mesh.position.setY(pt.y);
+    mesh.position.setZ(pt.z);
+
     transformControl.name = `${name}_control`;
     transformControl.attach(mesh);
     scene.add(transformControl);
