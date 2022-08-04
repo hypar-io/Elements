@@ -73,9 +73,16 @@ function initializeEditor() {
         enableLiveAutocompletion: true
     });
 
+    const code = localStorage.getItem('code');
+    if (code) {
+        editor.setValue(code);
+        DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', code)
+    }
+
     editor.getSession().on('change', function () {
         var code = editor.getValue();
         DotNet.invokeMethod('Elements.Playground', 'SetCodeValue', code)
+        localStorage.setItem('code', code);
     });
 }
 
