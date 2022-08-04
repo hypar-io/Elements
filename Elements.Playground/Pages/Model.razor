@@ -23,24 +23,26 @@
                 <div class="input">
                     <div class="inputName">@numberInput.Name</div>
                     <div>
-                        <input type="range" min="1" max="100" @bind="numberInput.Value" @bind:event="oninput" class="slider"
-                    id="length" @onchange="Run">
+                        <input type="range" min="1" max="100" value="@numberInput.Value" class="slider" id="length"
+                    @onchange="(ChangeEventArgs args) => {numberInput.Value = double.Parse(args.Value.ToString());Run();}">
                     </div>
                 </div>
             }
             else if (input is Input<Material> materialInput)
             {
-                <div class="input">
+                <div class=" input">
                     <div class="inputName">@materialInput.Name</div>
                     <div>
                         <label for="gloss" style="display:block">Glossiness</label>
-                        <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.GlossinessFactor"
-                    @bind:event="oninput" class="slider" id="gloss" @onchange="Run">
+                        <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.GlossinessFactor"
+                    class="slider" id="gloss"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.GlossinessFactor = double.Parse(args.Value.ToString());Run();}">
                     </div>
                     <div>
                         <label for="specular" style="display:block">Specular</label>
-                        <input type="range" min="0.0" max="1.0" step="0.1" @bind="materialInput.Value.SpecularFactor"
-                    @bind:event="oninput" class="slider" id="specular" @onchange="Run">
+                        <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.SpecularFactor"
+                    class="slider" id="specular"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.SpecularFactor = double.Parse(args.Value.ToString());Run();}">
                     </div>
                     <div>
                         <label for="color" style="display:block">Color</label>
@@ -227,13 +229,13 @@ return model;";
     [JSInvokable]
     public static async Task UpdatePointInput(string name, double x, double y, double z)
     {
-        var input = globals.Inputs.Values.FirstOrDefault(v=>v.Name == name && v is Input<Vector3>);
-        if(input == null)
+        var input = globals.Inputs.Values.FirstOrDefault(v => v.Name == name && v is Input<Vector3>);
+        if (input == null)
         {
             Console.WriteLine($"A vector input with the name {name} could not be found.");
         }
         var vectorInput = (Input<Vector3>)input;
-        vectorInput.Value = new Vector3(x,-y,z);
+        vectorInput.Value = new Vector3(x, -y, z);
         component.StateHasChanged();
         Run();
     }
