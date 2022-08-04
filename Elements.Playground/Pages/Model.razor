@@ -99,45 +99,7 @@
     bool loading = true;
     private static Globals globals = new Globals();
     private static Model component;
-    private static string csharp = @"var model = new Model();
-
-var length = Inputs.GetNumberInput(""length"");
-var m = Inputs.GetMaterialInput(""test material"");
-var p = Inputs.GetProfileInput(""wide flange"");
-
-for(var i=0; i<1; i++)
-{
-var start = new Vector3(i, 0, 0);
-var end = new Vector3(i, length, i);
-
-// The bottom chord
-var bottomChord = new Line(start, end);
-var bottomChordBeam = new Beam(bottomChord, p, null, m);
-model.AddElement(bottomChordBeam);
-
-var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-var topChordBeam = new Beam(topChord, p, null, m);
-model.AddElement(topChordBeam);
-
-Vector3 last = default(Vector3);
-for(var j=0.0; j<=1.0; j+=0.1)
-{
-var pt = bottomChord.PointAt(j);
-var top = pt + new Vector3(0,0,5);
-var panelLine = new Line(pt, top);
-var panelBeam = new Beam(panelLine, p, null, m);
-model.AddElement(panelBeam);
-
-if(j > 0.0)
-{
-var braceLine = new Line(top, last);
-var braceBeam = new Beam(braceLine, p, null, m);
-model.AddElement(braceBeam);
-}
-last = pt;
-}
-}
-return model;";
+    private static string csharp = "// Put your code here.";
     private static string Output = "";
     private static IJSUnmarshalledRuntime Runtime;
     [Inject] private HttpClient Client { get; set; }
@@ -152,10 +114,16 @@ return model;";
         loading = false;
 
         globals.Inputs.Values.Add(new Input<double>("length", 5));
+        
         var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
         globals.Inputs.Values.Add(new Input<Material>("test material", m));
+
         globals.Inputs.Values.Add(new Input<Vector3>("a point", new Vector3(5.0, 2.0, 3.0)));
         await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "a point");
+
+        @* globals.Inputs.Values.Add(new Input<Vector3>("b point", new Vector3(5.0, 2.0, 3.0)));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "b point"); *@
+
         globals.Inputs.Values.Add(new WideFlangeProfileInput("wide flange"));
 
         await CompileAndRun();
