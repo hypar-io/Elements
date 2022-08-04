@@ -17,7 +17,7 @@ namespace Elements.Playground
 {
     public abstract class InputBase
     {
-        public string Name { get; set; }
+        public string Name { get; protected set; }
     }
 
     public class Input<T> : InputBase
