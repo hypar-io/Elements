@@ -126,7 +126,9 @@
         globals.Inputs.Values.Add(new Input<Vector3>("b point", b));
         await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "b point", b);
 
-        globals.Inputs.Values.Add(new WideFlangeProfileInput("wide flange"));
+        globals.Inputs.Values.Add(new WideFlangeProfileInput("chord profile"));
+
+        globals.Inputs.Values.Add(new WideFlangeProfileInput("web profile"));
 
         await CompileAndRun();
 
