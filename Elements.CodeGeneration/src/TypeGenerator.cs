@@ -17,6 +17,17 @@ namespace Elements.Generate
 {
     class ElementsTypeNameGenerator : ITypeNameGenerator
     {
+
+        // Don't append the namespace to the typename for these types. This
+        // should mostly match the built-in `usings` in `File.Liquid`, with the
+        // exception of Elements.GeoJSON, since it has colliding type names, and
+        // we want that code generated with fully qualified types.
+        private static HashSet<string> excludedNamespaces = new HashSet<string> {
+            "Elements",
+            "Elements.Geometry",
+            "Elements.Geometry.Solids"
+        };
+
         // TODO(Ian): This type name generator is only required because njsonschema
         // calls dependencies 'Json2', 'Json3', etc. We use their title to label
         // them and then they get excluded by that title. This is fragile because
@@ -42,7 +53,12 @@ namespace Elements.Generate
             }
             else
             {
-                return schema.Title.ToSafeIdentifier();
+                var typeName = schema.Title.ToSafeIdentifier();
+                if (schema.ExtensionData.TryGetValue("x-namespace", out var ns) && !excludedNamespaces.Contains(ns))
+                {
+                    typeName = $"{ns}.{typeName}";
+                }
+                return typeName;
             }
         }
     }
@@ -104,7 +120,8 @@ namespace Elements.Generate
             "Grid1d",
             "Grid2d",
             "Domain1d",
-            "IndexedCell"
+            "IndexedCell",
+            "GeoJSON.Polygon"
         };
 
         /// <summary>
@@ -165,8 +182,12 @@ namespace Elements.Generate
                     DiagnosticResults = new[] { "The provided schema does not contain the required 'x-namespace' property." }
                 };
             }
-
-            var typeName = schema.Title;
+            var namespaceQualifier = "";
+            if (ns != "Elements" && ns != "Elements.Geometry")
+            {
+                namespaceQualifier = ns + ".";
+            }
+            var typeName = namespaceQualifier + schema.Title;
             return WriteTypeFromSchemaToDisk(schema, outputBaseDir, typeName, ns, excludedTypeNames ?? new HashSet<string>(_coreTypeNames));
         }
 
