@@ -164,6 +164,22 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Order at which leaf terminal are connected into the tree.
+        /// </summary>
+        public enum TreeOrder
+        {
+            /// <summary>
+            /// Closest from remaining terminals is routed first.
+            /// </summary>
+            ClosestToFurthest,
+
+            /// <summary>
+            /// Furthest from remaining terminals is routed first.
+            /// </summary>
+            FurthestToClosest
+        }
+
+        /// <summary>
         /// Filter function definition.
         /// </summary>
         /// <param name="start">Last Vertex in the route.</param>
@@ -290,10 +306,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="leafVertices">Vertices to connect into the system with extra information attached.</param>
         /// <param name="trunkPathVertices">End vertices, connected in the same order as provided. Exit location goes first.</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line is required.</param>
+        /// <param name="order">In which order tree is constructed</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSpanningTree(
             IList<RoutingVertex> leafVertices,
-            IList<ulong> trunkPathVertices, IEnumerable<RoutingHintLine> hintLines)
+            IList<ulong> trunkPathVertices,
+            IEnumerable<RoutingHintLine> hintLines,
+            TreeOrder order)
         {
             if (!hintLines.Any())
             {
@@ -332,32 +351,24 @@ namespace Elements.Spatial.AdaptiveGrid
             //Path is still added to tree from start to end.
             //TO DO: investigate if this can be done through automatic hint lines
             //TO DO: this section can be moved into `RouteAndAddTailVertices` function 
-            for (int i = 0; i < trunkPathVertices.Count - 1; i++)
+            var droppipePath = new List<ulong>() { trunkPathVertices.Last() };
+            ulong? tailStartDirection = null;
+            for (int i = trunkPathVertices.Count - 1; i > 0 ; i--)
             {
                 var c = ShortestPathDijkstra(trunkPathVertices[i], weights,
-                    out var travelCost, vertexTree[trunkPathVertices[i]], allExcluded);
-                var p = GetPathTo(c, trunkPathVertices[i + 1]);
-                AddPathToTree(trunkPathVertices[i + 1], p, vertexTree);
+                    out var travelCost, tailStartDirection, allExcluded);
+                var path = GetPathTo(c, trunkPathVertices[i - 1]);
+                AddPathToTree(trunkPathVertices[i], path, vertexTree);
+                tailStartDirection = path[path.Count - 2];
+                droppipePath.AddRange(path.Skip(1));
             }
 
-            //2. Connect furthest exit point to most efficient point on any of the hint lines.
-            var connections = ShortestPathDijkstra(trunkPathVertices.Last(),
-                                                   weights,
-                                                   out var dropppipeTravelCost,
-                                                   vertexTree[trunkPathVertices.Last()],
-                                                   allExcluded);
-            var droppipeCollectorTerminal = FindConnectionPoint(
-                hintVertices, offsetVertices, dropppipeTravelCost);
-            var droppipePath = GetPathTo(connections, droppipeCollectorTerminal);
-            AddPathToTree(droppipeCollectorTerminal, droppipePath, vertexTree);
-
-            //3. Connect inlets to  most efficient point on hint line.
+            //2. Connect inlets to  most efficient point on hint line.
             var inletToTrunkPaths = new Dictionary<ulong, List<ulong>>();
             var inletTouchPoint = new Dictionary<ulong, ulong>();
             var inletConnections = new Dictionary<ulong, Dictionary<ulong, ulong>>();
             var inletTravelCosts = new Dictionary<ulong, Dictionary<ulong, double>>();
             List<ulong> collectorTerminals = new List<ulong>();
-            List<ulong> path = null;
             foreach (var inlet in leafVertices)
             {
                 //TO DO: part of this section can be moved into `RouteLeaflVertex` function 
@@ -382,7 +393,8 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
                 }
 
-                connections = ShortestPathDijkstra(lastInChain, weights,
+                List<ulong> path = null;
+                var connections = ShortestPathDijkstra(lastInChain, weights,
                     out var travelCost, startDirection, otherExcluded);
                 inletConnections[lastInChain] = connections;
                 inletTravelCosts[lastInChain] = travelCost;
@@ -403,7 +415,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 inletTouchPoint[path.Last()] = inlet.Id;
             }
 
-            //4. Join all individual pieces together. We start from a single connection
+            //3. Join all individual pieces together. We start from a single connection
             //path from droppipe and a set of connection points from the previous step.
             //One at a time we choose the connection point that is cheapest to travel to existing
             //network and its path is added to the network until all are added.
@@ -435,30 +447,30 @@ namespace Elements.Spatial.AdaptiveGrid
             //considering also if any of them need extra turn when connected.
             while (collectorTerminals.Any())
             {
-                ulong closestTerminal = 0;
-                path = null;
-                double lowestCost = double.MaxValue;
+                ulong bestTerminal = 0;
+                List<ulong> path = null;
+                double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
                 foreach (var terminal in collectorTerminals)
                 {
                     var info = terminalInfo[terminal];
                     var (localClosest, branchSide) = FindConnectionPoint(
                         magnetTerminals, info.Costs, info.Connections, vertexTree, weights);
                     var costs = info.Costs[localClosest];
-                    var bestCost = branchSide == BranchSide.Left ? costs.Item1 : costs.Item2;
-                    if (bestCost < lowestCost)
+                    var localBestCost = branchSide == BranchSide.Left ? costs.Item1 : costs.Item2;
+                    if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
                     {
                         path = GetPathTo(info.Connections, localClosest, branchSide);
-                        closestTerminal = terminal;
-                        lowestCost = bestCost;
+                        bestTerminal = terminal;
+                        bestCost = localBestCost;
                     }
                 }
 
                 path.ForEach(p => magnetTerminals.Add(p));
-                AddPathToTree(closestTerminal, path, vertexTree);
-                collectorTerminals.Remove(closestTerminal);
+                AddPathToTree(bestTerminal, path, vertexTree);
+                collectorTerminals.Remove(bestTerminal);
             }
 
-            //5. Inlets are added last. Trunk is already built, check for the best
+            //4. Inlets are added last. Trunk is already built, check for the best
             //join point once again, better one might be found.
             //TO DO: this section can be moved into `RerouteAndAddInletVertices` function 
             foreach (var inlet in leafVertices)
@@ -484,7 +496,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var costs = inletTravelCosts[key];
                 double bestCost = costs[bestIndex] - _grid.Tolerance;
                 var t = FindConnectionPoint(magnetTerminals, costs, bestIndex, bestCost);
-                path = GetPathTo(inletConnections[key], t);
+                var path = GetPathTo(inletConnections[key], t);
                 AddPathToTree(key, path, vertexTree);
             }
 
@@ -504,10 +516,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="localTails">Anchor points that will form global tree between sections.</param>
         /// <param name="trunkPathVertices">End vertices, connected in the same order as provided. Exit location goes first.</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
+        /// <param name="order">In which order tree is constructed</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSpanningTree(
-            IList<List<RoutingVertex>> leafVertices, IList<ulong> localTails,
-            IList<ulong> trunkPathVertices, IList<List<RoutingHintLine>> hintLines)
+            IList<List<RoutingVertex>> leafVertices, 
+            IList<ulong> localTails,
+            IList<ulong> trunkPathVertices,
+            IList<List<RoutingHintLine>> hintLines,
+            TreeOrder order)
         {
             if (!hintLines.Any() || hintLines.Any(hl => hl == null || !hl.Any()))
             {
@@ -548,12 +564,16 @@ namespace Elements.Spatial.AdaptiveGrid
             //Path is still added to tree from start to end.
             //TO DO: investigate if this can be done through automatic hint lines
             //TO DO: this section can be moved into `RouteAndAddTailVertices` function 
-            for (int i = 0; i < trunkPathVertices.Count - 1; i++)
+            var droppipePath = new List<ulong>() { trunkPathVertices.Last() };
+            ulong? tailStartDirection = null;
+            for (int i = trunkPathVertices.Count - 1; i > 0; i--)
             {
-                var connections = ShortestPathDijkstra(trunkPathVertices[i], weights,
-                    out var travelCost, vertexTree[trunkPathVertices[i]], allExcluded);
-                var p = GetPathTo(connections, trunkPathVertices[i + 1]);
-                AddPathToTree(trunkPathVertices[i + 1], p, vertexTree);
+                var c = ShortestPathDijkstra(trunkPathVertices[i], weights,
+                    out var travelCost, tailStartDirection, allExcluded);
+                var path = GetPathTo(c, trunkPathVertices[i - 1]);
+                AddPathToTree(trunkPathVertices[i], path, vertexTree);
+                tailStartDirection = path[path.Count - 2];
+                droppipePath.AddRange(path.Skip(1));
             }
 
             //2. Connect ends of each sections together.
@@ -581,23 +601,24 @@ namespace Elements.Spatial.AdaptiveGrid
             while (tailsCopy.Any())
             {
                 List<ulong> path = null;
-                double lowestCost = double.PositiveInfinity;
-                ulong closestTerminal = 0u;
+                double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
+                ulong bestTerminal = 0u;
                 foreach (var terminal in tailsCopy)
                 {
                     var info = tailsInfo[terminal];
                     var localClosest = FindConnectionPoint(magnetTail, info.Costs);
-                    if (info.Costs[localClosest] < lowestCost)
+                    var localBestCost = info.Costs[localClosest];
+                    if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
                     {
                         path = GetPathTo(info.Connections, localClosest);
-                        closestTerminal = terminal;
-                        lowestCost = info.Costs[localClosest];
+                        bestTerminal = terminal;
+                        bestCost = localBestCost;
                     }
                 }
 
                 path.ForEach(p => magnetTail.Add(p));
-                tailsCopy.Remove(closestTerminal);
-                AddPathToTree(closestTerminal, path, vertexTree);
+                tailsCopy.Remove(bestTerminal);
+                AddPathToTree(bestTerminal, path, vertexTree);
             }
 
             //Next steps are repeated independently for each input section
@@ -689,19 +710,19 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     ulong closestTerminal = 0;
                     path = null;
-                    double lowestCost = double.MaxValue;
+                    double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
                     foreach (var terminal in collectorTerminals)
                     {
                         var info = terminalInfo[terminal];
                         var (localClosest, branch) = FindConnectionPoint(
                             magnetTerminals, info.Costs, info.Connections, vertexTree, weights);
                         var costs = info.Costs[localClosest];
-                        var bestCost = branch == BranchSide.Left ? costs.Item1 : costs.Item2;
-                        if (bestCost < lowestCost)
+                        var localBestCost = branch == BranchSide.Left ? costs.Item1 : costs.Item2;
+                        if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
                         {
                             path = GetPathTo(info.Connections, localClosest, branch);
                             closestTerminal = terminal;
-                            lowestCost = bestCost;
+                            bestCost = localBestCost;
                         }
                     }
 
@@ -834,7 +855,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
 
                 if (_configuration.SupportedAngles != null &&
-                    !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle)))
+                    !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle, 0.01)))
                 {
                     weights[e.Id] = (w, double.PositiveInfinity);
                 }
@@ -1379,8 +1400,9 @@ namespace Elements.Spatial.AdaptiveGrid
                     check(segment.Start);
                     check(segment.End);
 
+                    var minResulution = Math.Max(_grid.Tolerance, hint.InfluenceDistance);
                     if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine2d.Length() > _grid.Tolerance)
+                        (hiClosest - lowClosest) * edgeLine2d.Length() > minResulution)
                     {
                         return true;
                     }

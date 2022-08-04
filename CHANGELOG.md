@@ -15,6 +15,18 @@
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
+- `Polyline.GetParameterAt(Vector3 point)` method
+- `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
+- `Polygon.GetSharedSegments(Polyline polyline)` method 
+- `BBox3.Offset(double amount)`
+- `Obstacle` in `Elements.Spatial.AdaptiveGrid`
+- `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`
+- `AdaptiveGrid.Boundaries`
+- `AdaptiveGrid.AddVertex(Vector3 point)`
+- `AdaptiveGrid.AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vertex a, Vertex b, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vector3 a, Vector3 b, bool cut = true)`
 
 ### Changed
 
@@ -24,7 +36,13 @@
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
-- `Line.PointOnLine` now uses distance to line instead of dot product. 
+- `Line.PointOnLine` now uses distance to line instead of dot product.
+- `Line.Intersects` for `BBox3` now has `double tolerance` parameter.
+- `AdaptiveGraphRouting.BuildSpanningTree` functions now have `TreeOrder` parameter: `ClosestToFurthest` or `FurthestToClosest`.
+- `AdaptiveGrid.SubtractBox(BBox3 box)` is changed into `AdaptiveGrid.SubtractObstacle(Obstacle obstacle)`
+- `AdaptiveGrid.AddVertex(Vector3 point, IList<Vertex> connections)` is removed and replaced with IAddVertexStrategy approach.
+- `AdaptiveGrid.AddVertexStrip(IList<Vector3> points)` is changed into `AdaptiveGrid.AddVertices(IList<Vector3> points, VerticesInsertionMethod method)`
+- `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2, bool cut = true)` - added cut parameter.
 
 ### Fixed
 

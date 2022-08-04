@@ -967,6 +967,159 @@ namespace Elements.Geometry
             }
             return;
         }
+
+        /// <summary>
+        /// Calculate U parameter for point on polyline
+        /// </summary>
+        /// <param name="point">Point on polyline</param>
+        /// <returns>Returns U parameter for point on polyline</returns>
+        public double GetParameterAt(Vector3 point)
+        {
+            var segment = Segments().FirstOrDefault(x => x.PointOnLine(point, true));
+
+            if (segment == null)
+            {
+                return -1;
+            }
+
+            var segmentIndex = Segments().ToList().IndexOf(segment);
+
+            var segmentsLength = Segments().Where((x, i) => i < segmentIndex).Sum(x => x.Length());
+            var pointLength = segmentsLength + point.DistanceTo(segment.Start);
+
+            return pointLength / Length();
+        }
+
+        /// <summary>
+        /// Check if polyline intersects with line
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <param name="intersections">Intersections between polyline and line</param>
+        /// <param name="infinite">Threat the line as infinite?</param>
+        /// <param name="includeEnds">If the end of line lies exactly on the vertex of polyline, count it as an intersection? </param>
+        /// <returns>True if line intersects with polyline, false if they do not intersect</returns>
+        public bool Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)
+        {
+            var segments = Segments();
+
+            intersections = new List<Vector3>();
+
+            foreach (var segment in segments)
+            {
+                if (segment.Intersects(line, out var point, infinite: infinite, includeEnds: includeEnds))
+                {
+                    intersections.Add(point);
+                }
+            }
+
+            return intersections.Any();
+        }
+
+        /// <summary>
+        /// Checks if polyline intersects with polygon
+        /// </summary>
+        /// <param name="polygon">Polygon to check</param>
+        /// <param name="sharedSegments">List of shared subsegments</param>
+        /// <returns>Result of check if polyline and polygon intersects</returns>
+        public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
+        {
+            sharedSegments = new List<Polyline>();
+
+            var intersections = polygon.Segments()
+                .SelectMany(x =>
+                {
+                    Intersects(x, out var result);
+                    return result;
+                })
+                .OrderBy(x => GetParameterAt(x))
+                .ToList();
+
+            if (intersections.Count == 0)
+            {
+                if (polygon.Contains(Start) && polygon.Contains(End))
+                {
+                    sharedSegments.Add(this);
+                }
+                return sharedSegments.Any();
+            }
+
+            if (polygon.Contains(Start))
+            {
+                var intersection = intersections.First();
+                var startSegment = GetSubsegment(Start, intersection);
+                sharedSegments.Add(startSegment);
+                intersections.Remove(intersection);
+            }
+
+            for (int i = 1; i < intersections.Count; i += 2)
+            {
+                var subsegment = GetSubsegment(intersections[i - 1], intersections[i]);
+                sharedSegments.Add(subsegment);
+            }
+
+            if (polygon.Contains(End))
+            {
+                var intersection = intersections.Last();
+                var endSegment = GetSubsegment(intersection, End);
+                sharedSegments.Add(endSegment);
+                intersections.Remove(intersection);
+            }
+
+            return sharedSegments.Any();
+        }
+
+        /// <summary>
+        /// Get new polyline between two points
+        /// </summary>
+        /// <param name="start">Start point</param>
+        /// <param name="end">End point</param>
+        /// <returns>New polyline or null if any of points is not on polyline</returns>
+        public Polyline GetSubsegment(Vector3 start, Vector3 end)
+        {
+            if(start.IsAlmostEqualTo(end))
+            {
+                return null;
+            }
+
+            var startParameter = GetParameterAt(start);
+            var endParameter = GetParameterAt(end);
+
+            if(startParameter < 0 || endParameter < 0)
+            {
+                return null;
+            }
+
+            var firstParameter = 0d;
+            var lastParameter = 0d;
+            var vertices = new List<Vector3>();
+            var lastVertex = Vector3.Origin;
+
+            if(startParameter < endParameter)
+            {
+                firstParameter = startParameter;
+                lastParameter = endParameter;
+                vertices.Add(start);
+                lastVertex = end;
+            }
+            else
+            {
+                firstParameter = endParameter;
+                lastParameter = startParameter;
+                vertices.Add(end);
+                lastVertex = start;
+            }
+
+            var verticesToAdd = Vertices.Where(x =>
+            {
+                var parameter = GetParameterAt(x);
+                return parameter > firstParameter && parameter < lastParameter;
+            });
+
+            vertices.AddRange(verticesToAdd);
+            vertices.Add(lastVertex);
+
+            return new Polyline(vertices);
+        }
     }
 
     /// <summary>
