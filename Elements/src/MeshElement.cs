@@ -60,7 +60,7 @@ namespace Elements
         /// </summary>
         public MeshElement() : base()
         {
-
+            _mesh = new Mesh();
         }
 
         internal MeshElement(Material material = null,
