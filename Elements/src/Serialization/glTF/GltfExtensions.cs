@@ -16,6 +16,8 @@ using System.Net;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
+using Vector3 = Elements.Geometry.Vector3;
+using Quaternion = Elements.Geometry.Quaternion;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
