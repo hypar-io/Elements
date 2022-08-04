@@ -212,7 +212,7 @@ namespace Elements.Tests
                 }
             }
             mesh.ComputeNormals();
-            var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime), new Transform(new Vector3(-7, -8, 0), new Vector3(-5, 3, 2)));
+            var meshElement = new MeshElement(mesh, new Transform(new Vector3(-7, -8, 0), new Vector3(-5, 3, 2)), new Material("Lime", Colors.Lime));
             return meshElement;
         }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+- MeshElement constructor signature modified to be compatible with code generation.
+
 ## 1.1.0
 
 ### Added
@@ -18,7 +23,7 @@
 - `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
 - `Polyline.GetParameterAt(Vector3 point)` method
 - `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
-- `Polygon.GetSharedSegments(Polyline polyline)` method 
+- `Polygon.GetSharedSegments(Polyline polyline)` method
 - `BBox3.Offset(double amount)`
 - `Obstacle` in `Elements.Spatial.AdaptiveGrid`
 - `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`
@@ -37,17 +42,11 @@
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
 - `Line.PointOnLine` now uses distance to line instead of dot product.
-- `Line.Intersects` for `BBox3` now has `double tolerance` parameter.
-- `AdaptiveGraphRouting.BuildSpanningTree` functions now have `TreeOrder` parameter: `ClosestToFurthest` or `FurthestToClosest`.
-- `AdaptiveGrid.SubtractBox(BBox3 box)` is changed into `AdaptiveGrid.SubtractObstacle(Obstacle obstacle)`
-- `AdaptiveGrid.AddVertex(Vector3 point, IList<Vertex> connections)` is removed and replaced with IAddVertexStrategy approach.
-- `AdaptiveGrid.AddVertexStrip(IList<Vector3> points)` is changed into `AdaptiveGrid.AddVertices(IList<Vector3> points, VerticesInsertionMethod method)`
-- `AdaptiveGrid.AddEdge(ulong vertexId1, ulong vertexId2, bool cut = true)` - added cut parameter.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
-- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
