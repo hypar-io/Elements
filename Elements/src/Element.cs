@@ -13,6 +13,12 @@ namespace Elements
         private string _name;
 
         /// <summary>
+        /// The element's animation.
+        /// </summary>
+        [JsonIgnore]
+        public Animation Animation { get; set; }
+
+        /// <summary>
         /// Construct an element.
         /// </summary>
         /// <param name="id">The unique id of the element.</param>

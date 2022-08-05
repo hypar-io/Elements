@@ -54,13 +54,14 @@ namespace Elements.Serialization.glTF
                 var b = transform.YAxis;
                 var c = transform.ZAxis;
 
-                var transNode = new Node();
-
-                transNode.Matrix = new[]{
+                var transNode = new Node
+                {
+                    Matrix = new[]{
                     (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
                     (float)b.X, (float)b.Y, (float)b.Z, 0.0f,
                     (float)c.X, (float)c.Y, (float)c.Z, 0.0f,
                     (float)transform.Origin.X,(float)transform.Origin.Y,(float)transform.Origin.Z, 1.0f
+                }
                 };
 
                 parentId = AddNode(nodes, transNode, 0);
@@ -122,9 +123,11 @@ namespace Elements.Serialization.glTF
             // transform, so that the transform can be modified in explore at
             // runtime (e.g. by a transform override) and have the expected effect.
             float[] elementTransform = TransformToMatrix(transform);
-            var newNode = new glTFLoader.Schema.Node();
-            newNode.Name = $"{instanceElementId}";
-            newNode.Matrix = elementTransform;
+            var newNode = new glTFLoader.Schema.Node
+            {
+                Name = $"{instanceElementId}",
+                Matrix = elementTransform
+            };
             nodes.Add(newNode);
             newNode.Children = new[] { nodes.Count };
 
@@ -134,8 +137,10 @@ namespace Elements.Serialization.glTF
             // back to Y up further up in the node hierarchy. 
             rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
             float[] glbOrientationTransform = TransformToMatrix(rootTransform);
-            var elementOrientationNode = new glTFLoader.Schema.Node();
-            elementOrientationNode.Matrix = glbOrientationTransform;
+            var elementOrientationNode = new glTFLoader.Schema.Node
+            {
+                Matrix = glbOrientationTransform
+            };
             nodes.Add(elementOrientationNode);
             elementOrientationNode.Children = new[] { nodes.Count };
 
@@ -146,8 +151,10 @@ namespace Elements.Serialization.glTF
 
         private static int RecursivelyCopyNode(List<Node> nodes, ProtoNode nodeToCopy)
         {
-            var newNode = new Node();
-            newNode.Matrix = nodeToCopy.Matrix;
+            var newNode = new Node
+            {
+                Matrix = nodeToCopy.Matrix
+            };
             if (nodeToCopy.Mesh != null)
             {
                 newNode.Mesh = nodeToCopy.Mesh;
@@ -201,8 +208,11 @@ namespace Elements.Serialization.glTF
             parentId = CreateAndAddRTSNode(nodes, transform, parentId);
 
             // Add mesh node to gltf nodes
-            var node = new Node();
-            node.Mesh = meshId;
+            var node = new Node
+            {
+                Mesh = meshId,
+            };
+
             var nodeId = AddNode(nodes, node, parentId);
             return nodeId;
         }

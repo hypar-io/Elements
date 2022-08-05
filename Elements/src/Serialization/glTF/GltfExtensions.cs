@@ -497,7 +497,14 @@ namespace Elements.Serialization.glTF
             }
         }
 
-        private static int AddAccessor(List<Accessor> accessors, int bufferView, int byteOffset, Accessor.ComponentTypeEnum componentType, int count, float[] min, float[] max, Accessor.TypeEnum accessorType)
+        private static int AddAccessor(List<Accessor> accessors,
+                                       int bufferView,
+                                       int byteOffset,
+                                       Accessor.ComponentTypeEnum componentType,
+                                       int count,
+                                       float[] min,
+                                       float[] max,
+                                       Accessor.TypeEnum accessorType)
         {
             var a = new Accessor
             {
@@ -963,6 +970,7 @@ namespace Elements.Serialization.glTF
             var textures = new List<Texture>();
             var images = new List<Image>();
             var samplers = new List<Sampler>();
+            var animations = new List<glTFLoader.Schema.Animation>();
             var materials = gltf.Materials != null ? gltf.Materials.ToList() : new List<glTFLoader.Schema.Material>();
 
             var meshElementMap = new Dictionary<Guid, List<int>>();
@@ -1000,6 +1008,7 @@ namespace Elements.Serialization.glTF
                                             meshTransformMap,
                                             currLines,
                                             drawEdges,
+                                            animations,
                                             mergeVertices);
                 }
                 catch (Exception ex)
@@ -1053,6 +1062,10 @@ namespace Elements.Serialization.glTF
             {
                 gltf.Samplers = samplers.ToArray(samplers.Count);
             }
+            if (animations.Count > 0)
+            {
+                gltf.Animations = animations.ToArray(animations.Count);
+            }
             gltf.Nodes = nodes.ToArray(nodes.Count);
             if (meshes.Count > 0)
             {
@@ -1083,10 +1096,12 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, Transform> meshTransformMap,
                                                     List<Vector3> lines,
                                                     bool drawEdges,
+                                                    List<glTFLoader.Schema.Animation> animations,
                                                     bool mergeVertices = false)
         {
             var materialId = BuiltInMaterials.Default.Id.ToString();
             int meshId = -1;
+            int nodeId = -1;
 
             if (e is GeometricElement element)
             {
@@ -1146,6 +1161,7 @@ namespace Elements.Serialization.glTF
                                                                 materialId,
                                                                 ref meshId,
                                                                 content,
+                                                                out nodeId,
                                                                 mergeVertices);
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
@@ -1169,6 +1185,7 @@ namespace Elements.Serialization.glTF
                                                             materialId,
                                                             ref meshId,
                                                             geometricElement,
+                                                            out nodeId,
                                                             mergeVertices);
                     if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
                     {
@@ -1232,7 +1249,16 @@ namespace Elements.Serialization.glTF
             {
                 if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, (MeshPrimitive.ModeEnum)mode, meshes, nodes, ge.Transform);
+                    gltf.AddPointsOrLines(id,
+                                          buffer,
+                                          bufferViews,
+                                          accessors,
+                                          materialIndexMap[ge.Material.Id.ToString()],
+                                          gb,
+                                          (MeshPrimitive.ModeEnum)mode,
+                                          meshes,
+                                          nodes,
+                                          ge.Transform);
                 }
             }
 
@@ -1266,8 +1292,163 @@ namespace Elements.Serialization.glTF
                 var geom = (GeometricElement)e;
                 if (!geom.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
+                    nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
                 }
+            }
+
+            if (e.Animation != null && nodeId != -1)
+            {
+                // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
+
+                var channels = new List<AnimationChannel>();
+                var animationSamplers = new List<AnimationSampler>();
+
+                if (e.Animation.HasAnimatedScale())
+                {
+                    var scaleTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.ScaleTimes.Length, null, null);
+                    buffer.AddRange(e.Animation.ScaleTimes);
+                    var scaleTimeAccessor = AddAccessor(accessors,
+                                                        scaleTimeBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.ScaleTimes.Length / sizeof(float),
+                                                        new float[] { e.Animation.ScaleTimeMin },
+                                                        new float[] { e.Animation.ScaleTimeMax },
+                                                        Accessor.TypeEnum.SCALAR);
+
+                    var scaleBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Scales.Length, null, null);
+                    buffer.AddRange(e.Animation.Scales);
+                    var scaleAccessor = AddAccessor(accessors,
+                                                        scaleBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.Scales.Length / sizeof(float) / 3,
+                                                        e.Animation.ScaleMin,
+                                                        e.Animation.ScaleMax,
+                                                        Accessor.TypeEnum.VEC3);
+
+                    var scaleSampler = new AnimationSampler
+                    {
+                        Input = scaleTimeAccessor,  // time
+                        Output = scaleAccessor,    // scale
+                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                    };
+
+                    var scaleTarget = new AnimationChannelTarget
+                    {
+                        Node = nodeId,
+                        Path = AnimationChannelTarget.PathEnum.scale
+                    };
+
+                    var scaleChannel = new AnimationChannel()
+                    {
+                        Target = scaleTarget,
+                        Sampler = animationSamplers.Count
+                    };
+
+                    animationSamplers.Add(scaleSampler);
+                    channels.Add(scaleChannel);
+                }
+                if (e.Animation.HasAnimatedTranslation())
+                {
+                    var translationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.TranslationTimes.Length, null, null);
+                    buffer.AddRange(e.Animation.TranslationTimes);
+                    var translationTimeAccessor = AddAccessor(accessors,
+                                                        translationTimeBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.TranslationTimes.Length / sizeof(float),
+                                                        new float[] { e.Animation.TranslationTimeMin },
+                                                        new float[] { e.Animation.TranslationTimeMax },
+                                                        Accessor.TypeEnum.SCALAR);
+
+                    var translationBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Translations.Length, null, null);
+                    buffer.AddRange(e.Animation.Translations);
+                    var translationAccessor = AddAccessor(accessors,
+                                                        translationBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.Translations.Length / sizeof(float) / 3,
+                                                        e.Animation.TranslationMin,
+                                                        e.Animation.TranslationMax,
+                                                        Accessor.TypeEnum.VEC3);
+
+                    var translationSampler = new AnimationSampler
+                    {
+                        Input = translationTimeAccessor,  // time
+                        Output = translationAccessor,    // scale
+                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                    };
+
+                    var translationTarget = new AnimationChannelTarget
+                    {
+                        Node = nodeId,
+                        Path = AnimationChannelTarget.PathEnum.translation
+                    };
+
+                    var translationChannel = new AnimationChannel()
+                    {
+                        Target = translationTarget,
+                        Sampler = animationSamplers.Count
+                    };
+
+                    animationSamplers.Add(translationSampler);
+                    channels.Add(translationChannel);
+                }
+                if (e.Animation.HasAnimatedRotation())
+                {
+                    var rotationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.RotationTimes.Length, null, null);
+                    buffer.AddRange(e.Animation.RotationTimes);
+                    var rotationTimeAccessor = AddAccessor(accessors,
+                                                        rotationTimeBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.RotationTimes.Length / sizeof(float),
+                                                        new float[] { e.Animation.RotationTimeMin },
+                                                        new float[] { e.Animation.RotationTimeMax },
+                                                        Accessor.TypeEnum.SCALAR);
+
+                    var rotationBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Rotations.Length, null, null);
+                    buffer.AddRange(e.Animation.Rotations);
+                    var rotationAccessor = AddAccessor(accessors,
+                                                        rotationBufferView,
+                                                        0,
+                                                        Accessor.ComponentTypeEnum.FLOAT,
+                                                        e.Animation.Rotations.Length / sizeof(float) / 4,
+                                                        e.Animation.RotationMin,
+                                                        e.Animation.RotationMax,
+                                                        Accessor.TypeEnum.VEC4);
+
+                    var rotationSampler = new AnimationSampler
+                    {
+                        Input = rotationTimeAccessor,  // time
+                        Output = rotationAccessor,    // scale
+                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                    };
+
+                    var rotationTarget = new AnimationChannelTarget
+                    {
+                        Node = nodeId,
+                        Path = AnimationChannelTarget.PathEnum.rotation
+                    };
+
+                    var rotationChannel = new AnimationChannel()
+                    {
+                        Target = rotationTarget,
+                        Sampler = animationSamplers.Count
+                    };
+
+                    animationSamplers.Add(rotationSampler);
+                    channels.Add(rotationChannel);
+                }
+
+                var anim = new glTFLoader.Schema.Animation()
+                {
+                    Channels = channels.ToArray(),
+                    Samplers = animationSamplers.ToArray()
+                };
+
+                animations.Add(anim);
             }
         }
 
@@ -1380,9 +1561,12 @@ namespace Elements.Serialization.glTF
                                                            string materialId,
                                                            ref int meshId,
                                                            GeometricElement geometricElement,
+                                                           out int nodeId,
                                                            bool mergeVertices = false)
         {
             geometricElement.UpdateRepresentations();
+
+            nodeId = -1;
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
@@ -1415,7 +1599,7 @@ namespace Elements.Serialization.glTF
 
                 if (!geometricElement.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
+                    nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
                 }
                 return meshId;
             }
