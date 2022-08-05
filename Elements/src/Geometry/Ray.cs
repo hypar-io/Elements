@@ -282,15 +282,7 @@ namespace Elements.Geometry
 
         public bool Intersects(Mesh mesh, out Vector3 result)
         {
-            result = default;
-            foreach (var t in mesh.Triangles)
-            {
-                if (this.Intersects(t, out result))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return mesh.Intersects(this, out result);
         }
 
         /// <summary>
@@ -368,6 +360,24 @@ namespace Elements.Geometry
             }
             result = default(Vector3);
             return false;
+        }
+
+        /// <summary>
+        /// Find points in the collection that are within the provided distance of this ray.
+        /// </summary>
+        /// <param name="points">The collection of points to search</param>
+        /// <param name="distance">The maximum distance from the ray.</param>
+        /// <returns>Points that are within the given distance of the ray.</returns>
+        public Vector3[] NearbyPoints(IEnumerable<Vector3> points, double distance)
+        {
+            // TODO: calibrate these values
+            var octree = new Octree.PointOctree<Vector3>(10000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON * 100);
+            foreach (var point in points)
+            {
+                octree.Add(point, point.ToOctreePoint());
+            }
+            var nearbyPoints = octree.GetNearby(this.ToOctreeRay(), (float)distance);
+            return nearbyPoints;
         }
 
         /// <summary>

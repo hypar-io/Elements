@@ -90,7 +90,7 @@ namespace Elements.Geometry
             }
         }
 
-        internal void Extend(Vector3 v)
+        internal BBox3 Extend(Vector3 v)
         {
             var newMin = new Vector3(Min.X, Min.Y, Min.Z);
             if (v.X < this.Min.X) newMin.X = v.X;
@@ -103,6 +103,7 @@ namespace Elements.Geometry
             if (v.Y > this.Max.Y) newMax.Y = v.Y;
             if (v.Z > this.Max.Z) newMax.Z = v.Z;
             this.Max = newMax;
+            return this;
         }
 
         /// <summary>

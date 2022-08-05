@@ -16,15 +16,23 @@ namespace Elements.Geometry
     [JsonConverter(typeof(MeshConverter))]
     public partial class Mesh
     {
+
+        private double _maxTriangleSize = 0;
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
 
-        /// <summary>The mesh' vertices.</summary>
+        /// <summary>The mesh's vertices.</summary>
         [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Vertex> Vertices { get; set; }
 
-        /// <summary>The mesh' triangles.</summary>
+        /// <summary>The mesh's triangles.</summary>
         [JsonProperty("Triangles", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
+
+        private BBox3 _bbox = new BBox3();
+        /// <summary>
+        /// The mesh's bounding box.
+        /// </summary>
+        public BBox3 BoundingBox => _bbox;
 
         /// <summary>
         /// Construct a mesh.
@@ -34,8 +42,16 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles)
         {
-            this.Vertices = @vertices;
-            this.Triangles = @triangles;
+            Vertices = new List<Vertex>();
+            Triangles = new List<Triangle>();
+            foreach (var v in @vertices)
+            {
+                AddVertex(v);
+            }
+            foreach (var t in @triangles)
+            {
+                AddTriangle(t);
+            }
         }
 
         /// <summary>
@@ -186,6 +202,14 @@ Triangles:{Triangles.Count}";
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
+            for (int i = 0; i < 3; i++)
+            {
+                var sideLength = t.Vertices[i].Position.DistanceTo(t.Vertices[(i + 1) % 3].Position);
+                if (sideLength > this._maxTriangleSize)
+                {
+                    this._maxTriangleSize = sideLength;
+                }
+            }
             this.Triangles.Add(t);
             return t;
         }
@@ -199,6 +223,14 @@ Triangles:{Triangles.Count}";
             if (t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                var sideLength = t.Vertices[i].Position.DistanceTo(t.Vertices[(i + 1) % 3].Position);
+                if (sideLength > this._maxTriangleSize)
+                {
+                    this._maxTriangleSize = sideLength;
+                }
             }
             this.Triangles.Add(t);
             return t;
@@ -223,7 +255,7 @@ Triangles:{Triangles.Count}";
                                 bool merge = false,
                                 double edgeAngle = 30.0)
         {
-            var p = new Octree.Point((float)position.X, (float)position.Y, (float)position.Z);
+            var p = position.ToOctreePoint();
 
             if (merge)
             {
@@ -243,6 +275,7 @@ Triangles:{Triangles.Count}";
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
             this._octree.Add(v, p);
+            this._bbox = this._bbox.Extend(v.Position);
             return v;
         }
 
@@ -253,6 +286,8 @@ Triangles:{Triangles.Count}";
         public Vertex AddVertex(Vertex v)
         {
             this.Vertices.Add(v);
+            this._octree.Add(v, v.Position.ToOctreePoint());
+            this._bbox = this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
         }
@@ -335,6 +370,28 @@ Triangles:{Triangles.Count}";
             return polygons;
         }
 
+        /// <summary>
+        /// Does the provided ray intersect this mesh mesh?
+        /// </summary>
+        /// <param name="ray">The Ray to intersect.</param>
+        /// <param name="intersection">The location of intersection.</param>
+        /// <returns>True if an intersection result occurs.
+        /// False if no intersection occurs.</returns>
+        public bool Intersects(Ray ray, out Vector3 intersection)
+        {
+            var nearbyVertices = this._octree.GetNearby(ray.ToOctreeRay(), (float)_maxTriangleSize).ToList();
+            var nearbyTriangles = nearbyVertices.SelectMany(v => v.Triangles).Distinct();
+            intersection = default;
+            foreach (var t in nearbyTriangles)
+            {
+                if (ray.Intersects(t, out intersection))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private double SignedVolumeOfTriangle(Triangle t)
         {
             var p1 = t.Vertices[0].Position;
@@ -403,5 +460,28 @@ Triangles:{Triangles.Count}";
             return faceMesh;
         }
 
+    }
+
+    internal static class OctreeExtensions
+    {
+        internal static Octree.Ray ToOctreeRay(this Ray ray)
+        {
+            return new Octree.Ray(ray.Origin.ToOctreePoint(), ray.Direction.ToOctreePoint());
+        }
+
+        internal static Octree.Point ToOctreePoint(this Vector3 point)
+        {
+            return new Octree.Point((float)point.X, (float)point.Y, (float)point.Z);
+        }
+
+        internal static BBox3 ToBbox3(this Octree.BoundingBox bbox)
+        {
+            return new BBox3(bbox.Min.ToVector3(), bbox.Max.ToVector3());
+        }
+
+        internal static Vector3 ToVector3(this Octree.Point p)
+        {
+            return new Vector3(p.X, p.Y, p.Z);
+        }
     }
 }

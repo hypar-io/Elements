@@ -302,6 +302,34 @@ namespace Elements.Tests
             Assert.True(ray.Intersects(mass, out var _));
         }
 
+        [Fact]
+        private void RayNearbyPoints()
+        {
+            Name = nameof(RayNearbyPoints);
+            var points = new List<Vector3>();
+            var random = new Random(1);
+            for (int i = 0; i < 1000; i++)
+            {
+                var point = new Vector3(random.NextDouble() * 10, random.NextDouble() * 10, random.NextDouble() * 10);
+                points.Add(point);
+            }
+            var modelpts = new ModelPoints(points, BuiltInMaterials.ZAxis);
+            Model.AddElement(modelpts);
+            var ray = new Ray((0, 0, 0), new Vector3(1, 1, 1));
+            var nearbyPoints = ray.NearbyPoints(points, 1);
+            var rayAsLine = new Line((0, 0, 0), (10, 10, 10));
+            Model.AddElement(rayAsLine);
+            foreach (var p in nearbyPoints)
+            {
+                var distance = p.DistanceTo(rayAsLine, out var pt);
+                var line = new Line(p, pt);
+                var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
+                Model.AddElement(mc);
+                Assert.True(distance < 1);
+            }
+
+        }
+
         private static Vector3 Center(Triangle t)
         {
             return new Vector3[] { t.Vertices[0].Position, t.Vertices[1].Position, t.Vertices[2].Position }.Average();
