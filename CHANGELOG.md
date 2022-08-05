@@ -4,7 +4,7 @@
 
 ### Added
 - `Mesh.Intersects(Ray)` (same as `Ray.Intersects(Mesh)`)
-- `Ray.NearestPoints()`
+- `Ray.NearbyPoints()`
 ### Changed
 - MeshElement constructor signature modified to be compatible with code generation.
 - Improved performance of mesh/ray intersection
