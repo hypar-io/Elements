@@ -1,4 +1,5 @@
 ﻿using Elements.Geometry;
+using Elements.Search;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -70,6 +71,11 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Transformation with which planar spaces are aligned
         /// </summary>
         public Transform Transform { get; set; }
+
+        /// <summary>
+        /// Grid boundary used in obstacle perimeter clipping. Can be null.
+        /// </summary>
+        public Polygon Boundaries { get; set; }
 
         #endregion
 
@@ -177,43 +183,51 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Intersect the box with existent edges and cut any portion of the edge, or whole edge,
-        /// that is inside the box. Note that no new connections are created afterwards.
+        /// Intersect the grid with a list of obstacles.
         /// </summary>
-        /// <param name="box">Boding box to subtract</param>
-        public void SubtractBox(BBox3 box)
+        /// <param name="obstacles">List of obstacles.</param>
+        /// <returns>True if any obstacle intersects with any edge on the grid.</returns>
+        public bool SubtractObstacles(IEnumerable<Obstacle> obstacles)
         {
-            List<Edge> edgesToDelete = new List<Edge>();
+            bool intersected = false;
+            foreach (var obstacle in obstacles)
+            {
+                intersected &= SubtractObstacle(obstacle);
+            }
+            return intersected;
+        }
+
+        /// <summary>
+        /// Intersect the grid with an obstacle, defined from a set of points with offset.
+        /// </summary>
+        /// <param name="obstacle">Obstacle object.</param>
+        /// <returns>True if obstacle intersects with any edge on the grid.</returns>
+        public bool SubtractObstacle(Obstacle obstacle)
+        {
+            var frame = obstacle.Transform == null ? Transform : obstacle.Transform;
+            var toGrid = frame.Inverted();
+            List<Vector3> localPoints = obstacle.Points.Select(p => toGrid.OfPoint(p)).ToList();
+            BBox3 localBox = new BBox3(localPoints).Offset(obstacle.Offset);
+
+            var edgesToDelete = new List<Edge>();
+            var edgesToAdd = new List<(Vertex Anchor, Edge Edge, Vector3 New)>();
+
             foreach (var edge in GetEdges())
             {
                 var start = GetVertex(edge.StartId);
                 var end = GetVertex(edge.EndId);
-                PointOrientation startZ = Orientation(start.Point.Z, box.Min.Z, box.Max.Z);
-                PointOrientation endZ = Orientation(end.Point.Z, box.Min.Z, box.Max.Z);
-                if (startZ == endZ && startZ != PointOrientation.Inside)
-                    continue;
+                var localStartP = toGrid.OfPoint(start.Point);
+                var localEndP = toGrid.OfPoint(end.Point);
 
                 //Z coordinates and X/Y are treated differently.
                 //If edge lies on one of X or Y planes of the box - it's not treated as "Inside" and edge is kept.
                 //If edge lies on one of Z planes - it's still "Inside", so edge is cut or removed.
                 //This is because we don't want travel under or over obstacles on elevation where they start/end.
-                PointOrientation startX = OrientationTolerance(start.Point.X, box.Min.X, box.Max.X);
-                PointOrientation startY = OrientationTolerance(start.Point.Y, box.Min.Y, box.Max.Y);
-                PointOrientation endX = OrientationTolerance(end.Point.X, box.Min.X, box.Max.X);
-                PointOrientation endY = OrientationTolerance(end.Point.Y, box.Min.Y, box.Max.Y);
-
-                if ((startX == endX && startX != PointOrientation.Inside) ||
-                    (startY == endY && startY != PointOrientation.Inside))
+                if (!IsLineInDomain((localStartP, localEndP), (localBox.Min, localBox.Max),
+                    -Tolerance, 0, out bool startInside, out bool endInside))
+                {
                     continue;
-
-                bool startInside = startZ == PointOrientation.Inside &&
-                                   startX == PointOrientation.Inside &&
-                                   startY == PointOrientation.Inside;
-
-                bool endInside = endZ == PointOrientation.Inside &&
-                                 endX == PointOrientation.Inside &&
-                                 endY == PointOrientation.Inside;
-
+                }
 
                 if (startInside && endInside)
                 {
@@ -221,29 +235,72 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
                 else
                 {
-                    var edgeLine = GetLine(edge);
+                    var localLine = new Line(localStartP, localEndP);
                     List<Vector3> intersections;
-                    edgeLine.Intersects(box, out intersections);
-                    // If no intersection found than outside point is exactly within tolerance.
-                    // But since Intersects works on 0 to 1 range internally, mismatch in interpretation
-                    // is possible. Cut the edge in this case.
-                    if (intersections.Count == 0)
-                    {
-                        edgesToDelete.Add(edge);
-                    }
-                    // Intersections are sorted from the start point.
-                    else if (intersections.Count == 1)
+                    localLine.Intersects(localBox, out intersections, tolerance: Tolerance);
+                    if (intersections.Count == 1)
                     {
                         //Need to find which end is inside the box.
                         //If none - we just touched the corner
-                        if (startInside || endInside)
+                        var intersection = frame.OfPoint(intersections[0]);
+                        if (startInside)
                         {
                             edgesToDelete.Add(edge);
+                            edgesToAdd.Add((end, edge, intersection));
+                        }
+                        else if (endInside)
+                        {
+                            edgesToDelete.Add(edge);
+                            edgesToAdd.Add((start, edge, intersection));
+                        }
+                        else
+                        {
+                            edgesToAdd.Add((null, edge, intersection));
                         }
                     }
-                    if (intersections.Count == 2)
+                    else if (intersections.Count == 2)
                     {
                         edgesToDelete.Add(edge);
+                        var startIntersection = frame.OfPoint(intersections[0]);
+                        var endIntersection = frame.OfPoint(intersections[1]);
+                        edgesToAdd.Add((start, edge, startIntersection));
+                        edgesToAdd.Add((end, edge, endIntersection));
+                    }
+                }
+            }
+
+            if (obstacle.Perimeter && edgesToAdd.Any())
+            {
+                var corners = localBox.Corners().Take(4).Select(c => frame.OfPoint(c)).ToList();
+                var intersectionsByElevations = edgesToAdd.GroupBy(
+                    e => e.New.Z, new DoubleToleranceComparer(Tolerance));
+                foreach (var group in intersectionsByElevations)
+                {
+                    var intersections = group.Select(i => i.New);
+
+                    var plane = new Plane(new Vector3(0, 0, group.Key), Vector3.ZAxis);
+                    var cornersAtElevation = corners.Select(
+                        c => c.ProjectAlong(frame.ZAxis, plane)).ToList();
+
+                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections);
+                    AddEdgesOnLine(cornersAtElevation[1], cornersAtElevation[2], intersections);
+                    AddEdgesOnLine(cornersAtElevation[2], cornersAtElevation[3], intersections);
+                    AddEdgesOnLine(cornersAtElevation[3], cornersAtElevation[0], intersections);
+
+                    foreach (var item in group)
+                    {
+                        if (item.Anchor != null)
+                        {
+                            if (!item.Anchor.Point.IsAlmostEqualTo(item.New, Tolerance))
+                            {
+                                Vertex v = AddVertex(item.New);
+                                AddInsertEdge(v.Id, item.Anchor.Id);
+                            }
+                        }
+                        else
+                        {
+                            CutEdge(item.Edge, item.New);
+                        }
                     }
                 }
             }
@@ -252,6 +309,8 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 RemoveEdge(e);
             }
+
+            return edgesToDelete.Any();
         }
 
         /// <summary>
@@ -302,62 +361,149 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Add a Vertex and connect in to one or more other vertices.
+        /// Add a Vertex or return existing one if it's withing grid tolerance.
+        /// Doesn't connect new Vertex to the grid with edges.
         /// </summary>
-        /// <param name="point">Position of required Vertex.</param>
-        /// <param name="connections">Ids of other vertices to connect new Vertex with.</param>
-        /// <returns>New Vertex or existing one if it's within grid tolerance.</returns>
-        public Vertex AddVertex(Vector3 point, IList<Vertex> connections)
+        /// <param name="point">Position of required vertex</param>
+        /// <returns>New or existing Vertex.</returns>
+        public Vertex AddVertex(Vector3 point)
         {
-            if (connections == null || !connections.Any())
+            if (!TryGetVertexIndex(point, out var id, Tolerance))
             {
-                throw new ArgumentException("Vertex should be connected to at least one other Vertex");
+                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
+                id = this._vertexId;
+                var vertex = new Vertex(id, point);
+                zDict[point.Z] = id;
+                _vertices[id] = vertex;
+                this._vertexId++;
             }
 
-            Vertex v = AddVertex(point);
-            foreach (var c in connections)
-            {
-                AddEdge(v.Id, c.Id);
-            }
-
-            return v;
+            return GetVertex(id);
         }
 
         /// <summary>
-        /// Create connected chain of vertices. If chain intersects itself - intersection vertices are created as well.
-        /// New vertices are not connected with other vertices, except in the case then one or more added vertices already exist in the grid.
+        /// Add a Vertex and connect in to one or more other vertices.
         /// </summary>
-        /// <param name="points">List of points to connect by edges. Must have at least two points.</param>
-        /// <returns>New vertices in order. Vertices at intersection points are presented more than once.</returns>
-        public List<Vertex> AddVertexStrip(IList<Vector3> points)
+        /// <param name="point">Position of required Vertex.</param>
+        /// <param name="strategy">Vertex insertion strategy.</param>
+        /// <param name="cut">Should new edges be intersected with existing edges.</param>
+        /// <returns>New Vertex or existing one if it's within grid tolerance.</returns>
+        public Vertex AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)
+        {
+            return strategy.Add(this, point, cut);
+        }
+
+        /// <summary>
+        /// Execution style for AddVertices function.
+        /// Each option performs more operations than the previous one.
+        /// </summary>
+        public enum VerticesInsertionMethod
+        {
+            /// <summary>
+            /// Just put vertices into the grid without connecting them.
+            /// Inserted vertices are returned in order.
+            /// </summary>
+            Insert,
+
+            /// <summary>
+            /// Insert vertices and connect them to each other.
+            /// Inserted vertices are returned in order.
+            /// </summary>
+            Connect,
+
+            /// <summary>
+            /// Insert vertices and connect them to each other.
+            /// Find any intersections between new edges.
+            /// Inserted vertices are returned in order including self intersection vertices twice. 
+            /// 
+            /// </summary>
+            ConnectAndSelfIntersect,
+
+            /// <summary>
+            /// Insert vertices and connect them to each other.
+            /// New vertices are inserted where new edges intersect with existing edges.
+            /// All vertices are returned in order from first vertex to the last including all intersection vertices.
+            /// </summary>
+            ConnectAndCut,
+
+            /// <summary>
+            /// Insert vertices and connect them to each other.
+            /// New vertices are inserted where new edges intersect with existing edges.
+            /// Each vertex is extended in direction of two neighbor edges until first hit.
+            /// Extensions are done even if vertex is already on an edge.
+            /// All vertices are returned in order from first vertex to the last including all intersection and extension vertices.
+            /// </summary>
+            ConnectCutAndExtend
+        }
+
+        /// <summary>
+        /// Create a chain of vertices. Exact behavior depends on the method used. 
+        /// </summary>
+        /// <param name="points">List of points to insert. Must have at least two points.</param>
+        /// <param name="method">Insertion method.</param>
+        /// <returns>Vertices in order between provided points. Depends on used method.</returns>
+        public List<Vertex> AddVertices(IList<Vector3> points, VerticesInsertionMethod method)
         {
             if (points.Count < 2)
             {
                 throw new ArgumentException("At least two points required");
             }
 
+            if (method == VerticesInsertionMethod.ConnectCutAndExtend)
+            {
+                return AddExtendVertices(points);
+            }
+
             var vertices = new List<Vertex>();
             vertices.Add(AddVertex(points[0]));
             for (int i = 1; i < points.Count; i++)
             {
-                var tailVertex = AddVertex(points[i], new List<Vertex> { vertices.Last() });
-
-                for (int j = 0; j < vertices.Count - 1; j++)
+                if (points[i].IsAlmostEqualTo(vertices.Last().Point, Tolerance))
                 {
-                    if (Line.Intersects(vertices.Last().Point, tailVertex.Point,
-                                        vertices[j].Point, vertices[j + 1].Point,
-                                        out var intersection))
+                    continue;
+                }
+
+                var tailVertex = AddVertex(points[i]);
+                if (method == VerticesInsertionMethod.ConnectAndCut)
+                {
+                    var edges = AddCutEdge(vertices.Last().Id, tailVertex.Id);
+                    var lastId = vertices.Last().Id;
+                    foreach (var e in edges)
                     {
-                        var cross = AddVertex(intersection, new List<Vertex> {
-                            tailVertex, vertices.Last(),  vertices[j], vertices[j + 1] });
-                        RemoveEdge(tailVertex.GetEdge(vertices.Last().Id));
-                        RemoveEdge(vertices[j].GetEdge(vertices[j + 1].Id));
-                        vertices.Insert(j + 1, cross);
-                        vertices.Add(cross);
-                        j++;
+                        var otherId = e.StartId == lastId ? e.EndId : e.StartId;
+                        vertices.Add(GetVertex(otherId));
+                        lastId = otherId;
                     }
                 }
-                vertices.Add(tailVertex);
+                else if (method == VerticesInsertionMethod.ConnectAndSelfIntersect)
+                {
+                    AddInsertEdge(tailVertex.Id, vertices.Last().Id);
+                    for (int j = 0; j < vertices.Count - 1; j++)
+                    {
+                        if (Line.Intersects(vertices.Last().Point, tailVertex.Point,
+                                            vertices[j].Point, vertices[j + 1].Point,
+                                            out var intersection))
+                        {
+                            var cross = AddVertex(intersection, new ConnectVertexStrategy(
+                                tailVertex, vertices.Last(), vertices[j], vertices[j + 1]), cut: false);
+                            RemoveEdge(tailVertex.GetEdge(vertices.Last().Id));
+                            RemoveEdge(vertices[j].GetEdge(vertices[j + 1].Id));
+                            vertices.Insert(j + 1, cross);
+                            vertices.Add(cross);
+                            j++;
+                        }
+                    }
+                    vertices.Add(tailVertex);
+                }
+                else if (method == VerticesInsertionMethod.Connect)
+                {
+                    AddInsertEdge(tailVertex.Id, vertices.Last().Id);
+                    vertices.Add(tailVertex);
+                }
+                else if (method == VerticesInsertionMethod.Insert)
+                {
+                    vertices.Add(tailVertex);
+                }
             }
             return vertices;
         }
@@ -373,9 +519,14 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var startVertex = GetVertex(edge.StartId);
             var endVertex = GetVertex(edge.EndId);
-            var newVertex = AddVertex(position, new List<Vertex> { startVertex, endVertex });
-            RemoveEdge(edge);
-            return newVertex;
+            if (!position.IsAlmostEqualTo(startVertex.Point, Tolerance) &&
+                !position.IsAlmostEqualTo(endVertex.Point, Tolerance))
+            {
+                var newVertex = AddVertex(position, new ConnectVertexStrategy(startVertex, endVertex));
+                RemoveEdge(edge);
+                return newVertex;
+            }
+            return null;
         }
 
         /// <summary>
@@ -446,39 +597,49 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Add an Edge or return the exiting one with given indexes.
+        /// Add an edge between two vertices represented by their ids.
         /// </summary>
-        /// <param name="vertexId1">Index of the first Vertex</param>
-        /// <param name="vertexId2">Index of the second Vertex</param>
-        /// <returns>New or existing Edge.</returns>
-        public Edge AddEdge(ulong vertexId1, ulong vertexId2)
+        /// <param name="vertexId1">Id of the first vertex.</param>
+        /// <param name="vertexId2">Id of the second vertex.</param>
+        /// <param name="cut">Intersect new edge with existing edges.</param>
+        /// <returns>Edges between two vertices. Single if cut is false.</returns>
+        public List<Edge> AddEdge(ulong vertexId1, ulong vertexId2, bool cut = true)
         {
-            if (vertexId1 == vertexId2)
+            if (cut)
             {
-                throw new ArgumentException("Can't create edge. The vertices of the edge cannot be the same.", $"{vertexId1}, {vertexId2}");
-            }
-
-            var hash = Edge.GetHash(new List<ulong> { vertexId1, vertexId2 });
-
-            if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
-            {
-                var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
-                edgeId = edge.Id;
-
-                this._edgesLookup[hash] = edgeId;
-                this._edges.Add(edgeId, edge);
-
-                this.GetVertex(edge.StartId).Edges.Add(edge);
-                this.GetVertex(edge.EndId).Edges.Add(edge);
-
-                this._edgeId++;
-                return edge;
+                return AddCutEdge(vertexId1, vertexId2);
             }
             else
             {
-                this._edges.TryGetValue(edgeId, out var edge);
-                return edge;
+                return new List<Edge> { AddInsertEdge(vertexId1, vertexId2) };
             }
+        }
+
+        /// <summary>
+        /// Add an edge between two vertices.
+        /// </summary>
+        /// <param name="a">First vertex.</param>
+        /// <param name="b">Second vertex.</param>
+        /// <param name="cut">Intersect new edge with existing edges.</param>
+        /// <returns>Edges between two vertices. Single if cut is false.</returns>
+        public List<Edge> AddEdge(Vertex a, Vertex b, bool cut = true)
+        {
+            return AddEdge(a.Id, b.Id, cut);
+        }
+
+        /// <summary>
+        /// Add an edge between two vertices represented by their position.
+        /// Positions that are not yet present in the grid are created as new vertices.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="cut">Intersect new edge with existing edges.</param>
+        /// <returns>Edges between two vertices. Single if cut is false.</returns>
+        public List<Edge> AddEdge(Vector3 a, Vector3 b, bool cut = true)
+        {
+            var vertexA = AddVertex(a);
+            var vertexB = AddVertex(b);
+            return AddEdge(vertexA.Id, vertexB.Id, cut);
         }
 
         /// <summary>
@@ -510,8 +671,15 @@ namespace Elements.Spatial.AdaptiveGrid
         public void RemoveEdge(Edge edge)
         {
             var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
-            this._edgesLookup.Remove(hash);
-            this._edges.Remove(edge.Id);
+            if (!this._edgesLookup.Remove(hash))
+            {
+                return;
+            }
+
+            if (!this._edges.Remove(edge.Id))
+            {
+                return;
+            }
 
             var startVertexEdges = this.GetVertex(edge.StartId).Edges;
             startVertexEdges.Remove(edge);
@@ -532,24 +700,441 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Private logic
 
         /// <summary>
-        /// Add a Vertex or return existing one if it's withing grid tolerance.
-        /// Doesn't connect new Vertex to the grid with edges.
+        /// Add an Edge or return the exiting one with given indexes.
         /// </summary>
-        /// <param name="point">Position of required vertex</param>
-        /// <returns>New or existing Vertex.</returns>
-        private Vertex AddVertex(Vector3 point)
+        /// <param name="vertexId1">Index of the first Vertex</param>
+        /// <param name="vertexId2">Index of the second Vertex</param>
+        /// <returns>New or existing Edge.</returns>
+        private Edge AddInsertEdge(ulong vertexId1, ulong vertexId2)
         {
-            if (!TryGetVertexIndex(point, out var id, Tolerance))
+            if (vertexId1 == vertexId2)
             {
-                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
-                id = this._vertexId;
-                var vertex = new Vertex(id, point);
-                zDict[point.Z] = id;
-                _vertices[id] = vertex;
-                this._vertexId++;
+                throw new ArgumentException("Can't create edge. The vertices of the edge cannot be the same.", $"{vertexId1}, {vertexId2}");
             }
 
-            return GetVertex(id);
+            var hash = Edge.GetHash(new List<ulong> { vertexId1, vertexId2 });
+
+            if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
+            {
+                var startVertex = this.GetVertex(vertexId1);
+                var endVertex = this.GetVertex(vertexId2);
+
+                if (startVertex == null)
+                {
+                    throw new ArgumentException("Can't create edge. Start vertex id is not present in the grid.", $"{vertexId1}");
+                }
+
+                if (endVertex == null)
+                {
+                    throw new ArgumentException("Can't create edge. End vertex id is not present in the grid.", $"{vertexId2}");
+                }
+
+                var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
+                edgeId = edge.Id;
+
+                this._edgesLookup[hash] = edgeId;
+                this._edges.Add(edgeId, edge);
+
+                startVertex.Edges.Add(edge);
+                endVertex.Edges.Add(edge);
+
+                this._edgeId++;
+                return edge;
+            }
+            else
+            {
+                this._edges.TryGetValue(edgeId, out var edge);
+                return edge;
+            }
+        }
+
+        /// <summary>
+        /// Add an edge between two vertices and intersect it with other edges on the grid. 
+        /// </summary>
+        /// <param name="startId">Index of start vertex.</param>
+        /// <param name="endId">Index of end vertex.</param>
+        /// <returns>Ordered list of edges between start and end vertices.</returns>
+        private List<Edge> AddCutEdge(ulong startId, ulong endId)
+        {
+            var startVertex = GetVertex(startId);
+            var endVertex = GetVertex(endId);
+
+            if (startVertex == null)
+            {
+                throw new ArgumentException("Can't create edge. Start vertex id is not present in the grid.", $"{startId}");
+            }
+
+            if (endVertex == null)
+            {
+                throw new ArgumentException("Can't create edge. End vertex id is not present in the grid.", $"{endId}");
+            }
+
+            var sp = startVertex.Point;
+            var ep = endVertex.Point;
+            List<Edge> edgesToRemove = new List<Edge>();
+            var intersectionPoints = new List<Vector3>();
+
+            foreach (var edge in GetEdges())
+            {
+                var edgeV0 = GetVertex(edge.StartId);
+                var edgeV1 = GetVertex(edge.EndId);
+
+                if ((startId == edgeV0.Id && endId == edgeV1.Id) ||
+                    (startId == edgeV1.Id && endId == edgeV0.Id))
+                {
+                    continue;
+                }
+
+                (double minX, double maxX) = edgeV0.Point.X < edgeV1.Point.X ?
+                    (edgeV0.Point.X, edgeV1.Point.X) : (edgeV1.Point.X, edgeV0.Point.X);
+                (double minY, double maxY) = edgeV0.Point.Y < edgeV1.Point.Y ?
+                    (edgeV0.Point.Y, edgeV1.Point.Y) : (edgeV1.Point.Y, edgeV0.Point.Y);
+                (double minZ, double maxZ) = edgeV0.Point.Z < edgeV1.Point.Z ?
+                    (edgeV0.Point.Z, edgeV1.Point.Z) : (edgeV1.Point.Z, edgeV0.Point.Z);
+                //Positive tolerance means that space, tolerance outside the min max box is still considered inside.
+                if (!IsLineInDomain((sp, ep), (new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ)),
+                    Tolerance, Tolerance, out _, out _))
+                {
+                    continue;
+                }
+
+                var newEdgeLine = new Line(sp, ep);
+                var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
+                if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint, includeEnds: true))
+                {
+                    intersectionPoints.Add(intersectionPoint);
+                    var newVertex = AddVertex(intersectionPoint);
+                    if (edge.StartId != newVertex.Id && edge.EndId != newVertex.Id)
+                    {
+                        AddInsertEdge(edge.StartId, newVertex.Id);
+                        AddInsertEdge(edge.EndId, newVertex.Id);
+                        edgesToRemove.Add(edge);
+                    }
+                }
+                else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
+                {
+                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
+                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
+                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
+                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
+                    // new edge is inside old edge
+                    if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge &&
+                        AddEdgeInsideExisting(edgeV0, edgeV1, startVertex, endVertex))
+                    {
+                        edgesToRemove.Add(edge);
+                    }
+                    // edges overlap
+                    else if (isNewEdgeStartOnOldEdge || isNewEdgeEndOnOldEdge)
+                    {
+                        if (isOldEdgeEndOnNewEdge &&
+                            AddEdgeOverlappingExisting(edgeV0, edgeV1, startVertex, endVertex, true))
+                        {
+                            edgesToRemove.Add(edge);
+                        }
+
+                        if (isOldEdgeStartOnNewEdge &&
+                            AddEdgeOverlappingExisting(edgeV0, edgeV1, startVertex, endVertex, false))
+                        {
+                            edgesToRemove.Add(edge);
+                        }
+                    }
+                    // old edge is inside new edge
+                    else if (isOldEdgeStartOnNewEdge && isOldEdgeEndOnNewEdge)
+                    {
+                        intersectionPoints.Add(oldEdgeLine.Start);
+                        intersectionPoints.Add(oldEdgeLine.End);
+                    }
+                }
+            }
+
+            List<Edge> addedEdges = null;
+            if (intersectionPoints.Any())
+            {
+                addedEdges = AddEdgesInBetween(startVertex, endVertex,
+                    intersectionPoints.OrderBy(p => p.DistanceTo(startVertex.Point)));
+            }
+            else
+            {
+                addedEdges = new List<Edge>() { AddInsertEdge(startVertex.Id, endVertex.Id) };
+            }
+
+            foreach (var edge in edgesToRemove)
+            {
+                RemoveEdge(edge);
+            }
+
+            return addedEdges;
+        }
+
+        private bool AddEdgeInsideExisting(Vertex oldV0, Vertex oldV1,
+                                           Vertex newV0, Vertex newV1)
+        {
+            bool startInserted = false;
+            bool endInserted = false;
+            if (oldV0.Point.DistanceTo(newV0.Point) < oldV0.Point.DistanceTo(newV1.Point))
+            {
+                if (oldV0.Id != newV0.Id)
+                {
+                    AddInsertEdge(oldV0.Id, newV0.Id);
+                    startInserted = true;
+                }
+
+                if (oldV1.Id != newV1.Id)
+                {
+                    AddInsertEdge(oldV1.Id, newV1.Id);
+                    endInserted = true;
+                }
+            }
+            else
+            {
+                if (oldV0.Id != newV1.Id)
+                {
+                    AddInsertEdge(oldV0.Id, newV1.Id);
+                    endInserted = true;
+                }
+
+                if (oldV1.Id != newV0.Id)
+                {
+                    AddInsertEdge(oldV1.Id, newV0.Id);
+                    startInserted = true;
+                }
+            }
+            return startInserted || endInserted;
+        }
+
+        private bool AddEdgeOverlappingExisting(Vertex oldV0, Vertex oldV1,
+                                                Vertex newV0, Vertex newV1,
+                                                bool isOldEdgeEndOnNewEdge)
+        {
+            bool inserted = false;
+            var oldStart = isOldEdgeEndOnNewEdge ? oldV0 : oldV1;
+            var oldEnd = isOldEdgeEndOnNewEdge ? oldV1 : oldV0;
+            if (oldStart.Point.DistanceTo(newV0.Point) < oldStart.Point.DistanceTo(newV1.Point))
+            {
+                if (newV0.Id != oldEnd.Id)
+                {
+                    AddInsertEdge(oldStart.Id, newV0.Id);
+                    inserted = true;
+                }
+            }
+            else
+            {
+                if (newV1.Id != oldEnd.Id)
+                {
+                    AddInsertEdge(oldStart.Id, newV1.Id);
+                    inserted = true;
+                }
+            }
+            return inserted;
+        }
+
+        private List<Edge> AddEdgesInBetween(Vertex start, Vertex end, IEnumerable<Vector3> points)
+        {
+            var addedEdges = new List<Edge>();
+            var v1 = start;
+            foreach (var p in points)
+            {
+                if (!v1.Point.IsAlmostEqualTo(p, Tolerance))
+                {
+                    var v2 = AddVertex(p);
+                    addedEdges.Add(AddInsertEdge(v1.Id, v2.Id));
+                    v1 = v2;
+                }
+            }
+
+            if (v1 != end)
+            {
+                addedEdges.Add(AddInsertEdge(v1.Id, end.Id));
+            }
+            return addedEdges;
+        }
+
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
+        {
+            var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(Boundaries, out var _);
+            if (!inside.Any())
+            {
+                return;
+            }
+
+            var fi = inside.First();
+            start = new Vector3(fi.Start.X, fi.Start.Y, start.Z);
+            end = new Vector3(fi.End.X, fi.End.Y, end.Z);
+
+            var onLine = candidates.Where(x => Line.PointOnLine(x, start, end));
+            var ordered = onLine.OrderBy(x => (x - start).Dot(end - start));
+            var strip = new List<Vector3>();
+            strip.Add(start);
+            foreach (var point in ordered)
+            {
+                if (!point.IsAlmostEqualTo(start, Tolerance) &&
+                    !point.IsAlmostEqualTo(end, Tolerance) &&
+                    !point.IsAlmostEqualTo(strip.Last(), Tolerance))
+                {
+                    strip.Add(point);
+                }
+            }
+            strip.Add(end);
+
+            AddVertices(strip, VerticesInsertionMethod.Connect);
+        }
+
+        /// <summary>
+        /// Intersect points into grid and connect them into edges.
+        /// New edges are intersected along intersection points.
+        /// End points of each segment are extended until the next hit on both sides.
+        /// </summary>
+        /// <param name="points"></param>
+        private List<Vertex> AddExtendVertices(IList<Vector3> points)
+        {
+            List<Vertex> vertices = new List<Vertex>();
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                var segmentLength = (points[i + 1] - points[i]).Length();
+                var hits = IntersectGraph(points[i], points[i + 1]);
+
+                int index = LastNegativeHit(hits, segmentLength);
+                if (index < 0 || index + 1 >= hits.Count)
+                {
+                    continue;
+                }
+
+                Vertex lastCut;
+                if (hits[index].EdgeParam.ApproximatelyEquals(0, Tolerance))
+                {
+                    lastCut = GetVertex(hits[index].Edge.StartId);
+                }
+                else if (hits[index].EdgeParam.ApproximatelyEquals(hits[index].EdgeLength, Tolerance))
+                {
+                    lastCut = GetVertex(hits[index].Edge.EndId);
+                }
+                else
+                {
+                    var startPoint = GetVertex(hits[index].Edge.StartId).Point;
+                    var endPoint = GetVertex(hits[index].Edge.EndId).Point;
+                    var cutPoint = startPoint + hits[index].EdgeParam * (endPoint - startPoint).Unitized();
+                    lastCut = CutEdge(hits[index].Edge, cutPoint);
+                }
+                index++;
+                vertices.Add(lastCut);
+
+                while (index < hits.Count && hits[index].LineParam < segmentLength + Tolerance)
+                {
+                    var newCut = InsertHit(hits[index], lastCut);
+                    if (newCut != null)
+                    {
+                        vertices.Add(newCut);
+                        lastCut = newCut;
+                    }
+                    index++;
+                }
+
+                if (index < hits.Count && !hits[index - 1].LineParam.ApproximatelyEquals(segmentLength, Tolerance))
+                {
+                    var newCut = InsertHit(hits[index], lastCut);
+                    if (newCut != null)
+                    {
+                        vertices.Add(newCut);
+                    }
+                }
+            }
+            return vertices;
+        }
+
+        private List<(Edge Edge, double LineParam, double EdgeParam, double EdgeLength)> IntersectGraph(
+            Vector3 start, Vector3 end)
+        {
+            var hits = new List<(Edge Edge, double D1, double D2, double L2)>();
+            foreach (var edge in GetEdges())
+            {
+                var startVertex = GetVertex(edge.StartId);
+                var endVertex = GetVertex(edge.EndId);
+                var edgeStartPoint = startVertex.Point;
+                var edgeEndPoint = endVertex.Point;
+                if (edgeStartPoint.IsAlmostEqualTo(edgeEndPoint))
+                {
+                    continue;
+                }
+
+                if (Line.Intersects(start, end, edgeStartPoint, edgeEndPoint, out var result, true, true))
+                {
+                    var dot1 = (result - start).Dot((end - start).Unitized());
+                    var dot2 = (result - edgeStartPoint).Dot((edgeEndPoint - edgeStartPoint).Unitized());
+                    var l2 = (edgeEndPoint - edgeStartPoint).Length();
+                    if (dot2 > -Vector3.EPSILON && dot2 < l2 + Vector3.EPSILON)
+                    {
+                        hits.Add((edge, dot1, dot2, l2));
+                    }
+                }
+            }
+
+            return hits.OrderBy(h => h.D1).ToList();
+        }
+
+        private int LastNegativeHit(
+            List<(Edge edge, double LineParam, double EdgeParam, double EdgeLength)> hits,
+            double segmentLength)
+        {
+            int index = -1;
+            for (int j = 0; j < hits.Count; j++)
+            {
+                if (hits[j].LineParam < -Tolerance)
+                {
+                    index = j;
+                }
+                else
+                {
+                    if (index < 0)
+                    {
+                        if (hits[j].LineParam > segmentLength + Tolerance)
+                        {
+                            index = -1;
+                        }
+                        else
+                        {
+                            index = j;
+                        }
+                    }
+                    break;
+                }
+            }
+            return index;
+        }
+
+        private Vertex InsertHit(
+            (Edge Edge, double LineParam, double EdgeParam, double EdgeLength) hit,
+            Vertex lastCut)
+        {
+            Vertex newCut = null;
+            if (hit.EdgeParam.ApproximatelyEquals(0, Tolerance))
+            {
+                if (hit.Edge.StartId != lastCut.Id)
+                {
+                    newCut = GetVertex(hit.Edge.StartId);
+                    AddInsertEdge(lastCut.Id, newCut.Id);
+                }
+            }
+            else if (hit.EdgeParam.ApproximatelyEquals(hit.EdgeLength, Tolerance))
+            {
+                if (hit.Edge.EndId != lastCut.Id)
+                {
+                    newCut = GetVertex(hit.Edge.EndId);
+                    AddInsertEdge(lastCut.Id, newCut.Id);
+                }
+            }
+            else
+            {
+                var startPoint = GetVertex(hit.Edge.StartId).Point;
+                var endPoint = GetVertex(hit.Edge.EndId).Point;
+                var cutPoint = startPoint + hit.EdgeParam * (endPoint - startPoint).Unitized();
+                newCut = CutEdge(hit.Edge, cutPoint);
+                if (newCut.Id != lastCut.Id)
+                {
+                    AddInsertEdge(lastCut.Id, newCut.Id);
+                }
+            }
+            return newCut;
         }
 
         private void DeleteVertex(ulong id)
@@ -642,7 +1227,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var edge in edgeCandidates)
             {
-                addedEdges.Add(AddEdge(edge.Item1, edge.Item2));
+                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
             }
 
             return addedEdges;
@@ -654,28 +1239,77 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var heightVector = height * extrusionAxis;
                 var topVertex = AddVertex(bottomVertex.Point + heightVector);
-                AddEdge(bottomVertex.Id, topVertex.Id);
+                AddInsertEdge(bottomVertex.Id, topVertex.Id);
             }
         }
 
-        private PointOrientation OrientationTolerance(double x, double start, double end)
+        /// <summary>
+        /// Check where number lies in comparison to given domain.
+        /// </summary>
+        /// <param name="number">Number to check.</param>
+        /// <param name="domain">Min-Max range.</param>
+        /// <param name="tolerance">How far outside the range numbers are considered inside.
+        /// When tolerance positive - range is increased by it, when negative - decreased.</param>
+        /// <returns>Low, Inside or High.</returns>
+        private PointOrientation NumberOrientation(
+            double number,
+            (double Min, double Max) domain,
+            double tolerance)
         {
             PointOrientation po = PointOrientation.Inside;
-            if (x - start < Tolerance)
+            if (number - domain.Min < -tolerance)
                 po = PointOrientation.Low;
-            else if (x - end > -Tolerance)
+            else if (number - domain.Max > tolerance)
                 po = PointOrientation.Hi;
             return po;
         }
 
-        private PointOrientation Orientation(double x, double start, double end)
+        /// <summary>
+        /// Check if line lies in certain domain.
+        /// This happens if any line point is Inside domain at any coordinate or
+        /// two points are on different sides on the domain - Hi and Low.
+        /// </summary>
+        /// <param name="line">Line to check.</param>
+        /// <param name="domain">Min-Max range in 3 coordinates.</param>
+        /// <param name="xyTolerance">Tolerance for X and Y coordinates.</param>
+        /// <param name="zTolerance">Tolerance for Z coordinate.</param>
+        /// <param name="startInside">Is start point of line inside the domain.</param>
+        /// <param name="endInside">Is end point of line inside the domain.</param>
+        /// <returns>Low, Inside or High.</returns>
+        private bool IsLineInDomain(
+            (Vector3 Start, Vector3 End) line,
+            (Vector3 Min, Vector3 Max) domain,
+            double xyTolerance, double zTolerance, 
+            out bool startInside, out bool endInside)
         {
-            PointOrientation po = PointOrientation.Inside;
-            if (x < start)
-                po = PointOrientation.Low;
-            else if (x > end)
-                po = PointOrientation.Hi;
-            return po;
+            startInside = false;
+            endInside = false;
+            PointOrientation startZ = NumberOrientation(line.Start.Z, (domain.Min.Z, domain.Max.Z), zTolerance);
+            PointOrientation endZ = NumberOrientation(line.End.Z, (domain.Min.Z, domain.Max.Z), zTolerance);
+            if (startZ == endZ && startZ != PointOrientation.Inside)
+            {
+                return false;
+            }
+
+            PointOrientation startX = NumberOrientation(line.Start.X, (domain.Min.X, domain.Max.X), xyTolerance);
+            PointOrientation startY = NumberOrientation(line.Start.Y, (domain.Min.Y, domain.Max.Y), xyTolerance);
+            PointOrientation endX = NumberOrientation(line.End.X, (domain.Min.X, domain.Max.X), xyTolerance);
+            PointOrientation endY = NumberOrientation(line.End.Y, (domain.Min.Y, domain.Max.Y), xyTolerance);
+
+            if ((startX == endX && startX != PointOrientation.Inside) ||
+                (startY == endY && startY != PointOrientation.Inside))
+            {
+                return false;
+            }
+
+            startInside = startZ == PointOrientation.Inside &&
+                          startX == PointOrientation.Inside &&
+                          startY == PointOrientation.Inside;
+
+            endInside = endZ == PointOrientation.Inside &&
+                        endX == PointOrientation.Inside &&
+                        endY == PointOrientation.Inside;
+            return true;
         }
 
         /// <summary>
