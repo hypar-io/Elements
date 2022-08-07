@@ -57,11 +57,11 @@ namespace Elements
         private static Font _font60;
         private static Font _font72;
         private static string _labelsDirectory;
-        private int _dpi = 72;
-        private int _maxTextureSize = 2048;
+        private readonly int _dpi = 72;
+        private readonly int _maxTextureSize = 2048;
         private List<(UV min, UV max, FontRectangle fontRect)> _textureAtlas;
         private DrawingOptions _options;
-        private string _texturePath;
+        private Image<Rgba32> _texture;
 
         /// <summary>
         /// A collection of text data objects which specify the location,
@@ -92,7 +92,7 @@ namespace Elements
                          FontSize fontSize,
                          double scale = 10.0)
         {
-            this.Texts = texts != null ? texts : new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)>();
+            this.Texts = texts ?? new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Geometry.Color? color)>();
             this.FontSize = fontSize;
             this.Scale = scale;
 
@@ -101,12 +101,23 @@ namespace Elements
             GenerateMesh();
 
             this.Material = new Material($"{Guid.NewGuid()}_texture_atlas",
-                                         Elements.Geometry.Colors.White,
+                                         Colors.White,
+                                         _texture,
                                          0.0,
                                          0.0,
-                                         texture: _texturePath,
                                          repeatTexture: false,
                                          unlit: true);
+        }
+
+        /// <summary>
+        /// Finalize the model text.
+        /// </summary>
+        ~ModelText()
+        {
+            if (_texture != null)
+            {
+                _texture.Dispose();
+            }
         }
 
         private void Initialize()
@@ -180,8 +191,6 @@ namespace Elements
             var x = 0.0f;
             var y = 0.0f;
 
-            _texturePath = Path.Combine(_labelsDirectory, $"{Guid.NewGuid()}.png");
-
             var textureLookup = new Dictionary<int, (UV min, UV max, FontRectangle fontRect)>();
 
             foreach (var t in this.Texts)
@@ -230,36 +239,34 @@ namespace Elements
                 x += fontRectangle.Width;
             }
 
-            if (image != null)
-            {
-                image.Save(_texturePath);
-                image.Dispose();
-            }
+            _texture = image;
+
+
         }
 
         private void GenerateMesh()
         {
             for (var i = 0; i < this.Texts.Count; i++)
             {
-                var t = this.Texts[i];
+                var (location, facingDirection, lineDirection, _, _) = this.Texts[i];
 
-                var td = t.facingDirection.IsZero() ? Vector3.ZAxis : t.facingDirection;
-                var ta = this._textureAtlas[i];
+                var td = facingDirection.IsZero() ? Vector3.ZAxis : facingDirection;
+                var (min, max, fontRect) = this._textureAtlas[i];
 
-                var sizeX = Units.InchesToMeters(ta.fontRect.Width / _dpi);
-                var sizeY = Units.InchesToMeters(ta.fontRect.Height / _dpi);
+                var sizeX = Units.InchesToMeters(fontRect.Width / _dpi);
+                var sizeY = Units.InchesToMeters(fontRect.Height / _dpi);
 
-                var tx = new Transform(t.location, t.lineDirection, td);
+                var tx = new Transform(location, lineDirection, td);
 
                 var v1 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, sizeY * this.Scale / 2));
                 var v2 = tx.OfPoint(new Vector3(-sizeX * this.Scale / 2, -sizeY * this.Scale / 2));
                 var v3 = tx.OfPoint(new Vector3(sizeX * this.Scale / 2, -sizeY * this.Scale / 2));
                 var v4 = tx.OfPoint(new Vector3(sizeX * this.Scale / 2, sizeY * this.Scale / 2));
 
-                var uv1 = new UV(ta.min.U, ta.min.V);
-                var uv2 = new UV(ta.min.U, ta.max.V);
-                var uv3 = new UV(ta.max.U, ta.max.V);
-                var uv4 = new UV(ta.max.U, ta.min.V);
+                var uv1 = new UV(min.U, min.V);
+                var uv2 = new UV(min.U, max.V);
+                var uv3 = new UV(max.U, max.V);
+                var uv4 = new UV(max.U, min.V);
 
                 var a = this.Mesh.AddVertex(v1, uv1);
                 var b = this.Mesh.AddVertex(v2, uv2);
