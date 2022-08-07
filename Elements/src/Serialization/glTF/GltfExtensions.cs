@@ -17,6 +17,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
+using SixLabors.ImageSharp.PixelFormats;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -179,7 +180,7 @@ namespace Elements.Serialization.glTF
             var textureDict = new Dictionary<string, int>(); // the name of the texture image, the id of the texture
             var textures = new List<Texture>();
 
-            var images = new List<Image>();
+            var images = new List<glTFLoader.Schema.Image>();
             var samplers = new List<Sampler>();
 
             var matId = 0;
@@ -245,8 +246,10 @@ namespace Elements.Serialization.glTF
 
                 var textureHasTransparency = false;
 
-                if (material.Texture != null && File.Exists(material.Texture))
+                if (material._texture != null)
                 {
+                    var key = $"{material.Id}_texture";
+
                     // Add the texture
                     var textureInfo = new TextureInfo();
                     gltfMaterial.PbrMetallicRoughness.BaseColorTexture = textureInfo;
@@ -257,15 +260,15 @@ namespace Elements.Serialization.glTF
                         ((Dictionary<string, object>)gltfMaterial.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = textureInfo;
                     }
 
-                    if (textureDict.ContainsKey(material.Texture))
+                    if (textureDict.ContainsKey(key))
                     {
-                        textureInfo.Index = textureDict[material.Texture];
+                        textureInfo.Index = textureDict[key];
                     }
                     else
                     {
                         var texture = new Texture();
                         textures.Add(texture);
-                        var image = CreateImage(material.Texture, bufferViews, buffer, out textureHasTransparency);
+                        var image = CreateGlTFImage(material._texture, bufferViews, buffer, out textureHasTransparency);
                         texture.Source = imageId;
                         images.Add(image);
 
@@ -277,7 +280,7 @@ namespace Elements.Serialization.glTF
                         texture.Sampler = samplerId;
                         samplers.Add(sampler);
 
-                        textureDict.Add(material.Texture, texId);
+                        textureDict.Add(key, texId);
 
                         texId++;
                         imageId++;
@@ -285,8 +288,10 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if (material.NormalTexture != null && File.Exists(material.NormalTexture))
+                if (material._normalTexture != null)
                 {
+                    var key = $"{material.Id}_normal";
+
                     var textureInfo = new MaterialNormalTextureInfo();
                     gltfMaterial.NormalTexture = textureInfo;
                     textureInfo.Index = texId;
@@ -295,18 +300,18 @@ namespace Elements.Serialization.glTF
                     // base texture.
                     textureInfo.TexCoord = 0;
 
-                    if (textureDict.ContainsKey(material.NormalTexture))
+                    if (textureDict.ContainsKey(key))
                     {
-                        textureInfo.Index = textureDict[material.NormalTexture];
+                        textureInfo.Index = textureDict[key];
                     }
                     else
                     {
                         var texture = new Texture();
                         textures.Add(texture);
-                        var image = CreateImage(material.NormalTexture, bufferViews, buffer, out _);
+                        var image = CreateGlTFImage(material._normalTexture, bufferViews, buffer, out _);
                         texture.Source = imageId;
                         images.Add(image);
-                        textureDict.Add(material.NormalTexture, texId);
+                        textureDict.Add(key, texId);
 
                         var sampler = CreateSampler(material.RepeatTexture);
                         if (!material.InterpolateTexture)
@@ -322,22 +327,24 @@ namespace Elements.Serialization.glTF
                     }
                 }
 
-                if (material.EmissiveTexture != null && File.Exists(material.EmissiveTexture))
+                if (material._emissiveTexture != null)
                 {
+                    var key = $"{material.Id}_emissive";
+
                     var textureInfo = new TextureInfo();
                     gltfMaterial.EmissiveTexture = textureInfo;
                     textureInfo.Index = texId;
                     textureInfo.TexCoord = 0;
 
-                    if (textureDict.ContainsKey(material.EmissiveTexture))
+                    if (textureDict.ContainsKey(key))
                     {
-                        textureInfo.Index = textureDict[material.EmissiveTexture];
+                        textureInfo.Index = textureDict[key];
                     }
                     else
                     {
                         var texture = new Texture();
                         textures.Add(texture);
-                        var image = CreateImage(material.EmissiveTexture, bufferViews, buffer, out _);
+                        var image = CreateGlTFImage(material._emissiveTexture, bufferViews, buffer, out _);
                         texture.Source = imageId;
                         images.Add(image);
 
@@ -345,7 +352,7 @@ namespace Elements.Serialization.glTF
                         texture.Sampler = samplerId;
                         samplers.Add(sampler);
 
-                        textureDict.Add(material.EmissiveTexture, texId);
+                        textureDict.Add(key, texId);
 
                         texId++;
                         imageId++;
@@ -401,26 +408,18 @@ namespace Elements.Serialization.glTF
             gltfMaterial.Extensions.Add(extensionName, extensionAttributes);
         }
 
-        private static Image CreateImage(string path, List<BufferView> bufferViews, List<byte> buffer, out bool textureHasTransparency)
+        private static glTFLoader.Schema.Image CreateGlTFImage(Image<Rgba32> image, List<BufferView> bufferViews, List<byte> buffer, out bool textureHasTransparency)
         {
-            var image = new Image();
+            var glTFImage = new glTFLoader.Schema.Image();
 
             using (var ms = new MemoryStream())
             {
-                // Flip the texture image vertically
-                // to align with OpenGL convention.
-                // 0,1  1,1
-                // 0,0  1,0
-                using (var texImage = SixLabors.ImageSharp.Image.Load(path))
-                {
-                    PngMetadata meta = texImage.Metadata.GetPngMetadata();
-                    textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
-                    texImage.Mutate(x => x.Flip(FlipMode.Vertical));
-                    texImage.Save(ms, new PngEncoder());
-                }
+                image.Save(ms, new PngEncoder());
                 var imageData = ms.ToArray();
-                image.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null);
+                glTFImage.BufferView = AddBufferView(bufferViews, 0, buffer.Count, imageData.Length, null, null);
                 buffer.AddRange(imageData);
+                var meta = image.Metadata.GetPngMetadata();
+                textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
             }
 
             while (buffer.Count % 4 != 0)
@@ -428,8 +427,8 @@ namespace Elements.Serialization.glTF
                 buffer.Add(0);
             }
 
-            image.MimeType = Image.MimeTypeEnum.image_png;
-            return image;
+            glTFImage.MimeType = glTFLoader.Schema.Image.MimeTypeEnum.image_png;
+            return glTFImage;
         }
 
         private static Sampler CreateSampler(bool repeatTexture)
@@ -987,7 +986,7 @@ namespace Elements.Serialization.glTF
 
             var accessors = new List<Accessor>();
             var textures = new List<Texture>();
-            var images = new List<Image>();
+            var images = new List<glTFLoader.Schema.Image>();
             var samplers = new List<Sampler>();
             var materials = gltf.Materials != null ? gltf.Materials.ToList() : new List<glTFLoader.Schema.Material>();
 
@@ -1117,7 +1116,7 @@ namespace Elements.Serialization.glTF
                                                     List<Accessor> accessors,
                                                     List<glTFLoader.Schema.Material> materials,
                                                     List<Texture> textures,
-                                                    List<Image> images,
+                                                    List<glTFLoader.Schema.Image> images,
                                                     List<Sampler> samplers,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<Node> nodes,
