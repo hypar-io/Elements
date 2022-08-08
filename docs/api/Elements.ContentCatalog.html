@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ContentCatalog
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -142,7 +142,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_ContentCatalog_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ContentCatalog : Element, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public class ContentCatalog : Element, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -153,7 +154,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ContentCatalog(IList&lt;ContentElement&gt; content, IList&lt;Element&gt; referenceConfiguration, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public ContentCatalog(IList&lt;ContentElement&gt; content, IList&lt;Element&gt; referenceConfiguration, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -196,7 +198,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Content&quot;, Required = Required.Always)]
+[Required]
+public IList&lt;ContentElement&gt; Content { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -220,7 +224,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Element&gt; ReferenceConfiguration { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;ReferenceConfiguration&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public IList&lt;Element&gt; ReferenceConfiguration { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -282,7 +287,7 @@
   </table>
   <a id="Elements_ContentCatalog_ToJson_" data-uid="Elements.ContentCatalog.ToJson*"></a>
   <h4 id="Elements_ContentCatalog_ToJson" data-uid="Elements.ContentCatalog.ToJson">ToJson()</h4>
-  <div class="markdown level1 summary"><p>Convert the ContentCatalog into it's JSON representation.</p>
+  <div class="markdown level1 summary"><p>Convert the ContentCatalog into its JSON representation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
