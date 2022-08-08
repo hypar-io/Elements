@@ -1,7 +1,7 @@
+using Elements.Search;
 using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
-using Octree;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +18,7 @@ namespace Elements.Geometry
     {
 
         private double _maxTriangleSize = 0;
-        private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
+        private readonly PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, (0, 0, 0), Vector3.EPSILON);
 
         /// <summary>The mesh's vertices.</summary>
         [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -33,6 +33,16 @@ namespace Elements.Geometry
         /// The mesh's bounding box.
         /// </summary>
         public BBox3 BoundingBox => _bbox;
+
+        /// <summary>
+        /// When constructing meshes, by default we build an octree lookup
+        /// structure of the mesh's vertices, in order to speed up coincident
+        /// vertex checks and intersections. This can slow down extremely large
+        /// meshes — disable this setting to speed up mesh construction if you
+        /// won't be using `Intersects()` or the `merge` flag on `AddVertex`.
+        /// </summary>
+        [JsonIgnore]
+        public bool BuildOctree { get; set; } = true;
 
         /// <summary>
         /// Construct a mesh.
@@ -255,26 +265,32 @@ Triangles:{Triangles.Count}";
                                 bool merge = false,
                                 double edgeAngle = 30.0)
         {
-            var p = position.ToOctreePoint();
-
-            if (merge)
+            var v = new Vertex(position, normal, color);
+            if (BuildOctree)
             {
-                var search = this._octree.GetNearby(p, (float)Vector3.EPSILON);
-                if (search.Length > 0)
+
+                if (merge)
                 {
-                    var angle = search[0].Normal.AngleTo(normal);
-                    if (angle < edgeAngle)
+                    var search = this._octree.GetNearby(position, Vector3.EPSILON);
+                    if (search.Length > 0)
                     {
-                        return search[0];
+                        var angle = search[0].Normal.AngleTo(normal);
+                        if (angle < edgeAngle)
+                        {
+                            return search[0];
+                        }
                     }
                 }
+                this._octree.Add(v, position);
+            }
+            else if (merge)
+            {
+                throw new ArgumentException("Cannot merge vertices if BuildOctree is false. Before adding any vertices to this mesh, set BuildOctree to true.");
             }
 
-            var v = new Vertex(position, normal, color);
             v.UV = uv;
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
-            this._octree.Add(v, p);
             this._bbox = this._bbox.Extend(v.Position);
             return v;
         }
@@ -286,7 +302,10 @@ Triangles:{Triangles.Count}";
         public Vertex AddVertex(Vertex v)
         {
             this.Vertices.Add(v);
-            this._octree.Add(v, v.Position.ToOctreePoint());
+            if (BuildOctree)
+            {
+                this._octree.Add(v, v.Position);
+            }
             this._bbox = this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
@@ -379,7 +398,7 @@ Triangles:{Triangles.Count}";
         /// False if no intersection occurs.</returns>
         public bool Intersects(Ray ray, out Vector3 intersection)
         {
-            var nearbyVertices = this._octree.GetNearby(ray.ToOctreeRay(), (float)_maxTriangleSize).ToList();
+            var nearbyVertices = this._octree.GetNearby(ray, _maxTriangleSize).ToList();
             var nearbyTriangles = nearbyVertices.SelectMany(v => v.Triangles).Distinct();
             intersection = default;
             foreach (var t in nearbyTriangles)
@@ -460,28 +479,5 @@ Triangles:{Triangles.Count}";
             return faceMesh;
         }
 
-    }
-
-    internal static class OctreeExtensions
-    {
-        internal static Octree.Ray ToOctreeRay(this Ray ray)
-        {
-            return new Octree.Ray(ray.Origin.ToOctreePoint(), ray.Direction.ToOctreePoint());
-        }
-
-        internal static Octree.Point ToOctreePoint(this Vector3 point)
-        {
-            return new Octree.Point((float)point.X, (float)point.Y, (float)point.Z);
-        }
-
-        internal static BBox3 ToBbox3(this Octree.BoundingBox bbox)
-        {
-            return new BBox3(bbox.Min.ToVector3(), bbox.Max.ToVector3());
-        }
-
-        internal static Vector3 ToVector3(this Octree.Point p)
-        {
-            return new Vector3(p.X, p.Y, p.Z);
-        }
     }
 }

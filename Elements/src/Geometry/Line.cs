@@ -1,5 +1,3 @@
-using System.Net.Sockets;
-using System.Numerics;
 using Elements.Validators;
 using System;
 using System.Collections.Generic;
@@ -510,7 +508,7 @@ namespace Elements.Geometry
 
             var delta = end - start;
             var lambda = (point - start).Dot(delta) / (end - start).Dot(delta);
-            if( lambda > 0 && lambda < 1)
+            if (lambda > 0 && lambda < 1)
             {
                 var pointOnLine = start + lambda * delta;
                 return pointOnLine.IsAlmostEqualTo(point);

@@ -7,34 +7,19 @@ using Elements.Serialization.glTF;
 
 namespace Elements.Benchmarks
 {
-    public class Mesh
+    public class MeshRayIntersection
     {
-        private Geometry.Mesh _mesh;
+        private Mesh _mesh;
         private List<Ray> _rays;
-        public Mesh()
+
+        public MeshRayIntersection()
         {
             var random = new Random(10);
-            _mesh = new Geometry.Mesh();
+            _mesh = new Mesh();
             _rays = new List<Ray>();
             var xCount = 100;
             var yCount = 300;
-            for (int i = 0; i < xCount; i++)
-            {
-                for (int j = 0; j < yCount; j++)
-                {
-                    var point = new Vector3(i, j, random.NextDouble() * 2);
-                    var c = _mesh.AddVertex(point);
-                    if (i != 0 && j != 0)
-                    {
-                        // add faces
-                        var d = _mesh.Vertices[i * yCount + j - 1];
-                        var a = _mesh.Vertices[(i - 1) * yCount + j - 1];
-                        var b = _mesh.Vertices[(i - 1) * yCount + j];
-                        _mesh.AddTriangle(a, b, c);
-                        _mesh.AddTriangle(c, d, a);
-                    }
-                }
-            }
+            MeshConstruction.BuildRandomMesh(_mesh, random, xCount, yCount);
 
             // create 1000 random rays
             for (int i = 0; i < 1000; i++)
@@ -44,6 +29,7 @@ namespace Elements.Benchmarks
             }
         }
 
+
         [Benchmark(Description = "Intersect 1000 rays with mesh.")]
         public void IntersectRays()
         {
@@ -52,5 +38,45 @@ namespace Elements.Benchmarks
                 ray.Intersects(_mesh, out var _);
             }
         }
+    }
+    public class MeshConstruction
+    {
+        public static void BuildRandomMesh(Mesh m, Random random, int xCount, int yCount)
+        {
+            for (int i = 0; i < xCount; i++)
+            {
+                for (int j = 0; j < yCount; j++)
+                {
+                    var point = new Vector3(i, j, random.NextDouble() * 2);
+                    var c = m.AddVertex(point);
+                    if (i != 0 && j != 0)
+                    {
+                        // add faces
+                        var d = m.Vertices[i * yCount + j - 1];
+                        var a = m.Vertices[(i - 1) * yCount + j - 1];
+                        var b = m.Vertices[(i - 1) * yCount + j];
+                        m.AddTriangle(a, b, c);
+                        m.AddTriangle(c, d, a);
+                    }
+                }
+            }
+        }
+
+        [Params(true, false)]
+        public bool BuildOctree { get; set; }
+
+        [Params(1000, 5000, 10000, 30000)]
+        public int VertexCount { get; set; }
+
+        [Benchmark(Description = "Construct Mesh")]
+        public void ConstructMesh()
+        {
+            var mesh = new Mesh
+            {
+                BuildOctree = BuildOctree
+            };
+            BuildRandomMesh(mesh, new Random(10), 100, VertexCount / 100);
+        }
+
     }
 }

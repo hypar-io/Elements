@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Solids;
+using Elements.Search;
 
 namespace Elements.Geometry
 {
@@ -371,12 +372,12 @@ namespace Elements.Geometry
         public Vector3[] NearbyPoints(IEnumerable<Vector3> points, double distance)
         {
             // TODO: calibrate these values
-            var octree = new Octree.PointOctree<Vector3>(10000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON * 100);
+            var octree = new PointOctree<Vector3>(10000, (0, 0, 0), (float)Vector3.EPSILON * 100);
             foreach (var point in points)
             {
-                octree.Add(point, point.ToOctreePoint());
+                octree.Add(point, point);
             }
-            var nearbyPoints = octree.GetNearby(this.ToOctreeRay(), (float)distance);
+            var nearbyPoints = octree.GetNearby(this, (float)distance);
             return nearbyPoints;
         }
 
