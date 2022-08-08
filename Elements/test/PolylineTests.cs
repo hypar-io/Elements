@@ -292,6 +292,21 @@ namespace Elements.Geometry.Tests
             Assert.True(polyline.Intersects(collinearSegmentLine, out result, includeEnds: true));
             Assert.Collection(result,
                 x => Assert.True(x.IsAlmostEqualTo(collinearSegmentLine.End)));
+
+            var lPolygon = Polygon.L(10, 10, 4);
+            var upperLine = new Line(new Vector3(5, 1), new Vector3(5, 2));
+            Assert.False(lPolygon.Intersects(upperLine, out result));
+            Assert.True(lPolygon.Intersects(upperLine, out result, infinite: true));
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(new Vector3(5, 0)),
+                x => x.IsAlmostEqualTo(new Vector3(5, 4)));
+
+            var verticiesLine = new Line(Vector3.Origin, new Vector3(4, 4));
+            Assert.False(lPolygon.Intersects(verticiesLine, out result));
+            Assert.True(lPolygon.Intersects(verticiesLine, out result, includeEnds: true));
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(verticiesLine.Start),
+                x => x.IsAlmostEqualTo(verticiesLine.End));
         }
 
         [Fact]

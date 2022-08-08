@@ -1008,7 +1008,10 @@ namespace Elements.Geometry
             {
                 if (segment.Intersects(line, out var point, infinite: infinite, includeEnds: includeEnds))
                 {
-                    intersections.Add(point);
+                    if (segment.PointOnLine(point, includeEnds) && intersections.All(x => !x.IsAlmostEqualTo(point)))
+                    {
+                        intersections.Add(point);
+                    }
                 }
             }
 
