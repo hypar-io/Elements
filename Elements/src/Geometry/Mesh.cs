@@ -182,7 +182,7 @@ Triangles:{Triangles.Count}";
         public Triangle AddTriangle(Vertex a, Vertex b, Vertex c)
         {
             var t = new Triangle(a, b, c);
-            if (t.HasDuplicatedVertices(out Vector3 duplicate))
+            if (!Validators.Validator.DisableValidationOnConstruction && t.HasDuplicatedVertices(out Vector3 duplicate))
             {
                 throw new ArgumentException($"Not a valid Triangle.  Duplicate vertex at {duplicate}.");
             }
