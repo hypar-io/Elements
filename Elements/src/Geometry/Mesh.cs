@@ -41,7 +41,6 @@ namespace Elements.Geometry
         /// meshes — disable this setting to speed up mesh construction if you
         /// won't be using `Intersects()` or the `merge` flag on `AddVertex`.
         /// </summary>
-        [JsonIgnore]
         public bool BuildOctree { get; set; } = true;
 
         /// <summary>
@@ -285,7 +284,7 @@ Triangles:{Triangles.Count}";
             }
             else if (merge)
             {
-                throw new ArgumentException("Cannot merge vertices if BuildOctree is false. Before adding any vertices to this mesh, set BuildOctree to true.");
+                throw new ArgumentException("Cannot merge vertices if `BuildOctree` is false. Before adding any vertices to this mesh, set `BuildOctree` to true, or run `Mesh.ForceBuildOctree()`.");
             }
 
             v.UV = uv;
@@ -309,6 +308,24 @@ Triangles:{Triangles.Count}";
             this._bbox = this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
+        }
+
+        /// <summary>
+        /// If this mesh was loaded without an octree, construct one so that you
+        /// can utilize capabilities that rely on the octree, like
+        /// `Intersects()` and the merge option in `AddVertex()`.
+        /// </summary>
+        public void ForceBuildOctree()
+        {
+            if (this._octree.Count > 0)
+            {
+                throw new Exception("Octree already built.");
+            }
+            this.BuildOctree = true;
+            foreach (var v in Vertices)
+            {
+                this._octree.Add(v, v.Position);
+            }
         }
 
         /// <summary>
@@ -398,6 +415,10 @@ Triangles:{Triangles.Count}";
         /// False if no intersection occurs.</returns>
         public bool Intersects(Ray ray, out Vector3 intersection)
         {
+            if (!this.BuildOctree)
+            {
+                throw new Exception("The Intersects method is only available if you have constructed the mesh with `BuildOctree = true`, or run `Mesh.ForceBuildOctree()`.");
+            }
             var nearbyVertices = this._octree.GetNearby(ray, _maxTriangleSize).ToList();
             var nearbyTriangles = nearbyVertices.SelectMany(v => v.Triangles).Distinct();
             intersection = default;
