@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polyline
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -288,7 +288,8 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -317,7 +318,8 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -341,7 +343,8 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -365,7 +368,10 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
+[Required]
+[MinLength(2)]
+public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -576,6 +582,208 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a></div>
+  <a id="Elements_Geometry_Polyline_GetParameterAt_" data-uid="Elements.Geometry.Polyline.GetParameterAt*"></a>
+  <h4 id="Elements_Geometry_Polyline_GetParameterAt_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polyline.GetParameterAt(Elements.Geometry.Vector3)">GetParameterAt(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Calculate U parameter for point on polyline</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double GetParameterAt(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point on polyline</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>Returns U parameter for point on polyline</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_GetSubsegment_" data-uid="Elements.Geometry.Polyline.GetSubsegment*"></a>
+  <h4 id="Elements_Geometry_Polyline_GetSubsegment_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polyline.GetSubsegment(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">GetSubsegment(Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Get new polyline between two points</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polyline GetSubsegment(Vector3 start, Vector3 end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>Start point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">end</span></td>
+        <td><p>End point</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>New polyline or null if any of points is not on polyline</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Intersects_" data-uid="Elements.Geometry.Polyline.Intersects*"></a>
+  <h4 id="Elements_Geometry_Polyline_Intersects_Elements_Geometry_Line_System_Collections_Generic_List_Elements_Geometry_Vector3___System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Polyline.Intersects(Elements.Geometry.Line,System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Boolean,System.Boolean)">Intersects(Line, out List&lt;Vector3&gt;, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Check if polyline intersects with line</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Line line, out List&lt;Vector3&gt; intersections, bool infinite = false, bool includeEnds = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>Line to check</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">intersections</span></td>
+        <td><p>Intersections between polyline and line</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>Threat the line as infinite?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeEnds</span></td>
+        <td><p>If the end of line lies exactly on the vertex of polyline, count it as an intersection?</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if line intersects with polyline, false if they do not intersect</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Intersects_" data-uid="Elements.Geometry.Polyline.Intersects*"></a>
+  <h4 id="Elements_Geometry_Polyline_Intersects_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Polyline___" data-uid="Elements.Geometry.Polyline.Intersects(Elements.Geometry.Polygon,System.Collections.Generic.List{Elements.Geometry.Polyline}@)">Intersects(Polygon, out List&lt;Polyline&gt;)</h4>
+  <div class="markdown level1 summary"><p>Checks if polyline intersects with polygon</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Polygon polygon, out List&lt;Polyline&gt; sharedSegments)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>Polygon to check</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</td>
+        <td><span class="parametername">sharedSegments</span></td>
+        <td><p>List of shared subsegments</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Result of check if polyline and polygon intersects</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Polyline_Length_" data-uid="Elements.Geometry.Polyline.Length*"></a>
   <h4 id="Elements_Geometry_Polyline_Length" data-uid="Elements.Geometry.Polyline.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Calculate the length of the polygon.</p>
@@ -1308,6 +1516,15 @@ of the polyline's segments.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_ValidateVertices_" data-uid="Elements.Geometry.Polyline.ValidateVertices*"></a>
+  <h4 id="Elements_Geometry_Polyline_ValidateVertices" data-uid="Elements.Geometry.Polyline.ValidateVertices">ValidateVertices()</h4>
+  <div class="markdown level1 summary"><p>Clean up any duplicate vertices, and warn about any vertices that are too close to each other.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ValidateVertices()</code></pre>
+  </div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
