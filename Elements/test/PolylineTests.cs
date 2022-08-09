@@ -263,9 +263,9 @@ namespace Elements.Geometry.Tests
         public void Intersects()
         {
             var polyline = new Polyline(
-                new Vector3(-5,-5), 
-                new Vector3(-5, 5), 
-                new Vector3(5,5), 
+                new Vector3(-5, -5),
+                new Vector3(-5, 5),
+                new Vector3(5, 5),
                 new Vector3(5, -5));
 
             var notIntersectingLine = new Line(new Vector3(-3, 0), new Vector3(3, 0));
@@ -500,7 +500,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(5, -5));
 
             var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
-            
+
             var expectedResult = new Polyline(new Vector3(-5, -3),
                 new Vector3(-5, 5),
                 new Vector3(5, 5),
@@ -524,6 +524,32 @@ namespace Elements.Geometry.Tests
             var endSubsegment = polyline.GetSubsegment(middlePoint, polyline.End);
             var endSubsegmentExpected = new Polyline(middlePoint, new Vector3(5, 5), polyline.End);
             Assert.Equal(endSubsegmentExpected, endSubsegment);
+        }
+
+        [Fact]
+        public void PolylineFrameNormalsAreConsistent()
+        {
+            Name = nameof(PolylineFrameNormalsAreConsistent);
+            Polyline curve = new Polyline(
+                (0, 0, 0),
+                (1, 0, 0),
+                (2, 4, 3),
+                (5, 3, 1),
+                (10, 0, 0)
+            );
+
+            var frames = curve.Frames();
+
+            for (int i = 0; i < frames.Length - 1; i++)
+            {
+                var currFrame = frames[i];
+                var nextFrame = frames[i + 1];
+                var currNormal = currFrame.ZAxis;
+                var nextNormal = nextFrame.ZAxis;
+                Assert.True(currNormal.Dot(nextNormal) > 0.0);
+            }
+            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElement(curve);
         }
     }
 }
