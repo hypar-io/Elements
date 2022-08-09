@@ -53,7 +53,7 @@ namespace Elements
         /// <summary>
         /// Read data from the CSV file
         /// </summary>
-        /// <typeparam name="T">The type of the elemens inside CSV file</typeparam>
+        /// <typeparam name="T">The type of the elemens inside the CSV file</typeparam>
         /// <param name="stream">The file stream</param>
         public virtual IList<T> Read<T>(Stream stream) where T : class, new()
         {
@@ -122,10 +122,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Sets value to the inctance prtoprty
+        /// Sets value to the instance property
         /// </summary>
         /// <typeparam name="T">The type of the instance</typeparam>
-        /// <param name="instance">The of the element</param>
+        /// <param name="instance">The instance of the type</param>
         /// <param name="value">The property value</param>
         /// <param name="property">The instance property</param>
         protected static string SetValue<T>(T instance, string value, PropertyInfo property) where T : class, new()
@@ -170,11 +170,10 @@ namespace Elements
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance
                 | BindingFlags.GetProperty | BindingFlags.SetProperty);
 
-            var quary = properties.AsQueryable().Where(a => a.PropertyType.IsValueType || a.PropertyType.Name == "String");
+            var query = properties.AsQueryable().Where(a => a.PropertyType.IsValueType || a.PropertyType.Name == "String");
 
-            var sortedProperties = from property in quary
-                                   select property;
-            return sortedProperties.ToList();
+            return from property in query
+                   select property;
         }
 
         /// <summary>
