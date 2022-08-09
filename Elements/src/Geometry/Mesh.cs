@@ -18,7 +18,7 @@ namespace Elements.Geometry
     {
 
         private double _maxTriangleSize = 0;
-        private readonly PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, (0, 0, 0), Vector3.EPSILON);
+        private PointOctree<Vertex> _octree = null;
 
         /// <summary>The mesh's vertices.</summary>
         [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -33,15 +33,6 @@ namespace Elements.Geometry
         /// The mesh's bounding box.
         /// </summary>
         public BBox3 BoundingBox => _bbox;
-
-        /// <summary>
-        /// When constructing meshes, by default we build an octree lookup
-        /// structure of the mesh's vertices, in order to speed up coincident
-        /// vertex checks and intersections. This can slow down extremely large
-        /// meshes — disable this setting to speed up mesh construction if you
-        /// won't be using `Intersects()` or the `merge` flag on `AddVertex`.
-        /// </summary>
-        public bool BuildOctree { get; set; } = true;
 
         /// <summary>
         /// Construct a mesh.
@@ -265,27 +256,22 @@ Triangles:{Triangles.Count}";
                                 double edgeAngle = 30.0)
         {
             var v = new Vertex(position, normal, color);
-            if (BuildOctree)
-            {
 
-                if (merge)
+
+            if (merge)
+            {
+                var search = GetOctree().GetNearby(position, Vector3.EPSILON);
+                if (search.Length > 0)
                 {
-                    var search = this._octree.GetNearby(position, Vector3.EPSILON);
-                    if (search.Length > 0)
+                    var angle = search[0].Normal.AngleTo(normal);
+                    if (angle < edgeAngle)
                     {
-                        var angle = search[0].Normal.AngleTo(normal);
-                        if (angle < edgeAngle)
-                        {
-                            return search[0];
-                        }
+                        return search[0];
                     }
                 }
-                this._octree.Add(v, position);
             }
-            else if (merge)
-            {
-                throw new ArgumentException("Cannot merge vertices if `BuildOctree` is false. Before adding any vertices to this mesh, set `BuildOctree` to true, or run `Mesh.ForceBuildOctree()`.");
-            }
+            // If the octree is null, do nothing — we'll build it when we need it. If we've already constructed it, let's keep it up to date.
+            this._octree?.Add(v, position);
 
             v.UV = uv;
             this.Vertices.Add(v);
@@ -301,31 +287,25 @@ Triangles:{Triangles.Count}";
         public Vertex AddVertex(Vertex v)
         {
             this.Vertices.Add(v);
-            if (BuildOctree)
-            {
-                this._octree.Add(v, v.Position);
-            }
+            // If the octree is null, do nothing — we'll build it when we need it. If we've already constructed it, let's keep it up to date.
+            this._octree?.Add(v, v.Position);
             this._bbox = this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
         }
 
-        /// <summary>
-        /// If this mesh was loaded without an octree, construct one so that you
-        /// can utilize capabilities that rely on the octree, like
-        /// `Intersects()` and the merge option in `AddVertex()`.
-        /// </summary>
-        public void ForceBuildOctree()
+        private PointOctree<Vertex> GetOctree()
         {
-            if (this._octree.Count > 0)
+            if (_octree == null)
             {
-                throw new Exception("Octree already built.");
+                _octree = new PointOctree<Vertex>(Math.Max(_bbox.Max.DistanceTo(_bbox.Min), 100), _bbox.PointAt(0.5, 0.5, 0.5), Vector3.EPSILON);
+                // make sure existing vertices are added to the octree — we're initializing it for the first time
+                foreach (var v in Vertices)
+                {
+                    _octree.Add(v, v.Position);
+                }
             }
-            this.BuildOctree = true;
-            foreach (var v in Vertices)
-            {
-                this._octree.Add(v, v.Position);
-            }
+            return _octree;
         }
 
         /// <summary>
@@ -415,11 +395,7 @@ Triangles:{Triangles.Count}";
         /// False if no intersection occurs.</returns>
         public bool Intersects(Ray ray, out Vector3 intersection)
         {
-            if (!this.BuildOctree)
-            {
-                throw new Exception("The Intersects method is only available if you have constructed the mesh with `BuildOctree = true`, or run `Mesh.ForceBuildOctree()`.");
-            }
-            var nearbyVertices = this._octree.GetNearby(ray, _maxTriangleSize).ToList();
+            var nearbyVertices = GetOctree().GetNearby(ray, _maxTriangleSize).ToList();
             var nearbyTriangles = nearbyVertices.SelectMany(v => v.Triangles).Distinct();
             intersection = default;
             foreach (var t in nearbyTriangles)

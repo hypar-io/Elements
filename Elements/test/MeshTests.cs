@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
@@ -44,47 +47,6 @@ namespace Elements.Tests
 }
             ";
             Newtonsoft.Json.JsonConvert.DeserializeObject<InputsWithMesh>(json, new[] { new MeshConverter() });
-        }
-
-
-        [Fact]
-        public void ThrowsForIntersectOrMergeWhenBuildOctreeFalse()
-        {
-            var _mesh = new Mesh()
-            {
-                BuildOctree = false
-            };
-            var xCount = 10;
-            var yCount = 10;
-            var random = new Random();
-            for (int i = 0; i < xCount; i++)
-            {
-                for (int j = 0; j < yCount; j++)
-                {
-                    var point = new Vector3(i, j, random.NextDouble() * 2);
-                    var c = _mesh.AddVertex(point);
-                    if (i != 0 && j != 0)
-                    {
-                        // add faces
-                        var d = _mesh.Vertices[i * yCount + j - 1];
-                        var a = _mesh.Vertices[(i - 1) * yCount + j - 1];
-                        var b = _mesh.Vertices[(i - 1) * yCount + j];
-                        _mesh.AddTriangle(a, b, c);
-                        _mesh.AddTriangle(c, d, a);
-                    }
-                }
-            }
-            var vertToAddWithMerge = _mesh.Vertices[10].Position;
-            Assert.Throws<ArgumentException>(() =>
-            {
-                _mesh.AddVertex(vertToAddWithMerge, merge: true);
-            });
-
-            var ray = new Ray(new Vector3(5, 5, 5), new Vector3(0, 0, -1));
-            Assert.Throws<Exception>(() =>
-            {
-                _mesh.Intersects(ray, out var pt);
-            });
         }
 
         [Fact]
@@ -138,6 +100,7 @@ namespace Elements.Tests
 
             Assert.Equal(_rays.Count, pts.Count);
         }
+
         public class InputsWithMesh
         {
             [JsonConstructor]

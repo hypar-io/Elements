@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Elements.Geometry;
-using Elements.Serialization.glTF;
 
 namespace Elements.Benchmarks
 {
@@ -62,19 +60,13 @@ namespace Elements.Benchmarks
             }
         }
 
-        [Params(true, false)]
-        public bool BuildOctree { get; set; }
-
         [Params(1000, 5000, 10000, 30000)]
         public int VertexCount { get; set; }
 
         [Benchmark(Description = "Construct Mesh")]
         public void ConstructMesh()
         {
-            var mesh = new Mesh
-            {
-                BuildOctree = BuildOctree
-            };
+            var mesh = new Mesh();
             BuildRandomMesh(mesh, new Random(10), 100, VertexCount / 100);
         }
 
