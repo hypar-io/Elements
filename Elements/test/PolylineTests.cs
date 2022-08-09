@@ -538,6 +538,8 @@ namespace Elements.Geometry.Tests
                 (10, 0, 0)
             );
 
+            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
+
             var frames = curve.Frames();
 
             for (int i = 0; i < frames.Length - 1; i++)
@@ -548,8 +550,25 @@ namespace Elements.Geometry.Tests
                 var nextNormal = nextFrame.ZAxis;
                 Assert.True(currNormal.Dot(nextNormal) > 0.0);
             }
+
+            var bFrames = bezier.Frames();
+
+            var parameters = new List<double>();
+            for (int i = 0; i < 20; i++)
+            {
+                parameters.Add(i / 19.0);
+            }
+
+            var movedCrv = curve.TransformedPolyline(new Transform(15, 0, 0));
+
+            var transformAtFrames = parameters.Select(p => movedCrv.TransformAt(p));
+
             Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElements(bFrames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElements(transformAtFrames.SelectMany(f => f.ToModelCurves()));
             Model.AddElement(curve);
+            Model.AddElement(movedCrv);
+            Model.AddElement(bezier);
         }
     }
 }

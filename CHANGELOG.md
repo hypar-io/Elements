@@ -5,6 +5,9 @@
 ### Changed
 - MeshElement constructor signature modified to be compatible with code generation.
 
+### Fixed
+- Fixed a bug where `Polyline.Frames` would return inconsistently-oriented transforms.
+
 ## 1.1.0
 
 ### Added

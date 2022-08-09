@@ -517,6 +517,7 @@ namespace Elements.Geometry
                     tangent = v1;
                 }
             }
+            tangent = tangent.Negate();
             return new Transform(origin, up.Cross(tangent), tangent);
         }
 
