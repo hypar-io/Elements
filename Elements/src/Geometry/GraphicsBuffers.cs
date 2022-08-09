@@ -21,7 +21,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Add vertices to the graphics buffers
         /// </summary>
-        void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices);
+        void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices);
 
         /// <summary>
         /// Add a vertex to the graphics buffers.
@@ -232,7 +232,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Add vertices to the graphics buffers.
         /// </summary>
-        public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+        public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
         {
             var vertexStep = sizeof(float) * 3;
             var normalStep = sizeof(float) * 3;
@@ -277,18 +277,18 @@ namespace Elements.Geometry
                 this.UVMin[0] = Math.Min(this.UVMin[0], uv.U);
                 this.UVMin[1] = Math.Min(this.UVMin[1], uv.V);
 
-                if (color != default)
+                if (color.HasValue)
                 {
                     hasVertexColors = true;
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Red), 0, allColors, colorStep * i, sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Green), 0, allColors, colorStep * i + sizeof(float), sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Blue), 0, allColors, colorStep * i + sizeof(float) * 2, sizeof(float));
-                    this.CMax[0] = Math.Max(this.CMax[0], color.Red);
-                    this.CMax[1] = Math.Max(this.CMax[1], color.Green);
-                    this.CMax[2] = Math.Max(this.CMax[2], color.Blue);
-                    this.CMin[0] = Math.Min(this.CMin[0], color.Red);
-                    this.CMin[1] = Math.Min(this.CMin[1], color.Green);
-                    this.CMin[2] = Math.Min(this.CMin[2], color.Blue);
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Red), 0, allColors, colorStep * i, sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Green), 0, allColors, colorStep * i + sizeof(float), sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Blue), 0, allColors, colorStep * i + sizeof(float) * 2, sizeof(float));
+                    this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
+                    this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);
+                    this.CMax[2] = Math.Max(this.CMax[2], color.Value.Blue);
+                    this.CMin[0] = Math.Min(this.CMin[0], color.Value.Red);
+                    this.CMin[1] = Math.Min(this.CMin[1], color.Value.Green);
+                    this.CMin[2] = Math.Min(this.CMin[2], color.Value.Blue);
                 }
             }
 

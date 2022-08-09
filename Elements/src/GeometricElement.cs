@@ -38,7 +38,7 @@ namespace Elements
         /// as the object is tessellated.
         /// </summary>
         [JsonIgnore]
-        public Func<(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)> ModifyVertexAttributes { get; set; }
+        public Func<(Vector3 position, Vector3 normal, UV uv, Color? color), (Vector3 position, Vector3 normal, UV uv, Color? color)> ModifyVertexAttributes { get; set; }
 
         /// <summary>
         /// Create a geometric element.

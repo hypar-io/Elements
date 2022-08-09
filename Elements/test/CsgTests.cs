@@ -5,8 +5,6 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
 
@@ -208,7 +206,7 @@ namespace Elements.Tests
         {
             public List<ushort> Indices { get; set; } = new List<ushort>();
 
-            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal)>();
+            public List<(Vector3 position, Vector3 normal, UV uv, Color? color)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             public void AddIndex(ushort index)
             {
                 Indices.Add(index);
@@ -216,22 +214,22 @@ namespace Elements.Tests
 
             public void AddIndices(IList<ushort> indices)
             {
-                throw new NotImplementedException();
+                Indices.AddRange(indices);
             }
 
             public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
             {
-                Vertices.Add((position, normal));
+                Vertices.Add((position, normal, uv, color));
             }
 
             public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
             {
-                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz), new UV(u, v), color));
             }
 
-            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
             {
-                throw new NotImplementedException();
+                Vertices.AddRange(vertices);
             }
         }
     }

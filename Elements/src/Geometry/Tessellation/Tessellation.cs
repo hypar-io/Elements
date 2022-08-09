@@ -18,9 +18,9 @@ namespace Elements.Geometry.Tessellation
         internal static void Tessellate(IEnumerable<ITessellationTargetProvider> providers,
                                         IGraphicsBuffers buffers,
                                         bool mergeVertices = false,
-                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+                                        Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
-            var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color color)>();
+            var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             foreach (var provider in providers)
             {
                 foreach (var target in provider.GetTessellationTargets())
@@ -41,7 +41,7 @@ namespace Elements.Geometry.Tessellation
 
         private static void TessellatePolygon(Tess tess,
                                               IGraphicsBuffers buffers,
-                                              List<(Vector3 position, Vector3 normal, UV uv, Color color)> allVertices,
+                                              List<(Vector3 position, Vector3 normal, UV uv, Color? color)> allVertices,
                                               bool mergeVertices = false)
         {
             if (tess.ElementCount == 0)
@@ -95,7 +95,7 @@ namespace Elements.Geometry.Tessellation
         private static int GetOrCreateVertex(Vector3 position,
                                              Vector3 normal,
                                              UV uv,
-                                             List<(Vector3 position, Vector3 normal, UV uv, Color color)> pts,
+                                             List<(Vector3 position, Vector3 normal, UV uv, Color? color)> pts,
                                              bool mergeVertices)
         {
             if (mergeVertices)

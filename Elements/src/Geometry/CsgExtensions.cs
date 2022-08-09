@@ -26,7 +26,7 @@ namespace Elements.Geometry
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid csg,
                                                    bool mergeVertices = false,
-                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+                                                   Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
             return Tessellate(new[] { csg }, mergeVertices, modifyVertexAttributes);
         }
@@ -37,7 +37,7 @@ namespace Elements.Geometry
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs,
                                                    bool mergeVertices = false,
-                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+                                                   Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
             var buffers = new GraphicsBuffers();
 
