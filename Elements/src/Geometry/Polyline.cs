@@ -396,7 +396,7 @@ namespace Elements.Geometry
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
                 if (additionalRotation != 0.0)
                 {
-                    result[i].Rotate(result[i].ZAxis, additionalRotation, result[i].Origin);
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
                 }
             }
             return result;
@@ -1114,7 +1114,7 @@ namespace Elements.Geometry
         /// <returns>New polyline or null if any of points is not on polyline</returns>
         public Polyline GetSubsegment(Vector3 start, Vector3 end)
         {
-            if(start.IsAlmostEqualTo(end))
+            if (start.IsAlmostEqualTo(end))
             {
                 return null;
             }
@@ -1122,7 +1122,7 @@ namespace Elements.Geometry
             var startParameter = GetParameterAt(start);
             var endParameter = GetParameterAt(end);
 
-            if(startParameter < 0 || endParameter < 0)
+            if (startParameter < 0 || endParameter < 0)
             {
                 return null;
             }
@@ -1132,7 +1132,7 @@ namespace Elements.Geometry
             var vertices = new List<Vector3>();
             var lastVertex = Vector3.Origin;
 
-            if(startParameter < endParameter)
+            if (startParameter < endParameter)
             {
                 firstParameter = startParameter;
                 lastParameter = endParameter;

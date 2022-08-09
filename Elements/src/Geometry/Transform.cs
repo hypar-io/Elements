@@ -389,26 +389,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Apply a rotation to the transform around a point.
-        /// </summary>
-        /// <param name="axis">The axis of rotation.</param>
-        /// <param name="angle">The angle of rotation in degrees.</param>
-        /// <param name="origin">The point around which to rotate.</param>
-        public void Rotate(Vector3 axis, double angle, Vector3 origin)
-        {
-            var mT1 = new Matrix();
-            mT1.SetupTranslation(origin.Negate());
-
-            var mT2 = new Matrix();
-            mT2.SetupTranslation(origin);
-
-            var mR = new Matrix();
-            mR.SetupRotate(axis, angle * (Math.PI / 180.0));
-
-            this.Matrix = this.Matrix * mT1 * mR * mT2;
-        }
-
-        /// <summary>
         /// Apply a rotation to the transform around the Z axis.
         /// </summary>
         /// <param name="angle">The angle of rotation in degrees.</param>

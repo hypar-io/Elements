@@ -40,7 +40,7 @@ namespace Elements.Geometry
                 transforms[i] = TransformAt(parameters[i]);
                 if (additionalRotation != 0.0)
                 {
-                    transforms[i].Rotate(transforms[i].ZAxis, additionalRotation, transforms[i].Origin);
+                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
                 }
             }
             return transforms;
