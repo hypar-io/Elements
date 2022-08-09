@@ -24,7 +24,7 @@ jobs:
           dotnet test --filter Category=Examples
           docfx ./doc/docfx.json -f
       - name: Deploy Docs
-      - uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9
         with:
         add: 'docs
         message: 'Update documentation'
