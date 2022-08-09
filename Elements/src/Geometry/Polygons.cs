@@ -21,7 +21,7 @@ namespace Elements.Geometry
             var c = new Vector3(width / 2, height / 2);
             var d = new Vector3(-width / 2, height / 2);
 
-            return new Polygon(true, new[] { a, b, c, d });
+            return new Polygon(true, a, b, c, d);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Elements.Geometry
             var d = new Vector3(thickness, thickness, 0);
             var e = new Vector3(thickness, length, 0);
             var f = new Vector3(0, length, 0);
-            return new Polygon(true, new[] { a, b, c, d, e, f });
+            return new Polygon(true, a, b, c, d, e, f);
         }
 
         /// <summary>
