@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+- MeshElement constructor signature modified to be compatible with code generation.
+
 ## 1.1.0
 
 ### Added
@@ -17,6 +22,16 @@
 - `Line.IsOnPlane()` method
 - `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
 - `Polyline.GetParameterAt(Vector3 point)` method
+- `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
+- `Polygon.GetSharedSegments(Polyline polyline)` method
+- `BBox3.Offset(double amount)`
+- `Obstacle` in `Elements.Spatial.AdaptiveGrid`
+- `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`
+- `AdaptiveGrid.Boundaries`
+- `AdaptiveGrid.AddVertex(Vector3 point)`
+- `AdaptiveGrid.AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vertex a, Vertex b, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vector3 a, Vector3 b, bool cut = true)`
 
 ### Changed
 
@@ -26,15 +41,16 @@
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
-- `Line.PointOnLine` now uses distance to line instead of dot product. 
+- `Line.PointOnLine` now uses distance to line instead of dot product.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
-- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set 
 
 ## 1.0.1
 
