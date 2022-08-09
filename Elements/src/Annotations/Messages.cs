@@ -152,11 +152,7 @@ namespace Elements.Annotations
                                           string stackTrace = null)
         {
             const double messageHeightSubtleLift = 0.02;
-            SolidOperation solid = new Lamina(polygon, false);
-            if (height > 0)
-            {
-                solid = new Extrude(polygon, height, Vector3.ZAxis, false);
-            }
+            SolidOperation solid = height > 0 ? new Extrude(polygon, height, Vector3.ZAxis, false) : new Lamina(polygon, false) as SolidOperation;
             var message = new Message(messageText,
                                       stackTrace,
                                       severity,
