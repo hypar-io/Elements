@@ -37,7 +37,7 @@ namespace Elements.Geometry
             var c = max;
             var d = new Vector3(min.X, max.Y);
 
-            return new Polygon(true, new[] { a, b, c, d });
+            return new Polygon(true, a, b, c, d);
         }
 
         /// <summary>
