@@ -2,6 +2,9 @@
 
 ## 1.2.0
 
+### Added
+- Message class along with helper creation methods.
+
 ### Changed
 - MeshElement constructor signature modified to be compatible with code generation.
 
@@ -53,7 +56,7 @@
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
-- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set 
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set
 
 ## 1.0.1
 
