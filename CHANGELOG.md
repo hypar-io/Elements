@@ -79,6 +79,7 @@
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 - `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
 
