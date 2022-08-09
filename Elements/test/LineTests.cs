@@ -287,6 +287,40 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void LineTrimWithPolygonInfinite()
+        {
+            var polygon = new Polygon(new[]
+            {
+                new Vector3(0, 0),
+                new Vector3(0, 5),
+                new Vector3(2, 5),
+                new Vector3(2, 2),
+                new Vector3(3, 3),
+                new Vector3(4, 2),
+                new Vector3(4, 5),
+                new Vector3(6, 5),
+                new Vector3(6, 0)
+            });
+
+            var line = new Line(new Vector3(10, 3), new Vector3(8, 3));
+            var inside = line.Trim(polygon, out var outside, infinite: true);
+            Assert.Equal(2, inside.Count);
+            // Sorted in line direction.
+            Assert.Equal(new Vector3(6, 3), inside[0].Start);
+            Assert.Equal(new Vector3(4, 3), inside[0].End);
+            Assert.Equal(new Vector3(2, 3), inside[1].Start);
+            Assert.Equal(new Vector3(0, 3), inside[1].End);
+
+            // (3; 3) point splits outside point into two segments.
+            // Outer outside segments are discarded when infinite is false.
+            Assert.Equal(2, outside.Count);
+            Assert.Equal(new Vector3(4, 3), outside[0].Start);
+            Assert.Equal(new Vector3(3, 3), outside[0].End);
+            Assert.Equal(new Vector3(3, 3), outside[1].Start);
+            Assert.Equal(new Vector3(2, 3), outside[1].End);
+        }
+
+        [Fact]
         public void ExtendToProfile()
         {
             Name = "ExtendToProfile";
@@ -396,6 +430,25 @@ namespace Elements.Geometry.Tests
             Assert.True(results.Count == 2);
             Assert.Equal(results[0], new Vector3(0, 0, 5));
             Assert.Equal(results[1], new Vector3(10, 0, 7));
+
+            //5. Line touches two sides of box and is misaligned slightly
+            l = new Line(new Vector3(5, box.Min.Y + Vector3.EPSILON * 0.99, box.Min.Z), new Vector3(5, box.Max.Y - Vector3.EPSILON * 0.99, box.Min.Z));
+            Assert.True(box.Min.Y.ApproximatelyEquals(l.Start.Y));
+            Assert.True(box.Max.Y.ApproximatelyEquals(l.End.Y));
+            l.Intersects(box, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.True(results[0].IsAlmostEqualTo(l.Start));
+            Assert.True(results[1].IsAlmostEqualTo(l.End));
+
+            //6. Short line touches two sides of box and is misaligned slightly (it requires increased tolerance to get correct results )
+            var newBox = new BBox3(new Vector3(-30, 19.60979, 0), new Vector3(-29.5, 20.39021, 0));
+            l = new Line(new Vector3(-30, newBox.Min.Y + Vector3.EPSILON * 0.99, 0), new Vector3(-30, newBox.Max.Y - Vector3.EPSILON * 0.99, 0));
+            Assert.True(newBox.Min.Y.ApproximatelyEquals(l.Start.Y));
+            Assert.True(newBox.Max.Y.ApproximatelyEquals(l.End.Y));
+            l.Intersects(newBox, out results, infinite: false);
+            Assert.True(results.Count == 2);
+            Assert.True(results[0].IsAlmostEqualTo(l.Start));
+            Assert.True(results[1].IsAlmostEqualTo(l.End));
         }
 
         [Fact]
@@ -457,12 +510,12 @@ namespace Elements.Geometry.Tests
                 (8,0,Vector3.EPSILON * 0.5),
                 (-4, 0, 0)
             };
-            Assert.True(points1.AreCollinear());
+            Assert.True(points1.AreCollinearByDistance());
 
             points1.Add(
                   (-6, Vector3.EPSILON * 2, 0)
             );
-            Assert.False(points1.AreCollinear());
+            Assert.False(points1.AreCollinearByDistance());
         }
 
         [Fact]
@@ -616,12 +669,145 @@ namespace Elements.Geometry.Tests
             Assert.Throws<ArgumentException>(() => line.MergedCollinearLine(nonCollinearLine));
         }
 
+        [Fact]
+        public void BestFitLine()
+        {
+            // points symmetrical about the expected horizontal line
+            var points0 = new[]
+            {
+                new Vector3(0, 0),
+                new Vector3(0, 4),
+                new Vector3(2, 1),
+                new Vector3(2, 3),
+                new Vector3(4, 1),
+                new Vector3(4, 3),
+                new Vector3(6, 0),
+                new Vector3(6, 4)
+            };
+            var line0 = Line.BestFit(points0);
+            Assert.Equal(line0, new Line(new Vector3(0, 2), new Vector3(6, 2)));
+
+            // collinear points
+            var points1 = new[]
+            {
+                new Vector3(1, 1),
+                new Vector3(1.25, 2),
+                new Vector3(1.5, 3),
+                new Vector3(2, 5)
+            };
+            var line1 = Line.BestFit(points1);
+            Assert.Equal(new Line(points1[0], points1[3]), line1);
+
+            // points symmetrical about the expected vertical line
+            var points2 = new[]
+           {
+                new Vector3(0, 0),
+                new Vector3(0, 2),
+                new Vector3(0, 4),
+                new Vector3(2, 0),
+                new Vector3(2, 2),
+                new Vector3(2, 4)
+            };
+            var line2 = Line.BestFit(points2);
+            Assert.Equal(line2, new Line(new Vector3(1, 0), new Vector3(1, 4)));
+
+            // random points
+            var points3 = new[]
+            {
+                new Vector3(1.21,1.69),
+                new Vector3(3,5.89),
+                new Vector3(5.16,4.11),
+                new Vector3(8.31,5.49),
+                new Vector3(10.21,8.65)
+            };
+            var line3 = Line.BestFit(points3);
+            var mCoef = 0.56150040095236275;
+            var bCoef = 2.03395076348772;
+            Assert.True(line3.PointOnLine(new Vector3(2, mCoef * 2 + bCoef)));
+            Assert.True(line3.PointOnLine(new Vector3(7, mCoef * 7 + bCoef)));
+        }
+
         [Theory]
         [MemberData(nameof(ProjectedData))]
         public void Projected(Line line, Plane plane, Line expectedLine)
         {
             var result = line.Projected(plane);
             Assert.Equal(expectedLine, result);
+        }
+
+        [Fact]
+        public void PointOnLine()
+        {
+            Vector3 start = new Vector3(0, 0, 0);
+            Vector3 end = new Vector3(10, 0, 0);
+
+            //1. End points
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.False(Line.PointOnLine(start, start, end));
+            Assert.True(Line.PointOnLine(start, start, end, true));
+
+            //2. Almost end point
+            Vector3 test = new Vector3(1e-6, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(1e-6, 1e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Midpoint
+            test = new Vector3(4, 0, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //3. Almost midpoint
+            test = new Vector3(4, 5e-6, 0);
+            Assert.True(Line.PointOnLine(test, start, end));
+            Assert.True(Line.PointOnLine(test, start, end, true));
+
+            //4. Point not on the line
+            test = new Vector3(5, 1, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+
+            //5. Large line
+            Vector3 farEnd = new Vector3(150, 0, 0);
+            test = new Vector3(100, 0.1, 0);
+            Assert.False(Line.PointOnLine(test, start, farEnd));
+            Assert.False(Line.PointOnLine(test, start, farEnd, true));
+
+            //6. Collinear point outside line
+            test = new Vector3(15, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+            test = new Vector3(-5, 0, 0);
+            Assert.False(Line.PointOnLine(test, start, end));
+            Assert.False(Line.PointOnLine(test, start, end, true));
+        }
+
+        [Fact]
+        public void IsOnPlane()
+        {
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+
+            var lineOnPlane = new Line(new Vector3(1, 2), new Vector3(3, 2));
+            Assert.True(lineOnPlane.IsOnPlane(plane));
+
+            var tolerance = 0.001;
+            var lineOnPlaneWithTolerance = new Line(new Vector3(1, 2, 0.0009), new Vector3(3, 2, -0.0009));
+            Assert.True(lineOnPlaneWithTolerance.IsOnPlane(plane, tolerance));
+
+            var lineAbovePlane = new Line(new Vector3(1, 2, 3), new Vector3(3, 2, 3));
+            Assert.False(lineAbovePlane.IsOnPlane(plane));
+
+            var lineWithStartOnPlane = new Line(new Vector3(1, 2), new Vector3(3, 2, 3));
+            Assert.False(lineWithStartOnPlane.IsOnPlane(plane));
+
+            var lineWithEndOnPlane = new Line(new Vector3(1, 2, 3), new Vector3(3, 2));
+            Assert.False(lineWithEndOnPlane.IsOnPlane(plane));
+
+            var lineIntersectingPlane = new Line(new Vector3(1, 2, -3), new Vector3(3, 2, 3));
+            Assert.True(lineIntersectingPlane.Intersects(plane, out var _));
+            Assert.False(lineIntersectingPlane.IsOnPlane(plane));
         }
 
         public static IEnumerable<object[]> ProjectedData()

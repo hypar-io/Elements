@@ -307,13 +307,13 @@ namespace Elements.Geometry
             // construct a plane through this line and the start or end of the other line
             Plane plane;
             Vector3 testpoint;
-            if (!(new[] { start1, end1, start2 }).AreCollinear())
+            if (!(new[] { start1, end1, start2 }).AreCollinearByDistance())
             {
                 plane = new Plane(start1, end1, start2);
                 testpoint = end2;
 
             } // this only occurs in the rare case that the start point of the other line is collinear with this line (still need to generate a plane)
-            else if (!(new[] { start1, end1, end2 }).AreCollinear())
+            else if (!(new[] { start1, end1, end2 }).AreCollinearByDistance())
             {
                 plane = new Plane(start1, end1, end2);
                 testpoint = start2;
@@ -351,11 +351,12 @@ namespace Elements.Geometry
         /// <summary>
         /// Does this line touches or intersects the provided box in 3D?
         /// </summary>
-        /// <param name="box"></param>
-        /// <param name="results"></param>
+        /// <param name="box">Axis aligned box to intersect.</param>
+        /// <param name="results">Up to two intersection points.</param>
         /// <param name="infinite">Treat the line as infinite?</param>
+        /// <param name="tolerance">An optional distance tolerance.</param>
         /// <returns>True if the line touches or intersects the  box at least at one point, false otherwise.</returns>
-        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)
+        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false, double tolerance = Vector3.EPSILON)
         {
             var d = End - Start;
             results = new List<Vector3>();
@@ -421,14 +422,18 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var length = d.Length();
+            var dMin = tMin * length;
+            var dMax = tMax * length;
+
             // Check if found parameters are within normalized line range.
-            if (infinite || (tMin > -Vector3.EPSILON && tMin < 1 + Vector3.EPSILON))
+            if (infinite || (dMin > -tolerance && dMin < length + tolerance))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(tMax - tMin) > Vector3.EPSILON &&
-                (infinite || (tMax > -Vector3.EPSILON && tMax < 1 + Vector3.EPSILON)))
+            if (Math.Abs(dMax - dMin) > tolerance &&
+                (infinite || (dMax > -tolerance && dMax < length + tolerance)))
             {
                 results.Add(Start + d * tMax);
             }
@@ -476,29 +481,41 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Test if a point lies within this line segment
+        /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
             return Line.PointOnLine(point, Start, End, includeEnds);
         }
 
         /// <summary>
-        /// Test if a point lies within a given line segment
+        /// Test if a point lies within tolerance of a given line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
+            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
             {
                 return true;
             }
-            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
+
+            var delta = end - start;
+            var lambda = (point - start).Dot(delta) / (end - start).Dot(delta);
+            if( lambda > 0 && lambda < 1)
+            {
+                var pointOnLine = start + lambda * delta;
+                return pointOnLine.IsAlmostEqualTo(point);
+            }
+            return false;
         }
 
         /// <summary>
@@ -705,7 +722,7 @@ namespace Elements.Geometry
                 // We want to extend only to the first corner of the other lines,
                 // not all the way through to the other end
                 if (segment.Direction().IsParallelTo(testLine.Direction(), tolerance) && // if the two lines are parallel
-                    (new[] { segment.End, segment.Start, testLine.Start, testLine.End }).AreCollinear())// and collinear
+                    (new[] { segment.End, segment.Start, testLine.Start, testLine.End }).AreCollinearByDistance())// and collinear
                 {
                     if (!this.PointOnLine(segment.End, true))
                     {
@@ -838,19 +855,26 @@ namespace Elements.Geometry
         /// <param name="polygon">The polygon to trim with.</param>
         /// <param name="outsideSegments">A list of the segment(s) of the line outside of the supplied polygon.</param>
         /// <param name="includeCoincidenceAtEdge">Include coincidence at edge as inner segment.</param>
+        /// <param name="infinite">Treat the line as infinite?</param>
         /// <returns>A list of the segment(s) of the line within the supplied polygon.</returns>
-        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false)
+        public List<Line> Trim(Polygon polygon, out List<Line> outsideSegments, bool includeCoincidenceAtEdge = false, bool infinite = false)
         {
             // adapted from http://csharphelper.com/blog/2016/01/clip-a-line-segment-to-a-polygon-in-c/
             // Make lists to hold points of intersection
             var intersections = new List<Vector3>();
 
-            // Add the segment's starting point.
-            intersections.Add(this.Start);
-            polygon.Contains(this.Start, out var containment);
-            var StartsOutsidePolygon = containment == Containment.Outside;
+            var startsOutsidePolygon = false;
+            var hasVertexIntersections = false;
+            var containment = Containment.Outside;
 
-            var hasVertexIntersections = containment == Containment.CoincidesAtVertex;
+            if (!infinite)
+            {
+                // Add the segment's starting point.
+                intersections.Add(this.Start);
+                polygon.Contains(this.Start, out containment);
+                startsOutsidePolygon = containment == Containment.Outside;
+                hasVertexIntersections = containment == Containment.CoincidesAtVertex;
+            }
 
             // Examine the polygon's edges.
             for (int i1 = 0; i1 < polygon.Vertices.Count; i1++)
@@ -860,29 +884,47 @@ namespace Elements.Geometry
 
                 // See where the edge intersects the segment.
                 var segment = new Line(polygon.Vertices[i1], polygon.Vertices[i2]);
-                var segmentsIntersect = Intersects(segment, out Vector3 intersection); // This will return false for intersections exactly at an end
+                // This will return false for intersections exactly at an end if line is not infinite
+                var segmentsIntersect = Intersects(segment, out Vector3 intersection, infinite);
 
-                // See if the segment intersects the edge.
-                if (segmentsIntersect)
+                if (infinite)
                 {
-                    // Record this intersection.
-                    intersections.Add(intersection);
+                    if (segmentsIntersect)
+                    {
+                        intersections.Add(intersection);
+                        if (Vector3.AreCollinearByDistance(Start, End, polygon.Vertices[i1]))
+                        {
+                            hasVertexIntersections = true;
+                        }
+                    }
                 }
-                // see if the segment intersects at a vertex
-                else if (this.PointOnLine(polygon.Vertices[i1]))
+                else
                 {
-                    intersections.Add(polygon.Vertices[i1]);
-                    hasVertexIntersections = true;
+                    // See if the segment intersects the edge.
+                    if (segmentsIntersect)
+                    {
+                        // Record this intersection.
+                        intersections.Add(intersection);
+                    }
+                    // see if the segment intersects at a vertex
+                    else if (this.PointOnLine(polygon.Vertices[i1]))
+                    {
+                        intersections.Add(polygon.Vertices[i1]);
+                        hasVertexIntersections = true;
+                    }
                 }
             }
 
-            // Add the segment's ending point.
-            intersections.Add(End);
+            if (!infinite)
+            {
+                // Add the segment's ending point.
+                intersections.Add(End);
+            }
 
-            var intersectionsOrdered = intersections.OrderBy(v => v.DistanceTo(Start)).ToArray();
+            var intersectionsOrdered = intersections.OrderBy(v => (v - Start).Dot(Direction())).ToArray();
             var inSegments = new List<Line>();
             outsideSegments = new List<Line>();
-            var currentlyIn = !StartsOutsidePolygon;
+            var currentlyIn = !startsOutsidePolygon;
             for (int i = 0; i < intersectionsOrdered.Length - 1; i++)
             {
                 var A = intersectionsOrdered[i];
@@ -1000,7 +1042,7 @@ namespace Elements.Geometry
         public bool IsCollinear(Line line)
         {
             var vectors = new Vector3[] { Start, End, line.Start, line.End };
-            return vectors.AreCollinear();
+            return vectors.AreCollinearByDistance();
         }
 
         /// <summary>
@@ -1082,7 +1124,8 @@ namespace Elements.Geometry
 
             return (point - start).Length() / (end - start).Length();
         }
-        
+
+        /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
@@ -1108,6 +1151,7 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// <summary>
         /// Projects current line onto a plane
         /// </summary>
         /// <param name="plane">Plane to project</param>
@@ -1125,6 +1169,108 @@ namespace Elements.Geometry
         internal override IList<Vector3> RenderVertices()
         {
             return new[] { this.Start, this.End };
+        }
+
+        /// <summary>
+        /// Return an approximate fit line through a set of points using the least squares method.
+        /// </summary>
+        /// <param name="points">The points to fit. Should have at least 2 distinct points.</param>
+        /// <returns>An approximate fit line through a set of points using the least squares method.
+        /// If there is less than 2 distinct points, returns null.</returns>
+        public static Line BestFit(IList<Vector3> points)
+        {
+            var distinctPoints = points.Distinct().ToList();
+            if (distinctPoints.Count < 2)
+            {
+                return null;
+            }
+            else if (distinctPoints.Count == 2)
+            {
+                return new Line(points[0], points[1]);
+            }
+
+            // find the coefficients of the straight line equation (y = m * x + b) using the least squares method
+            var m = FindMCoefficient(points);
+            var b = FindBCoefficient(points, m);
+            var areInfiniteCoefficients = double.IsInfinity(m) || double.IsInfinity(b);
+            Line line = null;
+            if (m.ApproximatelyEquals(0) || areInfiniteCoefficients)
+            {
+                // find the coefficients of the straight line equation (x = b0)
+                var b0 = FindBCoefficient(points.Select(t => new Vector3(t.Y, t.X)).ToList(), 0);
+                var currentLine = new Line(new Vector3(b0, 0), new Vector3(b0, 10));
+                if (areInfiniteCoefficients)
+                {
+                    line = currentLine;
+                }
+                else
+                {
+                    var sum1 = points.Sum(t => Math.Abs(t.Y - b));
+                    var sum2 = points.Sum(t => Math.Abs(t.X - b0));
+                    // select currentLine, if the sum of all distances from points to this line is minimal
+                    if (sum2 < sum1)
+                    {
+                        line = currentLine;
+                    }
+                }
+            }
+            // substitute the values x=0 and x=10 into the equation of a straight line for getting y value of points
+            line = line ?? new Line(new Vector3(0, b), new Vector3(10, m * 10 + b));
+
+            var closestPointsOnLine = points.Select(p => p.ClosestPointOn(line, true)).Select(p =>
+            {
+                var vector = p - line.Start;
+                var parameterizedPosition = vector.Length();
+                if (line.Direction().AngleTo(vector) > 90)
+                {
+                    parameterizedPosition *= -1;
+                }
+                return (p, parameterizedPosition);
+            }).OrderBy(t => t.parameterizedPosition);
+
+            var resultLine = new Line(closestPointsOnLine.First().p, closestPointsOnLine.Last().p);
+            return resultLine;
+        }
+
+        /// <summary>
+        /// Find the 'm' coefficient of the straight line equation (y = m * x + b) using the least squares method
+        /// </summary>
+        /// <param name="points">Points for which best fit line should be found.</param>
+        /// <returns>The 'm' coefficient of the straight line equation.</returns>
+        private static double FindMCoefficient(IList<Vector3> points)
+        {
+            double sumxy = points.Sum(p => p.X * p.Y);
+            var sumx = points.Sum(p => p.X);
+            var sumy = points.Sum(p => p.Y);
+            var sumx2 = points.Sum(p => p.X * p.X);
+            var m = (sumxy - sumx * sumy / points.Count) / (sumx2 - sumx * sumx / points.Count);
+            return m;
+        }
+
+        /// <summary>
+        /// Find the 'b' coefficient of the straight line equation (y = m * x + b) using the least squares method
+        /// </summary>
+        /// <param name="points">Points for which best fit line should be found.</param>
+        /// <param name="m">'m' coefficient of the straight line equation.</param>
+        /// <returns>The 'b' coefficient of the straight line equation.</returns>
+        private static double FindBCoefficient(IList<Vector3> points, double m)
+        {
+            var sumx = points.Sum(p => p.X);
+            var sumy = points.Sum(p => p.Y);
+            var b = (sumy - m * sumx) / points.Count;
+            return b;
+        }
+
+        /// <summary>
+        /// Checks if line lays on plane
+        /// </summary>
+        /// <param name="plane">Plane to check</param>
+        /// <param name="tolerance">Optional tolerance value</param>
+        /// <returns>The result of check if line lays on plane</returns>
+        public bool IsOnPlane(Plane plane, double tolerance = 1E-05)
+        {
+            return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
+                && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
         }
     }
 }

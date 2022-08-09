@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GeometricElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -159,7 +159,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_GeometricElement_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GeometricElement : Element, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public class GeometricElement : Element, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -170,7 +171,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GeometricElement(Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public GeometricElement(Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -225,7 +227,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsElementDefinition { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;IsElementDefinition&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public bool IsElementDefinition { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -249,7 +252,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material Material { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Material&quot;, Required = Required.AllowNull)]
+public Material Material { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -275,7 +279,8 @@ as the object is tessellated.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Func&lt;(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)&gt; ModifyVertexAttributes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Func&lt;(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)&gt; ModifyVertexAttributes { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -299,7 +304,8 @@ as the object is tessellated.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Representation Representation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Representation&quot;, Required = Required.AllowNull)]
+public Representation Representation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -323,7 +329,8 @@ as the object is tessellated.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
+public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -454,6 +461,59 @@ Instances will point to the same instance of an element.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_GeometricElement_TryToGraphicsBuffers_" data-uid="Elements.GeometricElement.TryToGraphicsBuffers*"></a>
+  <h4 id="Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___" data-uid="Elements.GeometricElement.TryToGraphicsBuffers(System.Collections.Generic.List{Elements.Geometry.GraphicsBuffers}@,System.String@,System.Nullable{glTFLoader.Schema.MeshPrimitive.ModeEnum}@)">TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt;, out String, out Nullable&lt;MeshPrimitive.ModeEnum&gt;)</h4>
+  <div class="markdown level1 summary"><p>Get graphics buffers and other metadata required to modify a GLB.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt; graphicsBuffers, out string id, out MeshPrimitive.ModeEnum? mode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a>&gt;</td>
+        <td><span class="parametername">graphicsBuffers</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">glTFLoader.Schema.MeshPrimitive.ModeEnum</span>&gt;</td>
+        <td><span class="parametername">mode</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if there is graphicsbuffers data applicable to add, false otherwise.
+Out variables should be ignored if the return value is false.</p>
+</td>
       </tr>
     </tbody>
   </table>

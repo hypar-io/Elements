@@ -15,6 +15,11 @@ namespace Elements.Geometry
         /// </summary>
         public const double EPSILON = 1e-5;
 
+        /// <summary>
+        /// A tolerance for angle comparison operation of cos of 0.001 degrees.
+        /// </summary>
+        public const double COS_ANGLE_EPSILON = 0.99999999984769128;
+
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
@@ -700,8 +705,7 @@ namespace Elements.Geometry
         {
             //Ax+By+Cz+d=0
             //p' = p - (n ⋅ (p - o)) * n
-            var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
-            var p1 = this - (p.Normal.Dot(this - p.Origin)) * p.Normal;
+            var p1 = this - p.Normal.Dot(this - p.Origin) * p.Normal;
             return p1;
         }
 
@@ -798,14 +802,18 @@ namespace Elements.Geometry
         /// Get the closest point on the line from this point.
         /// </summary>
         /// <param name="line">The line on which to find the closest point.</param>
+        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
         /// <returns>The closest point on the line from this point.</returns>
-        public Vector3 ClosestPointOn(Line line)
+        public Vector3 ClosestPointOn(Line line, bool infinite = false)
         {
             var dir = line.Direction();
             var v = this - line.Start;
             var d = v.Dot(dir);
-            d = Math.Min(line.Length(), d);
-            d = Math.Max(d, 0);
+            if (!infinite)
+            {
+                d = Math.Min(line.Length(), d);
+                d = Math.Max(d, 0);
+            }
             return line.Start + dir * d;
         }
 
@@ -815,7 +823,7 @@ namespace Elements.Geometry
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
-        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
+        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are collinear.</returns>
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
@@ -828,10 +836,65 @@ namespace Elements.Geometry
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
+        [Obsolete("Use AreCollinearByDistance or AreCollinearByAngle instead")]
         public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
         {
+            return AreCollinearByDistance(a, b, c);
+        }
+
+        /// <summary>
+        /// Check whether three points are on the same line within certain distance.
+        /// This function is slower than AreCollinearByAngle and less suitable for high complexity code.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <param name="tolerance">Distance tolerance.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON) 
+        {
             var vectorList = new List<Vector3> { a, b, c };
-            return vectorList.AreCollinear();
+            return vectorList.AreCollinearByDistance(tolerance);
+        }
+
+        /// <summary>
+        /// Check whether three points are on the same line within certain angle.
+        /// Order is important since unsigned abc angle is checked.
+        /// This function is much faster than AreCollinearByDistance but angle deviation scales with the distance of points being compared.
+        /// If points are far away from each other they might appear collinear even if there are large distance offsets between them.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <param name="cosAngleTolerance">Angle tolerance as cos.</param>
+        /// <returns></returns>
+        public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = Vector3.COS_ANGLE_EPSILON)
+        {
+            var baX = b.X - a.X;
+            var baY = b.Y - a.Y;
+            var baZ = b.Z - a.Z;
+            var baLength = Math.Sqrt(Math.Pow(baX, 2) + Math.Pow(baY, 2) + Math.Pow(baZ, 2));
+            if (baLength < Vector3.EPSILON)
+            {
+                return true;
+            }
+            baX = baX / baLength;
+            baY = baY / baLength;
+            baZ = baZ / baLength;
+
+            var cbX = c.X - b.X;
+            var cbY = c.Y - b.Y;
+            var cbZ = c.Z - b.Z;
+            var cbLength = Math.Sqrt(Math.Pow(cbX, 2) + Math.Pow(cbY, 2) + Math.Pow(cbZ, 2));
+            if (cbLength < Vector3.EPSILON)
+            {
+                return true;
+            }
+            cbX = cbX / cbLength;
+            cbY = cbY / cbLength;
+            cbZ = cbZ / cbLength;
+
+            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > cosAngleTolerance;
         }
 
         /// <summary>

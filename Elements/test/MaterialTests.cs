@@ -100,7 +100,7 @@ namespace Elements.Tests
 
             var m = new Material("test", Colors.Orange, emissiveTexture: "./Textures/Checkerboard.png", emissiveFactor: 0.5);
             var sphere = Mesh.Sphere(2, 30);
-            Model.AddElement(new MeshElement(sphere, m));
+            Model.AddElement(new MeshElement(sphere, material: m));
         }
 
         [Fact]

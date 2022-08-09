@@ -1839,6 +1839,48 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the rectangle along axis containing a set of points,
+        /// calculated without regard for Z coordinate,
+        /// located at the height of points minimum Z coordinate.
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle.</param>
+        /// <param name="axis">The axis along which the rectangle is built. Must be a non-zero vector.</param>
+        /// <param name="minSideSize">The minimum size of a side of a polygon when all points lie on the same line and polygon cannot be constructed. Must be greater than 0.</param>
+        /// <returns></returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)
+        {
+            if (minSideSize < Vector3.EPSILON)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minSideSize), "Must be greater than 0.");
+            }
+
+            if (axis.IsZero())
+            {
+                throw new ArgumentException("Axis must be a non-zero vector.", nameof(axis));
+            }
+            var transform = new Transform(Vector3.Origin, axis, Vector3.ZAxis);
+            var box = new Box(points, transform);
+            var xOffset = 0.0;
+            var length = box.Bounds.Max.X - box.Bounds.Min.X;
+            var yOffset = 0.0;
+            var width = box.Bounds.Max.Y - box.Bounds.Min.Y;
+            if (length.ApproximatelyEquals(0))
+            {
+                length = minSideSize / 2;
+                xOffset = minSideSize / 2;
+            }
+            if (width.ApproximatelyEquals(0))
+            {
+                width = minSideSize / 2;
+                yOffset = minSideSize / 2;
+            }
+            var boundary = Rectangle(new Vector3(box.Bounds.Min.X - xOffset, box.Bounds.Min.Y - yOffset),
+                                     new Vector3(box.Bounds.Min.X + length, box.Bounds.Min.Y + width))
+                          .TransformedPolygon(transform.Moved(new Vector3(0, 0, box.Bounds.Min.Z)));
+            return boundary;
+        }
+
+        /// <summary>
         /// Find a point that is guaranteed to be internal to the polygon.
         /// </summary>
         public Vector3 PointInternal()
@@ -1972,16 +2014,16 @@ namespace Elements.Geometry
             int count = this.Vertices.Count;
             var unique = new List<Vector3>(count);
 
-            if (!Vector3.AreCollinear(Vertices[count - 1], Vertices[0], Vertices[1]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 1], Vertices[0], Vertices[1]))
                 unique.Add(Vertices[0]);
 
             for (int i = 1; i < count - 1; i++)
             {
-                if (!Vector3.AreCollinear(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                if (!Vector3.AreCollinearByDistance(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
                     unique.Add(Vertices[i]);
             }
 
-            if (!Vector3.AreCollinear(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
                 unique.Add(Vertices[count - 1]);
 
             return new Polygon(unique);

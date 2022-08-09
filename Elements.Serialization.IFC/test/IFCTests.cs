@@ -134,7 +134,7 @@ namespace Elements.IFC.Tests
                     {
                         Vector3 b = colA[i + 1];
                         var line1 = new Line(a, b);
-                        var beam1 = new Beam(line1, prof, m1, name: $"Hypar's beam {j}_{i}");
+                        var beam1 = new Beam(line1, prof, material: m1, name: $"Hypar's beam {j}_{i}");
                         model.AddElement(beam1);
                     }
 
@@ -142,7 +142,7 @@ namespace Elements.IFC.Tests
                     {
                         var c = colB[i];
                         var line2 = new Line(a, c);
-                        var beam2 = new Beam(line2, prof, m2);
+                        var beam2 = new Beam(line2, prof, material: m2);
                         model.AddElement(beam2);
                     }
                 }
