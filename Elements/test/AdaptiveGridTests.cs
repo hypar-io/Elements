@@ -221,6 +221,128 @@ namespace Elements.Tests
             Assert.Equal(edgesCount - 9, adaptiveGrid.GetEdges().Count);
             Assert.Equal(verticiesCount - 2, adaptiveGrid.GetVertices().Count);
         }
+
+        [Fact]
+        public void AdaptiveGridSubstructRotatedBox()
+        {
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+            var transfrom = new Transform().Rotated(Vector3.ZAxis, 45);
+
+            var points = new List<Vector3>();
+            for (int i = 1; i < 10; i++)
+            {
+                for (int j = 1; j < 10; j++)
+                {
+                    points.Add(new Vector3(i, j));
+                }
+            }
+
+            var adaptiveGrid = new AdaptiveGrid(transfrom);
+            adaptiveGrid.AddFromPolygon(polygon, points);
+
+            //Obstacle aligned with adaptive grid transformation.
+            //Forms big (3;1) -> (5;3) -> (3;5) -> (1;3) rectangle.
+            var bbox = new BBox3(new Vector3(2, 2), new Vector3(4, 4));
+            var withoutTransfrom = Obstacle.FromBBox(bbox, perimeter: true);
+            adaptiveGrid.SubtractObstacle(withoutTransfrom);
+
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 2), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 4), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 3), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 3), out _, adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 2), out var id, adaptiveGrid.Tolerance));
+            var v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(1.5, 2.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(2.5, 1.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 2), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(3.5, 1.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(4.5, 2.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 4), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(3.5, 4.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(4.5, 3.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 4), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(1.5, 3.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(2.5, 4.5), adaptiveGrid.Tolerance));
+
+            //Obstacle aligned with global transformation.
+            //Forms small (6;6) -> (8;6) -> (8;8) -> (6;8) rectangle.
+            bbox = new BBox3(new Vector3(6, 6), new Vector3(8, 8));
+            var withTransform = Obstacle.FromBBox(bbox, perimeter: true);
+            withTransform.Transform = new Transform();
+            adaptiveGrid.SubtractObstacle(withTransform);
+
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(7, 7), out _, adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 6), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(6, 7), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(5.5, 6.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7, 6), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(6.5, 5.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 6), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7, 6), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7.5, 5.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(8, 7), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(8.5, 6.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 8), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(8, 7), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(8.5, 7.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7, 8), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7.5, 8.5), adaptiveGrid.Tolerance));
+
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 8), out id, adaptiveGrid.Tolerance));
+            v = adaptiveGrid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7, 8), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(6.5, 8.5), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(6, 7), adaptiveGrid.Tolerance));
+            Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
+                e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(5.5, 7.5), adaptiveGrid.Tolerance));
+
+            WriteToModelWithRandomMaterials(adaptiveGrid);
+        }
         [Fact]
         public void AdaptiveGridLongSectionDoNowThrow()
         {
@@ -723,6 +845,16 @@ namespace Elements.Tests
             grid.AddVertex(new Vector3(5, 5), new ConnectVertexStrategy(strip[0], strip[2]), cut: false); //4
             grid.AddVertex(new Vector3(5, 2), new ConnectVertexStrategy(strip[1]), cut: false); //5
             return grid;
+        }
+        
+        private void WriteToModelWithRandomMaterials(AdaptiveGrid grid, [CallerMemberName] string memberName = "")
+        {
+            var random = new Random();
+            Name = memberName;
+            foreach (var edge in grid.GetEdges())
+            {
+                Model.AddElement(new ModelCurve(grid.GetLine(edge), material: random.NextMaterial()));
+            }
         }
     }
 }

@@ -64,8 +64,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New obstacle object.</returns>
         public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false)
         {
-            List<Vector3> points = new List<Vector3>() { box.Min, box.Max };
-            return new Obstacle(points, offset, perimeter, null);
+            return new Obstacle(box.Corners(), offset, perimeter, null);
         }
 
         /// <summary>
@@ -132,23 +131,23 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points { get; private set; }
+        public List<Vector3> Points { get; set; }
 
         /// <summary>
         /// Offset of bounding box created from the list of points.
         /// </summary>
-        public double Offset { get; private set; }
+        public double Offset { get; set; }
 
         /// <summary>
         /// Should edges be created around obstacle.
         /// If false - any intersected edges are just discarded.
         /// If true - intersected edges are cut to obstacle and perimeter edges are inserted.
         /// </summary>
-        public bool Perimeter { get; private set; }
+        public bool Perimeter { get; set; }
 
         /// <summary>
         /// Transformation of bounding box created from the list of points.
         /// </summary>
-        public Transform Transform { get; private set; }
+        public Transform Transform { get; set; }
     }
 }
