@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Xunit;
 using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
@@ -16,9 +17,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Examples")]
         public void AdaptiveGridPolygonKeyPointsExample()
         {
-            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGrid";
             // <example>
-            var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid();
             var points = new List<Vector3>()
@@ -32,19 +31,15 @@ namespace Elements.Tests
             adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(
                 new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
 
-            foreach (var edge in adaptiveGrid.GetEdges())
-            {
-                Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
-            }
             // </example>
+
+            WriteToModelWithRandomMaterials(adaptiveGrid, "Elements_Spatial_AdaptiveGrid_AdaptiveGrid");
         }
 
         [Fact]
         public void AdaptiveGridBboxKeyPointsExample()
         {
-            this.Name = "Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints";
             // <example2>
-            var random = new Random();
 
             var adaptiveGrid = new AdaptiveGrid();
             var points = new List<Vector3>()
@@ -75,11 +70,9 @@ namespace Elements.Tests
             };
             adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
 
-            foreach (var edge in adaptiveGrid.GetEdges())
-            {
-                Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
-            }
             // </example2>
+
+            WriteToModelWithRandomMaterials(adaptiveGrid, "Elements_Spatial_AdaptiveGrid_AdaptiveGridBboxKeyPoints");
         }
 
         [Fact]
