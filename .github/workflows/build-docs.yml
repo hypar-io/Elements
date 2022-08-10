@@ -13,6 +13,10 @@ jobs:
         with:
           fetch-depth: 10
           token: ${{ secrets.HYPAR_GITHUB_BOT_PAT }}
+      - name: Setup Git
+        run: |
+          git config user.name "hypar-eric-bot"
+          git config user.email "github.bot@hypar.io"
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
