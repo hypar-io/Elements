@@ -4,6 +4,7 @@ using IFC;
 using STEP;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -263,8 +264,8 @@ namespace Elements.Serialization.IFC
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
-                    Console.WriteLine(ex.StackTrace);
+                    Debug.WriteLine($"There was an error writing an element of type {e.GetType()} to IFC: " + ex.Message);
+                    Debug.WriteLine(ex.StackTrace);
                     continue;
                 }
             }
