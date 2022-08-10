@@ -343,6 +343,44 @@ namespace Elements.Tests
 
             WriteToModelWithRandomMaterials(adaptiveGrid);
         }
+
+        [Fact]
+        public void BrokenSubtractionForMisalignedPolygon()
+        {
+            var boundaryVerticies = new List<Vector3>
+            {
+                new Vector3(0.241, -40, 7),
+                new Vector3(0.241, -60, 7),
+                new Vector3(80, -60.000000000000014, 7),
+                new Vector3(80, -40.000000000000014, 7)
+            };
+
+            var boundary = new Polygon(boundaryVerticies);
+
+            var grid = new AdaptiveGrid()
+            {
+                Boundaries = boundary
+            };
+
+            grid.AddFromPolygon(boundary, new[] { Vector3.Origin });
+
+            var profile = Polygon.Rectangle(0.2, 0.2);
+            var column = new Column(
+                new Vector3(0.5, -56.22727272727274),
+                10,
+                new Line(new Vector3(0.5, -56.22727272727274, 10), new Vector3(0.5, -56.22727272727274, 0)),
+                profile);
+
+            var obstacle = Obstacle.FromColumn(column, 0.2, true);
+            var result = grid.SubtractObstacle(obstacle);
+
+            Assert.True(result);
+            Assert.Equal(8, grid.GetEdges().Count);
+            Assert.All(grid.GetVertices(), x => Assert.Equal(2, x.Edges.Count));
+
+            WriteToModelWithRandomMaterials(grid);
+        }
+
         [Fact]
         public void AdaptiveGridLongSectionDoNowThrow()
         {
