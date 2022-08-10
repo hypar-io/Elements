@@ -3,7 +3,15 @@
 ## 1.2.0
 
 ### Changed
+
 - MeshElement constructor signature modified to be compatible with code generation.
+- `AdaptiveGrid.Boundary` can be left null.
+- `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
+
+### Fixed
+
+- `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
+- `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 
 ## 1.1.0
 
