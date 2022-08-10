@@ -76,14 +76,20 @@ namespace Elements.Serialization.glTF
         /// <param name="errors">A collection of serialization errors</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, out List<BaseError> errors, bool useBinarySerialization = true, bool drawEdges = false)
+        /// <param name="mergeVertices">Should solid face vertices be merged during tessellation?</param>
+        public static void ToGlTF(this Model model,
+                                  string path,
+                                  out List<BaseError> errors,
+                                  bool useBinarySerialization = true,
+                                  bool drawEdges = false,
+                                  bool mergeVertices = false)
         {
             errors = new List<BaseError>();
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
                 {
-                    if (SaveGlb(model, path, out errors, drawEdges))
+                    if (SaveGlb(model, path, out errors, drawEdges, mergeVertices))
                     {
                         return;
                     }
@@ -91,7 +97,7 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
-                    if (SaveGltf(model, path, out errors, drawEdges))
+                    if (SaveGltf(model, path, out errors, drawEdges, mergeVertices))
                     {
                         return;
                     }
@@ -111,9 +117,14 @@ namespace Elements.Serialization.glTF
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false)
+        /// <param name="mergeVertices">Should solid face vertices be merged during tessellation?</param>
+        public static void ToGlTF(this Model model,
+                                  string path,
+                                  bool useBinarySerialization = true,
+                                  bool drawEdges = false,
+                                  bool mergeVertices = false)
         {
-            ToGlTF(model, path, out _, useBinarySerialization, drawEdges);
+            ToGlTF(model, path, out _, useBinarySerialization, drawEdges, mergeVertices);
         }
 
         /// <summary>
@@ -149,7 +160,6 @@ namespace Elements.Serialization.glTF
         /// <returns>A Base64 string representing the model.</returns>
         public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
