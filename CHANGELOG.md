@@ -3,12 +3,15 @@
 ## 1.2.0
 
 ### Added
-
-- Message class along with helper creation methods.
+- `Mesh.Intersects(Ray)` (same as `Ray.Intersects(Mesh)`)
+- `Ray.NearbyPoints()`
+- `PointOctree<T>`
+- `Message` class along with helper creation methods.
 
 ### Changed
 
 - MeshElement constructor signature modified to be compatible with code generation.
+- Improved performance of mesh/ray intersection
 - `BBox3.Extend` method is public now
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
