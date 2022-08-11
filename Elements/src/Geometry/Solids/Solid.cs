@@ -856,51 +856,50 @@ namespace Elements.Geometry.Solids
 
             foreach (var f in Faces.Values)
             {
+                // Calculate the virtual edges that will be used
+                // to create the texture coordinates.
+                var normal = f.Plane().Normal;
+
                 var tess = new Tess
                 {
                     NoEmptyPolygons = true
                 };
 
-                tess.AddContour(f.Outer.ToContourVertexArray());
+                // Create the csg vertices first then use them to create
+                // the tessellation vertices. This way we can pass the
+                // texture coordinates AND the vertex tag through tessellation
+                // to be used for lookup on the other side.
+
+                var outerVerts = f.Outer.ToCsgVertexArray(normal);
+                tess.AddContour(outerVerts.ToContourVertexArray());
+
+                var csgVertices = new List<Csg.Vertex>(outerVerts);
 
                 if (f.Inner != null)
                 {
                     foreach (var loop in f.Inner)
                     {
-                        tess.AddContour(loop.ToContourVertexArray());
+                        var innerVerts = loop.ToCsgVertexArray(normal);
+                        csgVertices.AddRange(innerVerts);
+                        tess.AddContour(innerVerts.ToContourVertexArray());
                     }
                 }
 
                 tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
 
-                Vector3 e1 = new Vector3();
-                Vector3 e2 = new Vector3();
-
                 for (var i = 0; i < tess.Elements.Count(); i += 3)
                 {
-                    var a = tess.Vertices[tess.Elements[i]].ToCsgVector3();
-                    var b = tess.Vertices[tess.Elements[i + 1]].ToCsgVector3();
-                    var c = tess.Vertices[tess.Elements[i + 2]].ToCsgVector3();
+                    var v1 = tess.Vertices[tess.Elements[i]];
+                    var v2 = tess.Vertices[tess.Elements[i + 1]];
+                    var v3 = tess.Vertices[tess.Elements[i + 2]];
 
-                    if (i == 0)
-                    {
-                        var n = f.Plane().Normal;
-                        e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                        e2 = n.Cross(e1).Unitized();
-                    }
+                    var vData1 = ((Csg.Vector2D, int))v1.Data;
+                    var vData2 = ((Csg.Vector2D, int))v2.Data;
+                    var vData3 = ((Csg.Vector2D, int))v3.Data;
 
-                    var avv = new Vector3(a.X, a.Y, a.Z);
-                    var bvv = new Vector3(b.X, b.Y, b.Z);
-                    var cvv = new Vector3(c.X, c.Y, c.Z);
-
-                    if (Vector3.AreCollinearByAngle(avv, bvv, cvv))
-                    {
-                        continue;
-                    }
-
-                    var av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
-                    var bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
-                    var cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
+                    var av = csgVertices.First(v => v.Tag == vData1.Item2);
+                    var bv = csgVertices.First(v => v.Tag == vData2.Item2);
+                    var cv = csgVertices.First(v => v.Tag == vData3.Item2);
 
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);

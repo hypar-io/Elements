@@ -247,6 +247,40 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
+        /// Find a vertex using the Tag property, or create a new vertex.
+        /// </summary>
+        /// <param name="position">The vertex's position.</param>
+        /// <param name="tag">The vertex's tag.</param>
+        /// <param name="uv">The vertex's texture coordinate.</param>
+        /// <param name="normal">The vertex's normal.</param>
+        /// <param name="color">The vertex's color.</param>
+        /// <returns>An existing vertex if a match is found, otherwise
+        /// a new vertex.</returns>
+        internal Vertex FindOrCreateVertex(Vector3 position,
+                                int tag,
+                                UV uv = default,
+                                Vector3 normal = default,
+                                Color color = default)
+        {
+            var existing = this.Vertices.FirstOrDefault(vtx => vtx.Tag == tag);
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            var v = new Vertex(position, normal, color)
+            {
+                UV = uv,
+                Tag = tag
+            };
+            Vertices.Add(v);
+            v.Index = Vertices.Count - 1;
+            var p = new Point((float)position.X, (float)position.Y, (float)position.Z);
+            _octree.Add(v, p);
+            return v;
+        }
+
+        /// <summary>
         /// Add a vertex to the mesh.
         /// </summary>
         /// <param name="v">The vertex to add.</param>
