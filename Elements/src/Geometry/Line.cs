@@ -1184,7 +1184,7 @@ namespace Elements.Geometry
             }
             else if (distinctPoints.Count == 2)
             {
-                return new Line(points[0], points[1]);
+                return new Line(distinctPoints[0], distinctPoints[1]);
             }
 
             // find the coefficients of the straight line equation (y = m * x + b) using the least squares method

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Matrix
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -109,9 +109,6 @@ The fourth column represents the translation of the coordinate system.</p>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
       <span class="xref">System.Object.GetType()</span>
     </div>
     <div>
@@ -190,7 +187,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Matrix(double[] components)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Matrix(double[] components)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -219,7 +217,11 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double[] Components { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Components&quot;, Required = Required.Always)]
+[Required]
+[MinLength(12)]
+[MaxLength(12)]
+public double[] Components { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -243,7 +245,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m11 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m11 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -267,7 +270,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m12 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m12 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -291,7 +295,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m13 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m13 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,7 +320,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m21 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m21 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -339,7 +345,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m22 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m22 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -363,7 +370,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m23 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m23 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -387,7 +395,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m31 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m31 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -411,7 +420,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m32 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m32 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -435,7 +445,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double m33 { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double m33 { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -459,7 +470,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Translation { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Translation { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -483,7 +495,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double tx { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double tx { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -507,7 +520,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double ty { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double ty { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -531,7 +545,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double tz { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public double tz { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -555,7 +570,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 XAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 XAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -579,7 +595,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 YAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 YAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -603,7 +620,8 @@ The fourth column represents the translation of the coordinate system.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 ZAxis { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 ZAxis { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -689,6 +707,32 @@ The fourth column represents the translation of the coordinate system.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Matrix_GetHashCode_" data-uid="Elements.Geometry.Matrix.GetHashCode*"></a>
+  <h4 id="Elements_Geometry_Matrix_GetHashCode" data-uid="Elements.Geometry.Matrix.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Get the hash code for the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
   <a id="Elements_Geometry_Matrix_Inverse_" data-uid="Elements.Geometry.Matrix.Inverse*"></a>
   <h4 id="Elements_Geometry_Matrix_Inverse" data-uid="Elements.Geometry.Matrix.Inverse">Inverse()</h4>
   <div class="markdown level1 summary"><p>Compute the inverse of the matrix.</p>
