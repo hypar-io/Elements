@@ -60,7 +60,7 @@ namespace Elements
             }
         }
 
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new AdditionalPropertiesDictionary();
 
         /// <summary>
         /// A collection of additional properties.
@@ -68,8 +68,14 @@ namespace Elements
         [Newtonsoft.Json.JsonExtensionData]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
+            get
+            {
+                return _additionalProperties ?? new AdditionalPropertiesDictionary();
+            }
+            set
+            {
+                _additionalProperties = value ?? _additionalProperties;
+            }
         }
 
         /// <summary>

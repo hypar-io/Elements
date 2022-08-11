@@ -551,5 +551,28 @@ namespace Elements.Tests
                 Model.AddElement(ge);
             }
         }
+
+        [Fact]
+        public void ProfileIsEqualAfterSerDeser()
+        {
+            JsonInheritanceConverter.ElementwiseSerialization = true;
+            var profile = new Profile(Polygon.Rectangle(10, 10), Polygon.Rectangle(5, 5));
+            var json = JsonConvert.SerializeObject(profile);
+            var profile2 = JsonConvert.DeserializeObject<Profile>(json);
+            Assert.True(profile.Equals(profile2));
+            var profile2Json = JsonConvert.SerializeObject(profile2);
+            var profile3 = JsonConvert.DeserializeObject<Profile>(profile2Json);
+            Assert.True(profile2.Equals(profile3));
+            JsonInheritanceConverter.ElementwiseSerialization = false;
+        }
+
+        [Fact]
+        public void DeserThing()
+        {
+            var profileJsonPath = "../../../models/Geometry/profile-alone.json";
+            var profileJson = File.ReadAllText(profileJsonPath);
+            var profile = JsonConvert.DeserializeObject<Profile>(profileJson);
+            Assert.False(profile.AdditionalProperties.ContainsKey("AdditionalProperties"));
+        }
     }
 }
