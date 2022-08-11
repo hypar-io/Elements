@@ -5,8 +5,6 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
 
@@ -92,7 +90,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void UnionWithProblematicPolygons()
+        public void UnionWithPolygonsWhichCreateZeroAreaTessElement()
         {
             var profile1 = JsonConvert.DeserializeObject<Polygon>(
                 @"{
@@ -164,14 +162,16 @@ namespace Elements.Tests
                     }
                     ]}"
                     );
-            var element = new GeometricElement();
-            element.Representation = new Representation(new List<SolidOperation>{
-                new Extrude(profile1, 1, Vector3.ZAxis, false),
-                new Extrude(profile2, 1, Vector3.ZAxis, false)
-            });
+            var element = new GeometricElement
+            {
+                Representation = new Representation(new List<SolidOperation>{
+                    new Extrude(profile1, 1, Vector3.ZAxis, false),
+                    new Extrude(profile2, 1, Vector3.ZAxis, false)
+                })
+            };
 
             element.UpdateRepresentations();
-            var solid = element.GetFinalCsgFromSolids();
+            element.GetFinalCsgFromSolids();
         }
 
         [Fact]

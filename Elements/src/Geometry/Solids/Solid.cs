@@ -876,16 +876,11 @@ namespace Elements.Geometry.Solids
                 Vector3 e1 = new Vector3();
                 Vector3 e2 = new Vector3();
 
-                var vertices = new List<Csg.Vertex>(tess.Elements.Count() * 3);
-                for (var i = 0; i < tess.ElementCount; i++)
+                for (var i = 0; i < tess.Elements.Count(); i += 3)
                 {
-                    var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
-                    var b = tess.Vertices[tess.Elements[i * 3 + 1]].ToCsgVector3();
-                    var c = tess.Vertices[tess.Elements[i * 3 + 2]].ToCsgVector3();
-
-                    Csg.Vertex av = null;
-                    Csg.Vertex bv = null;
-                    Csg.Vertex cv = null;
+                    var a = tess.Vertices[tess.Elements[i]].ToCsgVector3();
+                    var b = tess.Vertices[tess.Elements[i + 1]].ToCsgVector3();
+                    var c = tess.Vertices[tess.Elements[i + 2]].ToCsgVector3();
 
                     if (i == 0)
                     {
@@ -893,24 +888,19 @@ namespace Elements.Geometry.Solids
                         e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
                         e2 = n.Cross(e1).Unitized();
                     }
-                    if (av == null)
+
+                    var avv = new Vector3(a.X, a.Y, a.Z);
+                    var bvv = new Vector3(b.X, b.Y, b.Z);
+                    var cvv = new Vector3(c.X, c.Y, c.Z);
+
+                    if (Vector3.AreCollinearByAngle(avv, bvv, cvv))
                     {
-                        var avv = new Vector3(a.X, a.Y, a.Z);
-                        av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
-                        vertices.Add(av);
+                        continue;
                     }
-                    if (bv == null)
-                    {
-                        var bvv = new Vector3(b.X, b.Y, b.Z);
-                        bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
-                        vertices.Add(bv);
-                    }
-                    if (cv == null)
-                    {
-                        var cvv = new Vector3(c.X, c.Y, c.Z);
-                        cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
-                        vertices.Add(cv);
-                    }
+
+                    var av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
+                    var bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
+                    var cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
 
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);
