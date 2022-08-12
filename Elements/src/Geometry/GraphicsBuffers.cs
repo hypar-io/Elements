@@ -4,101 +4,81 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A generic container for graphics data. This is broken out primarily to facilitate
-    /// simpler testing of graphics buffers.
-    /// </summary>
-    internal interface IGraphicsBuffers
-    {
-        /// <summary>
-        /// Add a vertex to the graphics buffers.
-        /// </summary>
-        /// <param name="position">The position of the vertex.</param>
-        /// <param name="normal">The normal of the vertex.</param>
-        /// <param name="uv">The UV of the vertex.</param>
-        /// <param name="color">The vertex color.</param>
-        void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null);
-
-        /// <summary>
-        /// Add a vertex to the graphics buffers.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        /// <param name="nx"></param>
-        /// <param name="ny"></param>
-        /// <param name="nz"></param>
-        /// <param name="u"></param>
-        /// <param name="v"></param>
-        /// <param name="color"></param>
-        void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null);
-
-        /// <summary>
-        /// Add an index to the graphics buffers.
-        /// </summary>
-        /// <param name="index">The index to add.</param>
-        void AddIndex(ushort index);
-    }
-
-    /// <summary>
     /// A container for graphics data.
     /// The buffers used in this class align with webgl requirements.
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
         /// <summary>
+        /// The number of vertices represented by the buffer.
+        /// </summary>
+        public int VertexCount
+        {
+            get { return this.Vertices.Count / sizeof(float) / 3; }
+        }
+
+        /// <summary>
+        /// The number of facets represeted by the buffer.
+        /// </summary>
+        public int FacetCount
+        {
+            get { return this.Indices.Count / sizeof(ushort) / 3; }
+        }
+
+        /// <summary>
         /// A collection of vertex positions stored as sequential bytes.
         /// </summary>
-        public List<byte> Vertices { get; }
+        public List<byte> Vertices { get; private set; }
 
         /// <summary>
         /// A collection of indices stored as sequential bytes.
         /// </summary>
-        public List<byte> Indices { get; }
+        public List<byte> Indices { get; private set; }
 
         /// <summary>
         /// A collection of sequential normal values stored as sequential bytes.
         /// </summary>
-        public List<byte> Normals { get; }
+        public List<byte> Normals { get; private set; }
 
         /// <summary>
         /// A collection of sequential color values stored as sequential bytes.
         /// </summary>
-        public List<byte> Colors { get; }
+        public List<byte> Colors { get; private set; }
 
         /// <summary>
         /// A collection of UV values stored as sequential bytes.
         /// </summary>
-        public List<byte> UVs { get; }
+        public List<byte> UVs { get; private set; }
 
         /// <summary>
         /// The maximum of the axis-aligned bounding box of the data as [x,y,z].
         /// </summary>
-        public double[] VMax { get; }
+        public double[] VMax { get; private set; }
 
         /// <summary>
         /// The minimum of the axis-aligned bounding box of the data as [x,y,z].
         /// </summary>
-        public double[] VMin { get; }
+        public double[] VMin { get; private set; }
 
         /// <summary>
         /// The minimum normal of the data as [x,y,z].
         /// </summary>
-        public double[] NMin { get; }
+        public double[] NMin { get; private set; }
 
         /// <summary>
         /// The maximum normal of the data as [x,y,z].
         /// </summary>
-        public double[] NMax { get; }
+        public double[] NMax { get; private set; }
 
         /// <summary>
         /// The minimum color value as [r,g,b].
         /// </summary>
-        public double[] CMin { get; }
+        public double[] CMin { get; private set; }
 
         /// <summary>
         /// The maximum color value as [r,g,b].
         /// </summary>
-        public double[] CMax { get; }
+        public double[] CMax { get; private set; }
 
         /// <summary>
         /// The maximum index value.
@@ -113,36 +93,19 @@ namespace Elements.Geometry
         /// <summary>
         /// The maximum UV value as [u,v].
         /// </summary>
-        public double[] UVMin { get; }
+        public double[] UVMin { get; private set; }
 
         /// <summary>
         /// The maximum UV value as [u,v].
         /// </summary>
-        public double[] UVMax { get; }
+        public double[] UVMax { get; private set; }
 
         /// <summary>
         /// Construct an empty graphics buffers object.
         /// </summary>
         public GraphicsBuffers()
         {
-            // Initialize everything
-            this.Vertices = new List<byte>();
-            this.Normals = new List<byte>();
-            this.Indices = new List<byte>();
-            this.UVs = new List<byte>();
-            this.Colors = new List<byte>();
-
-            this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
-            this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-
-            this.VMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-            this.VMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
-
-            this.NMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
-            this.NMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
-
-            this.UVMin = new double[2] { double.MaxValue, double.MaxValue };
-            this.UVMax = new double[2] { double.MinValue, double.MinValue };
+            Initialize();
         }
 
         /// <summary>
@@ -201,7 +164,7 @@ namespace Elements.Geometry
             this.UVMin[0] = Math.Min(this.UVMin[0], u);
             this.UVMin[1] = Math.Min(this.UVMin[1], v);
 
-            if (color.HasValue && color.Value != default(Color))
+            if (color.HasValue && color.Value != default)
             {
                 this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
                 this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);
@@ -227,5 +190,31 @@ namespace Elements.Geometry
             this.IMin = Math.Min(this.IMin, index);
         }
 
+        /// <summary>
+        /// Initialize the graphics buffer to a known size.
+        /// </summary>
+        /// <param name="vertexCount">The number of vertices.</param>
+        /// <param name="indexCount">The number of indices.</param>
+        public void Initialize(int vertexCount = 0, int indexCount = 0)
+        {
+            // Initialize everything
+            this.Vertices = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Normals = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Indices = new List<byte>(sizeof(ushort) * indexCount);
+            this.UVs = new List<byte>(sizeof(float) * 2 * vertexCount);
+            this.Colors = new List<byte>(sizeof(float) * 3 * vertexCount);
+
+            this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            this.VMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+            this.VMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+
+            this.NMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
+            this.NMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
+
+            this.UVMin = new double[2] { double.MaxValue, double.MaxValue };
+            this.UVMax = new double[2] { double.MinValue, double.MinValue };
+        }
     }
 }

@@ -35,6 +35,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
+        public Polygon(IList<Vector3> @vertices, bool disableValidation = false) : base(vertices, disableValidation)
+        {
+            _plane = Plane();
+        }
+
+        /// <summary>
         /// Validate that this Polygon's vertices are coplanar, clean up any
         /// duplicate vertices, and fix any overlapping edges.
         /// </summary>
@@ -78,6 +88,13 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">The vertices of the polygon.</param>
         public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices)) { }
+
+        /// <summary>
+        /// Construct a polygon from points.
+        /// </summary>
+        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        public Polygon(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation) { }
 
         /// <summary>
         /// Construct a transformed copy of this Polygon.
@@ -2017,7 +2034,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        /// <param name="additionalRotation"></param>
+        public override Transform[] Frames(double startSetback = 0.0,
+                                           double endSetback = 0.0,
+                                           double additionalRotation = 0.0)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.
@@ -2030,6 +2050,10 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 result[i] = CreateMiterTransform(i, a, up);
+                if (additionalRotation != 0.0)
+                {
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
+                }
             }
             return result;
         }
