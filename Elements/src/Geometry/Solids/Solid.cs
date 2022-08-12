@@ -891,6 +891,8 @@ namespace Elements.Geometry.Solids
                     }
                 }
 
+                // Always tessellate to 3 sided polygons because CSGs
+                // require convex polys.
                 tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
 
                 for (var i = 0; i < tess.Elements.Count(); i += 3)
