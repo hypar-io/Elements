@@ -257,7 +257,6 @@ Triangles:{Triangles.Count}";
         {
             var v = new Vertex(position, normal, color);
 
-
             if (merge)
             {
                 var search = GetOctree().GetNearby(position, Vector3.EPSILON);
@@ -309,8 +308,7 @@ Triangles:{Triangles.Count}";
             };
             Vertices.Add(v);
             v.Index = Vertices.Count - 1;
-            var p = new Point((float)position.X, (float)position.Y, (float)position.Z);
-            _octree.Add(v, p);
+            this._octree?.Add(v, position);
             return v;
         }
 
