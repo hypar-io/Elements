@@ -44,6 +44,23 @@ namespace Elements.Geometry
             _bounds = new BBox3(Vertices);
         }
 
+
+        /// <summary>
+        /// Construct a polyline.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
+        {
+            this.Vertices = @vertices;
+
+            if (!Validator.DisableValidationOnConstruction && !disableValidation)
+            {
+                ValidateVertices();
+            }
+            _bounds = new BBox3(Vertices);
+        }
+
         /// <summary>
         /// Clean up any duplicate vertices, and warn about any vertices that are too close to each other.
         /// </summary>
@@ -59,6 +76,17 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">The vertices of the polyline.</param>
         public Polyline(params Vector3[] vertices) : this(new List<Vector3>(vertices))
+        {
+
+        }
+
+        /// <summary>
+        /// Construct a polyline from points. This is a convenience constructor
+        /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        /// <param name="vertices">The vertices of the polyline.</param>
+        public Polyline(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation)
         {
 
         }
@@ -353,7 +381,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        public override Transform[] Frames(double startSetback = 0, double endSetback = 0)
+        /// <param name="additionalRotation"></param>
+        public override Transform[] Frames(double startSetback = 0.0,
+                                           double endSetback = 0.0,
+                                           double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
 
@@ -363,6 +394,10 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
+                if (additionalRotation != 0.0)
+                {
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
+                }
             }
             return result;
         }

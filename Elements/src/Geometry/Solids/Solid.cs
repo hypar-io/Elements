@@ -106,12 +106,14 @@ namespace Elements.Geometry.Solids
         /// <param name="curve">The curve along which to sweep.</param>
         /// <param name="startSetback">The setback distance of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback distance of the sweep from the end of the curve.</param>
+        /// <param name="profileRotation">The rotation of the profile.</param>
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
                                                 ICurve curve,
                                                 double startSetback = 0,
-                                                double endSetback = 0)
+                                                double endSetback = 0,
+                                                double profileRotation = 0)
         {
             var solid = new Solid();
 
@@ -131,7 +133,7 @@ namespace Elements.Geometry.Solids
             var ssb = startSetback / l;
             var esb = endSetback / l;
 
-            var transforms = curve.Frames(ssb, esb);
+            var transforms = curve.Frames(ssb, esb, profileRotation);
 
             if (curve is Polygon)
             {
