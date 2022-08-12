@@ -222,5 +222,10 @@ namespace Elements.Geometry
             }
             return contour;
         }
+
+        internal static Vector3 ToVector3(this Csg.Vector3D v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
     }
 }

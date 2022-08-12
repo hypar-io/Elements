@@ -859,6 +859,8 @@ namespace Elements.Geometry.Solids
                 // Calculate the virtual edges that will be used
                 // to create the texture coordinates.
                 var normal = f.Plane().Normal;
+                var e1 = normal.Cross(normal.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
+                var e2 = normal.Cross(e1).Unitized();
 
                 var tess = new Tess
                 {
@@ -870,8 +872,9 @@ namespace Elements.Geometry.Solids
                 // texture coordinates AND the vertex tag through tessellation
                 // to be used for lookup on the other side.
 
-                var outerVerts = f.Outer.ToCsgVertexArray(normal);
-                tess.AddContour(outerVerts.ToContourVertexArray());
+                var outerVerts = f.Outer.ToCsgVertexArray(e1, e2);
+                var outerContourArray = outerVerts.ToContourVertexArray();
+                tess.AddContour(outerContourArray);
 
                 var csgVertices = new List<Csg.Vertex>(outerVerts);
 
@@ -879,9 +882,10 @@ namespace Elements.Geometry.Solids
                 {
                     foreach (var loop in f.Inner)
                     {
-                        var innerVerts = loop.ToCsgVertexArray(normal);
+                        var innerVerts = loop.ToCsgVertexArray(e1, e2);
                         csgVertices.AddRange(innerVerts);
-                        tess.AddContour(innerVerts.ToContourVertexArray());
+                        var innerContourArray = innerVerts.ToContourVertexArray();
+                        tess.AddContour(innerContourArray);
                     }
                 }
 
@@ -893,13 +897,50 @@ namespace Elements.Geometry.Solids
                     var v2 = tess.Vertices[tess.Elements[i + 1]];
                     var v3 = tess.Vertices[tess.Elements[i + 2]];
 
-                    var vData1 = ((Csg.Vector2D, int))v1.Data;
-                    var vData2 = ((Csg.Vector2D, int))v2.Data;
-                    var vData3 = ((Csg.Vector2D, int))v3.Data;
+                    Csg.Vertex av = null;
+                    Csg.Vertex bv = null;
+                    Csg.Vertex cv = null;
 
-                    var av = csgVertices.First(v => v.Tag == vData1.Item2);
-                    var bv = csgVertices.First(v => v.Tag == vData2.Item2);
-                    var cv = csgVertices.First(v => v.Tag == vData3.Item2);
+                    if (v1.Data == null)
+                    {
+                        // It's a new vertex created during tessellation.
+                        var avv = v1.Position.ToVector3();
+                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
+                    }
+                    else
+                    {
+                        var vData1 = ((Csg.Vector2D, int))v1.Data;
+                        av = csgVertices.First(v => v.Tag == vData1.Item2);
+                    }
+
+                    if (v2.Data == null)
+                    {
+                        var bvv = v1.Position.ToVector3();
+                        bv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
+                    }
+                    else
+                    {
+                        var vData2 = ((Csg.Vector2D, int))v2.Data;
+                        bv = csgVertices.First(v => v.Tag == vData2.Item2);
+                    }
+
+                    if (v3.Data == null)
+                    {
+                        var cvv = v1.Position.ToVector3();
+                        cv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
+                    }
+                    else
+                    {
+                        var vData3 = ((Csg.Vector2D, int))v3.Data;
+                        cv = csgVertices.First(v => v.Tag == vData3.Item2);
+                    }
+
+                    // Don't allow us to create a csg that has zero
+                    // area triangles.
+                    if (Vector3.AreCollinearByAngle(av.Pos.ToVector3(), bv.Pos.ToVector3(), cv.Pos.ToVector3()))
+                    {
+                        continue;
+                    }
 
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);

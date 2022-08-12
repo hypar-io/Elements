@@ -26,11 +26,8 @@ namespace Elements.Geometry.Solids
             return contour;
         }
 
-        internal static Csg.Vertex[] ToCsgVertexArray(this Loop loop, Vector3 normal)
+        internal static Csg.Vertex[] ToCsgVertexArray(this Loop loop, Vector3 e1, Vector3 e2)
         {
-            var e1 = normal.Cross(normal.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-            var e2 = normal.Cross(e1).Unitized();
-
             var vertices = new Csg.Vertex[loop.Edges.Count];
             for (var i = 0; i < loop.Edges.Count; i++)
             {
