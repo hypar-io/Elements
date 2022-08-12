@@ -276,7 +276,7 @@ Triangles:{Triangles.Count}";
             v.UV = uv;
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
-            this._bbox = this._bbox.Extend(v.Position);
+            this._bbox.Extend(v.Position);
             return v;
         }
 
@@ -289,7 +289,7 @@ Triangles:{Triangles.Count}";
             this.Vertices.Add(v);
             // If the octree is null, do nothing — we'll build it when we need it. If we've already constructed it, let's keep it up to date.
             this._octree?.Add(v, v.Position);
-            this._bbox = this._bbox.Extend(v.Position);
+            this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
         }

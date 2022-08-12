@@ -1438,7 +1438,7 @@ namespace Elements.Serialization.glTF
             }
             else
             {
-                buffers = geometricElement._csg.Tessellate(mergeVertices, geometricElement.ModifyVertexAttributes);
+                buffers = geometricElement._csg.Tessellate(geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)
