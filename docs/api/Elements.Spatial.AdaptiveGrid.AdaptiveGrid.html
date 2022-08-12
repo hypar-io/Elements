@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class AdaptiveGrid
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -92,6 +92,133 @@ only by common vertices. Make sure that regions that are added into the graph ar
 aligned with respect to boundaries and split points.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+  
+    div.appendChild( renderer.domElement );
+  
+    var controls = new OrbitControls( camera, renderer.domElement );
+  
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
+  
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    // Instantiate a loader
+    var loader = new GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_Spatial_AdaptiveGrid_AdaptiveGrid.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+        scene.add( gltf.scene );
+        fitCameraToObject(scene, 2.0, controls);
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      },
+      // called when loading has errors
+      function ( error ) {
+        console.log( 'An error happened' );
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
+  
+      const center = new Vector3();
+      boundingBox.getCenter(center);
+      const size = new Vector3();
+      boundingBox.getSize(size);
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">var random = new Random();
+
+var adaptiveGrid = new AdaptiveGrid();
+var points = new List&lt;Vector3&gt;()
+{
+    new Vector3(-6, -4),
+    new Vector3(-2, -4),
+    new Vector3(3, -4),
+    new Vector3(1, 4.5),
+    new Vector3(6, 3),
+};
+adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(
+    new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
+
+foreach (var edge in adaptiveGrid.GetEdges())
+{
+    Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
+}
+</code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
@@ -130,8 +257,17 @@ aligned with respect to boundaries and split points.</p>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor">AdaptiveGrid()</h4>
+  <div class="markdown level1 summary"><p>Create default AdaptiveGrid</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AdaptiveGrid()</code></pre>
+  </div>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid__ctor_Elements_Geometry_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.#ctor(Elements.Geometry.Transform)">AdaptiveGrid(Transform)</h4>
-  <div class="markdown level1 summary"><p>Create an AdaptiveGrid.</p>
+  <div class="markdown level1 summary"><p>Create an AdaptiveGrid with custom transformation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -158,6 +294,30 @@ aligned with respect to boundaries and split points.</p>
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Boundaries*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Boundaries">Boundaries</h4>
+  <div class="markdown level1 summary"><p>Grid boundary used in obstacle perimeter clipping. Can be null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Polygon Boundaries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance">Tolerance</h4>
   <div class="markdown level1 summary"><p>Tolerance for points being considered the same.
@@ -210,6 +370,170 @@ Tolerance is twice the epsilon to make sure graph has no cracks when new section
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Boolean)">AddEdge(Vector3, Vector3, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Add an edge between two vertices represented by their position.
+Positions that are not yet present in the grid are created as new vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Edge&gt; AddEdge(Vector3 a, Vector3 b, bool cut = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cut</span></td>
+        <td><p>Intersect new edge with existing edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td><p>Edges between two vertices. Single if cut is false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_Elements_Spatial_AdaptiveGrid_Vertex_Elements_Spatial_AdaptiveGrid_Vertex_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge(Elements.Spatial.AdaptiveGrid.Vertex,Elements.Spatial.AdaptiveGrid.Vertex,System.Boolean)">AddEdge(Vertex, Vertex, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Add an edge between two vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Edge&gt; AddEdge(Vertex a, Vertex b, bool cut = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>First vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>Second vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cut</span></td>
+        <td><p>Intersect new edge with existing edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td><p>Edges between two vertices. Single if cut is false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddEdge_System_UInt64_System_UInt64_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddEdge(System.UInt64,System.UInt64,System.Boolean)">AddEdge(UInt64, UInt64, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Add an edge between two vertices represented by their ids.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Edge&gt; AddEdge(ulong vertexId1, ulong vertexId2, bool cut = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">vertexId1</span></td>
+        <td><p>Id of the first vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td><span class="parametername">vertexId2</span></td>
+        <td><p>Id of the second vertex.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cut</span></td>
+        <td><p>Intersect new edge with existing edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td><p>Edges between two vertices. Single if cut is false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromBbox*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromBbox(Elements.Geometry.BBox3,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromBbox(BBox3, List&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Add graph section using bounding box, divided by a set of key points.
@@ -246,6 +570,43 @@ This way new region is connected with the rest of the graph.</p>
       </tr>
     </tbody>
   </table>
+  <h5 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3___examples">Examples</h5>
+  <pre><code class="lang-csharp" name="Main">var random = new Random();
+
+var adaptiveGrid = new AdaptiveGrid();
+var points = new List&lt;Vector3&gt;()
+{
+    new Vector3(-6, -4),
+    new Vector3(-2, -4),
+    new Vector3(3, -4),
+    new Vector3(1, 4.5, 3),
+    new Vector3(6, 3, -2),
+};
+adaptiveGrid.AddFromBbox(new BBox3(new Vector3(-7.5, -5, -3), new Vector3(10, 10, 3)), points);
+
+points = new List&lt;Vector3&gt;()
+{
+    new Vector3(-6, -4, 3),
+    new Vector3(-2, 0, 3),
+    new Vector3(0, 4, 3),
+    new Vector3(2, 6, 3)
+};
+var rectangle = Polygon.Rectangle(new Vector3(-10, -5), new Vector3(15, 10));
+adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 3))), points);
+points = new List&lt;Vector3&gt;()
+{
+    new Vector3(-6, -4, 2),
+    new Vector3(-2, 0, 2),
+    new Vector3(0, 4, 2),
+    new Vector3(2, 6, 2)
+};
+adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
+
+foreach (var edge in adaptiveGrid.GetEdges())
+{
+    Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
+}
+</code></pre>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_Elements_Geometry_Polygon_Elements_Geometry_Vector3_System_Double_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude(Elements.Geometry.Polygon,Elements.Geometry.Vector3,System.Double,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromExtrude(Polygon, Vector3, Double, List&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Add graph section using polygon, extruded in given direction.
@@ -344,13 +705,57 @@ This way new region is connected with the rest of the graph.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_Elements_Geometry_Vector3_System_Collections_Generic_List_Elements_Spatial_AdaptiveGrid_Vertex__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex(Elements.Geometry.Vector3,System.Collections.Generic.List{Elements.Spatial.AdaptiveGrid.Vertex})">AddVertex(Vector3, List&lt;Vertex&gt;)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex(Elements.Geometry.Vector3)">AddVertex(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Add a Vertex or return existing one if it's withing grid tolerance.
+Doesn't connect new Vertex to the grid with edges.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Position of required vertex</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><p>New or existing Vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertex_Elements_Geometry_Vector3_Elements_Spatial_AdaptiveGrid_IAddVertexStrategy_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertex(Elements.Geometry.Vector3,Elements.Spatial.AdaptiveGrid.IAddVertexStrategy,System.Boolean)">AddVertex(Vector3, IAddVertexStrategy, Boolean)</h4>
   <div class="markdown level1 summary"><p>Add a Vertex and connect in to one or more other vertices.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 point, List&lt;Vertex&gt; connections)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vertex AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,9 +774,15 @@ This way new region is connected with the rest of the graph.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
-        <td><span class="parametername">connections</span></td>
-        <td><p>Ids of other vertices to connect new Vertex with.</p>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.IAddVertexStrategy.html">IAddVertexStrategy</a></td>
+        <td><span class="parametername">strategy</span></td>
+        <td><p>Vertex insertion strategy.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cut</span></td>
+        <td><p>Should new edges be intersected with existing edges.</p>
 </td>
       </tr>
     </tbody>
@@ -388,6 +799,199 @@ This way new region is connected with the rest of the graph.</p>
       <tr>
         <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
         <td><p>New Vertex or existing one if it's within grid tolerance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertices_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertices*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVertices_System_Collections_Generic_IList_Elements_Geometry_Vector3__Elements_Spatial_AdaptiveGrid_AdaptiveGrid_VerticesInsertionMethod_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVertices(System.Collections.Generic.IList{Elements.Geometry.Vector3},Elements.Spatial.AdaptiveGrid.AdaptiveGrid.VerticesInsertionMethod)">AddVertices(IList&lt;Vector3&gt;, AdaptiveGrid.VerticesInsertionMethod)</h4>
+  <div class="markdown level1 summary"><p>Create a chain of vertices. Exact behavior depends on the method used.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vertex&gt; AddVertices(IList&lt;Vector3&gt; points, AdaptiveGrid.VerticesInsertionMethod method)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>List of points to insert. Must have at least two points.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.VerticesInsertionMethod.html">AdaptiveGrid.VerticesInsertionMethod</a></td>
+        <td><span class="parametername">method</span></td>
+        <td><p>Insertion method.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
+        <td><p>Vertices in order between provided points. Depends on used method.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_ClosestEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.ClosestEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_ClosestEdge_Elements_Geometry_Vector3_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.ClosestEdge(Elements.Geometry.Vector3,Elements.Geometry.Vector3@)">ClosestEdge(Vector3, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find closest Edge on the grid to given location.
+If several edges are no the same closest distance - first found is returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Edge ClosestEdge(Vector3 location, out Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>Position to which closest Vertex is searched.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Closest point of the found edge line.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></td>
+        <td><p>Closest Edge</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_ClosestVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.ClosestVertex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_ClosestVertex_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.ClosestVertex(Elements.Geometry.Vector3)">ClosestVertex(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find closest Vertex on the grid to given location.
+If several vertices are no the same closest distance - first found is returned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex ClosestVertex(Vector3 location)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>Position to which closest Vertex is searched.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><p>Closest Vertex</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_CutEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.CutEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_CutEdge_Elements_Spatial_AdaptiveGrid_Edge_Elements_Geometry_Vector3_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.CutEdge(Elements.Spatial.AdaptiveGrid.Edge,Elements.Geometry.Vector3)">CutEdge(Edge, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Split provided edge by given point. Edge is removed and replaced by two new edges.
+New vertex position is not required to be in the edge line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Vertex CutEdge(Edge edge, Vector3 position)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></td>
+        <td><span class="parametername">edge</span></td>
+        <td><p>Edge to cut.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">position</span></td>
+        <td><p>Cut position where new Vertex is created.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><p>New Vertex at cut position.</p>
 </td>
       </tr>
     </tbody>
@@ -412,6 +1016,47 @@ This way new region is connected with the rest of the graph.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetLine_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetLine*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetLine_Elements_Spatial_AdaptiveGrid_Edge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetLine(Elements.Spatial.AdaptiveGrid.Edge)">GetLine(Edge)</h4>
+  <div class="markdown level1 summary"><p>Get the geometry that represents this Edge or DirectedEdge.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line GetLine(Edge edge)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></td>
+        <td><span class="parametername">edge</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -481,15 +1126,14 @@ This way new region is connected with the rest of the graph.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractBox_Elements_Geometry_BBox3_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractBox(Elements.Geometry.BBox3)">SubtractBox(BBox3)</h4>
-  <div class="markdown level1 summary"><p>Intersect the box with existent edges and cut any portion of the edge, or whole edge,
-that is inside the box. Note that no new connections are created afterwards.</p>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertices_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertices*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_GetVertices_Elements_Spatial_AdaptiveGrid_Edge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.GetVertices(Elements.Spatial.AdaptiveGrid.Edge)">GetVertices(Edge)</h4>
+  <div class="markdown level1 summary"><p>Get associated Vertices.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void SubtractBox(BBox3 box)</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;Vertex&gt; GetVertices(Edge edge)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -502,9 +1146,165 @@ that is inside the box. Note that no new connections are created afterwards.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
-        <td><span class="parametername">box</span></td>
-        <td><p>Boding box to subtract</p>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></td>
+        <td><span class="parametername">edge</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveEdge*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveEdge_Elements_Spatial_AdaptiveGrid_Edge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveEdge(Elements.Spatial.AdaptiveGrid.Edge)">RemoveEdge(Edge)</h4>
+  <div class="markdown level1 summary"><p>Remove the Edge from the grid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveEdge(Edge edge)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></td>
+        <td><span class="parametername">edge</span></td>
+        <td><p>Edge to delete</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveVertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveVertex*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveVertex_Elements_Spatial_AdaptiveGrid_Vertex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveVertex(Elements.Spatial.AdaptiveGrid.Vertex)">RemoveVertex(Vertex)</h4>
+  <div class="markdown level1 summary"><p>Remove the Vertex from the grid.
+All it's edges are removed as well, including any neighbor
+vertices that are left without edges.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveVertex(Vertex v)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
+        <td><span class="parametername">v</span></td>
+        <td><p>Vertex to delete.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractObstacle_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractObstacle*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractObstacle_Elements_Spatial_AdaptiveGrid_Obstacle_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractObstacle(Elements.Spatial.AdaptiveGrid.Obstacle)">SubtractObstacle(Obstacle)</h4>
+  <div class="markdown level1 summary"><p>Intersect the grid with an obstacle, defined from a set of points with offset.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SubtractObstacle(Obstacle obstacle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html">Obstacle</a></td>
+        <td><span class="parametername">obstacle</span></td>
+        <td><p>Obstacle object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if obstacle intersects with any edge on the grid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractObstacles_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractObstacles*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SubtractObstacles_System_Collections_Generic_IEnumerable_Elements_Spatial_AdaptiveGrid_Obstacle__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SubtractObstacles(System.Collections.Generic.IEnumerable{Elements.Spatial.AdaptiveGrid.Obstacle})">SubtractObstacles(IEnumerable&lt;Obstacle&gt;)</h4>
+  <div class="markdown level1 summary"><p>Intersect the grid with a list of obstacles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SubtractObstacles(IEnumerable&lt;Obstacle&gt; obstacles)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html">Obstacle</a>&gt;</td>
+        <td><span class="parametername">obstacles</span></td>
+        <td><p>List of obstacles.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if any obstacle intersects with any edge on the grid.</p>
 </td>
       </tr>
     </tbody>
@@ -516,7 +1316,7 @@ that is inside the box. Note that no new connections are created afterwards.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = default(double? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

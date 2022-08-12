@@ -385,7 +385,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
-            this.Matrix = this.Matrix * m;
+            this.Matrix *= m;
         }
 
         /// <summary>

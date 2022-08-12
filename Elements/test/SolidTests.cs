@@ -10,6 +10,7 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
+using Elements.Geometry.Tessellation;
 
 namespace Elements.Tests
 {
@@ -727,6 +728,16 @@ namespace Elements.Tests
 
             this.Model.AddElements(DrawEdges(result, null));
             Assert.Equal(14, result.Faces.Count);
+        }
+
+        [Fact]
+        public void TessellationHasCorrectNumberOfVertices()
+        {
+            var panel = new Panel(Polygon.L(5, 5, 2));
+            panel.UpdateRepresentations();
+            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)));
+            Assert.Equal(12, buffer.VertexCount); // Two faces of 6 vertices each
+            Assert.Equal(8, buffer.FacetCount); // Two faces of 4 facets each.
         }
 
         private class DebugInfo
