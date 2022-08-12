@@ -94,7 +94,7 @@ namespace Elements.Geometry
         /// Extend a bounding box with a new point
         /// </summary>
         /// <param name="point">The point which should be inside the extended bounding box</param>
-        public void Extend(Vector3 point)
+        public BBox3 Extend(Vector3 point)
         {
             var newMin = new Vector3(Min.X, Min.Y, Min.Z);
             if (point.X < this.Min.X) newMin.X = point.X;
@@ -107,6 +107,7 @@ namespace Elements.Geometry
             if (point.Y > this.Max.Y) newMax.Y = point.Y;
             if (point.Z > this.Max.Z) newMax.Z = point.Z;
             this.Max = newMax;
+            return this;
         }
 
         /// <summary>

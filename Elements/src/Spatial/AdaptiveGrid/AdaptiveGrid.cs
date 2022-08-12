@@ -951,15 +951,19 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
         {
-            var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(Boundaries, out var _);
-            if (!inside.Any())
+            if (Boundaries != null)
             {
-                return;
-            }
+                var boundary2d = new Polygon(Boundaries.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
+                var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(boundary2d, out var _);
+                if (!inside.Any())
+                {
+                    return;
+                }
 
-            var fi = inside.First();
-            start = new Vector3(fi.Start.X, fi.Start.Y, start.Z);
-            end = new Vector3(fi.End.X, fi.End.Y, end.Z);
+                var fi = inside.First();
+                start = new Vector3(fi.Start.X, fi.Start.Y, start.Z);
+                end = new Vector3(fi.End.X, fi.End.Y, end.Z);
+            }
 
             var onLine = candidates.Where(x => Line.PointOnLine(x, start, end));
             var ordered = onLine.OrderBy(x => (x - start).Dot(end - start));
