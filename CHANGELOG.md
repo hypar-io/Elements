@@ -3,14 +3,24 @@
 ## 1.2.0
 
 ### Added
-- Message class along with helper creation methods.
+- `Mesh.Intersects(Ray)` (same as `Ray.Intersects(Mesh)`)
+- `Ray.NearbyPoints()`
+- `PointOctree<T>`
+- `Message` class along with helper creation methods.
 
 ### Changed
+
 - MeshElement constructor signature modified to be compatible with code generation.
+- Improved performance of mesh/ray intersection
 - `BBox3.Extend` method is public now
+- `AdaptiveGrid.Boundary` can be left null.
+- `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
 
 ### Fixed
+
 - Fixed a bug where `Polyline.Frames` would return inconsistently-oriented transforms.
+- `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
+- `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 
 ## 1.1.0
 
@@ -57,7 +67,7 @@
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
-- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set.
 
 ## 1.0.1
 
