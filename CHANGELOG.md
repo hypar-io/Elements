@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+- `Polygon(IList<Vector3> @vertices, bool disableValidation = false)`
+- `Polygon(bool disableValidation, params Vector3[] vertices)`
+- `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
+- `Polyline(bool disableValidation, params Vector3[] vertices)`
+- `Mesh.Intersects(Ray)` (same as `Ray.Intersects(Mesh)`)
+- `Ray.NearbyPoints()`
+- `PointOctree<T>`
+- `Message` class along with helper creation methods.
+
+### Changed
+
+- MeshElement constructor signature modified to be compatible with code generation.
+- Improved performance of mesh/ray intersection
+- `BBox3.Extend` method is public now
+- `AdaptiveGrid.Boundary` can be left null.
+- `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
+
+### Fixed
+
+- Fixed a bug where `Polyline.Frames` would return inconsistently-oriented transforms.
+- `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
+- `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
+- #805
+
 ## 1.1.0
 
 ### Added
@@ -23,6 +50,18 @@
 - `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method
+- `Polyline.GetParameterAt(Vector3 point)` method
+- `Polyline.GetSubsegment(Vector3 start, Vector3 end)` method
+- `Polygon.GetSharedSegments(Polyline polyline)` method
+- `BBox3.Offset(double amount)`
+- `Obstacle` in `Elements.Spatial.AdaptiveGrid`
+- `IAddVertexStrategy` with `Connect` and `ConnectWithAngle` implementations in `Elements.Spatial.AdaptiveGrid`
+- `AdaptiveGrid.Boundaries`
+- `AdaptiveGrid.AddVertex(Vector3 point)`
+- `AdaptiveGrid.AddVertex(Vector3 point, IAddVertexStrategy strategy, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vertex a, Vertex b, bool cut = true)`
+- `AdaptiveGrid.AddEdge(Vector3 a, Vector3 b, bool cut = true)`
 
 ### Changed
 
@@ -32,15 +71,16 @@
 - `Vector3.ClosestPointOn` - added `infinite` for the cases when line needs to be treated as infinite.
 - `Elements.Geometry.Solids.Edge` public constructor
 - `Elements.Geometry.Solids.Vertex` public constructor
-- `Line.PointOnLine` now uses distance to line instead of dot product. 
+- `Line.PointOnLine` now uses distance to line instead of dot product.
 
 ### Fixed
 
 - `Profile.Split` would sometimes fail if the profile being split contained voids.
-- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box 
+- `Line.Intersects(BBox3 box, out List<Vector> results, bool infinite = false)` fix incomplete results when line misaligned with bounding box
 - Fixed a mathematical error in `MercatorProjection.MetersToLatLon`, which was returning longitude values that were skewed.
 - `Grid2d.IsTrimmed` would occasionally return `true` for cells that were not actually trimmed.
 - `Vector3[].AreCoplanar()` computed its tolerance for deviation incorrectly, this is fixed.
+- `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` fix wrong results when infinite flag is set, fix for overlapping points when include ends is set.
 
 ## 1.0.1
 
@@ -52,11 +92,6 @@
 - `ContinuousDimension`
 - `Vector3.AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double tolerance)`
 
-
-### Fixed
-
-- #805
-
 ### Fixed
 
 - `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear
@@ -65,11 +100,13 @@
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 - `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
 
 - Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
 - `TryToGraphicsBuffers` is now public
+- `Solid SweepFaceAlongCurve` now has an additional parameter, `profileRotation`, which enables the caller to pass a profile rotation into sweep creation.
 
 ## 1.0.0
 

@@ -1,5 +1,3 @@
-using System.Net.Sockets;
-using System.Numerics;
 using Elements.Validators;
 using System;
 using System.Collections.Generic;
@@ -351,11 +349,12 @@ namespace Elements.Geometry
         /// <summary>
         /// Does this line touches or intersects the provided box in 3D?
         /// </summary>
-        /// <param name="box"></param>
-        /// <param name="results"></param>
+        /// <param name="box">Axis aligned box to intersect.</param>
+        /// <param name="results">Up to two intersection points.</param>
         /// <param name="infinite">Treat the line as infinite?</param>
+        /// <param name="tolerance">An optional distance tolerance.</param>
         /// <returns>True if the line touches or intersects the  box at least at one point, false otherwise.</returns>
-        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)
+        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false, double tolerance = Vector3.EPSILON)
         {
             var d = End - Start;
             results = new List<Vector3>();
@@ -426,13 +425,13 @@ namespace Elements.Geometry
             var dMax = tMax * length;
 
             // Check if found parameters are within normalized line range.
-            if (infinite || (dMin > -Vector3.EPSILON && dMin < length + Vector3.EPSILON))
+            if (infinite || (dMin > -tolerance && dMin < length + tolerance))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(dMax - dMin) > Vector3.EPSILON &&
-                (infinite || (dMax > -Vector3.EPSILON && dMax < length + Vector3.EPSILON)))
+            if (Math.Abs(dMax - dMin) > tolerance &&
+                (infinite || (dMax > -tolerance && dMax < length + tolerance)))
             {
                 results.Add(Start + d * tMax);
             }
@@ -1185,7 +1184,7 @@ namespace Elements.Geometry
             }
             else if (distinctPoints.Count == 2)
             {
-                return new Line(points[0], points[1]);
+                return new Line(distinctPoints[0], distinctPoints[1]);
             }
 
             // find the coefficients of the straight line equation (y = m * x + b) using the least squares method

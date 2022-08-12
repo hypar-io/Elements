@@ -326,6 +326,17 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Offset a box in each coordinate by a given amount. 
+        /// </summary>
+        /// <param name="amount">Offset distance.</param>
+        /// <returns></returns>
+        public BBox3 Offset(double amount)
+        {
+            return new BBox3(new Vector3(Min.X - amount, Min.Y - amount, Min.Z - amount),
+                             new Vector3(Max.X + amount, Max.Y + amount, Max.Z + amount));
+        }
+
+        /// <summary>
         /// The volume of the bounding box.
         /// </summary>
         [JsonIgnore]
