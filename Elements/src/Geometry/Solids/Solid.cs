@@ -941,7 +941,7 @@ namespace Elements.Geometry.Solids
 
                     // Don't allow us to create a csg that has zero
                     // area triangles.
-                    if (Vector3.AreCollinearByAngle(av.Pos.ToVector3(), bv.Pos.ToVector3(), cv.Pos.ToVector3()))
+                    if (Vector3.AreCollinearByDistance(av.Pos.ToVector3(), bv.Pos.ToVector3(), cv.Pos.ToVector3()))
                     {
                         continue;
                     }
