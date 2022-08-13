@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using LibTessDotNet.Double;
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -15,17 +16,30 @@ namespace Elements.Geometry.Tessellation
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(IEnumerable<ITessellationTargetProvider> providers,
-                                        IGraphicsBuffers buffers,
+        internal static T Tessellate<T>(IEnumerable<ITessellationTargetProvider> providers,
                                         bool mergeVertices = false,
-                                        Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
+                                        Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null) where T : IGraphicsBuffers
         {
+            // Gather all the tessellations
+            var tesses = new List<Tess>();
+            foreach (var provider in providers)
+            {
+                foreach (var target in provider.GetTessellationTargets())
+                {
+                    tesses.Add(target.GetTess());
+                }
+            }
+
+            // Pre-allocate a buffer big enough to hold all the tessellations
+            var buffer = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));
+            buffer.Initialize(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
+
             var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             foreach (var provider in providers)
             {
                 foreach (var target in provider.GetTessellationTargets())
                 {
-                    TessellatePolygon(target.GetTess(), buffers, allVertices, mergeVertices);
+                    TessellatePolygon(target.GetTess(), buffer, allVertices, mergeVertices);
                 }
             }
 
@@ -36,7 +50,9 @@ namespace Elements.Geometry.Tessellation
                     allVertices[i] = modifyVertexAttributes(allVertices[i]);
                 }
             }
-            buffers.AddVertices(allVertices);
+            buffer.AddVertices(allVertices);
+
+            return (T)buffer;
         }
 
         private static void TessellatePolygon(Tess tess,

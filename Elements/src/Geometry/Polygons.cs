@@ -21,7 +21,7 @@ namespace Elements.Geometry
             var c = new Vector3(width / 2, height / 2);
             var d = new Vector3(-width / 2, height / 2);
 
-            return new Polygon(new[] { a, b, c, d });
+            return new Polygon(true, a, b, c, d);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Elements.Geometry
             var c = max;
             var d = new Vector3(min.X, max.Y);
 
-            return new Polygon(new[] { a, b, c, d });
+            return new Polygon(true, a, b, c, d);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Elements.Geometry
                 var t = i * (Math.PI * 2 / divisions);
                 verts[i] = new Vector3(radius * Math.Cos(t), radius * Math.Sin(t));
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Elements.Geometry
                 var t = i * (Math.PI * 2 / sides);
                 verts[i] = new Vector3(radius * Math.Cos(t), radius * Math.Sin(t));
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Elements.Geometry
             var d = new Vector3(thickness, thickness, 0);
             var e = new Vector3(thickness, length, 0);
             var f = new Vector3(0, length, 0);
-            return new Polygon(new[] { a, b, c, d, e, f });
+            return new Polygon(true, a, b, c, d, e, f);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Elements.Geometry
                     verts.Add(c1.PointAt(t));
                 }
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
     }
 }

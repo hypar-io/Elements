@@ -39,12 +39,9 @@ namespace Elements.Geometry
                                                    bool mergeVertices = false,
                                                    Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
-            var buffers = new GraphicsBuffers();
-
-            Tessellation.Tessellation.Tessellate(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
-                                    buffers,
-                                    mergeVertices,
-                                    modifyVertexAttributes);
+            var buffers = Tessellation.Tessellation.Tessellate<GraphicsBuffers>(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
+                                                                                mergeVertices,
+                                                                                modifyVertexAttributes);
             return buffers;
         }
 

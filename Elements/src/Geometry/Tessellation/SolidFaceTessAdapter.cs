@@ -29,8 +29,10 @@ namespace Elements.Geometry.Tessellation
         {
             var tess = new Tess
             {
+                UsePooling = true,
                 NoEmptyPolygons = true
             };
+
             tess.AddContour(face.Outer.ToContourVertexArray(transform));
 
             if (face.Inner != null)
