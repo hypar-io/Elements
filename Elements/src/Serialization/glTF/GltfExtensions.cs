@@ -76,20 +76,18 @@ namespace Elements.Serialization.glTF
         /// <param name="errors">A collection of serialization errors</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        /// <param name="mergeVertices">Should solid face vertices be merged during tessellation?</param>
         public static void ToGlTF(this Model model,
                                   string path,
                                   out List<BaseError> errors,
                                   bool useBinarySerialization = true,
-                                  bool drawEdges = false,
-                                  bool mergeVertices = false)
+                                  bool drawEdges = false)
         {
             errors = new List<BaseError>();
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
                 {
-                    if (SaveGlb(model, path, out errors, drawEdges, mergeVertices))
+                    if (SaveGlb(model, path, out errors, drawEdges))
                     {
                         return;
                     }
@@ -97,7 +95,7 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
-                    if (SaveGltf(model, path, out errors, drawEdges, mergeVertices))
+                    if (SaveGltf(model, path, out errors, drawEdges))
                     {
                         return;
                     }
@@ -117,14 +115,12 @@ namespace Elements.Serialization.glTF
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        /// <param name="mergeVertices">Should solid face vertices be merged during tessellation?</param>
         public static void ToGlTF(this Model model,
                                   string path,
                                   bool useBinarySerialization = true,
-                                  bool drawEdges = false,
-                                  bool mergeVertices = false)
+                                  bool drawEdges = false)
         {
-            ToGlTF(model, path, out _, useBinarySerialization, drawEdges, mergeVertices);
+            ToGlTF(model, path, out _, useBinarySerialization, drawEdges);
         }
 
         /// <summary>
@@ -132,11 +128,10 @@ namespace Elements.Serialization.glTF
         /// </summary>
         /// <param name="model">The model to serialize.</param>
         /// <param name="drawEdges">Should edges of the model be drawn?</param>
-        /// <param name="mergeVertices">Should vertices be merged in the resulting output?</param>
         /// <returns>A byte array representing the model.</returns>
-        public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
+        public static byte[] ToGlTF(this Model model, bool drawEdges = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges);
             if (gltf == null)
             {
                 return null;
@@ -158,9 +153,9 @@ namespace Elements.Serialization.glTF
         /// Serialize the model to a base64 encoded string.
         /// </summary>
         /// <returns>A Base64 string representing the model.</returns>
-        public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
+        public static string ToBase64String(this Model model, bool drawEdges = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges);
             if (gltf == null)
             {
                 return "";
@@ -851,9 +846,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges);
             if (gltf == null)
             {
                 return false;
@@ -866,9 +861,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false)
         {
-            var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges);
             if (gltf == null)
             {
                 return false;
@@ -883,8 +878,7 @@ namespace Elements.Serialization.glTF
         internal static Gltf InitializeGlTF(Model model,
                                             out List<byte[]> allBuffers,
                                             out List<BaseError> errors,
-                                            bool drawEdges = false,
-                                            bool mergeVertices = false)
+                                            bool drawEdges = false)
         {
             errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
@@ -1007,8 +1001,7 @@ namespace Elements.Serialization.glTF
                                             nodeElementMap,
                                             meshTransformMap,
                                             currLines,
-                                            drawEdges,
-                                            mergeVertices);
+                                            drawEdges);
                 }
                 catch (Exception ex)
                 {
@@ -1090,8 +1083,7 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, ProtoNode> nodeElementMap,
                                                     Dictionary<Guid, Transform> meshTransformMap,
                                                     List<Vector3> lines,
-                                                    bool drawEdges,
-                                                    bool mergeVertices = false)
+                                                    bool drawEdges)
         {
             var materialId = BuiltInMaterials.Default.Id.ToString();
             int meshId = -1;
