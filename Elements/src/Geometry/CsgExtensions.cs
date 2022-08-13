@@ -200,17 +200,17 @@ namespace Elements.Geometry
         /// vertices, storing the texture coordinates and the tag in the data.
         /// </summary>
         /// <param name="vertices"></param>
-        internal static ContourVertex[] ToContourVertexArray(this Csg.Vertex[] vertices)
+        internal static ContourVertex[] ToContourVertexArray(this IList<Csg.Vertex> vertices)
         {
-            var contour = new ContourVertex[vertices.Length];
-            for (var i = 0; i < vertices.Length; i++)
+            var contour = new ContourVertex[vertices.Count];
+            for (var i = 0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
 
                 var cv = new ContourVertex
                 {
                     Position = new Vec3 { X = v.Pos.X, Y = v.Pos.Y, Z = v.Pos.Z },
-                    Data = (v.Tex, v.Tag)
+                    Data = (v.Tex.ToUV(), v.Tag)
                 };
                 contour[i] = cv;
             }

@@ -27,7 +27,7 @@ namespace Elements.Geometry.Tessellation
             {
                 NoEmptyPolygons = true
             };
-            tess.AddContour(polygon.Vertices.ToContourVertices());
+            tess.AddContour(polygon.Vertices.ToContourVertexArray());
 
             tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
             return tess;

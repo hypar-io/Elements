@@ -913,7 +913,7 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData1 = ((Csg.Vector2D, int))v1.Data;
+                        var vData1 = ((UV, int))v1.Data;
                         av = csgVertices.First(v => v.Tag == vData1.Item2);
                     }
 
@@ -924,7 +924,7 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData2 = ((Csg.Vector2D, int))v2.Data;
+                        var vData2 = ((UV, int))v2.Data;
                         bv = csgVertices.First(v => v.Tag == vData2.Item2);
                     }
 
@@ -935,7 +935,7 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData3 = ((Csg.Vector2D, int))v3.Data;
+                        var vData3 = ((UV, int))v3.Data;
                         cv = csgVertices.First(v => v.Tag == vData3.Item2);
                     }
 

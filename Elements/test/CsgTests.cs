@@ -7,12 +7,20 @@ using Xunit;
 using System.Linq;
 using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
     public class CsgTests : ModelTest
     {
         private HSSPipeProfileFactory _profileFactory = new HSSPipeProfileFactory();
+
+        private readonly ITestOutputHelper output;
+
+        public CsgTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
 
         [Fact]
         public void Csg()
