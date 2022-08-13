@@ -126,7 +126,7 @@ namespace Elements.Geometry.Tessellation
                 }
             }
 
-            pts.Add((position, normal, uv, default(Color)));
+            pts.Add((position, normal, uv, null));
             return pts.Count - 1;
         }
 
