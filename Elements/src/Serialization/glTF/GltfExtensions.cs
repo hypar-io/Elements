@@ -1491,12 +1491,13 @@ namespace Elements.Serialization.glTF
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
                 buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
+                                        false,
                                         geometricElement.ModifyVertexAttributes);
             }
             else
             {
                 var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
+                buffers = csg.Tessellate(false, geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)

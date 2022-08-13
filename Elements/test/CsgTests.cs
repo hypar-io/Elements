@@ -181,9 +181,8 @@ namespace Elements.Tests
             var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
-            var mgb = new MockGraphicsBuffer();
             var arrows = new ModelArrows();
-            Tessellation.Tessellate(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)), mgb);
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
             for (int i = 0; i < mgb.Indices.Count; i += 3)
             {
                 var a = mgb.Indices[i];
@@ -207,6 +206,7 @@ namespace Elements.Tests
             public List<ushort> Indices { get; set; } = new List<ushort>();
 
             public List<(Vector3 position, Vector3 normal, UV uv, Color? color)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
+
             public void AddIndex(ushort index)
             {
                 Indices.Add(index);
@@ -230,6 +230,12 @@ namespace Elements.Tests
             public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
             {
                 Vertices.AddRange(vertices);
+            }
+
+            public void Initialize(int vertexCount, int indexCount)
+            {
+                Indices = new List<ushort>();
+                Vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             }
         }
     }
