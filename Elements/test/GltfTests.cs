@@ -86,7 +86,7 @@ namespace Elements.Tests
             model.AddElement(panel);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
             var gltfPath = Path.Combine(modelsDir, "Single-Panel.gltf");
-            model.ToGlTF(gltfPath, false, mergeVertices: true);
+            model.ToGlTF(gltfPath, false);
             var gltfJson = File.ReadAllText(gltfPath);
             using (var glbStream = GltfExtensions.GetGlbStreamFromPath(gltfPath))
             {
