@@ -202,7 +202,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="obstacle">Obstacle object.</param>
         /// <returns>True if obstacle intersects with any edge on the grid.</returns>
-        public bool SubtractObstacle(Obstacle obstacle)
+        public bool SubtractObstacle(Obstacle obstacle, bool allowOutsideBoundary = false)
         {
             var frame = obstacle.Transform == null ? Transform : obstacle.Transform;
             var toGrid = frame.Inverted();
@@ -282,7 +282,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     var cornersAtElevation = corners.Select(
                         c => c.ProjectAlong(frame.ZAxis, plane)).ToList();
 
-                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections);
+                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections, allowOutsideBoundary);
                     AddEdgesOnLine(cornersAtElevation[1], cornersAtElevation[2], intersections);
                     AddEdgesOnLine(cornersAtElevation[2], cornersAtElevation[3], intersections);
                     AddEdgesOnLine(cornersAtElevation[3], cornersAtElevation[0], intersections);
@@ -414,8 +414,8 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <summary>
             /// Insert vertices and connect them to each other.
             /// Find any intersections between new edges.
-            /// Inserted vertices are returned in order including self intersection vertices twice. 
-            /// 
+            /// Inserted vertices are returned in order including self intersection vertices twice.
+            ///
             /// </summary>
             ConnectAndSelfIntersect,
 
@@ -437,7 +437,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Create a chain of vertices. Exact behavior depends on the method used. 
+        /// Create a chain of vertices. Exact behavior depends on the method used.
         /// </summary>
         /// <param name="points">List of points to insert. Must have at least two points.</param>
         /// <param name="method">Insertion method.</param>
@@ -749,7 +749,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Add an edge between two vertices and intersect it with other edges on the grid. 
+        /// Add an edge between two vertices and intersect it with other edges on the grid.
         /// </summary>
         /// <param name="startId">Index of start vertex.</param>
         /// <param name="endId">Index of end vertex.</param>
@@ -949,9 +949,9 @@ namespace Elements.Spatial.AdaptiveGrid
             return addedEdges;
         }
 
-        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowOutsideBoundary)
         {
-            if (Boundaries != null)
+            if (Boundaries != null && !allowOutsideBoundary)
             {
                 var boundary2d = new Polygon(Boundaries.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
                 var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(boundary2d, out var _);
@@ -1283,7 +1283,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private bool IsLineInDomain(
             (Vector3 Start, Vector3 End) line,
             (Vector3 Min, Vector3 Max) domain,
-            double xyTolerance, double zTolerance, 
+            double xyTolerance, double zTolerance,
             out bool startInside, out bool endInside)
         {
             startInside = false;
