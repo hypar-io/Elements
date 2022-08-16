@@ -3,12 +3,19 @@
 ## 1.2.0
 
 ### Added
-
-- Message class along with helper creation methods.
+- `Polygon(IList<Vector3> @vertices, bool disableValidation = false)`
+- `Polygon(bool disableValidation, params Vector3[] vertices)`
+- `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
+- `Polyline(bool disableValidation, params Vector3[] vertices)`
+- `Mesh.Intersects(Ray)` (same as `Ray.Intersects(Mesh)`)
+- `Ray.NearbyPoints()`
+- `PointOctree<T>`
+- `Message` class along with helper creation methods.
 
 ### Changed
 
 - MeshElement constructor signature modified to be compatible with code generation.
+- Improved performance of mesh/ray intersection
 - `BBox3.Extend` method is public now
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
@@ -18,6 +25,7 @@
 - Fixed a bug where `Polyline.Frames` would return inconsistently-oriented transforms.
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
+- #805
 
 ## 1.1.0
 
@@ -76,11 +84,6 @@
 - `ContinuousDimension`
 - `Vector3.AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double tolerance)`
 
-
-### Fixed
-
-- #805
-
 ### Fixed
 
 - `Line.IsCollinear(Line line)` would return `false` if lines are close to each other but not collinear
@@ -89,11 +92,13 @@
 - `Line.GetUParameter(Vector 3)` - calculate U parameter for point on line
 - `Line.MergeCollinearLine(Line line)` creates new line containing all four collinear vertices
 - `Line.Projected(Plane plane)` create new line projected onto plane
+- `Profile.Split` would sometimes fail if the profile being split contained voids.
 
 ### Changed
 
 - Simplified `IEnumerable<Vector3>.ToGraphicsBuffers()`
 - `TryToGraphicsBuffers` is now public
+- `Solid SweepFaceAlongCurve` now has an additional parameter, `profileRotation`, which enables the caller to pass a profile rotation into sweep creation.
 
 ## 1.0.0
 

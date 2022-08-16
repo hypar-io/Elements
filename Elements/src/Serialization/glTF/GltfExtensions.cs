@@ -232,6 +232,8 @@ namespace Elements.Serialization.glTF
                     AddExtension(gltf, gltfMaterial, "HYPAR_materials_edge_settings", new Dictionary<string, object>{
                         {"lineWidth", material.EdgeDisplaySettings.LineWidth},
                         {"widthMode", (int)material.EdgeDisplaySettings.WidthMode},
+                        {"dashMode", (int)material.EdgeDisplaySettings.DashMode},
+                        {"dashSize", material.EdgeDisplaySettings.DashSize}
                     });
                 }
 
@@ -1143,8 +1145,7 @@ namespace Elements.Serialization.glTF
                                                                 nodes,
                                                                 materialId,
                                                                 ref meshId,
-                                                                content,
-                                                                mergeVertices);
+                                                                content);
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
                             meshElementMap.Add(e.Id, new List<int> { meshId });
@@ -1166,8 +1167,7 @@ namespace Elements.Serialization.glTF
                                                             nodes,
                                                             materialId,
                                                             ref meshId,
-                                                            geometricElement,
-                                                            mergeVertices);
+                                                            geometricElement);
                     if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
                     {
                         meshElementMap.Add(e.Id, new List<int> { meshId });
@@ -1377,8 +1377,7 @@ namespace Elements.Serialization.glTF
                                                            List<Node> nodes,
                                                            string materialId,
                                                            ref int meshId,
-                                                           GeometricElement geometricElement,
-                                                           bool mergeVertices = false)
+                                                           GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
 
@@ -1401,8 +1400,7 @@ namespace Elements.Serialization.glTF
                                     ref buffers,
                                     bufferViews,
                                     accessors,
-                                    meshes,
-                                    mergeVertices);
+                                    meshes);
 
                 // If the id == -1, the mesh is malformed.
                 // It may have no geometry.
@@ -1428,8 +1426,7 @@ namespace Elements.Serialization.glTF
                                       ref List<byte> buffer,
                                       List<BufferView> bufferViews,
                                       List<Accessor> accessors,
-                                      List<glTFLoader.Schema.Mesh> meshes,
-                                      bool mergeVertices = false)
+                                      List<glTFLoader.Schema.Mesh> meshes)
         {
             GraphicsBuffers buffers = null;
             if (geometricElement.Representation.SkipCSGUnion)
@@ -1437,16 +1434,13 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                buffers = new GraphicsBuffers();
-                Tessellation.Tessellate(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
-                                        buffers,
-                                        mergeVertices,
+                buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
                                         geometricElement.ModifyVertexAttributes);
             }
             else
             {
                 var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(mergeVertices, geometricElement.ModifyVertexAttributes);
+                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)
