@@ -1255,7 +1255,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="tolerance">How far outside the range numbers are considered inside.
         /// When tolerance positive - range is increased by it, when negative - decreased.</param>
         /// <returns>Low, Inside or High.</returns>
-        private PointOrientation NumberOrientation(
+        private static PointOrientation NumberOrientation(
             double number,
             (double Min, double Max) domain,
             double tolerance)
@@ -1280,7 +1280,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="startInside">Is start point of line inside the domain.</param>
         /// <param name="endInside">Is end point of line inside the domain.</param>
         /// <returns>Low, Inside or High.</returns>
-        private bool IsLineInDomain(
+        public static bool IsLineInDomain(
             (Vector3 Start, Vector3 End) line,
             (Vector3 Min, Vector3 Max) domain,
             double xyTolerance, double zTolerance, 
