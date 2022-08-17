@@ -152,7 +152,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Should edges be created when obstacle is outside <see cref="AdaptiveGrid.Boundaries"/>, it will work only when <see cref="Perimeter"/> property is true />
         /// </summary>
-        public bool AllowOutsideBoudary { get; }
+        public bool AllowOutsideBoudary { get; set; }
 
         /// <summary>
         /// Transformation of bounding box created from the list of points.

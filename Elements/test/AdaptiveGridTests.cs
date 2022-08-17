@@ -369,7 +369,6 @@ namespace Elements.Tests
             Assert.All(grid.GetVertices(), x => Assert.Equal(2, x.Edges.Count));
 
             WriteToModelWithRandomMaterials(grid);
-            Model.ToGlTF("../../../MisalignedColumn.gltf");
         }
 
         [Theory]
