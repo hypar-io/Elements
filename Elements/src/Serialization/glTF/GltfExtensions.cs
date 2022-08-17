@@ -233,6 +233,8 @@ namespace Elements.Serialization.glTF
                     AddExtension(gltf, gltfMaterial, "HYPAR_materials_edge_settings", new Dictionary<string, object>{
                         {"lineWidth", material.EdgeDisplaySettings.LineWidth},
                         {"widthMode", (int)material.EdgeDisplaySettings.WidthMode},
+                        {"dashMode", (int)material.EdgeDisplaySettings.DashMode},
+                        {"dashSize", material.EdgeDisplaySettings.DashSize}
                     });
                 }
 
