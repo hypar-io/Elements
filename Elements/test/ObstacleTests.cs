@@ -1,8 +1,6 @@
 ﻿using Elements.Geometry;
 using Elements.Spatial.AdaptiveGrid;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Elements
