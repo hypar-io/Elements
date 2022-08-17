@@ -1,14 +1,11 @@
 ﻿using Elements.Geometry;
+using Elements.Serialization.glTF;
 using Elements.Spatial.AdaptiveGrid;
-using Elements.Tests;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Xunit;
-using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
 
 namespace Elements.Tests
 {
@@ -372,6 +369,46 @@ namespace Elements.Tests
             Assert.All(grid.GetVertices(), x => Assert.Equal(2, x.Edges.Count));
 
             WriteToModelWithRandomMaterials(grid);
+            Model.ToGlTF("../../../MisalignedColumn.gltf");
+        }
+
+        [Theory]
+        [MemberData(nameof(GetObstaclesForAllowOutsideBoundaryTest))]
+        public void AadaptiveGridSubtractObstacleAllowOutsideBoundaryTest(Obstacle obstacle, bool expectedResult, int additionalVertices, int additionalEdges)
+        {
+            var boundary = Polygon.Rectangle(20, 40);
+            var grid = new AdaptiveGrid { Boundaries = boundary };
+            grid.AddFromPolygon(boundary, new List<Vector3> { Vector3.Origin });
+            grid.AddVertices(new List<Vector3> { new Vector3(0, 20), new Vector3(0, 50) }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            var edgesCount = grid.GetEdges().Count;
+            var verticesCount = grid.GetVertices().Count;
+
+            var result = grid.SubtractObstacle(obstacle);
+
+            WriteToModelWithRandomMaterials(grid);
+
+            Assert.Equal(expectedResult, result);
+            Assert.Equal(verticesCount + additionalVertices, grid.GetVertices().Count);
+            Assert.Equal(edgesCount + additionalEdges, grid.GetEdges().Count);
+        }
+
+        public static IEnumerable<object[]> GetObstaclesForAllowOutsideBoundaryTest()
+        {
+            var profile = Polygon.Rectangle(1, 1);
+
+            //Column outside of boundary and does not intersect with any edge or vertex
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true), false, 0, 0 };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true, true), false, 0, 0, };
+            //Column intersects with boundary
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true), true, 4, 4 };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true, true), true, 6, 7, };
+            //Column outside of boundary and intersects with grid edge
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true), true, 2, 1, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true, true), true, 6, 7, };
+            //Column outside of boundary and intersects with grid vertex
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true), true, 0, 0, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true, true), true, 4, 5, };
         }
 
         [Fact]
@@ -877,7 +914,7 @@ namespace Elements.Tests
             grid.AddVertex(new Vector3(5, 2), new ConnectVertexStrategy(strip[1]), cut: false); //5
             return grid;
         }
-        
+
         private void WriteToModelWithRandomMaterials(AdaptiveGrid grid, [CallerMemberName] string memberName = "")
         {
             var random = new Random();
