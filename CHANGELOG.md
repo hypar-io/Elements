@@ -11,6 +11,8 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
+- `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property 
+- `AdaptiveGrid.Obstacle.Intersects(Polyline polyline, double tolerance = 1e-05)` method
 
 ### Changed
 
