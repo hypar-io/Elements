@@ -1,10 +1,7 @@
-﻿using Elements;
-using Elements.Geometry;
-using Elements.Spatial.AdaptiveGrid;
+﻿using Elements.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -22,8 +19,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="column">Column to avoid.</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <returns>New obstacle object.</returns>
-        public static Obstacle FromColumn(Column column, double offset = 0, bool perimeter = false)
+        public static Obstacle FromColumn(Column column, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
             var p = column.Profile.Perimeter.TransformedPolygon(
                 new Transform(column.Location));
@@ -31,7 +29,7 @@ namespace Elements.Spatial.AdaptiveGrid
             points.AddRange(p.Vertices);
             points.AddRange(p.Vertices.Select(
                 v => new Vector3(v.X, v.Y, v.Z + column.Height)));
-            return new Obstacle(points, offset, perimeter, null);
+            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -40,8 +38,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="wall">Wall to avoid.</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <returns>New obstacle object.</returns>
-        public static Obstacle FromWall(StandardWall wall, double offset = 0, bool perimeter = false)
+        public static Obstacle FromWall(StandardWall wall, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
             var ortho = wall.CenterLine.Direction().Cross(Vector3.ZAxis);
             List<Vector3> points = new List<Vector3>();
@@ -52,7 +51,7 @@ namespace Elements.Spatial.AdaptiveGrid
             points.AddRange(points.Select(v => new Vector3(v.X, v.Y, v.Z + wall.Height)).ToArray());
             var transfrom = new Transform(Vector3.Origin,
                 wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
-            return new Obstacle(points, offset, perimeter, transfrom);
+            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, transfrom);
         }
 
         /// <summary>
@@ -61,10 +60,11 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="box">Bounding box to avoid.</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <returns>New obstacle object.</returns>
-        public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false)
+        public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
-            return new Obstacle(box.Corners(), offset, perimeter, null);
+            return new Obstacle(box.Corners(), offset, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -74,13 +74,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="height">Height of the obstacle.</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <returns>New obstacle object.</returns>
-        public static Obstacle From2DPolygon(Polygon polyon, double height, double offset = 0, bool perimeter = false)
+        public static Obstacle From2DPolygon(Polygon polyon, double height, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
             List<Vector3> points = new List<Vector3>();
             points.AddRange(polyon.Vertices.Select(p => new Vector3(p.X, p.Y)));
             points.AddRange(polyon.Vertices.Select(p => new Vector3(p.X, p.Y, height)));
-            return new Obstacle(points, offset, perimeter, null);
+            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -89,8 +90,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="line">Line to avoid.</param>
         /// <param name="offset">Extra space around obstacle bounding box. Should be larger than 0.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <returns>New obstacle object.</returns>
-        public static Obstacle FromLine(Line line, double offset = 0.1, bool perimeter = false)
+        public static Obstacle FromLine(Line line, double offset = 0.1, bool perimeter = false, bool allowOutsideBoundary = false)
         {
             if (offset < Vector3.EPSILON)
             {
@@ -110,7 +112,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 frame = new Transform(Vector3.Origin, forward, rigth, up);
             }
 
-            return new Obstacle(points, offset, perimeter, frame);
+            return new Obstacle(points, offset, perimeter,allowOutsideBoundary, frame);
         }
 
         /// <summary>
@@ -119,12 +121,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="points"></param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
+        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <param name="transformation">Transformation of the obstacle.</param>
-        public Obstacle(List<Vector3> points, double offset, bool perimeter, Transform transformation)
+        public Obstacle(List<Vector3> points, double offset, bool perimeter, bool allowOutsideBoundary, Transform transformation)
         {
             Points = points;
             Offset = offset;
             Perimeter = perimeter;
+            AllowOutsideBoudary = allowOutsideBoundary;
             Transform = transformation;
         }
 
@@ -144,6 +148,11 @@ namespace Elements.Spatial.AdaptiveGrid
         /// If true - intersected edges are cut to obstacle and perimeter edges are inserted.
         /// </summary>
         public bool Perimeter { get; set; }
+
+        /// <summary>
+        /// Should edges be created when obstacle is outside <see cref="AdaptiveGrid.Boundaries"/>, it will work only when <see cref="Perimeter"/> property is true />
+        /// </summary>
+        public bool AllowOutsideBoudary { get; }
 
         /// <summary>
         /// Transformation of bounding box created from the list of points.
