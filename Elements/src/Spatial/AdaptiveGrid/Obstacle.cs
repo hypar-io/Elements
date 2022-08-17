@@ -158,5 +158,27 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Transformation of bounding box created from the list of points.
         /// </summary>
         public Transform Transform { get; set; }
+
+        /// <summary>
+        /// Check if any segment of polyline intersects with obstacle or is inside of obstacle
+        /// </summary>
+        /// <param name="polyline">Polyline to check</param>
+        /// <param name="tolerance">Tolerance for checks</param>
+        /// <returns>Result of check</returns>
+        public bool Intersects(Polyline polyline, double tolerance = 1e-05)
+        {
+            var minX = Points.Min(x => x.X);
+            var maxX = Points.Max(x => x.X);
+            var minY = Points.Min(x => x.Y);
+            var maxY = Points.Max(x => x.Y);
+            var minZ = Points.Min(x => x.Z);
+            var maxZ = Points.Max(x => x.Z);
+
+            var domain = (new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ));
+
+            return polyline
+                .Segments()
+                .Any(x => AdaptiveGrid.IsLineInDomain((x.Start, x.End), domain, tolerance, tolerance, out var _, out var _));
+        }
     }
 }
