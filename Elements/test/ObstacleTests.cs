@@ -38,6 +38,18 @@ namespace Elements
             //One segment intersecting with obstacle
             yield return new object[] { bigPolygon.TransformedPolygon(new Transform(10, 0, 2)), true };
 
+            //Polyline on bottom plane of obstacle
+            yield return new object[] { new Polyline(new Vector3(-10, 0), new Vector3(10, 0)), true};
+            //Polyline on top plane of obstacle
+            yield return new object[] { new Polyline(new Vector3(-10, 0, 10), new Vector3(10, 0, 10)), true };
+            //Polyline on top plane of obstacle
+            yield return new object[] { new Polyline
+            (
+                new Vector3(-10, 0), 
+                new Vector3(-10, 10), 
+                new Vector3(10, 10), 
+                new Vector3(10, 0)
+            ), false };
         }
     }
 }
