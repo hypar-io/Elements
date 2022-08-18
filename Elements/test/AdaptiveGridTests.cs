@@ -398,16 +398,19 @@ namespace Elements.Tests
 
             //Column outside of boundary and does not intersect with any edge or vertex
             yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true), false, 0, 0 };
-            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true, true), false, 0, 0, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true, true), false, 0, 0 };
             //Column intersects with boundary
             yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true), true, 4, 4 };
-            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true, true), true, 6, 7, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true, true), true, 6, 7 };
+            //Column fully inside in boundary
+            yield return new object[] { Obstacle.FromColumn(new Column(Vector3.Origin, 5, null, profile), 0, true), true, 7, 8 };
+            yield return new object[] { Obstacle.FromColumn(new Column(Vector3.Origin, 5, null, profile), 0, true, true), true, 7, 8 };
             //Column outside of boundary and intersects with grid edge
             yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true), true, 2, 1, };
-            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true, true), true, 6, 7, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true, true), true, 6, 7 };
             //Column outside of boundary and intersects with grid vertex
             yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true), true, 0, 0, };
-            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true, true), true, 4, 5, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true, true), true, 4, 5 };
         }
 
         [Fact]
