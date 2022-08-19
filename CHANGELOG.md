@@ -26,6 +26,7 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
 
 ## 1.1.0
 
