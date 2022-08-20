@@ -168,6 +168,20 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
+        /// Remaps the mesh's UVs to the bounds. For surfaces close to
+        /// horizontal, this has the effect of a planar projection.
+        /// </summary>
+        internal void MapUVsToBounds()
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var v = this.Vertices[i];
+                var uv1 = _bbox.UVWAtPoint(v.Position);
+                v.UV = new UV(uv1.X, uv1.Y);
+            }
+        }
+
+        /// <summary>
         /// Get all buffers required for rendering.
         /// </summary>
         public GraphicsBuffers GetBuffers()
@@ -311,6 +325,7 @@ Triangles:{Triangles.Count}";
             v.Index = Vertices.Count - 1;
             this._octree?.Add(v, position);
             _vertexMap.Add(tag, v);
+            this._bbox = this._bbox.Extend(v.Position);
             return v;
         }
 

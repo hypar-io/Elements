@@ -222,5 +222,10 @@ namespace Elements.Geometry
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
+
+        internal static Csg.Vector3D ToCsgVector3(this Vec3 v)
+        {
+            return new Csg.Vector3D(v.X, v.Y, v.Z);
+        }
     }
 }

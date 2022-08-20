@@ -851,7 +851,6 @@ namespace Elements.Geometry.Solids
                 e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
             }
         }
-
         internal Csg.Solid ToCsg()
         {
             var polygons = new List<Csg.Polygon>();
@@ -908,8 +907,8 @@ namespace Elements.Geometry.Solids
                     if (v1.Data == null)
                     {
                         // It's a new vertex created during tessellation.
-                        var avv = v1.Position.ToVector3();
-                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(avv), V.Dot(avv)));
+                        var avv = v1.Position.ToCsgVector3();
+                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(avv.X, avv.Y, avv.Z), V.Dot(avv.X, avv.Y, avv.Z)));
                     }
                     else
                     {
@@ -919,8 +918,8 @@ namespace Elements.Geometry.Solids
 
                     if (v2.Data == null)
                     {
-                        var bvv = v1.Position.ToVector3();
-                        bv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(bvv), V.Dot(bvv)));
+                        var bvv = v2.Position.ToCsgVector3();
+                        bv = new Csg.Vertex(bvv, new Csg.Vector2D(U.Dot(bvv.X, bvv.Y, bvv.Z), V.Dot(bvv.X, bvv.Y, bvv.Z)));
                     }
                     else
                     {
@@ -930,8 +929,8 @@ namespace Elements.Geometry.Solids
 
                     if (v3.Data == null)
                     {
-                        var cvv = v1.Position.ToVector3();
-                        cv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(cvv), V.Dot(cvv)));
+                        var cvv = v3.Position.ToCsgVector3();
+                        cv = new Csg.Vertex(cvv, new Csg.Vector2D(U.Dot(cvv.X, cvv.Y, cvv.Z), V.Dot(cvv.X, cvv.Y, cvv.Z)));
                     }
                     else
                     {

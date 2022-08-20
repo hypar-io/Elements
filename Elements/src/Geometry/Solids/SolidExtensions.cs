@@ -27,7 +27,6 @@ namespace Elements.Geometry.Solids
             }
             return contour;
         }
-
         internal static Csg.Vertex[] ToCsgVertexArray(this Loop loop, Vector3 e1, Vector3 e2)
         {
             var vertices = new Csg.Vertex[loop.Edges.Count];
@@ -41,7 +40,6 @@ namespace Elements.Geometry.Solids
             }
             return vertices;
         }
-
         internal static Edge[] GetLinkedEdges(this Loop loop)
         {
             var edges = new Edge[loop.Edges.Count];
@@ -51,7 +49,6 @@ namespace Elements.Geometry.Solids
             }
             return edges;
         }
-
         internal static Plane Plane(this Face f)
         {
             var v = f.Outer.Edges.Select(e => e.Vertex.Point).ToList();

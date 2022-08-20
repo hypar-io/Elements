@@ -88,14 +88,14 @@ namespace Elements.Geometry.Tessellation
 
                     if (vertexMap.ContainsKey((tag, faceId)))
                     {
-                        Debug.WriteLine($"Resuing vertex {tag}");
+                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex from csg
                         buffers.AddIndex(vertexMap[(tag, faceId)]);
                         continue;
                     }
                     else if (vertexMap.ContainsKey((index, 0)))
                     {
-                        Debug.WriteLine($"Resuing vertex {tag}");
+                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex created
                         // earlier here.
                         buffers.AddIndex(vertexMap[(index, 0)]);
@@ -124,7 +124,7 @@ namespace Elements.Geometry.Tessellation
                         {
                             buffers.AddVertex(v1, n, uv, c1);
                         }
-                        Debug.WriteLine($"Adding vertex {tag}:{index}");
+                        Debug.WriteLine($"Adding vertex (tag:{tag},faceId:{faceId}):{index}");
                         buffers.AddIndex((ushort)index);
                         vertexMap.Add((tag, faceId), (ushort)index);
                         newVerts++;
