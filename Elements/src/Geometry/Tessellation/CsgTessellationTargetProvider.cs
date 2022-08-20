@@ -23,11 +23,12 @@ namespace Elements.Geometry.Tessellation
         /// </summary>
         public IEnumerable<ITessAdapter> GetTessellationTargets()
         {
-            var id = 0;
             foreach (var p in csg.Polygons)
             {
-                yield return new CsgPolygonTessAdapter(p, id);
-                id++;
+                // We used the polygon's shared tag, which seems to 
+                // work for planar solids turned into csgs as a discriminator,
+                // but this may break in the future.
+                yield return new CsgPolygonTessAdapter(p, p.Shared.Tag);
             }
         }
     }
