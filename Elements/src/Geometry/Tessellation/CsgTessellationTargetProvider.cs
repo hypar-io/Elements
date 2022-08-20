@@ -23,9 +23,11 @@ namespace Elements.Geometry.Tessellation
         /// </summary>
         public IEnumerable<ITessAdapter> GetTessellationTargets()
         {
+            var id = 0;
             foreach (var p in csg.Polygons)
             {
-                yield return new CsgPolygonTessAdapter(p);
+                yield return new CsgPolygonTessAdapter(p, id);
+                id++;
             }
         }
     }

@@ -44,13 +44,11 @@ namespace Elements.Geometry.Tessellation
                                               IGraphicsBuffers buffers,
                                               Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes)
         {
-            // The vertex map enables us to re-use vertices. Csgs only return
-            // polygons with vertices that have a 'tag'. We can use the tag as
-            // the key to lookup the index of the vertex to avoid re-creating it.
-            // For direct solid tesselation, we don't have a tag but we do have
-            // the tesselation's element index, which we use as the key when
-            // writing solid tesselations.
-            var vertexMap = new Dictionary<int, ushort>();
+            // The vertex map enables us to re-use vertices. Csgs and solid faces 
+            // create vertices which store the face id, the vertex id, and for csgs, the uv. 
+            // We can use the tag as the key to lookup the index of the vertex to avoid re-creating it.
+            var vertexMap = new Dictionary<(int tag, long faceId), ushort>();
+
             var tessOffset = 0;
             var index = 0;
 
@@ -84,80 +82,53 @@ namespace Elements.Geometry.Tessellation
                     var tessIndex = tessOffset + localIndex;
 
                     // This is an optimization to use pre-existing csg vertex 
-                    // data to match vertices. For solid tesselations, this
-                    // information won't exist, so we'll skip to the block below.
-                    if (v.Data != null)
-                    {
-                        var (uv, tag) = ((UV uv, int tag))v.Data;
-                        if (vertexMap.ContainsKey(tag))
-                        {
-                            Debug.WriteLine($"Resuing vertex {tag}");
-                            // Reference an existing vertex from csg
-                            buffers.AddIndex(vertexMap[tag]);
-                            continue;
-                        }
-                        else if (vertexMap.ContainsKey(index))
-                        {
-                            Debug.WriteLine($"Resuing vertex {tag}");
-                            // Reference an existing vertex created
-                            // earlier here.
-                            buffers.AddIndex(vertexMap[index]);
-                            continue;
-                        }
-                        else
-                        {
-                            // Create a new vertex.
-                            var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
-                            var c1 = default(Color);
+                    // data to match vertices. 
 
-                            if (modifyVertexAttributes != null)
-                            {
-                                var mod = modifyVertexAttributes((v1, n, uv, c1));
-                                buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
-                            }
-                            else
-                            {
-                                buffers.AddVertex(v1, n, uv, c1);
-                            }
-                            Debug.WriteLine($"Adding vertex {tag}:{index}");
-                            buffers.AddIndex((ushort)index);
-                            vertexMap.Add(tag, (ushort)index);
-                            newVerts++;
-                            index++;
-                        }
+                    var (uv, tag, faceId) = ((UV uv, int tag, int faceId))v.Data;
+
+                    if (vertexMap.ContainsKey((tag, faceId)))
+                    {
+                        Debug.WriteLine($"Resuing vertex {tag}");
+                        // Reference an existing vertex from csg
+                        buffers.AddIndex(vertexMap[(tag, faceId)]);
+                        continue;
+                    }
+                    else if (vertexMap.ContainsKey((index, 0)))
+                    {
+                        Debug.WriteLine($"Resuing vertex {tag}");
+                        // Reference an existing vertex created
+                        // earlier here.
+                        buffers.AddIndex(vertexMap[(index, 0)]);
+                        continue;
                     }
                     else
                     {
-                        if (vertexMap.ContainsKey(tessIndex))
+                        // Create a new vertex.
+                        var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
+                        var c1 = default(Color);
+
+                        // Solid faces won't have UV coordinates.
+                        if (uv == default)
                         {
-                            Debug.WriteLine($"Resuing vertex {tessIndex}");
-                            buffers.AddIndex((ushort)tessIndex);
-                            continue;
+                            var uu = U.Dot(v1);
+                            var vv = V.Dot(v1);
+                            uv = new UV(uu, vv);
+                        }
+
+                        if (modifyVertexAttributes != null)
+                        {
+                            var mod = modifyVertexAttributes((v1, n, uv, c1));
+                            buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
                         }
                         else
                         {
-                            // Create the new vertex.
-                            var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
-                            var c1 = default(Color);
-                            var uu = U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
-                            var vv = V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
-                            var uv = new UV(uu, vv);
-
-                            if (modifyVertexAttributes != null)
-                            {
-                                var mod = modifyVertexAttributes((v1, n, uv, c1));
-                                buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
-                            }
-                            else
-                            {
-                                buffers.AddVertex(v1, n, uv, c1);
-                            }
-                            Debug.WriteLine($"Adding vertex {tessIndex}:{index}");
-                            buffers.AddIndex((ushort)index);
-                            vertexMap.Add(tessIndex, (ushort)index);
-                            newVerts++;
-                            index++;
+                            buffers.AddVertex(v1, n, uv, c1);
                         }
+                        Debug.WriteLine($"Adding vertex {tag}:{index}");
+                        buffers.AddIndex((ushort)index);
+                        vertexMap.Add((tag, faceId), (ushort)index);
+                        newVerts++;
+                        index++;
                     }
                 }
                 tessOffset += newVerts;
@@ -173,7 +144,7 @@ namespace Elements.Geometry.Tessellation
         internal static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)
         {
             var tmp = (b - a).Unitized();
-            n = tmp.Cross(c - a).Unitized();
+            n = tmp.Cross((c - a).Unitized()).Unitized();
             var basis = n.ComputeDefaultBasisVectors();
             return basis;
         }

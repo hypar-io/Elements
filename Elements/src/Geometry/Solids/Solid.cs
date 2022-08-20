@@ -856,26 +856,26 @@ namespace Elements.Geometry.Solids
         {
             var polygons = new List<Csg.Polygon>();
 
+            ushort faceId = 0;
             foreach (var f in Faces.Values)
             {
-                // Calculate the virtual edges that will be used
-                // to create the texture coordinates.
-                var normal = f.Plane().Normal;
-                var e1 = normal.Cross(normal.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                var e2 = normal.Cross(e1).Unitized();
-
                 var tess = new Tess
                 {
                     NoEmptyPolygons = true
                 };
+
+                var a = f.Outer.Edges[0].Vertex.Point;
+                var b = f.Outer.Edges[1].Vertex.Point;
+                var c = f.Outer.Edges[2].Vertex.Point;
+                (Vector3 U, Vector3 V) = Tessellation.Tessellation.ComputeBasisAndNormalForTriangle(a, b, c, out var normal);
 
                 // Create the csg vertices first then use them to create
                 // the tessellation vertices. This way we can pass the
                 // texture coordinates AND the vertex tag through tessellation
                 // to be used for lookup on the other side.
 
-                var outerVerts = f.Outer.ToCsgVertexArray(e1, e2);
-                var outerContourArray = outerVerts.ToContourVertexArray();
+                var outerVerts = f.Outer.ToCsgVertexArray(U, V);
+                var outerContourArray = outerVerts.ToContourVertexArray(faceId);
                 tess.AddContour(outerContourArray);
 
                 var csgVertices = new List<Csg.Vertex>(outerVerts);
@@ -884,9 +884,9 @@ namespace Elements.Geometry.Solids
                 {
                     foreach (var loop in f.Inner)
                     {
-                        var innerVerts = loop.ToCsgVertexArray(e1, e2);
+                        var innerVerts = loop.ToCsgVertexArray(U, V);
                         csgVertices.AddRange(innerVerts);
-                        var innerContourArray = innerVerts.ToContourVertexArray();
+                        var innerContourArray = innerVerts.ToContourVertexArray(faceId);
                         tess.AddContour(innerContourArray);
                     }
                 }
@@ -909,33 +909,33 @@ namespace Elements.Geometry.Solids
                     {
                         // It's a new vertex created during tessellation.
                         var avv = v1.Position.ToVector3();
-                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
+                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(avv), V.Dot(avv)));
                     }
                     else
                     {
-                        var vData1 = ((UV, int))v1.Data;
+                        var vData1 = ((UV, int, int))v1.Data;
                         av = csgVertices.First(v => v.Tag == vData1.Item2);
                     }
 
                     if (v2.Data == null)
                     {
                         var bvv = v1.Position.ToVector3();
-                        bv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
+                        bv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(bvv), V.Dot(bvv)));
                     }
                     else
                     {
-                        var vData2 = ((UV, int))v2.Data;
+                        var vData2 = ((UV, int, int))v2.Data;
                         bv = csgVertices.First(v => v.Tag == vData2.Item2);
                     }
 
                     if (v3.Data == null)
                     {
                         var cvv = v1.Position.ToVector3();
-                        cv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
+                        cv = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(cvv), V.Dot(cvv)));
                     }
                     else
                     {
-                        var vData3 = ((UV, int))v3.Data;
+                        var vData3 = ((UV, int, int))v3.Data;
                         cv = csgVertices.First(v => v.Tag == vData3.Item2);
                     }
 
@@ -949,6 +949,7 @@ namespace Elements.Geometry.Solids
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);
                 }
+                faceId++;
             }
             return Csg.Solid.FromPolygons(polygons);
         }
