@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 namespace Elements.Annotations
 {
     /// <summary>An element that stores warning messages.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     // TODO: We probably don't want to inherit from GeometricElement for ever.  It would be better for Messages to
     // behave more like actual Annotation elements while still being capable of having an appearance in 3D in some circumstances.
     public partial class Message : GeometricElement

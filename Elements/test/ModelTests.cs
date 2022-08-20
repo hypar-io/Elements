@@ -276,6 +276,13 @@ namespace Elements.Tests
             var json = File.ReadAllText("../../../models/Geometry/tower.json");
             var newModel = Model.GeometricElementModelFromJson(json);
             newModel.ToGlTF("models/geometric_elements_2.glb");
+
+            var model = new Model();
+            var meshSphere = Mesh.Sphere(5, 10);
+            var meshElement = new MeshElement(meshSphere);
+            model.AddElement(meshElement);
+            var json2 = model.ToJson();
+            var newModel2 = Model.GeometricElementModelFromJson(json2);
         }
 
         [Fact]

@@ -9,6 +9,7 @@ namespace Elements.Geometry
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
+        private const int _preallocationVertexCount = 100;
         /// <summary>
         /// The number of vertices represented by the buffer.
         /// </summary>
@@ -105,7 +106,7 @@ namespace Elements.Geometry
         /// </summary>
         public GraphicsBuffers()
         {
-            Initialize();
+            Initialize(_preallocationVertexCount, _preallocationVertexCount);
         }
 
         /// <summary>
@@ -287,6 +288,15 @@ namespace Elements.Geometry
 
             this.UVMin = new double[2] { double.MaxValue, double.MaxValue };
             this.UVMax = new double[2] { double.MinValue, double.MinValue };
+        }
+
+        internal static int PreallocationSize()
+        {
+            // Assume a fully vertex-colored mesh of the size required to contain 30k vertices.
+            // Postion, Normal, Color, Index, UV
+            var floatSize = sizeof(float);
+            var intSize = sizeof(int);
+            return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
         }
     }
 }

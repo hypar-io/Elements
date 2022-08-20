@@ -337,7 +337,7 @@ namespace Elements
 
                             // Qualify element as a geometric element by seeing 
                             // whether it has a representation.
-                            if (element.Value.TryGetProperty("Representation", out var repProperty))
+                            if (element.Value.TryGetProperty("Representation", out var repProperty) && repProperty.ValueKind == JsonValueKind.Object)
                             {
                                 var solidOps = new List<SolidOperation>();
                                 foreach (var solidOp in repProperty.GetProperty("SolidOperations").EnumerateArray())
