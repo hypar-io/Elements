@@ -863,7 +863,7 @@ namespace Elements.Geometry
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
-        /// <param name="tolerance">Angle tolerance as cos.</param>
+        /// <param name="cosAngleTolerance">Angle tolerance as cos.</param>
         /// <returns></returns>
         public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = Vector3.COS_ANGLE_EPSILON)
         {
