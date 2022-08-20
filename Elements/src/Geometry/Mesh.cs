@@ -19,6 +19,7 @@ namespace Elements.Geometry
 
         private double _maxTriangleSize = 0;
         private PointOctree<Vertex> _octree = null;
+        private readonly Dictionary<int, Vertex> _vertexMap = new Dictionary<int, Vertex>();
 
         /// <summary>The mesh's vertices.</summary>
         [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -28,7 +29,8 @@ namespace Elements.Geometry
         [JsonProperty("Triangles", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
 
-        private BBox3 _bbox = new BBox3();
+        private BBox3 _bbox = new BBox3(new List<Vector3> { });
+
         /// <summary>
         /// The mesh's bounding box.
         /// </summary>
@@ -295,10 +297,9 @@ Triangles:{Triangles.Count}";
                                 Vector3 normal = default,
                                 Color color = default)
         {
-            var existing = this.Vertices.FirstOrDefault(vtx => vtx.Tag == tag);
-            if (existing != null)
+            if (_vertexMap.ContainsKey(tag))
             {
-                return existing;
+                return _vertexMap[tag];
             }
 
             var v = new Vertex(position, normal, color)
@@ -309,6 +310,7 @@ Triangles:{Triangles.Count}";
             Vertices.Add(v);
             v.Index = Vertices.Count - 1;
             this._octree?.Add(v, position);
+            _vertexMap.Add(tag, v);
             return v;
         }
 
