@@ -287,10 +287,7 @@ namespace Elements
                     var discriminator = element.Value.GetProperty("discriminator").GetString();
                     var id = element.Value.GetProperty("Id").GetGuid();
                     element.Value.TryGetProperty("Name", out var nameProp);
-                    string name;
-                    {
-                        name = nameProp.GetString();
-                    }
+                    string name = nameProp.ValueKind == JsonValueKind.String ? nameProp.GetString() : null;
 
                     switch (discriminator)
                     {

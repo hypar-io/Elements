@@ -297,7 +297,7 @@ namespace Elements.Serialization.JSON
                 {
                     foreach (var innerProp in prop.EnumerateObject())
                     {
-                        if (innerProp.Value.TryGetGuid(out var referenceId))
+                        if (innerProp.Value.ValueKind == JsonValueKind.String && innerProp.Value.TryGetGuid(out var referenceId))
                         {
                             if (documentElements.TryGetProperty(referenceId.ToString(), out var foundElement))
                             {
