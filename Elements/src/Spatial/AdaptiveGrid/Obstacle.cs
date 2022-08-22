@@ -196,23 +196,61 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Check if any segment of polyline intersects with obstacle or is inside of obstacle
         /// </summary>
         /// <param name="polyline">Polyline to check</param>
-        /// <param name="tolerance">Tolerance for checks</param>
+        /// <param name="tolerance">Tolerance of checks</param>
         /// <returns>Result of check</returns>
         public bool Intersects(Polyline polyline, double tolerance = 1e-05)
         {
-            var minX = Points.Min(x => x.X);
-            var maxX = Points.Max(x => x.X);
-            var minY = Points.Min(x => x.Y);
-            var maxY = Points.Max(x => x.Y);
-            var minZ = Points.Min(x => x.Z);
-            var maxZ = Points.Max(x => x.Z);
-
-            var domain = (new Vector3(minX, minY, minZ), new Vector3(maxX, maxY, maxZ));
-
-            return polyline
-                .Segments()
-                .Any(x => AdaptiveGrid.IsLineInDomain((x.Start, x.End), domain, tolerance, tolerance, out var _, out var _));
+            return polyline.Segments().Any(s => Intersects(s, tolerance));
         }
+
+        /// <summary>
+        /// Check if line intersects with obstacle
+        /// </summary>
+        /// <param name="line">Line to check</param>
+        /// <param name="tolerance">Tolerance of checks</param>
+        /// <returns>Result of check</returns>
+        public bool Intersects(Line line, double tolerance = 1e-05)
+        {
+            if(IsInside(line.Start) || IsInside(line.End))
+            {
+                return true;
+            }
+
+            var horizontalIntersections = GetIntersections(_horizontalPlanes, line);
+            var verticalIntersections = GetIntersections(_verticalPlanes, line);
+
+            if(horizontalIntersections.Any() && horizontalIntersections
+                .All(x => IsBetweenPlanes(_verticalPlanes, x, tolerance)))
+            {
+                return true;
+            }
+
+            if(verticalIntersections.Any() && verticalIntersections
+                .All(x => IsBetweenPlanesOrOnAnyOfThem(_horizontalPlanes, x, tolerance) 
+                    && IsBetweenPlanesOrOnAnyOfThem(_verticalPlanes, x, tolerance)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if point is inside of an obstacle
+        /// </summary>
+        /// <param name="point">Point to check</param>
+        /// <param name="tolerance">Tolerance of check</param>
+        /// <returns>Result of check</returns>
+        public bool IsInside(Vector3 point, double tolerance = 1e-05)
+        {
+            if (!IsBetweenPlanesOrOnAnyOfThem(_horizontalPlanes, point, tolerance))
+            {
+                return false;
+            }
+
+            return IsBetweenPlanes(_verticalPlanes, point, tolerance);
+        }
+
         private void UpdatePlanes()
         {
             _horizontalPlanes.Clear();
