@@ -26,7 +26,7 @@ namespace Elements.Serialization.SVG
         /// </summary>
         None,
         /// <summary>
-        /// Roate the drawing by a specific angle.
+        /// Rotate the drawing by a specific angle.
         /// </summary>
         Angle,
     }
