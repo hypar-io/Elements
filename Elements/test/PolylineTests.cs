@@ -325,18 +325,6 @@ namespace Elements.Geometry.Tests
             Assert.Empty(sharedSegments);
         }
 
-        [Fact]
-        public void Test()
-        {
-            var polyline = new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 5));
-            var expectedResult = new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2));
-            var polygon = Polygon.Rectangle(6, 4);
-            var result = polyline.Intersects(polygon, out var sharedSegments);
-
-            Assert.True(result);
-            Assert.Collection(sharedSegments, x => Assert.True(x.Equals(expectedResult)));
-        }
-
         [Theory]
         [MemberData(nameof(GetPolygonIntersectsTestData))]
         public void PolygonIntersectsReturnsOneSegment(Polyline polyline, Polyline expectedResult)
@@ -351,40 +339,67 @@ namespace Elements.Geometry.Tests
         public static IEnumerable<object[]> GetPolygonIntersectsTestData()
         {
             //Polyline is inside boundary
-            yield return new object[] { new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)),
-                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)),
+                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)) 
+            };
 
             //Polyline both ends outside boundary
-            yield return new object[] { new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -5)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -5)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+            };
 
             //Polyline end is on polygon boundary
-            yield return new object[] { new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+            };
 
             //Polyline start is on polygon boundary
-            yield return new object[] { new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)) 
+            };
 
             //Polyline end is inside boundary
-            yield return new object[] { new Polyline(new Vector3(1, 5), new Vector3(1,0), Vector3.Origin),
-                new Polyline(new Vector3(1, 2), new Vector3(1, 0), Vector3.Origin) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(1, 5), new Vector3(1,0), Vector3.Origin),
+                new Polyline(new Vector3(1, 2), new Vector3(1, 0), Vector3.Origin) 
+            };
 
             //Polyline start is inside boundary
-            yield return new object[] { new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin) 
+            };
 
             //Polyline end is boundary vertex
-            yield return new object[] { new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), new Vector3(3, 2)),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), new Vector3(3, 2)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), new Vector3(3, 2)),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), new Vector3(3, 2)) 
+            };
 
             //Polyline start is boundary vertex
-            yield return new object[] { new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 5)),
-                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 5)),
+                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2)) 
+            };
 
             //Polyline segment is part of boundary
-            yield return new object[] { new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), new Vector3(3, 0), new Vector3(3, 1)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), new Vector3(3, 0)) };
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), new Vector3(3, 0), new Vector3(3, 1)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), new Vector3(3, 0)) 
+            };
         }
 
         [Fact]
