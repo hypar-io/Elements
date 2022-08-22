@@ -89,9 +89,9 @@ namespace Elements.Geometry
                 var a = p.Vertices[0];
                 var b = p.Vertices[1];
                 var c = p.Vertices[2];
-                var av = mesh.AddVertex(a.Pos.ToElementsVector(), a.Tex.ToUV(), n, merge: true);
-                var bv = mesh.AddVertex(b.Pos.ToElementsVector(), b.Tex.ToUV(), n, merge: true);
-                var cv = mesh.AddVertex(c.Pos.ToElementsVector(), c.Tex.ToUV(), n, merge: true);
+                var av = mesh.FindOrCreateVertex(a.Pos.ToElementsVector(), a.Tag, a.Tex.ToUV(), n);
+                var bv = mesh.FindOrCreateVertex(b.Pos.ToElementsVector(), b.Tag, b.Tex.ToUV(), n);
+                var cv = mesh.FindOrCreateVertex(c.Pos.ToElementsVector(), c.Tag, c.Tex.ToUV(), n);
 
                 var t = new Triangle(av, bv, cv);
                 if (!t.HasDuplicatedVertices(out Vector3 _))
@@ -107,10 +107,10 @@ namespace Elements.Geometry
                 var b = p.Vertices[1];
                 var c = p.Vertices[2];
                 var d = p.Vertices[3];
-                var av = mesh.AddVertex(a.Pos.ToElementsVector(), a.Tex.ToUV(), n, merge: true);
-                var bv = mesh.AddVertex(b.Pos.ToElementsVector(), b.Tex.ToUV(), n, merge: true);
-                var cv = mesh.AddVertex(c.Pos.ToElementsVector(), c.Tex.ToUV(), n, merge: true);
-                var dv = mesh.AddVertex(d.Pos.ToElementsVector(), d.Tex.ToUV(), n, merge: true);
+                var av = mesh.FindOrCreateVertex(a.Pos.ToElementsVector(), a.Tag, a.Tex.ToUV(), n);
+                var bv = mesh.FindOrCreateVertex(b.Pos.ToElementsVector(), b.Tag, b.Tex.ToUV(), n);
+                var cv = mesh.FindOrCreateVertex(c.Pos.ToElementsVector(), c.Tag, c.Tex.ToUV(), n);
+                var dv = mesh.FindOrCreateVertex(d.Pos.ToElementsVector(), d.Tag, d.Tex.ToUV(), n);
 
                 var t = new Triangle(av, bv, cv);
                 if (!t.HasDuplicatedVertices(out Vector3 _))
@@ -128,25 +128,31 @@ namespace Elements.Geometry
             {
                 // Polygons coming back from Csg can have an arbitrary number
                 // of vertices. We need to retessellate the returned polygon.
-                var tess = new Tess();
-                tess.NoEmptyPolygons = true;
+                var tess = new Tess
+                {
+                    NoEmptyPolygons = true
+                };
 
                 tess.AddContour(p.Vertices.ToContourVertices());
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
 
-                tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
-                    var a = tess.Vertices[tess.Elements[i * 3]].Position.ToVector3();
-                    var b = tess.Vertices[tess.Elements[i * 3 + 1]].Position.ToVector3();
-                    var c = tess.Vertices[tess.Elements[i * 3 + 2]].Position.ToVector3();
+                    var t1 = tess.Vertices[tess.Elements[i * 3]];
+                    var t2 = tess.Vertices[tess.Elements[i * 3 + 1]];
+                    var t3 = tess.Vertices[tess.Elements[i * 3 + 2]];
 
-                    var uva = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3]].Data;
-                    var uvb = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 1]].Data;
-                    var uvc = (Csg.Vector2D)tess.Vertices[tess.Elements[i * 3 + 2]].Data;
+                    var a = t1.Position.ToVector3();
+                    var b = t2.Position.ToVector3();
+                    var c = t3.Position.ToVector3();
 
-                    var v1 = mesh.AddVertex(a, uva.ToUV(), n, merge: true);
-                    var v2 = mesh.AddVertex(b, uvb.ToUV(), n, merge: true);
-                    var v3 = mesh.AddVertex(c, uvc.ToUV(), n, merge: true);
+                    var dataA = ((Csg.Vector2D, int))t1.Data;
+                    var dataB = ((Csg.Vector2D, int))t2.Data;
+                    var dataC = ((Csg.Vector2D, int))t3.Data;
+
+                    var v1 = mesh.FindOrCreateVertex(a, dataA.Item2, dataA.Item1.ToUV(), n);
+                    var v2 = mesh.FindOrCreateVertex(b, dataB.Item2, dataB.Item1.ToUV(), n);
+                    var v3 = mesh.FindOrCreateVertex(c, dataC.Item2, dataC.Item1.ToUV(), n);
 
                     var t = new Triangle(v1, v2, v3);
                     if (!t.HasDuplicatedVertices(out Vector3 _))
@@ -177,7 +183,7 @@ namespace Elements.Geometry
             var result = new ContourVertex[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)
             {
-                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z }, Data = vertices[i].Tex };
+                result[i] = new ContourVertex() { Position = new Vec3() { X = vertices[i].Pos.X, Y = vertices[i].Pos.Y, Z = vertices[i].Pos.Z }, Data = (vertices[i].Tex, vertices[i].Tag) };
             }
             return result;
         }
@@ -190,6 +196,39 @@ namespace Elements.Geometry
         private static Csg.Vector2D ToCsgVector2(this UV uv)
         {
             return new Csg.Vector2D(uv.U, uv.V);
+        }
+
+        /// <summary>
+        /// Convert an array of CSG vertices to an array of tessellation
+        /// vertices, storing the texture coordinates and the tag in the data.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <param name="faceId"></param>
+        internal static ContourVertex[] ToContourVertexArray(this IList<Csg.Vertex> vertices, int faceId)
+        {
+            var contour = new ContourVertex[vertices.Count];
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var v = vertices[i];
+
+                var cv = new ContourVertex
+                {
+                    Position = new Vec3 { X = v.Pos.X, Y = v.Pos.Y, Z = v.Pos.Z },
+                    Data = (v.Tex.ToUV(), v.Tag, faceId)
+                };
+                contour[i] = cv;
+            }
+            return contour;
+        }
+
+        internal static Vector3 ToVector3(this Csg.Vector3D v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
+        internal static Csg.Vector3D ToCsgVector3(this Vec3 v)
+        {
+            return new Csg.Vector3D(v.X, v.Y, v.Z);
         }
     }
 }

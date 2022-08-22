@@ -10,6 +10,7 @@ namespace Elements.Geometry.Tessellation
     {
         private readonly Face face;
         private readonly Transform transform;
+        private readonly long faceId;
 
         /// <summary>
         /// Construct a SolidFaceTessAdaptor.
@@ -33,26 +34,18 @@ namespace Elements.Geometry.Tessellation
                 NoEmptyPolygons = true
             };
 
-            tess.AddContour(face.Outer.ToContourVertexArray(transform));
+            tess.AddContour(face.Outer.ToContourVertexArray((int)face.Id, transform));
 
             if (face.Inner != null)
             {
                 foreach (var loop in face.Inner)
                 {
-                    tess.AddContour(loop.ToContourVertexArray(transform));
+                    tess.AddContour(loop.ToContourVertexArray((int)face.Id, transform));
                 }
             }
 
             tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
             return tess;
-        }
-
-        /// <summary>
-        /// Does this target require tessellation?
-        /// </summary>
-        public bool RequiresTessellation()
-        {
-            return true;
         }
     }
 }
