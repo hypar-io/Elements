@@ -73,7 +73,7 @@ namespace Elements.Geometry.Profiles
         private string CompilePolygonScriptFromExpressions(List<VectorExpression> expressions)
         {
             var sb = new StringBuilder();
-            sb.Append("new Polygon(new[]{");
+            sb.Append("new Polygon(true, new[]{");
 
             foreach (var expr in expressions)
             {

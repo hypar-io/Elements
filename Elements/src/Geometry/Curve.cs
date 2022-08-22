@@ -28,14 +28,21 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset parameter from the start of the curve.</param>
         /// <param name="endSetback">The offset parameter from the end of the curve.</param>
+        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
         /// <returns>A collection of transforms.</returns>
-        public virtual Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0)
+        public virtual Transform[] Frames(double startSetback = 0.0,
+                                          double endSetback = 0.0,
+                                          double additionalRotation = 0.0)
         {
             var parameters = GetSampleParameters(startSetback, endSetback);
             var transforms = new Transform[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
                 transforms[i] = TransformAt(parameters[i]);
+                if (additionalRotation != 0.0)
+                {
+                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
+                }
             }
             return transforms;
         }

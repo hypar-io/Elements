@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Solids;
+using Elements.Search;
 
 namespace Elements.Geometry
 {
@@ -282,15 +283,7 @@ namespace Elements.Geometry
 
         public bool Intersects(Mesh mesh, out Vector3 result)
         {
-            result = default;
-            foreach (var t in mesh.Triangles)
-            {
-                if (this.Intersects(t, out result))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return mesh.Intersects(this, out result);
         }
 
         /// <summary>
@@ -368,6 +361,24 @@ namespace Elements.Geometry
             }
             result = default(Vector3);
             return false;
+        }
+
+        /// <summary>
+        /// Find points in the collection that are within the provided distance of this ray.
+        /// </summary>
+        /// <param name="points">The collection of points to search</param>
+        /// <param name="distance">The maximum distance from the ray.</param>
+        /// <returns>Points that are within the given distance of the ray.</returns>
+        public Vector3[] NearbyPoints(IEnumerable<Vector3> points, double distance)
+        {
+            // TODO: calibrate these values
+            var octree = new PointOctree<Vector3>(10000, (0, 0, 0), (float)Vector3.EPSILON * 100);
+            foreach (var point in points)
+            {
+                octree.Add(point, point);
+            }
+            var nearbyPoints = octree.GetNearby(this, (float)distance);
+            return nearbyPoints;
         }
 
         /// <summary>

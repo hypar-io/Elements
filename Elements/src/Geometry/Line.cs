@@ -1,5 +1,3 @@
-using System.Net.Sockets;
-using System.Numerics;
 using Elements.Validators;
 using System;
 using System.Collections.Generic;
@@ -349,11 +347,12 @@ namespace Elements.Geometry
         /// <summary>
         /// Does this line touches or intersects the provided box in 3D?
         /// </summary>
-        /// <param name="box"></param>
-        /// <param name="results"></param>
+        /// <param name="box">Axis aligned box to intersect.</param>
+        /// <param name="results">Up to two intersection points.</param>
         /// <param name="infinite">Treat the line as infinite?</param>
+        /// <param name="tolerance">An optional distance tolerance.</param>
         /// <returns>True if the line touches or intersects the  box at least at one point, false otherwise.</returns>
-        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false)
+        public bool Intersects(BBox3 box, out List<Vector3> results, bool infinite = false, double tolerance = Vector3.EPSILON)
         {
             var d = End - Start;
             results = new List<Vector3>();
@@ -424,13 +423,13 @@ namespace Elements.Geometry
             var dMax = tMax * length;
 
             // Check if found parameters are within normalized line range.
-            if (infinite || (dMin > -Vector3.EPSILON && dMin < length + Vector3.EPSILON))
+            if (infinite || (dMin > -tolerance && dMin < length + tolerance))
             {
                 results.Add(Start + d * tMin);
             }
 
-            if (Math.Abs(dMax - dMin) > Vector3.EPSILON &&
-                (infinite || (dMax > -Vector3.EPSILON && dMax < length + Vector3.EPSILON)))
+            if (Math.Abs(dMax - dMin) > tolerance &&
+                (infinite || (dMax > -tolerance && dMax < length + tolerance)))
             {
                 results.Add(Start + d * tMax);
             }
@@ -478,29 +477,41 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Test if a point lies within this line segment
+        /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public bool PointOnLine(Vector3 point, bool includeEnds = false)
         {
             return Line.PointOnLine(point, Start, End, includeEnds);
         }
 
         /// <summary>
-        /// Test if a point lies within a given line segment
+        /// Test if a point lies within tolerance of a given line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// When true, any point within tolerance of the end points will be considered on the line.
+        /// When false, points precisely at the ends of the line will not be considered on the line.</param>
         public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
         {
-            if (includeEnds && (point.DistanceTo(start) < Vector3.EPSILON || point.DistanceTo(end) < Vector3.EPSILON))
+            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
             {
                 return true;
             }
-            return (start - point).Unitized().Dot((end - point).Unitized()) < (Vector3.EPSILON - 1);
+
+            var delta = end - start;
+            var lambda = (point - start).Dot(delta) / (end - start).Dot(delta);
+            if (lambda > 0 && lambda < 1)
+            {
+                var pointOnLine = start + lambda * delta;
+                return pointOnLine.IsAlmostEqualTo(point);
+            }
+            return false;
         }
 
         /// <summary>
@@ -1110,6 +1121,7 @@ namespace Elements.Geometry
             return (point - start).Length() / (end - start).Length();
         }
 
+        /// <summary>
         /// Creates new line with vertices of current and joined line
         /// </summary>
         /// <param name="line">Collinear line</param>
@@ -1135,6 +1147,7 @@ namespace Elements.Geometry
                 : joinedLine.Reversed();
         }
 
+        /// <summary>
         /// Projects current line onto a plane
         /// </summary>
         /// <param name="plane">Plane to project</param>
@@ -1169,7 +1182,7 @@ namespace Elements.Geometry
             }
             else if (distinctPoints.Count == 2)
             {
-                return new Line(points[0], points[1]);
+                return new Line(distinctPoints[0], distinctPoints[1]);
             }
 
             // find the coefficients of the straight line equation (y = m * x + b) using the least squares method
@@ -1234,6 +1247,7 @@ namespace Elements.Geometry
         /// Find the 'b' coefficient of the straight line equation (y = m * x + b) using the least squares method
         /// </summary>
         /// <param name="points">Points for which best fit line should be found.</param>
+        /// <param name="m">'m' coefficient of the straight line equation.</param>
         /// <returns>The 'b' coefficient of the straight line equation.</returns>
         private static double FindBCoefficient(IList<Vector3> points, double m)
         {
@@ -1241,6 +1255,18 @@ namespace Elements.Geometry
             var sumy = points.Sum(p => p.Y);
             var b = (sumy - m * sumx) / points.Count;
             return b;
+        }
+
+        /// <summary>
+        /// Checks if line lays on plane
+        /// </summary>
+        /// <param name="plane">Plane to check</param>
+        /// <param name="tolerance">Optional tolerance value</param>
+        /// <returns>The result of check if line lays on plane</returns>
+        public bool IsOnPlane(Plane plane, double tolerance = 1E-05)
+        {
+            return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
+                && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
         }
     }
 }

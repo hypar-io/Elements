@@ -5,17 +5,22 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Text.Json.Serialization;
 using Elements.Geometry.Tessellation;
 using System.Text.Json;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
     public class CsgTests : ModelTest
     {
         private HSSPipeProfileFactory _profileFactory = new HSSPipeProfileFactory();
+
+        private readonly ITestOutputHelper output;
+
+        public CsgTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
 
         [Fact]
         public void Csg()
@@ -93,7 +98,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void UnionWithProblematicPolygons()
+        public void UnionWithPolygonsWhichCreateZeroAreaTessElement()
         {
             var profile1 = JsonSerializer.Deserialize<Polygon>(
                 @"{
@@ -165,14 +170,16 @@ namespace Elements.Tests
                     }
                     ]}"
                     );
-            var element = new GeometricElement();
-            element.Representation = new Representation(new List<SolidOperation>{
-                new Extrude(profile1, 1, Vector3.ZAxis, false),
-                new Extrude(profile2, 1, Vector3.ZAxis, false)
-            });
+            var element = new GeometricElement
+            {
+                Representation = new Representation(new List<SolidOperation>{
+                    new Extrude(profile1, 1, Vector3.ZAxis, false),
+                    new Extrude(profile2, 1, Vector3.ZAxis, false)
+                })
+            };
 
             element.UpdateRepresentations();
-            var solid = element.GetFinalCsgFromSolids();
+            element.GetFinalCsgFromSolids();
         }
 
         [Fact]
@@ -184,9 +191,8 @@ namespace Elements.Tests
             var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
-            var mgb = new MockGraphicsBuffer();
             var arrows = new ModelArrows();
-            Tessellation.Tessellate(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)), mgb);
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
             for (int i = 0; i < mgb.Indices.Count; i += 3)
             {
                 var a = mgb.Indices[i];
@@ -207,9 +213,10 @@ namespace Elements.Tests
 
         private class MockGraphicsBuffer : IGraphicsBuffers
         {
-            public List<ushort> Indices { get; set; } = new List<ushort>();
+            public List<ushort> Indices { get; set; }
 
-            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal)>();
+            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; }
+
             public void AddIndex(ushort index)
             {
                 Indices.Add(index);
@@ -230,9 +237,15 @@ namespace Elements.Tests
                 Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
             }
 
-            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
             {
                 throw new NotImplementedException();
+            }
+
+            public void Initialize(int vertexCount = 0, int indexCount = 0)
+            {
+                this.Vertices = new List<(Vector3 position, Vector3 normal)>();
+                this.Indices = new List<ushort>();
             }
         }
     }

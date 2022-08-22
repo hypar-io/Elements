@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Polygon
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -261,6 +261,18 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Split_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Boolean_">Polyline.Split(IList&lt;Vector3&gt;, Boolean)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_GetParameterAt_Elements_Geometry_Vector3_">Polyline.GetParameterAt(Vector3)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Intersects_Elements_Geometry_Line_System_Collections_Generic_List_Elements_Geometry_Vector3___System_Boolean_System_Boolean_">Polyline.Intersects(Line, List&lt;Vector3&gt;, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Intersects_Elements_Geometry_Polygon_System_Collections_Generic_List_Elements_Geometry_Polyline___">Polyline.Intersects(Polygon, List&lt;Polyline&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_GetSubsegment_Elements_Geometry_Vector3_Elements_Geometry_Vector3_">Polyline.GetSubsegment(Vector3, Vector3)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
     </div>
     <div>
@@ -322,7 +334,8 @@ that can be used like this: <code>new Polygon((0,0,0), (10,0,0), (10,10,0))</cod
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1201,6 +1214,62 @@ calculated without regard for Z coordinate.</p>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><p>A rectangular polygon that contains all input points</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d*"></a>
+  <h4 id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3},Elements.Geometry.Vector3,System.Double)">FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt;, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Find the rectangle along axis containing a set of points,
+calculated without regard for Z coordinate,
+located at the height of points minimum Z coordinate.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Polygon FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt; points, Vector3 axis, double minSideSize = 0.1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to contain within the rectangle.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">axis</span></td>
+        <td><p>The axis along which the rectangle is built. Must be a non-zero vector.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">minSideSize</span></td>
+        <td><p>The minimum size of a side of a polygon when all points lie on the same line and polygon cannot be constructed. Must be greater than 0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -3088,6 +3157,18 @@ tolerance.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polygon_ValidateVertices_" data-uid="Elements.Geometry.Polygon.ValidateVertices*"></a>
+  <h4 id="Elements_Geometry_Polygon_ValidateVertices" data-uid="Elements.Geometry.Polygon.ValidateVertices">ValidateVertices()</h4>
+  <div class="markdown level1 summary"><p>Validate that this Polygon's vertices are coplanar, clean up any
+duplicate vertices, and fix any overlapping edges.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ValidateVertices()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_ValidateVertices">Polyline.ValidateVertices()</a></div>
   <a id="Elements_Geometry_Polygon_XOR_" data-uid="Elements.Geometry.Polygon.XOR*"></a>
   <h4 id="Elements_Geometry_Polygon_XOR_Elements_Geometry_Polygon_System_Double_" data-uid="Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon,System.Double)">XOR(Polygon, Double)</h4>
   <div class="markdown level1 summary"><p>Returns Polygons representing the symmetric difference between this Polygon and the supplied Polygon.</p>

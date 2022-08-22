@@ -34,7 +34,7 @@ namespace Elements.Geometry
             {
                 pts[i] = this.PointAt((double)i / (double)divisions);
             }
-            return new Polygon(pts);
+            return new Polygon(pts, true);
         }
     }
 }

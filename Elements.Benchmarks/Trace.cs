@@ -30,8 +30,8 @@ namespace Elements.Benchmarks
     }
 
     [EventPipeProfiler(EventPipeProfile.CpuSampling)]
-    [SimpleJob]
     [MemoryDiagnoser]
+    [SimpleJob]
     public class TraceGltfSerialization
     {
         private Model _model;

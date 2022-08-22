@@ -109,9 +109,7 @@ namespace Elements.Geometry.Solids
 
         private void UpdateGeometry()
         {
-            var profileTrans = new Transform();
-            profileTrans.Rotate(profileTrans.ZAxis, this.ProfileRotation);
-            this._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(this._profile), this._curve, this._startSetback, this._endSetback);
+            this._solid = Kernel.Instance.CreateSweepAlongCurve(this._profile, this._curve, this._startSetback, this._endSetback, this._profileRotation);
         }
     }
 }
