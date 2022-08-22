@@ -23,16 +23,17 @@ namespace Elements.Serialization.SVG.Tests
         public void Plan()
         {
             var json = File.ReadAllText("../../../models/tower.json");
-            var model = Model.FromJson(json, out var errors);
+            var model = Model.FromJson(json, out _);
 
             model.UpdateRepresentations();
             model.UpdateBoundsAndComputedSolids();
 
-            SvgSection.CreatePlanFromModels(new[] { model },
-                                            3,
-                                            _frontContext,
-                                            _backContext,
-                                            "ModelPlan.svg", planRotation: PlanRotation.LongestGridHorizontal);
+            SvgSection.CreateAndSavePlanFromModels(new[] { model },
+                                                   3,
+                                                   _frontContext,
+                                                   _backContext,
+                                                   "ModelPlan.svg",
+                                                   planRotation: PlanRotation.LongestGridHorizontal);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Elements.Serialization.SVG
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
         /// <param name="path">The location on disk to write the SVG file.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
-        public static void SavePlanFromModels(IList<Model> models,
+        public static void CreateAndSavePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
                                                 SvgContext backContext,
@@ -175,9 +175,9 @@ namespace Elements.Serialization.SVG
             foreach (var model in models)
             {
                 model.Intersect(plane,
-                                        out Dictionary<Guid, List<Polygon>> intersecting,
-                                        out Dictionary<Guid, List<Polygon>> back,
-                                        out Dictionary<Guid, List<Line>> lines);
+                                out Dictionary<Guid, List<Polygon>> intersecting,
+                                out Dictionary<Guid, List<Polygon>> back,
+                                out Dictionary<Guid, List<Line>> lines);
 
                 foreach (var intersectingPolygon in intersecting)
                 {
