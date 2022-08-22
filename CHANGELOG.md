@@ -11,6 +11,7 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
+- `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
 
 ### Changed
 
@@ -26,6 +27,7 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
 
 ## 1.1.0
 
@@ -47,7 +49,7 @@
 - `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
-- `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
+- `Solid.ToCSG()` extension method is now an instance method on `Solid`.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
 - `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method

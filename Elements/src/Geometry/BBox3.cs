@@ -56,7 +56,6 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Domain1d ZDomain => new Domain1d(Min.Z, Max.Z);
 
-
         /// <summary>
         /// Create a bounding box.
         /// </summary>
