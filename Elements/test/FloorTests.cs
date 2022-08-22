@@ -37,7 +37,7 @@ namespace Elements.Tests
         {
             this.Name = "FloorWithAddedOpenings";
 
-            var p = Polygon.Rectangle(10, 20);
+            var p = Polygon.L(10, 20, 5);
             var floor1 = new Floor(p, 0.1, new Transform(0, 0, 0.5), material: new Material("green", Colors.Green, 0.0f, 0.0f));
 
             var transRotate = new Transform();
@@ -54,11 +54,11 @@ namespace Elements.Tests
 
             floor1.UpdateRepresentations();
             Assert.Single(floor1.GetCsgSolids());
-            Assert.Equal(16, floor1.GetFinalCsgFromSolids().Polygons.Count);
+            Assert.Equal(18, floor1.GetFinalCsgFromSolids().Polygons.Count);
 
             floor2.UpdateRepresentations();
             Assert.Single(floor2.GetCsgSolids());
-            Assert.Equal(20, floor2.GetFinalCsgFromSolids().Polygons.Count);
+            Assert.Equal(26, floor2.GetFinalCsgFromSolids().Polygons.Count);
 
             this.Model.AddElements(new[] { floor1, floor2 });
         }

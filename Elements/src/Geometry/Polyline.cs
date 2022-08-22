@@ -44,6 +44,23 @@ namespace Elements.Geometry
             _bounds = new BBox3(Vertices);
         }
 
+
+        /// <summary>
+        /// Construct a polyline.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
+        {
+            this.Vertices = @vertices;
+
+            if (!Validator.DisableValidationOnConstruction && !disableValidation)
+            {
+                ValidateVertices();
+            }
+            _bounds = new BBox3(Vertices);
+        }
+
         /// <summary>
         /// Clean up any duplicate vertices, and warn about any vertices that are too close to each other.
         /// </summary>
@@ -59,6 +76,17 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">The vertices of the polyline.</param>
         public Polyline(params Vector3[] vertices) : this(new List<Vector3>(vertices))
+        {
+
+        }
+
+        /// <summary>
+        /// Construct a polyline from points. This is a convenience constructor
+        /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        /// <param name="vertices">The vertices of the polyline.</param>
+        public Polyline(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation)
         {
 
         }
@@ -312,7 +340,7 @@ namespace Elements.Geometry
                 for (var i = 2; i < this.Vertices.Count; i++)
                 {
                     previousDirection = (this.Vertices[i] - this.Vertices[1]).Unitized();
-                    if (Math.Abs(previousDirection.Dot(nextDirection)) > 1 - Vector3.EPSILON)
+                    if (Math.Abs(previousDirection.Dot(nextDirection)) < 1 - Vector3.EPSILON)
                     {
                         break;
                     }
@@ -326,7 +354,7 @@ namespace Elements.Geometry
             {
                 // If this vertex has a bend, use the normal computed from the previous and next edges.
                 // Otherwise keep using the normal from the previous bend.
-                if (i < result.Length - 1)
+                if (i > 0 && i < result.Length - 1)
                 {
                     var direction = (this.Vertices[i + 1] - this.Vertices[i]).Unitized();
                     if (Math.Abs(nextDirection.Dot(direction)) < 1 - Vector3.EPSILON)
@@ -338,12 +366,12 @@ namespace Elements.Geometry
                 var normal = nextDirection.Cross(previousDirection);
 
                 // Flip the normal if it's pointing away from the previous point's normal.
-                if (i > 1 && previousNormal.Dot(normal) < 0)
+                if (i >= 1 && previousNormal.Dot(normal) < 0)
                 {
                     normal *= -1;
                 }
                 result[i] = normal.Unitized();
-                previousNormal = normal;
+                previousNormal = result[i];
             }
             return result;
         }
@@ -353,7 +381,10 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback"></param>
         /// <param name="endSetback"></param>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        /// <param name="additionalRotation"></param>
+        public override Transform[] Frames(double startSetback = 0.0,
+                                           double endSetback = 0.0,
+                                           double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
 
@@ -363,6 +394,10 @@ namespace Elements.Geometry
             {
                 var a = this.Vertices[i];
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
+                if (additionalRotation != 0.0)
+                {
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
+                }
             }
             return result;
         }
@@ -489,31 +524,36 @@ namespace Elements.Geometry
             return new Transform(this.Vertices[i], x, x.Cross(up));
         }
 
-        private Transform CreateOrthogonalTransform(int i, Vector3 a, Vector3 up)
+        private Transform CreateOrthogonalTransform(int i, Vector3 origin, Vector3 up)
         {
-            Vector3 b, x, c;
+            Vector3 prev, next, tangent;
 
             if (i == 0)
             {
-                b = this.Vertices[i + 1];
-                var z = (a - b).Unitized();
-                return new Transform(a, up.Cross(z), z);
+                next = this.Vertices[i + 1];
+                tangent = (next - origin).Unitized();
             }
             else if (i == this.Vertices.Count - 1)
             {
-                b = this.Vertices[i - 1];
-                var z = (b - a).Unitized();
-                return new Transform(a, up.Cross(z), z);
+                prev = this.Vertices[i - 1];
+                tangent = (origin - prev).Unitized();
             }
             else
             {
-                b = this.Vertices[i - 1];
-                c = this.Vertices[i + 1];
-                var v1 = (b - a).Unitized();
-                var v2 = (c - a).Unitized();
-                x = v1.Average(v2).Negate();
-                return new Transform(this.Vertices[i], x, x.Cross(up));
+                prev = this.Vertices[i - 1];
+                next = this.Vertices[i + 1];
+                var v1 = (origin - prev).Unitized();
+                var v2 = (next - origin).Unitized();
+                tangent = v1.Average(v2).Unitized();
+                // if a segment doubles back on itself, this will be zero — just
+                // pick one tangent if this happens.
+                if (tangent.IsZero())
+                {
+                    tangent = v1;
+                }
             }
+            tangent = tangent.Negate();
+            return new Transform(origin, up.Cross(tangent), tangent);
         }
 
         /// <summary>
@@ -1008,7 +1048,10 @@ namespace Elements.Geometry
             {
                 if (segment.Intersects(line, out var point, infinite: infinite, includeEnds: includeEnds))
                 {
-                    intersections.Add(point);
+                    if (segment.PointOnLine(point, includeEnds) && intersections.All(x => !x.IsAlmostEqualTo(point)))
+                    {
+                        intersections.Add(point);
+                    }
                 }
             }
 
@@ -1076,7 +1119,7 @@ namespace Elements.Geometry
         /// <returns>New polyline or null if any of points is not on polyline</returns>
         public Polyline GetSubsegment(Vector3 start, Vector3 end)
         {
-            if(start.IsAlmostEqualTo(end))
+            if (start.IsAlmostEqualTo(end))
             {
                 return null;
             }
@@ -1084,7 +1127,7 @@ namespace Elements.Geometry
             var startParameter = GetParameterAt(start);
             var endParameter = GetParameterAt(end);
 
-            if(startParameter < 0 || endParameter < 0)
+            if (startParameter < 0 || endParameter < 0)
             {
                 return null;
             }
@@ -1094,7 +1137,7 @@ namespace Elements.Geometry
             var vertices = new List<Vector3>();
             var lastVertex = Vector3.Origin;
 
-            if(startParameter < endParameter)
+            if (startParameter < endParameter)
             {
                 firstParameter = startParameter;
                 lastParameter = endParameter;
