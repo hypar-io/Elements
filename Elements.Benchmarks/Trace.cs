@@ -22,6 +22,7 @@ namespace Elements.Benchmarks
     }
 
     [EventPipeProfiler(EventPipeProfile.CpuSampling)]
+    [MemoryDiagnoser]
     [SimpleJob]
     public class TraceGltfSerialization
     {

@@ -263,9 +263,9 @@ namespace Elements.Geometry.Tests
         public void Intersects()
         {
             var polyline = new Polyline(
-                new Vector3(-5,-5), 
-                new Vector3(-5, 5), 
-                new Vector3(5,5), 
+                new Vector3(-5, -5),
+                new Vector3(-5, 5),
+                new Vector3(5, 5),
                 new Vector3(5, -5));
 
             var notIntersectingLine = new Line(new Vector3(-3, 0), new Vector3(3, 0));
@@ -292,6 +292,21 @@ namespace Elements.Geometry.Tests
             Assert.True(polyline.Intersects(collinearSegmentLine, out result, includeEnds: true));
             Assert.Collection(result,
                 x => Assert.True(x.IsAlmostEqualTo(collinearSegmentLine.End)));
+
+            var lPolygon = Polygon.L(10, 10, 4);
+            var upperLine = new Line(new Vector3(5, 1), new Vector3(5, 2));
+            Assert.False(lPolygon.Intersects(upperLine, out result));
+            Assert.True(lPolygon.Intersects(upperLine, out result, infinite: true));
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(new Vector3(5, 0)),
+                x => x.IsAlmostEqualTo(new Vector3(5, 4)));
+
+            var verticiesLine = new Line(Vector3.Origin, new Vector3(4, 4));
+            Assert.False(lPolygon.Intersects(verticiesLine, out result));
+            Assert.True(lPolygon.Intersects(verticiesLine, out result, includeEnds: true));
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(verticiesLine.Start),
+                x => x.IsAlmostEqualTo(verticiesLine.End));
         }
 
         [Fact]
@@ -485,7 +500,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(5, -5));
 
             var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
-            
+
             var expectedResult = new Polyline(new Vector3(-5, -3),
                 new Vector3(-5, 5),
                 new Vector3(5, 5),
@@ -509,6 +524,51 @@ namespace Elements.Geometry.Tests
             var endSubsegment = polyline.GetSubsegment(middlePoint, polyline.End);
             var endSubsegmentExpected = new Polyline(middlePoint, new Vector3(5, 5), polyline.End);
             Assert.Equal(endSubsegmentExpected, endSubsegment);
+        }
+
+        [Fact]
+        public void PolylineFrameNormalsAreConsistent()
+        {
+            Name = nameof(PolylineFrameNormalsAreConsistent);
+            Polyline curve = new Polyline(
+                (0, 0, 0),
+                (1, 0, 0),
+                (2, 4, 3),
+                (5, 3, 1),
+                (10, 0, 0)
+            );
+
+            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
+
+            var frames = curve.Frames();
+
+            for (int i = 0; i < frames.Length - 1; i++)
+            {
+                var currFrame = frames[i];
+                var nextFrame = frames[i + 1];
+                var currNormal = currFrame.ZAxis;
+                var nextNormal = nextFrame.ZAxis;
+                Assert.True(currNormal.Dot(nextNormal) > 0.0);
+            }
+
+            var bFrames = bezier.Frames();
+
+            var parameters = new List<double>();
+            for (int i = 0; i < 20; i++)
+            {
+                parameters.Add(i / 19.0);
+            }
+
+            var movedCrv = curve.TransformedPolyline(new Transform(15, 0, 0));
+
+            var transformAtFrames = parameters.Select(p => movedCrv.TransformAt(p));
+
+            Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElements(bFrames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElements(transformAtFrames.SelectMany(f => f.ToModelCurves()));
+            Model.AddElement(curve);
+            Model.AddElement(movedCrv);
+            Model.AddElement(bezier);
         }
     }
 }

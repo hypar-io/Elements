@@ -31,6 +31,12 @@ namespace Elements.Geometry
         public UV UV { get; set; } = new UV();
 
         /// <summary>
+        /// A tag used to map a mesh vertex to a vertex of a CSG or a solid.
+        /// </summary>
+        [JsonIgnore]
+        public int Tag { get; set; }
+
+        /// <summary>
         /// Construct a vertex.
         /// </summary>
         /// <param name="position">The position of the vertex.</param>

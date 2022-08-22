@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using LibTessDotNet.Double;
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
@@ -15,77 +17,122 @@ namespace Elements.Geometry.Tessellation
         /// Triangulate a collection of CSGs and pack the triangulated data into
         /// a supplied buffers object. 
         /// </summary>
-        internal static void Tessellate(IEnumerable<ITessellationTargetProvider> providers,
-                                        IGraphicsBuffers buffers,
-                                        bool mergeVertices = false,
-                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+        internal static T Tessellate<T>(IEnumerable<ITessellationTargetProvider> providers,
+                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null) where T : IGraphicsBuffers
         {
-            var allVertices = new List<(Vector3 position, Vector3 normal, UV uv, Color color)>();
+
+            // Gather all the tessellations
+            var tesses = new List<Tess>();
             foreach (var provider in providers)
             {
                 foreach (var target in provider.GetTessellationTargets())
                 {
-                    TessellatePolygon(target.GetTess(), buffers, allVertices, mergeVertices);
+                    tesses.Add(target.GetTess());
                 }
             }
 
-            foreach (var v in allVertices)
-            {
-                if (modifyVertexAttributes != null)
-                {
-                    var mod = modifyVertexAttributes(v);
-                    buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
-                }
-                else
-                {
-                    buffers.AddVertex(v.position, v.normal, v.uv);
-                }
-            }
+            // Pre-allocate a buffer big enough to hold all the tessellations
+            var buffer = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));
+            buffer.Initialize(tesses.Sum(tess => tess.VertexCount), tesses.Sum(tess => tess.Elements.Length));
+
+            PackTessellationsIntoBuffers(tesses, buffer, modifyVertexAttributes);
+
+            return (T)buffer;
         }
 
-        private static void TessellatePolygon(Tess tess,
+        private static void PackTessellationsIntoBuffers(List<Tess> tesses,
                                               IGraphicsBuffers buffers,
-                                              List<(Vector3 position, Vector3 normal, UV uv, Color color)> allVertices,
-                                              bool mergeVertices = false)
+                                              Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes)
         {
-            if (tess.ElementCount == 0)
+            // The vertex map enables us to re-use vertices. Csgs and solid faces 
+            // create vertices which store the face id, the vertex id, and for csgs, the uv. 
+            // We can use the tag as the key to lookup the index of the vertex to avoid re-creating it.
+            var vertexMap = new Dictionary<(int tag, long faceId), ushort>();
+
+            var tessOffset = 0;
+            var index = 0;
+
+            foreach (var tess in tesses)
             {
-                return;
-            }
+                if (tess.ElementCount == 0)
+                {
+                    return;
+                }
 
-            var vertexIndices = new ushort[tess.Vertices.Length];
+                // We pick the first triangle from the tesselator,
+                // instead of the first three vertices, which are not guaranteed to be
+                // wound correctly.
+                var a = tess.Vertices[tess.Elements[0]].ToElementsVector();
+                var b = tess.Vertices[tess.Elements[1]].ToElementsVector();
+                var c = tess.Vertices[tess.Elements[2]].ToElementsVector();
 
-            // We pick the first triangle from the tesselator,
-            // instead of the first three vertices, which are not guaranteed to be
-            // wound correctly.
-            var a = tess.Vertices[tess.Elements[0]].ToElementsVector();
-            var b = tess.Vertices[tess.Elements[1]].ToElementsVector();
-            var c = tess.Vertices[tess.Elements[2]].ToElementsVector();
+                // Calculate the texture space basis vectors
+                // from the first triangle. This is acceptable
+                // for planar faces.
+                // TODO: Update this when we support non-planar faces.
+                // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
+                var (U, V) = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
 
-            // Calculate the texture space basis vectors
-            // from the first triangle. This is acceptable
-            // for planar faces.
-            // TODO: Update this when we support non-planar faces.
-            // https://gamedev.stackexchange.com/questions/172352/finding-texture-coordinates-for-plane
-            var (U, V) = ComputeBasisAndNormalForTriangle(a, b, c, out Vector3 n);
+                var newVerts = 0;
 
-            for (var i = 0; i < tess.Vertices.Length; i++)
-            {
-                var v = tess.Vertices[i];
-                var uu = U.Dot(v.Position.X, v.Position.Y, v.Position.Z);
-                var vv = V.Dot(v.Position.X, v.Position.Y, v.Position.Z);
+                for (var i = 0; i < tess.Elements.Length; i++)
+                {
+                    var localIndex = tess.Elements[i];
+                    var v = tess.Vertices[localIndex];
+                    var tessIndex = tessOffset + localIndex;
 
-                vertexIndices[i] = (ushort)GetOrCreateVertex(new Vector3(v.Position.X, v.Position.Y, v.Position.Z),
-                                                             new Vector3(n.X, n.Y, n.Z),
-                                                             new UV(uu, vv),
-                                                             allVertices,
-                                                             mergeVertices);
-            }
+                    // This is an optimization to use pre-existing csg vertex 
+                    // data to match vertices. 
 
-            for (var k = 0; k < tess.Elements.Length; k++)
-            {
-                var index = vertexIndices[tess.Elements[k]];
-                buffers.AddIndex(index);
+                    var (uv, tag, faceId) = ((UV uv, int tag, int faceId))v.Data;
+
+                    if (vertexMap.ContainsKey((tag, faceId)))
+                    {
+                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
+                        // Reference an existing vertex from csg
+                        buffers.AddIndex(vertexMap[(tag, faceId)]);
+                        continue;
+                    }
+                    else if (vertexMap.ContainsKey((index, 0)))
+                    {
+                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
+                        // Reference an existing vertex created
+                        // earlier here.
+                        buffers.AddIndex(vertexMap[(index, 0)]);
+                        continue;
+                    }
+                    else
+                    {
+                        // Create a new vertex.
+                        var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
+                        var c1 = default(Color);
+
+                        // Solid faces won't have UV coordinates.
+                        if (uv == default)
+                        {
+                            var uu = U.Dot(v1);
+                            var vv = V.Dot(v1);
+                            uv = new UV(uu, vv);
+                        }
+
+                        if (modifyVertexAttributes != null)
+                        {
+                            var mod = modifyVertexAttributes((v1, n, uv, c1));
+                            buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
+                        }
+                        else
+                        {
+                            buffers.AddVertex(v1, n, uv, c1);
+                        }
+                        Debug.WriteLine($"Adding vertex (tag:{tag},faceId:{faceId}):{index}");
+                        buffers.AddIndex((ushort)index);
+                        vertexMap.Add((tag, faceId), (ushort)index);
+                        newVerts++;
+                        index++;
+                    }
+                }
+                tessOffset += newVerts;
+                Debug.WriteLine($"----------{tessOffset}");
             }
         }
 
@@ -94,32 +141,10 @@ namespace Elements.Geometry.Tessellation
             return new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
         }
 
-        private static int GetOrCreateVertex(Vector3 position,
-                                             Vector3 normal,
-                                             UV uv,
-                                             List<(Vector3 position, Vector3 normal, UV uv, Color color)> pts,
-                                             bool mergeVertices)
-        {
-            if (mergeVertices)
-            {
-                var index = pts.FindIndex(p =>
-                {
-                    return p.position.IsAlmostEqualTo(position) && p.normal.AngleTo(normal) < 45.0;
-                });
-                if (index != -1)
-                {
-                    return index;
-                }
-            }
-
-            pts.Add((position, normal, uv, default(Color)));
-            return pts.Count - 1;
-        }
-
         internal static (Vector3 U, Vector3 V) ComputeBasisAndNormalForTriangle(Vector3 a, Vector3 b, Vector3 c, out Vector3 n)
         {
             var tmp = (b - a).Unitized();
-            n = tmp.Cross(c - a).Unitized();
+            n = tmp.Cross((c - a).Unitized()).Unitized();
             var basis = n.ComputeDefaultBasisVectors();
             return basis;
         }
