@@ -4,8 +4,6 @@ using Elements.Geometry;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-using System.IO;
-
 namespace Elements.Analysis
 {
     /// <summary>
@@ -63,13 +61,14 @@ namespace Elements.Analysis
                             double vLength,
                             ColorScale colorScale,
                             Func<Vector3, double> analyze,
-                            Guid id = default(Guid),
+                            Guid id = default,
                             string name = null) : base(perimeter, uLength, vLength, colorScale, analyze, id, name) { }
 
         /// <summary>
         /// Compute a value for each grid cell, and create the required material.
         /// </summary>
-        public override void Analyze() {
+        public override void Analyze()
+        {
             base.Analyze();
 
             _perimBounds = new BBox3(new[] { this.Perimeter });
@@ -83,14 +82,14 @@ namespace Elements.Analysis
 
             var image = new Image<Rgba32>(_imgPixels, _imgPixels);
 
-            foreach (var result in this._results)
+            foreach (var (cell, value) in this._results)
             {
-                var center = result.cell.Center();
+                var center = cell.Center();
                 if (this.Perimeter.Contains(center))
                 {
-                    var vertexColor = this.ColorScale.GetColor(result.value);
-                    var u = (result.cell.Min.X - _perimBounds.Min.X) / _perimW * (_numPixelsX / _imgPixels);
-                    var v = (result.cell.Min.Y - _perimBounds.Min.Y) / _perimH * (_numPixelsY / _imgPixels);
+                    var vertexColor = this.ColorScale.GetColor(value);
+                    var u = (cell.Min.X - _perimBounds.Min.X) / _perimW * (_numPixelsX / _imgPixels);
+                    var v = (cell.Min.Y - _perimBounds.Min.Y) / _perimH * (_numPixelsY / _imgPixels);
 
                     var pX = (int)Math.Round(u * _imgPixels); // pixels in world coordinates
                     var pY = (int)Math.Round(v * _imgPixels); // pixels in world coordinates
@@ -108,7 +107,7 @@ namespace Elements.Analysis
                     image[x, y] = rgbaColor;
 
                     // Extend this color to the right
-                    if (Math.Abs(result.cell.Max.X - _perimBounds.Max.X) < Vector3.EPSILON)
+                    if (Math.Abs(cell.Max.X - _perimBounds.Max.X) < Vector3.EPSILON)
                     {
                         while (x < _imgPixels - 1)
                         {
@@ -118,7 +117,7 @@ namespace Elements.Analysis
                     }
 
                     // Extend this color to the top
-                    if (Math.Abs(result.cell.Max.Y - _perimBounds.Max.Y) < Vector3.EPSILON)
+                    if (Math.Abs(cell.Max.Y - _perimBounds.Max.Y) < Vector3.EPSILON)
                     {
                         while (y >= 0)
                         {
@@ -129,16 +128,13 @@ namespace Elements.Analysis
                 }
             }
 
-            var imagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
-            image.Save(imagePath);
-
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, imagePath, true, true, interpolateTexture:false, id: Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid()}", Colors.White, image, 0, 0, true, true, interpolateTexture: false, id: Guid.NewGuid());
         }
 
         /// <summary>
         /// Gives an element with a mapped texture.
         /// </summary>
-        public override void Tessellate(ref Mesh mesh, Transform transform = null, Elements.Geometry.Color color = default(Elements.Geometry.Color))
+        public override void Tessellate(ref Mesh mesh, Transform transform = null, Elements.Geometry.Color color = default)
         {
             var meshVertices = new List<Vertex>();
 

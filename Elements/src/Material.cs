@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using Elements.Geometry;
 using Elements.Validators;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Elements
 {
@@ -15,10 +18,25 @@ namespace Elements
     /// </example>
     public class Material : Element
     {
+        /// <summary>
+        /// The texture image.
+        /// </summary>
+        internal Image<Rgba32> _texture;
+
+        /// <summary>
+        /// The normal texture image.
+        /// </summary>
+        internal Image<Rgba32> _normalTexture;
+
+        /// <summary>
+        /// The emissive texture image.
+        /// </summary>
+        internal Image<Rgba32> _emissiveTexture;
+
         /// <summary>The material's color.</summary>
         [JsonProperty("Color", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public Color Color { get; set; } = new Color();
+        public Geometry.Color Color { get; set; } = new Geometry.Color();
 
         /// <summary>The specular factor between 0.0 and 1.0.</summary>
         [JsonProperty("SpecularFactor", Required = Required.Always)]
@@ -101,7 +119,7 @@ namespace Elements
         /// <param name="id">The id of the material.</param>
         /// <param name="name">The name of the material.</param>
         [JsonConstructor]
-        public Material(Color @color,
+        public Material(Geometry.Color @color,
                         double @specularFactor,
                         double @glossinessFactor,
                         bool @unlit,
@@ -117,27 +135,36 @@ namespace Elements
                         string @name = null)
             : base(id, name)
         {
+            if (texture != null)
+            {
+                // https://weblog.west-wind.com/posts/2019/Aug/20/UriAbsoluteUri-and-UrlEncoding-of-Local-File-Urls
+                _texture = Image.CreateFromUri(ConstructUri(texture));
+                if (_texture == null)
+                {
+                    throw new ArgumentException("No image data could be found for the specified texture path.");
+                }
+            }
+
+            if (normalTexture != null)
+            {
+                _normalTexture = Image.CreateFromUri(ConstructUri(normalTexture));
+                if (_normalTexture == null)
+                {
+                    throw new ArgumentException("No image data could be found for the specified normal texture path.");
+                }
+            }
+
+            if (emissiveTexture != null)
+            {
+                _emissiveTexture = Image.CreateFromUri(ConstructUri(emissiveTexture));
+                if (_emissiveTexture == null)
+                {
+                    throw new ArgumentException("No image data could be found for the specified emissive texture path.");
+                }
+            }
+
             if (!Validator.DisableValidationOnConstruction)
             {
-                if (texture != null && !File.Exists(texture))
-                {
-                    // If the file doesn't exist, set the texture to null,
-                    // so the material is still created.
-                    texture = null;
-                }
-
-                if (normalTexture != null && !File.Exists(normalTexture))
-                {
-                    // If the file doesn't exist, set the normalTexture to null,
-                    // so the material is still created.
-                    normalTexture = null;
-                }
-
-                if (emissiveTexture != null && !File.Exists(emissiveTexture))
-                {
-                    emissiveTexture = null;
-                }
-
                 if (specularFactor < 0.0 || glossinessFactor < 0.0)
                 {
                     throw new ArgumentOutOfRangeException("The material could not be created. Specular and glossiness values must be less greater than 0.0.");
@@ -163,6 +190,18 @@ namespace Elements
             this.DrawInFront = drawInFront;
         }
 
+        private Uri ConstructUri(string path)
+        {
+            if (path.StartsWith("https://") || path.StartsWith("http://") || path.StartsWith("file://"))
+            {
+                return new Uri(path);
+            }
+            else
+            {
+                return new Uri($"file://{Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path)}");
+            }
+        }
+
         /// <summary>
         /// Construct a material.
         /// </summary>
@@ -180,7 +219,8 @@ namespace Elements
         /// <param name="color">The RGBA color of the material.</param>
         /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
         /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
-        /// <param name="texture">A relative path to a jpg or png image file to be used as a texture.</param>
+        /// <param name="texture">A path to a jpg or png image file to be used as a texture. The path will be
+        /// converted to a uri. It can be a local file path, a path relative to the executing assembly, or a url.</param>
         /// <param name="unlit">Is this material affected by lights?</param>
         /// <param name="doubleSided">Is this material to be rendered from both sides?</param>
         /// <param name="repeatTexture">Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</param>
@@ -193,7 +233,7 @@ namespace Elements
         /// <exception>Thrown when the specular or glossiness value is less than 0.0.</exception>
         /// <exception>Thrown when the specular or glossiness value is greater than 1.0.</exception>
         public Material(string name,
-                        Color color,
+                        Geometry.Color color,
                         double specularFactor = 0.1,
                         double glossinessFactor = 0.1,
                         string texture = null,
@@ -221,6 +261,114 @@ namespace Elements
                  id != default ? id : Guid.NewGuid(),
                  name)
         { }
+
+        /// <summary>
+        /// Construct a material.
+        /// </summary>
+        /// <param name="name">The name of the material.</param>
+        /// <param name="color">The color of the material.</param>
+        /// <param name="specularFactor">The specular component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="glossinessFactor">The glossiness component of the color. Between 0.0 and 1.0.</param>
+        /// <param name="texture">The texture image.</param>
+        /// <param name="unlit">Is this material affected by lights?</param>
+        /// <param name="doubleSided">Is this material to be rendered from both sides?</param>
+        /// <param name="repeatTexture">Should the texture be repeated? The RepeatTexture property determines whether textures are clamped in the [0,0]->[1,1] range or repeat continuously.</param>
+        /// <param name="normalTexture">The normal texture image.</param>
+        /// <param name="interpolateTexture">Should the texture colors be interpolated between pixels? If false, renders hard pixels in the texture rather than fading between adjacent pixels.</param>
+        /// <param name="emissiveTexture">The emissive texture image.</param>
+        /// <param name="emissiveFactor">The scale, between 0.0 and 1.0, of the emissive texture's components.</param>
+        /// <param name="drawInFront">Should objects with this material be drawn in front of all other objects?</param>
+        /// <param name="id">The id of the material.</param>
+        public Material(string name,
+                        Geometry.Color color,
+                        Image<Rgba32> texture,
+                        double specularFactor = 0.1,
+                        double glossinessFactor = 0.1,
+                        bool unlit = false,
+                        bool doubleSided = false,
+                        bool repeatTexture = true,
+                        Image<Rgba32> normalTexture = null,
+                        bool interpolateTexture = true,
+                        Image<Rgba32> emissiveTexture = null,
+                        double emissiveFactor = 1.0,
+                        bool drawInFront = false,
+                        Guid id = default) :
+
+            this(color,
+                 specularFactor,
+                 glossinessFactor,
+                 unlit,
+                 null,
+                 doubleSided,
+                 repeatTexture,
+                 null,
+                 interpolateTexture,
+                 null,
+                 emissiveFactor,
+                 drawInFront,
+                 id != default ? id : Guid.NewGuid(),
+                 name)
+        {
+            _texture = texture;
+            _normalTexture = normalTexture;
+            _emissiveTexture = emissiveTexture;
+        }
+
+        public Material(string name,
+                        Geometry.Color color,
+                        byte[] texture,
+                        double specularFactor = 0.1,
+                        double glossinessFactor = 0.1,
+                        bool unlit = false,
+                        bool doubleSided = false,
+                        bool repeatTexture = true,
+                        byte[] normalTexture = null,
+                        bool interpolateTexture = true,
+                        byte[] emissiveTexture = null,
+                        double emissiveFactor = 1.0,
+                        bool drawInFront = false,
+                        Guid id = default) :
+
+            this(color,
+                 specularFactor,
+                 glossinessFactor,
+                 unlit,
+                 null,
+                 doubleSided,
+                 repeatTexture,
+                 null,
+                 interpolateTexture,
+                 null,
+                 emissiveFactor,
+                 drawInFront,
+                 id != default ? id : Guid.NewGuid(),
+                 name)
+        {
+            _texture = Image.CreateFromBytes(texture);
+            _normalTexture = Image.CreateFromBytes(normalTexture);
+            _emissiveTexture = Image.CreateFromBytes(emissiveTexture);
+        }
+
+        /// <summary>
+        /// Finalize the model text.
+        /// </summary>
+        ~Material()
+        {
+            if (_texture != null)
+            {
+                _texture.Dispose();
+            }
+
+            if (_normalTexture != null)
+            {
+                _normalTexture.Dispose();
+            }
+
+            if (_emissiveTexture != null)
+            {
+                _emissiveTexture.Dispose();
+            }
+        }
 
         /// <summary>
         /// Is this material equal to the provided material?
