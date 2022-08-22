@@ -8,14 +8,32 @@ using Colors = System.Drawing.Color;
 
 namespace Elements.Serialization.SVG
 {
+    /// <summary>
+    /// Orientations for a plan relative to the page.
+    /// </summary>
     public enum PlanRotation
     {
+        /// <summary>
+        /// Align the longest grid along the long axis of the page.
+        /// </summary>
         LongestGridHorizontal,
+        /// <summary>
+        /// Align the longest grid along the short axis of the page.
+        /// </summary>
         LongestGridVertical,
+        /// <summary>
+        /// Do not reorient the drawing on the page.
+        /// </summary>
         None,
+        /// <summary>
+        /// Roate the drawing by a specific angle.
+        /// </summary>
         Angle,
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class SvgSection
     {
         /// <summary>
@@ -24,14 +42,14 @@ namespace Elements.Serialization.SVG
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
-        /// <param name="frontContext"></param>
-        /// <param name="backContext"></param>
+        /// <param name="frontContext">An svg context which defines settings for elements cut by the cut plane.</param>
+        /// <param name="backContext">An svg context which defines settings for elements behind the cut plane.</param>
         /// <param name="path">The location on disk to write the SVG file.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
-        /// <param name="gridHeadExtension"></param>
-        /// <param name="gridHeadRadius"></param>
-        /// <param name="planRotation"></param>
-        /// <param name="planRotationDegrees"></param>
+        /// <param name="gridHeadExtension">The extension of the grid head past the bounds of the drawing in the created plan.</param>
+        /// <param name="gridHeadRadius">The radius of grid heads in the created plan.</param>
+        /// <param name="planRotation">How should the plan be rotated relative to the page?</param>
+        /// <param name="planRotationDegrees">An additional amount to rotate the plan.</param>
         public static void CreateAndSavePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
@@ -53,14 +71,13 @@ namespace Elements.Serialization.SVG
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
-        /// <param name="frontContext"></param>
-        /// <param name="backContext"></param>
-        /// <param name="path">The location on disk to write the SVG file.</param>
+        /// <param name="frontContext">An svg context which defines settings for elements cut by the cut plane.</param>
+        /// <param name="backContext">An svg context which defines settings for elements behind the cut plane.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
-        /// <param name="gridHeadExtension"></param>
-        /// <param name="gridHeadRadius"></param>
-        /// <param name="planRotation"></param>
-        /// <param name="planRotationDegrees"></param>
+        /// <param name="gridHeadExtension">The extension of the grid head past the bounds of the drawing in the created plan.</param>
+        /// <param name="gridHeadRadius">The radius of grid heads in the created plan.</param>
+        /// <param name="planRotation">How should the plan be rotated relative to the page?</param>
+        /// <param name="planRotationDegrees">An additional amount to rotate the plan.</param>
         public static SvgDocument CreatePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
