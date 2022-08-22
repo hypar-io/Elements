@@ -1,21 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
+
+[assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
+            InternalsVisibleTo("Hypar.Elements.Serialization.SVG")]
 
 namespace Elements
 {
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
+        internal BBox3 _bounds;
+        internal Csg.Solid _csg;
+
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
@@ -67,7 +71,28 @@ namespace Elements
         /// </summary>
         public virtual void UpdateRepresentations()
         {
-            // Override in derived classes.
+            // Override in derived classes
+        }
+
+        /// <summary>
+        /// Update the computed solid and the bounding box of the element.
+        /// </summary>
+        public void UpdateBoundsAndComputeSolid()
+        {
+            if (Transform != null)
+            {
+                var tScale = Transform.GetScale();
+                if (tScale.X == 0.0 || tScale.Y == 0.0 || tScale.Z == 0.0)
+                {
+                    throw new ArgumentOutOfRangeException($"A solid cannot be created for elements {Id}. One or more components of the element's transform has a scale equal to zero.");
+                }
+            }
+            _csg = GetFinalCsgFromSolids();
+            if (_csg == null)
+            {
+                return;
+            }
+            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
         }
 
         /// <summary>
@@ -121,6 +146,11 @@ namespace Elements
         /// <param name="transformed">Should the csg be transformed by the element's transform?</param>
         internal Csg.Solid GetFinalCsgFromSolids(bool transformed = false)
         {
+            if (Representation == null || Representation.SolidOperations.Count == 0)
+            {
+                return null;
+            }
+
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
             // can be computed and by default the final csg will have the inverse of the

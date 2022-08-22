@@ -1380,6 +1380,7 @@ namespace Elements.Serialization.glTF
                                                            GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
+            geometricElement.UpdateBoundsAndComputeSolid();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
@@ -1439,8 +1440,7 @@ namespace Elements.Serialization.glTF
             }
             else
             {
-                var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
+                buffers = geometricElement._csg.Tessellate(geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)
