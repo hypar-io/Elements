@@ -1,6 +1,5 @@
 ﻿using Elements.Geometry;
 using Elements.Spatial.AdaptiveGrid;
-using Elements.Tests;
 using System.Collections.Generic;
 using Xunit;
 
@@ -110,15 +109,6 @@ namespace Elements
             Assert.False(flatObstacle.IsInside(edgePoint));
 
             pointInside = new Vector3(3, 3);
-            Assert.True(flatObstacle.IsInside(pointInside));
-        }
-
-        [Fact]
-        public void Test()
-        {
-            var flatObstacle = Obstacle.FromBBox(new BBox3(new Vector3(2, 2), new Vector3(4, 4)), perimeter: true);
-            var pointInside = new Vector3(3, 3);
-
             Assert.True(flatObstacle.IsInside(pointInside));
         }
     }
