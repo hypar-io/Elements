@@ -9,47 +9,113 @@ namespace Elements
     /// </summary>
     public class Animation
     {
-        List<byte> _scaleTimes = new List<byte>();
-        List<byte> _scales = new List<byte>();
-        List<byte> _translationTimes = new List<byte>();
-        List<byte> _translations = new List<byte>();
-        List<byte> _rotationTimes = new List<byte>();
-        List<byte> _rotations = new List<byte>();
-
-        float[] _scaleMin;
-        float[] _scaleMax;
+        readonly List<byte> _scaleTimes = new List<byte>();
+        readonly List<byte> _scales = new List<byte>();
+        readonly List<byte> _translationTimes = new List<byte>();
+        readonly List<byte> _translations = new List<byte>();
+        readonly List<byte> _rotationTimes = new List<byte>();
+        readonly List<byte> _rotations = new List<byte>();
+        readonly float[] _scaleMin;
+        readonly float[] _scaleMax;
         float _scaleTimeMin;
         float _scaleTimeMax;
-
-        float[] _translationMin;
-        float[] _translationMax;
+        readonly float[] _translationMin;
+        readonly float[] _translationMax;
         float _translationTimeMin;
         float _translationTimeMax;
-
-        float[] _rotationMin;
-        float[] _rotationMax;
+        readonly float[] _rotationMin;
+        readonly float[] _rotationMax;
         float _rotationTimeMin;
         float _rotationTimeMax;
 
+        /// <summary>
+        /// An array of bytes representing the scale keys.
+        /// </summary>
         public byte[] Scales => _scales.ToArray();
+
+        /// <summary>
+        /// An array of bytes representing the scale time keys.
+        /// </summary>
         public byte[] ScaleTimes => _scaleTimes.ToArray();
+
+        /// <summary>
+        /// The minimum scale time.
+        /// </summary>
         public float ScaleTimeMin => _scaleTimeMin;
+
+        /// <summary>
+        /// The maximum scale time.
+        /// </summary>
         public float ScaleTimeMax => _scaleTimeMax;
+
+        /// <summary>
+        /// The minimum scale as [x,y,z].
+        /// </summary>
         public float[] ScaleMin => _scaleMin;
+
+        /// <summary>
+        /// The maximum scale as [x,y,z];
+        /// </summary>
         public float[] ScaleMax => _scaleMax;
 
+        /// <summary>
+        /// An array of bytes representing translation keys.
+        /// </summary>
         public byte[] Translations => _translations.ToArray();
+
+        /// <summary>
+        /// An array of bytes representing translation time keys.
+        /// </summary>
         public byte[] TranslationTimes => _translationTimes.ToArray();
+
+        /// <summary>
+        /// The minimum translation time.
+        /// </summary>
         public float TranslationTimeMin => _translationTimeMin;
+
+        /// <summary>
+        /// The maximum translation time.
+        /// </summary>
         public float TranslationTimeMax => _translationTimeMax;
+
+        /// <summary>
+        /// The minimum translation as [x,y,z].
+        /// </summary>
         public float[] TranslationMin => _translationMin;
+
+        /// <summary>
+        /// The maximum translation as [x,y,z].
+        /// </summary>
         public float[] TranslationMax => _translationMax;
 
+        /// <summary>
+        /// An array of bytes representing rotation keys.
+        /// </summary>
         public byte[] Rotations => _rotations.ToArray();
+
+        /// <summary>
+        /// An array of bytes representing rotation time keys.
+        /// </summary>
         public byte[] RotationTimes => _rotationTimes.ToArray();
+
+        /// <summary>
+        /// The minimum rotation time.
+        /// </summary>
         public float RotationTimeMin => _rotationTimeMin;
+
+        /// <summary>
+        /// The maximum rotation time.
+        /// </summary>
         public float RotationTimeMax => _rotationTimeMax;
+
+        /// <summary>
+        /// The minimum rotation as [x,y,z,w].
+        /// </summary>
         public float[] RotationMin => _rotationMin;
+
+        /// <summary>
+        /// The maximum rotation as [x,y,z,w].
+        /// </summary>
         public float[] RotationMax => _rotationMax;
 
         /// <summary>
@@ -72,11 +138,12 @@ namespace Elements
             _rotationTimeMin = float.MaxValue;
             _rotationTimeMax = float.MinValue;
         }
+
         /// <summary>
         /// Add a scale keyframe.
         /// </summary>
-        /// <param name="scale"></param>
-        /// <param name="time"></param>
+        /// <param name="scale">The scale value.</param>
+        /// <param name="time">The time at which to apply the scale value.</param>
         public void AddScaleKeyframe(Geometry.Vector3 scale, double time)
         {
             _scales.AddRange(BitConverter.GetBytes((float)scale.X));
@@ -103,7 +170,7 @@ namespace Elements
         /// <param name="axis">The axis of rotation.</param>
         /// <param name="angle">The angle of rotation in radians.</param>
         /// <param name="time">The keyframe time.</param>
-        public void AddRotationKeyframe(Elements.Geometry.Vector3 axis, double angle, double time)
+        public void AddRotationKeyframe(Geometry.Vector3 axis, double angle, double time)
         {
             var rotation = new Quaternion(new Vector3((float)axis.X, (float)axis.Y, (float)axis.Z), (float)Units.DegreesToRadians(angle));
             rotation = Quaternion.Normalize(rotation);
@@ -132,8 +199,8 @@ namespace Elements
         /// <summary>
         /// Add a translation keyframe.
         /// </summary>
-        /// <param name="translation"></param>
-        /// <param name="time"></param>
+        /// <param name="translation">The translation value.</param>
+        /// <param name="time">The time at which to apply the translation.</param>
         public void AddTranslationKeyframe(Geometry.Vector3 translation, double time)
         {
             _translations.AddRange(BitConverter.GetBytes((float)translation.X));
@@ -157,7 +224,6 @@ namespace Elements
         /// <summary>
         /// Is the scale of the element animated?
         /// </summary>
-        /// <returns></returns>
         public bool HasAnimatedScale()
         {
             return _scales.Count > 0;
@@ -166,7 +232,6 @@ namespace Elements
         /// <summary>
         /// Is the translation of the element animated?
         /// </summary>
-        /// <returns></returns>
         public bool HasAnimatedTranslation()
         {
             return _translations.Count > 0;
@@ -175,7 +240,6 @@ namespace Elements
         /// <summary>
         /// Is the rotation of the element animated?
         /// </summary>
-        /// <returns></returns>
         public bool HasAnimatedRotation()
         {
             return _rotations.Count > 0;
