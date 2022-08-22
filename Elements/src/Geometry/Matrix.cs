@@ -1,7 +1,6 @@
 using Elements.Validators;
 using System;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 
 namespace Elements.Geometry
 {

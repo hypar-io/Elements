@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
+
+[assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
+            InternalsVisibleTo("Hypar.Elements.Serialization.SVG")]
 
 namespace Elements
 {
@@ -14,14 +17,8 @@ namespace Elements
     [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
-        private BBox3 _bounds;
+        internal BBox3 _bounds;
         internal Csg.Solid _csg;
-
-        /// <summary>
-        /// The element's bounds.
-        /// </summary>
-        [JsonProperty("Bounds")]
-        public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
@@ -82,6 +79,14 @@ namespace Elements
         /// </summary>
         public void UpdateBoundsAndComputeSolid()
         {
+            if (Transform != null)
+            {
+                var tScale = Transform.GetScale();
+                if (tScale.X == 0.0 || tScale.Y == 0.0 || tScale.Z == 0.0)
+                {
+                    throw new ArgumentOutOfRangeException($"A solid cannot be created for elements {Id}. One or more components of the element's transform has a scale equal to zero.");
+                }
+            }
             _csg = GetFinalCsgFromSolids();
             if (_csg == null)
             {

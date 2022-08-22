@@ -101,7 +101,6 @@ namespace Elements
             if (element is GeometricElement geo)
             {
                 geo.UpdateRepresentations();
-                geo.UpdateBoundsAndComputeSolid();
             }
 
             if (gatherSubElements)
@@ -275,10 +274,10 @@ namespace Elements
             UpdateBoundsAndComputedSolids();
 
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
-            var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
+            var intersectingElements = geos.Where(geo => geo._bounds.Intersects(plane, out _)).ToList();
 
             var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>();
-            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition.Bounds.Intersects(plane, out _, geo.Transform)).ToList();
+            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition._bounds.Intersects(plane, out _, geo.Transform)).ToList();
 
             var allIntersectingElements = new List<Element>();
             allIntersectingElements.AddRange(intersectingInstances);

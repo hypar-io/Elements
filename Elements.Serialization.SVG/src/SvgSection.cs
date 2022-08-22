@@ -24,8 +24,14 @@ namespace Elements.Serialization.SVG
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
+        /// <param name="frontContext"></param>
+        /// <param name="backContext"></param>
         /// <param name="path">The location on disk to write the SVG file.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
+        /// <param name="gridHeadExtension"></param>
+        /// <param name="gridHeadRadius"></param>
+        /// <param name="planRotation"></param>
+        /// <param name="planRotationDegrees"></param>
         public static void CreateAndSavePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
@@ -47,8 +53,14 @@ namespace Elements.Serialization.SVG
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
+        /// <param name="frontContext"></param>
+        /// <param name="backContext"></param>
         /// <param name="path">The location on disk to write the SVG file.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
+        /// <param name="gridHeadExtension"></param>
+        /// <param name="gridHeadRadius"></param>
+        /// <param name="planRotation"></param>
+        /// <param name="planRotationDegrees"></param>
         public static SvgDocument CreatePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
@@ -256,21 +268,21 @@ namespace Elements.Serialization.SVG
                         geo.UpdateRepresentations();
                         geo.UpdateBoundsAndComputeSolid();
 
-                        if (geo.Bounds.Max.X > max.X)
+                        if (geo._bounds.Max.X > max.X)
                         {
-                            max.X = geo.Bounds.Max.X;
+                            max.X = geo._bounds.Max.X;
                         }
-                        if (geo.Bounds.Max.Y > max.Y)
+                        if (geo._bounds.Max.Y > max.Y)
                         {
-                            max.Y = geo.Bounds.Max.Y;
+                            max.Y = geo._bounds.Max.Y;
                         }
-                        if (geo.Bounds.Min.X < min.X)
+                        if (geo._bounds.Min.X < min.X)
                         {
-                            min.X = geo.Bounds.Min.X;
+                            min.X = geo._bounds.Min.X;
                         }
-                        if (geo.Bounds.Min.Y < min.Y)
+                        if (geo._bounds.Min.Y < min.Y)
                         {
-                            min.Y = geo.Bounds.Min.Y;
+                            min.Y = geo._bounds.Min.Y;
                         }
                     }
                 }
