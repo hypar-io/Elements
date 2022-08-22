@@ -13,6 +13,8 @@
 - `Message` class along with helper creation methods.
 - `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property 
 - `AdaptiveGrid.Obstacle.Intersects(Polyline polyline, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.Intersects(Line line, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.IsInside(Vector3 point, double tolerance = 1e-05)` method
 
 ### Changed
 
