@@ -272,6 +272,8 @@ namespace Elements
                               out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
                               out Dictionary<Guid, List<Geometry.Line>> lines)
         {
+            UpdateBoundsAndComputedSolids();
+
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
             var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 

@@ -19,13 +19,14 @@ namespace Elements.Serialization.SVG
     public static class SvgSection
     {
         /// <summary>
-        /// Generate a plan of a model at the provided elevation.
+        /// Create a plan of a model at the provided elevation and save the 
+        /// resulting section to the provided path.
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
         /// <param name="elevation">The elevation at which the plan will be cut.</param>
         /// <param name="path">The location on disk to write the SVG file.</param>
         /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
-        public static void CreatePlanFromModels(IList<Model> models,
+        public static void SavePlanFromModels(IList<Model> models,
                                                 double elevation,
                                                 SvgContext frontContext,
                                                 SvgContext backContext,
