@@ -20,6 +20,7 @@
 - `BBox3.Extend` method is public now
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
+- `LinearDimension`s now support `IOverrideLinked` behavior.
 
 ### Fixed
 
