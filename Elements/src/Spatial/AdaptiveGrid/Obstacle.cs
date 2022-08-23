@@ -11,14 +11,13 @@ namespace Elements.Spatial.AdaptiveGrid
     /// with extra offset. Since offset is applied on the box, distance on corners is even larger.
     /// Can be constructed from different objects.
     /// </summary>
-    public class Obstacle
+    public class Obstacle 
     {
         private Transform _transform;
-        private List<Vector3> _points;
         private double _offset;
 
-        private readonly List<Plane> _horizontalPlanes = new List<Plane>();
-        private readonly List<Plane> _verticalPlanes = new List<Plane>();
+        private readonly List<Polygon> _primaryPolygons = new List<Polygon>();
+        private readonly List<Polygon> _secondaryPolygons = new List<Polygon>();
 
         /// <summary>
         /// Create an obstacle from a column.
@@ -32,11 +31,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var p = column.Profile.Perimeter.TransformedPolygon(
                 new Transform(column.Location));
-            List<Vector3> points = new List<Vector3>();
-            points.AddRange(p.Vertices);
-            points.AddRange(p.Vertices.Select(
-                v => new Vector3(v.X, v.Y, v.Z + column.Height)));
-            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, null);
+            return new Obstacle(p, column.Height, offset, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -50,15 +45,17 @@ namespace Elements.Spatial.AdaptiveGrid
         public static Obstacle FromWall(StandardWall wall, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
             var ortho = wall.CenterLine.Direction().Cross(Vector3.ZAxis);
-            List<Vector3> points = new List<Vector3>();
-            points.Add(wall.CenterLine.Start + ortho * wall.Thickness / 2);
-            points.Add(wall.CenterLine.End + ortho * wall.Thickness / 2);
-            points.Add(wall.CenterLine.Start - ortho * wall.Thickness / 2);
-            points.Add(wall.CenterLine.End - ortho * wall.Thickness / 2);
-            points.AddRange(points.Select(v => new Vector3(v.X, v.Y, v.Z + wall.Height)).ToArray());
+            var polygon = new Polygon
+            (
+                wall.CenterLine.Start + ortho * wall.Thickness / 2,
+                wall.CenterLine.End + ortho * wall.Thickness / 2,
+                wall.CenterLine.Start - ortho * wall.Thickness / 2,
+                wall.CenterLine.End - ortho * wall.Thickness / 2
+            );
             var transfrom = new Transform(Vector3.Origin,
                 wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
-            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, transfrom);
+
+            return new Obstacle(polygon, wall.Height, offset, perimeter, allowOutsideBoundary, transfrom);
         }
 
         /// <summary>
@@ -71,24 +68,29 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New obstacle object.</returns>
         public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
-            return new Obstacle(box.Corners(), offset, perimeter, allowOutsideBoundary, null);
-        }
+            var minZ = box.Corners().Min(x => x.Z);
+            var maxZ = box.Corners().Max(x => x.Z);
 
-        /// <summary>
-        /// Create an obstacle from a 2d polygon and height.
-        /// </summary>
-        /// <param name="polyon">2d polygon to avoid.</param>
-        /// <param name="height">Height of the obstacle.</param>
-        /// <param name="offset">Extra space around obstacle bounding box.</param>
-        /// <param name="perimeter">Should edges be created around obstacle.</param>
-        /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
-        /// <returns>New obstacle object.</returns>
-        public static Obstacle From2DPolygon(Polygon polyon, double height, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
-        {
-            List<Vector3> points = new List<Vector3>();
-            points.AddRange(polyon.Vertices.Select(p => new Vector3(p.X, p.Y)));
-            points.AddRange(polyon.Vertices.Select(p => new Vector3(p.X, p.Y, height)));
-            return new Obstacle(points, offset, perimeter, allowOutsideBoundary, null);
+            var minZVertices = box.Corners().Where(x => x.Z.ApproximatelyEquals(minZ)).ToList();
+
+            var filteredVerices = new List<Vector3>();
+
+            foreach(var vertex in minZVertices)
+            {
+                if(filteredVerices.Any(x => x.IsAlmostEqualTo(vertex)))
+                {
+                    continue;
+                }
+
+                filteredVerices.Add(vertex);
+            }
+
+            var orderedVerices = filteredVerices.OrderBy(x => x.DistanceTo(filteredVerices.First())).ToList();
+            var polygon = new Polygon(orderedVerices[0], orderedVerices[1], orderedVerices[3], orderedVerices[2]);
+
+            var height = maxZ - minZ;
+
+            return new Obstacle(polygon, height, offset, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -106,53 +108,52 @@ namespace Elements.Spatial.AdaptiveGrid
                 throw new ArgumentException("Offset should be larger then zero.");
             }
 
-            List<Vector3> points = new List<Vector3>();
-            points.Add(line.Start);
-            points.Add(line.End);
+            var frame = line.TransformAt(0);
 
-            Transform frame = null;
-            var forward = line.Direction();
-            if (!forward.IsParallelTo(Vector3.ZAxis))
-            {
-                var rigth = forward.Cross(Vector3.ZAxis);
-                var up = forward.Cross(rigth);
-                frame = new Transform(Vector3.Origin, forward, rigth, up);
-            }
+            var polygon = new Polygon
+            (
+                line.Start + offset * (frame.XAxis + frame.YAxis),
+                line.Start - offset * (frame.XAxis + frame.YAxis),
+                line.End - offset * (frame.XAxis + frame.YAxis),
+                line.End + offset * (frame.XAxis + frame.YAxis)
+            );
 
-            return new Obstacle(points, offset, perimeter,allowOutsideBoundary, frame);
+            var height = offset * 2;
+
+            return new Obstacle(polygon, height, offset, perimeter, allowOutsideBoundary, frame);
         }
 
         /// <summary>
         /// Create an obstacle from a list of points.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="boudary">Boundary of an obstacle</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
         /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
         /// <param name="transformation">Transformation of the obstacle.</param>
-        public Obstacle(List<Vector3> points, double offset, bool perimeter, bool allowOutsideBoundary, Transform transformation)
+        public Obstacle(Polygon boudary, double height, double offset, bool perimeter, bool allowOutsideBoundary, Transform transformation)
         {
-            Points = points;
+            Boundary = boudary;
+            Height = height;
             Offset = offset;
             Perimeter = perimeter;
             AllowOutsideBoudary = allowOutsideBoundary;
             Transform = transformation;
 
-            UpdatePlanes();
+            UpdatePolygons();
         }
 
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points 
-        {
-            get => _points;
-            set
-            {
-                _points = value;
-                UpdatePlanes();
-            }
-        }
+        public List<Vector3> Points => Boundary
+            .Vertices
+            .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
+            .ToList();
+        
+        public Polygon Boundary { get; }
+
+        public double Height { get; }
 
         /// <summary>
         /// Offset of bounding box created from the list of points.
@@ -163,7 +164,7 @@ namespace Elements.Spatial.AdaptiveGrid
             set
             {
                 _offset = value;
-                UpdatePlanes();
+                UpdatePolygons();
             }
         }
 
@@ -188,7 +189,7 @@ namespace Elements.Spatial.AdaptiveGrid
             set
             {
                 _transform = value;
-                UpdatePlanes();
+                UpdatePolygons();
             }      
         }
 
@@ -211,107 +212,95 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Result of check</returns>
         public bool Intersects(Line line, double tolerance = 1e-05)
         {
-            if(IsInside(line.Start) || IsInside(line.End))
+            if (_secondaryPolygons.Any(x => IntersectsWithHorizontalPolygon(x, line, tolerance)))
             {
                 return true;
             }
 
-            var horizontalIntersections = GetIntersections(_horizontalPlanes, line);
-            var verticalIntersections = GetIntersections(_verticalPlanes, line);
-
-            if(horizontalIntersections.Any() && horizontalIntersections
-                .All(x => IsBetweenPlanes(_verticalPlanes, x, tolerance)))
-            {
-                return true;
-            }
-
-            if(verticalIntersections.Any() && verticalIntersections
-                .All(x => IsBetweenPlanesOrOnAnyOfThem(_horizontalPlanes, x, tolerance) 
-                    && IsBetweenPlanesOrOnAnyOfThem(_verticalPlanes, x, tolerance)))
-            {
-                return true;
-            }
-
-            return false;
+            var hints = _primaryPolygons.Where(x => DoesPolygonIntersectsWithLine(x, line, tolerance)).ToList();
+            return hints.Any() && hints.Count % 2 == 0;
         }
 
-        /// <summary>
-        /// Check if point is inside of an obstacle
-        /// </summary>
-        /// <param name="point">Point to check</param>
-        /// <param name="tolerance">Tolerance of check</param>
-        /// <returns>Result of check</returns>
-        public bool IsInside(Vector3 point, double tolerance = 1e-05)
+        private bool DoesPolygonIntersectsWithLine(Polygon polygon, Line line, double tolerance = 1e-05)
         {
-            if (!IsBetweenPlanesOrOnAnyOfThem(_horizontalPlanes, point, tolerance))
+            var plane = polygon.Plane();
+            if(!line.Intersects(plane, out var intersection, true))
             {
                 return false;
             }
 
-            return IsBetweenPlanes(_verticalPlanes, point, tolerance);
-        }
-
-        private void UpdatePlanes()
-        {
-            _horizontalPlanes.Clear();
-            _verticalPlanes.Clear();
-
-            var transformedPoints = Transform != null
-                ? Points.Select(x => Transform.OfPoint(x)).ToList()
-                : Points;
-
-            var minZ = transformedPoints.Min(x => x.Z);
-            var maxZ = transformedPoints.Max(x => x.Z);
-
-            _horizontalPlanes.Add(new Plane(new Vector3(0, 0, minZ - Offset), Vector3.ZAxis.Negate()));
-
-            var heightDifference = maxZ - minZ + Offset * 2;
-            if (!heightDifference.ApproximatelyEquals(0))
+            if(!polygon.Contains3D(intersection))
             {
-                _horizontalPlanes.Add(new Plane(new Vector3(0, 0, maxZ + Offset), Vector3.ZAxis));
+                return false;
             }
 
-            var minZPolygon = CreatePolygonFromPoints(transformedPoints.Where(x => x.Z.ApproximatelyEquals(minZ)).ToList(), Vector3.ZAxis.Negate());
-            foreach (var segment in minZPolygon.Segments())
+            if(line.PointOnLine(intersection))
             {
-                var polygon = new Polygon(segment.Start, segment.End, segment.End + Vector3.ZAxis, segment.Start + Vector3.ZAxis);   
-                _verticalPlanes.Add(polygon.Plane());
+                return true;
+            }
+
+            var distance = plane.SignedDistanceTo(intersection);
+
+            return plane.Normal.IsParallelTo(line.Direction()) && (distance.ApproximatelyEquals(0, tolerance) || distance < 0);
+            
+        }
+
+        private bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
+        {
+            if(polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
+            {
+                return true;
+            }
+
+            if(!polygon.Intersects(line, out var intersections, false, includeEnds: true))
+            {
+                return false;
+            }
+
+            return intersections.Any() && intersections.Count % 2 == 0;
+        }
+
+        private void UpdatePolygons()
+        {
+            if(Boundary == null)
+            {
+                return;
+            }
+
+            _primaryPolygons.Clear();
+            _secondaryPolygons.Clear();
+
+            var boundary = Boundary.Offset(Offset).First();
+            if(Transform != null)
+            {
+                boundary = boundary.TransformedPolygon(Transform);
+            }
+
+            if (!boundary.IsClockWise())
+            {
+                boundary = boundary.Reversed();
+            }
+
+            var offsetVector = boundary.Normal() * Offset;
+            boundary = boundary.TransformedPolygon(new Transform(offsetVector));
+            _secondaryPolygons.Add(boundary);
+
+            var topVector = boundary.Normal().Negate() * (Height + 2 * Offset);
+
+            if(topVector.IsAlmostEqualTo(Vector3.Origin))
+            {
+                return;
+            }
+
+            var topBoundary = boundary.TransformedPolygon(new Transform(topVector)).Reversed();
+            _secondaryPolygons.Add(topBoundary);
+
+            _primaryPolygons.AddRange(_secondaryPolygons);
+            foreach (var segment in boundary.Segments())
+            {
+                var polygon = new Polygon(segment.Start, segment.End, segment.End + topVector, segment.Start + topVector).Reversed();
+                _primaryPolygons.Add(polygon);
             }            
         }
-
-        private Polygon CreatePolygonFromPoints(List<Vector3> vertices, Vector3 offsetDirection)
-        {
-            var filteredVerticies = new List<Vector3>();
-            foreach (var vertex in vertices)
-            {
-                if (filteredVerticies.Any(x => x.IsAlmostEqualTo(vertex)))
-                {
-                    continue;
-                }
-                filteredVerticies.Add(vertex);
-            }
-
-            var orderedVertices = filteredVerticies.OrderBy(x => x.DistanceTo(filteredVerticies.First())).ToList();
-            var polygon =  new Polygon(orderedVertices[0], orderedVertices[1], orderedVertices[3], orderedVertices[2]);
-
-            var offsetVector = offsetDirection * Offset;
-            var transform = new Transform(offsetVector);
-            var offsetPolygon = polygon.Offset(Offset).First();
-            return offsetPolygon.TransformedPolygon(transform);
-        }
-
-        private static bool IsBetweenPlanesOrOnAnyOfThem(List<Plane> planes, Vector3 point, double tolerance = 1e-05) => planes.
-            Select(x => x.SignedDistanceTo(point)).All(x => x.ApproximatelyEquals(0, tolerance) || x < 0);
-
-        private static bool IsBetweenPlanes(List<Plane> planes, Vector3 point, double tolerance = 1e-05) => planes
-            .Select(x => x.SignedDistanceTo(point)).All(x => !x.ApproximatelyEquals(0, tolerance) && x < 0);
-
-        private static List<Vector3> GetIntersections(List<Plane> planes, Line line) => planes
-            .Where(x => line.Intersects(x, out var _))
-            .Select(x =>
-            {
-                line.Intersects(x, out var result);
-                return result;
-            }).ToList();
     }
 }
