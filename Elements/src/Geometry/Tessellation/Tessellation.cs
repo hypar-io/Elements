@@ -18,9 +18,9 @@ namespace Elements.Geometry.Tessellation
         /// a supplied buffers object. 
         /// </summary>
         internal static T Tessellate<T>(IEnumerable<ITessellationTargetProvider> providers,
-                                        Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null) where T : IGraphicsBuffers
+                                        bool mergeVertices = false,
+                                        Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null) where T : IGraphicsBuffers
         {
-
             // Gather all the tessellations
             var tesses = new List<Tess>();
             foreach (var provider in providers)
@@ -42,12 +42,14 @@ namespace Elements.Geometry.Tessellation
 
         private static void PackTessellationsIntoBuffers(List<Tess> tesses,
                                               IGraphicsBuffers buffers,
-                                              Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes)
+                                              Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes)
         {
             // The vertex map enables us to re-use vertices. Csgs and solid faces 
             // create vertices which store the face id, the vertex id, and for csgs, the uv. 
             // We can use the tag as the key to lookup the index of the vertex to avoid re-creating it.
             var vertexMap = new Dictionary<(int tag, long faceId), ushort>();
+            var vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
+            var indices = new List<ushort>();
 
             var tessOffset = 0;
             var index = 0;
@@ -90,7 +92,7 @@ namespace Elements.Geometry.Tessellation
                     {
                         Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex from csg
-                        buffers.AddIndex(vertexMap[(tag, faceId)]);
+                        indices.Add(vertexMap[(tag, faceId)]);
                         continue;
                     }
                     else if (vertexMap.ContainsKey((index, 0)))
@@ -98,14 +100,14 @@ namespace Elements.Geometry.Tessellation
                         Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex created
                         // earlier here.
-                        buffers.AddIndex(vertexMap[(index, 0)]);
+                        indices.Add(vertexMap[(index, 0)]);
                         continue;
                     }
                     else
                     {
                         // Create a new vertex.
                         var v1 = new Vector3(v.Position.X, v.Position.Y, v.Position.Z);
-                        var c1 = default(Color);
+                        Color? c1 = null;
 
                         // Solid faces won't have UV coordinates.
                         if (uv == default)
@@ -118,14 +120,14 @@ namespace Elements.Geometry.Tessellation
                         if (modifyVertexAttributes != null)
                         {
                             var mod = modifyVertexAttributes((v1, n, uv, c1));
-                            buffers.AddVertex(mod.Item1, mod.Item2, mod.Item3, mod.Item4);
+                            vertices.Add((mod.Item1, mod.Item2, mod.Item3, mod.Item4));
                         }
                         else
                         {
-                            buffers.AddVertex(v1, n, uv, c1);
+                            vertices.Add((v1, n, uv, c1));
                         }
                         Debug.WriteLine($"Adding vertex (tag:{tag},faceId:{faceId}):{index}");
-                        buffers.AddIndex((ushort)index);
+                        indices.Add((ushort)index);
                         vertexMap.Add((tag, faceId), (ushort)index);
                         newVerts++;
                         index++;
@@ -134,6 +136,9 @@ namespace Elements.Geometry.Tessellation
                 tessOffset += newVerts;
                 Debug.WriteLine($"----------{tessOffset}");
             }
+
+            buffers.AddIndices(indices);
+            buffers.AddVertices(vertices);
         }
 
         private static Vector3 ToElementsVector(this ContourVertex v)
