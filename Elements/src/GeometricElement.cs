@@ -1,21 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Elements.Geometry;
-using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Newtonsoft.Json;
+
+[assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
+            InternalsVisibleTo("Hypar.Elements.Serialization.SVG")]
 
 namespace Elements
 {
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
+        internal BBox3 _bounds;
+        internal Csg.Solid _csg;
+
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
@@ -38,7 +43,7 @@ namespace Elements
         /// as the object is tessellated.
         /// </summary>
         [JsonIgnore]
-        public Func<(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)> ModifyVertexAttributes { get; set; }
+        public Func<(Vector3 position, Vector3 normal, UV uv, Color? color), (Vector3 position, Vector3 normal, UV uv, Color? color)> ModifyVertexAttributes { get; set; }
 
         /// <summary>
         /// Create a geometric element.
@@ -67,7 +72,28 @@ namespace Elements
         /// </summary>
         public virtual void UpdateRepresentations()
         {
-            // Override in derived classes.
+            // Override in derived classes
+        }
+
+        /// <summary>
+        /// Update the computed solid and the bounding box of the element.
+        /// </summary>
+        public void UpdateBoundsAndComputeSolid()
+        {
+            if (Transform != null)
+            {
+                var tScale = Transform.GetScale();
+                if (tScale.X == 0.0 || tScale.Y == 0.0 || tScale.Z == 0.0)
+                {
+                    throw new ArgumentOutOfRangeException($"A solid cannot be created for elements {Id}. One or more components of the element's transform has a scale equal to zero.");
+                }
+            }
+            _csg = GetFinalCsgFromSolids();
+            if (_csg == null)
+            {
+                return;
+            }
+            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
         }
 
         /// <summary>
@@ -121,6 +147,11 @@ namespace Elements
         /// <param name="transformed">Should the csg be transformed by the element's transform?</param>
         internal Csg.Solid GetFinalCsgFromSolids(bool transformed = false)
         {
+            if (Representation == null || Representation.SolidOperations.Count == 0)
+            {
+                return null;
+            }
+
             // To properly compute csgs, all solid operation csgs need
             // to be transformed into their final position. Then the csgs
             // can be computed and by default the final csg will have the inverse of the
@@ -129,21 +160,38 @@ namespace Elements
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
-            var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                       .Select(op => TransformedSolidOperation(op))
-                                                       .ToArray();
-            var voids = Representation.SolidOperations.Where(op => op.IsVoid == true)
-                                                      .Select(op => TransformedSolidOperation(op))
-                                                      .ToArray();
+            var solids = new List<Csg.Solid>();
+            var voids = new List<Csg.Solid>();
+
+            foreach (var op in Representation.SolidOperations)
+            {
+                if (op.IsVoid)
+                {
+                    voids.Add(TransformedSolidOperation(op));
+                }
+                else
+                {
+                    solids.Add(TransformedSolidOperation(op));
+                }
+            }
 
             if (this is IHasOpenings openingContainer)
             {
-                openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
-                                                      .Where(op => op.IsVoid == true)
-                                                      .Select(op => TransformedSolidOperation(op, o.Transform))))
-                                                      .ToArray();
+                foreach (var opening in openingContainer.Openings)
+                {
+                    foreach (var op in opening.Representation.SolidOperations)
+                    {
+                        if (op.IsVoid)
+                        {
+                            voids.Add(TransformedSolidOperation(op, opening.Transform));
+                        }
+                    }
+                }
             }
+
+            var solidItems = solids.ToArray();
+            var voidItems = voids.ToArray();
+
             // Don't try CSG booleans if we only have one one solid and no voids.
             if (solids.Count() == 1 && voids.Count() == 0)
             {
@@ -151,7 +199,7 @@ namespace Elements
             }
             else if (solids.Count() > 0)
             {
-                csg = csg.Union(solids);
+                csg = csg.Union(solidItems);
             }
             else
             {
@@ -160,7 +208,7 @@ namespace Elements
 
             if (voids.Count() > 0)
             {
-                csg = csg.Subtract(voids);
+                csg = csg.Subtract(voidItems);
             }
 
             if (Transform == null || transformed)
@@ -223,7 +271,7 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        public virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public virtual bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;

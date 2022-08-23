@@ -45,14 +45,17 @@ namespace Elements.Tests
             transRotate.Move(new Vector3(0, 0, 2));
             var floor2 = new Floor(p, 0.1, transRotate, material: new Material("blue", Colors.Blue, 0.0f, 0.0f));
 
-            floor1.AddOpening(3, 3, 1, 3);
-            floor2.AddOpening(3, 3, 1, 3);
+            var opening1 = floor1.AddOpening(3, 3, 1, 3);
+            var opening2 = floor2.AddOpening(3, 3, 1, 3);
 
             Assert.Equal(0.5, floor1.Elevation);
             Assert.Equal(0.1, floor1.Thickness);
             Assert.Equal(0.5, floor1.Transform.Origin.Z);
 
             floor1.UpdateRepresentations();
+            opening1.UpdateRepresentations();
+            opening2.UpdateRepresentations();
+
             Assert.Single(floor1.GetCsgSolids());
             Assert.Equal(18, floor1.GetFinalCsgFromSolids().Polygons.Count);
 

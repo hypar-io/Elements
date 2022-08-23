@@ -11,6 +11,7 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
+- `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
 
 ### Changed
 
@@ -26,12 +27,20 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
 
 ## 1.1.0
 
 ### Added
 
 - `Material` now supports a `DrawInFront` property.
+- `Model.Intersect(Plane plane, out List<Geometry.Polygon> intersectionPolygons, out List<Geometry.Polygon> beyondPolygons)`
+- `GeometricElement.UpdateBoundsAndCsg()`
+- `EdgeExtensions.Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)`
+- `RelationToPlane` enum.
+- `BBox3.Intersects(Plane plane, out RelationToPlane relationToPlane)`
+- `BBox3.Extend(Vector3 point)`
+- `BBox3.Extend(params Vector3[] points)`
 - `TiledCeiling.GetTileCells()`
 - `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
 - `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.

@@ -213,9 +213,9 @@ namespace Elements.Tests
 
         private class MockGraphicsBuffer : IGraphicsBuffers
         {
-            public List<ushort> Indices { get; set; }
+            public List<ushort> Indices { get; set; } = new List<ushort>();
 
-            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; }
+            public List<(Vector3 position, Vector3 normal, UV uv, Color? color)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
 
             public void AddIndex(ushort index)
             {
@@ -224,28 +224,28 @@ namespace Elements.Tests
 
             public void AddIndices(IList<ushort> indices)
             {
-                throw new NotImplementedException();
+                Indices.AddRange(indices);
             }
 
             public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
             {
-                Vertices.Add((position, normal));
+                Vertices.Add((position, normal, uv, color));
             }
 
             public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
             {
-                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz), new UV(u, v), color));
             }
 
-            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
             {
-                throw new NotImplementedException();
+                Vertices.AddRange(vertices);
             }
 
-            public void Initialize(int vertexCount = 0, int indexCount = 0)
+            public void Initialize(int vertexCount, int indexCount)
             {
-                this.Vertices = new List<(Vector3 position, Vector3 normal)>();
-                this.Indices = new List<ushort>();
+                Indices = new List<ushort>();
+                Vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             }
         }
     }

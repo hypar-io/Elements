@@ -184,7 +184,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Add vertices to the graphics buffers.
         /// </summary>
-        public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color color)> vertices)
+        public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
         {
             var vertexStep = sizeof(float) * 3;
             var normalStep = sizeof(float) * 3;
@@ -229,18 +229,18 @@ namespace Elements.Geometry
                 this.UVMin[0] = Math.Min(this.UVMin[0], uv.U);
                 this.UVMin[1] = Math.Min(this.UVMin[1], uv.V);
 
-                if (color != default)
+                if (color.HasValue)
                 {
                     hasVertexColors = true;
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Red), 0, allColors, colorStep * i, sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Green), 0, allColors, colorStep * i + sizeof(float), sizeof(float));
-                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Blue), 0, allColors, colorStep * i + sizeof(float) * 2, sizeof(float));
-                    this.CMax[0] = Math.Max(this.CMax[0], color.Red);
-                    this.CMax[1] = Math.Max(this.CMax[1], color.Green);
-                    this.CMax[2] = Math.Max(this.CMax[2], color.Blue);
-                    this.CMin[0] = Math.Min(this.CMin[0], color.Red);
-                    this.CMin[1] = Math.Min(this.CMin[1], color.Green);
-                    this.CMin[2] = Math.Min(this.CMin[2], color.Blue);
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Red), 0, allColors, colorStep * i, sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Green), 0, allColors, colorStep * i + sizeof(float), sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Blue), 0, allColors, colorStep * i + sizeof(float) * 2, sizeof(float));
+                    this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
+                    this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);
+                    this.CMax[2] = Math.Max(this.CMax[2], color.Value.Blue);
+                    this.CMin[0] = Math.Min(this.CMin[0], color.Value.Red);
+                    this.CMin[1] = Math.Min(this.CMin[1], color.Value.Green);
+                    this.CMin[2] = Math.Min(this.CMin[2], color.Value.Blue);
                 }
             }
 
@@ -291,18 +291,14 @@ namespace Elements.Geometry
             return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
         }
 
-        /// Initialize the graphics buffer to a known size.
-        /// </summary>
-        /// <param name="vertexCount">The number of vertices.</param>
-        /// <param name="indexCount">The number of indices.</param>
-        public void Initialize(int vertexCount = 0, int indexCount = 0)
+        public void Initialize(int vertexCount = _preallocationVertexCount, int indexCount = _preallocationVertexCount)
         {
             // Initialize everything
-            this.Vertices = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Normals = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Indices = new List<byte>(sizeof(ushort) * indexCount);
-            this.UVs = new List<byte>(sizeof(float) * 2 * vertexCount);
-            this.Colors = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Vertices = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Normals = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Indices = new List<byte>(_preallocationVertexCount * sizeof(int));
+            this.UVs = new List<byte>(_preallocationVertexCount * sizeof(float) * 2);
+            this.Colors = new List<byte>(_preallocationVertexCount * sizeof(float) * 4);
 
             this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };

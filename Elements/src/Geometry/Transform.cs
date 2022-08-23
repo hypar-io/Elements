@@ -584,5 +584,13 @@ namespace Elements.Geometry
         {
             return Matrix.GetHashCode();
         }
+
+        /// <summary>
+        /// Get the scale of the transform.
+        /// </summary>
+        public Vector3 GetScale()
+        {
+            return new Vector3(this.XAxis.Length(), this.YAxis.Length(), this.ZAxis.Length());
+        }
     }
 }

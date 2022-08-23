@@ -1180,7 +1180,6 @@ namespace Elements.Serialization.glTF
                     else
                     {
                         meshId = ProcessGeometricRepresentation(e,
-                                                                ref gltf,
                                                                 ref materialIndexMap,
                                                                 ref buffer,
                                                                 bufferViews,
@@ -1202,7 +1201,6 @@ namespace Elements.Serialization.glTF
                     materialId = geometricElement.Material.Id.ToString();
 
                     meshId = ProcessGeometricRepresentation(e,
-                                                            ref gltf,
                                                             ref materialIndexMap,
                                                             ref buffer,
                                                             bufferViews,
@@ -1421,7 +1419,6 @@ namespace Elements.Serialization.glTF
         /// Returns the index of the mesh created while processing the Geometry.
         /// </summary>
         private static int ProcessGeometricRepresentation(Element e,
-                                                           ref Gltf gltf,
                                                            ref Dictionary<string, int> materialIndexMap,
                                                            ref List<byte> buffers,
                                                            List<BufferView> bufferViews,
@@ -1433,6 +1430,7 @@ namespace Elements.Serialization.glTF
                                                            GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
+            geometricElement.UpdateBoundsAndComputeSolid();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
@@ -1448,7 +1446,6 @@ namespace Elements.Serialization.glTF
                 meshId = ProcessSolidsAsCSG(geometricElement,
                                     e.Id.ToString(),
                                     materialId,
-                                    ref gltf,
                                     ref materialIndexMap,
                                     ref buffers,
                                     bufferViews,
@@ -1474,7 +1471,6 @@ namespace Elements.Serialization.glTF
         private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
                                       string id,
                                       string materialId,
-                                      ref Gltf gltf,
                                       ref Dictionary<string, int> materials,
                                       ref List<byte> buffer,
                                       List<BufferView> bufferViews,
@@ -1486,18 +1482,18 @@ namespace Elements.Serialization.glTF
             // If we've explicitly skipped csg union or the element
             // only has one solid operation, we can perform this micro-optimization
             // of skipping CSG creation.
-            if (geometricElement.Representation.SkipCSGUnion || geometricElement.Representation.SolidOperations.Count == 1)
+            if (geometricElement.Representation.SkipCSGUnion)
             {
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
                 buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
+                                        false,
                                         geometricElement.ModifyVertexAttributes);
             }
             else
             {
-                var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
+                buffers = geometricElement._csg.Tessellate(modifyVertexAttributes: geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)
