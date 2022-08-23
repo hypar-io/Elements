@@ -1,13 +1,45 @@
 .grid {
     position: relative;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 700px 230px auto;
     grid-template-rows: auto 200px;
-    grid-template-areas: 
-        "code model"
-        "output output";
+    grid-template-areas:
+        "code inputs model"
+        "output inputs model";
     border: 1px solid lightgray;
     height: calc(100vh - 16px);
+}
+
+label {
+    font-size: small;
+}
+
+.input {
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    padding: 10px;
+    width: 195px;
+    margin: 5px;
+    background-color: lightgray;
+}
+
+.inputName {
+    font-weight: bold;
+    font-size: medium;
+    margin-bottom: 15px;
+}
+
+#inputs {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    grid-area: inputs;
+    border-bottom: 1px solid lightgray;
+    align-content: flex-start;
+    overflow-y: scroll;
+    background: linear-gradient(#b8b8b8, #ffffff);
+    border-right: 1px solid darkgray;
+    /* box-shadow: inset 0 0 20px black */
 }
 
 #editor {
@@ -24,7 +56,7 @@
     overflow-y: auto;
     font-family: monospace;
     font-size: 10pt;
-    color: darkgray;
+    color: gray;
     grid-area: output;
     border-top: 1px solid lightgray;
     padding: 10px;

@@ -3,6 +3,7 @@
 @using Microsoft.CodeAnalysis
 @using Microsoft.CodeAnalysis.CSharp
 @using Microsoft.CodeAnalysis.CSharp.Scripting.Hosting
+@using System.Diagnostics
 @using System.Reflection
 @using System.IO
 @using System.Threading
@@ -11,75 +12,127 @@
 @inject IJSRuntime JSRuntime
 @inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
 @inject NavigationManager MyNavigationManager
-
+@using System.Text.RegularExpressions;
 <div class="grid">
-    <button class="run" disabled=@loading @onclick="Run">Run</button>
+    <button class="run" disabled=@loading @onclick="CompileAndRun">Run</button>
+    <div id="inputs">
+        @foreach (var input in globals.Inputs.Values)
+        {
+            if (input is Input<double> numberInput)
+            {
+                        <div class="input">
+                            <div class="inputName">@numberInput.Name</div>
+                            <div>
+                                <input type="range" min="1" max="100" value="@numberInput.Value" class="slider" id="length"
+                    @onchange="(ChangeEventArgs args) => {numberInput.Value = double.Parse(args.Value.ToString());Run();}">
+                            </div>
+                        </div>
+            }
+            else if (input is Input<Material> materialInput)
+            {
+                        <div class=" input">
+                            <div class="inputName">@materialInput.Name</div>
+                            <div>
+                                <label for="gloss" style="display:block">Glossiness</label>
+                                <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.GlossinessFactor"
+                    class="slider" id="gloss"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.GlossinessFactor = double.Parse(args.Value.ToString());Run();}">
+                            </div>
+                            <div>
+                                <label for="specular" style="display:block">Specular</label>
+                                <input type="range" min="0.0" max="1.0" step="0.1" value="@materialInput.Value.SpecularFactor"
+                    class="slider" id="specular"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.SpecularFactor = double.Parse(args.Value.ToString());Run();}">
+                            </div>
+                            <div>
+                                <label for="color" style="display:block">Color</label>
+                                <input type="color" id="color" name="color" value="@materialInput.Value.Color.ToHex()"
+                    @onchange="(ChangeEventArgs args) => {materialInput.Value.Color = new Color(args.Value.ToString()); Run();}">
+                            </div>
+                        </div>
+            }
+            else if (input is Input<Vector3> vectorInput)
+            {
+                        <div class="input">
+                            <div class="inputName">@vectorInput.Name</div>
+                            <div style="display:flex;flex-direction:row;justify-content:space-between">
+                                <div>
+                                    <label for="x" style="display:block">X</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.X"
+                        @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(double.Parse(args.Value.ToString()), vectorInput.Value.Y, vectorInput.Value.Z); Run();}">
+                                </div>
+                                <div>
+                                    <label for="y" style="display:block">Y</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.Y"
+                        @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, double.Parse(args.Value.ToString()), vectorInput.Value.Z); Run();}">
+                                </div>
+                                <div>
+                                    <label for="z" style="display:block">Z</label>
+                                    <input style="width:50px;" type="text" value="@vectorInput.Value.Z"
+                        @onchange="(ChangeEventArgs args) => {vectorInput.Value = new Vector3(vectorInput.Value.X, vectorInput.Value.Y, double.Parse(args.Value.ToString())); Run();}">
+                                </div>
+                            </div>
+                        </div>
+            }
+            else if (input is WideFlangeProfileInput wideFlangeProfileInput)
+            {
+                        <div class="input">
+                            <div class="inputName">@wideFlangeProfileInput.Name</div>
+                            <select style="display:block;" name="profile" id="profile"
+                @onchange="(ChangeEventArgs args) => {wideFlangeProfileInput.Value = wideFlangeProfileInput.Factory.GetProfileByName(args.Value.ToString()); Run();}">
+                        @foreach (var profile in wideFlangeProfileInput.Factory.AllProfiles())
+                        {
+                                        <option value="@profile.Name">@profile.Name</option>
+                        }
+                            </select>
+                        </div>
+            }
+        }
+    </div>
     <div id="editor">@csharp</div>
     <div id="model"></div>
-    <div class="output">@((MarkupString)Output)</div>
+    <div class="output">@((MarkupString)Regex.Replace(
+        HttpUtility.HtmlEncode(@Output), "\r?\n|\r", "<br />"))</div>
 </div>
 
 @code {
     bool loading = true;
-    private static string csharp = @"var model = new Model();
-
-var length = 10;
-
-Validator.DisableValidationOnConstruction = true;
-var m = BuiltInMaterials.Concrete;
-var wf = new WideFlangeProfileFactory();
-var p = wf.GetProfileByType(WideFlangeProfileType.W10x100);
-
-for(var i=0; i<1; i++)
-{
-    var start = new Vector3(i, 0, 0);
-    var end = new Vector3(i, length, i);
-
-    // The bottom chord
-    var bottomChord = new Line(start, end);
-    var bottomChordBeam = new Beam(bottomChord, p, m);
-    model.AddElement(bottomChordBeam);
-
-    var topChord = new Line(start + new Vector3(0,0,5), end + new Vector3(0,0,5));
-    var topChordBeam = new Beam(topChord, p, m);
-    model.AddElement(topChordBeam);
-
-    Vector3 last = default(Vector3);
-    for(var j=0.0; j<=1.0; j+=0.1)
-    {
-        var pt = bottomChord.PointAt(j);
-        var top = pt + new Vector3(0,0,5);
-        var panelLine = new Line(pt, top);
-        var panelBeam = new Beam(panelLine, p, m);
-        model.AddElement(panelBeam);
-
-        if(j > 0.0)
-        {
-            var braceLine = new Line(top, last);
-            var braceBeam = new Beam(braceLine, p, m);
-            model.AddElement(braceBeam);
-        }
-        last = pt;
-    }
-}
-return model;";
+    private static Globals globals = new Globals();
+    private static Model component;
+    private static string csharp = "// Put your code here.";
     private static string Output = "";
     private static IJSUnmarshalledRuntime Runtime;
     [Inject] private HttpClient Client { get; set; }
+    private static Func<object[], Task> ExecutionDelegate;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         Runtime = JSUnmarshalledRuntime;
+        component = this;
+        await Compiler.InitializeMetadataReferences(Client);
+        await base.OnInitializedAsync();
+        loading = false;
 
-        Compiler.InitializeMetadataReferences(Client);
+        globals.Inputs.Values.Add(new Input<double>("length", 5));
 
-        base.OnInitializedAsync();
+        var m = new Material("Test", new Color(1.0, 0.0, 0.0, 1.0));
+        globals.Inputs.Values.Add(new Input<Material>("test material", m));
 
-        return Compiler.WhenReady(() =>
-        {
-            loading = false;
-            return Task.FromResult(0);
-        });
+        var a = new Vector3(5.0, 2.0, 3.0);
+        globals.Inputs.Values.Add(new Input<Vector3>("a point", a));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "a point", a);
+
+        var b = new Vector3(10.0, 2.0, 3.0);
+        globals.Inputs.Values.Add(new Input<Vector3>("b point", b));
+        await JSRuntime.InvokeVoidAsync("model.createTransformablePoint", "b point", b);
+
+        globals.Inputs.Values.Add(new WideFlangeProfileInput("chord profile"));
+
+        globals.Inputs.Values.Add(new WideFlangeProfileInput("web profile"));
+
+        await CompileAndRun();
+
+        await Task.FromResult(0);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,56 +152,102 @@ return model;";
     }
 
     [JSInvokable]
-    public static Task Run()
+    public static async Task CompileAndRun()
     {
-        return Compiler.WhenReady(RunInternal);
+        Compile();
+        await Run();
     }
 
-    static async Task RunInternal()
+    public static async Task Run()
+    {
+        RunInternal();
+    }
+
+    [JSInvokable]
+    public static async Task RunInternal()
+    {
+        var sw = Stopwatch.StartNew();
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        if (ExecutionDelegate == null)
+        {
+            Console.WriteLine("There is no execution method.");
+            Output += writer.ToString();
+            Console.SetOut(currentOut);
+            sw.Stop();
+            return;
+        }
+
+        var model = await (Task<object>)ExecutionDelegate(new object[] { globals, null });
+        Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
+
+        await Task.Run(() =>
+        {
+            sw.Start();
+            var glb = ((Elements.Model)model).ToGlTF();
+            Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
+            Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
+        });
+
+        Output += writer.ToString();
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+    }
+
+    [JSInvokable]
+    public static async Task UpdatePointInput(string name, double x, double y, double z)
+    {
+        var input = globals.Inputs.Values.FirstOrDefault(v => v.Name == name && v is Input<Vector3>);
+        if (input == null)
+        {
+            Console.WriteLine($"A vector input with the name {name} could not be found.");
+        }
+        var vectorInput = (Input<Vector3>)input;
+        vectorInput.Value = new Vector3(x, -y, z);
+        component.StateHasChanged();
+        Run();
+    }
+
+    static void Compile()
     {
         Output = "";
-
-        Console.WriteLine("Compiling and Running code");
         var sw = Stopwatch.StartNew();
 
         var currentOut = Console.Out;
         var writer = new StringWriter();
         Console.SetOut(writer);
 
-        Exception exception = null;
-        try
-        {
-            var (success, asm, compilation) = Compiler.LoadSource(csharp);
-            if (success)
-            {
-                var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
-                var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
-                var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+        // Redirect debug to the console.
+        Trace.Listeners.Clear();
+        Trace.Listeners.Add(
+        new TextWriterTraceListener(Console.Out));
 
-                var submission = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
-                var model = await (Task<object>)submission(new object[] { null, null });
-                Console.WriteLine($"\r\nCompilation successful in {sw.ElapsedMilliseconds} ms");
+        ExecutionDelegate = null;
 
-                await Task.Run(() =>
-                {
-                    var glb = ((Elements.Model)model).ToGlTF();
-                    Runtime.InvokeUnmarshalled<byte[], bool>("model.loadModel", glb);
-                });
-            }
-        }
-        catch (Exception ex)
+        // Compilation warnings will be written to console.out
+        // which is redirected here to the writer.
+        var (success, asm, compilation) = Compiler.LoadSource(csharp);
+        if (success)
         {
-            exception = ex;
-        }
-        Output = writer.ToString();
-        if (exception != null)
-        {
+            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
 
-            Output += "\r\n" + exception.ToString();
+            ExecutionDelegate = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+            Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
         }
+        else
+        {
+            Console.WriteLine("Compilation was not successful. The execution will not run.");
+        }
+
+        Output += writer.ToString();
         Console.SetOut(currentOut);
 
         sw.Stop();
-
     }
 }
