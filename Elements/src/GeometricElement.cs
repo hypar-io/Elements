@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Interfaces;
@@ -159,21 +160,38 @@ namespace Elements
             // ensure that the elements are correctly transformed.
             Csg.Solid csg = new Csg.Solid();
 
-            var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                       .Select(op => TransformedSolidOperation(op))
-                                                       .ToArray();
-            var voids = Representation.SolidOperations.Where(op => op.IsVoid == true)
-                                                      .Select(op => TransformedSolidOperation(op))
-                                                      .ToArray();
+            var solids = new List<Csg.Solid>();
+            var voids = new List<Csg.Solid>();
+
+            foreach (var op in Representation.SolidOperations)
+            {
+                if (op.IsVoid)
+                {
+                    voids.Add(TransformedSolidOperation(op));
+                }
+                else
+                {
+                    solids.Add(TransformedSolidOperation(op));
+                }
+            }
 
             if (this is IHasOpenings openingContainer)
             {
-                openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
-                voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
-                                                      .Where(op => op.IsVoid == true)
-                                                      .Select(op => TransformedSolidOperation(op, o.Transform))))
-                                                      .ToArray();
+                foreach (var opening in openingContainer.Openings)
+                {
+                    foreach (var op in opening.Representation.SolidOperations)
+                    {
+                        if (op.IsVoid)
+                        {
+                            voids.Add(TransformedSolidOperation(op, opening.Transform));
+                        }
+                    }
+                }
             }
+
+            var solidItems = solids.ToArray();
+            var voidItems = voids.ToArray();
+
             // Don't try CSG booleans if we only have one one solid and no voids.
             if (solids.Count() == 1 && voids.Count() == 0)
             {
@@ -181,7 +199,7 @@ namespace Elements
             }
             else if (solids.Count() > 0)
             {
-                csg = csg.Union(solids);
+                csg = csg.Union(solidItems);
             }
             else
             {
@@ -190,7 +208,7 @@ namespace Elements
 
             if (voids.Count() > 0)
             {
-                csg = csg.Subtract(voids);
+                csg = csg.Subtract(voidItems);
             }
 
             if (Transform == null || transformed)
@@ -253,7 +271,7 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        public virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public virtual bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;
