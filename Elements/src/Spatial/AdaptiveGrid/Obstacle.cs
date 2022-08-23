@@ -15,7 +15,8 @@ namespace Elements.Spatial.AdaptiveGrid
     {
         private Transform _transform;
         private double _offset;
-
+        private Polygon _boundary;
+        private double _height;
         private readonly List<Polygon> _primaryPolygons = new List<Polygon>();
         private readonly List<Polygon> _secondaryPolygons = new List<Polygon>();
 
@@ -126,7 +127,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Create an obstacle from a list of points.
         /// </summary>
-        /// <param name="boudary">Boundary of an obstacle</param>
+        /// <param name="boudary">Perimeter of an obstacle</param>
+        /// <param name="height">Height of an obstacle</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="perimeter">Should edges be created around obstacle.</param>
         /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
@@ -151,9 +153,31 @@ namespace Elements.Spatial.AdaptiveGrid
             .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
             .ToList();
         
-        public Polygon Boundary { get; }
+        /// <summary>
+        /// Perimeter defining obstacle.
+        /// </summary>
+        public Polygon Boundary 
+        {
+            get => _boundary;
+            set
+            {
+                _boundary = value;
+                UpdatePolygons();
+            }
+        }
 
-        public double Height { get; }
+        /// <summary>
+        /// Obstacle height, offset by Boundary normal vector
+        /// </summary>
+        public double Height 
+        {
+            get => _height;
+            set
+            {
+                _height = value;
+                UpdatePolygons();
+            }
+        }
 
         /// <summary>
         /// Offset of bounding box created from the list of points.
