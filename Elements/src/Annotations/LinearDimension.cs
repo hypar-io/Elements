@@ -25,8 +25,7 @@ namespace Elements.Annotations
         public Plane ReferencePlane { get; protected set; }
 
         /// <summary>
-        /// If this dimension is linked to a property of another element,
-        /// information about that element and property.
+        /// Information about the element and property that this dimension is linked to, if any.
         /// </summary>
         public LinkedPropertyInfo LinkedProperty { get; set; } = null;
 
