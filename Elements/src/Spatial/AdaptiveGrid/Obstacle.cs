@@ -70,27 +70,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New obstacle object.</returns>
         public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false, bool allowOutsideBoundary = false)
         {
-            var minZ = box.Corners().Min(x => x.Z);
-            var maxZ = box.Corners().Max(x => x.Z);
+            var polygon = new Polygon
+            (
+                new Vector3(box.Min.X, box.Min.Y, box.Min.Z),
+                new Vector3(box.Min.X, box.Max.Y, box.Min.Z),
+                new Vector3(box.Max.X, box.Max.Y, box.Min.Z),
+                new Vector3(box.Max.X, box.Min.Y, box.Min.Z)
+            );
 
-            var minZVertices = box.Corners().Where(x => x.Z.ApproximatelyEquals(minZ)).ToList();
-
-            var filteredVerices = new List<Vector3>();
-
-            foreach(var vertex in minZVertices)
-            {
-                if(filteredVerices.Any(x => x.IsAlmostEqualTo(vertex)))
-                {
-                    continue;
-                }
-
-                filteredVerices.Add(vertex);
-            }
-
-            var orderedVerices = filteredVerices.OrderBy(x => x.DistanceTo(filteredVerices.First())).ToList();
-            var polygon = new Polygon(orderedVerices[0], orderedVerices[1], orderedVerices[3], orderedVerices[2]);
-
-            var height = maxZ - minZ;
+            var height = box.Max.Z - box.Min.Z;
 
             return new Obstacle(polygon, height, offset, perimeter, allowOutsideBoundary, null);
         }
@@ -149,10 +137,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => Boundary?
-            .Vertices
-            .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
-            .ToList() ?? new List<Vector3>();
+        public List<Vector3> Points => _horizontalPolygons.SelectMany(x => x.Vertices).ToList();
         
         /// <summary>
         /// Perimeter defining obstacle.
@@ -267,14 +252,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 return false;
             }
 
-            if(line.PointOnLine(intersection))
-            {
-                return true;
-            }
+            var points = new List<Vector3> { line.Start, line.End };
 
-            var distance = plane.SignedDistanceTo(intersection);
-
-            return plane.Normal.IsParallelTo(line.Direction()) && (distance.ApproximatelyEquals(0, tolerance) || distance < 0);
+            return points.Any(x => plane.SignedDistanceTo(x) < - tolerance);
             
         }
 
