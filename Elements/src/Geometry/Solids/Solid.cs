@@ -950,10 +950,13 @@ namespace Elements.Geometry.Solids
 
                     // Don't allow us to create a csg that has zero
                     // area triangles.
-                    // if (Vector3.AreCollinearByDistance(av.Pos.ToVector3(), bv.Pos.ToVector3(), cv.Pos.ToVector3()))
-                    // {
-                    //     continue;
-                    // }
+                    var ab = bv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var ac = cv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var area = ab.Cross(ac).Length() / 2;
+                    if (area == 0.0)
+                    {
+                        continue;
+                    }
 
                     var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
                     polygons.Add(p);
