@@ -1,4 +1,5 @@
 ﻿using Elements.Geometry;
+using Elements.Geometry.Solids;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,14 @@ namespace Elements.Spatial.AdaptiveGrid
     /// with extra offset. Since offset is applied on the box, distance on corners is even larger.
     /// Can be constructed from different objects.
     /// </summary>
-    public class Obstacle 
+    public class Obstacle : GeometricElement
     {
         private Transform _transform;
         private double _offset;
         private Polygon _boundary;
         private double _height;
-        private readonly List<Polygon> _primaryPolygons = new List<Polygon>();
-        private readonly List<Polygon> _secondaryPolygons = new List<Polygon>();
+        private readonly List<Polygon> _verticalPolygons = new List<Polygon>();
+        private readonly List<Polygon> _horizontalPolygons = new List<Polygon>();
 
         /// <summary>
         /// Create an obstacle from a column.
@@ -148,10 +149,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => Boundary
+        public List<Vector3> Points => Boundary?
             .Vertices
             .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
-            .ToList();
+            .ToList() ?? new List<Vector3>();
         
         /// <summary>
         /// Perimeter defining obstacle.
@@ -236,13 +237,21 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Result of check</returns>
         public bool Intersects(Line line, double tolerance = 1e-05)
         {
-            if (_secondaryPolygons.Any(x => IntersectsWithHorizontalPolygon(x, line, tolerance)))
+            if (_horizontalPolygons.Any(x => IntersectsWithHorizontalPolygon(x, line, tolerance)))
             {
                 return true;
             }
 
-            var hints = _primaryPolygons.Where(x => DoesPolygonIntersectsWithLine(x, line, tolerance)).ToList();
+            var hints = _verticalPolygons.Where(x => DoesPolygonIntersectsWithLine(x, line, tolerance)).ToList();
             return hints.Any() && hints.Count % 2 == 0;
+        }
+
+        public override void UpdateRepresentations()
+        {
+            var allPolygons = _verticalPolygons.ToList();
+            allPolygons.AddRange(_horizontalPolygons);
+
+            Representation = new Representation(allPolygons.Select(x => new Lamina(x)).Cast<SolidOperation>().ToList());
         }
 
         private bool DoesPolygonIntersectsWithLine(Polygon polygon, Line line, double tolerance = 1e-05)
@@ -291,10 +300,10 @@ namespace Elements.Spatial.AdaptiveGrid
                 return;
             }
 
-            _primaryPolygons.Clear();
-            _secondaryPolygons.Clear();
+            _verticalPolygons.Clear();
+            _horizontalPolygons.Clear();
 
-            var boundary = Boundary.Offset(Offset).First();
+            var boundary = Boundary.Offset(Offset).First().Project(Boundary.Plane());
             if(Transform != null)
             {
                 boundary = boundary.TransformedPolygon(Transform);
@@ -307,7 +316,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var offsetVector = boundary.Normal() * Offset;
             boundary = boundary.TransformedPolygon(new Transform(offsetVector));
-            _secondaryPolygons.Add(boundary);
+            _horizontalPolygons.Add(boundary);
 
             var topVector = boundary.Normal().Negate() * (Height + 2 * Offset);
 
@@ -317,13 +326,13 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             var topBoundary = boundary.TransformedPolygon(new Transform(topVector)).Reversed();
-            _secondaryPolygons.Add(topBoundary);
+            _horizontalPolygons.Add(topBoundary);
 
-            _primaryPolygons.AddRange(_secondaryPolygons);
+            _verticalPolygons.AddRange(_horizontalPolygons);
             foreach (var segment in boundary.Segments())
             {
                 var polygon = new Polygon(segment.Start, segment.End, segment.End + topVector, segment.Start + topVector).Reversed();
-                _primaryPolygons.Add(polygon);
+                _verticalPolygons.Add(polygon);
             }            
         }
     }
