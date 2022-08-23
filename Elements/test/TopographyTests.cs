@@ -192,14 +192,14 @@ namespace Elements.Tests
             var topoImage = new Image<Rgba32>(512 * 2, 512 * 2);
             var mapImage = new Image<Rgba32>(1024 * 2, 1024 * 2);
 
-            using (var map0 = SixLabors.ImageSharp.Image.Load<Rgba32>(maps[0]))
-            using (var map1 = SixLabors.ImageSharp.Image.Load<Rgba32>(maps[1]))
-            using (var map2 = SixLabors.ImageSharp.Image.Load<Rgba32>(maps[2]))
-            using (var map3 = SixLabors.ImageSharp.Image.Load<Rgba32>(maps[3]))
-            using (var topo0 = SixLabors.ImageSharp.Image.Load<Rgba32>(topos[0]))
-            using (var topo1 = SixLabors.ImageSharp.Image.Load<Rgba32>(topos[1]))
-            using (var topo2 = SixLabors.ImageSharp.Image.Load<Rgba32>(topos[2]))
-            using (var topo3 = SixLabors.ImageSharp.Image.Load<Rgba32>(topos[3]))
+            using (var map0 = Image.Load<Rgba32>(maps[0]))
+            using (var map1 = Image.Load<Rgba32>(maps[1]))
+            using (var map2 = Image.Load<Rgba32>(maps[2]))
+            using (var map3 = Image.Load<Rgba32>(maps[3]))
+            using (var topo0 = Image.Load<Rgba32>(topos[0]))
+            using (var topo1 = Image.Load<Rgba32>(topos[1]))
+            using (var topo2 = Image.Load<Rgba32>(topos[2]))
+            using (var topo3 = Image.Load<Rgba32>(topos[3]))
             {
                 topoImage.Mutate(o => o
                 .DrawImage(topo0, new Point(0, 0), 1.0f)

@@ -25,7 +25,7 @@ namespace Elements.Serialization.glTF
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<glTFLoader.Schema.Material> materials,
                                         List<Texture> textures,
-                                        List<glTFLoader.Schema.Image> images,
+                                        List<Image> images,
                                         List<Sampler> samplers,
                                         bool shouldAddMaterials,
                                         System.Guid contentElementId,

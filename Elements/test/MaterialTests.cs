@@ -118,33 +118,8 @@ namespace Elements.Tests
         public void ImplicitConversion()
         {
             var material = new Material("A test", (0.5, 1, 0.2));
+
             Assert.Equal(new Color(0.9, 0.3, 0.5, 1.0), (0.9, 0.3, 0.5));
-        }
-
-        [Fact]
-        public void RemoteTexture()
-        {
-            this.Name = "RemoteTexture";
-            var m = new Material("test",
-                                 Colors.Gray,
-                                 0.0f,
-                                 0.0f,
-                                 "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-                                 true);
-            var mass = new Mass(new Circle(Vector3.Origin, 5).ToPolygon(), 10, m);
-            this.Model.AddElement(mass);
-        }
-
-        [Fact]
-        public void RemoteTextureThrowsWithBadUrl()
-        {
-            this.Name = "RemoteTexture";
-            Assert.Throws<ArgumentException>(() => new Material("test",
-                                 Colors.Gray,
-                                 0.0f,
-                                 0.0f,
-                                 "https://www.noimage.com/noimage.png",
-                                 true));
         }
     }
 }
