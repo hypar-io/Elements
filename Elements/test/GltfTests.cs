@@ -6,8 +6,7 @@ using System.Linq;
 using glTFLoader.Schema;
 using System;
 using System.IO;
-using System.Text.Json.Serialization;
-using System.Text.Json;
+using Elements.Geometry.Solids;
 
 namespace Elements.Tests
 {
@@ -102,11 +101,25 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void GeometricElementWithError()
+        public void CsgCreationErrorIsHandledWhenGeometricElementIsScaledToZero()
         {
             var model = new Model();
-            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(0.1, 0.2));
-            beam.Transform = new Transform().Scaled(new Vector3());
+            var l = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+            var beam = new Beam(l, Polygon.Rectangle(0.1, 0.2))
+            {
+                Transform = new Transform().Scaled(new Vector3())
+            };
+
+            // Previously, we didn't add an extra solid
+            // because the CSG was always computed. Now, we skip CSG creation
+            // if there's only one solid.
+            // Add one more solid operation to ensure that we hit the path
+            // which computes CSGs. Attempting to create a CSG with scale 0
+            // will throw an exception which will be handled and added to
+            // the errors collection. 
+
+            var t = l.TransformAt(0.5);
+            beam.Representation.SolidOperations.Add(new Extrude(Polygon.Rectangle(0.5, 0.5), 0.5, t.ZAxis, isVoid: false));
             model.AddElement(beam);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
             var gltfPath = Path.Combine(modelsDir, "Beam-with-error.gltf");

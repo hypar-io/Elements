@@ -52,7 +52,7 @@ namespace Elements
         void AddIndex(ushort index);
 
         /// <summary>
-        /// Add indices to the graphics buffers.
+        /// Add multiple indices to the graphics buffers.
         /// </summary>
         /// <param name="indices">The indices to add.</param>
         void AddIndices(IList<ushort> indices);

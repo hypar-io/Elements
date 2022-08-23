@@ -292,18 +292,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Initialize the graphics buffer to a known size.
+        /// Initialize the graphics buffers to the specified size.
         /// </summary>
-        /// <param name="vertexCount">The number of vertices.</param>
-        /// <param name="indexCount">The number of indices.</param>
-        public void Initialize(int vertexCount = 0, int indexCount = 0)
+        /// <param name="vertexCount"></param>
+        /// <param name="indexCount"></param>
+        public void Initialize(int vertexCount = _preallocationVertexCount, int indexCount = _preallocationVertexCount)
         {
             // Initialize everything
-            this.Vertices = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Normals = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Indices = new List<byte>(sizeof(ushort) * indexCount);
-            this.UVs = new List<byte>(sizeof(float) * 2 * vertexCount);
-            this.Colors = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Vertices = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Normals = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Indices = new List<byte>(_preallocationVertexCount * sizeof(int));
+            this.UVs = new List<byte>(_preallocationVertexCount * sizeof(float) * 2);
+            this.Colors = new List<byte>(_preallocationVertexCount * sizeof(float) * 4);
 
             this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };

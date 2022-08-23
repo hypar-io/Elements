@@ -853,14 +853,14 @@ namespace Elements.Geometry.Solids
         }
         internal Csg.Solid ToCsg()
         {
-            var polygons = new List<Csg.Polygon>();
+            var polygons = new List<Csg.Polygon>(Faces.Values.Count);
 
             ushort faceId = 0;
             foreach (var f in Faces.Values)
             {
                 var tess = new Tess
                 {
-                    NoEmptyPolygons = true
+                    NoEmptyPolygons = true,
                 };
 
                 var a = f.Outer.Edges[0].Vertex.Point;
@@ -877,14 +877,24 @@ namespace Elements.Geometry.Solids
                 var outerContourArray = outerVerts.ToContourVertexArray(faceId);
                 tess.AddContour(outerContourArray);
 
-                var csgVertices = new List<Csg.Vertex>(outerVerts);
+                // Map csg vertices by tag.
+                var csgVertices = new Dictionary<int, Csg.Vertex>();
+
+                foreach (var v in outerVerts)
+                {
+                    csgVertices.Add(v.Tag, v);
+                }
 
                 if (f.Inner != null)
                 {
                     foreach (var loop in f.Inner)
                     {
                         var innerVerts = loop.ToCsgVertexArray(U, V);
-                        csgVertices.AddRange(innerVerts);
+                        foreach (var v in innerVerts)
+                        {
+                            csgVertices.Add(v.Tag, v);
+                        }
+
                         var innerContourArray = innerVerts.ToContourVertexArray(faceId);
                         tess.AddContour(innerContourArray);
                     }
@@ -912,8 +922,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData1 = ((UV, int, int))v1.Data;
-                        av = csgVertices.First(v => v.Tag == vData1.Item2);
+                        var vData1 = ((UV uv, int tag, int faceId))v1.Data;
+                        av = csgVertices[vData1.tag];
                     }
 
                     if (v2.Data == null)
@@ -923,8 +933,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData2 = ((UV, int, int))v2.Data;
-                        bv = csgVertices.First(v => v.Tag == vData2.Item2);
+                        var vData2 = ((UV uv, int tag, int faceId))v2.Data;
+                        bv = csgVertices[vData2.tag];
                     }
 
                     if (v3.Data == null)
@@ -934,13 +944,16 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData3 = ((UV, int, int))v3.Data;
-                        cv = csgVertices.First(v => v.Tag == vData3.Item2);
+                        var vData3 = ((UV uv, int tag, int faceId))v3.Data;
+                        cv = csgVertices[vData3.tag];
                     }
 
                     // Don't allow us to create a csg that has zero
                     // area triangles.
-                    if (Vector3.AreCollinearByDistance(av.Pos.ToVector3(), bv.Pos.ToVector3(), cv.Pos.ToVector3()))
+                    var ab = bv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var ac = cv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var area = ab.Cross(ac).Length() / 2;
+                    if (area == 0.0)
                     {
                         continue;
                     }

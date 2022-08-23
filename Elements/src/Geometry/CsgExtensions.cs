@@ -25,9 +25,10 @@ namespace Elements.Geometry
         /// appropriate for use with gltf.
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid csg,
-                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+                                                   bool mergeVertices = false,
+                                                   Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
-            return Tessellate(new[] { csg }, modifyVertexAttributes);
+            return Tessellate(new[] { csg }, mergeVertices, modifyVertexAttributes);
         }
 
         /// <summary>
@@ -35,10 +36,12 @@ namespace Elements.Geometry
         /// buffers appropriate for use with gltf. 
         /// </summary>
         internal static GraphicsBuffers Tessellate(this Csg.Solid[] csgs,
-                                                   Func<(Vector3, Vector3, UV, Color), (Vector3, Vector3, UV, Color)> modifyVertexAttributes = null)
+                                                   bool mergeVertices = false,
+                                                   Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
             var buffers = Tessellation.Tessellation.Tessellate<GraphicsBuffers>(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
-                                    modifyVertexAttributes);
+                                                                                mergeVertices,
+                                                                                modifyVertexAttributes);
             return buffers;
         }
 
@@ -185,6 +188,11 @@ namespace Elements.Geometry
             return result;
         }
 
+        internal static Vector3 ToVector3(this Csg.Vector3D v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
+
         internal static Csg.Vector3D ToCsgVector3(this Vector3 v)
         {
             return new Csg.Vector3D(v.X, v.Y, v.Z);
@@ -193,6 +201,23 @@ namespace Elements.Geometry
         private static Csg.Vector2D ToCsgVector2(this UV uv)
         {
             return new Csg.Vector2D(uv.U, uv.V);
+        }
+
+        internal static bool IsCoplanar(this Csg.Plane csgPlane, Plane plane)
+        {
+            var dot = Math.Abs(csgPlane.Normal.ToVector3().Dot(plane.Normal));
+            return dot.ApproximatelyEquals(1) && csgPlane.W.ApproximatelyEquals(plane.Origin.DistanceTo(Vector3.Origin));
+        }
+
+        internal static Polygon Project(this Csg.Polygon poly, Plane plane)
+        {
+            return new Polygon(poly.Vertices.Select(vtx => vtx.Pos.ToVector3().Project(plane)).ToList());
+        }
+
+        internal static bool IsBehind(this Csg.Plane csgPlane, Plane plane)
+        {
+            var p = (csgPlane.Normal * csgPlane.W).ToVector3();
+            return plane.SignedDistanceTo(p) < 0;
         }
 
         /// <summary>
@@ -216,11 +241,6 @@ namespace Elements.Geometry
                 contour[i] = cv;
             }
             return contour;
-        }
-
-        internal static Vector3 ToVector3(this Csg.Vector3D v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
         }
 
         internal static Csg.Vector3D ToCsgVector3(this Vec3 v)
