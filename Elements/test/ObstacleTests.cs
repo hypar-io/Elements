@@ -51,7 +51,6 @@ namespace Elements
 
             Model.AddElement(obstacle);
             Model.AddElements(polyline.Segments().Select(x => new ModelCurve(x, BuiltInMaterials.XAxis)));
-            Model.ToGlTF($"../../../Test{testNumber}.gltf");
 
             Assert.Equal(expectedResult, result);
         }
@@ -116,6 +115,53 @@ namespace Elements
             var result = obstacle.Intersects(polyline);
 
             Assert.False(result);
+        }
+
+        [Fact]
+        public void IntersectsObstacleFromLine()
+        {
+            var offset = 0.1;
+            var horizontalLine = new Line(Vector3.Origin, new Vector3(0, 10));
+            var horizontalObstacle = Obstacle.FromLine(horizontalLine, offset);
+
+            Assert.True(horizontalObstacle.Intersects(horizontalLine));
+
+            var horizontalLineOnTop = horizontalLine.TransformedLine(new Transform(0, 0, offset));
+            Assert.True(horizontalObstacle.Intersects(horizontalLineOnTop));
+
+            var horizontalLineOnBottom = horizontalLine.TransformedLine(new Transform(0, 0, -offset));
+            Assert.True(horizontalObstacle.Intersects(horizontalLineOnBottom));
+
+            var horizontalLineOnSide = horizontalLine.TransformedLine(new Transform(offset, 0, 0));
+            Assert.False(horizontalObstacle.Intersects(horizontalLineOnSide));
+
+            var horizontalLineIntersecting = horizontalLine.TransformedLine(new Transform(0, offset, 0));
+            Assert.True(horizontalObstacle.Intersects(horizontalLineIntersecting));
+
+            var verticalLine = new Line(Vector3.Origin, new Vector3(0, 0, 10));
+            var verticalObstacle = Obstacle.FromLine(verticalLine);
+
+            Assert.True(verticalObstacle.Intersects(verticalLine));
+
+            var verticalLineOnMainTop = verticalLine.TransformedLine(new Transform(0, offset, 0));
+            Assert.True(verticalObstacle.Intersects(verticalLineOnMainTop));
+
+            var verticalLineOnMainBottom = verticalLine.TransformedLine(new Transform(0, -offset, 0));
+            Assert.True(verticalObstacle.Intersects(verticalLineOnMainBottom));
+
+            var lineIntersectingVerticalObstacle = verticalLine.TransformedLine(new Transform().RotatedAboutPoint(new Vector3(0, 0, 5), Vector3.YAxis, 30));
+            Assert.True(verticalObstacle.Intersects(lineIntersectingVerticalObstacle));
+
+            var angledLine = new Line(Vector3.Origin, new Vector3(10, 10, 10));
+            var angledObstacle = Obstacle.FromLine(angledLine);
+
+            Assert.True(angledObstacle.Intersects(angledLine));
+
+            var lineIntersectingAngleObstacle = new Line(new Vector3(5, 5), new Vector3(5, 5, 10));
+            Assert.True(angledObstacle.Intersects(lineIntersectingAngleObstacle));
+
+            var offsetedLine = angledLine.TransformedLine(new Transform(offset, 0, 0));
+            Assert.True(angledObstacle.Intersects(offsetedLine));
         }
     }
 }
