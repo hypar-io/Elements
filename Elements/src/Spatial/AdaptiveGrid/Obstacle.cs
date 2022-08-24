@@ -102,15 +102,15 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var polygon = new Polygon
             (
-                line.Start + offset * (frame.XAxis + frame.YAxis),
                 line.Start - offset * (frame.XAxis + frame.YAxis),
-                line.End - offset * (frame.XAxis + frame.YAxis),
-                line.End + offset * (frame.XAxis + frame.YAxis)
+                line.Start + offset * (frame.XAxis - frame.YAxis),
+                line.End + offset * (frame.XAxis - frame.YAxis),
+                line.End - offset * (frame.XAxis + frame.YAxis)
             );
 
             var height = offset * 2;
 
-            return new Obstacle(polygon, height, offset, perimeter, allowOutsideBoundary, frame);
+            return new Obstacle(polygon, height, 0, perimeter, allowOutsideBoundary, null);
         }
 
         /// <summary>
