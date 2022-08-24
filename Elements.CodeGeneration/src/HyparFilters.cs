@@ -51,6 +51,14 @@ namespace Elements.Generate
         }
 
         /// <summary>
+        /// Strip the nullable annotation (?) from a type.
+        /// </summary>
+        public static string Removenull(string input)
+        {
+            return input.Replace("?", "");
+        }
+
+        /// <summary>
         /// Convert the string into a tabbed text block with line breaks.
         /// </summary>
         /// <param name="input">The string to be formatted.</param>
