@@ -233,7 +233,7 @@ namespace Elements.Tests
             //Obstacle aligned with adaptive grid transformation.
             //Forms big (3;1) -> (5;3) -> (3;5) -> (1;3) rectangle.
             var bbox = new BBox3(new Vector3(2, 2), new Vector3(4, 4));
-            var withoutTransfrom = Obstacle.FromBBox(bbox, perimeter: true);
+            var withoutTransfrom = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
             adaptiveGrid.SubtractObstacle(withoutTransfrom);
 
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _, adaptiveGrid.Tolerance));
@@ -277,7 +277,7 @@ namespace Elements.Tests
             //Obstacle aligned with global transformation.
             //Forms small (6;6) -> (8;6) -> (8;8) -> (6;8) rectangle.
             bbox = new BBox3(new Vector3(6, 6), new Vector3(8, 8));
-            var withTransform = Obstacle.FromBBox(bbox, perimeter: true);
+            var withTransform = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
             withTransform.Transform = new Transform();
             adaptiveGrid.SubtractObstacle(withTransform);
 

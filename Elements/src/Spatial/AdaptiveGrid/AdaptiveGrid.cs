@@ -269,7 +269,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            if (obstacle.Perimeter && edgesToAdd.Any())
+            if (obstacle.AddPerimeterEdges && edgesToAdd.Any())
             {
                 var corners = localBox.Corners().Take(4).Select(c => frame.OfPoint(c)).ToList();
                 var intersectionsByElevations = edgesToAdd.GroupBy(
