@@ -1,21 +1,27 @@
 @page "/"
 
 @inject IJSRuntime JSRuntime
-@inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
 
 <div></div>
 
 @code {
 
+    // Why do we need a component to call Elements compile and
+    // run elements code from the browser?
+    // 1. We need an HttpClient passed in from the framework. We can't
+    // create it because this code runs sandboxed in wasm. It has to
+    // come from blazor and the only way to do that is by injecting it
+    // as a service.
+    // 2. We need the the IJSRuntime to call methods in javascript. This
+    // also needs to be injected as a service.
+
     private static Globals globals = new Globals();
-    private static IJSUnmarshalledRuntime unmarshalledRuntime;
     private static IJSRuntime runtime;
     [Inject] private HttpClient Client { get; set; }
     private static Func<object[], Task> executionDelegate;
 
     protected override async Task OnInitializedAsync()
     {
-        unmarshalledRuntime = JSUnmarshalledRuntime;
         runtime = JSRuntime;
         await Compiler.InitializeMetadataReferences(Client);
         await base.OnInitializedAsync();

@@ -14,10 +14,9 @@ The elements web assembly assets are served from S3 via cloud front at https://e
 ```
 ./deploy.sh
 ```
-
-### Files
-`Elements.js`
-- The javascript elements API. Elements is made available on the window object.
-
-`ElementsAPI.cs`
-- A wrapper around .net elements that is called by the javascript API.
+### Building an application with Elements in the browser.
+See `index.html` for examples of the following.
+- Add a script tag in your `<head>` which loads `elements.js`. `Elements.js` contains the API for elements.
+- Add an `<app>` tag which hangs the application in the DOM.
+- Add a a script tag which loads `blazor.webassembly.js` in the body, and ensure it is set to `autostart=false`.
+- Add a call to `Blazor.start` in a subsequent script to fetch Blazor assets from a preferred location, or from disk.
