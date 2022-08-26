@@ -1,0 +1,113 @@
+@page "/"
+
+@inject IJSRuntime JSRuntime
+@inject IJSUnmarshalledRuntime JSUnmarshalledRuntime
+
+<div></div>
+
+@code {
+
+    private static Globals globals = new Globals();
+    private static IJSUnmarshalledRuntime unmarshalledRuntime;
+    private static IJSRuntime runtime;
+    [Inject] private HttpClient Client { get; set; }
+    private static Func<object[], Task> executionDelegate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        unmarshalledRuntime = JSUnmarshalledRuntime;
+        runtime = JSRuntime;
+        await Compiler.InitializeMetadataReferences(Client);
+        await base.OnInitializedAsync();
+        await Task.FromResult(0);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable]
+    public static async Task<string> CompileAndRun(string code)
+    {
+        Compile(code);
+        return await Run();
+    }
+
+    [JSInvokable]
+    public static async Task<string> Run()
+    {
+        var sw = Stopwatch.StartNew();
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        if (executionDelegate == null)
+        {
+            Console.WriteLine("There is no execution method.");
+            Console.SetOut(currentOut);
+            sw.Stop();
+            return writer.ToString();
+        }
+
+        var model = await (Task<object>)executionDelegate(new object[] { globals, null });
+        Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
+
+        await Task.Run(() =>
+        {
+            sw.Start();
+            var glb = ((Elements.Model)model).ToGlTF();
+            @* unmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("elements.loadModel", glb); *@
+            runtime.InvokeVoidAsync("elements.loadModel", glb);
+            Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
+            return writer.ToString();
+        });
+
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+
+        return writer.ToString();
+    }
+
+    [JSInvokable]
+    public static string Compile(string code)
+    {
+        var sw = Stopwatch.StartNew();
+
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+
+        // Redirect debug to the console.
+        Trace.Listeners.Clear();
+        Trace.Listeners.Add(
+        new TextWriterTraceListener(Console.Out));
+
+        executionDelegate = null;
+
+        // Compilation warnings will be written to console.out
+        // which is redirected here to the writer.
+        var (success, asm, compilation) = Compiler.LoadSource(code);
+        if (success)
+        {
+            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+
+            executionDelegate = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+            Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
+        }
+        else
+        {
+            Console.WriteLine("Compilation was not successful. The execution will not run.");
+        }
+
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+
+        return writer.ToString();
+    }
+}

@@ -1,19 +1,23 @@
 # Elements Playground
 A playground for testing Elements in the browser.
 
-This is a minimal example using .NET 5, Blazor webassembly, and Elements.
+This is a minimal example using .NET 6, Blazor webassembly, and Elements.
 
 ### Running
 `dotnet watch run`
 
-Visit http://localhost:5000.
-
 ### Publishing
-`dotnet public -c release`
+`dotnet publish -c release`
 
-### Notes about hosting on Github Pages
-- In the site's repo on github
-  - Replace the base path in `index.html` with the path of the root of your site. For example, replace `/` with `/ElementsPlaygroundSite/` where `ElementsPlaygroundSite` is the name of the repo where the site is located.
-  - Include a `.nojekyll` file to avoid the system skipping files and folders that start with `_`.
-  - Add a `404.html` with contents identical to `index.html` to support redirection.
-  - Add a `.gitattributes` file with `* binary` to avoid git modifying the assemblies in such a way that their hash becomes invalid.
+### Deploy
+The elements web assembly assets are served from S3 via cloud front at https://elements.hypar.io. The deploy script will publish the "app" and copy and deploy all necessary files.
+```
+./deploy.sh
+```
+
+### Files
+`Elements.js`
+- The javascript elements API. Elements is made available on the window object.
+
+`ElementsAPI.cs`
+- A wrapper around .net elements that is called by the javascript API.

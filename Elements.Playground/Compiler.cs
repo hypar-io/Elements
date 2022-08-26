@@ -15,80 +15,9 @@ using Elements.Geometry.Profiles;
 
 namespace Elements.Playground
 {
-    public abstract class InputBase
-    {
-        public string Name { get; protected set; }
-    }
-
-    public class Input<T> : InputBase
-    {
-        public T Value { get; set; }
-
-        public Input(string name, T value)
-        {
-            Name = name;
-            Value = value;
-        }
-    }
-
-    public class WideFlangeProfileInput : Input<WideFlangeProfile>
-    {
-        public WideFlangeProfileFactory Factory { get; } = new WideFlangeProfileFactory();
-
-        public WideFlangeProfileInput(string name) : base(name, null)
-        {
-            Value = Factory.AllProfiles().First();
-        }
-    }
-
     public class Globals
     {
-        public Inputs Inputs { get; set; } = new Inputs();
-    }
-
-    public class Inputs
-    {
-        public List<InputBase> Values { get; set; } = new List<InputBase>();
-
-        public double GetNumberInput(string name)
-        {
-            var input = Values.FirstOrDefault(i => i.Name == name);
-            if (input is Input<double> numberInput)
-            {
-                return numberInput.Value;
-            }
-            return 0.0;
-        }
-
-        public Material GetMaterialInput(string name)
-        {
-            var input = Values.FirstOrDefault(i => i.Name == name);
-            if (input is Input<Material> materialInput)
-            {
-                return materialInput.Value;
-            }
-            return null;
-        }
-
-        public Vector3 GetVectorInput(string name)
-        {
-            var input = Values.FirstOrDefault(i => i.Name == name);
-            if (input is Input<Vector3> vectorInput)
-            {
-                return vectorInput.Value;
-            }
-            return default;
-        }
-
-        public WideFlangeProfile GetProfileInput(string name)
-        {
-            var input = Values.FirstOrDefault(i => i.Name == name);
-            if (input is WideFlangeProfileInput wideFlangeProfileInput)
-            {
-                return wideFlangeProfileInput.Value;
-            }
-            return default;
-        }
+        public List<object> Inputs { get; set; } = new List<object>();
     }
 
     public static class Compiler
@@ -114,10 +43,7 @@ namespace Elements.Playground
 
         public static async Task InitializeMetadataReferences(HttpClient client)
         {
-            // async Task InitializeInternal()
-            // {
             var model = new Model();
-            Console.WriteLine("Initializing the code editor...");
 
             // TODO: This loads every assembly that is available. We should
             // see if we can limit this to just the ones that we need.
