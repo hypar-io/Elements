@@ -6,6 +6,12 @@
 
 @code {
 
+    public class Result
+    {
+        public bool Success { get; set;}
+        public string Output { get; set;}
+    }
+
     // Why do we need a component to call Elements compile and
     // run elements code from the browser?
     // 1. We need an HttpClient passed in from the framework. We can't
@@ -34,57 +40,59 @@
     }
 
     [JSInvokable]
-    public static async Task<string> CompileAndRun(string code)
-    {
-        Compile(code);
-        return await Run();
-    }
-
-    [JSInvokable]
-    public static async Task<string> Run()
+    public static async Task<Result> Run()
     {
         var sw = Stopwatch.StartNew();
         var currentOut = Console.Out;
         var writer = new StringWriter();
         Console.SetOut(writer);
+        var success = false;
 
         if (executionDelegate == null)
         {
-            Console.WriteLine("There is no execution method.");
+            Console.WriteLine("There is nothing to execute. Try compiling first.");
             Console.SetOut(currentOut);
             sw.Stop();
-            return writer.ToString();
+            return new Result()
+            {
+                Success = success,
+                Output = writer.ToString()
+            };
         }
 
         var model = await (Task<object>)executionDelegate(new object[] { globals, null });
         Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
         sw.Reset();
 
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             sw.Start();
             var glb = ((Elements.Model)model).ToGlTF();
-            @* unmarshalledRuntime.InvokeUnmarshalled<byte[], bool>("elements.loadModel", glb); *@
-            runtime.InvokeVoidAsync("elements.loadModel", glb);
+            await runtime.InvokeVoidAsync("elements.loadModel", glb);
             Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
-            return writer.ToString();
+            success = true;
         });
 
         Console.SetOut(currentOut);
 
         sw.Stop();
 
-        return writer.ToString();
+        return new Result()
+        {
+            Success = success,
+            Output = writer.ToString()
+        };
     }
 
     [JSInvokable]
-    public static string Compile(string code)
+    public static Result Compile(string code)
     {
         var sw = Stopwatch.StartNew();
 
         var currentOut = Console.Out;
         var writer = new StringWriter();
         Console.SetOut(writer);
+        var compileSuccess = false;
 
         // Redirect debug to the console.
         Trace.Listeners.Clear();
@@ -104,16 +112,30 @@
 
             executionDelegate = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
             Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
+            compileSuccess = true;
         }
         else
         {
             Console.WriteLine("Compilation was not successful. The execution will not run.");
+            compileSuccess = false;
         }
 
         Console.SetOut(currentOut);
 
         sw.Stop();
 
-        return writer.ToString();
+        return new Result()
+        {
+            Success = compileSuccess,
+            Output = writer.ToString()
+        };
+    }
+
+    [JSInvokable]
+    public static void UpdateInputs(Dictionary<string,double> inputs)
+    {
+        globals.Inputs.Clear();
+        globals.Inputs = inputs;
+        return;
     }
 }

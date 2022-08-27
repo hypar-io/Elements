@@ -38,7 +38,25 @@
             })
         }
         startBlazor()
+
+        async function updateInputs(value) {
+            elements.updateInputs({ "height": parseFloat(value) });
+            let result = await elements.run();
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = result.output;
+        }
+
+        async function compile() {
+            let result = await elements.compile(elements.testCode);
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = result.output;
+        }
     </script>
+    <input type="range" min="1" max="100" value="50" class="slider" oninput="updateInputs(this.value)">
+    <input type="button" onclick="compile()" value="Compile" />
+    <div>
+        <p id="result"></p>
+    </div>
 </body>
 
 </html>

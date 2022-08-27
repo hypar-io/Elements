@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -10,14 +9,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Elements.Geometry;
-using Elements.Geometry.Profiles;
 
 namespace Elements.Playground
 {
     public class Globals
     {
-        public List<object> Inputs { get; set; } = new List<object>();
+        public Dictionary<string, double> Inputs { get; set; } = new Dictionary<string, double>();
     }
 
     public static class Compiler

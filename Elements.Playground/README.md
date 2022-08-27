@@ -1,7 +1,5 @@
 # Elements Playground
-A playground for testing Elements in the browser.
-
-This is a minimal example using .NET 6, Blazor webassembly, and Elements.
+The elements web assembly API, for using Elements in the browser.
 
 ### Running
 `dotnet watch run`
@@ -14,9 +12,15 @@ The elements web assembly assets are served from S3 via cloud front at https://e
 ```
 ./deploy.sh
 ```
+
 ### Building an application with Elements in the browser.
-See `index.html` for examples of the following.
+This repo contains a demo application that demonstrates the usage of the Elements web assembly APIs. The demo application has two input elements, a slider and a button. The button compiles some test code which relies on an input value provided by the slider. 
+
+See the `index.html` in the demo application for an example of how to do the following.
 - Add a script tag in your `<head>` which loads `elements.js`. `Elements.js` contains the API for elements.
 - Add an `<app>` tag which hangs the application in the DOM.
 - Add a a script tag which loads `blazor.webassembly.js` in the body, and ensure it is set to `autostart=false`.
 - Add a call to `Blazor.start` in a subsequent script to fetch Blazor assets from a preferred location, or from disk.
+
+**NOTE** The Elements web assembly API does not need to interact with the DOM, but we still need to create a blazor component to inject some of the infrastructure required by the compiler, like the `HttpClient` instance and the `IJSRuntime` instance. You will need to inlcude the `app` element in your application, which puts an empty div in the DOM. We're looking at ways to remove this requirement in the future.
+
