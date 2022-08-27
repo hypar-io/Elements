@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.GeoJSON
 {
@@ -11,19 +11,20 @@ namespace Elements.GeoJSON
         /// <summary>
         /// The type of the feature.
         /// </summary>
-        [JsonProperty("type")]
-        public string Type{
+        [JsonPropertyName("type")]
+        public string Type
+        {
             get
             {
                 return GetType().Name;
             }
         }
-        
+
         /// <summary>
         /// A collection of features.
         /// </summary>
-        [JsonProperty("features")]
-        public IEnumerable<Feature> Features{get;set;}
+        [JsonPropertyName("features")]
+        public IEnumerable<Feature> Features { get; set; }
 
         /// <summary>
         /// Construct a feature collection.

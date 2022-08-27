@@ -3,29 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
     /// <summary>
     /// A wall drawn using the elevation profile
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class WallByProfile : Wall
     {
         /// <summary>The overall thickness of the Wall</summary>
-        [JsonProperty("Thickness", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Thickness { get; set; }
 
         /// <summary>
         /// The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
         /// and will often be projected to that Plane during internal operations.
         /// </summary>
-        [JsonProperty("Perimeter", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>The Centerline of the wall</summary>
-        [JsonProperty("Centerline", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Line Centerline { get; set; }
 
         /// <summary>

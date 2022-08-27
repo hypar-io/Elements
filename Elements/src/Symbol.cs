@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -17,12 +18,11 @@ namespace Elements
         /// <summary>
         /// The geometry of the symbol.
         /// </summary>
-        [JsonProperty("Geometry", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonConverter(typeof(ElementConverter<GeometryReference>))]
         public GeometryReference Geometry { get; set; }
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
-        [JsonProperty("CameraPosition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public SymbolCameraPosition CameraPosition { get; set; }
 
         /// <summary>
@@ -40,7 +40,6 @@ namespace Elements
         /// <summary>
         /// Get the geometry from this symbol.
         /// </summary>
-        /// <returns></returns>
         public async Task<IEnumerable<object>> GetGeometryAsync()
         {
             if (this.Geometry.InternalGeometry != null)
@@ -56,14 +55,18 @@ namespace Elements
                     var stream = response.GetResponseStream();
                     var streamReader = new StreamReader(stream);
                     var json = streamReader.ReadToEnd();
-                    var objects = JsonConvert.DeserializeObject<List<JObject>>(json);
-                    var loadedTypes = typeof(Element).Assembly.GetTypes().ToList();
-                    return objects.Select(obj =>
+                    using (var doc = JsonDocument.Parse(json))
                     {
-                        var discriminator = obj.Value<string>("discriminator");
-                        var matchingType = loadedTypes.FirstOrDefault(t => t.FullName.Equals(discriminator));
-                        return obj.ToObject(matchingType);
-                    });
+                        var root = doc.RootElement;
+                        var geometry = new List<object>();
+                        var loadedTypes = typeof(Element).Assembly.GetTypes().ToList();
+                        foreach (var obj in root.EnumerateArray())
+                        {
+                            var discriminator = obj.GetProperty("discriminator").GetString();
+                            var matchingType = loadedTypes.FirstOrDefault(t => t.FullName.Equals(discriminator));
+                            root.Deserialize(matchingType);
+                        }
+                    }
                 }
                 catch
                 {

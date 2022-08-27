@@ -1,14 +1,10 @@
 ﻿using Elements.Geometry;
 using Elements.Spatial.AdaptiveGrid;
-using Elements.Tests;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Xunit;
-using Vertex = Elements.Spatial.AdaptiveGrid.Vertex;
 
 namespace Elements.Tests
 {
@@ -877,7 +873,7 @@ namespace Elements.Tests
             grid.AddVertex(new Vector3(5, 2), new ConnectVertexStrategy(strip[1]), cut: false); //5
             return grid;
         }
-        
+
         private void WriteToModelWithRandomMaterials(AdaptiveGrid grid, [CallerMemberName] string memberName = "")
         {
             var random = new Random();

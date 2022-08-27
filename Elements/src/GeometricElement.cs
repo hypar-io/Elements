@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Interfaces;
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
             InternalsVisibleTo("Hypar.Elements.Serialization.SVG")]
@@ -15,26 +15,22 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
         internal BBox3 _bounds;
         internal Csg.Solid _csg;
 
         /// <summary>The element's transform.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonConverter(typeof(ElementConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>

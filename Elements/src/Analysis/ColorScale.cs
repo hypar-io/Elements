@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry;
-using Newtonsoft.Json;
-using Elements;
+using System.Text.Json.Serialization;
 using System.Linq;
 
 namespace Elements.Analysis
@@ -19,21 +18,18 @@ namespace Elements.Analysis
         /// <summary>
         /// The colors of the scale.
         /// </summary>
-        [JsonProperty]
         public List<Color> Colors { get; } = new List<Color>();
 
         /// <summary>
         /// The domain of the scale
         /// </summary>
-        [JsonProperty]
-        private List<Domain1d> Domains { get; } = null;
+        public List<Domain1d> Domains { get; } = null;
 
         /// <summary>
         /// Whether this scale is chunked into discrete bands.
         /// If false, values will be returned in a smooth gradient.
         /// </summary>
-        [JsonProperty]
-        private Boolean Discrete { get; } = false;
+        public bool Discrete { get; } = false;
 
         /// <summary>
         /// Create a ColorScale from a list of colors. The scale will automatically have a domain from 0 to 1.
@@ -53,7 +49,7 @@ namespace Elements.Analysis
         /// <param name="discrete">Whether this color scale uses discrete values.</param>
         /// <param name="domains">The domains which the colors map to</param>
         [JsonConstructor]
-        internal ColorScale(List<Color> colors, Boolean discrete, List<Domain1d> domains = null)
+        public ColorScale(List<Color> colors, bool discrete, List<Domain1d> domains = null)
         {
             this.Colors = colors;
             this.Discrete = discrete;
@@ -114,7 +110,7 @@ namespace Elements.Analysis
             {
                 if (i > 0 && values[i] <= values[i - 1])
                 {
-                    throw new ArgumentException($"Your list of custom values must be sorted numerically and contain no duplicate values. {values[i]} cannot come after {values[i-1]}.");
+                    throw new ArgumentException($"Your list of custom values must be sorted numerically and contain no duplicate values. {values[i]} cannot come after {values[i - 1]}.");
                 }
                 this.Domains.Add(new Domain1d(values[i], values[i + 1]));
             }

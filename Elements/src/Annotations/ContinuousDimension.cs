@@ -1,6 +1,6 @@
 using System;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements.Annotations
 {

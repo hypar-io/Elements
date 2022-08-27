@@ -17,6 +17,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
+using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -126,7 +127,13 @@ namespace Elements.Serialization.glTF
         /// <returns>A byte array representing the model.</returns>
         public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms total for initializing the glTF");
+            sw.Restart();
+
             if (gltf == null)
             {
                 return null;
@@ -135,13 +142,14 @@ namespace Elements.Serialization.glTF
 
             byte[] bytes;
             using (var ms = new MemoryStream())
-            using (var writer = new BinaryWriter(ms))
             {
                 gltf.SaveBinaryModel(mergedBuffer, ms);
                 // Avoid a copy of this array by using GetBuffer() instead
                 // of ToArray()
                 bytes = ms.GetBuffer();
             }
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for saving the binary model");
+            sw.Restart();
 
             return bytes;
         }
@@ -863,6 +871,7 @@ namespace Elements.Serialization.glTF
         private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
             var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges, mergeVertices);
+
             if (gltf == null)
             {
                 return false;
@@ -872,6 +881,7 @@ namespace Elements.Serialization.glTF
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             gltf.SaveBinaryModel(mergedBuffer, path);
+
             return true;
         }
 
@@ -879,6 +889,7 @@ namespace Elements.Serialization.glTF
         private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
             var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
+
             if (gltf == null)
             {
                 return false;
@@ -886,7 +897,9 @@ namespace Elements.Serialization.glTF
 
             // Buffers must be saved first, URIs may be set or modified inside this method.
             gltf.SaveBuffersAndAddUris(path, buffers);
+
             gltf.SaveModel(path);
+
             return true;
         }
 
@@ -896,6 +909,8 @@ namespace Elements.Serialization.glTF
                                             bool drawEdges = false,
                                             bool mergeVertices = false)
         {
+            var sw = new Stopwatch();
+
             errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
@@ -996,6 +1011,10 @@ namespace Elements.Serialization.glTF
             var meshElementMap = new Dictionary<Guid, List<int>>();
             var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
+
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for creating glTF structure.");
+            sw.Restart();
+
             foreach (var e in elements)
             {
                 // Check if we'll overrun the index size
@@ -1035,7 +1054,11 @@ namespace Elements.Serialization.glTF
                     errors.Add(new ElementError(e.Id, ex));
                 }
             }
-            if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
+
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for gathering element geometry.");
+            sw.Restart();
+
+            if (allBuffers.Sum(b => b.Length) + buffer.Count == 0 && lights.Count == 0)
             {
                 return null;
             }

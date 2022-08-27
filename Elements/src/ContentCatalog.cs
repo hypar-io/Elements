@@ -1,24 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements
 {
     /// <summary>
     /// A collection of content elements.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class ContentCatalog : Element
     {
         /// <summary>The content elements in this catalog.</summary>
-        [JsonProperty("Content", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
 
         /// <summary>An example arrangement of the elements contained in this catalog.</summary>
-        [JsonProperty("ReferenceConfiguration", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Element> ReferenceConfiguration { get; set; }
 
         /// <summary>
@@ -41,10 +38,9 @@ namespace Elements
         /// </summary>
         public string ToJson()
         {
-            JsonInheritanceConverter.ElementwiseSerialization = true;
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-            JsonInheritanceConverter.ElementwiseSerialization = false;
-            return json;
+            var serializerOptions = new JsonSerializerOptions();
+            serializerOptions.Converters.Add(new ElementConverterFactory(true));
+            return JsonSerializer.Serialize(this, serializerOptions);
         }
 
         /// <summary>
@@ -53,17 +49,26 @@ namespace Elements
         /// <param name="json"></param>
         public static ContentCatalog FromJson(string json)
         {
-            var catalogObject = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(json);
-            if (catalogObject.TryGetValue("discriminator", out _))
+            using (var doc = JsonDocument.Parse(json))
             {
-                return catalogObject.ToObject<ContentCatalog>();
+                var root = doc.RootElement;
+                if (root.TryGetProperty("discriminator", out _))
+                {
+                    var options = new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    };
+                    var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
+                    var refHandler = new ElementReferenceHandler(typeCache, root);
+                    options.ReferenceHandler = refHandler;
+                    return root.Deserialize<ContentCatalog>(options);
+                }
+                else if (root.TryGetProperty("Elements", out _) && root.TryGetProperty("Transform", out _))
+                {
+                    var model = Model.FromJson(json);
+                    return model.AllElementsOfType<ContentCatalog>().First();
+                }
             }
-            else if (catalogObject.TryGetValue("Elements", out _) && catalogObject.TryGetValue("Transform", out _)) // catalog is stored in a model
-            {
-                var model = Model.FromJson(json);
-                return model.AllElementsOfType<ContentCatalog>().First();
-            }
-
             return null;
         }
 

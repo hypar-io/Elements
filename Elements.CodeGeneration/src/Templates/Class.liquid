@@ -1,9 +1,6 @@
 {% if HasDescription -%}
 /// <summary>{{ Description | csharpdocs }}</summary>
 {% endif -%}
-{% if HasDiscriminator -%}
-[JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "{{ Discriminator }}")]
-{% endif -%}
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
 {% if InheritsExceptionSchema -%}
 [JsonObjectAttribute]
@@ -30,7 +27,7 @@
 {%   if property.HasDescription -%}
     /// <summary>{{ property.Description | csharpdocs }}</summary>
 {%   endif -%}
-    [JsonProperty("{{ property.Name }}", Required = {{ property.JsonPropertyRequiredCode }}{% if property.IsStringEnumArray %}, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter){% endif %})]
+    [JsonPropertyName("{{ property.Name }}")]
 {%   if property.RenderRequiredAttribute -%}
     [System.ComponentModel.DataAnnotations.Required{% if property.AllowEmptyStrings %}(AllowEmptyStrings = true){% endif %}]
 {%   endif -%}
@@ -50,7 +47,7 @@
     [System.ComponentModel.DataAnnotations.RegularExpression(@"{{ property.RegularExpressionValue }}")]
 {%   endif -%}
 {%   if property.IsStringEnum -%}
-    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
 {%   endif -%}
 {%   if property.IsDate and UseDateFormatConverter -%}
     [JsonConverter(typeof(DateFormatConverter))]

@@ -6,12 +6,13 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Xunit;
 using Xunit.Abstractions;
 using SixLabors.ImageSharp.Processing;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -31,7 +32,7 @@ namespace Elements.Tests
 
             // <example>
             // Read topo elevations from a file.
-            var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
+            var data = JsonSerializer.Deserialize<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
             var latitude = 45;
             var elevations = data["points"];
             var tileSize = WebMercatorProjection.GetTileSizeMeters(latitude, 15);
@@ -412,7 +413,7 @@ namespace Elements.Tests
         private static Topography CreateTopoFromMapboxElevations(Vector3 origin = default(Vector3), Material material = null)
         {
             // Read topo elevations
-            var data = JsonConvert.DeserializeObject<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
+            var data = JsonSerializer.Deserialize<Dictionary<string, double[]>>(File.ReadAllText("./elevations.json"));
             var elevations = data["points"];
 
             // Compute the mapbox tile side length.

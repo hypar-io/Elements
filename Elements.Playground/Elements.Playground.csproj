@@ -6,6 +6,7 @@
     <BlazorEnableCompression>false</BlazorEnableCompression>
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
     <PublishTrimmed>false</PublishTrimmed>
+    <RunAOTCompilation>true</RunAOTCompilation>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,18 +1,15 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
     /// <summary>A reference to a model, hosted at a URL.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public partial class GeometryReference
     {
         /// <summary>The URL where the referenced geometry is hosted.</summary>
-        [JsonProperty("GeometryUrl", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string GeometryUrl { get; set; }
 
         /// <summary>Any geometric data directly contained in this reference.</summary>
-        [JsonProperty("InternalGeometry", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<object> InternalGeometry { get; set; }
 
         /// <summary>

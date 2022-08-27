@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -8,7 +8,6 @@ namespace Elements.Geometry
     public class Representation
     {
         /// <summary>A collection of solid operations.</summary>
-        [JsonProperty("SolidOperations", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
 
@@ -45,7 +44,7 @@ namespace Elements.Geometry
         /// A flag to disable CSG operations on this representation. Instead,
         /// all solids will be meshed, and all voids will be ignored.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public bool SkipCSGUnion { get; set; } = false;
     }

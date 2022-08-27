@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements;
-using Elements.Components;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 
 namespace Elements.Components
@@ -99,7 +98,7 @@ namespace Elements.Components
             /// <summary>
             /// The content element corresponding to this item.
             /// </summary>
-            [Newtonsoft.Json.JsonIgnore]
+            [JsonIgnore]
             public ContentElement ContentElement
             {
                 get
