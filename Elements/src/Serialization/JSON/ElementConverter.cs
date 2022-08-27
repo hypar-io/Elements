@@ -111,7 +111,8 @@ namespace Elements.Serialization.JSON
                             string elementType = discriminator.Substring(start, end - start);
                             if (!resolver.TypeCache.TryGetValue(elementType, out var genericType))
                             {
-                                throw new Exception($"The type {elementType} could not be found in the type cache. It can not be used as a generic type argument.");
+                                // This may occur if the object is a proxy of a type we don't have the class for. Fallback to `Element`.
+                                genericType = typeof(Element);
                             }
                             var typeArgs = new[] { genericType };
                             var genericElementType = derivedType.MakeGenericType(typeArgs);
@@ -140,7 +141,7 @@ namespace Elements.Serialization.JSON
                             DeserializeElementProperties(derivedType, root, resolver, resolver.DocumentElements);
 
                             // Use this for debugging. If you can't figure out
-                            // where serialization is going bezerk, it'll print
+                            // where serialization is going berserk, it'll print
                             // the element ids as they serialize. This is useful
                             // when things like stack overflows happen, to identify
                             // the last element entered before the overflow. Then you 
@@ -151,7 +152,6 @@ namespace Elements.Serialization.JSON
                             //     var strId = id.GetString();
                             //     Console.WriteLine($"Deserializing element {strId}");
                             // }
-
                             T e = (T)root.Deserialize(derivedType, options);
                             if (typeof(Element).IsAssignableFrom(derivedType))
                             {
