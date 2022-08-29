@@ -14,7 +14,7 @@ namespace Elements.Playground
 {
     public class Globals
     {
-        public Dictionary<string, double> Inputs { get; set; } = new Dictionary<string, double>();
+        public string InputJson { get; set; }
     }
 
     public static class Compiler
@@ -35,17 +35,31 @@ namespace Elements.Playground
             public Dictionary<string, string> pdb { get; set; }
             public Dictionary<string, string> runtime { get; set; }
         }
-
         private static List<MetadataReference> References;
+
+        private static bool _isInitialized = false;
+
+        public static bool IsReady()
+        {
+            return _isInitialized;
+        }
 
         public static async Task InitializeMetadataReferences(HttpClient client)
         {
+            if (_isInitialized)
+            {
+                return;
+            }
             var model = new Model();
-
+            Console.WriteLine("Loading metadata references...");
+            // TODO: Make this conditional on some build flag, so we can easily
+            // deploy to prod or dev, or allow others cloning the project to
+            // spec the URL where they'll be hosting it.
+            var rootUrl = "https://elements.hypar.io/";
             // TODO: This loads every assembly that is available. We should
             // see if we can limit this to just the ones that we need.
-            var response = await client.GetFromJsonAsync<BlazorBoot>("_framework/blazor.boot.json");
-            var assemblies = await Task.WhenAll(response.resources.assembly.Keys.Select(x => client.GetAsync("_framework/" + x)));
+            var response = await client.GetFromJsonAsync<BlazorBoot>($"{rootUrl}blazor.boot.json");
+            var assemblies = await Task.WhenAll(response.resources.assembly.Keys.Select(x => client.GetAsync($"{rootUrl}{x}")));
             var references = new List<MetadataReference>(assemblies.Length);
             foreach (var asm in assemblies)
             {
@@ -53,6 +67,7 @@ namespace Elements.Playground
                 references.Add(MetadataReference.CreateFromStream(task));
             }
             References = references;
+            _isInitialized = true;
         }
 
         public static (bool success, Assembly asm, Compilation compilation) LoadSource(string source)
@@ -70,6 +85,8 @@ namespace Elements.Playground
 "System.Collections.Generic",
 "System.Console",
 "System.Linq",
+"System.Text.Json",
+"System.Text.Json.Serialization",
 "Elements",
 "Elements.Geometry",
 "Elements.Geometry.Solids",

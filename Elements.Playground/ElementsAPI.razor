@@ -8,8 +8,11 @@
 
     public class Result
     {
-        public bool Success { get; set;}
-        public string Output { get; set;}
+        public bool Success { get; set; }
+
+        public string Output { get; set; }
+
+        public string ModelJson { get; set; }
     }
 
     // Why do we need a component to call Elements compile and
@@ -60,14 +63,14 @@
             };
         }
 
-        var model = await (Task<object>)executionDelegate(new object[] { globals, null });
+        var model = await (Task<object>)executionDelegate(new object[] { globals, null }) as Elements.Model;
         Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
         sw.Reset();
 
         await Task.Run(async () =>
         {
             sw.Start();
-            var glb = ((Elements.Model)model).ToGlTF();
+            var glb = model.ToGlTF();
             await runtime.InvokeVoidAsync("elements.loadModel", glb);
             Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
             success = true;
@@ -80,13 +83,22 @@
         return new Result()
         {
             Success = success,
-            Output = writer.ToString()
+            Output = writer.ToString(),
+            ModelJson = model.ToJson()
         };
     }
 
     [JSInvokable]
     public static Result Compile(string code)
     {
+        if (!Compiler.IsReady())
+        {
+            return new Result
+            {
+                Success = false,
+                Output = "Compiler not ready"
+            };
+        }
         var sw = Stopwatch.StartNew();
 
         var currentOut = Console.Out;
@@ -132,10 +144,9 @@
     }
 
     [JSInvokable]
-    public static void UpdateInputs(Dictionary<string,double> inputs)
+    public static void UpdateInputs(string json)
     {
-        globals.Inputs.Clear();
-        globals.Inputs = inputs;
+        globals.InputJson = json;
         return;
     }
 }

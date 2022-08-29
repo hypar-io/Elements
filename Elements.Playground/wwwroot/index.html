@@ -11,16 +11,13 @@
 
 <body>
     <app></app>
-    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script src="https://elements.hypar.io/blazor.webassembly.js" autostart="false"></script>
     <script>
         // Insert this code into your web application
         // to load blazor assets locally, for testing,
         // or from elements.hypar.io, for production.
-        async function startBlazor() {
+        async function startBlazor () {
             let root = 'https://elements.hypar.io'
-            if (window.origin.includes("https://localhost:")) {
-                root = `${window.origin}/_framework`;
-            }
             await Blazor.start({
                 loadBootResource: function (type, name, defaultUri, integrity) {
                     // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
@@ -31,6 +28,7 @@
                         case 'dotnetjs':
                         case 'dotnetwasm':
                         case 'timezonedata':
+                        case 'pdb':
                             return `${root}/${name}`
                     }
                     return null
@@ -39,14 +37,14 @@
         }
         startBlazor()
 
-        async function updateInputs(value) {
-            elements.updateInputs({ "height": parseFloat(value) });
+        async function updateInputs (value) {
+            elements.updateInputs(JSON.stringify({ "height": parseFloat(value) }));
             let result = await elements.run();
             let resultDiv = document.getElementById("result");
             resultDiv.innerHTML = result.output;
         }
 
-        async function compile() {
+        async function compile () {
             let result = await elements.compile(elements.testCode);
             let resultDiv = document.getElementById("result");
             resultDiv.innerHTML = result.output;
