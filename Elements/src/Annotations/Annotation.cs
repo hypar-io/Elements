@@ -1,5 +1,3 @@
-using Elements.Geometry;
-
 namespace Elements.Annotations
 {
     /// <summary>

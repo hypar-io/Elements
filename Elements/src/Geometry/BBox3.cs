@@ -1,5 +1,6 @@
 using Elements.Validators;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,7 +56,6 @@ namespace Elements.Geometry
         [JsonIgnore]
         public Domain1d ZDomain => new Domain1d(Min.Z, Max.Z);
 
-
         /// <summary>
         /// Create a bounding box.
         /// </summary>
@@ -91,10 +91,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Extend a bounding box with a new point
+        /// Extend this bounding box to contain the specified point.
         /// </summary>
-        /// <param name="point">The point which should be inside the extended bounding box</param>
-        public BBox3 Extend(Vector3 point)
+        /// <param name="point">The point to include in the bounding box.</param>
+        public void Extend(Vector3 point)
         {
             var newMin = new Vector3(Min.X, Min.Y, Min.Z);
             if (point.X < this.Min.X) newMin.X = point.X;
@@ -107,7 +107,18 @@ namespace Elements.Geometry
             if (point.Y > this.Max.Y) newMax.Y = point.Y;
             if (point.Z > this.Max.Z) newMax.Z = point.Z;
             this.Max = newMax;
-            return this;
+        }
+
+        /// <summary>
+        /// Extend this bound box to contain the specified points.
+        /// </summary>
+        /// <param name="points">The points to include in the bounding box.</param>
+        public void Extend(params Vector3[] points)
+        {
+            foreach (var pt in points)
+            {
+                Extend(pt);
+            }
         }
 
         /// <summary>
@@ -436,6 +447,58 @@ namespace Elements.Geometry
                      || other.Max.Y < Min.Y
                      || other.Min.Z > Max.Z
                      || other.Max.Z < Min.Z);
+        }
+
+        /// <summary>
+        /// Does the bounding box intersect the provided plane?
+        /// </summary>
+        /// <param name="plane">The plane.</param>
+        /// <param name="transform">An optional transform of the bounding box to apply before intersection.</param>
+        /// <param name="relationToPlane">The relation of the bounding box to the plane.</param>
+        /// <returns>True if the bounding box intersects, otherwise false.</returns>
+        public bool Intersects(Plane plane, out RelationToPlane relationToPlane, Transform transform = null)
+        {
+            var transformedPlane = new Plane(plane.Origin, plane.Normal);
+            if (transform != null)
+            {
+                // Transform the plane into the space of the bounding box.
+                var inverse = transform.Inverted();
+                transformedPlane.Origin = inverse.OfPoint(transformedPlane.Origin);
+                transformedPlane.Normal = inverse.OfVector(transformedPlane.Normal);
+            }
+
+            // https://gdbooks.gitbooks.io/3dcollisions/content/Chapter2/static_aabb_plane.html
+            // Convert AABB to center-extents representation
+            var c = (Max + Min) * 0.5; // Compute AABB center
+            var e = Max - c; // Compute positive extents
+
+            // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
+            var r = e.X * Math.Abs(transformedPlane.Normal.X) + e.Y * Math.Abs(transformedPlane.Normal.Y) + e.Z * Math.Abs(transformedPlane.Normal.Z);
+
+            // Compute distance of box center from plane
+            var s = c.DistanceTo(transformedPlane);
+
+            // Intersection occurs when distance s falls within [-r,+r] interval
+            if (Math.Abs(s) <= r)
+            {
+                relationToPlane = RelationToPlane.Intersects;
+                return true;
+            }
+
+            var corners = Corners();
+            if (corners.All(co => co.DistanceTo(transformedPlane) < 0))
+            {
+                relationToPlane = RelationToPlane.Below;
+                return false;
+            }
+            else if (corners.All(co => co.DistanceTo(transformedPlane) > 0))
+            {
+                relationToPlane = RelationToPlane.Above;
+                return false;
+            }
+
+            relationToPlane = RelationToPlane.None;
+            return false;
         }
     }
 }
