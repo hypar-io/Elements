@@ -1,3 +1,4 @@
+// Note: If updating this file to expose new APIs, please also update the adjacent type definition file at elements.d.ts.
 class Elements {
     testCode = `
     var model = new Model(); 

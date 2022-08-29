@@ -1,8 +1,10 @@
 # Elements Playground
 The elements web assembly API, for using Elements in the browser.
 
-### Running
-`dotnet watch run`
+### Running Locally
+`./serve.sh` - to serve Elements wasm assets
+Edit `wwwroot/index.html` to use localhost:5001, instead of the `https://elements.hypar.io` url.
+Serve `wwroot` (e.g. `python3 -m http.server`).
 
 ### Publishing
 `dotnet publish -c release`

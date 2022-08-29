@@ -17,6 +17,7 @@
         // to load blazor assets locally, for testing,
         // or from elements.hypar.io, for production.
         async function startBlazor () {
+            // If you are running locally, replace this with http://localhost:5001
             let root = 'https://elements.hypar.io'
             await Blazor.start({
                 loadBootResource: function (type, name, defaultUri, integrity) {
