@@ -488,6 +488,10 @@ namespace Elements.Geometry
             List<Profile> resultProfiles = new List<Profile>();
             foreach (var inputProfile in profiles)
             {
+                if (inputProfile.Perimeter.IsClockWise())
+                {
+                    inputProfile.Perimeter = inputProfile.Perimeter.Reversed();
+                }
                 inputProfile.OrientVoids();
                 var polygons = new List<Polygon>() {
                     inputProfile.Perimeter
