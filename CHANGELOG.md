@@ -29,6 +29,7 @@
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
+- `Profile.Split` would fail if the perimeter was clockwise-wound.
 
 ## 1.1.0
 
