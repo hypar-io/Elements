@@ -38,10 +38,10 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// In normal function use, this should be set to null.
-        /// If not null and set to a valid directory path, gltfs loaded for 
+        /// If not null and set to a valid directory path, gltfs loaded for
         /// content elements will be cached to this directory, and can be
         /// explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
-        /// by `hypar run` and test capabilities to speed up repeated runs. 
+        /// by `hypar run` and test capabilities to speed up repeated runs.
         /// </summary>
         public static string GltfCachePath
         {
@@ -902,9 +902,9 @@ namespace Elements.Serialization.glTF
 
             // Attempt to pre-allocate these lists. This won't be perfect.
             // Before processing the geometry of an element we can't know
-            // how much to allocate. In the worst case, this will reduce 
+            // how much to allocate. In the worst case, this will reduce
             // the list resizing.
-            // TODO: In future work where we update element geometry during 
+            // TODO: In future work where we update element geometry during
             // UpdateRepresentations, we will know at this moment how big the
             // geometry for an element is, and we should tighten this up.
             var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
@@ -962,8 +962,8 @@ namespace Elements.Serialization.glTF
             }
 
             // Gltf can't handle a materials array with zero materials.
-            // So we add the default material if this happens.
-            if (materialsToAdd.Count == 0)
+            // and we always want the default material to be available.
+            if (!materialsToAdd.Contains(BuiltInMaterials.Default))
             {
                 materialsToAdd.Add(BuiltInMaterials.Default);
             }
