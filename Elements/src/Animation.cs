@@ -5,7 +5,7 @@ using System.Numerics;
 namespace Elements
 {
     /// <summary>
-    /// An element's animation.
+    /// The animation of a transform expressed using glTF convention.
     /// </summary>
     public class Animation
     {
@@ -168,7 +168,7 @@ namespace Elements
         /// Add a rotation keyframe.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
-        /// <param name="angle">The angle of rotation in radians.</param>
+        /// <param name="angle">The angle of rotation in degrees.</param>
         /// <param name="time">The keyframe time.</param>
         public void AddRotationKeyframe(Geometry.Vector3 axis, double angle, double time)
         {

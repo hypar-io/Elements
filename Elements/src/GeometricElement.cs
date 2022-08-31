@@ -21,6 +21,12 @@ namespace Elements
         internal BBox3 _bounds;
         internal Csg.Solid _csg;
 
+        /// <summary>
+        /// The element's animation.
+        /// </summary>
+        [JsonIgnore]
+        public Animation Animation { get; set; }
+
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
