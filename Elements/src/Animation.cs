@@ -143,14 +143,14 @@ namespace Elements
         /// Add a scale keyframe.
         /// </summary>
         /// <param name="scale">The scale value.</param>
-        /// <param name="time">The time at which to apply the scale value.</param>
-        public void AddScaleKeyframe(Geometry.Vector3 scale, double time)
+        /// <param name="timeSeconds">The time at which to apply the scale value.</param>
+        public void AddScaleKeyframe(Geometry.Vector3 scale, double timeSeconds)
         {
             _scales.AddRange(BitConverter.GetBytes((float)scale.X));
             _scales.AddRange(BitConverter.GetBytes((float)scale.Y));
             _scales.AddRange(BitConverter.GetBytes((float)scale.Z));
 
-            _scaleTimes.AddRange(BitConverter.GetBytes((float)time));
+            _scaleTimes.AddRange(BitConverter.GetBytes((float)timeSeconds));
 
             _scaleMin[0] = Math.Min(_scaleMin[0], (float)scale.X);
             _scaleMin[1] = Math.Min(_scaleMin[1], (float)scale.Y);
@@ -160,19 +160,19 @@ namespace Elements
             _scaleMax[1] = Math.Max(_scaleMax[1], (float)scale.Y);
             _scaleMax[2] = Math.Max(_scaleMax[2], (float)scale.Z);
 
-            _scaleTimeMin = Math.Min(_scaleTimeMin, (float)time);
-            _scaleTimeMax = Math.Max(_scaleTimeMax, (float)time);
+            _scaleTimeMin = Math.Min(_scaleTimeMin, (float)timeSeconds);
+            _scaleTimeMax = Math.Max(_scaleTimeMax, (float)timeSeconds);
         }
 
         /// <summary>
         /// Add a rotation keyframe.
         /// </summary>
         /// <param name="axis">The axis of rotation.</param>
-        /// <param name="angle">The angle of rotation in degrees.</param>
-        /// <param name="time">The keyframe time.</param>
-        public void AddRotationKeyframe(Geometry.Vector3 axis, double angle, double time)
+        /// <param name="angleDegrees">The angle of rotation in degrees.</param>
+        /// <param name="timeSeconds">The keyframe time.</param>
+        public void AddRotationKeyframe(Geometry.Vector3 axis, double angleDegrees, double timeSeconds)
         {
-            var rotation = new Quaternion(new Vector3((float)axis.X, (float)axis.Y, (float)axis.Z), (float)Units.DegreesToRadians(angle));
+            var rotation = new Quaternion(new Vector3((float)axis.X, (float)axis.Y, (float)axis.Z), (float)Units.DegreesToRadians(angleDegrees));
             rotation = Quaternion.Normalize(rotation);
 
             _rotations.AddRange(BitConverter.GetBytes(rotation.X));
@@ -180,7 +180,7 @@ namespace Elements
             _rotations.AddRange(BitConverter.GetBytes(rotation.Z));
             _rotations.AddRange(BitConverter.GetBytes(rotation.W));
 
-            _rotationTimes.AddRange(BitConverter.GetBytes((float)time));
+            _rotationTimes.AddRange(BitConverter.GetBytes((float)timeSeconds));
 
             _rotationMin[0] = Math.Min(_rotationMin[0], rotation.X);
             _rotationMin[1] = Math.Min(_rotationMin[1], rotation.Y);
@@ -192,22 +192,22 @@ namespace Elements
             _rotationMax[2] = Math.Max(_rotationMax[2], rotation.Z);
             _rotationMax[3] = Math.Max(_rotationMax[3], rotation.W);
 
-            _rotationTimeMin = Math.Min(_rotationTimeMin, (float)time);
-            _rotationTimeMax = Math.Max(_rotationTimeMax, (float)time);
+            _rotationTimeMin = Math.Min(_rotationTimeMin, (float)timeSeconds);
+            _rotationTimeMax = Math.Max(_rotationTimeMax, (float)timeSeconds);
         }
 
         /// <summary>
         /// Add a translation keyframe.
         /// </summary>
         /// <param name="translation">The translation value.</param>
-        /// <param name="time">The time at which to apply the translation.</param>
-        public void AddTranslationKeyframe(Geometry.Vector3 translation, double time)
+        /// <param name="timeSeconds">The time at which to apply the translation.</param>
+        public void AddTranslationKeyframe(Geometry.Vector3 translation, double timeSeconds)
         {
             _translations.AddRange(BitConverter.GetBytes((float)translation.X));
             _translations.AddRange(BitConverter.GetBytes((float)translation.Y));
             _translations.AddRange(BitConverter.GetBytes((float)translation.Z));
 
-            _translationTimes.AddRange(BitConverter.GetBytes((float)time));
+            _translationTimes.AddRange(BitConverter.GetBytes((float)timeSeconds));
 
             _translationMin[0] = Math.Min(_translationMin[0], (float)translation.X);
             _translationMin[1] = Math.Min(_translationMin[1], (float)translation.Y);
@@ -217,8 +217,8 @@ namespace Elements
             _translationMax[1] = Math.Max(_translationMax[1], (float)translation.Y);
             _translationMax[2] = Math.Max(_translationMax[2], (float)translation.Z);
 
-            _translationTimeMin = Math.Min(_translationTimeMin, (float)time);
-            _translationTimeMax = Math.Max(_translationTimeMax, (float)time);
+            _translationTimeMin = Math.Min(_translationTimeMin, (float)timeSeconds);
+            _translationTimeMax = Math.Max(_translationTimeMax, (float)timeSeconds);
         }
 
         /// <summary>
