@@ -9,6 +9,8 @@ namespace Elements.Geometry
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
+        private const int _preallocationVertexCount = 100;
+
         /// <summary>
         /// The number of vertices represented by the buffer.
         /// </summary>
@@ -180,6 +182,78 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Add vertices to the graphics buffers.
+        /// </summary>
+        public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
+        {
+            var vertexStep = sizeof(float) * 3;
+            var normalStep = sizeof(float) * 3;
+            var uvStep = sizeof(float) * 2;
+            var colorStep = sizeof(float) * 3;
+
+            var allPositions = new byte[vertices.Count * vertexStep];
+            var allNormals = new byte[vertices.Count * normalStep];
+            var allUvs = new byte[vertices.Count * uvStep];
+            var allColors = new byte[vertices.Count * colorStep];
+
+            var hasVertexColors = false;
+
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var (position, normal, uv, color) = vertices[i];
+
+                Buffer.BlockCopy(BitConverter.GetBytes((float)position.X), 0, allPositions, vertexStep * i, sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes((float)position.Y), 0, allPositions, vertexStep * i + sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes((float)position.Z), 0, allPositions, vertexStep * i + sizeof(float) * 2, sizeof(float));
+                this.VMax[0] = Math.Max(this.VMax[0], position.X);
+                this.VMax[1] = Math.Max(this.VMax[1], position.Y);
+                this.VMax[2] = Math.Max(this.VMax[2], position.Z);
+                this.VMin[0] = Math.Min(this.VMin[0], position.X);
+                this.VMin[1] = Math.Min(this.VMin[1], position.Y);
+                this.VMin[2] = Math.Min(this.VMin[2], position.Z);
+
+                Buffer.BlockCopy(BitConverter.GetBytes((float)normal.X), 0, allNormals, normalStep * i, sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes((float)normal.Y), 0, allNormals, normalStep * i + sizeof(float), sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes((float)normal.Z), 0, allNormals, normalStep * i + sizeof(float) * 2, sizeof(float));
+                this.NMax[0] = Math.Max(this.NMax[0], normal.X);
+                this.NMax[1] = Math.Max(this.NMax[1], normal.Y);
+                this.NMax[2] = Math.Max(this.NMax[2], normal.Z);
+                this.NMin[0] = Math.Min(this.NMin[0], normal.X);
+                this.NMin[1] = Math.Min(this.NMin[1], normal.Y);
+                this.NMin[2] = Math.Min(this.NMin[2], normal.Z);
+
+                Buffer.BlockCopy(BitConverter.GetBytes((float)uv.U), 0, allUvs, uvStep * i, sizeof(float));
+                Buffer.BlockCopy(BitConverter.GetBytes((float)uv.V), 0, allUvs, uvStep * i + sizeof(float), sizeof(float));
+                this.UVMax[0] = Math.Max(this.UVMax[0], uv.U);
+                this.UVMax[1] = Math.Max(this.UVMax[1], uv.V);
+                this.UVMin[0] = Math.Min(this.UVMin[0], uv.U);
+                this.UVMin[1] = Math.Min(this.UVMin[1], uv.V);
+
+                if (color.HasValue)
+                {
+                    hasVertexColors = true;
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Red), 0, allColors, colorStep * i, sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Green), 0, allColors, colorStep * i + sizeof(float), sizeof(float));
+                    Buffer.BlockCopy(BitConverter.GetBytes((float)color.Value.Blue), 0, allColors, colorStep * i + sizeof(float) * 2, sizeof(float));
+                    this.CMax[0] = Math.Max(this.CMax[0], color.Value.Red);
+                    this.CMax[1] = Math.Max(this.CMax[1], color.Value.Green);
+                    this.CMax[2] = Math.Max(this.CMax[2], color.Value.Blue);
+                    this.CMin[0] = Math.Min(this.CMin[0], color.Value.Red);
+                    this.CMin[1] = Math.Min(this.CMin[1], color.Value.Green);
+                    this.CMin[2] = Math.Min(this.CMin[2], color.Value.Blue);
+                }
+            }
+
+            this.Vertices.AddRange(allPositions);
+            this.Normals.AddRange(allNormals);
+            this.UVs.AddRange(allUvs);
+            if (hasVertexColors)
+            {
+                this.Colors.AddRange(allColors);
+            }
+        }
+
+        /// <summary>
         /// Add an index to the graphics buffers.
         /// </summary>
         /// <param name="index">The index to add.</param>
@@ -191,18 +265,40 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Initialize the graphics buffer to a known size.
+        /// Add indices to the graphics buffers.
         /// </summary>
-        /// <param name="vertexCount">The number of vertices.</param>
-        /// <param name="indexCount">The number of indices.</param>
-        public void Initialize(int vertexCount = 0, int indexCount = 0)
+        /// <param name="indices">The indices to add.</param>
+        public void AddIndices(IList<ushort> indices)
+        {
+            var newRange = new byte[indices.Count * sizeof(ushort)];
+            for (var i = 0; i < indices.Count; i++)
+            {
+                var index = indices[i];
+                this.IMax = Math.Max(this.IMax, index);
+                this.IMin = Math.Min(this.IMin, index);
+                var bytes = BitConverter.GetBytes(index);
+                Buffer.BlockCopy(bytes, 0, newRange, i * sizeof(ushort), sizeof(ushort));
+            }
+            this.Indices.AddRange(newRange);
+        }
+
+        internal static int PreallocationSize()
+        {
+            // Assume a fully vertex-colored mesh of the size required to contain 30k vertices.
+            // Postion, Normal, Color, Index, UV
+            var floatSize = sizeof(float);
+            var intSize = sizeof(int);
+            return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
+        }
+
+        public void Initialize(int vertexCount = _preallocationVertexCount, int indexCount = _preallocationVertexCount)
         {
             // Initialize everything
-            this.Vertices = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Normals = new List<byte>(sizeof(float) * 3 * vertexCount);
-            this.Indices = new List<byte>(sizeof(ushort) * indexCount);
-            this.UVs = new List<byte>(sizeof(float) * 2 * vertexCount);
-            this.Colors = new List<byte>(sizeof(float) * 3 * vertexCount);
+            this.Vertices = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Normals = new List<byte>(_preallocationVertexCount * sizeof(float) * 3);
+            this.Indices = new List<byte>(_preallocationVertexCount * sizeof(int));
+            this.UVs = new List<byte>(_preallocationVertexCount * sizeof(float) * 2);
+            this.Colors = new List<byte>(_preallocationVertexCount * sizeof(float) * 4);
 
             this.CMin = new double[3] { double.MaxValue, double.MaxValue, double.MaxValue };
             this.CMax = new double[3] { double.MinValue, double.MinValue, double.MinValue };
