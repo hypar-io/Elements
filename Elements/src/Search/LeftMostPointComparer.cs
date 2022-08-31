@@ -54,13 +54,21 @@ namespace Elements.Search
                 {
                     return 1;
                 }
-                return 0;
+                if (bb1.Max.X.ApproximatelyEquals(bb2.Max.X))
+                {
+                    return 0;
+                }
+                return bb1.Max.X.CompareTo(bb2.Max.X);
             }
             else
             {
                 if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
                 {
-                    return 0;
+                    if (aLeft.X.ApproximatelyEquals(bLeft.X))
+                    {
+                        return 0;
+                    }
+                    return aLeft.X.CompareTo(bLeft.X);
                 }
                 if (aLeft.Y > bLeft.Y)
                 {
