@@ -1305,6 +1305,161 @@ namespace Elements.Serialization.glTF
                                      nodes,
                                      ge.Transform);
                 }
+
+                if (ge.Animation != null && nodeId != -1)
+                {
+                    // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
+
+                    var channels = new List<AnimationChannel>();
+                    var animationSamplers = new List<AnimationSampler>();
+
+                    if (ge.Animation.HasAnimatedScale())
+                    {
+                        var scaleTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.ScaleTimes.Length, null, null);
+                        buffer.AddRange(ge.Animation.ScaleTimes);
+                        var scaleTimeAccessor = AddAccessor(accessors,
+                                                            scaleTimeBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.ScaleTimes.Length / sizeof(float),
+                                                            new float[] { ge.Animation.ScaleTimeMin },
+                                                            new float[] { ge.Animation.ScaleTimeMax },
+                                                            Accessor.TypeEnum.SCALAR);
+
+                        var scaleBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.Scales.Length, null, null);
+                        buffer.AddRange(ge.Animation.Scales);
+                        var scaleAccessor = AddAccessor(accessors,
+                                                            scaleBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.Scales.Length / sizeof(float) / 3,
+                                                            ge.Animation.ScaleMin,
+                                                            ge.Animation.ScaleMax,
+                                                            Accessor.TypeEnum.VEC3);
+
+                        var scaleSampler = new AnimationSampler
+                        {
+                            Input = scaleTimeAccessor,  // time
+                            Output = scaleAccessor,    // scale
+                            Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                        };
+
+                        var scaleTarget = new AnimationChannelTarget
+                        {
+                            Node = nodeId,
+                            Path = AnimationChannelTarget.PathEnum.scale
+                        };
+
+                        var scaleChannel = new AnimationChannel()
+                        {
+                            Target = scaleTarget,
+                            Sampler = animationSamplers.Count
+                        };
+
+                        animationSamplers.Add(scaleSampler);
+                        channels.Add(scaleChannel);
+                    }
+                    if (ge.Animation.HasAnimatedTranslation())
+                    {
+                        var translationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.TranslationTimes.Length, null, null);
+                        buffer.AddRange(ge.Animation.TranslationTimes);
+                        var translationTimeAccessor = AddAccessor(accessors,
+                                                            translationTimeBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.TranslationTimes.Length / sizeof(float),
+                                                            new float[] { ge.Animation.TranslationTimeMin },
+                                                            new float[] { ge.Animation.TranslationTimeMax },
+                                                            Accessor.TypeEnum.SCALAR);
+
+                        var translationBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.Translations.Length, null, null);
+                        buffer.AddRange(ge.Animation.Translations);
+                        var translationAccessor = AddAccessor(accessors,
+                                                            translationBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.Translations.Length / sizeof(float) / 3,
+                                                            ge.Animation.TranslationMin,
+                                                            ge.Animation.TranslationMax,
+                                                            Accessor.TypeEnum.VEC3);
+
+                        var translationSampler = new AnimationSampler
+                        {
+                            Input = translationTimeAccessor,  // time
+                            Output = translationAccessor,    // scale
+                            Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                        };
+
+                        var translationTarget = new AnimationChannelTarget
+                        {
+                            Node = nodeId,
+                            Path = AnimationChannelTarget.PathEnum.translation
+                        };
+
+                        var translationChannel = new AnimationChannel()
+                        {
+                            Target = translationTarget,
+                            Sampler = animationSamplers.Count
+                        };
+
+                        animationSamplers.Add(translationSampler);
+                        channels.Add(translationChannel);
+                    }
+                    if (ge.Animation.HasAnimatedRotation())
+                    {
+                        var rotationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.RotationTimes.Length, null, null);
+                        buffer.AddRange(ge.Animation.RotationTimes);
+                        var rotationTimeAccessor = AddAccessor(accessors,
+                                                            rotationTimeBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.RotationTimes.Length / sizeof(float),
+                                                            new float[] { ge.Animation.RotationTimeMin },
+                                                            new float[] { ge.Animation.RotationTimeMax },
+                                                            Accessor.TypeEnum.SCALAR);
+
+                        var rotationBufferView = AddBufferView(bufferViews, 0, buffer.Count, ge.Animation.Rotations.Length, null, null);
+                        buffer.AddRange(ge.Animation.Rotations);
+                        var rotationAccessor = AddAccessor(accessors,
+                                                            rotationBufferView,
+                                                            0,
+                                                            Accessor.ComponentTypeEnum.FLOAT,
+                                                            ge.Animation.Rotations.Length / sizeof(float) / 4,
+                                                            ge.Animation.RotationMin,
+                                                            ge.Animation.RotationMax,
+                                                            Accessor.TypeEnum.VEC4);
+
+                        var rotationSampler = new AnimationSampler
+                        {
+                            Input = rotationTimeAccessor,  // time
+                            Output = rotationAccessor,    // scale
+                            Interpolation = AnimationSampler.InterpolationEnum.LINEAR
+                        };
+
+                        var rotationTarget = new AnimationChannelTarget
+                        {
+                            Node = nodeId,
+                            Path = AnimationChannelTarget.PathEnum.rotation
+                        };
+
+                        var rotationChannel = new AnimationChannel()
+                        {
+                            Target = rotationTarget,
+                            Sampler = animationSamplers.Count
+                        };
+
+                        animationSamplers.Add(rotationSampler);
+                        channels.Add(rotationChannel);
+                    }
+
+                    var anim = new glTFLoader.Schema.Animation()
+                    {
+                        Channels = channels.ToArray(),
+                        Samplers = animationSamplers.ToArray()
+                    };
+
+                    animations.Add(anim);
+                }
             }
 
             if (e is ITessellate geo)
@@ -1339,161 +1494,6 @@ namespace Elements.Serialization.glTF
                 {
                     nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
                 }
-            }
-
-            if (e.Animation != null && nodeId != -1)
-            {
-                // https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/gltfTutorial_007_Animations.md
-
-                var channels = new List<AnimationChannel>();
-                var animationSamplers = new List<AnimationSampler>();
-
-                if (e.Animation.HasAnimatedScale())
-                {
-                    var scaleTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.ScaleTimes.Length, null, null);
-                    buffer.AddRange(e.Animation.ScaleTimes);
-                    var scaleTimeAccessor = AddAccessor(accessors,
-                                                        scaleTimeBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.ScaleTimes.Length / sizeof(float),
-                                                        new float[] { e.Animation.ScaleTimeMin },
-                                                        new float[] { e.Animation.ScaleTimeMax },
-                                                        Accessor.TypeEnum.SCALAR);
-
-                    var scaleBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Scales.Length, null, null);
-                    buffer.AddRange(e.Animation.Scales);
-                    var scaleAccessor = AddAccessor(accessors,
-                                                        scaleBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.Scales.Length / sizeof(float) / 3,
-                                                        e.Animation.ScaleMin,
-                                                        e.Animation.ScaleMax,
-                                                        Accessor.TypeEnum.VEC3);
-
-                    var scaleSampler = new AnimationSampler
-                    {
-                        Input = scaleTimeAccessor,  // time
-                        Output = scaleAccessor,    // scale
-                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
-                    };
-
-                    var scaleTarget = new AnimationChannelTarget
-                    {
-                        Node = nodeId,
-                        Path = AnimationChannelTarget.PathEnum.scale
-                    };
-
-                    var scaleChannel = new AnimationChannel()
-                    {
-                        Target = scaleTarget,
-                        Sampler = animationSamplers.Count
-                    };
-
-                    animationSamplers.Add(scaleSampler);
-                    channels.Add(scaleChannel);
-                }
-                if (e.Animation.HasAnimatedTranslation())
-                {
-                    var translationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.TranslationTimes.Length, null, null);
-                    buffer.AddRange(e.Animation.TranslationTimes);
-                    var translationTimeAccessor = AddAccessor(accessors,
-                                                        translationTimeBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.TranslationTimes.Length / sizeof(float),
-                                                        new float[] { e.Animation.TranslationTimeMin },
-                                                        new float[] { e.Animation.TranslationTimeMax },
-                                                        Accessor.TypeEnum.SCALAR);
-
-                    var translationBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Translations.Length, null, null);
-                    buffer.AddRange(e.Animation.Translations);
-                    var translationAccessor = AddAccessor(accessors,
-                                                        translationBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.Translations.Length / sizeof(float) / 3,
-                                                        e.Animation.TranslationMin,
-                                                        e.Animation.TranslationMax,
-                                                        Accessor.TypeEnum.VEC3);
-
-                    var translationSampler = new AnimationSampler
-                    {
-                        Input = translationTimeAccessor,  // time
-                        Output = translationAccessor,    // scale
-                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
-                    };
-
-                    var translationTarget = new AnimationChannelTarget
-                    {
-                        Node = nodeId,
-                        Path = AnimationChannelTarget.PathEnum.translation
-                    };
-
-                    var translationChannel = new AnimationChannel()
-                    {
-                        Target = translationTarget,
-                        Sampler = animationSamplers.Count
-                    };
-
-                    animationSamplers.Add(translationSampler);
-                    channels.Add(translationChannel);
-                }
-                if (e.Animation.HasAnimatedRotation())
-                {
-                    var rotationTimeBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.RotationTimes.Length, null, null);
-                    buffer.AddRange(e.Animation.RotationTimes);
-                    var rotationTimeAccessor = AddAccessor(accessors,
-                                                        rotationTimeBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.RotationTimes.Length / sizeof(float),
-                                                        new float[] { e.Animation.RotationTimeMin },
-                                                        new float[] { e.Animation.RotationTimeMax },
-                                                        Accessor.TypeEnum.SCALAR);
-
-                    var rotationBufferView = AddBufferView(bufferViews, 0, buffer.Count, e.Animation.Rotations.Length, null, null);
-                    buffer.AddRange(e.Animation.Rotations);
-                    var rotationAccessor = AddAccessor(accessors,
-                                                        rotationBufferView,
-                                                        0,
-                                                        Accessor.ComponentTypeEnum.FLOAT,
-                                                        e.Animation.Rotations.Length / sizeof(float) / 4,
-                                                        e.Animation.RotationMin,
-                                                        e.Animation.RotationMax,
-                                                        Accessor.TypeEnum.VEC4);
-
-                    var rotationSampler = new AnimationSampler
-                    {
-                        Input = rotationTimeAccessor,  // time
-                        Output = rotationAccessor,    // scale
-                        Interpolation = AnimationSampler.InterpolationEnum.LINEAR
-                    };
-
-                    var rotationTarget = new AnimationChannelTarget
-                    {
-                        Node = nodeId,
-                        Path = AnimationChannelTarget.PathEnum.rotation
-                    };
-
-                    var rotationChannel = new AnimationChannel()
-                    {
-                        Target = rotationTarget,
-                        Sampler = animationSamplers.Count
-                    };
-
-                    animationSamplers.Add(rotationSampler);
-                    channels.Add(rotationChannel);
-                }
-
-                var anim = new glTFLoader.Schema.Animation()
-                {
-                    Channels = channels.ToArray(),
-                    Samplers = animationSamplers.ToArray()
-                };
-
-                animations.Add(anim);
             }
         }
 
