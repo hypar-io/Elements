@@ -14,7 +14,6 @@ namespace Elements.Spatial.AdaptiveGrid
     /// </summary>
     public class Obstacle : GeometricElement
     {
-        private Transform _transform;
         private double _offset;
         private Polygon _boundary;
         private double _height;
@@ -139,7 +138,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => _primaryPolygons.SelectMany(x => x.Vertices).ToList();
+        public List<Vector3> Points => Boundary?
+            .Vertices
+            .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
+            .ToList() ?? new List<Vector3>();
         
         /// <summary>
         /// Perimeter defining obstacle.
