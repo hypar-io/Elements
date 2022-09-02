@@ -11,7 +11,7 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
-- `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property 
+- `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property
 - `AdaptiveGrid.Obstacle.Intersects(Polyline polyline, double tolerance = 1e-05)` method
 - `AdaptiveGrid.Obstacle.Intersects(Line line, double tolerance = 1e-05)` method
 - `AdaptiveGrid.Obstacle.IsInside(Vector3 point, double tolerance = 1e-05)` method
@@ -32,7 +32,8 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
-- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
+- `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
 
 ## 1.1.0
 
