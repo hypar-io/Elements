@@ -13,9 +13,11 @@ namespace Elements.Geometry.Tessellation
     /// </summary>
     internal static class Tessellation
     {
+        private static bool LOG_TESSELATION = false;
+
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
-        /// a supplied buffers object. 
+        /// a supplied buffers object.
         /// </summary>
         internal static T Tessellate<T>(IEnumerable<ITessellationTargetProvider> providers,
                                         bool mergeVertices = false,
@@ -44,8 +46,8 @@ namespace Elements.Geometry.Tessellation
                                               IGraphicsBuffers buffers,
                                               Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes)
         {
-            // The vertex map enables us to re-use vertices. Csgs and solid faces 
-            // create vertices which store the face id, the vertex id, and for csgs, the uv. 
+            // The vertex map enables us to re-use vertices. Csgs and solid faces
+            // create vertices which store the face id, the vertex id, and for csgs, the uv.
             // We can use the tag as the key to lookup the index of the vertex to avoid re-creating it.
             var vertexMap = new Dictionary<(int tag, long faceId), ushort>();
             var vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
@@ -83,21 +85,21 @@ namespace Elements.Geometry.Tessellation
                     var v = tess.Vertices[localIndex];
                     var tessIndex = tessOffset + localIndex;
 
-                    // This is an optimization to use pre-existing csg vertex 
-                    // data to match vertices. 
+                    // This is an optimization to use pre-existing csg vertex
+                    // data to match vertices.
 
                     var (uv, tag, faceId) = ((UV uv, int tag, int faceId))v.Data;
 
                     if (vertexMap.ContainsKey((tag, faceId)))
                     {
-                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
+                        Debug.WriteLineIf(LOG_TESSELATION, $"Reusing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex from csg
                         indices.Add(vertexMap[(tag, faceId)]);
                         continue;
                     }
                     else if (vertexMap.ContainsKey((index, 0)))
                     {
-                        Debug.WriteLine($"Resuing vertex (tag:{tag},faceId:{faceId}");
+                        Debug.WriteLineIf(LOG_TESSELATION, $"Reusing vertex (tag:{tag},faceId:{faceId}");
                         // Reference an existing vertex created
                         // earlier here.
                         indices.Add(vertexMap[(index, 0)]);
