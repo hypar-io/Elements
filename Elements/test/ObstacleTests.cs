@@ -120,7 +120,8 @@ namespace Elements
         [Fact]
         public void ObstacleFromWall()
         {
-            var wall = new StandardWall(new Line(Vector3.Origin, new Vector3(10, 0)), 0.5, 3);
+            Line centerLine = new Line(Vector3.Origin, new Vector3(10, 0));
+            var wall = new StandardWall(centerLine, 0.5, 3);
             var obstacle = Obstacle.FromWall(wall, 0.5);
 
             // intersects wall line
@@ -131,6 +132,11 @@ namespace Elements
             Assert.True(obstacle.Intersects(new Line(new Vector3(3, -1, 3.5), new Vector3(3, 1, 3.5))));
             // does not intersect line that is above wall
             Assert.False(obstacle.Intersects(new Line(new Vector3(0, 0, 4), new Vector3(10, 0, 4))));
+
+            // ensure that line direction does not matter
+            centerLine = centerLine.Reversed();
+            var wall2 = new StandardWall(centerLine, 0.5, 3);
+            var obstacle2 = Obstacle.FromWall(wall2, 0.5);
         }
 
         [Fact]
