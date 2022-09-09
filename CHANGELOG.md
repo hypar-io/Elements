@@ -34,6 +34,7 @@
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
+- `Obstacle.FromWall` was failing when producing a polygon.
 
 ## 1.1.0
 
