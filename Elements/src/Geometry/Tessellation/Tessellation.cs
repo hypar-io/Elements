@@ -128,7 +128,7 @@ namespace Elements.Geometry.Tessellation
                         {
                             vertices.Add((v1, n, uv, c1));
                         }
-                        Debug.WriteLine($"Adding vertex (tag:{tag},faceId:{faceId}):{index}");
+                        Debug.WriteLineIf(LOG_TESSELATION, $"Adding vertex (tag:{tag},faceId:{faceId}):{index}");
                         indices.Add((ushort)index);
                         vertexMap.Add((tag, faceId), (ushort)index);
                         newVerts++;
@@ -136,7 +136,7 @@ namespace Elements.Geometry.Tessellation
                     }
                 }
                 tessOffset += newVerts;
-                Debug.WriteLine($"----------{tessOffset}");
+                Debug.WriteLineIf(LOG_TESSELATION, $"----------{tessOffset}");
             }
 
             buffers.AddIndices(indices);
