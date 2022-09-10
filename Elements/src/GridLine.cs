@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -36,6 +38,7 @@ namespace Elements
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Curve>))]
         public Curve Curve { get; set; }
 
         /// <summary>

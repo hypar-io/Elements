@@ -6,7 +6,8 @@ using Elements.Geometry;
 using Elements.Geometry.Profiles;
 using Elements.Geometry.Solids;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -26,16 +27,19 @@ namespace Elements
         /// <summary>
         /// Profile of the top chord of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile TopChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the bottom chord of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile BottomChordProfile { get; set; }
 
         /// <summary>
         /// Profile of the web of the joist.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<LProfile>))]
         public LProfile WebProfile { get; set; }
 
         /// <summary>
@@ -58,6 +62,12 @@ namespace Elements
         /// </summary>
         public List<Vector3> JoistPoints { get; set; } = new List<Vector3>();
 
+        [JsonConstructor]
+        public Joist() : base()
+        {
+            // Empty construction for JSON serialization.
+        }
+
         /// <summary>
         /// Construct a new BarJoist.
         /// </summary>
@@ -72,7 +82,6 @@ namespace Elements
         /// <param name="cellCount">The cell count of the joist.</param>
         /// <param name="seatDepth">The seat depth of the joist.</param>
         /// <param name="distanceToFirstPanel">The distance to the first panel of the joist (Y).</param>
-        [JsonConstructor]
         public Joist(Line curve,
                      LProfile topChordProfile,
                      LProfile bottomChordProfile,
@@ -135,6 +144,8 @@ namespace Elements
 
             JoistPoints.Clear();
 
+            // TODO: This creates too many profiles. We should reference the
+            // existing profiles but create local transforms for the profiles.
             var ll = Construct2LProfile(TopChordProfile, true);
 
             var topSweepR = new Sweep(ll[0],

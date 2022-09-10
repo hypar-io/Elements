@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace Elements.Analysis
 {
@@ -47,6 +48,15 @@ namespace Elements.Analysis
         private int _imgPixels;
 
         /// <summary>
+        /// Create an analysis image.
+        /// </summary>
+        [JsonConstructor]
+        public AnalysisImage()
+        {
+
+        }
+
+        /// <summary>
         /// An AnalysisImage is similar to an AnalysisMesh in that it renders a mesh with analysis colors.
         /// However, it uses a mapped image texture rather than mesh vertex colors to lighten the resulting geometry.
         /// </summary>
@@ -69,7 +79,8 @@ namespace Elements.Analysis
         /// <summary>
         /// Compute a value for each grid cell, and create the required material.
         /// </summary>
-        public override void Analyze() {
+        public override void Analyze()
+        {
             base.Analyze();
 
             _perimBounds = new BBox3(new[] { this.Perimeter });
@@ -132,7 +143,7 @@ namespace Elements.Analysis
             var imagePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.png");
             image.Save(imagePath);
 
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, imagePath, true, true, interpolateTexture:false, id: Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, imagePath, true, true, interpolateTexture: false, id: Guid.NewGuid());
         }
 
         /// <summary>

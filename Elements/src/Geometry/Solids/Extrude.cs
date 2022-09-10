@@ -1,6 +1,7 @@
 using System;
+using Elements.Serialization.JSON;
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Solids
 {
@@ -14,7 +15,7 @@ namespace Elements.Geometry.Solids
         private Vector3 _direction;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [JsonProperty("Profile", Required = Required.AllowNull)]
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }
@@ -29,7 +30,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The height of the extrusion.</summary>
-        [JsonProperty("Height", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
@@ -45,7 +45,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [JsonProperty("Direction", Required = Required.AllowNull)]
         public Vector3 Direction
         {
             get { return _direction; }

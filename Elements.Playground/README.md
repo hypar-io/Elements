@@ -25,4 +25,6 @@ See the `index.html` in the demo application for an example of how to do the fol
 - Add a call to `Blazor.start` in a subsequent script to fetch Blazor assets from a preferred location, or from disk.
 
 **NOTE** The Elements web assembly API does not need to interact with the DOM, but we still need to create a blazor component to inject some of the infrastructure required by the compiler, like the `HttpClient` instance and the `IJSRuntime` instance. You will need to inlcude the `app` element in your application, which puts an empty div in the DOM. We're looking at ways to remove this requirement in the future.
+### Publishing
+`dotnet publish -c release`
 

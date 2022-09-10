@@ -1,6 +1,6 @@
 using Elements.Validators;
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -12,7 +12,6 @@ namespace Elements.Geometry
     public partial class Matrix : IEquatable<Matrix>
     {
         /// <summary>The components of the matrix.</summary>
-        [JsonProperty("Components", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]

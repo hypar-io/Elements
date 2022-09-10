@@ -1,37 +1,32 @@
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements
 {
     /// <summary>
     /// An element representing user content.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class ContentElement : GeometricElement
     {
         /// <summary>The URI of the gltf for this element.</summary>
-        [JsonProperty("gltfLocation", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("gltfLocation")]
         public string GltfLocation { get; set; }
 
         /// <summary>The bounding box of the content.</summary>
-        [JsonProperty("Bounding Box", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public BBox3 BoundingBox { get; set; }
 
         /// <summary>The scale needed to convert the gltf to meters.</summary>
-        [JsonProperty("Gltf Scale to Meters", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Gltf Scale to Meters")]
         public double GltfScaleToMeters { get; set; }
 
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
-        [JsonProperty("SourceDirection", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 SourceDirection { get; set; }
 
         /// <summary>Alternate symbolic representations of the object.</summary>
-        [JsonProperty("Symbols", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Symbol> Symbols { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
 
         /// <summary>
         /// Construct a content element.
@@ -85,10 +80,34 @@ namespace Elements
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, IList<Symbol> symbols, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, symbols, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              IList<Symbol> symbols,
+                              Transform @transform,
+                              Material @material,
+                              Representation @representation,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties)
+        : this(@gltfLocation,
+               @boundingBox,
+               @gltfScaleToMeters,
+               @sourceDirection,
+               symbols,
+               @transform,
+               @material,
+               @representation,
+               @isElementDefinition,
+               @id,
+               @name)
         {
-            this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
+            if (additionalProperties != null && additionalProperties != string.Empty)
+            {
+                this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            }
         }
 
         /// <summary>
@@ -107,10 +126,33 @@ namespace Elements
         /// <param name="id">The guid of this element.</param>
         /// <param name="name">The name of this element.</param>
         /// <param name="additionalProperties">The string json serialization of a dictionary of additional parameters.</param>
-        public ContentElement(string @gltfLocation, BBox3 @boundingBox, double @gltfScaleToMeters, Vector3 @sourceDirection, Transform @transform, Material @material, Representation @representation, bool @isElementDefinition, System.Guid @id, string @name, string @additionalProperties)
-        : this(@gltfLocation, @boundingBox, @gltfScaleToMeters, @sourceDirection, null, @transform, @material, @representation, @isElementDefinition, @id, @name)
+        public ContentElement(string @gltfLocation,
+                              BBox3 @boundingBox,
+                              double @gltfScaleToMeters,
+                              Vector3 @sourceDirection,
+                              Transform @transform,
+                              Material @material,
+                              Representation @representation,
+                              bool @isElementDefinition,
+                              System.Guid @id,
+                              string @name,
+                              string @additionalProperties)
+        : this(@gltfLocation,
+               @boundingBox,
+               @gltfScaleToMeters,
+               @sourceDirection,
+               null,
+               @transform,
+               @material,
+               @representation,
+               @isElementDefinition,
+               @id,
+               @name)
         {
-            this.AdditionalProperties = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(@additionalProperties);
+            if (additionalProperties != null && additionalProperties != string.Empty)
+            {
+                this.AdditionalProperties = JsonSerializer.Deserialize<Dictionary<string, object>>(@additionalProperties);
+            }
         }
 
         /// <summary>

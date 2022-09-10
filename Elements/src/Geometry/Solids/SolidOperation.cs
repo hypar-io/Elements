@@ -1,11 +1,12 @@
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Solids
 {
     /// <summary>
     /// The base class for all operations which create solids.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<SolidOperation>))]
     public abstract class SolidOperation
     {
         internal Solid _solid;
@@ -24,8 +25,9 @@ namespace Elements.Geometry.Solids
             get { return _solid; }
         }
 
-        /// <summary>Is the solid operation a void operation?</summary>
-        [JsonProperty("IsVoid", Required = Required.Always)]
+        /// <summary>
+        /// Is the solid operation a void operation?
+        /// </summary>
         public bool IsVoid { get; set; } = false;
 
         /// <summary>

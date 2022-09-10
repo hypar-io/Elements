@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Components
 {

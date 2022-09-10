@@ -5,8 +5,8 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
+using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace Elements.Tests
@@ -100,7 +100,7 @@ namespace Elements.Tests
         [Fact]
         public void UnionWithPolygonsWhichCreateZeroAreaTessElement()
         {
-            var profile1 = JsonConvert.DeserializeObject<Polygon>(
+            var profile1 = JsonSerializer.Deserialize<Polygon>(
                 @"{
                 ""Vertices"": [
                     {
@@ -135,7 +135,7 @@ namespace Elements.Tests
                     }
                 ]}
                 ");
-            var profile2 = JsonConvert.DeserializeObject<Polygon>(
+            var profile2 = JsonSerializer.Deserialize<Polygon>(
                 @"{
                 ""Vertices"": [
                     {

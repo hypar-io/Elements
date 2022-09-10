@@ -291,6 +291,11 @@ namespace Elements.Geometry
             return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
         }
 
+        /// <summary>
+        /// Initialize the graphics buffers to the specified size.
+        /// </summary>
+        /// <param name="vertexCount"></param>
+        /// <param name="indexCount"></param>
         public void Initialize(int vertexCount = _preallocationVertexCount, int indexCount = _preallocationVertexCount)
         {
             // Initialize everything

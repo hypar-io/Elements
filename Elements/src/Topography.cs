@@ -5,7 +5,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Vertex = Elements.Geometry.Vertex;
 
 namespace Elements
@@ -131,8 +131,22 @@ namespace Elements
             RegisterPropertyChangeHandlers();
         }
 
+        /// <summary>
+        /// Create a topography.
+        /// </summary>
+        /// <param name="mesh">A mesh representing the topography.</param>
+        /// <param name="elevations">An array of elevation samples which will be converted to a square array of width.</param>
+        /// <param name="origin">The origin of the topography.</param>
+        /// <param name="rowWidth">The number of cells 'across' the topography.</param>
+        /// <param name="cellWidth">The distance between two elevation samples along a row.</param>
+        /// <param name="cellHeight">The distance between two elevation samples along a column.</param>
+        /// <param name="material">The topography's material.</param>
+        /// <param name="transform">The topography's transform.</param>
+        /// <param name="id">The topography's id.</param>
+        /// <param name="name">The topography's name.</param>
+        /// <returns></returns>
         [JsonConstructor]
-        internal Topography(Mesh mesh,
+        public Topography(Mesh mesh,
                             double[] elevations,
                             Vector3 origin,
                             int rowWidth,
