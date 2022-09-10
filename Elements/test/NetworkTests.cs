@@ -213,39 +213,6 @@ namespace Elements.Tests
             var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
             var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
 
-            int next((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) a)
-            {
-                var minAngle = double.MaxValue;
-                var minIndex = -1;
-                var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                foreach (var e in a.edgeIndices)
-                {
-                    if (e == a.previousIndex)
-                    {
-                        continue;
-                    }
-
-                    var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                    var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                    // The angle of traversal is not actually zero here,
-                    // it's 180 (unless the path is invalid). We want to
-                    // ensure that traversal happens along the straight
-                    // edge if possible.
-                    if (angle == 0)
-                    {
-                        angle = 180.0;
-                    }
-
-                    if (angle < minAngle)
-                    {
-                        minAngle = angle;
-                        minIndex = e;
-                    }
-                }
-                return minIndex;
-            }
-
             var leafIndices = new List<int>();
             for (var i = 0; i < network.NodeCount(); i++)
             {
@@ -257,11 +224,39 @@ namespace Elements.Tests
 
             Assert.Single(leafIndices);
 
+            var visitedEdges = new List<LocalEdge>();
             foreach (var leafIndex in leafIndices)
             {
-                var path = network.Traverse(leafIndex, next, out List<int> visited);
+                var path = network.Traverse(leafIndex, Network<Line>.TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
                 Assert.Equal(6, path.Count);
                 _output.WriteLine(string.Join(',', visited));
+            }
+        }
+
+        [Fact]
+        public void FindAllClosedRegions()
+        {
+            this.Name = nameof(FindAllClosedRegions);
+
+            var r = new Random(23);
+            var size = 1000.0;
+            var lines = new List<Line>(200);
+            for (var i = 0; i < 50; i++)
+            {
+                var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, 0);
+                var end = new Vector3(r.NextDouble() * size, r.NextDouble() * size, 0);
+                var line = new Line(start, end);
+                lines.Add(line);
+                this.Model.AddElement(new ModelCurve(line));
+            }
+
+            var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
+            var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+
+            foreach (var region in closedRegions)
+            {
+                var p = new Panel(region, r.NextMaterial());
+                this.Model.AddElement(p);
             }
         }
     }
