@@ -239,24 +239,58 @@ namespace Elements.Tests
             this.Name = nameof(FindAllClosedRegions);
 
             var r = new Random(23);
-            var size = 1000.0;
             var lines = new List<Line>(200);
-            for (var i = 0; i < 50; i++)
+
+            foreach (var line in Polygon.Rectangle(5, 5).Segments())
             {
-                var start = new Vector3(r.NextDouble() * size, r.NextDouble() * size, 0);
-                var end = new Vector3(r.NextDouble() * size, r.NextDouble() * size, 0);
-                var line = new Line(start, end);
                 lines.Add(line);
+            }
+            var t = new Transform(new Vector3(5, 0));
+            foreach (var line in Polygon.Rectangle(5, 5).TransformedPolygon(t).Segments())
+            {
+                var match = false;
+                foreach (var otherLine in lines)
+                {
+                    if (otherLine.IsAlmostEqualTo(line, false))
+                    {
+                        match = true;
+                    }
+                }
+                if (!match)
+                {
+                    lines.Add(line);
+                }
+            }
+            lines.Add(new Line(new Vector3(0, 0), new Vector3(0, 5)));
+            lines.Add(new Line(new Vector3(-5, -1), new Vector3(12.5, 1)));
+            lines.Add(new Line(new Vector3(5, 0), new Vector3(5, 5)));
+
+            foreach (var line in lines)
+            {
                 this.Model.AddElement(new ModelCurve(line));
             }
 
             var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
-            var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+
+            var closedRegions = network.FindAllClosedRegionsBypassingInternalLeaves(allNodeLocations);
+
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
+
+            // According to Euler, there will be V + R = E + 2 regions
+            Assert.Equal(6, closedRegions.Count);
 
             foreach (var region in closedRegions)
             {
-                var p = new Panel(region, r.NextMaterial());
-                this.Model.AddElement(p);
+                try
+                {
+                    var p = new Polygon(region.Select(i => allNodeLocations[i]).ToList());
+                    this.Model.AddElement(p);
+                }
+                catch
+                {
+                    continue;
+                }
             }
         }
     }

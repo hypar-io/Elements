@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Elements.Geometry;
 
@@ -329,6 +330,7 @@ namespace Elements.Search
                         segmentIntersections[data].Add(e.Point);
                     }
                 }
+                Debug.WriteLine(tree.ToString());
             }
 
             // A collection containing all intersection points, which
@@ -364,39 +366,38 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Find all the closed regions in a network.
+        /// Find all the closed regions in the network.
         /// This method uses the Traverse method internally with a traversal
         /// function that uses the minimal plane angle to determine the direction
         /// of traversal.
         /// </summary>
-        /// <returns>A collection of polygons representing the closed regions in the network.</returns>
-        public List<Polygon> FindAllClosedRegions(List<Vector3> allNodeLocations)
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <returns>A collection of integers representing the indices of the nodes 
+        /// forming closed regions in the network.</returns>
+        public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
-            var result = new List<Polygon>();
+            var result = new List<List<int>>();
 
-            var leafIndices = new List<int>();
+            var traversalStartIndices = new List<int>();
             for (var i = 0; i < this.NodeCount(); i++)
             {
-                if (this.EdgesAt(i).Count() == 1)
+                var edgeCount = this.EdgesAt(i).Count();
+                if (edgeCount == 1)
                 {
-                    leafIndices.Add(i);
+                    traversalStartIndices.Add(i);
                 }
             }
 
-            // The allvisited array stores the number of visits to each
-            // node as an int. If a graph has been fully traversed, each
-            // node will have as many visits as there are connected edges
-            // to that node. 
-            var allVisited = new int[NodeCount()];
+            var nodeVisits = new int[NodeCount()];
             var visitedEdges = new List<LocalEdge>();
 
-            foreach (var leafIndex in leafIndices)
+            foreach (var leafIndex in traversalStartIndices)
             {
-                var path = Traverse(leafIndex, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
-                var vertices = path.Select(i => allNodeLocations[i]).ToList();
+                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+
                 foreach (var index in path)
                 {
-                    allVisited[index] = allVisited[index] + 1;
+                    nodeVisits[index] = nodeVisits[index] + 1;
                 }
 
                 MarkVisitedEdges(visitedEdges, path);
@@ -406,27 +407,28 @@ namespace Elements.Search
                     continue;
                 }
 
-                result.Add(new Polygon(path.Select(i => allNodeLocations[i]).ToList()));
+                result.Add(path);
             }
 
-            for (var i = 0; i < allVisited.Length; i++)
+            for (var i = 0; i < nodeVisits.Length; i++)
             {
                 var localEdgeCount = EdgesAt(i).Count();
-                if (localEdgeCount > allVisited[i])
+                if (localEdgeCount > nodeVisits[i])
                 {
-                    var path = Traverse(i, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+                    List<int> path = Traverse(i, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
 
                     if (path.Count < 2 || path[0] != path[path.Count - 1])
                     {
                         continue;
                     }
+
                     MarkVisitedEdges(visitedEdges, path);
 
                     // Add the visits to the corresponding nodes
                     // to ensure that we don't re-traverse this loop.
                     foreach (var index in path)
                     {
-                        allVisited[index] = allVisited[index] + 1;
+                        nodeVisits[index] = nodeVisits[index] + 1;
                     }
 
                     if (path.Count < 3)
@@ -434,7 +436,7 @@ namespace Elements.Search
                         continue;
                     }
 
-                    result.Add(new Polygon(path.Select(index => allNodeLocations[index]).ToList()));
+                    result.Add(path);
                 }
             }
 
@@ -442,15 +444,68 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Traverse a network following the smallest plane angle path.
+        /// Find all the closed regions in the network ignoring leaf nodes.
+        /// This method uses the Traverse method internally with a traversal
+        /// function that uses the minimal plane angle to determine the direction
+        /// of traversal.
         /// </summary>
-        /// <param name="traversalData"></param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <returns>A collection of integers representing the indices of the nodes 
+        /// forming closed regions in the network.</returns>
+        public List<List<int>> FindAllClosedRegionsBypassingInternalLeaves(List<Vector3> allNodeLocations)
+        {
+            var result = new List<List<int>>();
+
+            var traversalStartIndices = new List<int>();
+            for (var i = 0; i < this.NodeCount(); i++)
+            {
+                var edgeCount = this.EdgesAt(i).Count();
+                if (edgeCount > 1)
+                {
+                    traversalStartIndices.Add(i);
+                }
+            }
+
+            var nodeVisits = new int[NodeCount()];
+            var visitedEdges = new List<LocalEdge>();
+
+            foreach (var leafIndex in traversalStartIndices)
+            {
+                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngleToNonLeaf, allNodeLocations, visitedEdges, out List<int> visited);
+
+                foreach (var index in path)
+                {
+                    nodeVisits[index] = nodeVisits[index] + 1;
+                }
+
+                MarkVisitedEdges(visitedEdges, path);
+
+                if (path.Count < 3)
+                {
+                    continue;
+                }
+
+                result.Add(path);
+
+                Debug.WriteLine($"PATH: {string.Join(",", path)}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Traverse a network following the smallest plane angle path including
+        /// leaf nodes.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
         /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="network">The network being traversed.</param>
         /// <returns>The next index to traverse.</returns>
         public static int TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
                                                List<Vector3> allNodeLocations,
-                                               List<LocalEdge> visitedEdges)
+                                               List<LocalEdge> visitedEdges,
+                                               Network<T> network)
         {
             var minAngle = double.MaxValue;
             var minIndex = -1;
@@ -483,6 +538,68 @@ namespace Elements.Search
 
                 if (angle < minAngle)
                 {
+                    minAngle = angle;
+                    minIndex = e;
+                }
+            }
+            return minIndex;
+        }
+
+        /// <summary>
+        /// Traverse a network following the smallest plane angle path bypassing
+        /// leaf nodes.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="network">The network being traversed.</param>
+        /// <returns>The next index to traverse.</returns>
+        public static int TraverseSmallestPlaneAngleToNonLeaf((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges,
+                                               Network<T> network)
+        {
+            var minAngle = double.MaxValue;
+            var minIndex = -1;
+            var baseEdge = traversalData.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
+            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
+
+            Debug.WriteLine(string.Join(",", edgeIndices));
+            for (var i = 0; i < edgeIndices.Count; i++)
+            {
+                var e = edgeIndices[i];
+
+                if (e == traversalData.previousIndex)
+                {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
+                    continue;
+                }
+
+                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
+                {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
+                var angle = baseEdge.PlaneAngleTo(localEdge);
+
+                // The angle of traversal is not actually zero here,
+                // it's 180 (unless the path is invalid). We want to
+                // ensure that traversal happens along the straight
+                // edge if possible.
+                if (angle == 0)
+                {
+                    angle = 180.0;
+                }
+
+                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
+
+                var isLeaf = network.EdgesAt(e).Count() == 1;
+                if (angle < minAngle && !isLeaf)
+                {
+                    Debug.WriteLine("Found minimum.");
                     minAngle = angle;
                     minIndex = e;
                 }
@@ -624,7 +741,7 @@ namespace Elements.Search
         /// <param name="visited">A collection of visited node indices.</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
+                                  Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, Network<T>, int> next,
                                   List<Vector3> allNodeLocations,
                                   List<LocalEdge> visitedEdges,
                                   out List<int> visited)
@@ -639,7 +756,7 @@ namespace Elements.Search
                 path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
-                currentIndex = Traverse(prevIndex, currentIndex, next, allNodeLocations, visitedEdges);
+                currentIndex = Traverse(prevIndex, currentIndex, next, allNodeLocations, visitedEdges, this);
                 prevIndex = oldIndex;
 
                 // After at least one traversal step, if the current index
@@ -670,9 +787,10 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
+                             Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, Network<T>, int> next,
                              List<Vector3> allNodeLocations,
-                             List<LocalEdge> visitedEdges)
+                             List<LocalEdge> visitedEdges,
+                             Network<T> network)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -697,7 +815,7 @@ namespace Elements.Search
                 }
             }
 
-            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges);
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges, network);
         }
     }
 }
