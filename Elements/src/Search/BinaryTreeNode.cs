@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Elements.Search
 {
     /// <summary>
@@ -25,5 +27,19 @@ namespace Elements.Search
         /// The data to store.
         /// </summary>
         public T Data { get; set; }
+
+        public void Print(StringBuilder sb, string prefix)
+        {
+            if (Left != null)
+            {
+                sb.AppendLine($"{prefix}LEFT: {Left.Data}");
+                Left.Print(sb, prefix + "\t");
+            }
+            if (Right != null)
+            {
+                sb.AppendLine($"{prefix}RIGHT: {Right.Data}");
+                Right.Print(sb, prefix + "\t");
+            }
+        }
     }
 }

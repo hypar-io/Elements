@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Elements.Search
 {
@@ -133,8 +134,10 @@ namespace Elements.Search
                 }
             }
 
-            BinaryTreeNode<T> newNode = new BinaryTreeNode<T>();
-            newNode.Data = value;
+            BinaryTreeNode<T> newNode = new BinaryTreeNode<T>
+            {
+                Data = value
+            };
 
             if (this.Root == null)
             {
@@ -254,6 +257,17 @@ namespace Elements.Search
         private int GetTreeDepth(BinaryTreeNode<T> parent)
         {
             return parent == null ? 0 : Math.Max(GetTreeDepth(parent.Left), GetTreeDepth(parent.Right)) + 1;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            if (Root != null)
+            {
+                sb.AppendLine($"ROOT: {Root.Data}");
+                Root.Print(sb, "\t");
+            }
+            return sb.ToString();
         }
     }
 }

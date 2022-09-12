@@ -1270,5 +1270,13 @@ namespace Elements.Geometry
             return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
                 && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
         }
+
+        /// <summary>
+        /// A string representation of the line.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"start: {Start}, end: {End}";
+        }
     }
 }
