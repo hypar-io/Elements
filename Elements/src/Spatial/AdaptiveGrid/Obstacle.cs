@@ -50,8 +50,8 @@ namespace Elements.Spatial.AdaptiveGrid
             (
                 wall.CenterLine.Start + ortho * wall.Thickness / 2,
                 wall.CenterLine.End + ortho * wall.Thickness / 2,
-                wall.CenterLine.Start - ortho * wall.Thickness / 2,
-                wall.CenterLine.End - ortho * wall.Thickness / 2
+                wall.CenterLine.End - ortho * wall.Thickness / 2,
+                wall.CenterLine.Start - ortho * wall.Thickness / 2
             );
             var transfrom = new Transform(Vector3.Origin,
                 wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
@@ -142,11 +142,11 @@ namespace Elements.Spatial.AdaptiveGrid
             .Vertices
             .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
             .ToList() ?? new List<Vector3>();
-        
+
         /// <summary>
         /// Perimeter defining obstacle.
         /// </summary>
-        public Polygon Boundary 
+        public Polygon Boundary
         {
             get => _boundary;
             set
@@ -159,7 +159,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Obstacle height, offset by Boundary normal vector
         /// </summary>
-        public double Height 
+        public double Height
         {
             get => _height;
             set
@@ -172,7 +172,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Offset of bounding box created from the list of points.
         /// </summary>
-        public double Offset 
+        public double Offset
         {
             get => _offset;
             set
@@ -236,30 +236,30 @@ namespace Elements.Spatial.AdaptiveGrid
         private bool DoesPolygonIntersectsWithLine(Polygon polygon, Line line, double tolerance = 1e-05)
         {
             var plane = polygon.Plane();
-            if(!line.Intersects(plane, out var intersection, true))
+            if (!line.Intersects(plane, out var intersection, true))
             {
                 return false;
             }
 
-            if(!polygon.Contains3D(intersection))
+            if (!polygon.Contains3D(intersection))
             {
                 return false;
             }
 
             var points = new List<Vector3> { line.Start, line.End };
 
-            return points.Any(x => plane.SignedDistanceTo(x) < - tolerance);
-            
+            return points.Any(x => plane.SignedDistanceTo(x) < -tolerance);
+
         }
 
         private bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
         {
-            if(polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
+            if (polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
             {
                 return true;
             }
 
-            if(!polygon.Intersects(line, out var intersections, false, includeEnds: true))
+            if (!polygon.Intersects(line, out var intersections, false, includeEnds: true))
             {
                 return false;
             }
@@ -269,7 +269,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private void UpdatePolygons()
         {
-            if(Boundary == null)
+            if (Boundary == null)
             {
                 return;
             }
@@ -280,14 +280,14 @@ namespace Elements.Spatial.AdaptiveGrid
             var boundaryTransform = new Transform(Boundary.Centroid(), Boundary.Plane().Normal);
             var boundary = Boundary.TransformedPolygon(boundaryTransform.Inverted()).Offset(Offset).FirstOrDefault();
 
-            if(boundary == null)
+            if (boundary == null)
             {
                 return;
             }
 
             boundary = boundary.TransformedPolygon(boundaryTransform);
 
-            if(Transform != null)
+            if (Transform != null)
             {
                 boundary = boundary.TransformedPolygon(Transform);
             }
@@ -303,7 +303,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var topVector = boundary.Normal().Negate() * (Height + 2 * Offset);
 
-            if(topVector.IsAlmostEqualTo(Vector3.Origin))
+            if (topVector.IsAlmostEqualTo(Vector3.Origin))
             {
                 return;
             }
@@ -316,7 +316,7 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var polygon = new Polygon(segment.Start, segment.End, segment.End + topVector, segment.Start + topVector).Reversed();
                 _secondaryPolygons.Add(polygon);
-            }            
+            }
         }
     }
 }

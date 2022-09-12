@@ -60,9 +60,9 @@ namespace Elements
             var smallPolygon = Polygon.Rectangle(5, 5);
             //Polygon fully inside
             yield return new object[] { smallPolygon.TransformedPolygon(new Transform(0, 0, 2)), true, 1 };
-            //Polygon fully outside below 
+            //Polygon fully outside below
             yield return new object[] { smallPolygon.TransformedPolygon(new Transform(0, 0, -2)), false, 2 };
-            //Polygon fully outside on side 
+            //Polygon fully outside on side
             yield return new object[] { smallPolygon.TransformedPolygon(new Transform().Rotated(Vector3.YAxis, 90).Moved(7, 0, 5)), false, 3 };
             //Only one vertex inside
             yield return new object[] { smallPolygon.TransformedPolygon(new Transform(5, 5, 2)), true, 4 };
@@ -70,7 +70,7 @@ namespace Elements
             yield return new object[] { smallPolygon.TransformedPolygon(new Transform(10, 10, 2)), false, 5 };
 
             var bigPolygon = Polygon.Rectangle(20, 20);
-            //Obstacle inside polygon 
+            //Obstacle inside polygon
             yield return new object[] { bigPolygon.TransformedPolygon(new Transform(0, 0, 2)), false, 6 };
             //One segment intersecting with obstacle
             yield return new object[] { bigPolygon.TransformedPolygon(new Transform(10, 0, 2)), true, 7 };
@@ -115,6 +115,28 @@ namespace Elements
             var result = obstacle.Intersects(polyline);
 
             Assert.False(result);
+        }
+
+        [Fact]
+        public void ObstacleFromWall()
+        {
+            Line centerLine = new Line(Vector3.Origin, new Vector3(10, 0));
+            var wall = new StandardWall(centerLine, 0.5, 3);
+            var obstacle = Obstacle.FromWall(wall, 0.5);
+
+            // intersects wall line
+            Assert.True(obstacle.Intersects(new Line(Vector3.Origin, new Vector3(10, 0))));
+            // intersects line that crosses wall
+            Assert.True(obstacle.Intersects(new Line(new Vector3(3, -1, 2), new Vector3(3, 1, 3))));
+            // intersects line that crosses wall at the top
+            Assert.True(obstacle.Intersects(new Line(new Vector3(3, -1, 3.5), new Vector3(3, 1, 3.5))));
+            // does not intersect line that is above wall
+            Assert.False(obstacle.Intersects(new Line(new Vector3(0, 0, 4), new Vector3(10, 0, 4))));
+
+            // ensure that line direction does not matter
+            centerLine = centerLine.Reversed();
+            var wall2 = new StandardWall(centerLine, 0.5, 3);
+            var obstacle2 = Obstacle.FromWall(wall2, 0.5);
         }
 
         [Fact]
