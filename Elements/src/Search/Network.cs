@@ -382,6 +382,7 @@ namespace Elements.Search
             for (var i = 0; i < this.NodeCount(); i++)
             {
                 var edgeCount = this.EdgesAt(i).Count();
+                // Leaf nodes
                 if (edgeCount == 1)
                 {
                     traversalStartIndices.Add(i);
@@ -408,6 +409,8 @@ namespace Elements.Search
                 }
 
                 result.Add(path);
+
+                Debug.WriteLine($"PATH: {string.Join(",", path)}");
             }
 
             for (var i = 0; i < nodeVisits.Length; i++)
@@ -437,6 +440,8 @@ namespace Elements.Search
                     }
 
                     result.Add(path);
+
+                    Debug.WriteLine($"PATH: {string.Join(",", path)}");
                 }
             }
 
@@ -460,6 +465,8 @@ namespace Elements.Search
             for (var i = 0; i < this.NodeCount(); i++)
             {
                 var edgeCount = this.EdgesAt(i).Count();
+
+                // Non-leaf nodes.
                 if (edgeCount > 1)
                 {
                     traversalStartIndices.Add(i);
@@ -515,12 +522,14 @@ namespace Elements.Search
             {
                 if (e == traversalData.previousIndex)
                 {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
                     continue;
                 }
 
                 var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
                 if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
                 {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
                     continue;
                 }
 
@@ -536,8 +545,11 @@ namespace Elements.Search
                     angle = 180.0;
                 }
 
+                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
+
                 if (angle < minAngle)
                 {
+                    Debug.WriteLine("Found minimum.");
                     minAngle = angle;
                     minIndex = e;
                 }
@@ -579,6 +591,12 @@ namespace Elements.Search
                 if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
                 {
                     Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var visits = visitedEdges.Where(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visits.Count() >= 2)
+                {
                     continue;
                 }
 
