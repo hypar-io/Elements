@@ -265,39 +265,6 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void FindAllClosedRegionsWithoutLeaves()
-        {
-            this.Name = nameof(FindAllClosedRegionsWithoutLeaves);
-
-            var lines = CreateClosedRegionTestLines();
-
-            foreach (var line in lines)
-            {
-                this.Model.AddElement(new ModelCurve(line));
-            }
-
-            var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
-            var closedRegions = network.FindAllClosedRegionsBypassingInternalLeaves(allNodeLocations);
-
-            // According to Euler, there will be V + R = E + 2 regions
-            Assert.Equal(6, closedRegions.Count);
-
-            var r = new Random(23);
-            foreach (var region in closedRegions)
-            {
-                try
-                {
-                    var p = new Polygon(region.Select(i => allNodeLocations[i]).ToList());
-                    this.Model.AddElement(new Panel(p, r.NextMaterial()));
-                }
-                catch
-                {
-                    continue;
-                }
-            }
-        }
-
-        [Fact]
         public void FindAllClosedRegions()
         {
             this.Name = nameof(FindAllClosedRegions);
@@ -316,8 +283,7 @@ namespace Elements.Tests
             this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
 
-            // According to Euler, there will be V + R = E + 2 regions
-            Assert.Equal(9, closedRegions.Count);
+            Assert.Equal(5, closedRegions.Count);
 
             var r = new Random(23);
             foreach (var region in closedRegions)

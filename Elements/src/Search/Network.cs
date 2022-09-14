@@ -408,7 +408,10 @@ namespace Elements.Search
                     continue;
                 }
 
-                result.Add(path);
+                if (path[0] == path[path.Count - 1])
+                {
+                    result.Add(path);
+                }
 
                 Debug.WriteLine($"PATH: {string.Join(",", path)}");
             }
@@ -439,62 +442,13 @@ namespace Elements.Search
                         continue;
                     }
 
-                    result.Add(path);
+                    if (path[0] == path[path.Count - 1])
+                    {
+                        result.Add(path);
+                    }
 
                     Debug.WriteLine($"PATH: {string.Join(",", path)}");
                 }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Find all the closed regions in the network ignoring leaf nodes.
-        /// This method uses the Traverse method internally with a traversal
-        /// function that uses the minimal plane angle to determine the direction
-        /// of traversal.
-        /// </summary>
-        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <returns>A collection of integers representing the indices of the nodes 
-        /// forming closed regions in the network.</returns>
-        public List<List<int>> FindAllClosedRegionsBypassingInternalLeaves(List<Vector3> allNodeLocations)
-        {
-            var result = new List<List<int>>();
-
-            var traversalStartIndices = new List<int>();
-            for (var i = 0; i < this.NodeCount(); i++)
-            {
-                var edgeCount = this.EdgesAt(i).Count();
-
-                // Non-leaf nodes.
-                if (edgeCount > 1)
-                {
-                    traversalStartIndices.Add(i);
-                }
-            }
-
-            var nodeVisits = new int[NodeCount()];
-            var visitedEdges = new List<LocalEdge>();
-
-            foreach (var leafIndex in traversalStartIndices)
-            {
-                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngleToNonLeaf, allNodeLocations, visitedEdges, out List<int> visited);
-
-                foreach (var index in path)
-                {
-                    nodeVisits[index] = nodeVisits[index] + 1;
-                }
-
-                MarkVisitedEdges(visitedEdges, path);
-
-                if (path.Count < 3)
-                {
-                    continue;
-                }
-
-                result.Add(path);
-
-                Debug.WriteLine($"PATH: {string.Join(",", path)}");
             }
 
             return result;
@@ -548,74 +502,6 @@ namespace Elements.Search
                 Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
 
                 if (angle < minAngle)
-                {
-                    Debug.WriteLine("Found minimum.");
-                    minAngle = angle;
-                    minIndex = e;
-                }
-            }
-            return minIndex;
-        }
-
-        /// <summary>
-        /// Traverse a network following the smallest plane angle path bypassing
-        /// leaf nodes.
-        /// </summary>
-        /// <param name="traversalData">Data about the current step of the traversal.</param>
-        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <param name="visitedEdges">A collection of previously visited edge.</param>
-        /// <param name="network">The network being traversed.</param>
-        /// <returns>The next index to traverse.</returns>
-        public static int TraverseSmallestPlaneAngleToNonLeaf((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
-                                               List<Vector3> allNodeLocations,
-                                               List<LocalEdge> visitedEdges,
-                                               Network<T> network)
-        {
-            var minAngle = double.MaxValue;
-            var minIndex = -1;
-            var baseEdge = traversalData.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
-            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
-
-            Debug.WriteLine(string.Join(",", edgeIndices));
-            for (var i = 0; i < edgeIndices.Count; i++)
-            {
-                var e = edgeIndices[i];
-
-                if (e == traversalData.previousIndex)
-                {
-                    Debug.WriteLine($"Skipping index {e} as previous.");
-                    continue;
-                }
-
-                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
-                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
-                {
-                    Debug.WriteLine($"Skipping index {e} as visited.");
-                    continue;
-                }
-
-                var visits = visitedEdges.Where(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
-                if (visits.Count() >= 2)
-                {
-                    continue;
-                }
-
-                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
-                var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                // The angle of traversal is not actually zero here,
-                // it's 180 (unless the path is invalid). We want to
-                // ensure that traversal happens along the straight
-                // edge if possible.
-                if (angle == 0)
-                {
-                    angle = 180.0;
-                }
-
-                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
-
-                var isLeaf = network.EdgesAt(e).Count() == 1;
-                if (angle < minAngle && !isLeaf)
                 {
                     Debug.WriteLine("Found minimum.");
                     minAngle = angle;
