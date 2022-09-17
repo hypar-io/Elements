@@ -115,6 +115,36 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create an U.
+        /// </summary>
+        /// <param name="width">The width of the U.</param>
+        /// <param name="length">The length of the U.</param>
+        /// <param name="thickness">The thickness of the U.</param>
+        /// <returns></returns>
+        public static Polygon U(double width, double length, double thickness)
+        {
+            if (thickness > length)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater than the length.");
+            }
+            if (thickness > width)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
+            }
+
+            var a = new Vector3(0, 0, 0);
+            var b = new Vector3(width / 2 - thickness, 0);
+            var c = new Vector3(width / 2 - thickness, length / 2);
+            var d = new Vector3(width / 2, length / 2);
+            var e = new Vector3(width / 2, -length / 2);
+            var f = new Vector3(-width / 2, -length / 2);
+            var g = new Vector3(-width / 2, length / 2);
+            var h = new Vector3(-width / 2 + thickness, length / 2);
+            var i = new Vector3(-width / 2 + thickness, 0);
+            return new Polygon(true, a, b, c, d, e, f, g, h, i);
+        }
+
+        /// <summary>
         /// Create a star.
         /// </summary>
         /// <param name="outerRadius">The outer radius.</param>
