@@ -25,6 +25,14 @@ namespace Elements
         internal BBox3 _bounds;
         internal Csg.Solid _csg;
 
+        /// <summary>
+        /// The element's bounds.
+        /// The bounds are only available when the geometry has been
+        /// updated using UpdateBoundsAndComputeSolid(),
+        /// </summary>
+        [JsonIgnore]
+        public BBox3 Bounds => _bounds;
+
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
@@ -82,7 +90,7 @@ namespace Elements
         /// <summary>
         /// Update the computed solid and the bounding box of the element.
         /// </summary>
-        public void UpdateBoundsAndComputeSolid()
+        public void UpdateBoundsAndComputeSolid(bool transformed = false)
         {
             if (Transform != null)
             {
@@ -92,7 +100,7 @@ namespace Elements
                     throw new ArgumentOutOfRangeException($"A solid cannot be created for elements {Id}. One or more components of the element's transform has a scale equal to zero.");
                 }
             }
-            _csg = GetFinalCsgFromSolids();
+            _csg = GetFinalCsgFromSolids(transformed);
             if (_csg == null)
             {
                 return;
