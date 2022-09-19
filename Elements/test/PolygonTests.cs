@@ -2059,7 +2059,10 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void U()
         {
-            Polygon.U(10, 10, 2);
+            this.Name = nameof(U);
+
+            var u = Polygon.U(10, 20, 2);
+            this.Model.AddElement(new ModelCurve(u));
         }
 
         [Fact]

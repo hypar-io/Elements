@@ -116,13 +116,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create an U.
+        /// Create a U.
         /// </summary>
         /// <param name="width">The width of the U.</param>
         /// <param name="length">The length of the U.</param>
         /// <param name="thickness">The thickness of the U.</param>
         /// <returns>A U shaped polygon with the origin at the center of
-        /// the inside edge of the U.</returns>
+        /// the inside bend of the U.</returns>
         public static Polygon U(double width, double length, double thickness)
         {
             if (thickness >= width / 2)
@@ -132,12 +132,12 @@ namespace Elements.Geometry
 
             var a = new Vector3(0, 0, 0);
             var b = new Vector3(width / 2 - thickness, 0);
-            var c = new Vector3(width / 2 - thickness, length / 2);
-            var d = new Vector3(width / 2, length / 2);
-            var e = new Vector3(width / 2, -length / 2);
-            var f = new Vector3(-width / 2, -length / 2);
-            var g = new Vector3(-width / 2, length / 2);
-            var h = new Vector3(-width / 2 + thickness, length / 2);
+            var c = new Vector3(width / 2 - thickness, length - thickness);
+            var d = new Vector3(width / 2, length - thickness);
+            var e = new Vector3(width / 2, -thickness);
+            var f = new Vector3(-width / 2, -thickness);
+            var g = new Vector3(-width / 2, length - thickness);
+            var h = new Vector3(-width / 2 + thickness, length - thickness);
             var i = new Vector3(-width / 2 + thickness, 0);
             return new Polygon(true, a, b, c, d, e, f, g, h, i);
         }
