@@ -125,11 +125,7 @@ namespace Elements.Geometry
         /// the inside edge of the U.</returns>
         public static Polygon U(double width, double length, double thickness)
         {
-            if (thickness > length)
-            {
-                throw new ArgumentOutOfRangeException("The thickness cannot be greater than the length.");
-            }
-            if (thickness > width)
+            if (thickness >= width / 2)
             {
                 throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
             }
