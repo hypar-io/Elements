@@ -265,5 +265,26 @@ namespace Elements.Tests
                 _output.WriteLine(string.Join(',', visited));
             }
         }
+
+        [Fact]
+        public void RevitWallsIntersectCorrectly()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
+            var model = Model.FromJson(json);
+            var walls = model.AllElementsOfType<WallByProfile>();
+            foreach (var wall in walls)
+            {
+                wall.Material = BuiltInMaterials.Mass;
+            }
+            Assert.Equal(4, walls.Count());
+            var network = Network<WallByProfile>.FromSegmentableItems(walls.ToList(),
+                                                                      (wall) => { return wall.Centerline; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.White));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.White));
+            model.ToGlTF("RevitIntersectingWalls.gltf", out _, false);
+        }
     }
 }
