@@ -1067,11 +1067,12 @@ namespace Elements.Geometry
         public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
         {
             sharedSegments = new List<Polyline>();
+            var polygonSegments = polygon.Segments();
 
             var intersections = polygon.Segments()
                 .SelectMany(x =>
                 {
-                    Intersects(x, out var result);
+                    Intersects(x, out var result, includeEnds: true);
                     return result;
                 })
                 .OrderBy(x => GetParameterAt(x))
@@ -1086,26 +1087,38 @@ namespace Elements.Geometry
                 return sharedSegments.Any();
             }
 
-            if (polygon.Contains(Start))
+            var filteredIntersections = new List<Vector3>();
+            foreach(var intersection in intersections)
             {
-                var intersection = intersections.First();
-                var startSegment = GetSubsegment(Start, intersection);
-                sharedSegments.Add(startSegment);
-                intersections.Remove(intersection);
+                if(filteredIntersections.Any(x => x.IsAlmostEqualTo(intersection)))
+                {
+                    continue;
+                }
+                filteredIntersections.Add(intersection);
             }
 
-            for (int i = 1; i < intersections.Count; i += 2)
+            if (polygon.Contains(Start))
             {
-                var subsegment = GetSubsegment(intersections[i - 1], intersections[i]);
-                sharedSegments.Add(subsegment);
+                var intersection = filteredIntersections.First();
+                var startSegment = GetSubsegment(Start, intersection);
+                sharedSegments.Add(startSegment);
+                filteredIntersections.Remove(intersection);
+            }
+
+            for (int i = 1; i < filteredIntersections.Count; i += 2)
+            {
+                var subsegment = GetSubsegment(filteredIntersections[i - 1], filteredIntersections[i]);
+                if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
+                {
+                    sharedSegments.Add(subsegment);
+                }
             }
 
             if (polygon.Contains(End))
             {
-                var intersection = intersections.Last();
+                var intersection = filteredIntersections.Last();
                 var endSegment = GetSubsegment(intersection, End);
                 sharedSegments.Add(endSegment);
-                intersections.Remove(intersection);
             }
 
             return sharedSegments.Any();

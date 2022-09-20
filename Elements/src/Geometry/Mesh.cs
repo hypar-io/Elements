@@ -19,6 +19,7 @@ namespace Elements.Geometry
 
         private double _maxTriangleSize = 0;
         private PointOctree<Vertex> _octree = null;
+        private readonly Dictionary<int, Vertex> _vertexMap = new Dictionary<int, Vertex>();
 
         /// <summary>The mesh's vertices.</summary>
         [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -28,7 +29,8 @@ namespace Elements.Geometry
         [JsonProperty("Triangles", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
 
-        private BBox3 _bbox = new BBox3();
+        private BBox3 _bbox = new BBox3(new List<Vector3> { });
+
         /// <summary>
         /// The mesh's bounding box.
         /// </summary>
@@ -166,6 +168,20 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
+        /// Remaps the mesh's UVs to the bounds. For surfaces close to
+        /// horizontal, this has the effect of a planar projection.
+        /// </summary>
+        internal void MapUVsToBounds()
+        {
+            for (var i = 0; i < this.Vertices.Count; i++)
+            {
+                var v = this.Vertices[i];
+                var uv1 = _bbox.UVWAtPoint(v.Position);
+                v.UV = new UV(uv1.X, uv1.Y);
+            }
+        }
+
+        /// <summary>
         /// Get all buffers required for rendering.
         /// </summary>
         public GraphicsBuffers GetBuffers()
@@ -257,7 +273,6 @@ Triangles:{Triangles.Count}";
         {
             var v = new Vertex(position, normal, color);
 
-
             if (merge)
             {
                 var search = GetOctree().GetNearby(position, Vector3.EPSILON);
@@ -276,7 +291,41 @@ Triangles:{Triangles.Count}";
             v.UV = uv;
             this.Vertices.Add(v);
             v.Index = (this.Vertices.Count) - 1;
-            this._bbox = this._bbox.Extend(v.Position);
+            this._bbox.Extend(v.Position);
+            return v;
+        }
+
+        /// <summary>
+        /// Find a vertex using the Tag property, or create a new vertex.
+        /// </summary>
+        /// <param name="position">The vertex's position.</param>
+        /// <param name="tag">The vertex's tag.</param>
+        /// <param name="uv">The vertex's texture coordinate.</param>
+        /// <param name="normal">The vertex's normal.</param>
+        /// <param name="color">The vertex's color.</param>
+        /// <returns>An existing vertex if a match is found, otherwise
+        /// a new vertex.</returns>
+        internal Vertex FindOrCreateVertex(Vector3 position,
+                                int tag,
+                                UV uv = default,
+                                Vector3 normal = default,
+                                Color color = default)
+        {
+            if (_vertexMap.ContainsKey(tag))
+            {
+                return _vertexMap[tag];
+            }
+
+            var v = new Vertex(position, normal, color)
+            {
+                UV = uv,
+                Tag = tag
+            };
+            Vertices.Add(v);
+            v.Index = Vertices.Count - 1;
+            this._octree?.Add(v, position);
+            _vertexMap.Add(tag, v);
+            this._bbox.Extend(v.Position);
             return v;
         }
 
@@ -289,7 +338,7 @@ Triangles:{Triangles.Count}";
             this.Vertices.Add(v);
             // If the octree is null, do nothing — we'll build it when we need it. If we've already constructed it, let's keep it up to date.
             this._octree?.Add(v, v.Position);
-            this._bbox = this._bbox.Extend(v.Position);
+            this._bbox.Extend(v.Position);
             v.Index = (this.Vertices.Count) - 1;
             return v;
         }

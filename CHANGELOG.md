@@ -11,6 +11,15 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
+- `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property
+- `AdaptiveGrid.Obstacle.Intersects(Polyline polyline, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.Intersects(Line line, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.IsInside(Vector3 point, double tolerance = 1e-05)` method
+- `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
+- `GeometricElement.Intersects(Plane plane,
+                               out Dictionary<Guid, List<Polygon>> intersectionPolygons,
+                               out Dictionary<Guid, List<Polygon>> beyondPolygons,
+                               out Dictionary<Guid, List<Line>> lines)`
 
 ### Changed
 
@@ -19,6 +28,7 @@
 - `BBox3.Extend` method is public now
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
+- `LinearDimension`s now support `IOverrideLinked` behavior.
 
 ### Fixed
 
@@ -26,6 +36,9 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
+- `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
+- `Obstacle.FromWall` was failing when producing a polygon.
 - `Network` incorrect tree building and search of intersections
 
 ## 1.1.0
@@ -33,6 +46,13 @@
 ### Added
 
 - `Material` now supports a `DrawInFront` property.
+- `Model.Intersect(Plane plane, out List<Geometry.Polygon> intersectionPolygons, out List<Geometry.Polygon> beyondPolygons)`
+- `GeometricElement.UpdateBoundsAndCsg()`
+- `EdgeExtensions.Intersects(this (Vector3 from, Vector3 to) edge, Plane plane, out Vector3 result)`
+- `RelationToPlane` enum.
+- `BBox3.Intersects(Plane plane, out RelationToPlane relationToPlane)`
+- `BBox3.Extend(Vector3 point)`
+- `BBox3.Extend(params Vector3[] points)`
 - `TiledCeiling.GetTileCells()`
 - `AdaptiveGridRouting.AddRoutingFilter(RoutingFilter f)`
 - `AdaptiveGraphRouting.RoutingConfiguration.SupportedAngles` property.
@@ -41,6 +61,7 @@
 - `Vector3Extensions.BestFitLine(this IList<Vector3> points)`
 - `Polygon.FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)`
 - `Transform.RotateAboutPoint` and `Transform.RotatedAboutPoint` convenience methods.
+- `Solid.ToCSG()` extension method is now an instance method on `Solid`.
 - `DoubleToleranceComparer`
 - `Line.IsOnPlane()` method
 - `Polyline.Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)` method

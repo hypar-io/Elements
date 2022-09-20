@@ -266,6 +266,7 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
+            result.MapUVsToBounds();
 
             var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
             this.Model.AddElement(new MeshElement(result, material: material));
