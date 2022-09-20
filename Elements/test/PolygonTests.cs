@@ -2055,5 +2055,17 @@ namespace Elements.Geometry.Tests
             var polygon = JsonConvert.DeserializeObject<Polygon>(json);
             Assert.NotNull(polygon);
         }
+
+        [Fact]
+        public void U()
+        {
+            var u = Polygon.U(10, 20, 2);
+        }
+
+        [Fact]
+        public void UThicknessGreaterThanWidthOverTwoThrows()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Polygon.U(10, 10, 6));
+        }
     }
 }

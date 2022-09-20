@@ -32,37 +32,10 @@ namespace Elements.Search
             var a = _getSegment(t1);
             var b = _getSegment(t2);
 
-            var aLeft = a.Start.X <= a.End.X ? a.Start : a.End;
-            var bLeft = b.Start.X <= b.End.X ? b.Start : b.End;
+            var aLeft = a.Start.X <= a.End.X ? a.PointAt(0.001) : a.PointAt(0.999);
+            var bLeft = b.Start.X <= b.End.X ? b.PointAt(0.001) : b.PointAt(0.999);
 
-            if (aLeft == bLeft)
-            {
-                // The left-most points of the lines are equal, but the lines
-                // themselves are not neccessarily equal. Use the lines' 
-                // bounding boxes to get the max points.
-                var bb1 = new BBox3();
-                bb1.Extend(a.Start);
-                bb1.Extend(a.End);
-                var bb2 = new BBox3();
-                bb2.Extend(b.Start);
-                bb2.Extend(b.End);
-                if (bb1.Max.Y > bb2.Max.Y)
-                {
-                    return -1;
-                }
-                else if (bb1.Max.Y < bb2.Max.Y)
-                {
-                    return 1;
-                }
-                if (bb1.Max.X.ApproximatelyEquals(bb2.Max.X))
-                {
-                    return 0;
-                }
-                return bb1.Max.X.CompareTo(bb2.Max.X);
-            }
-            else
-            {
-                if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
+            if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
                 {
                     if (aLeft.X.ApproximatelyEquals(bLeft.X))
                     {
@@ -75,7 +48,6 @@ namespace Elements.Search
                     return -1;
                 }
                 return 1;
-            }
         }
     }
 }
