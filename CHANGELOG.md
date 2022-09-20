@@ -26,6 +26,7 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
+- `Network` incorrect tree building and search of intersections
 
 ## 1.1.0
 
