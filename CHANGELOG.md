@@ -21,6 +21,10 @@
                                                List<Vector3> allNodeLocations,
                                                List<LocalEdge> visitedEdges,
                                                Network<T> network)`
+- `GeometricElement.Intersects(Plane plane,
+                               out Dictionary<Guid, List<Polygon>> intersectionPolygons,
+                               out Dictionary<Guid, List<Polygon>> beyondPolygons,
+                               out Dictionary<Guid, List<Line>> lines)`
 
 ### Changed
 
