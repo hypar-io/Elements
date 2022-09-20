@@ -433,80 +433,8 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Draw bounded areas of the network as panels.
-        /// </summary>
-        /// <param name="allNodeLocations">A collection of node locations.</param>
-        public List<Panel> ToBoundedAreas(List<Vector3> allNodeLocations)
-        {
-            int next((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) a)
-            {
-                var minAngle = double.MaxValue;
-                var minIndex = -1;
-                var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                foreach (var e in a.edgeIndices)
-                {
-                    if (e == a.previousIndex)
-                    {
-                        continue;
-                    }
-
-                    var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                    var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                    // The angle of traversal is not actually zero here,
-                    // it's 180 (unless the path is invalid). We want to
-                    // ensure that traversal happens along the straight
-                    // edge if possible.
-                    if (angle == 0)
-                    {
-                        angle = 180.0;
-                    }
-
-                    if (angle < minAngle)
-                    {
-                        minAngle = angle;
-                        minIndex = e;
-                    }
-                }
-                return minIndex;
-            }
-
-            var r = new Random();
-            var panels = new List<Panel>();
-
-            var leafs = new List<int>();
-            for (var i = 0; i < this._adjacencyList.NodeCount(); i++)
-            {
-                var node = this._adjacencyList[i];
-                if (node.Count == 1)
-                {
-                    leafs.Add(i);
-                }
-            }
-            foreach (var leaf in leafs)
-            {
-                var path = this.Traverse(leaf, next, out _);
-                var vertices = path.Select(i => allNodeLocations[i]).ToList();
-                Polygon poly = null;
-                try
-                {
-                    poly = new Polygon(vertices);
-                }
-                catch
-                {
-                    // This will happen for traversals of
-                    // straight edges.
-                    continue;
-                }
-                panels.Add(new Panel(poly, r.NextMaterial()));
-            }
-
-            return panels;
-        }
-
-        /// <summary>
         /// Traverse the network from the specified node index.
-        /// Traversal concludes when there are no more 
+        /// Traversal concludes when there are no more
         /// available nodes to traverse.
         /// </summary>
         /// <param name="start">The starting point of the traversal.</param>

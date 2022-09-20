@@ -265,40 +265,5 @@ namespace Elements.Tests
                 _output.WriteLine(string.Join(',', visited));
             }
         }
-
-        [Fact]
-        public void RevitWallsIntersectCorrectly()
-        {
-            var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
-            var model = Model.FromJson(json);
-            var walls = model.AllElementsOfType<WallByProfile>();
-            foreach (var wall in walls)
-            {
-                wall.Material = BuiltInMaterials.Mass;
-            }
-            Assert.Equal(4, walls.Count());
-            var network = Network<WallByProfile>.FromSegmentableItems(walls.ToList(),
-                                                                      (wall) => { return wall.Centerline; },
-                                                                      out var allNodeLocations,
-                                                                      out var allIntersectionLocations);
-
-            // var visSize = 0.02;
-            // foreach (var nodeLocation in allNodeLocations)
-            // {
-            //     var t = new Transform(new Vector3(nodeLocation.X, nodeLocation.Y, -visSize / 2));
-            //     model.AddElement(new Mass(Polygon.Rectangle(visSize, visSize), visSize, BuiltInMaterials.XAxis, transform: t));
-            // }
-
-            // foreach (var intersectionLocation in allIntersectionLocations)
-            // {
-            //     var t = new Transform(new Vector3(intersectionLocation.X, intersectionLocation.Y, -visSize / 2));
-            //     model.AddElement(new Mass(Polygon.Rectangle(visSize, visSize), visSize, BuiltInMaterials.ZAxis, transform: t));
-
-            // }
-            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.White));
-            model.AddElements(network.ToModelText(allNodeLocations, Colors.White));
-            model.AddElements(network.ToBoundedAreas(allNodeLocations));
-            model.ToGlTF("RevitIntersectingWalls.gltf", out _, false);
-        }
     }
 }
