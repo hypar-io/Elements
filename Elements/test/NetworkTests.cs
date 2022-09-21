@@ -1,6 +1,5 @@
 using Elements.Geometry;
 using Elements.Search;
-using Elements.Serialization.glTF;
 using Xunit;
 using System;
 using System.Collections.Generic;
@@ -319,7 +318,15 @@ namespace Elements.Tests
 
             model.AddElements(network.ToModelArrows(allNodeLocations, Colors.White));
             model.AddElements(network.ToModelText(allNodeLocations, Colors.White));
-            model.ToGlTF("RevitIntersectingWalls.gltf", out _, false);
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 3 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 4, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 1, 6, 7 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(6).Select(i => i.Item1), new List<int>() { 3 });
+            Assert.Equal(network.EdgesAt(7).Select(i => i.Item1), new List<int>() { 3 });
         }
     }
 }
