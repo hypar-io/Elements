@@ -53,10 +53,8 @@ namespace Elements.Spatial.AdaptiveGrid
                 wall.CenterLine.End - ortho * wall.Thickness / 2,
                 wall.CenterLine.Start - ortho * wall.Thickness / 2
             );
-            var transfrom = new Transform(Vector3.Origin,
-                wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
 
-            return new Obstacle(polygon, wall.Height, offset, addPerimeterEdges, allowOutsideBoundary, transfrom);
+            return new Obstacle(polygon, wall.Height, offset, addPerimeterEdges, allowOutsideBoundary, null);
         }
 
         /// <summary>
@@ -138,9 +136,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => Boundary?
-            .Vertices
-            .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
+        public List<Vector3> Points => _primaryPolygons?
+            .SelectMany(x => x.Vertices)
             .ToList() ?? new List<Vector3>();
 
         /// <summary>
