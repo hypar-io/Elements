@@ -800,7 +800,27 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 var newEdgeLine = new Line(sp, ep);
                 var oldEdgeLine = new Line(edgeV0.Point, edgeV1.Point);
-                if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint, includeEnds: true))
+                if (oldEdgeLine.PointOnLine(sp, tolerance: Tolerance))
+                {
+                    intersectionPoints.Add(sp);
+                    if (edge.StartId != startVertex.Id && edge.EndId != startVertex.Id)
+                    {
+                        AddInsertEdge(edge.StartId, startVertex.Id);
+                        AddInsertEdge(edge.EndId, startVertex.Id);
+                        edgesToRemove.Add(edge);
+                    }
+                }
+                else if (oldEdgeLine.PointOnLine(ep, tolerance: Tolerance))
+                {
+                    intersectionPoints.Add(ep);
+                    if (edge.StartId != endVertex.Id && edge.EndId != endVertex.Id)
+                    {
+                        AddInsertEdge(edge.StartId, endVertex.Id);
+                        AddInsertEdge(edge.EndId, endVertex.Id);
+                        edgesToRemove.Add(edge);
+                    }
+                }
+                else if (newEdgeLine.Intersects(oldEdgeLine, out var intersectionPoint, includeEnds: true))
                 {
                     intersectionPoints.Add(intersectionPoint);
                     var newVertex = AddVertex(intersectionPoint);
