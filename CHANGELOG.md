@@ -35,6 +35,7 @@
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
 - `LinearDimension`s now support `IOverrideLinked` behavior.
+- `Line.PointOnLine` - added `tolerance` parameter.
 
 ### Fixed
 
