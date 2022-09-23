@@ -1040,6 +1040,9 @@ namespace Elements.Spatial.AdaptiveGrid
                     var cutPoint = startPoint + hits[index].EdgeParam * (endPoint - startPoint).Unitized();
                     lastCut = CutEdge(hits[index].Edge, cutPoint);
                 }
+
+                double lastLineParam = hits[index].LineParam;
+
                 index++;
                 vertices.Add(lastCut);
 
@@ -1049,7 +1052,17 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (newCut != null)
                     {
                         vertices.Add(newCut);
+                        if (lastLineParam < -Tolerance && hits[index].LineParam > Tolerance)
+                        {
+                            var delta = newCut.Point - lastCut.Point;
+                            var t = (points[i] - lastCut.Point).Dot(delta.Unitized());
+                            if (t > 1e-3 && t < delta.Length() - 1e-3)
+                            {
+                                CutEdge(newCut.GetEdge(lastCut.Id), points[i]);
+                            }
+                        }
                         lastCut = newCut;
+                        lastLineParam = hits[index].LineParam;
                     }
                     index++;
                 }
@@ -1060,6 +1073,15 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (newCut != null)
                     {
                         vertices.Add(newCut);
+                        if (lastLineParam < segmentLength - Tolerance && hits[index].LineParam > segmentLength + Tolerance)
+                        {
+                            var delta = newCut.Point - lastCut.Point;
+                            var t = (points[i + 1] - lastCut.Point).Dot(delta.Unitized());
+                            if (t > 1e-3 && t < delta.Length() - 1e-3)
+                            {
+                                CutEdge(newCut.GetEdge(lastCut.Id), points[i + 1]);
+                            }
+                        }
                     }
                 }
             }

@@ -36,6 +36,7 @@
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
 - `LinearDimension`s now support `IOverrideLinked` behavior.
 - `Line.PointOnLine` - added `tolerance` parameter.
+- `AdaptiveGraphRouting.AddExtendVertices` - cut extended edges at end points of each segment
 
 ### Fixed
 
