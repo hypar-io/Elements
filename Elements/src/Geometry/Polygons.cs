@@ -93,7 +93,8 @@ namespace Elements.Geometry
         /// <param name="width">The width of the L.</param>
         /// <param name="length">The length of the L.</param>
         /// <param name="thickness">The thickness of the L.</param>
-        /// <returns></returns>
+        /// <returns>An L shaped polygon with the origin at the outer corner
+        /// of the bend in the L.</returns>
         public static Polygon L(double width, double length, double thickness)
         {
             if (thickness > length)
@@ -115,12 +116,40 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a U.
+        /// </summary>
+        /// <param name="width">The width of the U.</param>
+        /// <param name="length">The length of the U.</param>
+        /// <param name="thickness">The thickness of the U.</param>
+        /// <returns>A U shaped polygon with the origin at the center of
+        /// the inside bend of the U.</returns>
+        public static Polygon U(double width, double length, double thickness)
+        {
+            if (thickness >= width / 2)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
+            }
+
+            var a = new Vector3(0, 0, 0);
+            var b = new Vector3(width / 2 - thickness, 0);
+            var c = new Vector3(width / 2 - thickness, length - thickness);
+            var d = new Vector3(width / 2, length - thickness);
+            var e = new Vector3(width / 2, -thickness);
+            var f = new Vector3(-width / 2, -thickness);
+            var g = new Vector3(-width / 2, length - thickness);
+            var h = new Vector3(-width / 2 + thickness, length - thickness);
+            var i = new Vector3(-width / 2 + thickness, 0);
+            return new Polygon(true, a, b, c, d, e, f, g, h, i);
+        }
+
+        /// <summary>
         /// Create a star.
         /// </summary>
         /// <param name="outerRadius">The outer radius.</param>
         /// <param name="innerRadius">The inner radius.</param>
         /// <param name="points">The number of points.</param>
-        /// <returns></returns>
+        /// <returns>A star shaped polygon with the specified number of points
+        /// along the outer radius and their compliment along the inner radius.</returns>
         public static Polygon Star(double outerRadius, double innerRadius, int points)
         {
             var c1 = new Circle(Vector3.Origin, innerRadius);
