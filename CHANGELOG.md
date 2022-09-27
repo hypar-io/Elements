@@ -26,6 +26,7 @@
                                out Dictionary<Guid, List<Polygon>> intersectionPolygons,
                                out Dictionary<Guid, List<Polygon>> beyondPolygons,
                                out Dictionary<Guid, List<Line>> lines)`
+- `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
 
 ### Changed
 
