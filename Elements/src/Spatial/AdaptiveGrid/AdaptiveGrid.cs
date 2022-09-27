@@ -997,7 +997,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="points">Points to add and connect to the grid.</param>
         /// <param name="extendDistance">Distance at which lines are extended to existing edges.</param>
         /// <returns></returns>
-        private List<Vertex> AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)
+        public List<Vertex> AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)
         {
             List<Vertex> vertices = new List<Vertex>();
 
