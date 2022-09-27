@@ -67,7 +67,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         public double Tolerance { get; } = Vector3.EPSILON * 2;
 
-        public double HintSnapDistance { get; } = 5;
+        /// <summary>
+        /// Maximum distance for line segments of hints lines to extend to other existing edges.
+        /// </summary>
+        public double HintExtendDistance { get; set; } = 3;
 
         /// <summary>
         /// Transformation with which planar spaces are aligned
@@ -453,7 +456,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             if (method == VerticesInsertionMethod.ConnectCutAndExtend)
             {
-                return AddExtendVertices(points);
+                return AddVerticesWithCustomExtension(points, HintExtendDistance);
             }
 
             var vertices = new List<Vertex>();
@@ -988,10 +991,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Intersect points into grid and connect them into edges.
         /// New edges are intersected along intersection points.
-        /// End points of each segment are extended until the next hit on both sides.
+        /// End points of each segment are extended up to given distance until the next hit on both sides.
+        /// If not extended, point is connected to the grid at its position.
         /// </summary>
-        /// <param name="points"></param>
-        private List<Vertex> AddExtendVertices(IList<Vector3> points)
+        /// <param name="points">Points to add and connect to the grid.</param>
+        /// <param name="extendDistance">Distance at which lines are extended to existing edges.</param>
+        /// <returns></returns>
+        private List<Vertex> AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)
         {
             List<Vertex> vertices = new List<Vertex>();
 
@@ -1007,7 +1013,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
 
                 Vertex lastCut;
-                if (hits[index].LineParam < -HintSnapDistance)
+                if (hits[index].LineParam < -extendDistance)
                 {
                     lastCut = AddVertex(points[i]);
                 }
@@ -1044,7 +1050,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (index < hits.Count && !hits[index - 1].LineParam.ApproximatelyEquals(segmentLength, Tolerance))
                 {
                     Vertex finalCut;
-                    if (hits[index].LineParam > segmentLength + HintSnapDistance)
+                    if (hits[index].LineParam > segmentLength + extendDistance)
                     {
                         finalCut = AddVertex(points[i + 1]);
                         if (finalCut.Id != lastCut.Id)
