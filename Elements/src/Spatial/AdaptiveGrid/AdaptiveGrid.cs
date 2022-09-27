@@ -67,6 +67,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         public double Tolerance { get; } = Vector3.EPSILON * 2;
 
+        public double HintSnapDistance { get; } = 5;
+
         /// <summary>
         /// Transformation with which planar spaces are aligned
         /// </summary>
@@ -1005,7 +1007,11 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
 
                 Vertex lastCut;
-                if (hits[index].EdgeParam.ApproximatelyEquals(0, Tolerance))
+                if (hits[index].LineParam < -HintSnapDistance)
+                {
+                    lastCut = AddVertex(points[i]);
+                }
+                else if (hits[index].EdgeParam.ApproximatelyEquals(0, Tolerance))
                 {
                     lastCut = GetVertex(hits[index].Edge.StartId);
                 }
@@ -1021,8 +1027,6 @@ namespace Elements.Spatial.AdaptiveGrid
                     lastCut = CutEdge(hits[index].Edge, cutPoint);
                 }
 
-                double lastLineParam = hits[index].LineParam;
-
                 index++;
                 vertices.Add(lastCut);
 
@@ -1032,36 +1036,30 @@ namespace Elements.Spatial.AdaptiveGrid
                     if (newCut != null)
                     {
                         vertices.Add(newCut);
-                        if (lastLineParam < -Tolerance && hits[index].LineParam > Tolerance)
-                        {
-                            var delta = newCut.Point - lastCut.Point;
-                            var t = (points[i] - lastCut.Point).Dot(delta.Unitized());
-                            if (t > 1e-3 && t < delta.Length() - 1e-3)
-                            {
-                                CutEdge(newCut.GetEdge(lastCut.Id), points[i]);
-                            }
-                        }
                         lastCut = newCut;
-                        lastLineParam = hits[index].LineParam;
                     }
                     index++;
                 }
 
                 if (index < hits.Count && !hits[index - 1].LineParam.ApproximatelyEquals(segmentLength, Tolerance))
                 {
-                    var newCut = InsertHit(hits[index], lastCut);
-                    if (newCut != null)
+                    Vertex finalCut;
+                    if (hits[index].LineParam > segmentLength + HintSnapDistance)
                     {
-                        vertices.Add(newCut);
-                        if (lastLineParam < segmentLength - Tolerance && hits[index].LineParam > segmentLength + Tolerance)
+                        finalCut = AddVertex(points[i + 1]);
+                        if (finalCut.Id != lastCut.Id)
                         {
-                            var delta = newCut.Point - lastCut.Point;
-                            var t = (points[i + 1] - lastCut.Point).Dot(delta.Unitized());
-                            if (t > 1e-3 && t < delta.Length() - 1e-3)
-                            {
-                                CutEdge(newCut.GetEdge(lastCut.Id), points[i + 1]);
-                            }
+                            AddInsertEdge(lastCut.Id, finalCut.Id);
                         }
+                    }
+                    else
+                    {
+                        finalCut = InsertHit(hits[index], lastCut);
+                    }
+
+                    if (finalCut != null)
+                    {
+                        vertices.Add(finalCut);
                     }
                 }
             }
