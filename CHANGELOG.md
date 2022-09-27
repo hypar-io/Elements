@@ -26,6 +26,8 @@
                                out Dictionary<Guid, List<Polygon>> intersectionPolygons,
                                out Dictionary<Guid, List<Polygon>> beyondPolygons,
                                out Dictionary<Guid, List<Line>> lines)`
+- `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
+- `AdaptiveGrid.HintExtendDistance`
 
 ### Changed
 
@@ -36,7 +38,7 @@
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
 - `LinearDimension`s now support `IOverrideLinked` behavior.
 - `Line.PointOnLine` - added `tolerance` parameter.
-- `AdaptiveGrid.AddExtendVertices` - cut extended edges at end points of each segment.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
 -  Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
 
 ### Fixed
