@@ -43,6 +43,7 @@
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
+- `Profile.Split` would fail if the perimeter was clockwise-wound.
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
 - `Obstacle.FromWall` was failing when producing a polygon.
 - GLTF creation does not include elements with custom buffers if they are `IsElementDefinition=true`.
