@@ -269,7 +269,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            if (obstacle.Perimeter && edgesToAdd.Any())
+            if (obstacle.AddPerimeterEdges && edgesToAdd.Any())
             {
                 var corners = localBox.Corners().Take(4).Select(c => frame.OfPoint(c)).ToList();
                 var intersectionsByElevations = edgesToAdd.GroupBy(
@@ -282,10 +282,10 @@ namespace Elements.Spatial.AdaptiveGrid
                     var cornersAtElevation = corners.Select(
                         c => c.ProjectAlong(frame.ZAxis, plane)).ToList();
 
-                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections);
-                    AddEdgesOnLine(cornersAtElevation[1], cornersAtElevation[2], intersections);
-                    AddEdgesOnLine(cornersAtElevation[2], cornersAtElevation[3], intersections);
-                    AddEdgesOnLine(cornersAtElevation[3], cornersAtElevation[0], intersections);
+                    AddEdgesOnLine(cornersAtElevation[0], cornersAtElevation[1], intersections, obstacle.AllowOutsideBoudary);
+                    AddEdgesOnLine(cornersAtElevation[1], cornersAtElevation[2], intersections, obstacle.AllowOutsideBoudary);
+                    AddEdgesOnLine(cornersAtElevation[2], cornersAtElevation[3], intersections, obstacle.AllowOutsideBoudary);
+                    AddEdgesOnLine(cornersAtElevation[3], cornersAtElevation[0], intersections, obstacle.AllowOutsideBoudary);
 
                     foreach (var item in group)
                     {
@@ -949,9 +949,9 @@ namespace Elements.Spatial.AdaptiveGrid
             return addedEdges;
         }
 
-        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates)
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowEdgesOutsideBoudnary)
         {
-            if (Boundaries != null)
+            if (Boundaries != null && !allowEdgesOutsideBoudnary)
             {
                 var boundary2d = new Polygon(Boundaries.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
                 var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(boundary2d, out var _);

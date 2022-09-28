@@ -11,7 +11,21 @@
 - `Ray.NearbyPoints()`
 - `PointOctree<T>`
 - `Message` class along with helper creation methods.
+- `AdaptiveGrid.Obstacle.AllowOutsideBoundary` property
+- `AdaptiveGrid.Obstacle.Intersects(Polyline polyline, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.Intersects(Line line, double tolerance = 1e-05)` method
+- `AdaptiveGrid.Obstacle.IsInside(Vector3 point, double tolerance = 1e-05)` method
 - `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
+- `Polygons.U`
+- `Network.FindAllClosedRegions(List<Vector3> allNodeLocations)`
+- `Network.TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges,
+                                               Network<T> network)`
+- `GeometricElement.Intersects(Plane plane,
+                               out Dictionary<Guid, List<Polygon>> intersectionPolygons,
+                               out Dictionary<Guid, List<Polygon>> beyondPolygons,
+                               out Dictionary<Guid, List<Line>> lines)`
 
 ### Changed
 
@@ -28,8 +42,11 @@
 - `Obstacle.FromBox` works properly with `AdaptiveGrid` transformation.
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
-- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter 
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
 - `Profile.Split` would fail if the perimeter was clockwise-wound.
+- `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
+- `Obstacle.FromWall` was failing when producing a polygon.
+- GLTF creation does not include elements with custom buffers if they are `IsElementDefinition=true`.
 
 ## 1.1.0
 

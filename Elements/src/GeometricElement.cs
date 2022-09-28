@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using Elements.Search;
+using Elements.Spatial;
 using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
@@ -20,6 +24,14 @@ namespace Elements
     {
         internal BBox3 _bounds;
         internal Csg.Solid _csg;
+
+        /// <summary>
+        /// The element's bounds.
+        /// The bounds are only available when the geometry has been
+        /// updated using UpdateBoundsAndComputeSolid(),
+        /// </summary>
+        [JsonIgnore]
+        public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
         [JsonProperty("Transform", Required = Required.AllowNull)]
@@ -78,7 +90,7 @@ namespace Elements
         /// <summary>
         /// Update the computed solid and the bounding box of the element.
         /// </summary>
-        public void UpdateBoundsAndComputeSolid()
+        public void UpdateBoundsAndComputeSolid(bool transformed = false)
         {
             if (Transform != null)
             {
@@ -88,7 +100,7 @@ namespace Elements
                     throw new ArgumentOutOfRangeException($"A solid cannot be created for elements {Id}. One or more components of the element's transform has a scale equal to zero.");
                 }
             }
-            _csg = GetFinalCsgFromSolids();
+            _csg = GetFinalCsgFromSolids(transformed);
             if (_csg == null)
             {
                 return;
@@ -138,6 +150,158 @@ namespace Elements
         public bool HasGeometry()
         {
             return Representation != null && Representation.SolidOperations != null && Representation.SolidOperations.Count > 0;
+        }
+
+        /// <summary>
+        /// Does this element intersect the provided plane?
+        /// </summary>
+        /// <param name="plane">The plane of intersection.</param>
+        /// <param name="intersectionPolygons">A collection of polygons representing
+        /// the intersections of the plane and the element's solid geometry.</param>
+        /// <param name="beyondPolygons">A collection of polygons representing coplanar 
+        /// faces beyond the plane of intersection.</param>
+        /// <param name="lines">A collection of lines representing intersections
+        /// of zero-thickness elements with the plane.</param>
+        /// <returns>True if an intersection occurs, otherwise false.</returns>
+        public bool Intersects(Plane plane,
+                               out Dictionary<Guid, List<Polygon>> intersectionPolygons,
+                               out Dictionary<Guid, List<Polygon>> beyondPolygons,
+                               out Dictionary<Guid, List<Line>> lines)
+        {
+            beyondPolygons = new Dictionary<Guid, List<Polygon>>();
+            intersectionPolygons = new Dictionary<Guid, List<Polygon>>();
+            lines = new Dictionary<Guid, List<Line>>();
+
+            if (Representation == null)
+            {
+                return false;
+            }
+
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+            // TODO: Can we avoid this copy? It seems to be the most straightforward
+            // way to get the csg transformed for sectioning.
+            var localCsg = _csg.Transform(Transform.ToMatrix4x4());
+            foreach (var csgPoly in localCsg.Polygons)
+            {
+                var csgNormal = csgPoly.Plane.Normal.ToVector3();
+
+                if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
+                {
+                    // TODO: We can cut out transformation if the element's transform is null.
+                    var backPoly = csgPoly.Project(plane);
+                    if (!beyondPolygons.ContainsKey(Id))
+                    {
+                        beyondPolygons[Id] = new List<Polygon>() { backPoly };
+                    }
+                    else
+                    {
+                        beyondPolygons[Id].Add(backPoly);
+                    }
+
+                    continue;
+                }
+
+                var edgeResults = new List<Vector3>();
+                for (var i = 0; i < csgPoly.Vertices.Count; i++)
+                {
+                    var a = csgPoly.Vertices[i].Pos.ToVector3();
+                    var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
+                    if (plane.Intersects((a, b), out var xsect))
+                    {
+                        edgeResults.Add(xsect);
+                    }
+                }
+
+                if (edgeResults.Count < 2)
+                {
+                    continue;
+                }
+
+                var d = csgNormal.Cross(plane.Normal).Unitized();
+                edgeResults.Sort(new DirectionComparer(d));
+
+                // Draw segments through the results and add to the 
+                // half edge graph.
+                for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                {
+                    // Don't create zero-length edges.
+                    if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
+                    {
+                        continue;
+                    }
+
+                    var a = Solid.FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
+                    var b = Solid.FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
+                    var e1 = (a, b, 0);
+                    var e2 = (b, a, 0);
+                    if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        graphEdges[a].Add(e1);
+                    }
+                }
+            }
+
+            var heg = new HalfEdgeGraph2d()
+            {
+                Vertices = graphVertices,
+                EdgesPerVertex = graphEdges
+            };
+
+            try
+            {
+                // Elements with zero thickness sections.
+                if (heg.Vertices.Count == 2)
+                {
+                    // TODO: We're over-drawing here because we have edges
+                    // that are from->to and to->from.
+                    foreach (var edges in heg.EdgesPerVertex)
+                    {
+                        foreach (var (from, to, tag) in edges)
+                        {
+                            var start = heg.Vertices[from];
+                            var end = heg.Vertices[to];
+                            var line = new Line(start, end);
+                            if (!lines.ContainsKey(Id))
+                            {
+                                lines[Id] = new List<Geometry.Line>() { line };
+                            }
+                            else
+                            {
+                                lines[Id].Add(line);
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+                var rebuiltPolys = heg.Polygonize();
+                if (rebuiltPolys == null || rebuiltPolys.Count == 0)
+                {
+                    return false;
+                }
+
+                if (!intersectionPolygons.ContainsKey(Id))
+                {
+                    intersectionPolygons[Id] = new List<Polygon>(rebuiltPolys);
+                }
+                else
+                {
+                    intersectionPolygons[Id].AddRange(rebuiltPolys);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         /// <summary>
