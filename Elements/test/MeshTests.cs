@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elements.Tests
@@ -46,13 +47,13 @@ namespace Elements.Tests
 
         public class InputsWithMesh
         {
-            [Newtonsoft.Json.JsonConstructor]
+            [JsonConstructor]
             public InputsWithMesh(Mesh @mesh, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey)
             {
                 this.Mesh = @mesh;
             }
 
-            [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [JsonProperty("Mesh", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public Mesh Mesh { get; set; }
         }
     }

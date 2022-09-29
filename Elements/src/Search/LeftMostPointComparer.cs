@@ -10,7 +10,7 @@ namespace Elements.Search
     /// </summary>
     internal class LeftMostPointComparer<T> : IComparer<T>
     {
-        private Func<T, Line> _getSegment;
+        private readonly Func<T, Line> _getSegment;
 
         /// <summary>
         /// Construct a left most point comparer.
@@ -58,15 +58,15 @@ namespace Elements.Search
             }
             else
             {
+                if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
+                {
+                    return 0;
+                }
                 if (aLeft.Y > bLeft.Y)
                 {
                     return -1;
                 }
-                else if (aLeft.Y < bLeft.Y)
-                {
-                    return 1;
-                }
-                return 0;
+                return 1;
             }
         }
     }

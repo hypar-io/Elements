@@ -11,6 +11,7 @@ using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
+using System.IO;
 
 namespace Elements
 {
@@ -20,16 +21,16 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
@@ -39,10 +40,13 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
+
+#pragma warning disable CS0618
             this.Origin = @origin;
+#pragma warning restore CS0618
             this.Transform = @transform;
             this.Elements = @elements;
         }
@@ -92,9 +96,9 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement)
+            if (element is GeometricElement element1)
             {
-                ((GeometricElement)element).UpdateRepresentations();
+                element1.UpdateRepresentations();
             }
 
             if (gatherSubElements)
@@ -180,19 +184,77 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all entities of the specified Type.
+        /// Get all elements of the type T.
         /// </summary>
-        /// <typeparam name="T">The Type of element to return.</typeparam>
+        /// <typeparam name="T">The type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> AllElementsOfType<T>()
+        public IEnumerable<T> AllElementsOfType<T>() where T : Element
         {
-            return this.Elements.Values.OfType<T>();
+            return Elements.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Get all elements assignable from type T. This will include
+        /// types which derive from T and types which implement T if T 
+        /// is an interface.
+        /// </summary>
+        /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
+        /// <returns>A collection of elements derived from the specified type.</returns>
+        public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
+        {
+            return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }
 
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
+        public string ToJson(bool indent = false, bool gatherSubElements = true)
+        {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        }
+
+        /// <summary>
+        /// Serialize the model to JSON using default arguments.
+        /// </summary>
+        public string ToJson()
+        {
+            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
+            return ToJson(false, true);
+        }
+
+        /// <summary>
+        /// Serialize the model to JSON to match default arguments.
+        /// TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.
+        /// </summary>
         public string ToJson(bool indent = false)
+        {
+            return ToJson(indent, true);
+        }
+
+        /// <summary>
+        /// Serialize the model to a JSON file.
+        /// </summary>
+        /// <param name="path">The path of the file on disk.</param>
+        /// <param name="gatherSubElements"></param>
+        public void ToJson(string path, bool gatherSubElements = true)
+        {
+            var exportModel = CreateExportModel(gatherSubElements);
+
+            // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
+            // https://www.newtonsoft.com/json/help/html/Performance.htm
+            using (FileStream s = File.Create(path))
+            using (StreamWriter writer = new StreamWriter(s))
+            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, exportModel);
+                jsonWriter.Flush();
+            }
+        }
+
+        internal Model CreateExportModel(bool gatherSubElements)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
@@ -201,11 +263,10 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                exportModel.AddElement(kvp.Value);
+                exportModel.AddElement(kvp.Value, gatherSubElements);
             }
             exportModel.Transform = this.Transform;
-            return Newtonsoft.Json.JsonConvert.SerializeObject(exportModel,
-                                                           indent ? Formatting.Indented : Formatting.None);
+            return exportModel;
         }
 
         /// <summary>
@@ -246,6 +307,15 @@ namespace Elements
 
         private List<Element> RecursiveGatherSubElements(object obj)
         {
+            // A dictionary created for the purpose of caching properties
+            // that we need to recurse, for types that we've seen before.
+            var props = new Dictionary<Type, List<PropertyInfo>>();
+
+            return RecursiveGatherSubElementsInternal(obj, props);
+        }
+
+        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        {
             var elements = new List<Element>();
 
             if (obj == null)
@@ -272,8 +342,19 @@ namespace Elements
                 return elements;
             }
 
-            var props = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => !p.GetCustomAttributes<JsonIgnoreAttribute>().Any());
-            var constrainedProps = props.Where(p => IsValidForRecursiveAddition(p.PropertyType));
+            List<PropertyInfo> constrainedProps;
+            if (properties.ContainsKey(t))
+            {
+                constrainedProps = properties[t];
+            }
+            else
+            {
+                // This query had a nice little speed boost when we filtered for
+                // valid types first then filtered for custom attributes.
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
+                properties.Add(t, constrainedProps);
+            }
+
             foreach (var p in constrainedProps)
             {
                 try
@@ -284,28 +365,26 @@ namespace Elements
                         continue;
                     }
 
-                    var elems = pValue as IList;
-                    if (elems != null)
+                    if (pValue is IList elems)
                     {
                         foreach (var item in elems)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(item));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties));
                         }
                         continue;
                     }
 
                     // Get the properties dictionaries.
-                    var dict = pValue as IDictionary;
-                    if (dict != null)
+                    if (pValue is IDictionary dict)
                     {
                         foreach (var value in dict.Values)
                         {
-                            elements.AddRange(RecursiveGatherSubElements(value));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties));
                         }
                         continue;
                     }
 
-                    elements.AddRange(RecursiveGatherSubElements(pValue));
+                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties));
                 }
                 catch (Exception ex)
                 {

@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
+    public class JsonInheritanceConverter : JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
 
@@ -64,7 +64,7 @@ namespace Elements.Serialization.JSON
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
         /// We use reflection to find all public types available in the app domain
-        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the
+        /// that have a JsonConverterAttribute whose converter type is the
         /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
@@ -144,17 +144,17 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
+                if (value is Element element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
                 {
-                    var ident = (Element)value;
+                    var ident = element;
                     writer.WriteValue(ident.Id);
                 }
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
-                    if (jObject.TryGetValue(_discriminator, out _))
+                    if (jObject.TryGetValue(_discriminator, out JToken token))
                     {
-                        jObject[_discriminator] = GetDiscriminatorName(value);
+                        ((JValue)token).Value = GetDiscriminatorName(value);
                     }
                     else
                     {
@@ -171,14 +171,15 @@ namespace Elements.Serialization.JSON
 
         private static string GetDiscriminatorName(object value)
         {
-            var discriminatorName = "";
             var t = value.GetType();
-            discriminatorName += t.FullName.Split('`').First();
             if (t.IsGenericType)
             {
-                discriminatorName += "<" + String.Join(",", t.GenericTypeArguments.Select(arg => arg.FullName)) + ">";
+                return $"{t.FullName.Split('`').First()}<{String.Join(",", t.GenericTypeArguments.Select(arg => arg.FullName))}>";
             }
-            return discriminatorName;
+            else
+            {
+                return t.FullName.Split('`').First();
+            }
         }
 
         public override bool CanWrite
@@ -233,15 +234,12 @@ namespace Elements.Serialization.JSON
             // converter, and the case where the JSON does not have a discriminator,
             // but the type is known during deserialization.
             Type subtype;
-            JToken discriminatorToken;
             string discriminator = null;
-            jObject.TryGetValue(_discriminator, out discriminatorToken);
+            jObject.TryGetValue(_discriminator, out JToken discriminatorToken);
             if (discriminatorToken != null)
             {
                 discriminator = Newtonsoft.Json.Linq.Extensions.Value<string>(discriminatorToken);
                 subtype = GetObjectSubtype(objectType, discriminator, jObject);
-
-                var objectContract = serializer.ContractResolver.ResolveContract(subtype) as Newtonsoft.Json.Serialization.JsonObjectContract;
             }
             else
             {
@@ -309,7 +307,7 @@ namespace Elements.Serialization.JSON
 
             // If it's not in the type cache see if it's got a representation.
             // Import it as a GeometricElement.
-            if (jObject.TryGetValue("Representation", out JToken representationToken))
+            if (jObject.TryGetValue("Representation", out _))
             {
                 return typeof(GeometricElement);
             }

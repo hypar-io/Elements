@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonInheritanceConverter
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -82,38 +91,13 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">Newtonsoft.Json.JsonConverter</span></div>
-    <div class="level2"><span class="xref">JsonInheritanceConverter</span></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
+    <div class="level1"><span class="xref">JsonInheritanceConverter</span></div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Serialization.JSON.html">Elements.Serialization.JSON</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Serialization_JSON_JsonInheritanceConverter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonInheritanceConverter : JsonConverter</code></pre>
+    <pre><code class="lang-csharp hljs">public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -175,8 +159,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Newtonsoft.Json.JsonConverter.CanRead</span></div>
   <a id="Elements_Serialization_JSON_JsonInheritanceConverter_CanWrite_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.CanWrite*"></a>
   <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_CanWrite" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.CanWrite">CanWrite</h4>
   <div class="markdown level1 summary"></div>
@@ -200,8 +182,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Newtonsoft.Json.JsonConverter.CanWrite</span></div>
   <a id="Elements_Serialization_JSON_JsonInheritanceConverter_Elements_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.Elements*"></a>
   <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_Elements" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.Elements">Elements</h4>
   <div class="markdown level1 summary"></div>
@@ -290,15 +270,13 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Newtonsoft.Json.JsonConverter.CanConvert(System.Type)</span></div>
   <a id="Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson*"></a>
-  <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">ReadJson(JsonReader, Type, Object, JsonSerializer)</h4>
+  <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_ReadJson_Newtonsoft_Json_JsonReader_System_Type_System_Object_Newtonsoft_Json_JsonSerializer_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">ReadJson(Newtonsoft.Json.JsonReader, Type, Object, Newtonsoft.Json.JsonSerializer)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -347,15 +325,13 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Newtonsoft.Json.JsonConverter.ReadJson(Newtonsoft.Json.JsonReader, System.Type, System.Object, Newtonsoft.Json.JsonSerializer)</span></div>
   <a id="Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson*"></a>
-  <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">WriteJson(JsonWriter, Object, JsonSerializer)</h4>
+  <h4 id="Elements_Serialization_JSON_JsonInheritanceConverter_WriteJson_Newtonsoft_Json_JsonWriter_System_Object_Newtonsoft_Json_JsonSerializer_" data-uid="Elements.Serialization.JSON.JsonInheritanceConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">WriteJson(Newtonsoft.Json.JsonWriter, Object, Newtonsoft.Json.JsonSerializer)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -384,8 +360,6 @@
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">Newtonsoft.Json.JsonConverter.WriteJson(Newtonsoft.Json.JsonWriter, System.Object, Newtonsoft.Json.JsonSerializer)</span></div>
 </article>
           </div>
           

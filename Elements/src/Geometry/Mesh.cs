@@ -14,16 +14,16 @@ namespace Elements.Geometry
     /// A triangle mesh.
     /// </summary>
     [JsonConverter(typeof(MeshConverter))]
-    public class Mesh
+    public partial class Mesh
     {
         private PointOctree<Vertex> _octree = new PointOctree<Vertex>(100000, new Octree.Point(0f, 0f, 0f), (float)Vector3.EPSILON);
 
         /// <summary>The mesh' vertices.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Vertex> Vertices { get; set; }
 
         /// <summary>The mesh' triangles.</summary>
-        [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Triangles", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">The vertices of the mesh.</param>
         /// <param name="triangles">The triangles of the mesh.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Mesh(IList<Vertex> @vertices, IList<Triangle> @triangles)
         {
             this.Vertices = @vertices;

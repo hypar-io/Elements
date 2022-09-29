@@ -26,7 +26,7 @@ namespace Elements.Geometry.Solids
         /// <param name="id"></param>
         /// <param name="from">The start Vertex of the Edge.</param>
         /// <param name="to">The end Vertex of the Edge.</param>
-        internal Edge(long id, Vertex from, Vertex to)
+        public Edge(long id, Vertex from, Vertex to)
         {
             this.Id = id;
             this.Left = new HalfEdge(this, from);

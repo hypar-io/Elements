@@ -16,35 +16,49 @@ namespace Elements
         /// </summary>
         /// <param name="curve">The beam's center line.</param>
         /// <param name="profile">The beam's profile.</param>
-        /// <param name="material">The beam's material.</param>
-        /// <param name="startSetback">The setback of the beam's geometry at the start.</param>
-        /// <param name="endSetback">The setback of the beam's geometry at the end.</param>
-        /// <param name="rotation">An optional rotation of the beam's cross section around it's axis.</param>
         /// <param name="transform">The beam's transform.</param>
+        /// <param name="material">The beam's material.</param>
+        /// <param name="representation">The beam's representation.</param>
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the transform.</param>
         /// <param name="name">The name of the transform.</param>
         public Beam(Curve curve,
                     Profile profile,
-                    Material material = null,
-                    double startSetback = 0.0,
-                    double endSetback = 0.0,
-                    double rotation = 0.0,
                     Transform transform = null,
+                    Material material = null,
+                    Representation representation = null,
                     bool isElementDefinition = false,
-                    Guid id = default(Guid),
-                    string name = null)
-            : base(curve,
-                   profile,
-                   material,
-                   startSetback,
-                   endSetback,
-                   rotation,
-                   transform,
-                   null,
-                   isElementDefinition,
-                   id,
-                   name)
+                    Guid id = default,
+                    string name = null) : base(curve, profile, material, 0, 0, 0, transform, representation, isElementDefinition, id, name)
         { }
+
+        /// <summary>
+        /// Construct a beam.
+        /// </summary>
+        /// <param name="curve">The beam's center line.</param>
+        /// <param name="profile">The beam's profile.</param>
+        /// <param name="startSetback">The setback of the beam's geometry at the start.</param>
+        /// <param name="endSetback">The setback of the beam's geometry at the end.</param>
+        /// <param name="rotation">An optional rotation of the beam's cross section around it's axis.</param>
+        /// <param name="transform">The beam's transform.</param>
+        /// <param name="material">The beam's material.</param>
+        /// <param name="representation">The beam's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        /// <param name="id">The id of the transform.</param>
+        /// <param name="name">The name of the transform.</param>
+        public Beam(Curve curve,
+                    Profile profile,
+                    double startSetback,
+                    double endSetback,
+                    double rotation,
+                    Transform transform = null,
+                    Material material = null,
+                    Representation representation = null,
+                    bool isElementDefinition = false,
+                    Guid id = default,
+                    string name = null) : base(curve, profile, material, startSetback, endSetback, rotation, transform, representation, isElementDefinition, id, name)
+        { }
+
+        public Beam() { }
     }
 }

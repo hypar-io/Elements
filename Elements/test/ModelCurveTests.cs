@@ -47,6 +47,40 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ModelCurveWithLineWeights()
+        {
+            this.Name = nameof(ModelCurveWithLineWeights);
+
+            // <example>
+            // A line
+            var line = new Line(Vector3.Origin, new Vector3(5, 5, 5));
+
+            // An arc
+            var arc = new Arc(Vector3.Origin, 2.0, 45.0, 135.0);
+
+            // A polygon
+            var pline = Polygon.L(2, 2, 0.5);
+
+            // A Bezier
+            var a = Vector3.Origin;
+            var b = new Vector3(5, 0, 1);
+            var c = new Vector3(5, 5, 2);
+            var d = new Vector3(0, 5, 3);
+            var e = new Vector3(0, 0, 4);
+            var f = new Vector3(5, 0, 5);
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
+            var bezier = new Bezier(ctrlPts);
+
+            var lineModelCurve = new ModelCurve(line, new Material("Red", Colors.Red) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 5 } });
+            var arcModelCurve = new ModelCurve(arc, new Material("Orange", Colors.Orange) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 0.1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(5, 0, 0));
+            var plineModelCurve = new ModelCurve(pline, new Material("Purple", Colors.Purple) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 10, WidthMode = EdgeDisplayWidthMode.ScreenUnits } }, new Transform(10, 0, 0));
+            var bezierModelCurve = new ModelCurve(bezier, new Material("Green", Colors.Green) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(15, 0, 0));
+            // </example>
+
+            this.Model.AddElements(new[] { lineModelCurve, arcModelCurve, plineModelCurve, bezierModelCurve });
+        }
+
+        [Fact]
         public void OffsetModelCurves()
         {
             this.Name = "OffsetModelCurves";
@@ -123,11 +157,12 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void BBoxToCurves() {
+        public void BBoxToCurves()
+        {
             Name = "BBoxToCurves";
             var star = Polygon.Star(10, 4, 5);
             var flatbbox = new BBox3(star.Vertices);
-            var bbox = new BBox3(new Vector3(4,2,5), new Vector3(10, 8, 14));
+            var bbox = new BBox3(new Vector3(4, 2, 5), new Vector3(10, 8, 14));
             var crvs = bbox.ToModelCurves();
             Model.AddElements(crvs);
             var flatCrvs = flatbbox.ToModelCurves();

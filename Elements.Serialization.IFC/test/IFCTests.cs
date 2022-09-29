@@ -16,7 +16,7 @@ namespace Elements.IFC.Tests
 
         private readonly ITestOutputHelper output;
 
-        private WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
+        private readonly WideFlangeProfileFactory _profileFactory = new WideFlangeProfileFactory();
 
         public IfcTests(ITestOutputHelper output)
         {
@@ -32,8 +32,7 @@ namespace Elements.IFC.Tests
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void IFC4(string name, string ifcPath)
         {
-            var ctorErrors = new List<string>();
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors);
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors);
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
@@ -49,8 +48,7 @@ namespace Elements.IFC.Tests
         [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
         public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
         {
-            var ctorErrors = new List<string>();
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors, idsToConvert);
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors, idsToConvert);
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
@@ -100,8 +98,7 @@ namespace Elements.IFC.Tests
             model.ToIFC(ifcPath);
             model.ToGlTF(ConstructGlbPath("IfcFloor"));
 
-            var ctorErrors = new List<string>();
-            var newModel = IFCModelExtensions.FromIFC(ifcPath, out ctorErrors);
+            var newModel = IFCModelExtensions.FromIFC(ifcPath, out var ctorErrors);
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
@@ -133,12 +130,11 @@ namespace Elements.IFC.Tests
                 for (var i = 0; i < colA.Count; i++)
                 {
                     var a = colA[i];
-                    Vector3 b = default(Vector3);
                     if (i + 1 < colA.Count)
                     {
-                        b = colA[i + 1];
+                        Vector3 b = colA[i + 1];
                         var line1 = new Line(a, b);
-                        var beam1 = new Beam(line1, prof, m1);
+                        var beam1 = new Beam(line1, prof, material: m1, name: $"Hypar's beam {j}_{i}");
                         model.AddElement(beam1);
                     }
 
@@ -146,7 +142,7 @@ namespace Elements.IFC.Tests
                     {
                         var c = colB[i];
                         var line2 = new Line(a, c);
-                        var beam2 = new Beam(line2, prof, m2);
+                        var beam2 = new Beam(line2, prof, material: m2);
                         model.AddElement(beam2);
                     }
                 }

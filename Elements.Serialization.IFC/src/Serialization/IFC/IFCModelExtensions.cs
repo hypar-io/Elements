@@ -147,7 +147,8 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model"></param>
         /// <param name="path">The path to the generated IFC STEP file.</param>
-        public static void ToIFC(this Model model, string path)
+        /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public static void ToIFC(this Model model, string path, bool updateElementsRepresentation = true)
         {
             var ifc = new Document("Elements", "Elements", Environment.UserName,
                                     null, null, null, "Elements", null, null,
@@ -258,7 +259,7 @@ namespace Elements.Serialization.IFC
             {
                 try
                 {
-                    products.AddRange(e.ToIfcProducts(context, ifc, styleAssignments));
+                    products.AddRange(e.ToIfcProducts(context, ifc, styleAssignments, updateElementsRepresentation));
                 }
                 catch (Exception ex)
                 {

@@ -70,6 +70,8 @@ namespace Elements
             this.UpdateRepresentations();
         }
 
+        public StructuralFraming() { }
+
         private void SetProperties(Curve curve,
                                    Profile profile,
                                    double startSetback,

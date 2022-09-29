@@ -307,6 +307,99 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Union()
+        {
+            this.Name = nameof(Union);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var s = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(28, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void Difference()
+        {
+            this.Name = nameof(Difference);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+            var s = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(15, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void Intersection()
+        {
+            this.Name = nameof(Intersection);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var s = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+
+            Assert.Equal(12, s.Faces.Count);
+
+            var i = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s) }));
+            this.Model.AddElement(i);
+        }
+
+        [Fact]
+        public void AllBooleans()
+        {
+            this.Name = nameof(AllBooleans);
+
+            CreateTestSolids(out GeometricElement a, out GeometricElement b);
+
+            var t1 = new Transform(new Vector3(10, 0));
+            var t2 = new Transform(new Vector3(15, 0));
+            var s1 = Solid.Union(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s2 = Solid.Difference(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var s3 = Solid.Intersection(a.Representation.SolidOperations[0], b.Representation.SolidOperations[0]);
+            var i1 = new GeometricElement(null, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s1) }));
+            var i2 = new GeometricElement(t1, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s2) }));
+            var i3 = new GeometricElement(t2, BuiltInMaterials.Steel, new Representation(new List<SolidOperation> { new ConstructedSolid(s3) }));
+
+            this.Model.AddElements(DrawEdges(s1, null));
+            this.Model.AddElements(DrawEdges(s2, t1));
+            this.Model.AddElements(DrawEdges(s3, t2));
+            this.Model.AddElements(i1, i2, i3);
+        }
+
+        private static List<ModelCurve> DrawEdges(Solid s, Transform t)
+        {
+            var modelCurves = new List<ModelCurve>();
+            foreach (var e in s.Edges)
+            {
+                var from = e.Value.Right.Vertex.Point;
+                var to = e.Value.Left.Vertex.Point;
+                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+            }
+            return modelCurves;
+        }
+
+        private static void CreateTestSolids(out GeometricElement a, out GeometricElement b)
+        {
+            var r = new Transform();
+            r.Move(2.5, 2.5, 2.5);
+            a = new Mass(Polygon.Rectangle(5, 5), 5);
+            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+
+            a.UpdateRepresentations();
+            b.UpdateRepresentations();
+
+            var rotate = new Transform();
+            rotate.Rotate(Vector3.XAxis, 15);
+            b.Representation.SolidOperations[0].LocalTransform = rotate;
+        }
+
+        [Fact]
         public void SolidIntersectsWithPlane()
         {
             this.Name = nameof(SolidIntersectsWithPlane);
@@ -436,6 +529,204 @@ namespace Elements.Tests
                 var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
                 this.Model.AddElement(solidElement);
             }
+        }
+
+        [Fact]
+        public void CoplanarSolidFacesUnionCorrectly()
+        {
+            this.Name = nameof(CoplanarSolidFacesUnionCorrectly);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(2, 2).TransformedPolygon(new Transform(new Vector3(1, 1))), 2, Vector3.ZAxis, false);
+            var result = Solid.Union(s1._solid, null, s2._solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+            this.Model.AddElements(DrawEdges(result, null));
+
+            Assert.Equal(10, result.Faces.Count);
+
+            var t = new Transform(new Vector3(5, 0));
+            var result1 = Solid.Difference(s1._solid, t, s2._solid, t);
+            var rep1 = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement1 = new GeometricElement(representation: rep1);
+            this.Model.AddElement(solidElement1);
+            this.Model.AddElements(DrawEdges(result1, null));
+
+            Assert.Equal(8, result1.Faces.Count);
+
+            var t1 = new Transform(new Vector3(10, 0));
+            var result2 = Solid.Intersection(s1._solid, t1, s2._solid, t1);
+            var rep2 = new Representation(new List<SolidOperation>() { new ConstructedSolid(result2) });
+            var solidElement2 = new GeometricElement(representation: rep2);
+            this.Model.AddElement(solidElement2);
+            this.Model.AddElements(DrawEdges(result2, null));
+
+            Assert.Equal(6, result2.Faces.Count);
+        }
+
+        [Fact]
+        public void DifferenceInCenterOfFaceCreatesVoid()
+        {
+            this.Name = nameof(DifferenceInCenterOfFaceCreatesVoid);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Star(0.5, 0.25, 5), 6, Vector3.ZAxis, false);
+            var result1 = Solid.Difference(s1.Solid, new Transform(new Vector3(0, 0, -1)), s2.Solid, new Transform(new Vector3(0, 0, -3)));
+
+            // var t = new Transform();
+            // t.Move(new Vector3(0, 0, -3));
+            // t.Rotate(Vector3.XAxis, 90);
+            // var s3 = new Extrude(Polygon.Rectangle(0.6, 0.6), 6, Vector3.ZAxis, false);
+            // result1 = Solid.Difference(result1, null, s3.Solid, t);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+            this.Model.AddElements(DrawEdges(result1, null));
+        }
+
+        [Fact]
+        public void DifferenceWhichSplitsVolumeSucceeds()
+        {
+            this.Name = nameof(DifferenceWhichSplitsVolumeSucceeds);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 4), 6, Vector3.ZAxis, false);
+            var result1 = Solid.Difference(s1.Solid, new Transform(new Vector3(0, 0, -1)), s2.Solid, new Transform(new Vector3(0, 0, -3)));
+
+            var s3 = new Extrude(Polygon.Rectangle(4, 0.5), 3, Vector3.ZAxis, false);
+            result1 = Solid.Difference(result1, null, s3.Solid, new Transform(new Vector3(0, 0, -3.25)));
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result1, null));
+            Assert.Equal(20, result1.Faces.Count);
+            Assert.Equal(32, result1.Vertices.Count);
+            Assert.Equal(48, result1.Edges.Count);
+        }
+
+        [Fact]
+        public void UnionAcrossVolumeSucceeds()
+        {
+            // This tests the union of two crossing volumes which
+            // share top and bottom faces.
+            this.Name = nameof(UnionAcrossVolumeSucceeds);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 4), 2, Vector3.ZAxis, false);
+            var result1 = Solid.Union(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result1) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result1, null));
+            Assert.Equal(14, result1.Faces.Count);
+            Assert.Equal(24, result1.Vertices.Count);
+        }
+
+        [Fact]
+        public void BlindHoleHasBottomFace()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(BlindHoleHasBottomFace);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 6, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, new Transform(new Vector3(0, 0, 0.5)));
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(11, result.Faces.Count);
+        }
+
+        [Fact]
+        public void HorizontalThroughHole()
+        {
+            this.Name = nameof(HorizontalThroughHole);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 6, Vector3.ZAxis, false);
+            var t = new Transform();
+            t.Rotate(Vector3.YAxis, 90);
+            t.Move(new Vector3(-2, 0, 1));
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, t);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
+        [Fact]
+        public void ThroughHoleWithEqualFaces()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(ThroughHoleWithEqualFaces);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5), 2, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
+        [Fact]
+        public void PassingHoleWithEqualFaces()
+        {
+            // The bottom face of a blind hole is inside the main solid,
+            // but does not intersect with any of the faces of the main solid.
+            // Ensure that the bottom face is not excluded.
+            this.Name = nameof(PassingHoleWithEqualFaces);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.5, 0.5).TransformedPolygon(new Transform(new Vector3(0, 0.8))), 2, Vector3.ZAxis, false);
+            var result = Solid.Difference(s1.Solid, null, s2.Solid, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(10, result.Faces.Count);
+        }
+
+        [Fact]
+        public void TwoHoles()
+        {
+            this.Name = nameof(TwoHoles);
+
+            var s1 = new Extrude(Polygon.Rectangle(2, 2), 2, Vector3.ZAxis, false);
+            var s2 = new Extrude(Polygon.Rectangle(0.25, 0.25).TransformedPolygon(new Transform(new Vector3(0, 0.5))), 2.5, Vector3.ZAxis, false);
+            var s3 = new Extrude(Polygon.Rectangle(0.25, 0.25).TransformedPolygon(new Transform(new Vector3(0, -0.5))), 2.5, Vector3.ZAxis, false);
+            var result = Solid.Union(s2.Solid, null, s3.Solid, null);
+
+            result = Solid.Difference(s1.Solid, null, result, null);
+
+            var rep = new Representation(new List<SolidOperation>() { new ConstructedSolid(result) });
+            var solidElement = new GeometricElement(representation: rep);
+            this.Model.AddElement(solidElement);
+
+            this.Model.AddElements(DrawEdges(result, null));
+            Assert.Equal(14, result.Faces.Count);
         }
 
         private class DebugInfo

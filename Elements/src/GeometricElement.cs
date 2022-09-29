@@ -13,23 +13,23 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
         /// <summary>The element's transform.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [Newtonsoft.Json.JsonProperty("Material", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Material", Required = Required.AllowNull)]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [Newtonsoft.Json.JsonProperty("Representation", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [Newtonsoft.Json.JsonProperty("IsElementDefinition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Elements
         /// <param name="isElementDefinition"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
@@ -141,7 +141,8 @@ namespace Elements
                 openingContainer.Openings.ForEach(o => o.UpdateRepresentations());
                 voids = voids.Concat(openingContainer.Openings.SelectMany(o => o.Representation.SolidOperations
                                                       .Where(op => op.IsVoid == true)
-                                                      .Select(op => op._solid.ToCsg().Transform(o.Transform.ToMatrix4x4())))).ToArray();
+                                                      .Select(op => TransformedSolidOperation(op, o.Transform))))
+                                                      .ToArray();
             }
             // Don't try CSG booleans if we only have one one solid and no voids.
             if (solids.Count() == 1 && voids.Count() == 0)
@@ -193,15 +194,26 @@ namespace Elements
             }
         }
 
-        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op)
+        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op, Transform addTransform = null)
         {
             if (Transform == null)
             {
                 return op._solid.ToCsg();
             }
-            return op.LocalTransform != null
+
+            // Transform the solid operatioon by the the local transform AND the
+            // element's transform, or just by the element's transform.
+            var transformedOp = op.LocalTransform != null
                         ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
                         : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
+            if (addTransform == null)
+            {
+                return transformedOp;
+            }
+
+            // If an addition transform was proovided, don't forget
+            // to apply that as well.
+            return transformedOp.Transform(addTransform.ToMatrix4x4());
         }
 
         /// <summary>
@@ -211,7 +223,7 @@ namespace Elements
         /// True if there is graphicsbuffers data applicable to add, false otherwise.
         /// Out variables should be ignored if the return value is false.
         /// </returns>
-        internal virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public virtual Boolean TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = null;
             mode = null;

@@ -8,10 +8,13 @@ namespace Elements.Spatial.AdaptiveGrid
 {
     /// <summary>
     /// A graph like edge-vertex structure with planar spaces connected by vertical edges.
-    /// The grid doesn't do any intersections when new sections are added, they are stitched 
-    /// only by common vertices. Make sure that regions that are added into the graph are 
+    /// The grid doesn't do any intersections when new sections are added, they are stitched
+    /// only by common vertices. Make sure that regions that are added into the graph are
     /// aligned with respect to boundaries and split points.
     /// </summary>
+    /// <example>
+    /// [!code-csharp[Main](../../Elements/test/AdaptiveGridTests.cs?name=example)]
+    /// </example>
     public class AdaptiveGrid
     {
         #region Private fields
@@ -73,7 +76,16 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Constructors
 
         /// <summary>
-        /// Create an AdaptiveGrid.
+        /// Create default AdaptiveGrid
+        /// </summary>
+        /// <returns></returns>
+        public AdaptiveGrid()
+        {
+            Transform = new Transform();
+        }
+
+        /// <summary>
+        /// Create an AdaptiveGrid with custom transformation.
         /// </summary>
         /// <param name="transform">Transformation, grid is aligned with.</param>
         /// <returns></returns>
@@ -87,13 +99,16 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Public logic
 
         /// <summary>
-        /// Add graph section using bounding box, divided by a set of key points. 
+        /// Add graph section using bounding box, divided by a set of key points.
         /// Key points don't respect "MinimumResolution" at the moment.
         /// Any vertices that already exist are not created but reused.
         /// This way new region is connected with the rest of the graph.
         /// </summary>
         /// <param name="bBox">Box which region is populated with graph.</param>
         /// <param name="keyPoints">Set of 3D points, region is split with.</param>
+        /// <example>
+        /// [!code-csharp[Main](../../Elements/test/AdaptiveGridTests.cs?name=example2)]
+        /// </example>
         public void AddFromBbox(BBox3 bBox, List<Vector3> keyPoints)
         {
             var height = bBox.Max.Z - bBox.Min.Z;
@@ -206,7 +221,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
                 else
                 {
-                    var edgeLine = edge.GetGeometry();
+                    var edgeLine = GetLine(edge);
                     List<Vector3> intersections;
                     edgeLine.Intersects(box, out intersections);
                     // If no intersection found than outside point is exactly within tolerance.
@@ -219,39 +234,15 @@ namespace Elements.Spatial.AdaptiveGrid
                     // Intersections are sorted from the start point.
                     else if (intersections.Count == 1)
                     {
-                        //Need to find which end is inside the box. 
+                        //Need to find which end is inside the box.
                         //If none - we just touched the corner
-                        if (startInside)
+                        if (startInside || endInside)
                         {
-                            var v = AddVertex(intersections[0]);
-                            if (edge.EndId != v.Id)
-                            {
-                                AddEdge(v.Id, edge.EndId);
-                            }
-                            edgesToDelete.Add(edge);
-                        }
-                        else if (endInside)
-                        {
-                            var v = AddVertex(intersections[0]);
-                            if (edge.StartId != v.Id)
-                            {
-                                AddEdge(edge.StartId, v.Id);
-                            }
                             edgesToDelete.Add(edge);
                         }
                     }
                     if (intersections.Count == 2)
                     {
-                        var v0 = AddVertex(intersections[0]);
-                        var v1 = AddVertex(intersections[1]);
-                        if (edge.StartId != v0.Id)
-                        {
-                            AddEdge(edge.StartId, v0.Id);
-                        }
-                        if (edge.EndId != v1.Id)
-                        {
-                            AddEdge(v1.Id, edge.EndId);
-                        }
                         edgesToDelete.Add(edge);
                     }
                 }
@@ -259,7 +250,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var e in edgesToDelete)
             {
-                DeleteEdge(e);
+                RemoveEdge(e);
             }
         }
 
@@ -310,17 +301,249 @@ namespace Elements.Spatial.AdaptiveGrid
             return TryGetValue(zDict, point.Z, out id, tolerance);
         }
 
+        /// <summary>
+        /// Add a Vertex and connect in to one or more other vertices.
+        /// </summary>
+        /// <param name="point">Position of required Vertex.</param>
+        /// <param name="connections">Ids of other vertices to connect new Vertex with.</param>
+        /// <returns>New Vertex or existing one if it's within grid tolerance.</returns>
+        public Vertex AddVertex(Vector3 point, IList<Vertex> connections)
+        {
+            if (connections == null || !connections.Any())
+            {
+                throw new ArgumentException("Vertex should be connected to at least one other Vertex");
+            }
+
+            Vertex v = AddVertex(point);
+            foreach (var c in connections)
+            {
+                AddEdge(v.Id, c.Id);
+            }
+
+            return v;
+        }
+
+        /// <summary>
+        /// Create connected chain of vertices. If chain intersects itself - intersection vertices are created as well.
+        /// New vertices are not connected with other vertices, except in the case then one or more added vertices already exist in the grid.
+        /// </summary>
+        /// <param name="points">List of points to connect by edges. Must have at least two points.</param>
+        /// <returns>New vertices in order. Vertices at intersection points are presented more than once.</returns>
+        public List<Vertex> AddVertexStrip(IList<Vector3> points)
+        {
+            if (points.Count < 2)
+            {
+                throw new ArgumentException("At least two points required");
+            }
+
+            var vertices = new List<Vertex>();
+            vertices.Add(AddVertex(points[0]));
+            for (int i = 1; i < points.Count; i++)
+            {
+                var tailVertex = AddVertex(points[i], new List<Vertex> { vertices.Last() });
+
+                for (int j = 0; j < vertices.Count - 1; j++)
+                {
+                    if (Line.Intersects(vertices.Last().Point, tailVertex.Point,
+                                        vertices[j].Point, vertices[j + 1].Point,
+                                        out var intersection))
+                    {
+                        var cross = AddVertex(intersection, new List<Vertex> {
+                            tailVertex, vertices.Last(),  vertices[j], vertices[j + 1] });
+                        RemoveEdge(tailVertex.GetEdge(vertices.Last().Id));
+                        RemoveEdge(vertices[j].GetEdge(vertices[j + 1].Id));
+                        vertices.Insert(j + 1, cross);
+                        vertices.Add(cross);
+                        j++;
+                    }
+                }
+                vertices.Add(tailVertex);
+            }
+            return vertices;
+        }
+
+        /// <summary>
+        /// Split provided edge by given point. Edge is removed and replaced by two new edges.
+        /// New vertex position is not required to be in the edge line.
+        /// </summary>
+        /// <param name="edge">Edge to cut.</param>
+        /// <param name="position">Cut position where new Vertex is created.</param>
+        /// <returns>New Vertex at cut position.</returns>
+        public Vertex CutEdge(Edge edge, Vector3 position)
+        {
+            var startVertex = GetVertex(edge.StartId);
+            var endVertex = GetVertex(edge.EndId);
+            var newVertex = AddVertex(position, new List<Vertex> { startVertex, endVertex });
+            RemoveEdge(edge);
+            return newVertex;
+        }
+
+        /// <summary>
+        /// Get associated Vertices.
+        /// </summary>
+        /// <returns></returns>
+        public List<Vertex> GetVertices(Edge edge)
+        {
+            return new List<Vertex>() { GetVertex(edge.StartId), GetVertex(edge.EndId) };
+        }
+
+        /// <summary>
+        /// Get the geometry that represents this Edge or DirectedEdge.
+        /// </summary>
+        /// <returns></returns>
+        public Line GetLine(Edge edge)
+        {
+            return new Line(GetVertex(edge.StartId).Point, GetVertex(edge.EndId).Point);
+        }
+
+        /// <summary>
+        /// Find closest Vertex on the grid to given location.
+        /// If several vertices are no the same closest distance - first found is returned.
+        /// </summary>
+        /// <param name="location">Position to which closest Vertex is searched.</param>
+        /// <returns>Closest Vertex</returns>
+        public Vertex ClosestVertex(Vector3 location)
+        {
+            double lowestDist = double.MaxValue;
+            Vertex closest = null;
+            foreach (var v in GetVertices())
+            {
+                double dist = v.Point.DistanceTo(location);
+                if (dist < lowestDist)
+                {
+                    lowestDist = dist;
+                    closest = v;
+                }
+            }
+            return closest;
+        }
+
+        /// <summary>
+        /// Find closest Edge on the grid to given location.
+        /// If several edges are no the same closest distance - first found is returned.
+        /// </summary>
+        /// <param name="location">Position to which closest Vertex is searched.</param>
+        /// <param name="point">Closest point of the found edge line.</param>
+        /// <returns>Closest Edge</returns>
+        public Edge ClosestEdge(Vector3 location, out Vector3 point)
+        {
+            double lowestDist = double.MaxValue;
+            Edge closestEdge = null;
+            point = Vector3.Origin;
+            foreach (var e in GetEdges())
+            {
+                var start = GetVertex(e.StartId);
+                var end = GetVertex(e.EndId);
+                double dist = location.DistanceTo((start.Point, end.Point), out var closest);
+                if (dist < lowestDist)
+                {
+                    lowestDist = dist;
+                    closestEdge = e;
+                    point = closest;
+                }
+            }
+            return closestEdge;
+        }
+
+        /// <summary>
+        /// Add an Edge or return the exiting one with given indexes.
+        /// </summary>
+        /// <param name="vertexId1">Index of the first Vertex</param>
+        /// <param name="vertexId2">Index of the second Vertex</param>
+        /// <returns>New or existing Edge.</returns>
+        public Edge AddEdge(ulong vertexId1, ulong vertexId2)
+        {
+            if (vertexId1 == vertexId2)
+            {
+                throw new ArgumentException("Can't create edge. The vertices of the edge cannot be the same.", $"{vertexId1}, {vertexId2}");
+            }
+
+            var hash = Edge.GetHash(new List<ulong> { vertexId1, vertexId2 });
+
+            if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
+            {
+                var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
+                edgeId = edge.Id;
+
+                this._edgesLookup[hash] = edgeId;
+                this._edges.Add(edgeId, edge);
+
+                this.GetVertex(edge.StartId).Edges.Add(edge);
+                this.GetVertex(edge.EndId).Edges.Add(edge);
+
+                this._edgeId++;
+                return edge;
+            }
+            else
+            {
+                this._edges.TryGetValue(edgeId, out var edge);
+                return edge;
+            }
+        }
+
+        /// <summary>
+        /// Remove the Vertex from the grid.
+        /// All it's edges are removed as well, including any neighbor
+        /// vertices that are left without edges.
+        /// </summary>
+        /// <param name="v">Vertex to delete.</param>
+        public void RemoveVertex(Vertex v)
+        {
+            //If there are no edges - delete the vertex manually.
+            if (!v.Edges.Any())
+            {
+                DeleteVertex(v.Id);
+                return;
+            }
+
+            //Otherwise, edges will remove it's orphan vertices.
+            foreach (var edge in v.Edges.ToList())
+            {
+                RemoveEdge(edge);
+            }
+        }
+
+        /// <summary>
+        /// Remove the Edge from the grid.
+        /// </summary>
+        /// <param name="edge">Edge to delete</param>
+        public void RemoveEdge(Edge edge)
+        {
+            var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
+            this._edgesLookup.Remove(hash);
+            this._edges.Remove(edge.Id);
+
+            var startVertexEdges = this.GetVertex(edge.StartId).Edges;
+            startVertexEdges.Remove(edge);
+            if (!startVertexEdges.Any())
+            {
+                DeleteVertex(edge.StartId);
+            }
+            var endVertexEdges = this.GetVertex(edge.EndId).Edges;
+            endVertexEdges.Remove(edge);
+            if (!endVertexEdges.Any())
+            {
+                DeleteVertex(edge.EndId);
+            }
+        }
+
         #endregion
 
         #region Private logic
 
+        /// <summary>
+        /// Add a Vertex or return existing one if it's withing grid tolerance.
+        /// Doesn't connect new Vertex to the grid with edges.
+        /// </summary>
+        /// <param name="point">Position of required vertex</param>
+        /// <returns>New or existing Vertex.</returns>
         private Vertex AddVertex(Vector3 point)
         {
             if (!TryGetVertexIndex(point, out var id, Tolerance))
             {
                 var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
                 id = this._vertexId;
-                var vertex = new Vertex(this, id, point);
+                var vertex = new Vertex(id, point);
                 zDict[point.Z] = id;
                 _vertices[id] = vertex;
                 this._vertexId++;
@@ -351,56 +574,6 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private Edge AddEdge(ulong vertexId1, ulong vertexId2)
-        {
-            if (vertexId1 == vertexId2)
-            {
-                throw new ArgumentException("Can't create edge. The vertices of the edge cannot be the same.", $"{vertexId1}, {vertexId2}");
-            }
-
-            var hash = Edge.GetHash(new List<ulong> { vertexId1, vertexId2 });
-
-            if (!this._edgesLookup.TryGetValue(hash, out var edgeId))
-            {
-                var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
-                edgeId = edge.Id;
-
-                this._edgesLookup[hash] = edgeId;
-                this._edges.Add(edgeId, edge);
-
-                this.GetVertex(edge.StartId).Edges.Add(edge);
-                this.GetVertex(edge.EndId).Edges.Add(edge);
-
-                this._edgeId++;
-                return edge;
-            }
-            else
-            {
-                this._edges.TryGetValue(edgeId, out var edge);
-                return edge;
-            }
-        }
-
-        private void DeleteEdge(Edge edge)
-        {
-            var hash = Edge.GetHash(new List<ulong> { edge.StartId, edge.EndId });
-            this._edgesLookup.Remove(hash);
-            this._edges.Remove(edge.Id);
-
-            var startVertexEdges = this.GetVertex(edge.StartId).Edges;
-            startVertexEdges.Remove(edge);
-            if (!startVertexEdges.Any())
-            {
-                DeleteVertex(edge.StartId);
-            }
-            var endVertexEdges = this.GetVertex(edge.EndId).Edges;
-            endVertexEdges.Remove(edge);
-            if (!endVertexEdges.Any())
-            {
-                DeleteVertex(edge.EndId);
-            }
-        }
-
         private Grid2d CreateGridFromPolygon(Polygon boundingPolygon)
         {
             var boundingPolygonPlane = boundingPolygon.Plane();
@@ -421,7 +594,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var intersectionPoints = new List<Vector3>();
             foreach (var edge in edgesToIntersect)
             {
-                if (edge.GetGeometry().Intersects(boundingPolygonPlane, out var intersectionPoint)
+                if (GetLine(edge).Intersects(boundingPolygonPlane, out var intersectionPoint)
                     && boundingPolygon.Contains(intersectionPoint))
                 {
                     intersectionPoints.Add(intersectionPoint);
@@ -477,7 +650,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private void AddVerticalEdges(Vector3 extrusionAxis, double height, HashSet<Edge> addedEdges)
         {
-            foreach (var bottomVertex in addedEdges.SelectMany(e => e.GetVertices()).Distinct())
+            foreach (var bottomVertex in addedEdges.SelectMany(e => GetVertices(e)).Distinct())
             {
                 var heightVector = height * extrusionAxis;
                 var topVertex = AddVertex(bottomVertex.Point + heightVector);

@@ -550,5 +550,16 @@ namespace Elements.Tests
             var grid = JsonConvert.DeserializeObject<Grid2d>(json);
             var cellSeparators = grid.GetCellSeparators(GridDirection.V, true);
         }
+
+        [Fact]
+        public void NoTrimmedCells()
+        {
+            var json = File.ReadAllText("../../../models/Geometry/badGridTrimmed.json");
+            var grid = JsonConvert.DeserializeObject<Grid2d>(json);
+            foreach (var c in grid.GetCells())
+            {
+                Assert.False(c.IsTrimmed());
+            }
+        }
     }
 }

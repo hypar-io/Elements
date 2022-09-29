@@ -13,10 +13,11 @@ namespace Elements.Benchmarks
         [Benchmark(Description = "Create all HSS beams and serialize to JSON.")]
         public void TraceModelCreation()
         {
+            Validators.Validator.DisableValidationOnConstruction = true;
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
             var model = ElementCreation.DrawAllBeams(hssProfiles);
-            model.ToJson();
+            model.ToJson(gatherSubElements: false);
         }
     }
 

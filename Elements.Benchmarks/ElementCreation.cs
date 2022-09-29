@@ -10,8 +10,6 @@ namespace Elements.Benchmarks
     [MemoryDiagnoser]
     public class ElementCreation
     {
-        Model _model;
-        string _json;
 
         private List<HSSPipeProfile> _hssProfiles;
 

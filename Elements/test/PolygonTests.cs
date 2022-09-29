@@ -619,6 +619,18 @@ namespace Elements.Geometry.Tests
             Assert.Equal(1.0, ta.Area());
             var tb = b.TransformedPolygon(t);
             Assert.Equal(4.0, tb.Area());
+
+            var concave = new Polygon(new[] {
+                new Vector3(5, 0, 0),
+                new Vector3(5, 1, 0),
+                new Vector3(3, 1, 0),
+                new Vector3(3, 4, 0),
+                new Vector3(5, 4, 0),
+                new Vector3(5, 5, 0),
+                new Vector3(0, 5, 0),
+                new Vector3(0, 0, 0),
+            });
+            Assert.Equal(19, concave.Area());
         }
 
         [Fact]
@@ -719,6 +731,37 @@ namespace Elements.Geometry.Tests
             };
             var coHull = ConvexHull.FromPoints(coPts);
             Assert.Equal(50, coHull.Area());
+        }
+
+        [Fact]
+        public void FromAlignedBoundingBox2dAlongAxis()
+        {
+            Name = nameof(FromAlignedBoundingBox2dAlongAxis);
+            // handle random points test
+            var pts = new List<Vector3> {
+                new Vector3(2,1),
+                new Vector3(1,3),
+                new Vector3(5,5),
+                new Vector3(6,3),
+                new Vector3(2,2),
+                new Vector3(2.5,3),
+                new Vector3(4,3)
+            };
+            var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, pts[1] - pts[0]);
+            Assert.True(boundingRect.Area().ApproximatelyEquals(10));
+            Model.AddElements(pts.Select(p => new ModelCurve(new Circle(p, 0.2))));
+            Model.AddElements(new ModelCurve(boundingRect));
+
+            // handle collinear points test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0)
+            };
+            var coBoundingRect = Polygon.FromAlignedBoundingBox2d(coPts, new Vector3(1, 0));
+            Assert.Equal(1, coBoundingRect.Area());
         }
 
         [Fact]
@@ -1703,17 +1746,6 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void ThrowsExceptionForCoplanarTrimPolygons()
-        {
-            var hex = Polygon.Ngon(6, 3);
-            var star = Polygon.Star(5, 2, 5);
-            Assert.Throws<Exception>(() =>
-            {
-                star.TrimmedTo(new[] { hex });
-            });
-        }
-
-        [Fact]
         public void PolygonContains3D()
         {
             var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
@@ -1748,7 +1780,7 @@ namespace Elements.Geometry.Tests
             foreach (var p in polys)
             {
                 var other = polys.Where(pp => pp != p).ToList();
-                var trimmed = p.TrimmedTo(other);
+                var trimmed = p.TrimmedTo(other, LocalClassification.Outside);
 
                 Assert.Single(trimmed);
 
@@ -1852,6 +1884,54 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void OverlappedPolygonTrimsCorrectly()
+        {
+            this.Name = nameof(OverlappedPolygonTrimsCorrectly);
+            var r = new Transform();
+            r.Rotate(Vector3.XAxis, 90);
+            var p = Polygon.Rectangle(5, 5).TransformedPolygon(r);
+            var p1 = Polygon.Rectangle(5, 5).TransformedPolygon(r).TransformedPolygon(new Transform(2.5, 2.5, 2.5));
+            var polys = new List<Polygon>();
+            for (var i = 0; i < p1.Vertices.Count; i++)
+            {
+                var a = p1.Vertices[i];
+                var b = i == p1.Vertices.Count - 1 ? p1.Vertices[0] : p1.Vertices[i + 1];
+                var newP = new Polygon(new List<Vector3>(){
+                    a + new Vector3(0,-5,0), b + new Vector3(0,-5,0), b + new Vector3(0,5,0), a + new Vector3(0,5,0)
+                });
+                polys.Add(newP);
+            }
+            var trims = p.IntersectAndClassify(polys,
+                                               polys,
+                                               out _,
+                                               out _,
+                                               SetClassification.AOutsideB,
+                                               SetClassification.AInsideB);
+            Assert.Equal(2, trims.Count);
+        }
+
+        [Fact]
+        public void VerticalPolygonIntersectsHorizontalRoundPolygon()
+        {
+            // Test the intersection of of perpendicular planes
+            // where the plane of intersection of the first, cuts
+            // exactly through a point on the other.
+
+            this.Name = nameof(VerticalPolygonIntersectsHorizontalRoundPolygon);
+            var sqPoly = new Polygon(new[]{
+                new Vector3(-1, 1, -1), new Vector3(1, 1, -1), new Vector3(1, 1, 1), new Vector3(-1,1,1)});
+            var circlePoly = new Circle(new Vector3(1, 1), 2).ToPolygon();
+            sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
+            foreach (var r in results)
+            {
+                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+            }
+            Assert.Equal(2, results.Count);
+            this.Model.AddElement(new Panel(sqPoly));
+            this.Model.AddElement(new Panel(circlePoly));
+        }
+
+        [Fact]
         public void ExtendWhereSomeSegmentsAreAtOrigin()
         {
             var pgon = new Polygon((8.01, 6, 0),
@@ -1877,6 +1957,92 @@ namespace Elements.Geometry.Tests
             var trimmed = line.Trim(boundary, out var remainder);
             Assert.True(trimmed.Sum(l => l.Length()) > 0);
 
+        }
+
+        [Fact]
+        public void PolygonInsideAnotherPolygonTrimsAHole()
+        {
+            this.Name = nameof(PolygonInsideAnotherPolygonTrimsAHole);
+
+            var p1 = Polygon.Rectangle(2, 2);
+            var trims = Polygon.Star(0.75, 0.5, 5).Segments().Select(s => new Polygon(new[] {
+                s.Start - new Vector3(0,0,0.5),
+                s.End - new Vector3(0,0,0.5),
+                s.End + new Vector3(0,0,0.5),
+                s.Start + new Vector3(0,0,0.5)
+            })).ToList();
+            var polys = p1.IntersectOneToMany(trims, out _, out var trimEdges);
+
+            // In the disjoint scenario we expect one outer, and two inner
+            // wound in opposite directions.
+            Assert.Equal(2, polys.Count);
+            var r = new Random();
+            foreach (var p in polys)
+            {
+                Model.AddElement(new Panel(p, r.NextMaterial()));
+            }
+        }
+
+        [Fact]
+        public void PolygonAcrossPolygonTrimsIntoThree()
+        {
+            this.Name = nameof(PolygonAcrossPolygonTrimsIntoThree);
+
+            var p1 = Polygon.Rectangle(2, 2);
+            var p2 = Polygon.Rectangle(0.5, 4);
+            var p3 = Polygon.Rectangle(4.0, 0.5);
+            var trims = p2.Segments().Select(s => new Polygon(new[] {
+                s.Start - new Vector3(0,0,0.5),
+                s.End - new Vector3(0,0,0.5),
+                s.End + new Vector3(0,0,0.5),
+                s.Start + new Vector3(0,0,0.5)
+            })).ToList();
+
+            var polys = p1.IntersectAndClassify(trims, trims, out _, out var trimEdges);
+            var r = new Random();
+
+            var aInB = r.NextMaterial();
+            var aOutB = r.NextMaterial();
+            var bInA = r.NextMaterial();
+            var bOutA = r.NextMaterial();
+            foreach (var p in polys)
+            {
+                var m = BuiltInMaterials.Default;
+                switch (p.Item2)
+                {
+                    case SetClassification.AInsideB:
+                        m = aInB;
+                        break;
+                    case SetClassification.AOutsideB:
+                        m = aOutB;
+                        break;
+                    case SetClassification.BInsideA:
+                        m = bInA;
+                        break;
+                    case SetClassification.BOutsideA:
+                        m = bOutA;
+                        break;
+                }
+                Model.AddElement(new Panel(p.Item1, m));
+            }
+            // In the disjoint scenario we expect one outer, and two inner
+            // wound in opposite directions.
+            Assert.Equal(3, polys.Count);
+            Assert.Equal(2, polys.Where(p => p.Item2 == SetClassification.AOutsideB).Count());
+            Assert.Single(polys.Where(p => p.Item2 == SetClassification.AInsideB));
+        }
+
+        [Fact]
+        public void ConstructWithSequentialDuplicates()
+        {
+            var polygon = new Polygon(new List<Vector3>()
+            {
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, -6.0),
+                new Vector3(0.0, -6.0),
+                Vector3.Origin,
+            });
         }
     }
 }

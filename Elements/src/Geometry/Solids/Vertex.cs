@@ -25,7 +25,7 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="id"></param>
         /// <param name="point">The location of the Vertex.</param>
-        internal Vertex(long id, Vector3 point)
+        public Vertex(long id, Vector3 point)
         {
             this.Id = id;
             this.Point = point;

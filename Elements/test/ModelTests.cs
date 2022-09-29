@@ -138,12 +138,7 @@ namespace Elements.Tests
             model.AddElement(mass1);
             model.AddElement(mass2);
 
-            // TODO: This was previously 2 profiles, one for the stand alone 
-            // profile in the ctor and one created for the representation. 
-            // After we moved UpdateReprensentations into AddElement, this
-            // became 1 again because as soon as AddElement is called, the
-            // representation's profile is overridden with the main profile.
-            Assert.True(model.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(model.AllElementsOfType<Profile>().Count() == 2);
             Assert.True(model.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(model.AllElementsOfType<Material>());
 
@@ -151,7 +146,7 @@ namespace Elements.Tests
             File.WriteAllText("./deepSerialize.json", json);
 
             var newModel = Model.FromJson(json);
-            Assert.True(newModel.AllElementsOfType<Profile>().Count() == 1);
+            Assert.True(newModel.AllElementsOfType<Profile>().Count() == 2);
             Assert.True(newModel.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(newModel.AllElementsOfType<Material>());
         }
@@ -191,7 +186,7 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationSkipsUnknownProperties()
         {
-            var column = new Column(Vector3.Origin, 5, new Profile(Polygon.Rectangle(1, 1)));
+            var column = new Column(Vector3.Origin, 5, null, new Profile(Polygon.Rectangle(1, 1)));
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
@@ -212,7 +207,7 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationConstructsWithMissingProperties()
         {
-            var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
+            var column = new Column(new Vector3(5, 0), 5, null, new Profile(Polygon.Rectangle(1, 1)));
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
@@ -231,23 +226,23 @@ namespace Elements.Tests
         [Fact]
         public void DeserializationSkipsNullProperties()
         {
-            var column = new Column(new Vector3(5, 0), 5, new Profile(Polygon.Rectangle(1, 1)));
+            var material = BuiltInMaterials.Mass;
             var model = new Model();
-            model.AddElement(column);
+            model.AddElement(material);
             var json = model.ToJson(true);
             // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
             var obj = JObject.Parse(json);
             var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
+            var c = (JObject)elements.Values().ElementAt(0); // the material
 
             // Nullify a property.
-            c.Property("Location").Value = null;
+            c.Property("Color").Value = null;
             var newModel = Model.FromJson(obj.ToString(), out var errors);
             foreach (var e in errors)
             {
                 this._output.WriteLine(e);
             }
-            Assert.Empty(newModel.AllElementsOfType<Column>());
+            Assert.Empty(newModel.AllElementsOfType<Material>());
         }
 
         [Fact]
@@ -256,8 +251,8 @@ namespace Elements.Tests
             var profile = new Profile(Polygon.Rectangle(1, 1));
             var red = new Material("Red", Colors.Red);
             var green = new Material("Green", Colors.Green);
-            var column = new Column(new Vector3(5, 0), 5, profile, red);
-            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, green);
+            var column = new Column(new Vector3(5, 0), 5, null, profile, material: red);
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), profile, material: green);
             var model = new Model();
             model.AddElements(beam, column);
             var json = model.ToJson(true);
@@ -356,6 +351,17 @@ namespace Elements.Tests
             Assert.False(Model.IsValidForRecursiveAddition(typeof(double)));
             Assert.False(Model.IsValidForRecursiveAddition(typeof(string)));
             Assert.False(Model.IsValidForRecursiveAddition(typeof(object)));
+        }
+
+        [Fact]
+        public void AllElementsAssignableFromType()
+        {
+            var column = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            var beam = new Beam(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
+            var brace = new Brace(new Line(Vector3.Origin, new Vector3(5, 5, 5)), Polygon.Rectangle(1, 1));
+            var model = new Model();
+            model.AddElements(column, beam, brace);
+            Assert.Equal(3, model.AllElementsAssignableFromType<StructuralFraming>().Count());
         }
 
         private Model QuadPanelModel()

@@ -1,4 +1,5 @@
 using Elements.Validators;
+using Newtonsoft.Json;
 using System;
 using System.Globalization;
 
@@ -8,22 +9,22 @@ namespace Elements.Geometry
     public struct Color : IEquatable<Color>
     {
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("Red", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Red", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Red { get; set; }
 
         /// <summary>The green component of the color between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("Green", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Green", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Green { get; set; }
 
         /// <summary>The blue component of the color between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("Blue", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Blue", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Blue { get; set; }
 
         /// <summary>The alpha component of the color between 0.0 and 1.0.</summary>
-        [Newtonsoft.Json.JsonProperty("Alpha", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Alpha", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Alpha { get; set; }
 
@@ -34,7 +35,7 @@ namespace Elements.Geometry
         /// <param name="green">The green component.</param>
         /// <param name="blue">The blue component.</param>
         /// <param name="alpha">The alpha component.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Color(double @red, double @green, double @blue, double @alpha)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -104,8 +105,12 @@ namespace Elements.Geometry
         /// Get the color's components as an array.
         /// </summary>
         /// <returns>An array containing the color's components.</returns>
-        public float[] ToArray()
+        public float[] ToArray(bool convertToLinearColorSpace = false)
         {
+            if (convertToLinearColorSpace)
+            {
+                return new[] { (float)SRGBToLinear(Red), (float)SRGBToLinear(Green), (float)SRGBToLinear(Blue), (float)Alpha };
+            }
             return new[] { (float)Red, (float)Green, (float)Blue, (float)Alpha };
         }
 
@@ -266,6 +271,26 @@ namespace Elements.Geometry
                 throw new ArgumentNullException("Cannot convert null to a Color. Color is a non-nullable type.");
             }
             return new Color(hexOrName);
+        }
+
+        /// <summary>
+        /// Convert a gamma color space component to a linear color space value.
+        /// </summary>
+        /// <param name="c">The gamma color component value.</param>
+        /// <returns>A linear color space component value.</returns>
+        public static double SRGBToLinear(double c)
+        {
+            return (c < 0.04045) ? c * 0.0773993808 : Math.Pow(c * 0.9478672986 + 0.0521327014, 2.4);
+        }
+
+        /// <summary>
+        /// Convert a linear color space component to a gamma color space value.
+        /// </summary>
+        /// <param name="c">The linear color component value.</param>
+        /// <returns>A gamma color space component value.</returns>
+        public static double LinearToSRGB(double c)
+        {
+            return (c < 0.0031308) ? 12.92 * c : (1.055 * Math.Pow(c, 0.41666)) - 0.055;
         }
     }
 }

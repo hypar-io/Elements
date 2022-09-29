@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// The abstract base class for all curves.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>
@@ -67,10 +68,9 @@ namespace Elements.Geometry
         public virtual Polyline ToPolyline(int divisions = 10)
         {
             var pts = new List<Vector3>(divisions + 1);
-            var div = 1.0 / (double)divisions;
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0; t <= divisions; t++)
             {
-                pts.Add(PointAt(t));
+                pts.Add(PointAt(t * 1.0 / divisions));
             }
             return new Polyline(pts);
         }
@@ -97,9 +97,9 @@ namespace Elements.Geometry
         /// <param name="c">The curve to convert.</param>
         public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
 
-        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        internal GraphicsBuffers ToGraphicsBuffers()
         {
-            return this.RenderVertices().ToGraphicsBuffers(lineLoop);
+            return this.RenderVertices().ToGraphicsBuffers();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Elements.Validators;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -13,7 +14,7 @@ namespace Elements.Geometry.Solids
         private Vector3 _direction;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Profile", Required = Required.AllowNull)]
         public Profile Profile
         {
             get { return _profile; }
@@ -28,7 +29,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The height of the extrusion.</summary>
-        [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Height", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
@@ -44,7 +45,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Direction", Required = Required.AllowNull)]
         public Vector3 Direction
         {
             get { return _direction; }
@@ -65,7 +66,7 @@ namespace Elements.Geometry.Solids
         /// <param name="height"></param>
         /// <param name="direction"></param>
         /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
             : base(isVoid)
         {

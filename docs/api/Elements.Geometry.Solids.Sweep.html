@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Sweep
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.56.6.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -144,8 +153,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -198,8 +206,7 @@ public Sweep(Profile profile, Curve curve, double startSetback, double endSetbac
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Curve&quot;, Required = Required.AllowNull)]
-public Curve Curve { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Curve Curve { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -223,8 +230,7 @@ public Curve Curve { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndSetback&quot;, Required = Required.Always)]
-public double EndSetback { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double EndSetback { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -248,8 +254,7 @@ public double EndSetback { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Profile&quot;, Required = Required.AllowNull)]
-public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -273,8 +278,7 @@ public Profile Profile { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;ProfileRotation&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-public double ProfileRotation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double ProfileRotation { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -298,8 +302,7 @@ public double ProfileRotation { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartSetback&quot;, Required = Required.Always)]
-public double StartSetback { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double StartSetback { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
