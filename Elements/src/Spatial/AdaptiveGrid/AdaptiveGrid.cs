@@ -209,7 +209,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>True if obstacle intersects with any edge on the grid.</returns>
         public bool SubtractObstacle(Obstacle obstacle)
         {
-            var frame = obstacle.Transform == null ? Transform : obstacle.Transform;
+            var frame = obstacle.Orientation == null ? Transform : obstacle.Orientation;
             var toGrid = frame.Inverted();
             List<Vector3> localPoints = obstacle.Points.Select(p => toGrid.OfPoint(p)).ToList();
             BBox3 localBox = new BBox3(localPoints).Offset(obstacle.Offset);
@@ -274,6 +274,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
+            //TODO: this code builds perimeters, elevation by elevation, but do not connect them vertically.
             if (obstacle.AddPerimeterEdges && edgesToAdd.Any())
             {
                 var corners = localBox.Corners().Take(4).Select(c => frame.OfPoint(c)).ToList();

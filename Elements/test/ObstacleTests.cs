@@ -26,11 +26,10 @@ namespace Elements
 
         [Theory]
         [MemberData(nameof(GetIntersectsData))]
-        public void IntersectsTestDefaultConstructorWithOffsetAndTransform(Polyline polyline, bool expectedResult, int testNumber)
+        public void IntersectsTestDefaultConstructorWithOffset(Polyline polyline, bool expectedResult, int testNumber)
         {
-            var rectangle = Polygon.Rectangle(8, 8);
-            var transform = new Transform(0, 0, 1);
-            var obstacle = new Obstacle(rectangle, 8, 1, false, false, transform);
+            var rectangle = Polygon.Rectangle(8, 8).TransformedPolygon(new Transform(0, 0, 1));
+            var obstacle = new Obstacle(rectangle, 8, 1, false, false, null);
 
             var result = obstacle.Intersects(polyline);
 
@@ -140,6 +139,87 @@ namespace Elements
         }
 
         [Fact]
+        public void ObstacleFromWallHasCorrectOrientationInGrid()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+            Line centerLine = new Line(Vector3.Origin, new Vector3(10, 0));
+            var horizontalWall = new StandardWall(centerLine, 1, 3);
+            var horizontalObstacle = Obstacle.FromWall(horizontalWall, addPerimeterEdges: true);
+            var expectedPoints = new List<Vector3>()
+            {
+                new Vector3(0, -0.5, 0),
+                new Vector3(0, 0.5, 0),
+                new Vector3(10, -0.5, 0),
+                new Vector3(10, 0.5, 0),
+                new Vector3(0, -0.5, 3),
+                new Vector3(0, 0.5, 3),
+                new Vector3(10, -0.5, 3),
+                new Vector3(10, 0.5, 3),
+            };
+            Assert.Equal(horizontalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(horizontalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(horizontalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.5, 0), out var id));
+            var vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(10, 0.5, 0))));
+
+            grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+            centerLine = new Line(Vector3.Origin, new Vector3(0, 10));
+            var verticalWall = new StandardWall(centerLine, 1, 3);
+            var verticalObstacle = Obstacle.FromWall(verticalWall, addPerimeterEdges: true);
+            expectedPoints = new List<Vector3>()
+            {
+                new Vector3(-0.5, 0, 0),
+                new Vector3(0.5, 0, 0),
+                new Vector3(-0.5, 10, 0),
+                new Vector3(0.5, 10, 0),
+                new Vector3(-0.5, 0, 3),
+                new Vector3(0.5, 0, 3),
+                new Vector3(-0.5, 10, 3),
+                new Vector3(0.5, 10, 3),
+            };
+            Assert.Equal(verticalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(verticalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(verticalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0, 0), out id));
+            vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(0.5, 10, 0))));
+
+            grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+            centerLine = new Line(new Vector3(0.3535534, 0.3535534), new Vector3(9.64645, 9.64645));
+            var diagonalWall = new StandardWall(centerLine, 1, 3);
+            var diagonalObstacle = Obstacle.FromWall(diagonalWall, addPerimeterEdges: true);
+            expectedPoints = new List<Vector3>()
+            {
+                new Vector3(0, 0.70711, 0),
+                new Vector3(0.70711, 0, 0),
+                new Vector3(10, 9.292891, 0),
+                new Vector3(9.292891, 10, 0),
+                new Vector3(0, 0.70711, 3),
+                new Vector3(0.70711, 0, 3),
+                new Vector3(10, 9.292891, 3),
+                new Vector3(9.292891, 10, 3),
+            };
+            Assert.Equal(diagonalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(diagonalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(diagonalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(4, vertex.Edges.Count());
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(9.292891, 10, 0)));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(4, vertex.Edges.Count());
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(10, 9.292891, 0)));
+        }
+
+        [Fact]
         public void IntersectsObstacleFromLine()
         {
             var offset = 0.1;
@@ -184,6 +264,109 @@ namespace Elements
 
             var offsetedLine = angledLine.TransformedLine(new Transform(offset, 0, 0));
             Assert.True(angledObstacle.Intersects(offsetedLine));
+        }
+
+        [Fact]
+        public void ObstacleFromLineHasCorrectOrientationInGrid()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+            Line centerLine = new Line(new Vector3(9, 0), new Vector3(1, 0));
+            var horizontalObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true);
+            var expectedPoints = new List<Vector3>()
+            {
+                new Vector3(0.5, -0.5, -0.5),
+                new Vector3(0.5, 0.5, -0.5),
+                new Vector3(9.5, -0.5, -0.5),
+                new Vector3(9.5, 0.5, -0.5),
+                new Vector3(0.5, -0.5, 0.5),
+                new Vector3(0.5, 0.5, 0.5),
+                new Vector3(9.5, -0.5, 0.5),
+                new Vector3(9.5, 0.5, 0.5)
+            };
+            Assert.Equal(horizontalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(horizontalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(horizontalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0.5, 0), out var id));
+            var vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(9.5, 0.5, 0))));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(0.5, 0, 0))));
+
+            grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+            centerLine = new Line(new Vector3(0, 1), new Vector3(0, 9));
+            var perpendicularObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true);
+            expectedPoints = new List<Vector3>()
+            {
+                new Vector3(-0.5, 0.5, -0.5),
+                new Vector3(0.5, 0.5, -0.5),
+                new Vector3(-0.5, 9.5, -0.5),
+                new Vector3(0.5, 9.5, -0.5),
+                new Vector3(-0.5, 0.5, 0.5),
+                new Vector3(0.5, 0.5, 0.5),
+                new Vector3(-0.5, 9.5, 0.5),
+                new Vector3(0.5, 9.5, 0.5),
+            };
+            Assert.Equal(perpendicularObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(perpendicularObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(perpendicularObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0.5, 0), out id));
+            vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(0.5, 9.5, 0))));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(0, 0.5, 0))));
+
+            grid = new AdaptiveGrid();
+            var boundary = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+            grid.AddFromPolygon(boundary, new List<Vector3> { });
+            grid.Boundaries = boundary;
+            centerLine = new Line(new Vector3(0, 0), new Vector3(10, 10));
+            var diagonalObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true, allowOutsideBoundary: false);
+            expectedPoints = new List<Vector3>()
+            {
+                new Vector3(0, -0.70711, -0.5),
+                new Vector3(-0.70711, 0, -0.5),
+                new Vector3(10, 10.70711, -0.5),
+                new Vector3(10.70711, 10, -0.5),
+                new Vector3(0, -0.70711, 0.5),
+                new Vector3(-0.70711, 0, 0.5),
+                new Vector3(10, 10.70711, 0.5),
+                new Vector3(10.70711, 10, 0.5),
+            };
+            Assert.Equal(diagonalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(diagonalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(diagonalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(9.292891, 10, 0)));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(10, 9.292891, 0)));
+
+            grid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 45));
+            boundary = new Polygon(new List<Vector3> { new Vector3(0, 0), new Vector3(-5, 5), new Vector3(0, 10), new Vector3(5, 5) });
+            grid.AddFromExtrude(boundary, Vector3.ZAxis, 1, new List<Vector3> { new Vector3(0, 0) });
+            centerLine = new Line(new Vector3(0, 0), new Vector3(0, 0, 2));
+            var verticalObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true);
+            expectedPoints = new List<Vector3>()
+            {
+                new Vector3(0.5, 0.5, -0.5),
+                new Vector3(-0.5, 0.5, -0.5),
+                new Vector3(-0.5, -0.5, -0.5),
+                new Vector3(0.5, -0.5, -0.5),
+                new Vector3(0.5, 0.5, 2.5),
+                new Vector3(-0.5, 0.5, 2.5),
+                new Vector3(-0.5, -0.5, 2.5),
+                new Vector3(0.5, -0.5, 2.5),
+            };
+            Assert.Equal(verticalObstacle.Points.Count, expectedPoints.Count);
+            Assert.True(verticalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(verticalObstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0.5, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(1, 0, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(0, 1, 0)));
         }
     }
 }
