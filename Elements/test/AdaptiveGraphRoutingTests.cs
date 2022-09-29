@@ -47,11 +47,7 @@ namespace Elements.Tests
             var edgeCosts = new Dictionary<ulong, EdgeInfo>();
             foreach (var e in grid.GetEdges())
             {
-                var sp = grid.GetVertex(e.StartId).Point;
-                var ep = grid.GetVertex(e.EndId).Point;
-                var w = (sp - ep).Length();
-                var hasVerticalChange = Math.Abs(sp.Z - ep.Z) > grid.Tolerance; 
-                edgeCosts[e.Id] = new EdgeInfo(w, 1, hasVerticalChange);
+                edgeCosts[e.Id] = new EdgeInfo(grid, e);
             }
 
             //Calculate all path from point (0, 4) to all other accessible points.
@@ -134,14 +130,10 @@ namespace Elements.Tests
             {
                 //Set travel cost for each edge equal to it's length.
                 //Except (5, 2) -> (8, 2) for which it's 0.9 of length.
-                var sp = grid.GetVertex(e.StartId).Point;
-                var ep = grid.GetVertex(e.EndId).Point;
-                var w = (sp - ep).Length();
-                var hasVerticalChange = Math.Abs(sp.Z - ep.Z) > grid.Tolerance;
                 bool startMatch = e.StartId == ev0 || e.StartId == ev1;
                 bool endMatch = e.EndId == ev0 || e.EndId == ev1;
                 var factor = startMatch && endMatch ? 0.9 : 1;
-                edgeCosts[e.Id] = new EdgeInfo(w, factor, hasVerticalChange);
+                edgeCosts[e.Id] = new EdgeInfo(grid, e, factor);
             }
 
             Assert.True(grid.TryGetVertexIndex(new Vector3(2, 3, 0), out var preV, grid.Tolerance));
