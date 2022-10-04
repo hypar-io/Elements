@@ -1050,20 +1050,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 if (index < hits.Count && !hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
                 {
-                    Vertex finalCut;
-                    if (hits[index].DistanceAlongLine > segmentLength + extendDistance)
-                    {
-                        finalCut = AddVertex(points[i + 1]);
-                        if (finalCut.Id != lastCut.Id)
-                        {
-                            AddInsertEdge(lastCut.Id, finalCut.Id);
-                        }
-                    }
-                    else
-                    {
-                        finalCut = InsertHit(hits[index], lastCut);
-                    }
-
+                    var finalCut = InsertFinalCut(hits[index], lastCut, points[i + 1], segmentLength + extendDistance);
                     if (finalCut != null)
                     {
                         vertices.Add(finalCut);
@@ -1072,6 +1059,8 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             return vertices;
         }
+
+        #region AddVerticesWithCustomExtension helper functions
 
         private List<(Edge Edge, double DistanceAlongLine, double DistanceAlongEdge, double EdgeLength)> IntersectGraph(
             Vector3 start, Vector3 end)
@@ -1167,6 +1156,28 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             return newCut;
         }
+
+        private Vertex InsertFinalCut(
+            (Edge Edge, double DistanceAlongLine, double DistanceAlongEdge, double EdgeLength) hit,
+            Vertex lastCut, Vector3 endPoint, double maxDistance)
+        {
+            Vertex finalCut;
+            if (hit.DistanceAlongLine > maxDistance)
+            {
+                finalCut = AddVertex(endPoint);
+                if (finalCut.Id != lastCut.Id)
+                {
+                    AddInsertEdge(lastCut.Id, finalCut.Id);
+                }
+            }
+            else
+            {
+                finalCut = InsertHit(hit, lastCut);
+            }
+            return finalCut;
+        }
+
+        #endregion
 
         private void DeleteVertex(ulong id)
         {
