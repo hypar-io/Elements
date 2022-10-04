@@ -1014,15 +1014,15 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
 
                 Vertex lastCut;
-                if (hits[index].LineParam < -extendDistance)
+                if (hits[index].DistanceAlongLine < -extendDistance)
                 {
                     lastCut = AddVertex(points[i]);
                 }
-                else if (hits[index].EdgeParam.ApproximatelyEquals(0, Tolerance))
+                else if (hits[index].DistanceAlongEdge.ApproximatelyEquals(0, Tolerance))
                 {
                     lastCut = GetVertex(hits[index].Edge.StartId);
                 }
-                else if (hits[index].EdgeParam.ApproximatelyEquals(hits[index].EdgeLength, Tolerance))
+                else if (hits[index].DistanceAlongEdge.ApproximatelyEquals(hits[index].EdgeLength, Tolerance))
                 {
                     lastCut = GetVertex(hits[index].Edge.EndId);
                 }
@@ -1030,14 +1030,14 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     var startPoint = GetVertex(hits[index].Edge.StartId).Point;
                     var endPoint = GetVertex(hits[index].Edge.EndId).Point;
-                    var cutPoint = startPoint + hits[index].EdgeParam * (endPoint - startPoint).Unitized();
+                    var cutPoint = startPoint + hits[index].DistanceAlongEdge * (endPoint - startPoint).Unitized();
                     lastCut = CutEdge(hits[index].Edge, cutPoint);
                 }
 
                 index++;
                 vertices.Add(lastCut);
 
-                while (index < hits.Count && hits[index].LineParam < segmentLength + Tolerance)
+                while (index < hits.Count && hits[index].DistanceAlongLine < segmentLength + Tolerance)
                 {
                     var newCut = InsertHit(hits[index], lastCut);
                     if (newCut != null)
@@ -1048,10 +1048,10 @@ namespace Elements.Spatial.AdaptiveGrid
                     index++;
                 }
 
-                if (index < hits.Count && !hits[index - 1].LineParam.ApproximatelyEquals(segmentLength, Tolerance))
+                if (index < hits.Count && !hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
                 {
                     Vertex finalCut;
-                    if (hits[index].LineParam > segmentLength + extendDistance)
+                    if (hits[index].DistanceAlongLine > segmentLength + extendDistance)
                     {
                         finalCut = AddVertex(points[i + 1]);
                         if (finalCut.Id != lastCut.Id)
@@ -1073,7 +1073,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return vertices;
         }
 
-        private List<(Edge Edge, double LineParam, double EdgeParam, double EdgeLength)> IntersectGraph(
+        private List<(Edge Edge, double DistanceAlongLine, double DistanceAlongEdge, double EdgeLength)> IntersectGraph(
             Vector3 start, Vector3 end)
         {
             var hits = new List<(Edge Edge, double D1, double D2, double L2)>();
