@@ -212,7 +212,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var frame = obstacle.Orientation == null ? Transform : obstacle.Orientation;
             var toGrid = frame.Inverted();
             List<Vector3> localPoints = obstacle.Points.Select(p => toGrid.OfPoint(p)).ToList();
-            BBox3 localBox = new BBox3(localPoints).Offset(obstacle.Offset);
+            BBox3 localBox = new BBox3(localPoints);
 
             var edgesToDelete = new List<Edge>();
             var edgesToAdd = new List<(Vertex Anchor, Edge Edge, Vector3 New)>();

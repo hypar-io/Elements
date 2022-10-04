@@ -139,15 +139,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="addPerimeterEdges">Should edges be created around obstacle.</param>
         /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
-        /// <param name="transformation">Transformation of the obstacle.</param>
-        public Obstacle(Polygon boudary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform transformation)
+        /// <param name="orienatation">Orientation of the obstacle in space. Helpful for better bounding box creation.</param>
+        public Obstacle(Polygon boudary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform orienatation)
         {
             Boundary = boudary;
             Height = height;
             Offset = offset;
             AddPerimeterEdges = addPerimeterEdges;
             AllowOutsideBoudary = allowOutsideBoundary;
-            Orientation = transformation;
+            Orientation = orienatation;
 
             Material = BuiltInMaterials.Mass;
 
@@ -157,10 +157,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => Boundary?
-            .Vertices
-            .SelectMany(x => new List<Vector3> { x, x + Boundary.Normal().Negate() * Height })
-            .ToList() ?? new List<Vector3>();
+        public List<Vector3> Points => _primaryPolygons?.SelectMany(x => x.Vertices).ToList() ?? new List<Vector3>();
 
         /// <summary>
         /// Perimeter defining obstacle.
@@ -301,11 +298,6 @@ namespace Elements.Spatial.AdaptiveGrid
             if (Boundary == null)
             {
                 return;
-            }
-
-            if (!_boundary.IsClockWise())
-            {
-                _boundary = _boundary.Reversed();
             }
 
             _secondaryPolygons.Clear();
