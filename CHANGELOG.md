@@ -1,8 +1,28 @@
 # Changelog
 
+## 1.3.0
+
+### Added
+
+- `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
+- `AdaptiveGrid.HintExtendDistance`
+- `Obstacle.Orientation`
+
+### Changed
+
+- `Line.PointOnLine` - added `tolerance` parameter.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
+-  Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
+
+### Fixed
+
+- `Line.Intersects` for `BBox3` - better detection of line with one intersection that just touches box corner.
+- `Obstacle.FromWall` and `Obstacle.FromLine` produced wrong `Points` when diagonal.
+
 ## 1.2.0
 
 ### Added
+
 - `Polygon(IList<Vector3> @vertices, bool disableValidation = false)`
 - `Polygon(bool disableValidation, params Vector3[] vertices)`
 - `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
@@ -26,8 +46,6 @@
                                out Dictionary<Guid, List<Polygon>> intersectionPolygons,
                                out Dictionary<Guid, List<Polygon>> beyondPolygons,
                                out Dictionary<Guid, List<Line>> lines)`
-- `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
-- `AdaptiveGrid.HintExtendDistance`
 
 ### Changed
 
@@ -37,9 +55,6 @@
 - `AdaptiveGrid.Boundary` can be left null.
 - `Obstacle` properties `Points`, `Offset`, `Perimeter` and `Transform` can be modified from outside.
 - `LinearDimension`s now support `IOverrideLinked` behavior.
-- `Line.PointOnLine` - added `tolerance` parameter.
-- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
--  Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
 
 ### Fixed
 
@@ -48,10 +63,8 @@
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
-- `Profile.Split` would fail if the perimeter was clockwise-wound.
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
 - `Obstacle.FromWall` was failing when producing a polygon.
-- GLTF creation does not include elements with custom buffers if they are `IsElementDefinition=true`.
 
 ## 1.1.0
 
