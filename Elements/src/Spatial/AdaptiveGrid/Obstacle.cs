@@ -157,8 +157,9 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => _primaryPolygons?
-            .SelectMany(x => x.Vertices)
+        public List<Vector3> Points => Boundary?
+            .Vertices
+            .SelectMany(x => new List<Vector3> { x, x + Boundary.Normal().Negate() * Height })
             .ToList() ?? new List<Vector3>();
 
         /// <summary>
@@ -300,6 +301,11 @@ namespace Elements.Spatial.AdaptiveGrid
             if (Boundary == null)
             {
                 return;
+            }
+
+            if (!_boundary.IsClockWise())
+            {
+                _boundary = _boundary.Reversed();
             }
 
             _secondaryPolygons.Clear();

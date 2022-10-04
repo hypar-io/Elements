@@ -368,5 +368,37 @@ namespace Elements
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(1, 0, 0)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(0, 1, 0)));
         }
+
+        [Fact]
+        public void ObstacleFromColumnHasCorrectOrientationInGrid()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { new Vector3(5, 5) });
+            var center = new Vector3(5, 5);
+            var profile = Polygon.Rectangle(1, 1);
+            Column column = new Column(center, 1, null, profile);
+            var obstacle = Obstacle.FromColumn(column, 0.1, addPerimeterEdges: true);
+            var expectedPoints = new List<Vector3>()
+            {
+                new Vector3(5.5, 5.5, 0),
+                new Vector3(5.5, 4.5, 0),
+                new Vector3(4.5, 4.5, 0),
+                new Vector3(4.5, 5.5, 0),
+                new Vector3(5.5, 5.5, 1),
+                new Vector3(5.5, 4.5, 1),
+                new Vector3(4.5, 4.5, 1),
+                new Vector3(4.5, 5.5, 1),
+            };
+
+            Assert.Equal(obstacle.Points.Count, expectedPoints.Count);
+            Assert.True(obstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
+            grid.SubtractObstacle(obstacle);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5.6, 5, 0), out var id));
+            var vertex = grid.GetVertex(id);
+            Assert.Equal(3, vertex.Edges.Count());
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(5.6, 5.6, 0))));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(new Vector3(5.6, 4.4, 0))));
+        }
     }
 }
