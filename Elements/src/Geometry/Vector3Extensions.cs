@@ -251,6 +251,27 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+        
+        /// <summary>
+        /// Remove vectors at the same place
+        /// </summary>
+        /// <param name="vectors">List of vectors</param>
+        /// <param name="tolerance">Distance tolerance</param>
+        /// <returns>List without vectors at the same place</returns>
+        public static IEnumerable<Vector3> RemoveVectorsAtSamePlace(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        {
+            var output = new List<Vector3>();
+            foreach (var vector in vectors)
+            {
+                if (output.Any(x => x.IsAlmostEqualTo(vector, tolerance)))
+                {
+                    continue;;
+                }
+                output.Add(vector);
+            }
+
+            return output;
+        }
     }
 
     /// <summary>
