@@ -44,11 +44,10 @@ namespace Elements.Tests
             grid.TryGetVertexIndex(new Vector3(0, 4, 0), out var inV, grid.Tolerance);
 
             //Set travel cost for each edge equal to it's length
-            var edgeCosts = new Dictionary<ulong, (double Length, double Factor)>();
+            var edgeCosts = new Dictionary<ulong, EdgeInfo>();
             foreach (var e in grid.GetEdges())
             {
-                var w = (grid.GetVertex(e.StartId).Point - grid.GetVertex(e.EndId).Point).Length();
-                edgeCosts[e.Id] = (w, 1);
+                edgeCosts[e.Id] = new EdgeInfo(grid, e);
             }
 
             //Calculate all path from point (0, 4) to all other accessible points.
@@ -125,17 +124,16 @@ namespace Elements.Tests
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 2, 0), out var ev0, grid.Tolerance));
             Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2, 0), out var ev1, grid.Tolerance));
 
-            var edgeCosts = new Dictionary<ulong, (double Length, double Factor)>();
+            var edgeCosts = new Dictionary<ulong, EdgeInfo>();
 
             foreach (var e in grid.GetEdges())
             {
                 //Set travel cost for each edge equal to it's length.
                 //Except (5, 2) -> (8, 2) for which it's 0.9 of length.
-                var w = (grid.GetVertex(e.StartId).Point - grid.GetVertex(e.EndId).Point).Length();
                 bool startMatch = e.StartId == ev0 || e.StartId == ev1;
                 bool endMatch = e.EndId == ev0 || e.EndId == ev1;
                 var factor = startMatch && endMatch ? 0.9 : 1;
-                edgeCosts[e.Id] = (w, factor);
+                edgeCosts[e.Id] = new EdgeInfo(grid, e, factor);
             }
 
             Assert.True(grid.TryGetVertexIndex(new Vector3(2, 3, 0), out var preV, grid.Tolerance));

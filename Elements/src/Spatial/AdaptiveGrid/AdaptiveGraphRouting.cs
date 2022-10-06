@@ -180,6 +180,49 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Precalculated information about the edge.
+        /// </summary>
+        public struct EdgeInfo
+        {
+            /// <summary>
+            /// Construct new EdgeInfo structure.
+            /// </summary>
+            /// <param name="grid">Grid, edge belongs to.</param>
+            /// <param name="edge">The edge.</param>
+            /// <param name="factor">Edge traveling factor.</param>
+            public EdgeInfo(AdaptiveGrid grid, Edge edge, double factor = 1)
+            {
+                Edge = edge;
+                var v0 = grid.GetVertex(edge.StartId);
+                var v1 = grid.GetVertex(edge.EndId);
+                var vector = (v1.Point - v0.Point);
+                Length = vector.Length();
+                Factor = factor;
+                HasVerticalChange = Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance;
+            }
+
+            /// <summary>
+            /// The Edge.
+            /// </summary>
+            public readonly Edge Edge;
+
+            /// <summary>
+            /// Length of the edge.
+            /// </summary>
+            public readonly double Length;
+
+            /// <summary>
+            /// Edge traveling factor.
+            /// </summary>
+            public readonly double Factor;
+
+            /// <summary>
+            /// Are edge end points on different elevations.
+            /// </summary>
+            public readonly bool HasVerticalChange;
+        }
+
+        /// <summary>
         /// Filter function definition.
         /// </summary>
         /// <param name="start">Last Vertex in the route.</param>
@@ -835,19 +878,17 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Also some edges are not allowed at all by setting factor to infinity.
         /// </summary>
         /// <param name="hintLines">Lines that affect travel factor for edges</param>
-        /// <returns>For each edge - its length and extra traveling factor</returns>
-        private Dictionary<ulong, (double Length, double Factor)> CalculateWeights(
+        /// <returns>For each edge - its precalculated additional information.</returns>
+        private Dictionary<ulong, EdgeInfo> CalculateWeights(
             IEnumerable<RoutingHintLine> hintLines)
         {
-            var weights = new Dictionary<ulong, (double Length, double Factor)>();
+            var weights = new Dictionary<ulong, EdgeInfo>();
             var mainAxis = _grid.Transform.XAxis;
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
                 var v1 = _grid.GetVertex(e.EndId);
                 var vector = (v1.Point - v0.Point);
-                var w = vector.Length();
-
                 var angle = vector.AngleTo(mainAxis);
                 if (angle > 90)
                 {
@@ -857,7 +898,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (_configuration.SupportedAngles != null &&
                     !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle, 0.01)))
                 {
-                    weights[e.Id] = (w, double.PositiveInfinity);
+                    weights[e.Id] = new EdgeInfo(_grid, e, double.PositiveInfinity);
                 }
                 else
                 {
@@ -890,7 +931,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
                     }
 
-                    weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                    weights[e.Id] = new EdgeInfo(_grid, e, hintFactor * offsetFactor * layerFactor);
                 }
             }
 
@@ -940,7 +981,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="pathDirections">Next Vertex dictionary for Vertices that are already part of the route</param>
         /// <returns>Dictionary that have travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ulong> ShortestPathDijkstra(
-            ulong start, Dictionary<ulong, (double Length, double Factor)> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
             out Dictionary<ulong, double> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null,
             Dictionary<ulong, ulong?> pathDirections = null)
@@ -1008,7 +1049,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
@@ -1016,13 +1057,13 @@ namespace Elements.Spatial.AdaptiveGrid
                         var vertexBefore = _grid.GetVertex(beforeId);
                         if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, vertexBefore.Id, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, vertexBefore.Id, edgeWeights);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
                             !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, v, vertexAfter.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, v, vertexAfter.Value, edgeWeights);
                         }
                     }
 
@@ -1052,7 +1093,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="excluded">Vertices that are not allowed to visit</param>
         /// <returns>Dictionary that have two travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> ShortestBranchesDijkstra(
-            ulong start, Dictionary<ulong, (double Length, double Factor)> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
             out Dictionary<ulong, (double, double)> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
@@ -1121,7 +1162,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
@@ -1133,8 +1174,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
-                            leftCost += CalculateTurnCost(
-                                edgeWeight.Factor, vertex, leftBefore.Id, edgeWeights);
+                            leftCost += CalculateTurnCost(edgeWeight, vertex, leftBefore.Id, edgeWeights);
                         }
 
                         var rigthCost = Double.MaxValue;
@@ -1144,8 +1184,7 @@ namespace Elements.Spatial.AdaptiveGrid
                             rigthCost = cost.Item2 + newWeight;
                             if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += CalculateTurnCost(
-                                    edgeWeight.Factor, vertex, rigthBefore.Id, edgeWeights);
+                                rigthCost += CalculateTurnCost(edgeWeight, vertex, rigthBefore.Id, edgeWeights);
                             }
                         }
 
@@ -1197,26 +1236,34 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Calculate turn cost between two edges.
-        /// Turn cost should take into account cost factor of given edges.
+        /// If turn is not vertical, turn cost should take into account cost factor of given edges.
         /// Otherwise hint paths with several turns would be ignored because of extra cost.
         /// The turn factor is multiplied by minimum of two edges factor.
         /// </summary>
-        /// <param name="edgeFactor">Edge factor of the first edge</param>
+        /// <param name="edgeInfo">Edge informations for the first edge</param>
         /// <param name="sharedVertex">Id of the vertex, common for two edges</param>
         /// <param name="thirdVertexId">Third vertex Id</param>
         /// <param name="edgeWeights">Precalculated length and factor for each edge</param>
         /// <returns></returns>
         private double CalculateTurnCost(
-            double edgeFactor, Vertex sharedVertex, ulong thirdVertexId,
-            IDictionary<ulong, (double Lenght, double Factor)> edgeWeights)
+            EdgeInfo edgeInfo, Vertex sharedVertex, ulong thirdVertexId,
+            IDictionary<ulong, EdgeInfo> edgeWeights)
         {
             var otherEdge = sharedVertex.Edges.Where(
                 edge => edge.StartId == thirdVertexId || edge.EndId == thirdVertexId).FirstOrDefault();
             var otherWeight = edgeWeights[otherEdge.Id];
+
+            //Do not modify turn cost if either of edges is not horizontal.
+            //This prevents "free to travel" loops under 2d hint lines.
+            if (edgeInfo.HasVerticalChange || otherWeight.HasVerticalChange)
+            {
+                return _configuration.TurnCost;
+            }
+
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
             //fully inside hint line influence area. 
-            return _configuration.TurnCost * Math.Min(edgeFactor, otherWeight.Factor);
+            return _configuration.TurnCost * Math.Min(edgeInfo.Factor, otherWeight.Factor);
         }
 
         private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
@@ -1453,7 +1500,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IDictionary<ulong, (double, double)> travelCost,
             IDictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> connections,
             IDictionary<ulong, ulong?> tree,
-            IDictionary<ulong, (double Length, double Factor)> weights)
+            IDictionary<ulong, EdgeInfo> weights)
 
         {
             ulong bestIndex = 0;
@@ -1482,7 +1529,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV1.Id || e.EndId == beforeV1.Id).First();
                                 var edgeWeight = weights[edge.Id];
-                                cost1 += CalculateTurnCost(edgeWeight.Factor, activeV, nextV.Id, weights);
+                                cost1 += CalculateTurnCost(edgeWeight, activeV, nextV.Id, weights);
                             }
                         }
 
@@ -1494,7 +1541,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV2.Id || e.EndId == beforeV2.Id).First();
                                 var edgeWeight = weights[edge.Id];
-                                cost2 += CalculateTurnCost(edgeWeight.Factor, activeV, nextV.Id, weights);
+                                cost2 += CalculateTurnCost(edgeWeight, activeV, nextV.Id, weights);
                             }
 
                         }

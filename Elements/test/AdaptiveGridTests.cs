@@ -278,7 +278,7 @@ namespace Elements.Tests
             //Forms small (6;6) -> (8;6) -> (8;8) -> (6;8) rectangle.
             bbox = new BBox3(new Vector3(6, 6), new Vector3(8, 8));
             var withTransform = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
-            withTransform.Transform = new Transform();
+            withTransform.Orientation = new Transform();
             adaptiveGrid.SubtractObstacle(withTransform);
 
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(7, 7), out _, adaptiveGrid.Tolerance));
@@ -590,6 +590,55 @@ namespace Elements.Tests
             Assert.Equal(4, added[5].Edges.Count);
             Assert.Equal(4, added[6].Edges.Count);
             Assert.Equal(3, added[7].Edges.Count);
+        }
+
+        [Fact]
+        public void AddVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> {});
+
+            //Default HintExtendDistance is 3.
+            var toExtend = new Vector3[] { new Vector3(1, 3), new Vector3(1, 6) };
+            var added = grid.AddVerticesWithCustomExtension(toExtend, grid.HintExtendDistance);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(1, 0), added[0].Point);
+            Assert.Equal(new Vector3(1, 6), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Single(added[1].Edges);
+
+            toExtend = new Vector3[] { new Vector3(5, 3), new Vector3(5, 6) };
+            added = grid.AddVerticesWithCustomExtension(toExtend, 4);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(5, 0), added[0].Point);
+            Assert.Equal(new Vector3(5, 10), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Equal(3, added[1].Edges.Count);
+
+            toExtend = new Vector3[] { new Vector3(8, 3), new Vector3(8, 6) };
+            added = grid.AddVerticesWithCustomExtension(toExtend, 2);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(8, 3), added[0].Point);
+            Assert.Equal(new Vector3(8, 6), added[1].Point);
+            Assert.Single(added[0].Edges);
+            Assert.Single(added[1].Edges);
+        }
+
+        [Fact]
+        public void AddAngledVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+
+            var toExtend = new Vector3[] { new Vector3(1, 7), new Vector3(2, 8) };
+            var added = grid.AddVerticesWithCustomExtension(toExtend, 2);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(0, 6), added[0].Point);
+            Assert.Equal(new Vector3(2, 8), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Single(added[1].Edges);
         }
 
         [Fact]
