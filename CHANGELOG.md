@@ -26,6 +26,7 @@
                                out Dictionary<Guid, List<Polygon>> intersectionPolygons,
                                out Dictionary<Guid, List<Polygon>> beyondPolygons,
                                out Dictionary<Guid, List<Line>> lines)`
+- `IEnumerable<Vector3>.RemoveVectorsAtSamePlace(double tolerance = Vector3.EPSILON)`
 
 ### Changed
 
