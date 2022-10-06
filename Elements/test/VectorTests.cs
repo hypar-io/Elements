@@ -516,5 +516,49 @@ namespace Elements.Tests
             Assert.True(closestPointSegment.IsAlmostEqualTo(new Vector3(0, 0)));
             Assert.True(closestPointInfinite.IsAlmostEqualTo(new Vector3(-5, -5)));
         }
+
+        [Fact]
+        public void RemoveVectorsAtTheSamePlace()
+        {
+            var vectorsList = new List<Vector3>
+            {
+                Vector3.Origin,
+                new Vector3(0.000009, 0, 0),
+                new Vector3(0, -0.000009, 0),
+                new Vector3(5, 5),
+                new Vector3(5, 5, 0.000009),
+                Vector3.Origin, 
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.RemoveVectorsAtSamePlace();
+            
+            Assert.Collection(result, 
+                x => x.IsAlmostEqualTo(Vector3.Origin),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5)));
+        }
+        
+        [Fact]
+        public void RemoveVectorsAtTheSamePlaceWithTolerance()
+        {
+            var tolerance = 0.2;
+            
+            var vectorsList = new List<Vector3>
+            {
+                new Vector3(0.1, 0, 0),
+                Vector3.Origin,
+                new Vector3(0, -0.1, 0),
+                new Vector3(5, 5, 0.1),
+                new Vector3(5, 5),
+                Vector3.Origin, 
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.RemoveVectorsAtSamePlace(tolerance);
+            
+            Assert.Collection(result, 
+                x => x.IsAlmostEqualTo(Vector3.Origin, tolerance),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5), tolerance));
+        }
     }
 }
