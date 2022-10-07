@@ -782,6 +782,63 @@ namespace Elements.Tests
             CheckTree(grid, start.Id, route, expectedPath);
         }
 
+        [Fact]
+        public void AdaptiveGraphRoutingIsolationRadiusCheck()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+
+            // Straight path
+            var strip = grid.AddVertices(new Vector3[] {
+                new Vector3(0, 0, 0),
+                new Vector3(2, 0, 0),
+                new Vector3(4, 0, 0)
+            }, AdaptiveGrid.VerticesInsertionMethod.Connect);
+
+            // Longer path goes around.
+            grid.AddVertices(new Vector3[]
+            {
+                new Vector3(1, 0, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(3, 1, 0),
+                new Vector3(3, 0, 0),
+            }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            // Without isolation distance shortest path is taken.
+            var c = new RoutingConfiguration();
+            var routing = new AdaptiveGraphRouting(grid, c);
+            var first = new RoutingVertex(strip[0].Id, 0);
+            var second = new RoutingVertex(strip[1].Id, 0);
+            var route = routing.BuildSimpleNetwork(
+                new List<RoutingVertex> { first, second },
+                new List<ulong> { strip.Last().Id });
+            var expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(1, 0, 0),
+                new Vector3(2, 0, 0),
+                new Vector3(3, 0, 0),
+                new Vector3(4, 0, 0)
+            };
+            CheckTree(grid, first.Id, route, expectedPath);
+
+            // When isolation radius is used inlets can't go one near another.
+            first = new RoutingVertex(strip[0].Id, 0.1);
+            second = new RoutingVertex(strip[1].Id, 0.1);
+            route = routing.BuildSimpleNetwork(
+                new List<RoutingVertex> { first, second },
+                new List<ulong> { strip.Last().Id });
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(1, 0, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(3, 1, 0),
+                new Vector3(3, 0, 0),
+                new Vector3(4, 0, 0)
+            };
+            CheckTree(grid, first.Id, route, expectedPath);
+        }
+
         private static void CheckTree(
             AdaptiveGrid grid, ulong startId, IDictionary<ulong, ulong?> tree, List<Vector3> expectedPath)
         {

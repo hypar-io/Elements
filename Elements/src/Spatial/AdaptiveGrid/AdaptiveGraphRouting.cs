@@ -339,7 +339,7 @@ namespace Elements.Spatial.AdaptiveGrid
         public IDictionary<ulong, ulong?> BuildSimpleNetwork(
             IList<RoutingVertex> leafVertices,
             IList<ulong> exits,
-            IEnumerable<RoutingHintLine> hintLines)
+            IEnumerable<RoutingHintLine> hintLines = null)
         {
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
@@ -374,7 +374,9 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var inlet in leafVertices)
             {
-                var connections = ShortestPathDijkstra(inlet.Id, weights, out var travelCost);
+                var excluded = FilteredSet(allExcluded, excludedVertices[inlet.Id]);
+                var connections = ShortestPathDijkstra(
+                    inlet.Id, weights, out var travelCost, excluded: excluded);
                 var exit = FindConnectionPoint(exits, travelCost);
                 var path = GetPathTo(connections, exit);
                 AddPathToTree(inlet.Id, path, vertexTree);
