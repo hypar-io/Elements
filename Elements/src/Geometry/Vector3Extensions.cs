@@ -253,12 +253,12 @@ namespace Elements.Geometry
         }
         
         /// <summary>
-        /// Remove vectors at the same place
+        /// De-duplicate a collection of Vectors, such that no two vectors in the result are within tolerance of each other.
         /// </summary>
         /// <param name="vectors">List of vectors</param>
         /// <param name="tolerance">Distance tolerance</param>
-        /// <returns>List without vectors at the same place</returns>
-        public static IEnumerable<Vector3> RemoveVectorsAtSamePlace(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        /// <returns>A new collection of vectors with duplicates removed.</returns>
+        public static IEnumerable<Vector3> UniqueWithinTolerance(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
         {
             var output = new List<Vector3>();
             foreach (var vector in vectors)

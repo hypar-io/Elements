@@ -518,7 +518,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void RemoveVectorsAtTheSamePlace()
+        public void UniqueWithinToleranceReturnsNewCollection()
         {
             var vectorsList = new List<Vector3>
             {
@@ -531,7 +531,7 @@ namespace Elements.Tests
                 new Vector3(5,5)
             };
 
-            var result = vectorsList.RemoveVectorsAtSamePlace();
+            var result = vectorsList.UniqueWithinTolerance();
             
             Assert.Collection(result, 
                 x => x.IsAlmostEqualTo(Vector3.Origin),
@@ -539,7 +539,7 @@ namespace Elements.Tests
         }
         
         [Fact]
-        public void RemoveVectorsAtTheSamePlaceWithTolerance()
+        public void UniqueWithinToleranceReturnsNewCollectionWithTolerance()
         {
             var tolerance = 0.2;
             
@@ -554,7 +554,7 @@ namespace Elements.Tests
                 new Vector3(5,5)
             };
 
-            var result = vectorsList.RemoveVectorsAtSamePlace(tolerance);
+            var result = vectorsList.UniqueWithinTolerance(tolerance);
             
             Assert.Collection(result, 
                 x => x.IsAlmostEqualTo(Vector3.Origin, tolerance),
