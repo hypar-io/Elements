@@ -42,7 +42,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Routing supports checking if a Vertex can be added to the path.
-        /// New vertex must pass all filter functions to be accepted. 
+        /// New vertex must pass all filter functions to be accepted.
         /// </summary>
         /// <param name="f">New filter function.</param>
         public void AddRoutingFilter(RoutingFilter f)
@@ -75,7 +75,7 @@ namespace Elements.Spatial.AdaptiveGrid
             foreach (var edge in _grid.GetEdges())
             {
                 //There is only one edge for vertex pair, if this is changed -
-                //we will need to check edges for uniqueness, 
+                //we will need to check edges for uniqueness,
                 var v0 = _grid.GetVertex(edge.StartId);
                 var v1 = _grid.GetVertex(edge.EndId);
                 Line l = new Line(v0.Point, v1.Point);
@@ -176,7 +176,7 @@ namespace Elements.Spatial.AdaptiveGrid
             List<ulong> collectorTerminals = leafVertices.Select(lv => lv.Id).ToList();
 
             //Join all individual pieces together. We start from a single connection
-            //path from droppipe and a set of connection points from the previous step.
+            //path from trunk and a set of connection points from the previous step.
             //One at a time we choose the connection point that is cheapest to travel to existing
             //network and its path is added to the network until all are added.
             HashSet<ulong> magnetTerminals = new HashSet<ulong>() { trunkVertex };
@@ -228,18 +228,18 @@ namespace Elements.Spatial.AdaptiveGrid
         /// hint lines and local end Vertex, and the exit Vertex.
         /// Route is created by using Dijkstra algorithm locally on different segments.
         /// Segments are merged together to form a single trunk. Starting from end, point by point,
-        /// segments are connected. Then, Vertices in each segments are connected as well, 
+        /// segments are connected. Then, Vertices in each segments are connected as well,
         /// forming a local trunk, connected with the main one.
         /// All parameter except "trunkPathVertices" are provided per section in the same order.
         /// </summary>
         /// <param name="leafVertices">Vertices to connect into the system with extra information attached.</param>
-        /// <param name="trunkVerex">End vertex id.</param>
+        /// <param name="trunkVertex">End vertex id.</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
         /// <param name="order">In which order tree is constructed</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSpanningTree(
             IList<List<RoutingVertex>> leafVertices,
-            ulong trunkVerex,
+            ulong trunkVertex,
             IList<List<RoutingHintLine>> hintLines,
             TreeOrder order)
         {
@@ -262,7 +262,7 @@ namespace Elements.Spatial.AdaptiveGrid
             allExcluded.ExceptWith(nearbyHints.Select(nh => nh.Id));
 
             var vertexTree = new Dictionary<ulong, ulong?>();
-            vertexTree[trunkVerex] = null;
+            vertexTree[trunkVertex] = null;
             foreach (var inlets in leafVertices)
             {
                 foreach (var inlet in inlets)
@@ -270,7 +270,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     vertexTree[inlet.Id] = null;
                 }
             }
- 
+
             //Next steps are repeated independently for each input section
             for (int i = 0; i < leafVertices.Count; i++)
             {
@@ -281,7 +281,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 //path from droppipe and a set of connection points from the previous step.
                 //One at a time we choose the connection point that is cheapest to travel to existing
                 //network and its path is added to the network until all are added.
-                HashSet<ulong> magnetTerminals = new HashSet<ulong> { trunkVerex };
+                HashSet<ulong> magnetTerminals = new HashSet<ulong> { trunkVertex };
 
                 var terminalInfo = new Dictionary<ulong, (
                     Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> Connections,
@@ -784,7 +784,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
-            //fully inside hint line influence area. 
+            //fully inside hint line influence area.
             return _configuration.TurnCost * Math.Min(edgeInfo.Factor, otherWeight.Factor);
         }
 
