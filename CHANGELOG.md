@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+
+### Added
+- `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
+
+
 ## 1.2.0
 
 ### Added
@@ -26,7 +32,6 @@
                                out Dictionary<Guid, List<Polygon>> intersectionPolygons,
                                out Dictionary<Guid, List<Polygon>> beyondPolygons,
                                out Dictionary<Guid, List<Line>> lines)`
-- `IEnumerable<Vector3>.RemoveVectorsAtSamePlace(double tolerance = Vector3.EPSILON)`
 
 ### Changed
 
