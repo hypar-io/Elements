@@ -39,7 +39,7 @@ namespace Elements.Tests
             grid.SubtractObstacle(obstacle);
 
             //Each turn cost 1 additional "meter"
-            var configuration = new AdaptiveGraphRouting.RoutingConfiguration(turnCost: 1);
+            var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
             grid.TryGetVertexIndex(new Vector3(0, 4, 0), out var inV, grid.Tolerance);
 
@@ -213,16 +213,11 @@ namespace Elements.Tests
                 new Vector3(5, 8, 3)
             };
 
-            var tailPoints = new List<Vector3>()
-            {
-                new Vector3(5, 10, 0),
-                new Vector3(5, 10, 2),
-                new Vector3(6, 10, 2)
-            };
+            var tailPoint = new Vector3(5, 10, 0);
 
             var keyPoints = new List<Vector3>();
             keyPoints.AddRange(inputPoints);
-            keyPoints.AddRange(tailPoints);
+            keyPoints.Add(tailPoint);
 
             var hintPolyline = new Polyline(new List<Vector3>()
             {
@@ -238,14 +233,15 @@ namespace Elements.Tests
             var offsetPolyline = new Polyline(new List<Vector3>()
             {
                 new Vector3(6, 2),
-                new Vector3(6, 10)
+                new Vector3(6, 10),
+                new Vector3(5, 10)
             });
             keyPoints.AddRange(offsetPolyline.Vertices.Select(
                 v => new Vector3(v.X, v.Y, configuration.MainLayer)));
 
             var hints = new List<RoutingHintLine>();
-            hints.Add(new RoutingHintLine(hintPolyline, 0.1, 0.2, true));
-            hints.Add(new RoutingHintLine(offsetPolyline, 0.5, 0.1, false));
+            hints.Add(new RoutingHintLine(hintPolyline, 0.01, 0.2, true));
+            hints.Add(new RoutingHintLine(offsetPolyline, 0.1, 0.1, false));
 
             var box = new BBox3(new Vector3(3, 6, 0), new Vector3(7, 7, 3));
             var obstacle = Obstacle.FromBBox(box);
@@ -270,22 +266,32 @@ namespace Elements.Tests
                     inputVertices.Add(new RoutingVertex(id, 0.5));
                 }
             }
-            List<ulong> tailVertices = new List<ulong>();
-            foreach (var tail in tailPoints)
-            {
-                Assert.True(grid.TryGetVertexIndex(tail, out ulong id, grid.Tolerance));
-                {
-                    tailVertices.Add(id);
-                }
-            }
+
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
 
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
-            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
+            var tree = alg.BuildSpanningTree(inputVertices, tailVertex, hints, TreeOrder.ClosestToFurthest);
 
             List<Vector3> expectedPath = new List<Vector3>()
             {
                 new Vector3(5, 8, 3),
                 new Vector3(5, 8, 2),
+                new Vector3(6, 8, 2),
+                new Vector3(6, 10, 2),
+                new Vector3(5, 10, 2),
+                new Vector3(5, 10, 1),
+                new Vector3(5, 10, 0)
+            };
+
+            CheckTree(grid, inputVertices[2].Id, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(5, 5, 3),
+                new Vector3(5, 5, 2),
+                new Vector3(5, 6, 2),
+                new Vector3(3, 6, 2),
+                new Vector3(3, 7, 2),
                 new Vector3(5, 7, 2),
                 new Vector3(6, 7, 2),
                 new Vector3(6, 8, 2),
@@ -295,7 +301,7 @@ namespace Elements.Tests
                 new Vector3(5, 10, 0)
             };
 
-            CheckTree(grid, inputVertices[2].Id, tree, expectedPath);
+            CheckTree(grid, inputVertices[1].Id, tree, expectedPath);
 
             expectedPath = new List<Vector3>()
             {
@@ -343,17 +349,13 @@ namespace Elements.Tests
                 new Vector3(11, 12, 0),
             };
 
-            //3. Define end points. Last should go first.
-            var tailPoints = new List<Vector3>()
-            {
-                new Vector3(12, 20, 0),
-                new Vector3(10, 20, 0)
-            };
+            //3. Define end point.
+            var tailPoint = new Vector3(12, 20, 0);
 
             //4. All significant points must be added as key points.
             var keyPoints = new List<Vector3>();
             keyPoints.AddRange(inputPoints);
-            keyPoints.AddRange(tailPoints);
+            keyPoints.Add(tailPoint);
 
             //5. Define hint and offset lines.
             var firstOffsetPolyline = new Polyline(new List<Vector3>(){
@@ -397,14 +399,7 @@ namespace Elements.Tests
                 }
             }
 
-            List<ulong> tailVertices = new List<ulong>();
-            foreach (var tail in tailPoints)
-            {
-                Assert.True(grid.TryGetVertexIndex(tail, out ulong id, grid.Tolerance));
-                {
-                    tailVertices.Add(id);
-                }
-            }
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
 
             //9. Set configurations for hint and offset lines.
             var hint = new RoutingHintLine(hintPolyline, 0.01, 0.1, true);
@@ -415,11 +410,10 @@ namespace Elements.Tests
             //10. Run algorithm
             var config = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
-            var tree = alg.BuildSpanningTree(inputVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
+            var tree = alg.BuildSpanningTree(inputVertices, tailVertex, hints, TreeOrder.ClosestToFurthest);
 
-            //Throws if no hint lines
-            Assert.Throws<ArgumentException>(() =>
-                alg.BuildSpanningTree(inputVertices, tailVertices, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest));
+            //Not throws if no hint lines
+            alg.BuildSpanningTree(inputVertices, tailVertex, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
 
             //Results visualization
             List<Line> lines = new List<Line>();
@@ -463,25 +457,13 @@ namespace Elements.Tests
                 new Vector3(11, 12, 0),
             };
 
-            //3. Define end points. Last should go first.
-            var tailPoints = new List<Vector3>()
-            {
-                new Vector3(12, 20, 0),
-                new Vector3(10, 20, 0)
-            };
-
-            //3a. Define local tail points, one per group
-            var localTailPoints = new List<Vector3>()
-            {
-                new Vector3(5, 16, 0),
-                new Vector3(15, 13, 0)
-            };
+            //3. Define end point.
+            var tailPoint = new Vector3(12, 20, 0);
 
             //4. All significant points must be added as key points.
             var keyPoints = new List<Vector3>();
             keyPoints.AddRange(inputPoints);
-            keyPoints.AddRange(localTailPoints);
-            keyPoints.AddRange(tailPoints);
+            keyPoints.Add(tailPoint);
 
             //5. Define hint and offset lines.
             var firstOffsetPolyline = new Polyline(new List<Vector3>(){
@@ -535,23 +517,7 @@ namespace Elements.Tests
                 }
             }
 
-            List<ulong> localTailVertices = new List<ulong>();
-            foreach (var tail in localTailPoints)
-            {
-                Assert.True(grid.TryGetVertexIndex(tail, out ulong id, grid.Tolerance));
-                {
-                    localTailVertices.Add(id);
-                }
-            }
-
-            List<ulong> tailVertices = new List<ulong>();
-            foreach (var tail in tailPoints)
-            {
-                Assert.True(grid.TryGetVertexIndex(tail, out ulong id, grid.Tolerance));
-                {
-                    tailVertices.Add(id);
-                }
-            }
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
 
             //9. Set configurations for hint and offset lines. Split them into groups.
             var hint = new RoutingHintLine(hintPolyline, 0.01, 0.1, true);
@@ -567,11 +533,11 @@ namespace Elements.Tests
             var config = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
             var tree = alg.BuildSpanningTree(
-                inputVertices, localTailVertices, tailVertices, hints, TreeOrder.ClosestToFurthest);
+                inputVertices, tailVertex, hints, TreeOrder.ClosestToFurthest);
 
-            //Throws if no hint lines
-            Assert.Throws<ArgumentException>(() => alg.BuildSpanningTree(
-                    inputVertices, localTailVertices, tailVertices, new List<List<RoutingHintLine>>(), TreeOrder.ClosestToFurthest));
+            //No throws if no hint lines
+            alg.BuildSpanningTree(
+                inputVertices, tailVertex, new List<List<RoutingHintLine>>(), TreeOrder.ClosestToFurthest);
 
             //Result visualization
             List<Line> lines = new List<Line>();
