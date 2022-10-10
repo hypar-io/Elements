@@ -655,6 +655,11 @@ namespace Elements.Search
             var currentIndex = start;
             var prevIndex = -1;
 
+            // Track the trailing edge from a specific index.
+            // This will be used to compare traversal to avoid passing
+            // over where the path has previously travelled.
+            var lastIndexMap = new Dictionary<int, (int start, int end)>();
+
             while (currentIndex != -1)
             {
                 path.Add(currentIndex);
@@ -670,13 +675,30 @@ namespace Elements.Search
                     break;
                 }
 
-                if (path.Contains(currentIndex))
+                if (lastIndexMap.ContainsKey(currentIndex))
                 {
-                    // if we have already passed two elements in the same order, we've achieved a loop
-                    if (path.IndexOf(path[path.Count - 1]) == path.IndexOf(currentIndex) - 1)
+                    var firstSegmentStart = lastIndexMap[currentIndex].start;
+                    var firstSegmentEnd = lastIndexMap[currentIndex].end;
+
+                    var secondSegmentStart = oldIndex;
+                    var secondSegmentEnd = currentIndex;
+
+                    // Check if the segments are the same.
+                    if (firstSegmentStart == secondSegmentStart && firstSegmentEnd == secondSegmentEnd)
                     {
+                        // Snip the "tail" by taking only everything up to the last segment.
+                        path = path.Take(path.LastIndexOf(firstSegmentEnd)).ToList();
                         break;
                     }
+                }
+
+                if (lastIndexMap.ContainsKey(currentIndex))
+                {
+                    lastIndexMap[currentIndex] = (oldIndex, currentIndex);
+                }
+                else
+                {
+                    lastIndexMap.Add(currentIndex, (oldIndex, currentIndex));
                 }
             }
 
