@@ -1135,36 +1135,37 @@ namespace Elements.Geometry
                 return null;
             }
 
-            var firstParameter = 0d;
-            var lastParameter = 0d;
-            var vertices = new List<Vector3>();
-            var lastVertex = Vector3.Origin;
-
-            if (startParameter < endParameter)
+            if (startParameter > endParameter)
             {
-                firstParameter = startParameter;
-                lastParameter = endParameter;
-                vertices.Add(start);
-                lastVertex = end;
+                var vertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter < startParameter && parameter > endParameter;
+                    })
+                    .Reverse()
+                    .ToList();
+                
+                vertices.Insert(0, start);
+                vertices.Add(end);
+                
+                return new Polyline(vertices);
             }
             else
             {
-                firstParameter = endParameter;
-                lastParameter = startParameter;
+                var vertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter > startParameter && parameter < endParameter;
+                    })
+                    .ToList();
+
+                vertices.Insert(0, start);
                 vertices.Add(end);
-                lastVertex = start;
+
+                return new Polyline(vertices);
             }
-
-            var verticesToAdd = Vertices.Where(x =>
-            {
-                var parameter = GetParameterAt(x);
-                return parameter > firstParameter && parameter < lastParameter;
-            });
-
-            vertices.AddRange(verticesToAdd);
-            vertices.Add(lastVertex);
-
-            return new Polyline(vertices);
         }
     }
 

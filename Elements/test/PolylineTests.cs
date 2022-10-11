@@ -554,7 +554,8 @@ namespace Elements.Geometry.Tests
 
             var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
 
-            var expectedResult = new Polyline(new Vector3(-5, -3),
+            var expectedResult = new Polyline(
+                new Vector3(-5, -3),
                 new Vector3(-5, 5),
                 new Vector3(5, 5),
                 new Vector3(5, 3));
@@ -562,7 +563,12 @@ namespace Elements.Geometry.Tests
             Assert.Equal(expectedResult, result);
 
             var reversedResult = polyline.GetSubsegment(new Vector3(5, 3), new Vector3(-5, -3));
-            Assert.Equal(expectedResult, reversedResult);
+            var reversedExpectedResult = new Polyline(
+                new Vector3(5, 3),
+                new Vector3(5, 5),
+                new Vector3(-5, 5),
+                new Vector3(-5, -3));
+            Assert.Equal(reversedExpectedResult, reversedResult);
 
             var pointOutsidePolyline = Vector3.Origin;
             Assert.Equal(-1d, polyline.GetParameterAt(pointOutsidePolyline), 5);
