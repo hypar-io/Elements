@@ -3,12 +3,35 @@
 ## 1.3.0
 
 ### Added
+
+- `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
+- `AdaptiveGrid.HintExtendDistance`
+- `Obstacle.Orientation`
+- `Elements.Spatial.AdaptiveGrid.EdgeInfo`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 
+
+### Changed
+
+- `Line.PointOnLine` - added `tolerance` parameter.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
+-  Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
+- Moved `BranchSide`, `RoutingVertex`, `RoutingConfiguration`, `RoutingHintLine`, `TreeOrder` from `AdaptiveGraphRouting` to their own files.
+- `RoutingVertex` - removed `Guides`.
+- `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
+- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line. 
+
+
+### Fixed
+
+- `Line.Intersects` for `BBox3` - better detection of line with one intersection that just touches box corner.
+- `Obstacle.FromWall` and `Obstacle.FromLine` produced wrong `Points` when diagonal.
+- `AdaptiveGridRouting.BuildSimpleNetwork` now correctly uses `RoutingVertex.IsolationRadius`.
 
 ## 1.2.0
 
 ### Added
+
 - `Polygon(IList<Vector3> @vertices, bool disableValidation = false)`
 - `Polygon(bool disableValidation, params Vector3[] vertices)`
 - `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
@@ -49,10 +72,8 @@
 - `AdaptiveGrid.SubtractObstacle` worked incorrectly in `AdaptiveGrid.Boundary` had elevation.
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
-- `Profile.Split` would fail if the perimeter was clockwise-wound.
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
 - `Obstacle.FromWall` was failing when producing a polygon.
-- GLTF creation does not include elements with custom buffers if they are `IsElementDefinition=true`.
 
 ## 1.1.0
 
