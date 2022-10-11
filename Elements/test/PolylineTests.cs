@@ -527,6 +527,23 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolygonIntersectsOfLShape()
+        {
+            var polygon = Polygon.L(10, 10, 3);
+            var polyline = new Polyline(new Vector3(6, -2),
+                new Vector3(6, 0),
+                new Vector3(2, 0),
+                new Vector3(2, 2),
+                new Vector3(0, 2),
+                new Vector3(0, 5),
+                new Vector3(-2, 5));
+
+            var result = polyline.Intersects(polygon, out var sharedSegments);
+            
+            Assert.True(result);
+        }
+
+        [Fact]
         public void GetSubsegment()
         {
             var polyline = new Polyline(
