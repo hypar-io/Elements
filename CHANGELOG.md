@@ -8,6 +8,8 @@
 - `AdaptiveGrid.HintExtendDistance`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
+
 
 ### Changed
 
