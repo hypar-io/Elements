@@ -373,7 +373,7 @@ namespace Elements.Spatial
             // Since we have a finite set of edges, and we consume / remove every edge we traverse,
             // we must eventually either find an edge that points back to our start, or hit
             // a dead end where no more edges are available (in which case we throw an exception) 
-            while (currentSegment.to != initialFrom)
+            while (currentSegment.to != initialFrom || edgesPerVertex[currentSegment.to].Count() != 0)
             {
                 currentEdgeList.Add(currentSegment);
                 var toVertex = vertices[currentSegment.to];
