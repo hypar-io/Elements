@@ -1135,9 +1135,11 @@ namespace Elements.Geometry
                 return null;
             }
 
+            List<Vector3> filteredVertices;
+            
             if (startParameter > endParameter)
             {
-                var vertices = Vertices
+                filteredVertices = Vertices
                     .Where(x =>
                     {
                         var parameter = GetParameterAt(x);
@@ -1145,27 +1147,22 @@ namespace Elements.Geometry
                     })
                     .Reverse()
                     .ToList();
-                
-                vertices.Insert(0, start);
-                vertices.Add(end);
-                
-                return new Polyline(vertices);
             }
             else
             {
-                var vertices = Vertices
+                filteredVertices = Vertices
                     .Where(x =>
                     {
                         var parameter = GetParameterAt(x);
                         return parameter > startParameter && parameter < endParameter;
                     })
                     .ToList();
-
-                vertices.Insert(0, start);
-                vertices.Add(end);
-
-                return new Polyline(vertices);
             }
+            
+            filteredVertices.Insert(0, start);
+            filteredVertices.Add(end);
+
+            return new Polyline(filteredVertices);
         }
     }
 
