@@ -538,9 +538,12 @@ namespace Elements.Geometry.Tests
                 new Vector3(0, 5),
                 new Vector3(-2, 5));
 
+            var expectedSubsegment = new Polyline(new Vector3(2, 0), new Vector3(2, 2), new Vector3(0, 2));
+
             var result = polyline.Intersects(polygon, out var sharedSegments);
             
             Assert.True(result);
+            Assert.Collection(sharedSegments, sharedSegment => Assert.Equal(expectedSubsegment, sharedSegment));
         }
 
         [Fact]
