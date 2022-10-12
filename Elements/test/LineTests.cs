@@ -849,5 +849,24 @@ namespace Elements.Geometry.Tests
 
             Assert.Equal(2, offset.Count());
         }
+
+        [Fact]
+        public void LinesOffset_ThreeSeparatePolygons()
+        {
+            var lines = new List<Line> {
+                new Line((-23.738996, 125.715021, 0), (40.722023, 186.716267, 0)),
+                new Line((-39.945297, 180.889282, 0), (-23.738996, 125.715021, 0)),
+                new Line((-0.06687, 28.113027, 0), (-53.784385, -10.490746, 0)),
+                new Line((-0.06687, 108.41616, 0), (-0.06687, 28.113027, 0)),
+                new Line((-0.06687, 28.113027, 0), (70.403226, -6.666788, 0)),
+                new Line((91.161859, 86.747061, 0), (140.144949, 143.742255, 0)),
+                new Line((91.161859, 86.747061, 0), (95.167911, 158.855996, 0)),
+                new Line((53.468552, 134.637591, 0), (91.161859, 86.747061, 0))
+            };
+
+            var offset = lines.Offset(12);
+
+            Assert.Equal(3, offset.Count());
+        }
     }
 }
