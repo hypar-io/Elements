@@ -8,6 +8,8 @@
 - `AdaptiveGrid.HintExtendDistance`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
+
 
 ### Changed
 
@@ -26,6 +28,7 @@
 - `Line.Intersects` for `BBox3` - better detection of line with one intersection that just touches box corner.
 - `Obstacle.FromWall` and `Obstacle.FromLine` produced wrong `Points` when diagonal.
 - `AdaptiveGridRouting.BuildSimpleNetwork` now correctly uses `RoutingVertex.IsolationRadius`.
+- Fix #898
 
 ## 1.2.0
 
