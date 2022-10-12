@@ -13,7 +13,10 @@ namespace Elements.Geometry.Tessellation
     /// </summary>
     internal static class Tessellation
     {
-        private static bool LOG_TESSELATION = false;
+        // TODO remove this when we have a logging system with more granular control over logging levels.
+        // Switch this to true to see the tessellation progress of all elements.
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+        public static bool LOG_TESSELATION = false;
 
         /// <summary>
         /// Triangulate a collection of CSGs and pack the triangulated data into
