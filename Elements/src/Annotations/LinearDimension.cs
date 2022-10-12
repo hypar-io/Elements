@@ -7,7 +7,7 @@ namespace Elements.Annotations
     /// <summary>
     /// A linear dimension.
     /// </summary>
-    public abstract class LinearDimension : Annotation
+    public abstract class LinearDimension : Annotation, IOverrideLinked
     {
         /// <summary>
         /// The start of the dimension.
@@ -23,6 +23,11 @@ namespace Elements.Annotations
         /// The plane on which the start and end points are projected.
         /// </summary>
         public Plane ReferencePlane { get; protected set; }
+
+        /// <summary>
+        /// Information about the element and property that this dimension is linked to, if any.
+        /// </summary>
+        public LinkedPropertyInfo LinkedProperty { get; set; } = null;
 
         /// <summary>
         /// Create a linear dimension with a reference plane.

@@ -1,4 +1,5 @@
 ﻿using Elements.Geometry;
+using Elements.Serialization.glTF;
 using Elements.Spatial.AdaptiveGrid;
 using System;
 using System.Collections.Generic;
@@ -232,7 +233,7 @@ namespace Elements.Tests
             //Obstacle aligned with adaptive grid transformation.
             //Forms big (3;1) -> (5;3) -> (3;5) -> (1;3) rectangle.
             var bbox = new BBox3(new Vector3(2, 2), new Vector3(4, 4));
-            var withoutTransfrom = Obstacle.FromBBox(bbox, perimeter: true);
+            var withoutTransfrom = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
             adaptiveGrid.SubtractObstacle(withoutTransfrom);
 
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _, adaptiveGrid.Tolerance));
@@ -276,8 +277,8 @@ namespace Elements.Tests
             //Obstacle aligned with global transformation.
             //Forms small (6;6) -> (8;6) -> (8;8) -> (6;8) rectangle.
             bbox = new BBox3(new Vector3(6, 6), new Vector3(8, 8));
-            var withTransform = Obstacle.FromBBox(bbox, perimeter: true);
-            withTransform.Transform = new Transform();
+            var withTransform = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
+            withTransform.Orientation = new Transform();
             adaptiveGrid.SubtractObstacle(withTransform);
 
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(7, 7), out _, adaptiveGrid.Tolerance));
@@ -368,6 +369,48 @@ namespace Elements.Tests
             Assert.All(grid.GetVertices(), x => Assert.Equal(2, x.Edges.Count));
 
             WriteToModelWithRandomMaterials(grid);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetObstaclesForAllowOutsideBoundaryTest))]
+        public void AadaptiveGridSubtractObstacleAllowOutsideBoundaryTest(Obstacle obstacle, bool expectedResult, int additionalVertices, int additionalEdges)
+        {
+            var boundary = Polygon.Rectangle(20, 40);
+            var grid = new AdaptiveGrid { Boundaries = boundary };
+            grid.AddFromPolygon(boundary, new List<Vector3> { Vector3.Origin });
+            grid.AddVertices(new List<Vector3> { new Vector3(0, 20), new Vector3(0, 50) }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            var edgesCount = grid.GetEdges().Count;
+            var verticesCount = grid.GetVertices().Count;
+
+            var result = grid.SubtractObstacle(obstacle);
+
+            WriteToModelWithRandomMaterials(grid);
+
+            Assert.Equal(expectedResult, result);
+            Assert.Equal(verticesCount + additionalVertices, grid.GetVertices().Count);
+            Assert.Equal(edgesCount + additionalEdges, grid.GetEdges().Count);
+        }
+
+        public static IEnumerable<object[]> GetObstaclesForAllowOutsideBoundaryTest()
+        {
+            var profile = Polygon.Rectangle(1, 1);
+
+            //Column outside of boundary and does not intersect with any edge or vertex
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true), false, 0, 0 };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-15, 0), 5, null, profile), 0, true, true), false, 0, 0 };
+            //Column intersects with boundary
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true), true, 4, 4 };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(-10, 0), 5, null, profile), 0, true, true), true, 6, 7 };
+            //Column fully inside in boundary
+            yield return new object[] { Obstacle.FromColumn(new Column(Vector3.Origin, 5, null, profile), 0, true), true, 7, 8 };
+            yield return new object[] { Obstacle.FromColumn(new Column(Vector3.Origin, 5, null, profile), 0, true, true), true, 7, 8 };
+            //Column outside of boundary and intersects with grid edge
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true), true, 2, 1, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 30), 5, null, profile), 0, true, true), true, 6, 7 };
+            //Column outside of boundary and intersects with grid vertex
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true), true, 0, 0, };
+            yield return new object[] { Obstacle.FromColumn(new Column(new Vector3(0, 50), 5, null, profile), 0, true, true), true, 4, 5 };
         }
 
         [Fact]
@@ -547,6 +590,55 @@ namespace Elements.Tests
             Assert.Equal(4, added[5].Edges.Count);
             Assert.Equal(4, added[6].Edges.Count);
             Assert.Equal(3, added[7].Edges.Count);
+        }
+
+        [Fact]
+        public void AddVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> {});
+
+            //Default HintExtendDistance is 3.
+            var toExtend = new Vector3[] { new Vector3(1, 3), new Vector3(1, 6) };
+            var added = grid.AddVerticesWithCustomExtension(toExtend, grid.HintExtendDistance);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(1, 0), added[0].Point);
+            Assert.Equal(new Vector3(1, 6), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Single(added[1].Edges);
+
+            toExtend = new Vector3[] { new Vector3(5, 3), new Vector3(5, 6) };
+            added = grid.AddVerticesWithCustomExtension(toExtend, 4);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(5, 0), added[0].Point);
+            Assert.Equal(new Vector3(5, 10), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Equal(3, added[1].Edges.Count);
+
+            toExtend = new Vector3[] { new Vector3(8, 3), new Vector3(8, 6) };
+            added = grid.AddVerticesWithCustomExtension(toExtend, 2);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(8, 3), added[0].Point);
+            Assert.Equal(new Vector3(8, 6), added[1].Point);
+            Assert.Single(added[0].Edges);
+            Assert.Single(added[1].Edges);
+        }
+
+        [Fact]
+        public void AddAngledVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { });
+
+            var toExtend = new Vector3[] { new Vector3(1, 7), new Vector3(2, 8) };
+            var added = grid.AddVerticesWithCustomExtension(toExtend, 2);
+            Assert.Equal(2, added.Count);
+            Assert.Equal(new Vector3(0, 6), added[0].Point);
+            Assert.Equal(new Vector3(2, 8), added[1].Point);
+            Assert.Equal(3, added[0].Edges.Count);
+            Assert.Single(added[1].Edges);
         }
 
         [Fact]

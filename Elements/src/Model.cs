@@ -311,19 +311,16 @@ namespace Elements
             beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
             lines = new Dictionary<Guid, List<Geometry.Line>>();
 
-            Transform localTransform = null;
             foreach (var element in intersecting)
             {
                 GeometricElement geo = null;
                 if (element is GeometricElement)
                 {
                     geo = element as GeometricElement;
-                    localTransform = geo.Transform;
                 }
                 else if (element is ElementInstance instance)
                 {
                     geo = instance.BaseDefinition;
-                    localTransform = instance.Transform;
                 }
 
                 if (geo._csg == null)
@@ -331,132 +328,22 @@ namespace Elements
                     continue;
                 }
 
-                if (geo.Representation != null)
+                if (geo.Intersects(plane, out var xsectP, out var beyondP, out var xsectL))
                 {
-                    var graphVertices = new List<Vector3>();
-                    var graphEdges = new List<List<(int from, int to, int? tag)>>();
-
-                    // TODO: Can we avoid this copy? It seems to be the most straightforward
-                    // way to get the csg transformed for sectioning.
-                    var localCsg = geo._csg.Transform(localTransform.ToMatrix4x4());
-                    foreach (var csgPoly in localCsg.Polygons)
+                    foreach (var kvp in xsectP)
                     {
-                        var csgNormal = csgPoly.Plane.Normal.ToVector3();
-
-                        if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
-                        {
-                            // TODO: We can cut out transformation if the element's transform is null.
-                            var backPoly = csgPoly.Project(plane);
-                            if (!beyondPolygons.ContainsKey(geo.Id))
-                            {
-                                beyondPolygons[geo.Id] = new List<Geometry.Polygon>() { backPoly };
-                            }
-                            else
-                            {
-                                beyondPolygons[geo.Id].Add(backPoly);
-                            }
-
-                            continue;
-                        }
-
-                        var edgeResults = new List<Vector3>();
-                        for (var i = 0; i < csgPoly.Vertices.Count; i++)
-                        {
-                            var a = csgPoly.Vertices[i].Pos.ToVector3();
-                            var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
-                            if (plane.Intersects((a, b), out var xsect))
-                            {
-                                edgeResults.Add(xsect);
-                            }
-                        }
-
-                        if (edgeResults.Count < 2)
-                        {
-                            continue;
-                        }
-
-                        var d = csgNormal.Cross(plane.Normal).Unitized();
-                        edgeResults.Sort(new DirectionComparer(d));
-
-                        // Draw segments through the results and add to the 
-                        // half edge graph.
-                        for (var j = 0; j < edgeResults.Count - 1; j += 2)
-                        {
-                            // Don't create zero-length edges.
-                            if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
-                            {
-                                continue;
-                            }
-
-                            var a = Solid.FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
-                            var b = Solid.FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
-                            var e1 = (a, b, 0);
-                            var e2 = (b, a, 0);
-                            if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                graphEdges[a].Add(e1);
-                            }
-                        }
+                        intersectionPolygons.Add(kvp.Key, kvp.Value);
                     }
-
-                    var heg = new HalfEdgeGraph2d()
+                    foreach (var kvp in beyondP)
                     {
-                        Vertices = graphVertices,
-                        EdgesPerVertex = graphEdges
-                    };
-
-                    try
-                    {
-                        // Elements with zero thickness sections.
-                        if (heg.Vertices.Count == 2)
-                        {
-                            // TODO: We're over-drawing here because we have edges
-                            // that are from->to and to->from.
-                            foreach (var edges in heg.EdgesPerVertex)
-                            {
-                                foreach (var (from, to, tag) in edges)
-                                {
-                                    var start = heg.Vertices[from];
-                                    var end = heg.Vertices[to];
-                                    var line = new Geometry.Line(start, end);
-                                    if (!lines.ContainsKey(geo.Id))
-                                    {
-                                        lines[geo.Id] = new List<Geometry.Line>() { line };
-                                    }
-                                    else
-                                    {
-                                        lines[geo.Id].Add(line);
-                                    }
-                                }
-                            }
-                            continue;
-                        }
-
-                        var rebuiltPolys = heg.Polygonize();
-                        if (rebuiltPolys == null || rebuiltPolys.Count == 0)
-                        {
-                            continue;
-                        }
-
-                        if (!intersectionPolygons.ContainsKey(geo.Id))
-                        {
-                            intersectionPolygons[geo.Id] = new List<Geometry.Polygon>(rebuiltPolys);
-                        }
-                        else
-                        {
-                            intersectionPolygons[geo.Id].AddRange(rebuiltPolys);
-                        }
+                        beyondPolygons.Add(kvp.Key, kvp.Value);
                     }
-                    catch (Exception ex)
+                    foreach (var kvp in xsectL)
                     {
-                        Console.WriteLine(ex.Message);
-                        continue;
+                        lines.Add(kvp.Key, kvp.Value);
                     }
                 }
+
             }
         }
 

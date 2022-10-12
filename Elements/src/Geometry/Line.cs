@@ -386,7 +386,8 @@ namespace Elements.Geometry
 
             // If max hit of one coordinate is smaller then min hit of other - line hits planes outside the box.
             // In other words line just goes by.
-            if (t0x > t1y || t0y > t1x)
+            var length = d.Length();
+            if ((t0x - t1y) * length > tolerance || (t0y - t1x) * length > tolerance)
             {
                 return false;
             }
@@ -418,7 +419,6 @@ namespace Elements.Geometry
                 return false;
             }
 
-            var length = d.Length();
             var dMin = tMin * length;
             var dMax = tMax * length;
 
@@ -480,12 +480,13 @@ namespace Elements.Geometry
         /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="tolerance">An optional distance tolerance.
         /// When true, any point within tolerance of the end points will be considered on the line.
         /// When false, points precisely at the ends of the line will not be considered on the line.</param>
-        public bool PointOnLine(Vector3 point, bool includeEnds = false)
+        public bool PointOnLine(Vector3 point, bool includeEnds = false, double tolerance = Vector3.EPSILON)
         {
-            return Line.PointOnLine(point, Start, End, includeEnds);
+            return Line.PointOnLine(point, Start, End, includeEnds, tolerance);
         }
 
         /// <summary>
@@ -494,12 +495,13 @@ namespace Elements.Geometry
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="tolerance">An optional distance tolerance.
         /// When true, any point within tolerance of the end points will be considered on the line.
         /// When false, points precisely at the ends of the line will not be considered on the line.</param>
-        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
+        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false, double tolerance = Vector3.EPSILON)
         {
-            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
+            if (includeEnds && (point.IsAlmostEqualTo(start, tolerance) || point.IsAlmostEqualTo(end, tolerance)))
             {
                 return true;
             }
@@ -509,7 +511,7 @@ namespace Elements.Geometry
             if (lambda > 0 && lambda < 1)
             {
                 var pointOnLine = start + lambda * delta;
-                return pointOnLine.IsAlmostEqualTo(point);
+                return pointOnLine.IsAlmostEqualTo(point, tolerance);
             }
             return false;
         }
@@ -1267,6 +1269,14 @@ namespace Elements.Geometry
         {
             return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
                 && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
+        }
+
+        /// <summary>
+        /// A string representation of the line.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"start: {Start}, end: {End}";
         }
     }
 }
