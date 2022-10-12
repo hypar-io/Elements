@@ -552,28 +552,28 @@ namespace Elements.Geometry.Tests
                 new Vector3(5, 5),
                 new Vector3(5, -5));
 
-            var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
+            var start = new Vector3(-5, -3);
+            var end = new Vector3(5, 3);
+            
+            var result = polyline.GetSubsegment(start, end);
 
             var expectedResult = new Polyline(
-                new Vector3(-5, -3),
+                start,
                 new Vector3(-5, 5),
                 new Vector3(5, 5),
-                new Vector3(5, 3));
+                end);
 
             Assert.Equal(expectedResult, result);
 
-            var reversedResult = polyline.GetSubsegment(new Vector3(5, 3), new Vector3(-5, -3));
-            var reversedExpectedResult = new Polyline(
-                new Vector3(5, 3),
-                new Vector3(5, 5),
-                new Vector3(-5, 5),
-                new Vector3(-5, -3));
+            var reversedResult = polyline.GetSubsegment(end, start);
+            var reversedExpectedResult = expectedResult.Reversed();
+            
             Assert.Equal(reversedExpectedResult, reversedResult);
 
             var pointOutsidePolyline = Vector3.Origin;
             Assert.Equal(-1d, polyline.GetParameterAt(pointOutsidePolyline), 5);
-            Assert.Null(polyline.GetSubsegment(pointOutsidePolyline, new Vector3(-5, -3)));
-            Assert.Null(polyline.GetSubsegment(new Vector3(-5, -3), pointOutsidePolyline));
+            Assert.Null(polyline.GetSubsegment(pointOutsidePolyline, start));
+            Assert.Null(polyline.GetSubsegment(start, pointOutsidePolyline));
 
             var middlePoint = new Vector3(0, 5);
             var startSubsegment = polyline.GetSubsegment(polyline.Start, middlePoint);
