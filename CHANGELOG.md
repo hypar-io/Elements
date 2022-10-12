@@ -19,7 +19,8 @@
 - Moved `BranchSide`, `RoutingVertex`, `RoutingConfiguration`, `RoutingHintLine`, `TreeOrder` from `AdaptiveGraphRouting` to their own files.
 - `RoutingVertex` - removed `Guides`.
 - `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
-- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line. 
+- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- Don't log all vertex creation actions during Debug mode geometry generation.
 
 
 ### Fixed
