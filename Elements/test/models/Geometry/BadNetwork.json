@@ -1,0 +1,899 @@
+[
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -126.12387098094342,
+            "Y": 0.8066781706407831,
+            "Z": 0
+        },
+        "End": {
+            "X": -88.08962799842186,
+            "Y": -19.588125010118315,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -76.15691154980186,
+            "Y": 25.40158351214935,
+            "Z": 0
+        },
+        "End": {
+            "X": -102.27960919856264,
+            "Y": -23.911147946758284,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -89.56237992360983,
+            "Y": 30.32050024781155,
+            "Z": 0
+        },
+        "End": {
+            "X": -66.06308480580975,
+            "Y": 17.719662205860203,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -82.72551064403697,
+            "Y": 31.19320687512385,
+            "Z": 0
+        },
+        "End": {
+            "X": -110.72067198760303,
+            "Y": -21.654253009546718,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -123.8622455477271,
+            "Y": 9.256556138398349,
+            "Z": 0
+        },
+        "End": {
+            "X": -82.34071570857198,
+            "Y": -13.008195225645135,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -116.11736674156674,
+            "Y": 15.235594929313889,
+            "Z": 0
+        },
+        "End": {
+            "X": -130.27577010808355,
+            "Y": -11.168379038454464,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -131.91066860589459,
+            "Y": -5.752920655669669,
+            "Z": 0
+        },
+        "End": {
+            "X": -90.31331377076248,
+            "Y": -28.05834951880545,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -67.71583417303671,
+            "Y": 23.14467943776964,
+            "Z": 0
+        },
+        "End": {
+            "X": -95.71099675710062,
+            "Y": -29.70277119362249,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -74.30597,
+            "Y": 6.43177,
+            "Z": 0
+        },
+        "End": {
+            "X": -74.30508,
+            "Y": 6.4313,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -74.30508,
+            "Y": 6.4313,
+            "Z": 0
+        },
+        "End": {
+            "X": -70.59529,
+            "Y": 13.43442,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -70.59529,
+            "Y": 13.43442,
+            "Z": 0
+        },
+        "End": {
+            "X": -70.59632,
+            "Y": 13.43497,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -70.59632,
+            "Y": 13.43497,
+            "Z": 0
+        },
+        "End": {
+            "X": -70.59593,
+            "Y": 13.4357,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -70.59593,
+            "Y": 13.4357,
+            "Z": 0
+        },
+        "End": {
+            "X": -72.56513,
+            "Y": 14.47885,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -72.56513,
+            "Y": 14.47885,
+            "Z": 0
+        },
+        "End": {
+            "X": -71.22155,
+            "Y": 17.01516,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -71.22155,
+            "Y": 17.01516,
+            "Z": 0
+        },
+        "End": {
+            "X": -69.25221,
+            "Y": 15.97192,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -69.25221,
+            "Y": 15.97192,
+            "Z": 0
+        },
+        "End": {
+            "X": -66.88946,
+            "Y": 20.43218,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -66.88946,
+            "Y": 20.43218,
+            "Z": 0
+        },
+        "End": {
+            "X": -75.47846,
+            "Y": 25.03778,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -75.47846,
+            "Y": 25.03778,
+            "Z": 0
+        },
+        "End": {
+            "X": -76.78551,
+            "Y": 25.73865,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -76.78551,
+            "Y": 25.73865,
+            "Z": 0
+        },
+        "End": {
+            "X": -85.42435,
+            "Y": 30.37099,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -85.42435,
+            "Y": 30.37099,
+            "Z": 0
+        },
+        "End": {
+            "X": -86.00622,
+            "Y": 29.27257,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -86.00622,
+            "Y": 29.27257,
+            "Z": 0
+        },
+        "End": {
+            "X": -84.92975,
+            "Y": 28.70233,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -84.92975,
+            "Y": 28.70233,
+            "Z": 0
+        },
+        "End": {
+            "X": -87.23651,
+            "Y": 24.34777,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -87.23651,
+            "Y": 24.34777,
+            "Z": 0
+        },
+        "End": {
+            "X": -89.51939,
+            "Y": 20.03829,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -89.51939,
+            "Y": 20.03829,
+            "Z": 0
+        },
+        "End": {
+            "X": -92.08764,
+            "Y": 15.19013,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -92.08764,
+            "Y": 15.19013,
+            "Z": 0
+        },
+        "End": {
+            "X": -94.34711,
+            "Y": 10.92484,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -94.34711,
+            "Y": 10.92484,
+            "Z": 0
+        },
+        "End": {
+            "X": -95.42448,
+            "Y": 11.49556,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -95.42448,
+            "Y": 11.49556,
+            "Z": 0
+        },
+        "End": {
+            "X": -99.13417,
+            "Y": 4.49265,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -99.13417,
+            "Y": 4.49265,
+            "Z": 0
+        },
+        "End": {
+            "X": -98.0568,
+            "Y": 3.92193,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -98.0568,
+            "Y": 3.92193,
+            "Z": 0
+        },
+        "End": {
+            "X": -100.62551,
+            "Y": -0.92712,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -100.62551,
+            "Y": -0.92712,
+            "Z": 0
+        },
+        "End": {
+            "X": -101.70297,
+            "Y": -0.35635,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -101.70297,
+            "Y": -0.35635,
+            "Z": 0
+        },
+        "End": {
+            "X": -103.07005,
+            "Y": 0.37671,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -103.07005,
+            "Y": 0.37671,
+            "Z": 0
+        },
+        "End": {
+            "X": -103.06958,
+            "Y": 0.3776,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -103.06958,
+            "Y": 0.3776,
+            "Z": 0
+        },
+        "End": {
+            "X": -110.05373,
+            "Y": 4.12264,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -110.05373,
+            "Y": 4.12264,
+            "Z": 0
+        },
+        "End": {
+            "X": -111.10736,
+            "Y": 2.15772,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -111.10736,
+            "Y": 2.15772,
+            "Z": 0
+        },
+        "End": {
+            "X": -111.55506,
+            "Y": 2.39778,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -111.55506,
+            "Y": 2.39778,
+            "Z": 0
+        },
+        "End": {
+            "X": -115.85383,
+            "Y": 4.70288,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -115.85383,
+            "Y": 4.70288,
+            "Z": 0
+        },
+        "End": {
+            "X": -115.37636,
+            "Y": 5.59332,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -115.37636,
+            "Y": 5.59332,
+            "Z": 0
+        },
+        "End": {
+            "X": -114.80067,
+            "Y": 6.66693,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -114.80067,
+            "Y": 6.66693,
+            "Z": 0
+        },
+        "End": {
+            "X": -116.31764,
+            "Y": 7.48036,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -116.31764,
+            "Y": 7.48036,
+            "Z": 0
+        },
+        "End": {
+            "X": -116.89332,
+            "Y": 6.40677,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -116.89332,
+            "Y": 6.40677,
+            "Z": 0
+        },
+        "End": {
+            "X": -121.72935,
+            "Y": 8.99994,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -121.72935,
+            "Y": 8.99994,
+            "Z": 0
+        },
+        "End": {
+            "X": -125.76852,
+            "Y": 1.46725,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -125.76852,
+            "Y": 1.46725,
+            "Z": 0
+        },
+        "End": {
+            "X": -125.76941,
+            "Y": 1.46772,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -125.76941,
+            "Y": 1.46772,
+            "Z": 0
+        },
+        "End": {
+            "X": -126.50193,
+            "Y": 0.10164,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -126.50193,
+            "Y": 0.10164,
+            "Z": 0
+        },
+        "End": {
+            "X": -131.09322,
+            "Y": -8.46066,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -131.09322,
+            "Y": -8.46066,
+            "Z": 0
+        },
+        "End": {
+            "X": -93.01216,
+            "Y": -28.88056,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -93.01216,
+            "Y": -28.88056,
+            "Z": 0
+        },
+        "End": {
+            "X": -74.30597,
+            "Y": 6.43177,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -70.2493,
+            "Y": 16.69206,
+            "Z": 0
+        },
+        "End": {
+            "X": -67.96642,
+            "Y": 21.00155,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -67.96642,
+            "Y": 21.00155,
+            "Z": 0
+        },
+        "End": {
+            "X": -66.88993,
+            "Y": 20.43129,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -66.88993,
+            "Y": 20.43129,
+            "Z": 0
+        },
+        "End": {
+            "X": -69.17282,
+            "Y": 16.12181,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -69.17282,
+            "Y": 16.12181,
+            "Z": 0
+        },
+        "End": {
+            "X": -70.2493,
+            "Y": 16.69206,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -87.36756,
+            "Y": -15.62269,
+            "Z": 0
+        },
+        "End": {
+            "X": -85.10808,
+            "Y": -11.35739,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -85.10808,
+            "Y": -11.35739,
+            "Z": 0
+        },
+        "End": {
+            "X": -82.82519,
+            "Y": -7.04791,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -82.82519,
+            "Y": -7.04791,
+            "Z": 0
+        },
+        "End": {
+            "X": -80.25695,
+            "Y": -2.19974,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -80.25695,
+            "Y": -2.19974,
+            "Z": 0
+        },
+        "End": {
+            "X": -77.97407,
+            "Y": 2.10974,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -77.97407,
+            "Y": 2.10974,
+            "Z": 0
+        },
+        "End": {
+            "X": -75.38243,
+            "Y": 7.00208,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -75.38243,
+            "Y": 7.00208,
+            "Z": 0
+        },
+        "End": {
+            "X": -74.30594,
+            "Y": 6.43183,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -74.30594,
+            "Y": 6.43183,
+            "Z": 0
+        },
+        "End": {
+            "X": -86.29108,
+            "Y": -16.19294,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -86.29108,
+            "Y": -16.19294,
+            "Z": 0
+        },
+        "End": {
+            "X": -87.36756,
+            "Y": -15.62269,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -130.66388,
+            "Y": -8.69082,
+            "Z": 0
+        },
+        "End": {
+            "X": -130.08819,
+            "Y": -7.61722,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -130.08819,
+            "Y": -7.61722,
+            "Z": 0
+        },
+        "End": {
+            "X": -125.7451,
+            "Y": -9.94544,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -125.7451,
+            "Y": -9.94544,
+            "Z": 0
+        },
+        "End": {
+            "X": -117.14878,
+            "Y": -14.5537,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -117.14878,
+            "Y": -14.5537,
+            "Z": 0
+        },
+        "End": {
+            "X": -112.35742,
+            "Y": -17.12223,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -112.35742,
+            "Y": -17.12223,
+            "Z": 0
+        },
+        "End": {
+            "X": -112.93298,
+            "Y": -18.19588,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -112.93298,
+            "Y": -18.19588,
+            "Z": 0
+        },
+        "End": {
+            "X": -130.66388,
+            "Y": -8.69082,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -105.94847,
+            "Y": -21.94009,
+            "Z": 0
+        },
+        "End": {
+            "X": -105.37291,
+            "Y": -20.86643,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -105.37291,
+            "Y": -20.86643,
+            "Z": 0
+        },
+        "End": {
+            "X": -101.07531,
+            "Y": -23.17028,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -101.07531,
+            "Y": -23.17028,
+            "Z": 0
+        },
+        "End": {
+            "X": -101.6513,
+            "Y": -24.24369,
+            "Z": 0
+        }
+    },
+    {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+            "X": -101.6513,
+            "Y": -24.24369,
+            "Z": 0
+        },
+        "End": {
+            "X": -105.94847,
+            "Y": -21.94009,
+            "Z": 0
+        }
+    }
+]

@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -300,5 +301,21 @@ namespace Elements.Tests
             }
         }
 
+        [Fact]
+        public void FindAllClosedRegionsDoesNotLoopInfinitely()
+        {
+            this.Name = nameof(FindAllClosedRegionsDoesNotLoopInfinitely);
+            var json = File.ReadAllText("../../../models/Geometry/BadNetwork.json");
+            var lines = JsonConvert.DeserializeObject<List<Line>>(json);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            var r = new Random();
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            foreach (var region in regions)
+            {
+                Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
+            }
+        }
     }
 }

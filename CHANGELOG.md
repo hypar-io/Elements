@@ -20,7 +20,10 @@
 - `RoutingVertex` - removed `Guides`.
 - `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
 - `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line. 
+- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- Don't log all vertex creation actions during Debug mode geometry generation.
 - `Polyline.GetSubsegment` changes direction of output polyline when parameters reversed 
+
 
 
 ### Fixed
@@ -28,7 +31,9 @@
 - `Line.Intersects` for `BBox3` - better detection of line with one intersection that just touches box corner.
 - `Obstacle.FromWall` and `Obstacle.FromLine` produced wrong `Points` when diagonal.
 - `AdaptiveGridRouting.BuildSimpleNetwork` now correctly uses `RoutingVertex.IsolationRadius`.
+- Fix #898
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` fix bug when odd number of intersections between polyline and polygon
+
 
 ## 1.2.0
 
