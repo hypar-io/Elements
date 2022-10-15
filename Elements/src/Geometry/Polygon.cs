@@ -2024,8 +2024,13 @@ namespace Elements.Geometry
             }
 
             if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0], tolerance))
+            {
                 unique.Add(Vertices[count - 1]);
-
+            }
+            if (unique.Count < 3)
+            {
+                return this;
+            }
             return new Polygon(unique);
         }
 
