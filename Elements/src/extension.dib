@@ -15,6 +15,9 @@ using Microsoft.DotNet.Interactive.Formatting;
 using Elements;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
+using Newtonsoft.Json;
+using System;
+using System.IO;
 
 var viewerSrc = @"
 <div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
@@ -72,24 +75,27 @@ const fitCameraToObject = function (scene, offset = 1.25) {
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
 
-    // get the max side of the bounding box (fits to width OR height as needed )
+    // get the max size of the bounding box (fits to width OR height as needed )
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
     let cameraZ = Math.abs(maxDim / 4 * Math.tan(fov * 2));
-
-    camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
+    // if our model is nearly flat, view it from the top, otherwise view it from a corner.
+    if (size.y < 0.001) {
+        // position the camera looking straight down at the object.
+        camera.position.copy(center.clone().add(new THREE.Vector3(0, maxDim * offset, 0)))
+    } else {
+        camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
+    }
 
     const minZ = boundingBox.min.z;
     const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
 
-    camera.far = cameraToFarEdge * 3;
+    camera.far = cameraToFarEdge * 10;
     camera.updateProjectionMatrix();
 
     if (controls) {
         // set camera to rotate around center of loaded object
         controls.target = center;
-        // prevent camera from zooming out far enough to create far plane cutoff
-        controls.maxDistance = cameraToFarEdge * 2;
         controls.saveState();
 
     } else {
