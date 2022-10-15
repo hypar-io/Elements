@@ -129,6 +129,7 @@ if (KernelInvocationContext.Current is { } currentContext)
 
 double DEFAULT_MODEL_WIDTH = 600;
 double DEFAULT_MODEL_HEIGHT = 400;
+Material DEFAULT_CURVE_MATERIAL = BuiltInMaterials.XAxis;
 
 string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     var gltf = model.ToGlTF();
@@ -142,7 +143,7 @@ string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
 
 Formatter.Register<Curve>((crv, writer) => {
     var model = new Model();
-    model.AddElement(new ModelCurve(crv, BuiltInMaterials.XAxis));
+    model.AddElement(new ModelCurve(crv, DEFAULT_CURVE_MATERIAL));
     var src = GetModelViewerSrc(model);
     writer.Write(src);
 
@@ -150,7 +151,7 @@ Formatter.Register<Curve>((crv, writer) => {
 
 Formatter.Register<Profile>((p, writer) => {
     var model = new Model();
-    model.AddElements(p.ToModelCurves(null, BuiltInMaterials.XAxis));
+    model.AddElements(p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL));
     var src = GetModelViewerSrc(model);
     writer.Write(src);
 }, "text/html");
@@ -171,14 +172,14 @@ Formatter.Register<IEnumerable<Element>>((elements, writer) => {
 
 Formatter.Register<IEnumerable<Curve>>((crvs, writer) => {
     var model = new Model();
-    model.AddElements(crvs.Select(crv => new ModelCurve(crv, BuiltInMaterials.XAxis)));
+    model.AddElements(crvs.Select(crv => new ModelCurve(crv, DEFAULT_CURVE_MATERIAL)));
     var src = GetModelViewerSrc(model);
    writer.Write(src);
 }, "text/html");
 
 Formatter.Register<IEnumerable<Profile>>((profiles, writer) => {
     var model = new Model();
-    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, BuiltInMaterials.XAxis)));
+    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL)));
     var src = GetModelViewerSrc(model);
    writer.Write(src);
 }, "text/html");
@@ -193,7 +194,11 @@ void DisplayModel(Model model, double? width=null, double? height=null) {
     KernelInvocationContext.Current.DisplayAs(src, "text/html");
 }
 
-void setDefaultDisplaySize(double width, double height) {
+void SetDefaultDisplaySize(double width, double height) {
     DEFAULT_MODEL_WIDTH = width;
     DEFAULT_MODEL_HEIGHT = height;
+}
+
+void SetDefaultCurveMaterial(Material mat) {
+    DEFAULT_CURVE_MATERIAL = mat;
 }
