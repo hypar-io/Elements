@@ -310,12 +310,41 @@ namespace Elements.Tests
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
-            var r = new Random();
-            var regions = network.FindAllClosedRegions(allNodeLocations);
-            foreach (var region in regions)
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+        }
+
+        [Fact]
+        public void RevitWallsIntersectCorrectly()
+        {
+            this.Name = nameof(RevitWallsIntersectCorrectly);
+
+            var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
+            var model = Model.FromJson(json);
+            var walls = model.AllElementsOfType<WallByProfile>();
+            foreach (var wall in walls)
             {
-                Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
+                wall.Material = BuiltInMaterials.Mass;
             }
+            Assert.Equal(4, walls.Count());
+            var network = Network<WallByProfile>.FromSegmentableItems(walls.ToList(),
+                                                                      (wall) => { return wall.Centerline; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 3 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 4, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 1, 6, 7 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(6).Select(i => i.Item1), new List<int>() { 3 });
+            Assert.Equal(network.EdgesAt(7).Select(i => i.Item1), new List<int>() { 3 });
+
+            Model = model;
         }
 
         [Fact]

@@ -36,14 +36,18 @@ namespace Elements.Search
             var bLeft = b.Start.X <= b.End.X ? b.PointAt(0.001) : b.PointAt(0.999);
 
             if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
-            {
-                return 0;
-            }
-            if (aLeft.Y > bLeft.Y)
-            {
-                return -1;
-            }
-            return 1;
+                {
+                    if (aLeft.X.ApproximatelyEquals(bLeft.X))
+                    {
+                        return 0;
+                    }
+                    return aLeft.X.CompareTo(bLeft.X);
+                }
+                if (aLeft.Y > bLeft.Y)
+                {
+                    return -1;
+                }
+                return 1;
         }
     }
 }
