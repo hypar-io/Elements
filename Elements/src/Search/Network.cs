@@ -1,10 +1,90 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Elements.Geometry;
 
 namespace Elements.Search
 {
+    /// <summary>
+    /// Provides graph edge info
+    /// </summary>
+    public class LocalEdge
+    {
+        [Flags]
+        private enum VisitDirections
+        {
+            None,
+            Straight,
+            Opposite
+        }
+
+        /// <summary>
+        /// Creates a new instance of Edge class
+        /// </summary>
+        /// <param name="vertexIndex1">The index of the first vertex</param>
+        /// <param name="vertexIndex2">The index of the second vertex</param>
+        public LocalEdge(int vertexIndex1, int vertexIndex2)
+        {
+            visitDirections = VisitDirections.None;
+            VertexIndex1 = vertexIndex1;
+            VertexIndex2 = vertexIndex2;
+        }
+
+        public int VertexIndex1 { get; }
+        public int VertexIndex2 { get; }
+
+        /// <summary>
+        /// Mark a vertex as having been visited from the specified index.
+        /// </summary>
+        /// <param name="vertexIndex">The index of the vertex from which the edge is visited.</param>
+        public void MarkAsVisited(int vertexIndex)
+        {
+            if (vertexIndex == VertexIndex1)
+            {
+                visitDirections |= VisitDirections.Straight;
+            }
+            else if (vertexIndex == VertexIndex2)
+            {
+                visitDirections |= VisitDirections.Opposite;
+            }
+        }
+
+        /// <summary>
+        /// Is this edge between the provided vertices?
+        /// </summary>
+        /// <param name="vertexIndex1">The index of the first vertex.</param>
+        /// <param name="vertexIndex2">The index of the second vertex.</param>
+        /// <returns>Returns true if the edge is between the provided vertex indices.</returns>
+        public bool IsBetweenVertices(int vertexIndex1, int vertexIndex2)
+        {
+            return (VertexIndex1 == vertexIndex1 && VertexIndex2 == vertexIndex2) ||
+                (VertexIndex1 == vertexIndex2 && VertexIndex2 == vertexIndex1);
+        }
+
+        /// <summary>
+        /// Is this edge visited from the provided vertex?
+        /// </summary>
+        /// <param name="vertexIndex">The index of the vertex from which the vertex is visited.</param>
+        /// <returns>Returns true if the edge was visited from the vertex.</returns>
+        public bool IsVisitedFromVertex(int vertexIndex)
+        {
+            if (VertexIndex1 == vertexIndex)
+            {
+                return visitDirections.HasFlag(VisitDirections.Straight);
+            }
+
+            if (VertexIndex2 == vertexIndex)
+            {
+                return visitDirections.HasFlag(VisitDirections.Opposite);
+            }
+
+            return false;
+        }
+
+        private VisitDirections visitDirections;
+    }
+
     /// <summary>
     /// A network composed of nodes and edges with associated data.
     /// A network does not store spatial information. A network can
@@ -250,6 +330,7 @@ namespace Elements.Search
                         segmentIntersections[data].Add(e.Point);
                     }
                 }
+                Debug.WriteLine(tree.ToString());
             }
 
             // A collection containing all intersection points, which
@@ -282,6 +363,168 @@ namespace Elements.Search
             }
 
             return new Network<T>(adjacencyList);
+        }
+
+        /// <summary>
+        /// Find all the closed regions in the network.
+        /// This method uses the Traverse method internally with a traversal
+        /// function that uses the minimal plane angle to determine the direction
+        /// of traversal.
+        /// </summary>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <returns>A collection of integers representing the indices of the nodes 
+        /// forming closed regions in the network.</returns>
+        public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
+        {
+            var result = new List<List<int>>();
+
+            var traversalStartIndices = new List<int>();
+            for (var i = 0; i < this.NodeCount(); i++)
+            {
+                var edgeCount = this.EdgesAt(i).Count();
+                // Leaf nodes
+                if (edgeCount == 1)
+                {
+                    traversalStartIndices.Add(i);
+                }
+            }
+
+            var nodeVisits = new int[NodeCount()];
+            var visitedEdges = new List<LocalEdge>();
+
+            foreach (var leafIndex in traversalStartIndices)
+            {
+                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+
+                foreach (var index in path)
+                {
+                    nodeVisits[index] = nodeVisits[index] + 1;
+                }
+
+                MarkVisitedEdges(visitedEdges, path);
+
+                if (path.Count < 3)
+                {
+                    continue;
+                }
+
+                if (path[0] == path[path.Count - 1])
+                {
+                    result.Add(path);
+                }
+
+                Debug.WriteLine($"PATH: {string.Join(",", path)}");
+            }
+
+            for (var i = 0; i < nodeVisits.Length; i++)
+            {
+                var localEdgeCount = EdgesAt(i).Count();
+                if (localEdgeCount > nodeVisits[i])
+                {
+                    List<int> path = Traverse(i, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+
+                    if (path.Count < 2 || path[0] != path[path.Count - 1])
+                    {
+                        continue;
+                    }
+
+                    MarkVisitedEdges(visitedEdges, path);
+
+                    // Add the visits to the corresponding nodes
+                    // to ensure that we don't re-traverse this loop.
+                    foreach (var index in path)
+                    {
+                        nodeVisits[index] = nodeVisits[index] + 1;
+                    }
+
+                    if (path.Count < 3)
+                    {
+                        continue;
+                    }
+
+                    if (path[0] == path[path.Count - 1])
+                    {
+                        result.Add(path);
+                    }
+
+                    Debug.WriteLine($"PATH: {string.Join(",", path)}");
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Traverse a network following the smallest plane angle path including
+        /// leaf nodes.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="network">The network being traversed.</param>
+        /// <returns>The next index to traverse.</returns>
+        public static int TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges,
+                                               Network<T> network)
+        {
+            var minAngle = double.MaxValue;
+            var minIndex = -1;
+            var baseEdge = traversalData.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
+            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
+            foreach (var e in edgeIndices)
+            {
+                if (e == traversalData.previousIndex)
+                {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
+                    continue;
+                }
+
+                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
+                {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
+                var angle = baseEdge.PlaneAngleTo(localEdge);
+
+                // The angle of traversal is not actually zero here,
+                // it's 180 (unless the path is invalid). We want to
+                // ensure that traversal happens along the straight
+                // edge if possible.
+                if (angle == 0)
+                {
+                    angle = 180.0;
+                }
+
+                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
+
+                if (angle < minAngle)
+                {
+                    Debug.WriteLine("Found minimum.");
+                    minAngle = angle;
+                    minIndex = e;
+                }
+            }
+            return minIndex;
+        }
+
+        private static void MarkVisitedEdges(List<LocalEdge> visitedEdges, List<int> path)
+        {
+            for (int j = 0; j < path.Count - 1; j++)
+            {
+                var edge = visitedEdges.FirstOrDefault(e => e.IsBetweenVertices(path[j], path[j + 1]));
+
+                if (edge == null)
+                {
+                    edge = new LocalEdge(path[j], path[j + 1]);
+                    visitedEdges.Add(edge);
+                }
+
+                edge.MarkAsVisited(path[j]);
+            }
         }
 
         private static int AddVertexAtEvent(Vector3 location,
@@ -469,10 +712,14 @@ namespace Elements.Search
         /// </summary>
         /// <param name="start">The starting point of the traversal.</param>
         /// <param name="next">The traversal step delegate.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of all visited edges.</param>
         /// <param name="visited">A collection of visited node indices.</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  Func<(int currentNodeIndex, int previousNodeIndex, IEnumerable<int> connectedNodes), int> next,
+                                  Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, Network<T>, int> next,
+                                  List<Vector3> allNodeLocations,
+                                  List<LocalEdge> visitedEdges,
                                   out List<int> visited)
         {
             var path = new List<int>();
@@ -480,12 +727,17 @@ namespace Elements.Search
             var currentIndex = start;
             var prevIndex = -1;
 
+            // Track the trailing edge from a specific index.
+            // This will be used to compare traversal to avoid passing
+            // over where the path has previously travelled.
+            var lastIndexMap = new Dictionary<int, (int start, int end)>();
+
             while (currentIndex != -1)
             {
                 path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
-                currentIndex = Traverse(prevIndex, currentIndex, next);
+                currentIndex = Traverse(prevIndex, currentIndex, next, allNodeLocations, visitedEdges, this);
                 prevIndex = oldIndex;
 
                 // After at least one traversal step, if the current index
@@ -495,13 +747,30 @@ namespace Elements.Search
                     break;
                 }
 
-                if (path.Contains(currentIndex))
+                if (lastIndexMap.ContainsKey(currentIndex))
                 {
-                    // if we have already passed two elements in the same order, we've achieved a loop
-                    if (path.IndexOf(path[path.Count - 1]) == path.IndexOf(currentIndex) - 1)
+                    var firstSegmentStart = lastIndexMap[currentIndex].start;
+                    var firstSegmentEnd = lastIndexMap[currentIndex].end;
+
+                    var secondSegmentStart = oldIndex;
+                    var secondSegmentEnd = currentIndex;
+
+                    // Check if the segments are the same.
+                    if (firstSegmentStart == secondSegmentStart && firstSegmentEnd == secondSegmentEnd)
                     {
+                        // Snip the "tail" by taking only everything up to the last segment.
+                        path = path.Take(path.LastIndexOf(firstSegmentEnd)).ToList();
                         break;
                     }
+                }
+
+                if (lastIndexMap.ContainsKey(currentIndex))
+                {
+                    lastIndexMap[currentIndex] = (oldIndex, currentIndex);
+                }
+                else
+                {
+                    lastIndexMap.Add(currentIndex, (oldIndex, currentIndex));
                 }
             }
 
@@ -516,7 +785,10 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             Func<(int currentNodeIndex, int previousNodeIndex, IEnumerable<int> connectedNodes), int> next)
+                             Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, Network<T>, int> next,
+                             List<Vector3> allNodeLocations,
+                             List<LocalEdge> visitedEdges,
+                             Network<T> network)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -541,7 +813,7 @@ namespace Elements.Search
                 }
             }
 
-            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)));
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges, network);
         }
     }
 }

@@ -13,6 +13,7 @@ jobs:
         with:
           fetch-depth: 10
           token: ${{ secrets.HYPAR_GITHUB_BOT_PAT }}
+          ref: master
       - name: Setup Git
         run: |
           git config user.name "hypar-eric-bot"

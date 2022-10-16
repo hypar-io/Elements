@@ -16,6 +16,7 @@ using System.Net;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
+using System.Reflection;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -130,14 +131,16 @@ namespace Elements.Serialization.glTF
             {
                 return null;
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             byte[] bytes;
             using (var ms = new MemoryStream())
             using (var writer = new BinaryWriter(ms))
             {
-                gltf.SaveBinaryModel(mergedBuffer, writer);
-                bytes = ms.ToArray();
+                gltf.SaveBinaryModel(mergedBuffer, ms);
+                // Avoid a copy of this array by using GetBuffer() instead
+                // of ToArray()
+                bytes = ms.GetBuffer();
             }
 
             return bytes;
@@ -149,19 +152,17 @@ namespace Elements.Serialization.glTF
         /// <returns>A Base64 string representing the model.</returns>
         public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
         {
-            var tmp = Path.GetTempFileName();
             var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return "";
             }
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
             string b64;
             using (var ms = new MemoryStream())
-            using (var writer = new BinaryWriter(ms))
             {
-                gltf.SaveBinaryModel(mergedBuffer, writer);
-                b64 = Convert.ToBase64String(ms.ToArray());
+                gltf.SaveBinaryModel(mergedBuffer, ms);
+                b64 = Convert.ToBase64String(ms.GetBuffer());
             }
 
             return b64;
@@ -531,8 +532,7 @@ namespace Elements.Serialization.glTF
             return bufferViews.Count - 1;
         }
 
-        internal static int AddTriangleMesh(this Gltf gltf,
-                                            string name,
+        internal static int AddTriangleMesh(string name,
                                             List<byte> buffer,
                                             List<BufferView> bufferViews,
                                             List<Accessor> accessors,
@@ -636,8 +636,7 @@ namespace Elements.Serialization.glTF
             return meshes.Count - 1;
         }
 
-        internal static int AddPointsOrLines(this Gltf gltf,
-                                        string name,
+        internal static int AddPointsOrLines(string name,
                                         List<byte> buffer,
                                         List<BufferView> bufferViews,
                                         List<Accessor> accessors,
@@ -774,7 +773,7 @@ namespace Elements.Serialization.glTF
                                               buffer,
                                               bufferViews);
 
-            var mesh = new Elements.Geometry.Mesh();
+            var mesh = new Geometry.Mesh();
             solid.Tessellate(ref mesh);
             mesh.ComputeNormals();
 
@@ -782,13 +781,13 @@ namespace Elements.Serialization.glTF
 
             var accessors = new List<Accessor>();
 
-            var meshId = gltf.AddTriangleMesh("mesh",
-                                              buffer,
-                                              bufferViews,
-                                              accessors,
-                                              materials[BuiltInMaterials.Default.Id.ToString()],
-                                              gbuffers,
-                                              meshes);
+            var meshId = AddTriangleMesh("mesh",
+                                         buffer,
+                                         bufferViews,
+                                         accessors,
+                                         materials[BuiltInMaterials.Default.Id.ToString()],
+                                         gbuffers,
+                                         meshes);
 
             NodeUtilities.CreateNodeForMesh(meshId, nodes, null);
 
@@ -813,16 +812,34 @@ namespace Elements.Serialization.glTF
             {
                 // Draw standard edges
                 var id = $"{100000}_curve";
-                var gb = vertices.ToArray(vertices.Count).ToGraphicsBuffers();
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                var gb = vertices.ToGraphicsBuffers();
+                AddPointsOrLines(id,
+                                 buffer,
+                                 bufferViews,
+                                 accessors,
+                                 materials[BuiltInMaterials.Edges.Id.ToString()],
+                                 new List<GraphicsBuffers>() { gb },
+                                 MeshPrimitive.ModeEnum.LINES,
+                                 meshes,
+                                 nodes,
+                                 null);
             }
 
             if (verticesHighlighted.Count > 0)
             {
                 // Draw highlighted edges
                 var id = $"{100001}_curve";
-                var gb = verticesHighlighted.ToArray(verticesHighlighted.Count).ToGraphicsBuffers();
-                gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                var gb = verticesHighlighted.ToGraphicsBuffers();
+                AddPointsOrLines(id,
+                                 buffer,
+                                 bufferViews,
+                                 accessors,
+                                 materials[BuiltInMaterials.EdgesHighlighted.Id.ToString()],
+                                 new List<GraphicsBuffers>() { gb },
+                                 MeshPrimitive.ModeEnum.LINES,
+                                 meshes,
+                                 nodes,
+                                 null);
             }
 
             var buff = new glTFLoader.Schema.Buffer
@@ -852,7 +869,8 @@ namespace Elements.Serialization.glTF
             }
 
             //TODO handle initializing multiple gltf buffers at once.
-            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers.ToArray(buffers.Count));
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
+
             gltf.SaveBinaryModel(mergedBuffer, path);
             return true;
         }
@@ -881,8 +899,18 @@ namespace Elements.Serialization.glTF
             errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };
-            var buffer = new List<byte>();
-            allBuffers = new List<byte[]> { Array.Empty<byte>() };
+
+            // Attempt to pre-allocate these lists. This won't be perfect.
+            // Before processing the geometry of an element we can't know
+            // how much to allocate. In the worst case, this will reduce 
+            // the list resizing.
+            // TODO: In future work where we update element geometry during 
+            // UpdateRepresentations, we will know at this moment how big the
+            // geometry for an element is, and we should tighten this up.
+            var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
+            var buffer = new List<byte>(elementCount * GraphicsBuffers.PreallocationSize());
+            var contentElementCount = model.AllElementsAssignableFromType<ContentElement>().Count();
+            allBuffers = new List<byte[]>(contentElementCount * GraphicsBuffers.PreallocationSize()) { Array.Empty<byte>() };
 
             var gltf = new Gltf();
             var asset = new Asset
@@ -1022,7 +1050,16 @@ namespace Elements.Serialization.glTF
                     }
                     var id = $"{GetNextId()}_edge";
                     var gb = lineSet.ToGraphicsBuffers();
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[BuiltInMaterials.Edges.Id.ToString()], new List<GraphicsBuffers>() { gb }, MeshPrimitive.ModeEnum.LINES, meshes, nodes, null);
+                    AddPointsOrLines(id,
+                                     buffer,
+                                     bufferViews,
+                                     accessors,
+                                     materialIndexMap[BuiltInMaterials.Edges.Id.ToString()],
+                                     new List<GraphicsBuffers>() { gb },
+                                     MeshPrimitive.ModeEnum.LINES,
+                                     meshes,
+                                     nodes,
+                                     null);
                 }
             }
 
@@ -1059,7 +1096,15 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
-            allBuffers[0] = buffer.ToArray(buffer.Count);
+            // This is a hack! For web assembly, the ToArray() call creates
+            // a copy of all items in the list, and is extremely slow. We
+            // get around this by accessing the underlying list directly.
+            // https://stackoverflow.com/a/4973060
+            // allBuffers[0] = buffer.ToArray(buffer.Count);
+            buffer.TrimExcess();
+            allBuffers[0] = (byte[])typeof(List<byte>)
+                   .GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)
+                   .GetValue(buffer);
 
             return gltf;
         }
@@ -1136,7 +1181,6 @@ namespace Elements.Serialization.glTF
                     else
                     {
                         meshId = ProcessGeometricRepresentation(e,
-                                                                ref gltf,
                                                                 ref materialIndexMap,
                                                                 ref buffer,
                                                                 bufferViews,
@@ -1158,7 +1202,6 @@ namespace Elements.Serialization.glTF
                     materialId = geometricElement.Material.Id.ToString();
 
                     meshId = ProcessGeometricRepresentation(e,
-                                                            ref gltf,
                                                             ref materialIndexMap,
                                                             ref buffer,
                                                             bufferViews,
@@ -1226,11 +1269,20 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is GeometricElement ge)
+            if (e is GeometricElement ge && !ge.IsElementDefinition)
             {
                 if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
-                    gltf.AddPointsOrLines(id, buffer, bufferViews, accessors, materialIndexMap[ge.Material.Id.ToString()], gb, (MeshPrimitive.ModeEnum)mode, meshes, nodes, ge.Transform);
+                    AddPointsOrLines(id,
+                                     buffer,
+                                     bufferViews,
+                                     accessors,
+                                     materialIndexMap[ge.Material.Id.ToString()],
+                                     gb,
+                                     (MeshPrimitive.ModeEnum)mode,
+                                     meshes,
+                                     nodes,
+                                     ge.Transform);
                 }
             }
 
@@ -1247,13 +1299,13 @@ namespace Elements.Serialization.glTF
 
                 // TODO(Ian): Remove this cast to GeometricElement when we
                 // consolidate mesh under geometric representations.
-                meshId = gltf.AddTriangleMesh(e.Id + "_mesh",
-                                     buffer,
-                                     bufferViews,
-                                     accessors,
-                                     materialIndexMap[materialId],
-                                     gbuffers,
-                                     meshes);
+                meshId = AddTriangleMesh(e.Id + "_mesh",
+                                         buffer,
+                                         bufferViews,
+                                         accessors,
+                                         materialIndexMap[materialId],
+                                         gbuffers,
+                                         meshes);
 
                 if (!meshElementMap.ContainsKey(e.Id))
                 {
@@ -1368,7 +1420,6 @@ namespace Elements.Serialization.glTF
         /// Returns the index of the mesh created while processing the Geometry.
         /// </summary>
         private static int ProcessGeometricRepresentation(Element e,
-                                                           ref Gltf gltf,
                                                            ref Dictionary<string, int> materialIndexMap,
                                                            ref List<byte> buffers,
                                                            List<BufferView> bufferViews,
@@ -1380,6 +1431,7 @@ namespace Elements.Serialization.glTF
                                                            GeometricElement geometricElement)
         {
             geometricElement.UpdateRepresentations();
+            geometricElement.UpdateBoundsAndComputeSolid();
 
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
@@ -1395,7 +1447,6 @@ namespace Elements.Serialization.glTF
                 meshId = ProcessSolidsAsCSG(geometricElement,
                                     e.Id.ToString(),
                                     materialId,
-                                    ref gltf,
                                     ref materialIndexMap,
                                     ref buffers,
                                     bufferViews,
@@ -1421,7 +1472,6 @@ namespace Elements.Serialization.glTF
         private static int ProcessSolidsAsCSG(GeometricElement geometricElement,
                                       string id,
                                       string materialId,
-                                      ref Gltf gltf,
                                       ref Dictionary<string, int> materials,
                                       ref List<byte> buffer,
                                       List<BufferView> bufferViews,
@@ -1429,18 +1479,22 @@ namespace Elements.Serialization.glTF
                                       List<glTFLoader.Schema.Mesh> meshes)
         {
             GraphicsBuffers buffers = null;
+
+            // If we've explicitly skipped csg union or the element
+            // only has one solid operation, we can perform this micro-optimization
+            // of skipping CSG creation.
             if (geometricElement.Representation.SkipCSGUnion)
             {
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
                 buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
+                                        false,
                                         geometricElement.ModifyVertexAttributes);
             }
             else
             {
-                var csg = geometricElement.GetFinalCsgFromSolids();
-                buffers = csg.Tessellate(geometricElement.ModifyVertexAttributes);
+                buffers = geometricElement._csg.Tessellate(modifyVertexAttributes: geometricElement.ModifyVertexAttributes);
             }
 
             if (buffers.Vertices.Count == 0)
@@ -1448,13 +1502,13 @@ namespace Elements.Serialization.glTF
                 return -1;
             }
 
-            return gltf.AddTriangleMesh(id + "_mesh",
-                                        buffer,
-                                        bufferViews,
-                                        accessors,
-                                        materials[materialId],
-                                        buffers,
-                                        meshes);
+            return AddTriangleMesh(id + "_mesh",
+                                   buffer,
+                                   bufferViews,
+                                   accessors,
+                                   materials[materialId],
+                                   buffers,
+                                   meshes);
         }
     }
 }

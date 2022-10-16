@@ -1,6 +1,6 @@
+using Elements.Tests;
 using System.Collections.Generic;
 using System.Linq;
-using Elements.Tests;
 using Xunit;
 
 namespace Elements.Geometry.Tests
@@ -325,45 +325,81 @@ namespace Elements.Geometry.Tests
             Assert.Empty(sharedSegments);
         }
 
-        [Fact]
-        public void PolygonIntersectsReturnsPolylineWhenIsInside()
-        {
-            var polygon = Polygon.Rectangle(4, 8);
-            var polyline = new Polyline(
-                new Vector3(-1, -2),
-                new Vector3(-1, 2),
-                new Vector3(1, 2),
-                new Vector3(1, -2));
-
-            var result = polyline.Intersects(polygon, out var sharedSegments);
-
-            Assert.True(result);
-            Assert.Single(sharedSegments);
-            Assert.Collection(sharedSegments, (x => Assert.Equal(polyline, x)));
-        }
-
-        [Fact]
-        public void PolygonIntersectsReturnsNewSegmentWhenTwoIntersections()
+        [Theory]
+        [MemberData(nameof(GetPolygonIntersectsTestData))]
+        public void PolygonIntersectsReturnsOneSegment(Polyline polyline, Polyline expectedResult)
         {
             var polygon = Polygon.Rectangle(6, 4);
-
-            var polyline = new Polyline(
-                new Vector3(-1, -3),
-                new Vector3(-1, 1),
-                new Vector3(1, 1),
-                new Vector3(1, -3));
-
-            var expectedResult = new Polyline(
-                new Vector3(-1, -2),
-                new Vector3(-1, 1),
-                new Vector3(1, 1),
-                new Vector3(1, -2));
-
             var result = polyline.Intersects(polygon, out var sharedSegments);
 
             Assert.True(result);
-            Assert.Single(sharedSegments);
             Assert.Collection(sharedSegments, x => Assert.True(x.Equals(expectedResult)));
+        }
+
+        public static IEnumerable<object[]> GetPolygonIntersectsTestData()
+        {
+            //Polyline is inside boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)),
+                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)) 
+            };
+
+            //Polyline both ends outside boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -5)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+            };
+
+            //Polyline end is on polygon boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+            };
+
+            //Polyline start is on polygon boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)) 
+            };
+
+            //Polyline end is inside boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(1, 5), new Vector3(1,0), Vector3.Origin),
+                new Polyline(new Vector3(1, 2), new Vector3(1, 0), Vector3.Origin) 
+            };
+
+            //Polyline start is inside boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin) 
+            };
+
+            //Polyline end is boundary vertex
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), new Vector3(3, 2)),
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), new Vector3(3, 2)) 
+            };
+
+            //Polyline start is boundary vertex
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 5)),
+                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2)) 
+            };
+
+            //Polyline segment is part of boundary
+            yield return new object[] 
+            { 
+                new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), new Vector3(3, 0), new Vector3(3, 1)),
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), new Vector3(3, 0)) 
+            };
         }
 
         [Fact]
@@ -491,6 +527,26 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolygonIntersectsOfLShape()
+        {
+            var polygon = Polygon.L(10, 10, 3);
+            var polyline = new Polyline(new Vector3(6, -2),
+                new Vector3(6, 0),
+                new Vector3(2, 0),
+                new Vector3(2, 2),
+                new Vector3(0, 2),
+                new Vector3(0, 5),
+                new Vector3(-2, 5));
+
+            var expectedSubsegment = new Polyline(new Vector3(2, 0), new Vector3(2, 2), new Vector3(0, 2));
+
+            var result = polyline.Intersects(polygon, out var sharedSegments);
+            
+            Assert.True(result);
+            Assert.Collection(sharedSegments, sharedSegment => Assert.Equal(expectedSubsegment, sharedSegment));
+        }
+
+        [Fact]
         public void GetSubsegment()
         {
             var polyline = new Polyline(
@@ -499,22 +555,28 @@ namespace Elements.Geometry.Tests
                 new Vector3(5, 5),
                 new Vector3(5, -5));
 
-            var result = polyline.GetSubsegment(new Vector3(-5, -3), new Vector3(5, 3));
+            var start = new Vector3(-5, -3);
+            var end = new Vector3(5, 3);
+            
+            var result = polyline.GetSubsegment(start, end);
 
-            var expectedResult = new Polyline(new Vector3(-5, -3),
+            var expectedResult = new Polyline(
+                start,
                 new Vector3(-5, 5),
                 new Vector3(5, 5),
-                new Vector3(5, 3));
+                end);
 
             Assert.Equal(expectedResult, result);
 
-            var reversedResult = polyline.GetSubsegment(new Vector3(5, 3), new Vector3(-5, -3));
-            Assert.Equal(expectedResult, reversedResult);
+            var reversedResult = polyline.GetSubsegment(end, start);
+            var reversedExpectedResult = expectedResult.Reversed();
+            
+            Assert.Equal(reversedExpectedResult, reversedResult);
 
             var pointOutsidePolyline = Vector3.Origin;
             Assert.Equal(-1d, polyline.GetParameterAt(pointOutsidePolyline), 5);
-            Assert.Null(polyline.GetSubsegment(pointOutsidePolyline, new Vector3(-5, -3)));
-            Assert.Null(polyline.GetSubsegment(new Vector3(-5, -3), pointOutsidePolyline));
+            Assert.Null(polyline.GetSubsegment(pointOutsidePolyline, start));
+            Assert.Null(polyline.GetSubsegment(start, pointOutsidePolyline));
 
             var middlePoint = new Vector3(0, 5);
             var startSubsegment = polyline.GetSubsegment(polyline.Start, middlePoint);

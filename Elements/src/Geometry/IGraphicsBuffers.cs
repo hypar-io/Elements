@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Elements.Geometry;
 
 namespace Elements
@@ -39,9 +40,20 @@ namespace Elements
         void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null);
 
         /// <summary>
+        /// Add vertices to the graphics buffers
+        /// </summary>
+        void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices);
+
+        /// <summary>
         /// Add an index to the graphics buffers.
         /// </summary>
         /// <param name="index">The index to add.</param>
         void AddIndex(ushort index);
+
+        /// <summary>
+        /// Add multiple indices to the graphics buffers.
+        /// </summary>
+        /// <param name="indices">The indices to add.</param>
+        void AddIndices(IList<ushort> indices);
     }
 }

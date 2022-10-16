@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -214,39 +215,6 @@ namespace Elements.Tests
             var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
             var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
 
-            int next((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) a)
-            {
-                var minAngle = double.MaxValue;
-                var minIndex = -1;
-                var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                foreach (var e in a.edgeIndices)
-                {
-                    if (e == a.previousIndex)
-                    {
-                        continue;
-                    }
-
-                    var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                    var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                    // The angle of traversal is not actually zero here,
-                    // it's 180 (unless the path is invalid). We want to
-                    // ensure that traversal happens along the straight
-                    // edge if possible.
-                    if (angle == 0)
-                    {
-                        angle = 180.0;
-                    }
-
-                    if (angle < minAngle)
-                    {
-                        minAngle = angle;
-                        minIndex = e;
-                    }
-                }
-                return minIndex;
-            }
-
             var leafIndices = new List<int>();
             for (var i = 0; i < network.NodeCount(); i++)
             {
@@ -258,9 +226,10 @@ namespace Elements.Tests
 
             Assert.Single(leafIndices);
 
+            var visitedEdges = new List<LocalEdge>();
             foreach (var leafIndex in leafIndices)
             {
-                var path = network.Traverse(leafIndex, next, out List<int> visited);
+                var path = network.Traverse(leafIndex, Network<Line>.TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
                 Assert.Equal(6, path.Count);
                 _output.WriteLine(string.Join(',', visited));
             }
@@ -297,8 +266,87 @@ namespace Elements.Tests
             // }
             model.AddElements(network.ToModelArrows(allNodeLocations, Colors.White));
             model.AddElements(network.ToModelText(allNodeLocations, Colors.White));
-            model.AddElements(network.ToBoundedAreas(allNodeLocations));
+            model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
             model.ToGlTF("RevitIntersectingWalls.gltf", out _, false);
+        }
+
+        private List<Line> CreateClosedRegionTestLines()
+        {
+            var lines = new List<Line>();
+
+            foreach (var line in Polygon.Rectangle(5, 5).Segments())
+            {
+                lines.Add(line);
+            }
+            var t = new Transform(new Vector3(5, 0));
+            foreach (var line in Polygon.Rectangle(5, 5).TransformedPolygon(t).Segments())
+            {
+                var match = false;
+                foreach (var otherLine in lines)
+                {
+                    if (otherLine.IsAlmostEqualTo(line, false))
+                    {
+                        match = true;
+                    }
+                }
+                if (!match)
+                {
+                    lines.Add(line);
+                }
+            }
+            lines.Add(new Line(new Vector3(0, 0), new Vector3(0, 5)));
+            lines.Add(new Line(new Vector3(-5, -1), new Vector3(12.5, 1)));
+            lines.Add(new Line(new Vector3(5, 0), new Vector3(5, 5)));
+
+            return lines;
+        }
+
+        [Fact]
+        public void FindAllClosedRegions()
+        {
+            this.Name = nameof(FindAllClosedRegions);
+
+            var lines = CreateClosedRegionTestLines();
+
+            foreach (var line in lines)
+            {
+                this.Model.AddElement(new ModelCurve(line));
+            }
+
+            var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
+
+            var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
+
+            Assert.Equal(5, closedRegions.Count);
+
+            var r = new Random(23);
+            foreach (var region in closedRegions)
+            {
+                try
+                {
+                    var p = new Polygon(region.Select(i => allNodeLocations[i]).ToList());
+                    this.Model.AddElement(new Panel(p, r.NextMaterial()));
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+        }
+
+        [Fact]
+        public void FindAllClosedRegionsDoesNotLoopInfinitely()
+        {
+            this.Name = nameof(FindAllClosedRegionsDoesNotLoopInfinitely);
+            var json = File.ReadAllText("../../../models/Geometry/BadNetwork.json");
+            var lines = JsonConvert.DeserializeObject<List<Line>>(json);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
         }
     }
 }

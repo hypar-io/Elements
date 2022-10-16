@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>Hypar.Elements.Serialization.SVG</AssemblyName>
+    <PackageTitle>Hypar Elements Serialization SVG</PackageTitle>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>Hypar Elements Serialization SVG</Title>
+    <PackageId>Hypar.Elements.Serialization.SVG</PackageId>
+    <PackageDescription>SVG serialization for Elements.</PackageDescription>
+    <Summary>The Elements library provides object types for generating the built environment.</Summary>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <Version>$(Version)</Version>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="svg" Version="3.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+  </ItemGroup>
+
+</Project>

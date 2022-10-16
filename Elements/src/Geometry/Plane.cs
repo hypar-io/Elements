@@ -160,5 +160,21 @@ namespace Elements.Geometry
             result = num / denom;
             return true;
         }
+
+        /// <summary>
+        /// Does this plane intersect the provided edge?
+        /// </summary>
+        /// <param name="edge">The edge to intersect.</param>
+        /// <param name="result">The intersection.</param>
+        /// <returns>True if an intersection occurs, otherwise false.</returns>
+        public bool Intersects((Vector3 from, Vector3 to) edge, out Vector3 result)
+        {
+            if (Line.Intersects(this, edge.from, edge.to, out result))
+            {
+                return true;
+            }
+            result = default;
+            return false;
+        }
     }
 }
