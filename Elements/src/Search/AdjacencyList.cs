@@ -9,7 +9,7 @@ namespace Elements.Search
     /// </summary>
     internal class AdjacencyList<T>
     {
-        List<LinkedList<(int, T)>> _nodes;
+        readonly List<LinkedList<(int target, T data)>> _nodes;
 
         /// <summary>
         /// Create an adjacency list with the size of the provided collection.
@@ -156,10 +156,45 @@ namespace Elements.Search
             return result;
         }
 
+        public void RemoveLeaves()
+        {
+            // Mark removals to avoid errors on trying to remove
+            // during iteration.
+            var removals = new List<(int index, (int target, T data) item)>();
+
+            var leaves = Leaves();
+            foreach (var leaf in leaves)
+            {
+                // For each of the edges connected to this leaf node.
+                foreach (var edge in this._nodes[leaf])
+                {
+                    // For each of the target's edges, find the one
+                    // that connects to this leaf node.
+                    foreach (var (target, data) in this._nodes[edge.target])
+                    {
+                        if (target == leaf)
+                        {
+                            // Remove the edge that points back to 
+                            // this leaf node.
+                            removals.Add((edge.target, (target, data)));
+                        }
+                    }
+
+                    // Remove the edge from this leaf node to
+                    // the target.
+                    removals.Add((leaf, edge));
+                }
+            }
+
+            foreach (var (index, item) in removals)
+            {
+                this._nodes[index].Remove(item);
+            }
+        }
+
         /// <summary>
         /// Get all branch nodes.
         /// </summary>
-        /// <returns></returns>
         public List<int> Branches()
         {
             var result = new List<int>();
@@ -173,9 +208,47 @@ namespace Elements.Search
             return result;
         }
 
+        private bool NodeHasEdgeTo(int i, int target)
+        {
+            foreach (var edge in this._nodes[i])
+            {
+                if (edge.target == target)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool IsLeaf(int i)
         {
-            return this._nodes[i].Count == 0;
+            // If the node points to 1 other node, and 
+            // that node points back.
+            if (this._nodes[i].Count == 1)
+            {
+                if (NodeHasEdgeTo(this._nodes[i].First.Value.target, i))
+                {
+                    return true;
+                }
+            }
+
+            // If the node is pointed at by only 
+            // one other node and it points at nothing.
+            if (this._nodes[i].Count == 0)
+            {
+                var pointers = 0;
+                for (var j = 0; j < this._nodes.Count; j++)
+                {
+                    if (NodeHasEdgeTo(j, i))
+                    {
+                        pointers++;
+                    }
+                }
+
+                return pointers == 1;
+            }
+
+            return false;
         }
 
         public int NodeCount()

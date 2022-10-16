@@ -317,5 +317,43 @@ namespace Elements.Tests
                 Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
             }
         }
+
+        [Fact]
+        public void TwoWayLeafNodes()
+        {
+            var network = new Network<object>();
+            var a = network.AddVertex();
+            var b = network.AddVertex();
+            network.AddEdgeBothWays(a, b, null);
+            Assert.Equal(2, network.LeafNodes().Count);
+        }
+
+        [Fact]
+        public void LeafClipping()
+        {
+            this.Name = nameof(LeafClipping);
+            var json = File.ReadAllText("../../../models/Geometry/GridWithLeaves.json");
+            var model = JsonConvert.DeserializeObject<Model>(json);
+            var grids = model.AllElementsOfType<GridLine>().ToList();
+
+            var falseNetwork = Network<GridLine>.FromSegmentableItems(grids,
+                                                                 (gl) => { return gl.Curve as Line; },
+                                                                 out var falseNodeLocations,
+                                                                 out var _);
+            Model.AddElements(falseNetwork.ToModelArrows(falseNodeLocations, Colors.Blue));
+
+            var network = Network<GridLine>.FromSegmentableItems(grids,
+                                                                 (gl) => { return gl.Curve as Line; },
+                                                                 out var allNodeLocations,
+                                                                 out var _,
+                                                                 removeLeaves: true);
+            var r = new Random();
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Red));
+            foreach (var region in regions)
+            {
+                Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
+            }
+        }
     }
 }

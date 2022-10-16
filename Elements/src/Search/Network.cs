@@ -189,12 +189,14 @@ namespace Elements.Search
         /// <param name="allNodeLocations">A collection of all node locations.</param>
         /// <param name="allIntersectionLocations">A collection of all intersection locations.</param>
         /// <param name="twoWayEdges">Should edges be created in both directions?</param>
+        /// <param name="removeLeaves">Should leaf nodes be removed?</param>
         /// <returns>A network.</returns>
         public static Network<T> FromSegmentableItems(IList<T> items,
                                                          Func<T, Line> getSegment,
                                                          out List<Vector3> allNodeLocations,
                                                          out List<Vector3> allIntersectionLocations,
-                                                         bool twoWayEdges = true)
+                                                         bool twoWayEdges = true,
+                                                         bool removeLeaves = false)
         {
             // Use a line sweep algorithm to identify intersection events.
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
@@ -360,6 +362,11 @@ namespace Elements.Search
                                                  prevIndex,
                                                  twoWayEdges);
                 }
+            }
+
+            if (removeLeaves)
+            {
+                adjacencyList.RemoveLeaves();
             }
 
             return new Network<T>(adjacencyList);
