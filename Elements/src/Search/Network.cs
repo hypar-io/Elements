@@ -636,58 +636,16 @@ namespace Elements.Search
         /// <summary>
         /// Draw bounded areas of the network as panels.
         /// </summary>
-        /// <param name="allNodeLocations">A collection of node locations.</param>
-        public List<Panel> ToBoundedAreas(List<Vector3> allNodeLocations)
+        /// <param name="allNodeLocations">All node locations in the network.</param>
+        public List<Panel> ToBoundedAreaPanels(List<Vector3> allNodeLocations)
         {
-            int next((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) a)
-            {
-                var minAngle = double.MaxValue;
-                var minIndex = -1;
-                var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                foreach (var e in a.edgeIndices)
-                {
-                    if (e == a.previousIndex)
-                    {
-                        continue;
-                    }
-
-                    var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                    var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                    // The angle of traversal is not actually zero here,
-                    // it's 180 (unless the path is invalid). We want to
-                    // ensure that traversal happens along the straight
-                    // edge if possible.
-                    if (angle == 0)
-                    {
-                        angle = 180.0;
-                    }
-
-                    if (angle < minAngle)
-                    {
-                        minAngle = angle;
-                        minIndex = e;
-                    }
-                }
-                return minIndex;
-            }
-
+            var regions = FindAllClosedRegions(allNodeLocations);
             var r = new Random();
             var panels = new List<Panel>();
 
-            var leafs = new List<int>();
-            for (var i = 0; i < this._adjacencyList.NodeCount(); i++)
+            foreach (var region in regions)
             {
-                var node = this._adjacencyList[i];
-                if (node.Count == 1)
-                {
-                    leafs.Add(i);
-                }
-            }
-            foreach (var leaf in leafs)
-            {
-                var path = this.Traverse(leaf, next, out _);
-                var vertices = path.Select(i => allNodeLocations[i]).ToList();
+                var vertices = region.Select(i => allNodeLocations[i]).ToList();
                 Polygon poly = null;
                 try
                 {
