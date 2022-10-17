@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -301,8 +302,22 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void FindAllClosedRegionsDoesNotLoopInfinitely()
+        {
+            this.Name = nameof(FindAllClosedRegionsDoesNotLoopInfinitely);
+            var json = File.ReadAllText("../../../models/Geometry/BadNetwork.json");
+            var lines = JsonConvert.DeserializeObject<List<Line>>(json);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+        }
+
+        [Fact]
         public void RevitWallsIntersectCorrectly()
         {
+            this.Name = nameof(RevitWallsIntersectCorrectly);
+
             var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
             var model = Model.FromJson(json);
             var walls = model.AllElementsOfType<WallByProfile>();
@@ -316,8 +331,9 @@ namespace Elements.Tests
                                                                       out var allNodeLocations,
                                                                       out var allIntersectionLocations);
 
-            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.White));
-            model.AddElements(network.ToModelText(allNodeLocations, Colors.White));
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
 
             Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
             Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 3 });
@@ -327,6 +343,8 @@ namespace Elements.Tests
             Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
             Assert.Equal(network.EdgesAt(6).Select(i => i.Item1), new List<int>() { 3 });
             Assert.Equal(network.EdgesAt(7).Select(i => i.Item1), new List<int>() { 3 });
+
+            Model = model;
         }
     }
 }

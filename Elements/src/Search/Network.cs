@@ -700,6 +700,36 @@ namespace Elements.Search
         }
 
         /// <summary>
+        /// Draw bounded areas of the network as panels.
+        /// </summary>
+        /// <param name="allNodeLocations">All node locations in the network.</param>
+        public List<Panel> ToBoundedAreaPanels(List<Vector3> allNodeLocations)
+        {
+            var regions = FindAllClosedRegions(allNodeLocations);
+            var r = new Random();
+            var panels = new List<Panel>();
+
+            foreach (var region in regions)
+            {
+                var vertices = region.Select(i => allNodeLocations[i]).ToList();
+                Polygon poly = null;
+                try
+                {
+                    poly = new Polygon(vertices);
+                }
+                catch
+                {
+                    // This will happen for traversals of
+                    // straight edges.
+                    continue;
+                }
+                panels.Add(new Panel(poly, r.NextMaterial()));
+            }
+
+            return panels;
+        }
+
+        /// <summary>
         /// Traverse the network from the specified node index.
         /// Traversal concludes when there are no more
         /// available nodes to traverse.
@@ -721,6 +751,11 @@ namespace Elements.Search
             var currentIndex = start;
             var prevIndex = -1;
 
+            // Track the trailing edge from a specific index.
+            // This will be used to compare traversal to avoid passing
+            // over where the path has previously travelled.
+            var lastIndexMap = new Dictionary<int, (int start, int end)>();
+
             while (currentIndex != -1)
             {
                 path.Add(currentIndex);
@@ -736,13 +771,30 @@ namespace Elements.Search
                     break;
                 }
 
-                if (path.Contains(currentIndex))
+                if (lastIndexMap.ContainsKey(currentIndex))
                 {
-                    // if we have already passed two elements in the same order, we've achieved a loop
-                    if (path.IndexOf(path[path.Count - 1]) == path.IndexOf(currentIndex) - 1)
+                    var firstSegmentStart = lastIndexMap[currentIndex].start;
+                    var firstSegmentEnd = lastIndexMap[currentIndex].end;
+
+                    var secondSegmentStart = oldIndex;
+                    var secondSegmentEnd = currentIndex;
+
+                    // Check if the segments are the same.
+                    if (firstSegmentStart == secondSegmentStart && firstSegmentEnd == secondSegmentEnd)
                     {
+                        // Snip the "tail" by taking only everything up to the last segment.
+                        path = path.Take(path.LastIndexOf(firstSegmentEnd)).ToList();
                         break;
                     }
+                }
+
+                if (lastIndexMap.ContainsKey(currentIndex))
+                {
+                    lastIndexMap[currentIndex] = (oldIndex, currentIndex);
+                }
+                else
+                {
+                    lastIndexMap.Add(currentIndex, (oldIndex, currentIndex));
                 }
             }
 

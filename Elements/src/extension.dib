@@ -17,7 +17,7 @@ using Elements.Geometry;
 using Elements.Serialization.glTF;
 
 var viewerSrc = @"
-<div id=""main_DIV_ID"" style=""height:400px;width:400px;""></div>
+<div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
 </div>
 <script type=""module"">
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
@@ -118,26 +118,76 @@ animate();
 
 if (KernelInvocationContext.Current is { } currentContext)
 {
-    currentContext.DisplayAs("Add `return model;` at the end of a cell or call `DisplayModel(model, width, height);` to display an Elements model.", "text/markdown");
+    currentContext.DisplayAs("Add `return model;` at the end of a cell or call `DisplayModel(model, width, height);` to display an Elements model. You can also return individual elements, curves, profiles, or lists of elements, curves, or profiles to automatically populate a model.", "text/markdown");
 }
 
-string GetModelViewerSrc(Model model, double width=400, double height=400) {
+double DEFAULT_MODEL_WIDTH = 600;
+double DEFAULT_MODEL_HEIGHT = 400;
+
+string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     var gltf = model.ToGlTF();
     var gltfString = Convert.ToBase64String(gltf, 0, gltf.Length);
     return viewerSrc
     .Replace("MODEL_BYTES_HERE", gltfString)
-    .Replace("WIDTH_VAR", width.ToString())
-    .Replace("HEIGHT_VAR", height.ToString())
+    .Replace("WIDTH_VAR", (width ?? DEFAULT_MODEL_WIDTH).ToString())
+    .Replace("HEIGHT_VAR", (height ?? DEFAULT_MODEL_HEIGHT).ToString())
     .Replace("DIV_ID", Guid.NewGuid().ToString());
 }
 
-Formatter.Register<Model>((model, writer) => {
+Formatter.Register<Curve>((crv, writer) => {
+    var model = new Model();
+    model.AddElement(new ModelCurve(crv, BuiltInMaterials.XAxis));
     var src = GetModelViewerSrc(model);
     writer.Write(src);
 
 }, "text/html");
 
-void DisplayModel(Model model, double width=400, double height=400) {
-    var src = GetModelViewerSrc(model, width, height);
+Formatter.Register<Profile>((p, writer) => {
+    var model = new Model();
+    model.AddElements(p.ToModelCurves(null, BuiltInMaterials.XAxis));
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<Element>((e, writer) => {
+    var model = new Model();
+    model.AddElement(e);
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Element>>((elements, writer) => {
+    var model = new Model();
+    model.AddElements(elements);
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Curve>>((crvs, writer) => {
+    var model = new Model();
+    model.AddElements(crvs.Select(crv => new ModelCurve(crv, BuiltInMaterials.XAxis)));
+    var src = GetModelViewerSrc(model);
+   writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Profile>>((profiles, writer) => {
+    var model = new Model();
+    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, BuiltInMaterials.XAxis)));
+    var src = GetModelViewerSrc(model);
+   writer.Write(src);
+}, "text/html");
+
+Formatter.Register<Model>((model, writer) => {
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+void DisplayModel(Model model, double? width=null, double? height=null) {
+    var src = GetModelViewerSrc(model, width ?? DEFAULT_MODEL_WIDTH, height ?? DEFAULT_MODEL_HEIGHT);
     KernelInvocationContext.Current.DisplayAs(src, "text/html");
+}
+
+void setDefaultDisplaySize(double width, double height) {
+    DEFAULT_MODEL_WIDTH = width;
+    DEFAULT_MODEL_HEIGHT = height;
 }
