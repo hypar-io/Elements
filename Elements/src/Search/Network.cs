@@ -179,7 +179,7 @@ namespace Elements.Search
             return this._adjacencyList[i];
         }
 
-        private class XComparer : IComparer<Vector3>
+        private class XEqualityWithFallbackToYEqualityComparer : IComparer<Vector3>
         {
             public int Compare(Vector3 x, Vector3 y)
             {
@@ -235,16 +235,15 @@ namespace Elements.Search
             }).GroupBy(x => x.location).Select(g =>
             {
                 // TODO: Is there a way to make this faster?
-                // We're grouping by coordinate which is SLOW and is 
+                // We're grouping by coordinate which is SLOW and is
                 // only neccessary in the case where we have coincident points.
 
-                // Group by the event coordinate as lines may share start 
+                // Group by the event coordinate as lines may share start
                 // or end points.
                 return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
             });
-            events = events.OrderBy(e => -e.Point.Y);
-            events = events.OrderBy(e => e.Point, new XComparer());
 
+            events = events.OrderBy(e => -e.Point.Y).OrderBy(e => e.Point, new XEqualityWithFallbackToYEqualityComparer());
             var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
             // Create a binary tree to contain all segments ordered by their
@@ -280,14 +279,18 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(result)) && s.PointOnLine(result))
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
                                         segmentIntersections[data].Add(result);
-                                    if (!segmentIntersections[pre.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(pre.Data).PointOnLine(result))
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                    {
                                         segmentIntersections[pre.Data].Add(result);
+                                    }
 
                                     // TODO: Come up with a better solution for
                                     // storing only the intersection points without
-                                    // needing Contains(). 
+                                    // needing Contains().
                                     if (!allIntersectionLocations.Contains(result))
                                     {
                                         allIntersectionLocations.Add(result);
@@ -299,10 +302,14 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(result)) && s.PointOnLine(result))
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
                                         segmentIntersections[data].Add(result);
-                                    if (!segmentIntersections[suc.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(suc.Data).PointOnLine(result))
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                    {
                                         segmentIntersections[suc.Data].Add(result);
+                                    }
 
                                     if (!allIntersectionLocations.Contains(result))
                                     {
@@ -320,12 +327,18 @@ namespace Elements.Search
                         {
                             if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
-                                if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(result)) && s.PointOnLine(result))
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
                                     segmentIntersections[data].Add(result);
-                                if (!segmentIntersections[suc.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(suc.Data).PointOnLine(result))
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
                                     segmentIntersections[suc.Data].Add(result);
-                                if (!segmentIntersections[pre.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(pre.Data).PointOnLine(result))
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
                                     segmentIntersections[pre.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -337,10 +350,14 @@ namespace Elements.Search
                         {
                             if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                             {
-                                if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(result)) && s.PointOnLine(result))
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
                                     segmentIntersections[data].Add(result);
-                                if (!segmentIntersections[pre.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(pre.Data).PointOnLine(result))
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
                                     segmentIntersections[pre.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -352,10 +369,14 @@ namespace Elements.Search
                         {
                             if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
-                                if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(result)) && s.PointOnLine(result))
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
                                     segmentIntersections[data].Add(result);
-                                if (!segmentIntersections[suc.Data].Any(p => p.IsAlmostEqualTo(result)) && getSegment(suc.Data).PointOnLine(result))
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
                                     segmentIntersections[suc.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -363,6 +384,9 @@ namespace Elements.Search
                             }
                         }
 
+                        //NOTE: Custom data comparer is used inside Find method. Sometimes it fails to compare elements and
+                        // as result the wrong element can be deleted. It shouldn't be the case after changes inside LeftMostPointComparer,
+                        // but I left this code here as a precaution
                         if (tree.Find(data) != null && tree.Find(data).Data.Equals(data))
                         {
                             tree.Remove(data);
@@ -379,7 +403,7 @@ namespace Elements.Search
             // will be used to find an existing point if one exists.
             allNodeLocations = new List<Vector3>();
 
-            // Loop over all segment intersection data, sorting the 
+            // Loop over all segment intersection data, sorting the
             // data by distance from the segment's start point, and
             // creating new vertices and edges as necessary.
             var adjacencyList = new AdjacencyList<T>();
@@ -394,7 +418,7 @@ namespace Elements.Search
                     var x = segmentIntersections[segmentData.Key][i];
 
                     // We only add points as intersections if they're not at
-                    // the start or end 
+                    // the start or end
                     prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
@@ -414,7 +438,7 @@ namespace Elements.Search
         /// of traversal.
         /// </summary>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <returns>A collection of integers representing the indices of the nodes 
+        /// <returns>A collection of integers representing the indices of the nodes
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
@@ -576,7 +600,7 @@ namespace Elements.Search
                                             int previousIndex,
                                             bool twoWayEdges)
         {
-            // Find an existing intersection location, 
+            // Find an existing intersection location,
             // or create a new one.
             var newIndex = allNodeLocations.IndexOf(location);
             if (newIndex == -1)
@@ -663,7 +687,7 @@ namespace Elements.Search
                 var indexStr = $"{i}: {string.Join(",", EdgesAt(i).Select(e => e.Item1.ToString()))}";
                 textData.Add((nodeLocations[i], Vector3.ZAxis, Vector3.XAxis, indexStr, color));
 
-                // Break up text data objects to avoid overflowing maximum 
+                // Break up text data objects to avoid overflowing maximum
                 // texture and geometry buffer sizes.
                 if (textData.Count > 100 || i == count - 1)
                 {
@@ -755,13 +779,18 @@ namespace Elements.Search
 
                 if (edges.First.Value.Item1 != currentIndex)
                 {
-                    // If there's only one connected vertex and 
+                    // If there's only one connected vertex and
                     // it's not the current vertex, return it.
                     return edges.First.Value.Item1;
                 }
             }
 
             return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges, network);
+        }
+
+        private static bool PointIsUniqueIntersectionAlongLine(Vector3 point, Line line, List<Vector3> intersections)
+        {
+            return !intersections.Any(p => p.IsAlmostEqualTo(point)) && line.PointOnLine(point);
         }
     }
 }
