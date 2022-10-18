@@ -329,7 +329,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal);
+                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal, true);
 
                 if (predicate != null)
                 {
@@ -360,7 +360,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
         /// </summary>
-        private List<(int from, int to, int? tag)> GetEdgeList(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default)
+        private List<(int from, int to, int? tag)> GetEdgeList(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default, bool mergePolygons = false)
         {
             var currentEdgeList = new List<(int from, int to, int? tag)>();
             // pick a starting point
@@ -368,12 +368,13 @@ namespace Elements.Spatial
             var currentSegment = startingSet[0];
             startingSet.RemoveAt(0);
             var initialFrom = currentSegment.from;
+            var cannotBeSelectedEdgeList = new List<(int from, int to, int? tag)>();
 
             // loop until we reach the point at which we started for this polyline loop.
             // Since we have a finite set of edges, and we consume / remove every edge we traverse,
             // we must eventually either find an edge that points back to our start, or hit
             // a dead end where no more edges are available (in which case we throw an exception) 
-            while (currentSegment.to != initialFrom || edgesPerVertex[currentSegment.from].Count == 0 && edgesPerVertex[currentSegment.to].Count > 0)
+            while (currentSegment.to != initialFrom)
             {
                 currentEdgeList.Add(currentSegment);
                 var toVertex = vertices[currentSegment.to];
@@ -393,6 +394,43 @@ namespace Elements.Spatial
 
                 possibleNextSegments.Remove(nextSegment);
                 currentSegment = nextSegment;
+
+                // if there are polygons intersecting at the starting point with the current polygon, make one polygon from them along the outer border
+                if (currentSegment.to == initialFrom && mergePolygons)
+                {
+                    // if the angle is obtuse, then it is the inner border of the polygon
+                    if (vectorToTest.PlaneAngleTo(vertices[currentSegment.to] - vertices[currentSegment.from], n) > 180)
+                    {
+                        continue;
+                    }
+
+                    toVertex = vertices[currentSegment.to];
+                    fromVertex = vertices[currentSegment.from];
+
+                    vectorToTest = fromVertex - toVertex;
+                    possibleNextSegments = edgesPerVertex[currentSegment.to];
+                    if (possibleNextSegments.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var innerBorderSegments = possibleNextSegments.Where(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n) == 0);
+                    if (innerBorderSegments.Count() > 0)
+                    {
+                        cannotBeSelectedEdgeList.AddRange(innerBorderSegments);
+                    }
+
+                    var outerBorderSegments = possibleNextSegments.Where(cand => !cannotBeSelectedEdgeList.Contains(cand))
+                                                                  .OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n));
+                    if (outerBorderSegments.Count() > 0)
+                    {
+                        currentEdgeList.Add(currentSegment);
+                        nextSegment = outerBorderSegments.Last();
+
+                        possibleNextSegments.Remove(nextSegment);
+                        currentSegment = nextSegment;
+                    }
+                }
             }
             currentEdgeList.Add(currentSegment);
 
