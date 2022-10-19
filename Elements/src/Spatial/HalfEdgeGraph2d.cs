@@ -236,7 +236,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal);
+                var currentEdgeList = GetEdgeListForPolygonize(edgesPerVertex, vertices, normal);
                 var currentVertexList = new List<Vector3>();
 
                 // remove duplicate edges in the same new polygon, 
@@ -329,7 +329,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal, true);
+                var currentEdgeList = GetEdgeListForPolylinize(edgesPerVertex, vertices, normal);
 
                 if (predicate != null)
                 {
@@ -360,7 +360,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
         /// </summary>
-        private List<(int from, int to, int? tag)> GetEdgeList(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default, bool mergePolygons = false)
+        private List<(int from, int to, int? tag)> GetEdgeListForPolygonize(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default)
         {
             var currentEdgeList = new List<(int from, int to, int? tag)>();
             // pick a starting point
@@ -368,7 +368,48 @@ namespace Elements.Spatial
             var currentSegment = startingSet[0];
             startingSet.RemoveAt(0);
             var initialFrom = currentSegment.from;
-            var cannotBeSelectedEdgeList = new List<(int from, int to, int? tag)>();
+
+            // loop until we reach the point at which we started for this polyline loop.
+            // Since we have a finite set of edges, and we consume / remove every edge we traverse,
+            // we must eventually either find an edge that points back to our start, or hit
+            // a dead end where no more edges are available (in which case we throw an exception) 
+            while (currentSegment.to != initialFrom)
+            {
+                currentEdgeList.Add(currentSegment);
+                var toVertex = vertices[currentSegment.to];
+                var fromVertex = vertices[currentSegment.from];
+
+                var vectorToTest = fromVertex - toVertex;
+                // get all segments pointing outwards from our "to" vertex
+                var possibleNextSegments = edgesPerVertex[currentSegment.to];
+                if (possibleNextSegments.Count == 0)
+                {
+                    // this should never happen.
+                    throw new Exception("Something went wrong building polylines from split results. Unable to proceed.");
+                }
+                // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
+                var n = normal == default ? Vector3.ZAxis : normal;
+                var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+
+                possibleNextSegments.Remove(nextSegment);
+                currentSegment = nextSegment;
+            }
+            currentEdgeList.Add(currentSegment);
+
+            return currentEdgeList;
+        }
+
+        /// <summary>
+        /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
+        /// </summary>
+        private List<(int from, int to, int? tag)> GetEdgeListForPolylinize(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default)
+        {
+            var currentEdgeList = new List<(int from, int to, int? tag)>();
+            // pick a starting point
+            var startingSet = edgesPerVertex.First(l => l.Count > 0);
+            var currentSegment = startingSet[0];
+            startingSet.RemoveAt(0);
+            var initialFrom = currentSegment.from;
 
             // loop until we reach the point at which we started for this polyline loop.
             // Since we have a finite set of edges, and we consume / remove every edge we traverse,
@@ -395,43 +436,56 @@ namespace Elements.Spatial
                 possibleNextSegments.Remove(nextSegment);
                 currentSegment = nextSegment;
 
-                // if there are polygons intersecting at the starting point with the current polygon, make one polygon from them along the outer border
-                if (currentSegment.to == initialFrom && mergePolygons)
+                // if there are polygons intersecting at the starting point with the current polygon, make one polygon from them along the outer boundary
+                if (currentSegment.to == initialFrom)
                 {
-                    // if the angle is obtuse, then it is the inner border of the polygon
+                    // if the angle is obtuse, then it is the inner boundary of the polygon
                     if (vectorToTest.PlaneAngleTo(vertices[currentSegment.to] - vertices[currentSegment.from], n) > 180)
                     {
                         continue;
                     }
 
-                    toVertex = vertices[currentSegment.to];
-                    fromVertex = vertices[currentSegment.from];
+                    var nextSegments = edgesPerVertex[currentSegment.to];
+                    if (nextSegments.Count == 0)
+                    {
+                        continue;
+                    }
 
-                    vectorToTest = fromVertex - toVertex;
-                    possibleNextSegments = edgesPerVertex[currentSegment.to];
+                    // attempt to get a list of possible edges that create outer boundary
+                    possibleNextSegments = new List<(int from, int to, int? tag)>();
+                    foreach (var segment in nextSegments)
+                    {
+                        var nextToVertex = vertices[segment.to];
+                        var nextFromVertex = vertices[segment.from];
+                        var nextVectorToTest = nextFromVertex - nextToVertex;
+
+                        var currentPossibleNextSegments = edgesPerVertex[segment.to];
+                        var curentNextSegment = currentPossibleNextSegments.OrderBy(cand => nextVectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+                        if (nextVectorToTest.PlaneAngleTo(vertices[curentNextSegment.to] - vertices[curentNextSegment.from], n) <= 180)
+                        {
+                            possibleNextSegments.Add(segment);
+                        }
+                    }
+
                     if (possibleNextSegments.Count == 0)
                     {
                         continue;
                     }
 
-                    var innerBorderSegments = possibleNextSegments.Where(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n) == 0);
-                    if (innerBorderSegments.Count() > 0)
-                    {
-                        cannotBeSelectedEdgeList.AddRange(innerBorderSegments);
-                    }
+                    // if the next edge forming the outer boundary is present, select it as the next edge of the polygon
+                    currentEdgeList.Add(currentSegment);
 
-                    var outerBorderSegments = possibleNextSegments.Where(cand => !cannotBeSelectedEdgeList.Contains(cand))
-                                                                  .OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n));
-                    if (outerBorderSegments.Count() > 0)
-                    {
-                        currentEdgeList.Add(currentSegment);
-                        nextSegment = outerBorderSegments.Last();
+                    toVertex = vertices[currentSegment.to];
+                    fromVertex = vertices[currentSegment.from];
+                    vectorToTest = fromVertex - toVertex;
 
-                        possibleNextSegments.Remove(nextSegment);
-                        currentSegment = nextSegment;
-                    }
+                    nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
+
+                    nextSegments.Remove(nextSegment);
+                    currentSegment = nextSegment;
                 }
             }
+
             currentEdgeList.Add(currentSegment);
 
             return currentEdgeList;
