@@ -1,0 +1,2516 @@
+{
+  "Transform": {
+    "Matrix": {
+      "Components": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  "Elements": {
+    "89abd3fa-9240-4893-acc8-366f21291967": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.20000000298023224,
+        "Green": 0.20000000298023224,
+        "Blue": 0.20000000298023224,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.1,
+      "Unlit": false,
+      "DoubleSided": false,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": {
+        "LineWidth": 1.0,
+        "WidthMode": 0,
+        "DashMode": 0,
+        "DashSize": 1.0,
+        "GapSize": 1.0
+      },
+      "Id": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Name": "Grid Line"
+    },
+    "15c3fae3-5b11-414e-9469-59d5e092970b": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -48.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 61.0,
+          "Y": -48.5,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -48.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 61.0,
+          "Y": -48.5,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "15c3fae3-5b11-414e-9469-59d5e092970b",
+      "Name": "0"
+    },
+    "fdef86d8-73ea-4566-a862-3fa6ff4718af": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 58.5,
+          "Y": -14.385545727817643,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 58.5,
+          "Y": -51.0,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 58.5,
+          "Y": -14.385545727817643,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 58.5,
+          "Y": -51.0,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "fdef86d8-73ea-4566-a862-3fa6ff4718af",
+      "Name": "1"
+    },
+    "6a8ca796-9680-4d8f-afa1-9c5c61576020": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -28.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 70.06382779189431,
+          "Y": -28.5,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -28.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 70.06382779189431,
+          "Y": -28.5,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "6a8ca796-9680-4d8f-afa1-9c5c61576020",
+      "Name": "2"
+    },
+    "f5e89bd4-90a6-4f5e-8899-8b6d89e48324": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 42.662865925925914,
+          "Y": 1.0000000000000036,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 68.88013407407408,
+          "Y": -31.000000000000004,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 42.662865925925914,
+          "Y": 1.0000000000000036,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 68.88013407407408,
+          "Y": -31.000000000000004,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "f5e89bd4-90a6-4f5e-8899-8b6d89e48324",
+      "Name": "3"
+    },
+    "e158c089-ea5a-4b8d-93bf-2ea4bfdf9220": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -1.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 47.94300438914358,
+          "Y": -1.5,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -1.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 47.94300438914358,
+          "Y": -1.5,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "e158c089-ea5a-4b8d-93bf-2ea4bfdf9220",
+      "Name": "4"
+    },
+    "c83024fa-7f06-43d2-a063-cc422c6943f2": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 6.6627,
+          "Y": 1.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 6.6627,
+          "Y": -61.0,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 6.6627,
+          "Y": 1.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 6.6627,
+          "Y": -61.0,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "c83024fa-7f06-43d2-a063-cc422c6943f2",
+      "Name": "5"
+    },
+    "97b97105-7b67-4821-a0d6-a0a643adcba4": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -58.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 31.0,
+          "Y": -58.5,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 4.162700000000001,
+          "Y": -58.5,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 31.0,
+          "Y": -58.5,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "97b97105-7b67-4821-a0d6-a0a643adcba4",
+      "Name": "6"
+    },
+    "e7ec2596-66d3-4d52-8012-5916a9655051": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 28.5,
+          "Y": 1.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 28.5,
+          "Y": -61.0,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 28.5,
+          "Y": 1.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 28.5,
+          "Y": -61.0,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "e7ec2596-66d3-4d52-8012-5916a9655051",
+      "Name": "7"
+    },
+    "75d212bb-2566-4fda-a5f6-a6edcccfd982": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.652250000000002,
+          "Y": -16.4832,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 37.79858,
+          "Y": -16.4832,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.652250000000002,
+          "Y": -16.4832,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 37.79858,
+          "Y": -16.4832,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "75d212bb-2566-4fda-a5f6-a6edcccfd982",
+      "Name": "8"
+    },
+    "fdd4160b-c996-4306-9fd1-0e4d3576d885": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 35.29858,
+          "Y": -2.9629556467246463,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 35.29858,
+          "Y": -18.9832,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 35.29858,
+          "Y": -2.9629556467246463,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 35.29858,
+          "Y": -18.9832,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "fdd4160b-c996-4306-9fd1-0e4d3576d885",
+      "Name": "9"
+    },
+    "2a55c830-398d-4f9a-88a7-1a7b186b6948": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.652250000000002,
+          "Y": -5.413885780642441,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 37.79858,
+          "Y": -5.467564219357559,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.652250000000002,
+          "Y": -5.413885780642441,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 37.79858,
+          "Y": -5.467564219357559,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "2a55c830-398d-4f9a-88a7-1a7b186b6948",
+      "Name": "10"
+    },
+    "8c184ebf-fce7-45e4-aad8-845733508271": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 11.15225,
+          "Y": -2.9184843532753604,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 11.15225,
+          "Y": -56.85895,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 11.15225,
+          "Y": -2.9184843532753604,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 11.15225,
+          "Y": -56.85895,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "8c184ebf-fce7-45e4-aad8-845733508271",
+      "Name": "11"
+    },
+    "f4f09abe-8c4c-4a32-bea0-e3d120ea915e": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.65225,
+          "Y": -54.35895,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 24.1459,
+          "Y": -54.35895,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 8.65225,
+          "Y": -54.35895,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 24.1459,
+          "Y": -54.35895,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "f4f09abe-8c4c-4a32-bea0-e3d120ea915e",
+      "Name": "12"
+    },
+    "0c3d2fc4-00b2-4c79-a465-44c7f6caa1c8": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 21.6459,
+          "Y": -2.9378109419745115,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 21.6459,
+          "Y": -56.85895,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 21.6459,
+          "Y": -2.9378109419745115,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 21.6459,
+          "Y": -56.85895,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "0c3d2fc4-00b2-4c79-a465-44c7f6caa1c8",
+      "Name": "13"
+    },
+    "d5227939-e328-43a3-b05a-ee25fc44679d": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 53.21477867011927,
+          "Y": -11.87934321420062,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 64.79959262976371,
+          "Y": -26.019408372396306,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 53.21477867011927,
+          "Y": -11.87934321420062,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 64.79959262976371,
+          "Y": -26.019408372396306,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "d5227939-e328-43a3-b05a-ee25fc44679d",
+      "Name": "14"
+    },
+    "a2470295-2553-4d90-8d55-ad15b5726752": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 41.27089206494654,
+          "Y": -24.84882900616313,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 56.73637197317571,
+          "Y": -12.232915857218574,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 41.27089206494654,
+          "Y": -24.84882900616313,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 56.73637197317571,
+          "Y": -12.232915857218574,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "a2470295-2553-4d90-8d55-ad15b5726752",
+      "Name": "15"
+    },
+    "d48e481b-4632-49fc-8fcc-8bc1397ef9a1": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 41.62372953649161,
+          "Y": -21.33470009128589,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 53.20852916362756,
+          "Y": -35.47477832211639,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 41.62372953649161,
+          "Y": -21.33470009128589,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 53.20852916362756,
+          "Y": -35.47477832211639,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "d48e481b-4632-49fc-8fcc-8bc1397ef9a1",
+      "Name": "16"
+    },
+    "be56dc5f-2c6e-4837-a377-1fb35b478097": {
+      "discriminator": "Elements.GridLine",
+      "Radius": 1.0,
+      "ExtensionBeginning": 1.0,
+      "ExtensionEnd": 1.0,
+      "Line": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 49.68693966943434,
+          "Y": -35.12120311076991,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 65.15242629244132,
+          "Y": -22.50528202584915,
+          "Z": 0.0
+        }
+      },
+      "Geometry": null,
+      "Curve": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 49.68693966943434,
+          "Y": -35.12120311076991,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 65.15242629244132,
+          "Y": -22.50528202584915,
+          "Z": 0.0
+        }
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "89abd3fa-9240-4893-acc8-366f21291967",
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "be56dc5f-2c6e-4837-a377-1fb35b478097",
+      "Name": "17"
+    },
+    "edff0d93-0c8a-4e97-9837-23e139910756": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.49945811764311887,
+        "Green": 0.8439382714423995,
+        "Blue": 0.8122498219889821,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "edff0d93-0c8a-4e97-9837-23e139910756",
+      "Name": "R:0.50, G:0.84, B:0.81, A: 1.00"
+    },
+    "e8c81d9f-2936-47fb-9d06-296a939e34d3": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 6.6627,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 6.6627,
+            "Y": -28.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "edff0d93-0c8a-4e97-9837-23e139910756",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 6.6627,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 6.6627,
+                  "Y": -28.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "e8c81d9f-2936-47fb-9d06-296a939e34d3",
+      "Name": null
+    },
+    "ef753a96-996f-451a-8dfb-ad2a2e5e3f7a": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.023325426049216384,
+        "Green": 0.7122570721955305,
+        "Blue": 0.28870792514118737,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "ef753a96-996f-451a-8dfb-ad2a2e5e3f7a",
+      "Name": "R:0.02, G:0.71, B:0.29, A: 1.00"
+    },
+    "cede1fc3-46d0-4d97-9f93-5c4f3de02553": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 11.15225,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -28.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "ef753a96-996f-451a-8dfb-ad2a2e5e3f7a",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 11.15225,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -28.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "cede1fc3-46d0-4d97-9f93-5c4f3de02553",
+      "Name": null
+    },
+    "21a91237-b63d-4f62-8733-b85b200c9a69": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.2902927670116968,
+        "Green": 0.5612319878121987,
+        "Blue": 0.5621594984839482,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "21a91237-b63d-4f62-8733-b85b200c9a69",
+      "Name": "R:0.29, G:0.56, B:0.56, A: 1.00"
+    },
+    "b5ec0de0-f3f5-4a4d-8606-a550dc9b839c": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 21.6459,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -54.35895,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -54.35895,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "21a91237-b63d-4f62-8733-b85b200c9a69",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 21.6459,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -54.35895,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -54.35895,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "b5ec0de0-f3f5-4a4d-8606-a550dc9b839c",
+      "Name": null
+    },
+    "dcbc0ec2-c2a0-4ed6-bb27-71d6c19cdf65": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.4809151843566984,
+        "Green": 0.665372708656533,
+        "Blue": 0.22659312757970446,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "dcbc0ec2-c2a0-4ed6-bb27-71d6c19cdf65",
+      "Name": "R:0.48, G:0.67, B:0.23, A: 1.00"
+    },
+    "88d5346b-6a6e-4030-b91f-a2e8fb8ef73d": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 28.5,
+            "Y": -48.5,
+            "Z": 0.0
+          },
+          {
+            "X": 28.5,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -48.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "dcbc0ec2-c2a0-4ed6-bb27-71d6c19cdf65",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 28.5,
+                  "Y": -48.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 28.5,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -48.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "88d5346b-6a6e-4030-b91f-a2e8fb8ef73d",
+      "Name": null
+    },
+    "f0916682-d57b-4749-bda5-5c4704244cb5": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.7456706556238563,
+        "Green": 0.2184439390983637,
+        "Blue": 0.5863693457033342,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "f0916682-d57b-4749-bda5-5c4704244cb5",
+      "Name": "R:0.75, G:0.22, B:0.59, A: 1.00"
+    },
+    "7d3e1f44-5df7-47de-8f99-7c1cc9fc452b": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 58.5,
+            "Y": -18.330320695611356,
+            "Z": 0.0
+          },
+          {
+            "X": 54.79915932546985,
+            "Y": -13.813190550245702,
+            "Z": 0.0
+          },
+          {
+            "X": 43.20811,
+            "Y": -23.26855,
+            "Z": 0.0
+          },
+          {
+            "X": 47.494175396529336,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 57.80367783294572,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 58.5,
+            "Y": -27.931977426680547,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "f0916682-d57b-4749-bda5-5c4704244cb5",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 58.5,
+                  "Y": -18.330320695611356,
+                  "Z": 0.0
+                },
+                {
+                  "X": 54.79915932546985,
+                  "Y": -13.813190550245702,
+                  "Z": 0.0
+                },
+                {
+                  "X": 43.20811,
+                  "Y": -23.26855,
+                  "Z": 0.0
+                },
+                {
+                  "X": 47.494175396529336,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 57.80367783294572,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 58.5,
+                  "Y": -27.931977426680547,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "7d3e1f44-5df7-47de-8f99-7c1cc9fc452b",
+      "Name": null
+    },
+    "52a38ff3-52b6-48f7-8387-cdec1b87ce4f": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.9774597864493074,
+        "Green": 0.14826595697005557,
+        "Blue": 0.2983552912708164,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "52a38ff3-52b6-48f7-8387-cdec1b87ce4f",
+      "Name": "R:0.98, G:0.15, B:0.30, A: 1.00"
+    },
+    "ae8d670a-8aa8-475a-89e8-797c276769c2": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 58.5,
+            "Y": -27.931977426680547,
+            "Z": 0.0
+          },
+          {
+            "X": 63.2152070553705,
+            "Y": -24.08556240207206,
+            "Z": 0.0
+          },
+          {
+            "X": 58.5,
+            "Y": -18.330320695611356,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "52a38ff3-52b6-48f7-8387-cdec1b87ce4f",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 58.5,
+                  "Y": -27.931977426680547,
+                  "Z": 0.0
+                },
+                {
+                  "X": 63.2152070553705,
+                  "Y": -24.08556240207206,
+                  "Z": 0.0
+                },
+                {
+                  "X": 58.5,
+                  "Y": -18.330320695611356,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "ae8d670a-8aa8-475a-89e8-797c276769c2",
+      "Name": null
+    },
+    "ab8c26b6-16ea-4d32-8abf-5ec242c79ecf": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.38906174776566294,
+        "Green": 0.4686305576323674,
+        "Blue": 0.32794558551532477,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "ab8c26b6-16ea-4d32-8abf-5ec242c79ecf",
+      "Name": "R:0.39, G:0.47, B:0.33, A: 1.00"
+    },
+    "aeb28baf-63cf-4734-806c-4a6c20e41dab": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 58.5,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 58.5,
+            "Y": -27.931977426680547,
+            "Z": 0.0
+          },
+          {
+            "X": 57.80367783294572,
+            "Y": -28.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "ab8c26b6-16ea-4d32-8abf-5ec242c79ecf",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 58.5,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 58.5,
+                  "Y": -27.931977426680547,
+                  "Z": 0.0
+                },
+                {
+                  "X": 57.80367783294572,
+                  "Y": -28.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "aeb28baf-63cf-4734-806c-4a6c20e41dab",
+      "Name": null
+    },
+    "ddf42362-2901-42a9-a03a-4107ed1008dd": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.7722534135786134,
+        "Green": 0.16451631074981593,
+        "Blue": 0.8845206018930862,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "ddf42362-2901-42a9-a03a-4107ed1008dd",
+      "Name": "R:0.77, G:0.16, B:0.88, A: 1.00"
+    },
+    "ececc0ef-139d-4d61-a8b4-aefadd123a76": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 11.15225,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -16.4832,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "ddf42362-2901-42a9-a03a-4107ed1008dd",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 11.15225,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "ececc0ef-139d-4d61-a8b4-aefadd123a76",
+      "Name": null
+    },
+    "d3fbdac4-d763-46ca-88fd-c21444088799": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.8675965251715838,
+        "Green": 0.6891996477214618,
+        "Blue": 0.11463726317260287,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "d3fbdac4-d763-46ca-88fd-c21444088799",
+      "Name": "R:0.87, G:0.69, B:0.11, A: 1.00"
+    },
+    "543454bd-3801-429f-beba-ff0d30c7f26f": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 21.6459,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 28.5,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 28.5,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -16.4832,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "d3fbdac4-d763-46ca-88fd-c21444088799",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 21.6459,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 28.5,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 28.5,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "543454bd-3801-429f-beba-ff0d30c7f26f",
+      "Name": null
+    },
+    "05b2d328-aa0a-4d4e-bd96-79fcd3f7ffde": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.6485198953414895,
+        "Green": 0.4814542874141849,
+        "Blue": 0.23433045262206834,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "05b2d328-aa0a-4d4e-bd96-79fcd3f7ffde",
+      "Name": "R:0.65, G:0.48, B:0.23, A: 1.00"
+    },
+    "4d87eed8-be3e-411d-9203-c6b08013dcce": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 47.494175396529336,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 51.62415000000001,
+            "Y": -33.540929999999996,
+            "Z": 0.0
+          },
+          {
+            "X": 57.80367783294572,
+            "Y": -28.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "05b2d328-aa0a-4d4e-bd96-79fcd3f7ffde",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 47.494175396529336,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 51.62415000000001,
+                  "Y": -33.540929999999996,
+                  "Z": 0.0
+                },
+                {
+                  "X": 57.80367783294572,
+                  "Y": -28.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "4d87eed8-be3e-411d-9203-c6b08013dcce",
+      "Name": null
+    },
+    "ba653b59-5261-4894-94c5-9b4178bb3845": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.3228438633134793,
+        "Green": 0.8459093011198143,
+        "Blue": 0.5655076911512332,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "ba653b59-5261-4894-94c5-9b4178bb3845",
+      "Name": "R:0.32, G:0.85, B:0.57, A: 1.00"
+    },
+    "cb8cc7fc-cd2c-4f13-9df9-b8d917f0663c": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 66.83191,
+            "Y": -28.5,
+            "Z": 0.0
+          },
+          {
+            "X": 63.2152070553705,
+            "Y": -24.08556240207206,
+            "Z": 0.0
+          },
+          {
+            "X": 58.5,
+            "Y": -27.931977426680547,
+            "Z": 0.0
+          },
+          {
+            "X": 58.5,
+            "Y": -28.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "ba653b59-5261-4894-94c5-9b4178bb3845",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 66.83191,
+                  "Y": -28.5,
+                  "Z": 0.0
+                },
+                {
+                  "X": 63.2152070553705,
+                  "Y": -24.08556240207206,
+                  "Z": 0.0
+                },
+                {
+                  "X": 58.5,
+                  "Y": -27.931977426680547,
+                  "Z": 0.0
+                },
+                {
+                  "X": 58.5,
+                  "Y": -28.5,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "cb8cc7fc-cd2c-4f13-9df9-b8d917f0663c",
+      "Name": null
+    },
+    "b989c579-117e-4579-a492-12ecec479df3": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.5670751829478309,
+        "Green": 0.1934081335521341,
+        "Blue": 0.05158836210686171,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "b989c579-117e-4579-a492-12ecec479df3",
+      "Name": "R:0.57, G:0.19, B:0.05, A: 1.00"
+    },
+    "2de01434-6c64-4b48-8b07-036925021849": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 28.5,
+            "Y": -5.450439138544035,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -5.437816026584579,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 28.5,
+            "Y": -16.4832,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "b989c579-117e-4579-a492-12ecec479df3",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 28.5,
+                  "Y": -5.450439138544035,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -5.437816026584579,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 28.5,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "2de01434-6c64-4b48-8b07-036925021849",
+      "Name": null
+    },
+    "7881bfc7-3459-4cd7-b66d-281d59fafb49": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.5210182776306841,
+        "Green": 0.5912272411357739,
+        "Blue": 0.2995907800735863,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "7881bfc7-3459-4cd7-b66d-281d59fafb49",
+      "Name": "R:0.52, G:0.59, B:0.30, A: 1.00"
+    },
+    "efe22456-7c31-4f4d-9cb3-8902fdf694c8": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 28.5,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 35.29858,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 35.29858,
+            "Y": -5.462960000000001,
+            "Z": 0.0
+          },
+          {
+            "X": 28.5,
+            "Y": -5.450439138544035,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "7881bfc7-3459-4cd7-b66d-281d59fafb49",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 28.5,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 35.29858,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 35.29858,
+                  "Y": -5.462960000000001,
+                  "Z": 0.0
+                },
+                {
+                  "X": 28.5,
+                  "Y": -5.450439138544035,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "efe22456-7c31-4f4d-9cb3-8902fdf694c8",
+      "Name": null
+    },
+    "74f86a5b-ad00-4718-a2ff-fc861dc6cc12": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.2517306009548393,
+        "Green": 0.8573838541551418,
+        "Blue": 0.20934707122358823,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.1,
+      "GlossinessFactor": 0.3,
+      "Unlit": true,
+      "DoubleSided": true,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 1.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "74f86a5b-ad00-4718-a2ff-fc861dc6cc12",
+      "Name": "R:0.25, G:0.86, B:0.21, A: 1.00"
+    },
+    "f3fba6b1-2afc-4770-b11f-884334186741": {
+      "discriminator": "Elements.Panel",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "Vertices": [
+          {
+            "X": 11.15225,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -16.4832,
+            "Z": 0.0
+          },
+          {
+            "X": 21.6459,
+            "Y": -5.437816026584579,
+            "Z": 0.0
+          },
+          {
+            "X": 11.15225,
+            "Y": -5.41849,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "74f86a5b-ad00-4718-a2ff-fc861dc6cc12",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Lamina",
+            "Perimeter": {
+              "discriminator": "Elements.Geometry.Polygon",
+              "Vertices": [
+                {
+                  "X": 11.15225,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -16.4832,
+                  "Z": 0.0
+                },
+                {
+                  "X": 21.6459,
+                  "Y": -5.437816026584579,
+                  "Z": 0.0
+                },
+                {
+                  "X": 11.15225,
+                  "Y": -5.41849,
+                  "Z": 0.0
+                }
+              ]
+            },
+            "Voids": [],
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "f3fba6b1-2afc-4770-b11f-884334186741",
+      "Name": null
+    }
+  }
+}

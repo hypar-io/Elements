@@ -384,5 +384,24 @@ namespace Elements.Tests
                 Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
             }
         }
+
+        [Fact]
+        public void GridWithHoles()
+        {
+            this.Name = nameof(GridWithHoles);
+            var json = File.ReadAllText("../../../models/Geometry/GridsWithHoles.json");
+            var model = JsonConvert.DeserializeObject<Model>(json);
+            var grids = model.AllElementsOfType<GridLine>().ToList();
+
+            var network = Network<GridLine>.FromSegmentableItems(grids,
+                                                                 (gl) => { return gl.Curve as Line; },
+                                                                 out var allNodeLocations,
+                                                                 out var _,
+                                                                 removeLeaves: true);
+            var r = new Random();
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Red));
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+        }
     }
 }
