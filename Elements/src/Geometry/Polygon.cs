@@ -261,6 +261,8 @@ namespace Elements.Geometry
 
                     if (d1 < 0 && d2 > 0)
                     {
+                        // The first point is inside,
+                        // and the second point is outside.
                         var l = new Line(v1, v2);
                         if (l.Intersects(plane, out Vector3 result))
                         {
