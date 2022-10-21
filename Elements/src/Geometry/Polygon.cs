@@ -181,21 +181,36 @@ namespace Elements.Geometry
                     plane = new Plane(plane.Origin, plane.Normal.Negate());
                 }
 
-                if (!this.Intersects(plane, out List<Vector3> intersections, false))
+                if (!this.Intersects(plane, out List<Vector3> intersections, true))
                 {
                     return null;
                 }
 
-                var newVertices = new List<Vector3>();
-                for (var i = 0; i <= this.Vertices.Count - 1; i++)
+                var split = this;
+                if (intersections.Count > 0)
                 {
-                    var v1 = this.Vertices[i];
-                    var v2 = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                    split = new Polygon(this.Vertices);
+                    split.Split(intersections);
+                }
+
+                var newVertices = new List<Vector3>();
+                for (var i = 0; i <= split.Vertices.Count - 1; i++)
+                {
+                    var v1 = split.Vertices[i];
+                    var v2 = i == split.Vertices.Count - 1 ? split.Vertices[0] : split.Vertices[i + 1];
 
                     var d1 = v1.DistanceTo(plane);
                     var d2 = v2.DistanceTo(plane);
+                    if (d1.ApproximatelyEquals(0, precision))
+                    {
+                        d1 = 0.0;
+                    }
+                    if (d2.ApproximatelyEquals(0, precision))
+                    {
+                        d2 = 0.0;
+                    }
 
-                    if (d1.ApproximatelyEquals(0, precision) && d2.ApproximatelyEquals(0, precision))
+                    if (d1 == 0.0 && d2 == 0.0)
                     {
                         // The segment is in the plane.
                         newVertices.Add(v1);
@@ -209,6 +224,13 @@ namespace Elements.Geometry
                         continue;
                     }
 
+                    if (d1 < 0 && d2 == 0.0)
+                    {
+                        // The first point is outside and
+                        // the second point is on the plane.
+                        continue;
+                    }
+
                     if (d1 > 0 && d2 > 0)
                     {
                         // Both points are on the inside of
@@ -217,7 +239,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1 > 0 && d2.ApproximatelyEquals(0, precision))
+                    if (d1 > 0 && d2 == 0.0)
                     {
                         // The first point is inside and
                         // the second point is on the plane.
@@ -229,7 +251,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1.ApproximatelyEquals(0, precision) && d2 > 0)
+                    if (d1 == 0.0 && d2 > 0)
                     {
                         // The first point is on the plane,
                         // and the second is inside.
@@ -237,69 +259,81 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    var l = new Line(v1, v2);
-                    if (l.Intersects(plane, out Vector3 result))
+                    if (d1 < 0 && d2 > 0)
                     {
-                        // Figure out what side the intersection is on.
-                        if (d1 < 0)
+                        var l = new Line(v1, v2);
+                        if (l.Intersects(plane, out Vector3 result))
                         {
-                            newVertices.Add(result);
-                        }
-                        else
-                        {
-                            newVertices.Add(v1);
-                            newVertices.Add(result);
+                            // Figure out what side the intersection is on.
+                            if (d1 < 0)
+                            {
+                                newVertices.Add(result);
+                            }
+                            else
+                            {
+                                newVertices.Add(v1);
+                                newVertices.Add(result);
+                            }
                         }
                     }
                 }
 
-                var graph = new HalfEdgeGraph2d();
-                graph.EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
-
-                if (newVertices.Count > 0)
+                var graph = new HalfEdgeGraph2d
                 {
-                    graph.Vertices = newVertices;
+                    EdgesPerVertex = new List<List<(int from, int to, int? tag)>>()
+                };
 
-                    // Initialize the graph.
-                    foreach (var v in newVertices)
-                    {
-                        graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
-                    }
-
-                    for (var i = 0; i < newVertices.Count - 1; i++)
-                    {
-                        var a = i;
-                        var b = i + 1 > newVertices.Count - 1 ? 0 : i + 1;
-                        if (intersections.Contains(newVertices[a]) && intersections.Contains(newVertices[b]))
-                        {
-                            continue;
-                        }
-
-                        // Only add one edge around the outside of the shape.
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-
-                    for (var i = 0; i < intersections.Count - 1; i += 2)
-                    {
-                        // Because we'll have duplicate vertices where an
-                        // intersection is on the plane, we need to choose
-                        // which one to use. This follows the rule of finding
-                        // the one whose index is closer to the first index used.
-                        var a = ClosestIndexOf(newVertices, intersections[i], i);
-                        var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
-
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-
-                    if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
-                    {
-                        // Close the graph
-                        var a = newVertices.Count - 1;
-                        var b = 0;
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-                    return graph.Polygonize();
+                if (newVertices.Count == 0)
+                {
+                    return null;
                 }
+
+                graph.Vertices = newVertices;
+
+                // Initialize the graph.
+                foreach (var v in newVertices)
+                {
+                    graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
+                }
+
+                for (var i = 0; i < newVertices.Count - 1; i++)
+                {
+                    var a = i;
+                    var b = i + 1 > newVertices.Count - 1 ? 0 : i + 1;
+                    if (intersections.Contains(newVertices[a]) && intersections.Contains(newVertices[b]))
+                    {
+                        continue;
+                    }
+
+                    // Only add one edge around the outside of the shape.
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+
+                for (var i = 0; i < intersections.Count - 1; i++)
+                {
+                    // Because we'll have duplicate vertices where an
+                    // intersection is on the plane, we need to choose
+                    // which one to use. This follows the rule of finding
+                    // the one whose index is closer to the first index used.
+                    var a = ClosestIndexOf(newVertices, intersections[i], i);
+                    var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
+
+                    if (!Contains3D(newVertices[a].Average(newVertices[b]), random: true))
+                    {
+                        continue;
+                    }
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+
+                if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
+                {
+                    // Close the graph
+                    var a = newVertices.Count - 1;
+                    var b = 0;
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+                return graph.Polygonize();
+
             }
             catch (Exception ex)
             {
@@ -499,7 +533,7 @@ namespace Elements.Geometry
         /// <param name="point">The point to test.</param>
         /// <param name="unique">Should intersections be unique?</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = true)
+        internal bool Contains3D(Vector3 point, bool unique = true, bool random = false)
         {
             var p = this.Plane();
 
@@ -510,9 +544,14 @@ namespace Elements.Geometry
 
             var t = new Transform(point, p.Normal);
 
-            // Intersect a randomly directed ray in the plane
+            // Intersect a ray in the plane
             // of the polygon and intersect with the polygon edges.
             var ray = new Ray(point, t.XAxis);
+            if (random)
+            {
+                var r = new Random();
+                ray = new Ray(point, t.OfVector(new Vector3(r.NextDouble(), r.NextDouble()).Unitized()));
+            }
             var intersects = 0;
             var xsects = new List<Vector3>();
             foreach (var (from, to) in this.Edges())
@@ -570,7 +609,6 @@ namespace Elements.Geometry
                     containment = Containment.CoincidesAtEdge;
                     return true;
                 }
-
 
                 if (AscendingRelativeTo(location, edge) &&
                     LocationInRange(location, Orientation.Ascending, edge))
