@@ -6,6 +6,7 @@ using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Elements.Geometry
@@ -192,6 +193,11 @@ namespace Elements.Geometry
                     split = new Polygon(this.Vertices);
                     split.Split(intersections);
                 }
+                else
+                {
+                    // A polygon with one intersection will not be trimmed;
+                    return null;
+                }
 
                 var newVertices = new List<Vector3>();
                 for (var i = 0; i <= split.Vertices.Count - 1; i++)
@@ -339,8 +345,8 @@ namespace Elements.Geometry
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
             return null;
         }

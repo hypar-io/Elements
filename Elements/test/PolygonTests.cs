@@ -2154,5 +2154,17 @@ namespace Elements.Geometry.Tests
             Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
             Model.AddElement(new ModelCurve(items.Item1));
         }
+
+        [Fact]
+        public void TrimSkyPlanePolygon3()
+        {
+            Name = nameof(TrimSkyPlanePolygon3);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":23.128761583107114,\"Y\":-13.28462370583442,\"Z\":30.99999999999992},{\"X\":23.12876158310712,\"Y\":-13.284623705834392,\"Z\":-7.588341022412967E-15},{\"X\":40.969737061724466,\"Y\":23.251497003257874,\"Z\":-4.6993153936072985E-15},{\"X\":40.96973706172446,\"Y\":23.251497003257846,\"Z\":30.99999999999918}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Null(trimmed);
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
     }
 }
