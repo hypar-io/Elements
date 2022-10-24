@@ -701,6 +701,72 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
+        /// <summary>
+        /// Store points of edges both vertices of which are located at the given plane.
+        /// </summary>
+        /// <param name="plane">Plane to store edges at.</param>
+        /// <param name="edgesToCheck">Optional. Edges to check, all by default .</param>
+        /// <returns>Position pair for each edge stored.</returns>
+        public List<(Vector3 Start, Vector3 End)> SnapshotEdgesOnPlane(
+            Plane plane, IEnumerable<Edge> edgesToCheck = null)
+        {
+            if (edgesToCheck == null)
+            {
+                edgesToCheck = GetEdges();
+            }
+
+            List<(Vector3, Vector3)> snapshot = new List<(Vector3, Vector3)>();
+            foreach (var e in edgesToCheck)
+            {
+                var sv = GetVertex(e.StartId);
+                var ev = GetVertex(e.EndId);
+                if (sv != null && Math.Abs(sv.Point.DistanceTo(plane)) < Tolerance &&
+                    ev != null && Math.Abs(ev.Point.DistanceTo(plane)) < Tolerance)
+                {
+                    snapshot.Add((sv.Point, ev.Point));
+                }
+            }
+            return snapshot;
+        }
+
+        /// <summary>
+        /// Duplicate stored edges with transformation applied.
+        /// </summary>
+        /// <param name="storedEdges">Edge positions to duplicate.</param>
+        /// <param name="transform">Transformation to apply to </param>
+        /// <param name="connect">Optional. Connect each new vertex with it's original vertex if it still exist.</param>
+        public void InsertSnapshot(
+            List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect = true)
+        {
+            HashSet<ulong> connected = new HashSet<ulong>();
+
+            foreach (var (Start, End) in storedEdges)
+            {
+                var newSV = AddVertex(transform.OfPoint(Start));
+                var newEV = AddVertex(transform.OfPoint(End));
+                AddEdge(newSV.Id, newEV.Id);
+
+                if (connect)
+                {
+                    // The same vertex can be part of multiple edges.
+                    // Cache to avoid expensive cut operations.
+                    if (!connected.Contains(newSV.Id) && 
+                        TryGetVertexIndex(Start, out var id, Tolerance))
+                    {
+                        AddEdge(newSV.Id, id);
+                        connected.Add(newSV.Id);
+                    }
+
+                    if (!connected.Contains(newEV.Id) &&
+                        TryGetVertexIndex(End, out id, Tolerance))
+                    {
+                        AddEdge(newEV.Id, id);
+                        connected.Add(newEV.Id);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Private logic
