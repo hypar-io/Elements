@@ -607,9 +607,14 @@ namespace Elements.Geometry.Tests
 
             // TryGetOverlap within tolerance
             var line1 = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 0));
+            // consistently off
             var line2 = new Line(new Vector3(5, 0.01, 0), new Vector3(15, 0.01, 0));
             Assert.False(line1.TryGetOverlap(line2, out _));
             Assert.True(line1.TryGetOverlap(line2, 0.1, out _));
+            // at an angle
+            var line3 = new Line(new Vector3(5, 0, 0), new Vector3(15, 0.01, 0));
+            Assert.True(line1.TryGetOverlap(line3, 0.1, out var overlap));
+            Assert.Equal(new Line((5, 0, 0), (10, 0, 0)), overlap);
         }
 
 

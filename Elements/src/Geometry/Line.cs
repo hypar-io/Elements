@@ -1094,7 +1094,7 @@ namespace Elements.Geometry
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
 
             //keep the same direction as original line
-            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction(), tolerance)
+            overlap = direction.Dot(overlappingLine.Direction()) > 0
                 ? overlappingLine
                 : overlappingLine.Reversed();
 
