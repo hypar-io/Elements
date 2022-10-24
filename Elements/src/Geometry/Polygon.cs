@@ -326,7 +326,7 @@ namespace Elements.Geometry
                     var a = ClosestIndexOf(newVertices, intersections[i], i);
                     var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
 
-                    if (!Contains3D(newVertices[a].Average(newVertices[b]), random: true))
+                    if (!Contains3D(newVertices[a].Average(newVertices[b]), useRandomRay: true))
                     {
                         continue;
                     }
@@ -540,8 +540,12 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="point">The point to test.</param>
         /// <param name="unique">Should intersections be unique?</param>
+        /// <param name="useRandomRay">If true, a randomly constructed ray in the plane of the polygon will be used
+        /// for ray testing. Otherwise, a ray along the X axis of the transform created from the plane's origin and 
+        /// normal will be used. A random ray is helpful when you have shapes where multiple vertices may lie across
+        /// the default test axis.</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = true, bool random = false)
+        internal bool Contains3D(Vector3 point, bool unique = true, bool useRandomRay = false)
         {
             var p = this.Plane();
 
@@ -555,7 +559,7 @@ namespace Elements.Geometry
             // Intersect a ray in the plane
             // of the polygon and intersect with the polygon edges.
             var ray = new Ray(point, t.XAxis);
-            if (random)
+            if (useRandomRay)
             {
                 var r = new Random();
                 ray = new Ray(point, t.OfVector(new Vector3(r.NextDouble(), r.NextDouble()).Unitized()));
