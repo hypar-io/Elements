@@ -61,6 +61,7 @@ namespace Hypar.Tests
             Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(1.0));
             Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(0.5));
             Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(0.0));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(-1e-15));
         }
 
         [Fact]
