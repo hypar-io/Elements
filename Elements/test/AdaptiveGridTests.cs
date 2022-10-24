@@ -133,6 +133,40 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridSubtractBoxAddPerimeter()
+        {
+            var adaptiveGrid = new AdaptiveGrid();
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+
+            var points = new List<Vector3>();
+            for (int i = 1; i < 10; i++)
+            {
+                points.Add(new Vector3(i, i, 1));
+            }
+
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4, 1), out var borderId);
+            var borderV = adaptiveGrid.GetVertex(borderId);
+            var numEdges = borderV.Edges.Count;
+            var numVertices = adaptiveGrid.GetVertices().Count;
+
+            var o = Obstacle.FromBBox(
+                new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2)),
+                addPerimeterEdges: true);
+            adaptiveGrid.SubtractObstacle(o);
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            Assert.Equal(numEdges, borderV.Edges.Count);
+            //On each elevation one vertex is removed and 8 added as box perimeter.
+            //TODO: elevations are not connected!!!
+            Assert.Equal(numVertices + (3 * 7), adaptiveGrid.GetVertices().Count);
+        }
+
+        [Fact]
         public void AdaptiveGridSubtractBoxSmallDifference()
         {
             var edgesNumber = 75;
