@@ -976,6 +976,57 @@ namespace Elements.Tests
             Assert.Null(s.MiddleVertex);
             Assert.Contains(startVertex.Edges, e => e.StartId == s.EndVertex.Id || e.EndId == s.EndVertex.Id);
         }
+        
+        [Fact]
+        public void AdaptiveGridStoreAndDuplicateElevation()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
+            grid.AddFromExtrude(polygon, Vector3.ZAxis, 1, new List<Vector3>() { new Vector3(5, 5) });
+            grid.AddEdge(new Vector3(0, 5, 1), new Vector3(0, 5, 2), false);
+            grid.AddEdge(new Vector3(10, 5, 1), new Vector3(10, 5, 4), false);
+
+            var plane = new Plane(new Vector3(0, 0, 1), Vector3.ZAxis);
+            var snapshot = grid.SnapshotEdgesOnPlane(plane);
+            Assert.Equal(12, snapshot.Count);
+
+            grid.TryGetVertexIndex(new Vector3(5, 0, 1), out var id, grid.Tolerance);
+            grid.RemoveVertex(grid.GetVertex(id));
+            var edgesBefore = grid.GetEdges().Count;
+
+            var transform = new Transform(0, 0, 2);
+            grid.InsertSnapshot(snapshot, transform);
+            Assert.Equal(edgesBefore + 20, grid.GetEdges().Count);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5, 3), out id, grid.Tolerance));
+            var v = grid.GetVertex(id);
+            Assert.Equal(4, v.Edges.Count);
+            var neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(0, 10, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.Contains(new Vector3(0, 5, 2), neighbourPoints);
+            Assert.DoesNotContain(new Vector3(0, 5, 1), neighbourPoints);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 3), out id, grid.Tolerance));
+            v = grid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.DoesNotContain(new Vector3(5, 0, 1), neighbourPoints);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5, 3), out id, grid.Tolerance));
+            v = grid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 10, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 5, 1), neighbourPoints);
+            Assert.Contains(new Vector3(10, 5, 4), neighbourPoints);
+        }
 
         //          (4)
         //         /   \
