@@ -2190,7 +2190,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected override Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 || u > 1.0)
+            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
             {
                 throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
             }
