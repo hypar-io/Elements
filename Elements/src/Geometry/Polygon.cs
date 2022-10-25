@@ -570,7 +570,7 @@ namespace Elements.Geometry
                     }
                     else if (result.IsAlmostEqualTo(to))
                     {
-                        // is 'from' to the lef of the ray?
+                        // is 'from' to the left of the ray?
                         var d = (from - to).PlaneAngleTo(ray.Direction, p.Normal);
                         if (d < 180)
                         {
