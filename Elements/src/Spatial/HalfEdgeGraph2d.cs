@@ -369,7 +369,7 @@ namespace Elements.Spatial
             startingSet.RemoveAt(0);
             var initialFrom = currentSegment.from;
 
-            // loop until we reach the point at which we started for this polyline loop.
+            // loop until we reach the point at which we started for this polygon loop.
             // Since we have a finite set of edges, and we consume / remove every edge we traverse,
             // we must eventually either find an edge that points back to our start, or hit
             // a dead end where no more edges are available (in which case we throw an exception) 
@@ -385,70 +385,15 @@ namespace Elements.Spatial
                 if (possibleNextSegments.Count == 0)
                 {
                     // this should never happen.
-                    throw new Exception("Something went wrong building polylines from split results. Unable to proceed.");
+                    throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
                 }
                 // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
                 var n = normal == default ? Vector3.ZAxis : normal;
-                if (mergePolygons)
-                {
-                    n = n.Negate();
-                }
-
                 var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
 
                 possibleNextSegments.Remove(nextSegment);
                 currentSegment = nextSegment;
-
-                // if there are polygons intersecting at the starting point with the current polygon, make one polygon from them along the outer boundary
-                if (currentSegment.to == initialFrom && mergePolygons)
-                {
-                    // if the angle is obtuse, then it is the inner boundary of the polygon
-                    if (vectorToTest.PlaneAngleTo(vertices[currentSegment.to] - vertices[currentSegment.from], n) > 180)
-                    {
-                        continue;
-                    }
-
-                    var nextSegments = edgesPerVertex[currentSegment.to];
-                    if (nextSegments.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    // attempt to get a list of possible edges that create outer boundary
-                    possibleNextSegments = new List<(int from, int to, int? tag)>();
-                    foreach (var segment in nextSegments)
-                    {
-                        var nextToVertex = vertices[segment.to];
-                        var nextFromVertex = vertices[segment.from];
-                        var nextVectorToTest = nextFromVertex - nextToVertex;
-
-                        var currentPossibleNextSegments = edgesPerVertex[segment.to];
-                        var curentNextSegment = currentPossibleNextSegments.OrderBy(cand => nextVectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
-                        if (nextVectorToTest.PlaneAngleTo(vertices[curentNextSegment.to] - vertices[curentNextSegment.from], n) <= 180)
-                        {
-                            possibleNextSegments.Add(segment);
-                        }
-                    }
-
-                    if (possibleNextSegments.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    // if the next edge forming the outer boundary is present, select it as the next edge of the polygon
-                    currentEdgeList.Add(currentSegment);
-
-                    toVertex = vertices[currentSegment.to];
-                    fromVertex = vertices[currentSegment.from];
-                    vectorToTest = fromVertex - toVertex;
-
-                    nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
-
-                    nextSegments.Remove(nextSegment);
-                    currentSegment = nextSegment;
-                }
             }
-
             currentEdgeList.Add(currentSegment);
 
             return currentEdgeList;
