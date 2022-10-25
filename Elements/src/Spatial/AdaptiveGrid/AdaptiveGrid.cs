@@ -703,8 +703,10 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Store points of edges both vertices of which are located at the given plane.
+        /// Use with InsertSnapshot to duplicate vertices to a new elevation,
+        /// while allowing modification of the original edges before duplication takes place.
         /// </summary>
-        /// <param name="plane">Plane to store edges at.</param>
+        /// <param name="plane">Plane to retrieve edges from.</param>
         /// <param name="edgesToCheck">Optional. Edges to check, all by default .</param>
         /// <returns>Position pair for each edge stored.</returns>
         public List<(Vector3 Start, Vector3 End)> SnapshotEdgesOnPlane(
@@ -731,14 +733,16 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Duplicate stored edges with transformation applied.
+        /// Use with InsertSnapshot to move a list of existing or previously existed edges to the new location,
+        /// for example, copy edges from one elevation to another.
         /// </summary>
         /// <param name="storedEdges">Edge positions to duplicate.</param>
-        /// <param name="transform">Transformation to apply to </param>
+        /// <param name="transform">Transformation to apply to all of the new edges.</param>
         /// <param name="connect">Optional. Connect each new vertex with it's original vertex if it still exist.</param>
         public void InsertSnapshot(
             List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect = true)
         {
-            HashSet<ulong> connected = new HashSet<ulong>();
+            HashSet<ulong> alreadyConnected = new HashSet<ulong>();
 
             foreach (var (Start, End) in storedEdges)
             {
@@ -750,18 +754,18 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     // The same vertex can be part of multiple edges.
                     // Cache to avoid expensive cut operations.
-                    if (!connected.Contains(newSV.Id) && 
+                    if (!alreadyConnected.Contains(newSV.Id) && 
                         TryGetVertexIndex(Start, out var id, Tolerance))
                     {
                         AddEdge(newSV.Id, id);
-                        connected.Add(newSV.Id);
+                        alreadyConnected.Add(newSV.Id);
                     }
 
-                    if (!connected.Contains(newEV.Id) &&
+                    if (!alreadyConnected.Contains(newEV.Id) &&
                         TryGetVertexIndex(End, out id, Tolerance))
                     {
                         AddEdge(newEV.Id, id);
-                        connected.Add(newEV.Id);
+                        alreadyConnected.Add(newEV.Id);
                     }
                 }
             }

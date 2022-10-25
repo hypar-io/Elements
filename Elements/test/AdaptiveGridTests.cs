@@ -161,6 +161,7 @@ namespace Elements.Tests
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
 
             Assert.Equal(numEdges, borderV.Edges.Count);
+            //There are 3 elevations: extrusion is done from 0 to 2 and split points are at  1.
             //On each elevation one vertex is removed and 8 added as box perimeter.
             //TODO: elevations are not connected!!!
             Assert.Equal(numVertices + (3 * 7), adaptiveGrid.GetVertices().Count);
