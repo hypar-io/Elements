@@ -236,7 +236,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = GetEdgeListForPolygonize(edgesPerVertex, vertices, normal);
+                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal);
                 var currentVertexList = new List<Vector3>();
 
                 // remove duplicate edges in the same new polygon, 
@@ -329,7 +329,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = GetEdgeListForPolylinize(edgesPerVertex, vertices, normal);
+                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal, true);
 
                 if (predicate != null)
                 {
@@ -360,7 +360,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
         /// </summary>
-        private List<(int from, int to, int? tag)> GetEdgeListForPolygonize(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default)
+        private List<(int from, int to, int? tag)> GetEdgeList(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default, bool mergePolygons = false)
         {
             var currentEdgeList = new List<(int from, int to, int? tag)>();
             // pick a starting point
@@ -389,55 +389,18 @@ namespace Elements.Spatial
                 }
                 // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
                 var n = normal == default ? Vector3.ZAxis : normal;
-                var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
-
-                possibleNextSegments.Remove(nextSegment);
-                currentSegment = nextSegment;
-            }
-            currentEdgeList.Add(currentSegment);
-
-            return currentEdgeList;
-        }
-
-        /// <summary>
-        /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
-        /// </summary>
-        private List<(int from, int to, int? tag)> GetEdgeListForPolylinize(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default)
-        {
-            var currentEdgeList = new List<(int from, int to, int? tag)>();
-            // pick a starting point
-            var startingSet = edgesPerVertex.First(l => l.Count > 0);
-            var currentSegment = startingSet[0];
-            startingSet.RemoveAt(0);
-            var initialFrom = currentSegment.from;
-
-            // loop until we reach the point at which we started for this polyline loop.
-            // Since we have a finite set of edges, and we consume / remove every edge we traverse,
-            // we must eventually either find an edge that points back to our start, or hit
-            // a dead end where no more edges are available (in which case we throw an exception) 
-            while (currentSegment.to != initialFrom)
-            {
-                currentEdgeList.Add(currentSegment);
-                var toVertex = vertices[currentSegment.to];
-                var fromVertex = vertices[currentSegment.from];
-
-                var vectorToTest = fromVertex - toVertex;
-                // get all segments pointing outwards from our "to" vertex
-                var possibleNextSegments = edgesPerVertex[currentSegment.to];
-                if (possibleNextSegments.Count == 0)
+                if (mergePolygons)
                 {
-                    // this should never happen.
-                    throw new Exception("Something went wrong building polylines from split results. Unable to proceed.");
+                    n = n.Negate();
                 }
-                // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
-                var n = normal == default ? Vector3.ZAxis : normal;
+
                 var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
 
                 possibleNextSegments.Remove(nextSegment);
                 currentSegment = nextSegment;
 
                 // if there are polygons intersecting at the starting point with the current polygon, make one polygon from them along the outer boundary
-                if (currentSegment.to == initialFrom)
+                if (currentSegment.to == initialFrom && mergePolygons)
                 {
                     // if the angle is obtuse, then it is the inner boundary of the polygon
                     if (vectorToTest.PlaneAngleTo(vertices[currentSegment.to] - vertices[currentSegment.from], n) > 180)

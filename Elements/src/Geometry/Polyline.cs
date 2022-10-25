@@ -745,7 +745,7 @@ namespace Elements.Geometry
             var segments = this.Segments();
 
             // Step through each point, collecting info on what its join will look like.
-            var joinInfo = GetOffsetPoints(isCycle, segments, offset, true, true);
+            var joinInfo = GetOffsetPoints(isCycle, segments, offset, false, true);
 
             polygons.Add(new Polygon(joinInfo.SelectMany(p => p).ToList()));
 
