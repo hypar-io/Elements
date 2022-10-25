@@ -2009,23 +2009,28 @@ namespace Elements.Geometry
         /// Remove collinear points from this Polygon.
         /// </summary>
         /// <returns>New Polygon without collinear points.</returns>
-        public Polygon CollinearPointsRemoved()
+        public Polygon CollinearPointsRemoved(double tolerance = Vector3.EPSILON)
         {
             int count = this.Vertices.Count;
             var unique = new List<Vector3>(count);
 
-            if (!Vector3.AreCollinearByDistance(Vertices[count - 1], Vertices[0], Vertices[1]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 1], Vertices[0], Vertices[1], tolerance))
                 unique.Add(Vertices[0]);
 
             for (int i = 1; i < count - 1; i++)
             {
-                if (!Vector3.AreCollinearByDistance(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                if (!Vector3.AreCollinearByDistance(Vertices[i - 1], Vertices[i], Vertices[i + 1], tolerance))
                     unique.Add(Vertices[i]);
             }
 
-            if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0], tolerance))
+            {
                 unique.Add(Vertices[count - 1]);
-
+            }
+            if (unique.Count < 3)
+            {
+                return this;
+            }
             return new Polygon(unique);
         }
 
