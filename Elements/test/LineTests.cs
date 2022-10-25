@@ -556,6 +556,12 @@ namespace Elements.Geometry.Tests
             var longLine = new Line(new Vector3(458.8830, -118.7170, 13.8152), new Vector3(458.8830, -80.4465, 13.8152));
             var nearlySameLine = new Line(new Vector3(458.9005, 29.6573, 13.7977), new Vector3(458.9005, 33.5632, 13.7977));
             Assert.False(longLine.IsCollinear(nearlySameLine));
+
+            // collinear within tolerance
+            var line1 = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 0));
+            var line2 = new Line(new Vector3(5, 0.01, 0), new Vector3(15, 0.01, 0));
+            Assert.False(line1.IsCollinear(line2));
+            Assert.True(line1.IsCollinear(line2, 0.1));
         }
 
         [Fact]
@@ -599,6 +605,17 @@ namespace Elements.Geometry.Tests
             var firstLineWihNearZeroSum = new Line(new Vector3(-3, 3, 0), new Vector3(-1, 1.00000002, 0));
             var secondLineWihNearZeroSum = new Line(new Vector3(-2, 2.00000001, 0), new Vector3(0, 0, 0));
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
+
+            // TryGetOverlap within tolerance
+            var line1 = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 0));
+            // consistently off
+            var line2 = new Line(new Vector3(5, 0.01, 0), new Vector3(15, 0.01, 0));
+            Assert.False(line1.TryGetOverlap(line2, out _));
+            Assert.True(line1.TryGetOverlap(line2, 0.1, out _));
+            // at an angle
+            var line3 = new Line(new Vector3(5, 0, 0), new Vector3(15, 0.01, 0));
+            Assert.True(line1.TryGetOverlap(line3, 0.1, out var overlap));
+            Assert.Equal(new Line((5, 0, 0), (10, 0, 0)), overlap);
         }
 
 
@@ -821,6 +838,53 @@ namespace Elements.Geometry.Tests
                 new object[] {line, new Plane(new Vector3(2, 2, 2), Vector3.YAxis), new Line(new Vector3(0, 2, 0), new Vector3(5, 2, 5))},
                 new object[] {new Line(Vector3.Origin, new Vector3(0, 5, 5)), new Plane(Vector3.Origin, Vector3.XAxis), new Line(Vector3.Origin, new Vector3(0, 5, 5))},
             };
+        }
+
+        [Fact]
+        public void LinesOffset()
+        {
+            var lines = new List<Line> {
+                new Line((3,2), (0,4)),
+                new Line((0,4), (3,7)),
+                new Line((3,7), (1,10)),
+                new Line((3,7), (6,8)),
+                new Line((6,8), (6,11)),
+                new Line((6,11), (9,11)),
+                new Line((9,11), (9,7)),
+                new Line((9,7), (6,4)),
+                new Line((6,4), (7,0)),
+                new Line((7,0), (9,2)),
+                new Line((9,2), (11,0)),
+                new Line((11,0), (13,2)),
+                new Line((13,2), (12,6)),
+                new Line((12,6), (9,7)),
+            };
+
+            var offset = lines.Offset(0.5);
+
+            Model.AddElements(lines.Select(p => new ModelCurve(p, BuiltInMaterials.XAxis)));
+            Model.AddElements(offset.Select(p => new ModelCurve(p, BuiltInMaterials.YAxis)));
+
+            Assert.Equal(2, offset.Count());
+        }
+
+        [Fact]
+        public void LinesOffset_ThreeSeparatePolygons()
+        {
+            var lines = new List<Line> {
+                new Line((-23.738996, 125.715021, 0), (40.722023, 186.716267, 0)),
+                new Line((-39.945297, 180.889282, 0), (-23.738996, 125.715021, 0)),
+                new Line((-0.06687, 28.113027, 0), (-53.784385, -10.490746, 0)),
+                new Line((-0.06687, 108.41616, 0), (-0.06687, 28.113027, 0)),
+                new Line((-0.06687, 28.113027, 0), (70.403226, -6.666788, 0)),
+                new Line((91.161859, 86.747061, 0), (140.144949, 143.742255, 0)),
+                new Line((91.161859, 86.747061, 0), (95.167911, 158.855996, 0)),
+                new Line((53.468552, 134.637591, 0), (91.161859, 86.747061, 0))
+            };
+
+            var offset = lines.Offset(12);
+
+            Assert.Equal(3, offset.Count());
         }
     }
 }
