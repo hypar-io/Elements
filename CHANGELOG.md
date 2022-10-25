@@ -6,9 +6,12 @@
 
 - `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
 - `AdaptiveGrid.HintExtendDistance`
+- `AdaptiveGrid.SnapshotEdgesOnPlane(Plane plane, IEnumerable<Edge> edgesToCheck)`
+- `AdaptiveGrid.InsertSnapshot(List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect)`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
+- `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
 
 ### Changed
 
