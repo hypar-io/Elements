@@ -886,5 +886,21 @@ namespace Elements.Geometry.Tests
 
             Assert.Equal(3, offset.Count());
         }
+
+        [Fact]
+        public void LinesOffset_ClosedShape()
+        {
+            var lines = new List<Line> {
+                new Line((-0.015494, -18.985642, 0), (-1.76639, 24.869265, 0)),
+                new Line((-1.76639, 24.869265, 0), (9.866722, -13.880061, 0)),
+                new Line((24.806017, 6.880776, 0), (86.757219, -32.955245, 0)),
+                new Line((86.757219, -32.955245, 0), (51.313489, 62.054296, 0)),
+                new Line((51.313489, 62.054296, 0), (24.806017, 6.880776, 0))
+            };
+
+            var offset = lines.Offset(3);
+
+            Assert.Equal(3, offset.Count());
+        }
     }
 }
