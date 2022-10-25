@@ -89,7 +89,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 || u < 0.0)
+            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }

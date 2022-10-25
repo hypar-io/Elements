@@ -15,6 +15,9 @@ using Microsoft.DotNet.Interactive.Formatting;
 using Elements;
 using Elements.Geometry;
 using Elements.Serialization.glTF;
+using Newtonsoft.Json;
+using System;
+using System.IO;
 
 var viewerSrc = @"
 <div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
@@ -72,24 +75,27 @@ const fitCameraToObject = function (scene, offset = 1.25) {
     const center = boundingBox.getCenter(new THREE.Vector3());
     const size = boundingBox.getSize(new THREE.Vector3());
 
-    // get the max side of the bounding box (fits to width OR height as needed )
+    // get the max size of the bounding box (fits to width OR height as needed )
     const maxDim = Math.max(size.x, size.y, size.z);
     const fov = camera.fov * (Math.PI / 180);
     let cameraZ = Math.abs(maxDim / 4 * Math.tan(fov * 2));
-
-    camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
+    // if our model is nearly flat, view it from the top, otherwise view it from a corner.
+    if (size.y < 0.001) {
+        // position the camera looking straight down at the object.
+        camera.position.copy(center.clone().add(new THREE.Vector3(0, maxDim * offset, 0)))
+    } else {
+        camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
+    }
 
     const minZ = boundingBox.min.z;
     const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
 
-    camera.far = cameraToFarEdge * 3;
+    camera.far = cameraToFarEdge * 10;
     camera.updateProjectionMatrix();
 
     if (controls) {
         // set camera to rotate around center of loaded object
         controls.target = center;
-        // prevent camera from zooming out far enough to create far plane cutoff
-        controls.maxDistance = cameraToFarEdge * 2;
         controls.saveState();
 
     } else {
@@ -123,6 +129,7 @@ if (KernelInvocationContext.Current is { } currentContext)
 
 double DEFAULT_MODEL_WIDTH = 600;
 double DEFAULT_MODEL_HEIGHT = 400;
+Material DEFAULT_CURVE_MATERIAL = BuiltInMaterials.XAxis;
 
 string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     var gltf = model.ToGlTF();
@@ -136,7 +143,7 @@ string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
 
 Formatter.Register<Curve>((crv, writer) => {
     var model = new Model();
-    model.AddElement(new ModelCurve(crv, BuiltInMaterials.XAxis));
+    model.AddElement(new ModelCurve(crv, DEFAULT_CURVE_MATERIAL));
     var src = GetModelViewerSrc(model);
     writer.Write(src);
 
@@ -144,7 +151,7 @@ Formatter.Register<Curve>((crv, writer) => {
 
 Formatter.Register<Profile>((p, writer) => {
     var model = new Model();
-    model.AddElements(p.ToModelCurves(null, BuiltInMaterials.XAxis));
+    model.AddElements(p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL));
     var src = GetModelViewerSrc(model);
     writer.Write(src);
 }, "text/html");
@@ -165,14 +172,14 @@ Formatter.Register<IEnumerable<Element>>((elements, writer) => {
 
 Formatter.Register<IEnumerable<Curve>>((crvs, writer) => {
     var model = new Model();
-    model.AddElements(crvs.Select(crv => new ModelCurve(crv, BuiltInMaterials.XAxis)));
+    model.AddElements(crvs.Select(crv => new ModelCurve(crv, DEFAULT_CURVE_MATERIAL)));
     var src = GetModelViewerSrc(model);
    writer.Write(src);
 }, "text/html");
 
 Formatter.Register<IEnumerable<Profile>>((profiles, writer) => {
     var model = new Model();
-    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, BuiltInMaterials.XAxis)));
+    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL)));
     var src = GetModelViewerSrc(model);
    writer.Write(src);
 }, "text/html");
@@ -187,7 +194,11 @@ void DisplayModel(Model model, double? width=null, double? height=null) {
     KernelInvocationContext.Current.DisplayAs(src, "text/html");
 }
 
-void setDefaultDisplaySize(double width, double height) {
+void SetDefaultDisplaySize(double width, double height) {
     DEFAULT_MODEL_WIDTH = width;
     DEFAULT_MODEL_HEIGHT = height;
+}
+
+void SetDefaultCurveMaterial(Material mat) {
+    DEFAULT_CURVE_MATERIAL = mat;
 }

@@ -1121,6 +1121,9 @@ namespace Elements.Geometry.Tests
             // end of the polygon AND at the end of the polyline.
             Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
             Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            // Test value close to u=0.0 within tolerance
+            Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
+            Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
 
             this.Model.AddElement(new ModelCurve(polyCircle));
 

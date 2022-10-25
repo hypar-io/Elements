@@ -51,6 +51,7 @@ namespace Elements.Geometry.Tests
             var l = new Line(a, b);
             Assert.Equal(1.0, l.Length());
             Assert.Equal(new Vector3(0.5, 0), l.PointAt(0.5));
+            Assert.Equal(a, l.PointAt(-1e-10));
         }
 
         [Fact]
