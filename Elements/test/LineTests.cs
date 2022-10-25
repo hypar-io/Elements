@@ -51,6 +51,7 @@ namespace Elements.Geometry.Tests
             var l = new Line(a, b);
             Assert.Equal(1.0, l.Length());
             Assert.Equal(new Vector3(0.5, 0), l.PointAt(0.5));
+            Assert.Equal(a, l.PointAt(-1e-10));
         }
 
         [Fact]
@@ -555,6 +556,12 @@ namespace Elements.Geometry.Tests
             var longLine = new Line(new Vector3(458.8830, -118.7170, 13.8152), new Vector3(458.8830, -80.4465, 13.8152));
             var nearlySameLine = new Line(new Vector3(458.9005, 29.6573, 13.7977), new Vector3(458.9005, 33.5632, 13.7977));
             Assert.False(longLine.IsCollinear(nearlySameLine));
+
+            // collinear within tolerance
+            var line1 = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 0));
+            var line2 = new Line(new Vector3(5, 0.01, 0), new Vector3(15, 0.01, 0));
+            Assert.False(line1.IsCollinear(line2));
+            Assert.True(line1.IsCollinear(line2, 0.1));
         }
 
         [Fact]
@@ -598,6 +605,17 @@ namespace Elements.Geometry.Tests
             var firstLineWihNearZeroSum = new Line(new Vector3(-3, 3, 0), new Vector3(-1, 1.00000002, 0));
             var secondLineWihNearZeroSum = new Line(new Vector3(-2, 2.00000001, 0), new Vector3(0, 0, 0));
             Assert.True(firstLineWihNearZeroSum.TryGetOverlap(secondLineWihNearZeroSum, out _));
+
+            // TryGetOverlap within tolerance
+            var line1 = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 0));
+            // consistently off
+            var line2 = new Line(new Vector3(5, 0.01, 0), new Vector3(15, 0.01, 0));
+            Assert.False(line1.TryGetOverlap(line2, out _));
+            Assert.True(line1.TryGetOverlap(line2, 0.1, out _));
+            // at an angle
+            var line3 = new Line(new Vector3(5, 0, 0), new Vector3(15, 0.01, 0));
+            Assert.True(line1.TryGetOverlap(line3, 0.1, out var overlap));
+            Assert.Equal(new Line((5, 0, 0), (10, 0, 0)), overlap);
         }
 
 

@@ -90,7 +90,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 || u < 0.0)
+            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
@@ -1036,30 +1036,43 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Check if this line is collinear with other line
+        /// Check if this line is collinear with another line.
         /// </summary>
-        /// <param name="line">Line to check</param>
+        /// <param name="line">Line to check.</param>
+        /// <param name="tolerance">If points are within this distance of a fit line, they will be considered collinear.</param>
         /// <returns></returns>
-        public bool IsCollinear(Line line)
+        public bool IsCollinear(Line line, double tolerance = Vector3.EPSILON)
         {
             var vectors = new Vector3[] { Start, End, line.Start, line.End };
-            return vectors.AreCollinearByDistance();
+            return vectors.AreCollinearByDistance(tolerance);
         }
 
         /// <summary>
-        /// Check if line overlap with other line
+        /// Check if this line overlaps with another line.
+        /// </summary>
+        /// <param name="line">Line to check.</param>
+        /// <param name="overlap">Overlapping line or null when lines do not overlap.</param>
+        /// <returns>Returns true when lines overlap and false when they do not.</returns>
+        public bool TryGetOverlap(Line line, out Line overlap)
+        {
+            return TryGetOverlap(line, Vector3.EPSILON, out overlap);
+        }
+
+        /// <summary>
+        /// Check if this line overlaps with another line.
         /// </summary>
         /// <param name="line">Line to check</param>
-        /// <param name="overlap">Overlapping line or null when lines do not overlap</param>
-        /// <returns>Returns true when lines overlap and false when they do not</returns>
-        public bool TryGetOverlap(Line line, out Line overlap)
+        /// <param name="tolerance">Tolerance for distance-based checks.</param>
+        /// <param name="overlap">Overlapping line or null when lines do not overlap.</param>
+        /// <returns>Returns true when lines overlap and false when they do not.</returns>
+        public bool TryGetOverlap(Line line, double tolerance, out Line overlap)
         {
             overlap = null;
 
             if (line == null)
                 return false;
 
-            if (!IsCollinear(line))
+            if (!IsCollinear(line, tolerance))
                 return false;
 
             //order vertices of lines
@@ -1068,21 +1081,21 @@ namespace Elements.Geometry
             var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
 
             //check if 2nd point lies on both lines
-            if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
+            if (!PointOnLine(orderedVectors[1], Start, End, true, tolerance) || !PointOnLine(orderedVectors[1], line.Start, line.End, true, tolerance))
                 return false;
 
             //check if 3rd point lies on both lines
-            if (!PointOnLine(orderedVectors[2], Start, End, true) || !PointOnLine(orderedVectors[2], line.Start, line.End, true))
+            if (!PointOnLine(orderedVectors[2], Start, End, true, tolerance) || !PointOnLine(orderedVectors[2], line.Start, line.End, true, tolerance))
                 return false;
 
             //edge case when lines share only point
-            if (orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
+            if (orderedVectors[1].IsAlmostEqualTo(orderedVectors[2], tolerance))
                 return false;
 
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
 
             //keep the same direction as original line
-            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction())
+            overlap = direction.Dot(overlappingLine.Direction()) > 0
                 ? overlappingLine
                 : overlappingLine.Reversed();
 
