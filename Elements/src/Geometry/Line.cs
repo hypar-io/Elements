@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Elements.Spatial;
 
 namespace Elements.Geometry
 {
@@ -1292,6 +1293,30 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $"start: {Start}, end: {End}";
+        }
+    }
+
+    /// <summary>
+    /// Line extension methods.
+    /// </summary>
+    public static class LineExtensions
+    {
+        /// <summary>
+        /// Offset the lines. The resulting polygon will have acute angles.
+        /// </summary>
+        /// <param name="lines">List of lines to offset.</param>
+        /// <param name="distance">The distance to offset.</param>
+        /// <returns></returns>
+        public static List<Polygon> Offset(this List<Line> lines, double distance)
+        {
+            if (lines == null || lines.Count == 0)
+                return new List<Polygon>();
+
+            var heg = HalfEdgeGraph2d.Construct(lines, true);
+            var polylines = heg.Polylinize();
+            var offsets = polylines.SelectMany(l => l.OffsetWithAcuteAngle(distance / 2)).ToList();
+            
+            return offsets;
         }
     }
 }
