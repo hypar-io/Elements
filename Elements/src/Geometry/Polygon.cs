@@ -326,7 +326,7 @@ namespace Elements.Geometry
                     var a = ClosestIndexOf(newVertices, intersections[i], i);
                     var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
 
-                    if (!Contains3D(newVertices[a].Average(newVertices[b]), useRandomRay: true))
+                    if (!Contains3D(newVertices[a].Average(newVertices[b])))
                     {
                         continue;
                     }
@@ -524,28 +524,23 @@ namespace Elements.Geometry
             var is3D = vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains(edges, location, out containment);
+                return Contains2D(edges, location, out containment);
             }
             var transformTo3D = vertices.ToTransform();
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
             var groundSegments = edges.Select(edge => (transformToGround.OfPoint(edge.from), transformToGround.OfPoint(edge.to)));
             var groundLocation = transformToGround.OfPoint(location);
-            return Contains(groundSegments, groundLocation, out containment);
+            return Contains2D(groundSegments, groundLocation, out containment);
         }
 
         /// <summary>
-        /// Does this polygon contain the specified point.
+        /// Does this polygon contain the specified point?
         /// https://en.wikipedia.org/wiki/Point_in_polygon
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="unique">Should intersections be unique?</param>
-        /// <param name="useRandomRay">If true, a randomly constructed ray in the plane of the polygon will be used
-        /// for ray testing. Otherwise, a ray along the X axis of the transform created from the plane's origin and 
-        /// normal will be used. A random ray is helpful when you have shapes where multiple vertices may lie across
-        /// the default test axis.</param>
         /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = true, bool useRandomRay = false)
+        internal bool Contains3D(Vector3 point)
         {
             var p = this.Plane();
 
@@ -559,33 +554,36 @@ namespace Elements.Geometry
             // Intersect a ray in the plane
             // of the polygon and intersect with the polygon edges.
             var ray = new Ray(point, t.XAxis);
-            if (useRandomRay)
-            {
-                var r = new Random();
-                ray = new Ray(point, t.OfVector(new Vector3(r.NextDouble(), r.NextDouble()).Unitized()));
-            }
-            var intersects = 0;
-            var xsects = new List<Vector3>();
+            var intersections = 0;
             foreach (var (from, to) in this.Edges())
             {
                 if (ray.Intersects(from, to, out Vector3 result))
                 {
-                    if (unique)
+                    if (result.IsAlmostEqualTo(from))
                     {
-                        if (!xsects.Contains(result))
+                        // Is 'to' to the left of the ray?
+                        var d = (to - from).PlaneAngleTo(ray.Direction, p.Normal);
+                        if (d < 180)
                         {
-                            xsects.Add(result);
-                            intersects++;
+                            intersections++;
+                        }
+                    }
+                    else if (result.IsAlmostEqualTo(to))
+                    {
+                        // is 'from' to the lef of the ray?
+                        var d = (from - to).PlaneAngleTo(ray.Direction, p.Normal);
+                        if (d < 180)
+                        {
+                            intersections++;
                         }
                     }
                     else
                     {
-                        xsects.Add(result);
-                        intersects++;
+                        intersections++;
                     }
                 }
             }
-            return intersects % 2 != 0;
+            return intersections % 2 != 0;
         }
 
         internal bool Contains3D(Polygon polygon)
@@ -594,7 +592,7 @@ namespace Elements.Geometry
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
+        internal static bool Contains2D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
             int windingNumber = 0;
 
@@ -815,7 +813,7 @@ namespace Elements.Geometry
             var allInside = true;
             foreach (var vertex in polygon.Vertices)
             {
-                Contains(Edges(), vertex, out Containment containment);
+                Contains2D(Edges(), vertex, out Containment containment);
                 if (containment == Containment.Outside)
                 {
                     return false;
@@ -836,7 +834,7 @@ namespace Elements.Geometry
             // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
             foreach (var vertex in Vertices)
             {
-                Contains(polygon.Edges(), vertex, out Containment containment);
+                Contains2D(polygon.Edges(), vertex, out Containment containment);
                 if (containment == Containment.Inside)
                 {
                     return false;

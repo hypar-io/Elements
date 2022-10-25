@@ -1813,10 +1813,10 @@ namespace Elements.Geometry.Tests
         public void PolygonContains3D()
         {
             var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(rect.Contains3D(rect.Centroid(), true));
+            Assert.True(rect.Contains3D(rect.Centroid()));
 
             var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(star.Contains3D(star.Centroid(), true));
+            Assert.True(star.Contains3D(star.Centroid()));
         }
 
         [Fact]

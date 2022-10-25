@@ -173,7 +173,7 @@ namespace Elements.Geometry
                 }
                 curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
 
-                if (Polygon.Contains(curveList, transformedIntersection, out _))
+                if (Polygon.Contains2D(curveList, transformedIntersection, out _))
                 {
                     result = intersection;
                     return true;
