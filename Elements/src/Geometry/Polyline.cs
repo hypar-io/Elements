@@ -564,7 +564,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 || u > 1.0)
+            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
             {
                 throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
             }
@@ -1067,7 +1067,6 @@ namespace Elements.Geometry
         public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
         {
             sharedSegments = new List<Polyline>();
-            var polygonSegments = polygon.Segments();
 
             var intersections = polygon.Segments()
                 .SelectMany(x =>
@@ -1075,7 +1074,8 @@ namespace Elements.Geometry
                     Intersects(x, out var result, includeEnds: true);
                     return result;
                 })
-                .OrderBy(x => GetParameterAt(x))
+                .UniqueWithinTolerance()
+                .OrderBy(GetParameterAt)
                 .ToList();
 
             if (intersections.Count == 0)
@@ -1086,28 +1086,18 @@ namespace Elements.Geometry
                 }
                 return sharedSegments.Any();
             }
-
-            var filteredIntersections = new List<Vector3>();
-            foreach(var intersection in intersections)
-            {
-                if(filteredIntersections.Any(x => x.IsAlmostEqualTo(intersection)))
-                {
-                    continue;
-                }
-                filteredIntersections.Add(intersection);
-            }
-
+            
             if (polygon.Contains(Start))
             {
-                var intersection = filteredIntersections.First();
+                var intersection = intersections.First();
                 var startSegment = GetSubsegment(Start, intersection);
                 sharedSegments.Add(startSegment);
-                filteredIntersections.Remove(intersection);
+                intersections.Remove(intersection);
             }
 
-            for (int i = 1; i < filteredIntersections.Count; i += 2)
+            for (var i = 0; i < intersections.Count - 1; i ++)
             {
-                var subsegment = GetSubsegment(filteredIntersections[i - 1], filteredIntersections[i]);
+                var subsegment = GetSubsegment(intersections[i], intersections[i+1]);
                 if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
@@ -1116,7 +1106,7 @@ namespace Elements.Geometry
 
             if (polygon.Contains(End))
             {
-                var intersection = filteredIntersections.Last();
+                var intersection = intersections.Last();
                 var endSegment = GetSubsegment(intersection, End);
                 sharedSegments.Add(endSegment);
             }
@@ -1145,36 +1135,34 @@ namespace Elements.Geometry
                 return null;
             }
 
-            var firstParameter = 0d;
-            var lastParameter = 0d;
-            var vertices = new List<Vector3>();
-            var lastVertex = Vector3.Origin;
-
-            if (startParameter < endParameter)
+            List<Vector3> filteredVertices;
+            
+            if (startParameter > endParameter)
             {
-                firstParameter = startParameter;
-                lastParameter = endParameter;
-                vertices.Add(start);
-                lastVertex = end;
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter < startParameter && parameter > endParameter;
+                    })
+                    .Reverse()
+                    .ToList();
             }
             else
             {
-                firstParameter = endParameter;
-                lastParameter = startParameter;
-                vertices.Add(end);
-                lastVertex = start;
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter > startParameter && parameter < endParameter;
+                    })
+                    .ToList();
             }
+            
+            filteredVertices.Insert(0, start);
+            filteredVertices.Add(end);
 
-            var verticesToAdd = Vertices.Where(x =>
-            {
-                var parameter = GetParameterAt(x);
-                return parameter > firstParameter && parameter < lastParameter;
-            });
-
-            vertices.AddRange(verticesToAdd);
-            vertices.Add(lastVertex);
-
-            return new Polyline(vertices);
+            return new Polyline(filteredVertices);
         }
     }
 

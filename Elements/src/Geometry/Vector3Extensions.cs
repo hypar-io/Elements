@@ -251,6 +251,27 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+        
+        /// <summary>
+        /// De-duplicate a collection of Vectors, such that no two vectors in the result are within tolerance of each other.
+        /// </summary>
+        /// <param name="vectors">List of vectors</param>
+        /// <param name="tolerance">Distance tolerance</param>
+        /// <returns>A new collection of vectors with duplicates removed.</returns>
+        public static IEnumerable<Vector3> UniqueWithinTolerance(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        {
+            var output = new List<Vector3>();
+            foreach (var vector in vectors)
+            {
+                if (output.Any(x => x.IsAlmostEqualTo(vector, tolerance)))
+                {
+                    continue;;
+                }
+                output.Add(vector);
+            }
+
+            return output;
+        }
     }
 
     /// <summary>

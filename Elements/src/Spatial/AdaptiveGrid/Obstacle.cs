@@ -53,8 +53,8 @@ namespace Elements.Spatial.AdaptiveGrid
                 wall.CenterLine.End - ortho * wall.Thickness / 2,
                 wall.CenterLine.Start - ortho * wall.Thickness / 2
             );
-            var transfrom = new Transform(Vector3.Origin,
-                wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
+
+            var transfrom = new Transform(Vector3.Origin, wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
 
             return new Obstacle(polygon, wall.Height, offset, addPerimeterEdges, allowOutsideBoundary, transfrom);
         }
@@ -97,20 +97,39 @@ namespace Elements.Spatial.AdaptiveGrid
                 throw new ArgumentException("Offset should be larger then zero.");
             }
 
-            var frame = line.TransformAt(0);
-
-            var polygon = new Polygon
-            (
-                line.Start - offset * (frame.XAxis + frame.YAxis),
-                line.Start + offset * (frame.XAxis - frame.YAxis),
-                line.End + offset * (frame.XAxis - frame.YAxis),
-                line.End - offset * (frame.XAxis + frame.YAxis)
-            );
-
+            Transform frame = null;
+            Polygon polygon = null;
             var height = offset * 2;
+            if (!line.Direction().IsParallelTo(Vector3.ZAxis))
+            {
+                var forward = line.Direction();
+                var ortho = Vector3.ZAxis.Cross(forward);
+                var up = forward.Cross(ortho);
+                frame = new Transform(line.Start, forward, ortho, up);
 
-            return new Obstacle(polygon, height, 0, addPerimeterEdges, allowOutsideBoundary, null);
-        }
+                polygon = new Polygon
+                (
+                    line.Start + offset * (forward.Negate() + ortho - up),
+                    line.Start + offset * (forward.Negate() - ortho - up),
+                    line.End + offset * (forward - ortho - up),
+                    line.End + offset * (forward + ortho - up)
+                );
+            }
+            else
+            {
+                polygon = new Polygon
+                (
+                    line.Start + offset * (Vector3.XAxis + Vector3.YAxis - Vector3.ZAxis),
+                    line.Start + offset * (Vector3.XAxis - Vector3.YAxis - Vector3.ZAxis),
+                    line.Start + offset * (Vector3.XAxis.Negate() - Vector3.YAxis - Vector3.ZAxis),
+                    line.Start + offset * (Vector3.XAxis.Negate() + Vector3.YAxis - Vector3.ZAxis)
+                );
+                height += line.Length();
+            }
+
+            
+            return new Obstacle(polygon, height, 0, addPerimeterEdges, allowOutsideBoundary, frame);
+         }
 
         /// <summary>
         /// Create an obstacle from a list of points.
@@ -120,15 +139,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="addPerimeterEdges">Should edges be created around obstacle.</param>
         /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
-        /// <param name="transformation">Transformation of the obstacle.</param>
-        public Obstacle(Polygon boudary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform transformation)
+        /// <param name="orienatation">Orientation of the obstacle in space. Helpful for better bounding box creation.</param>
+        public Obstacle(Polygon boudary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform orienatation)
         {
             Boundary = boudary;
             Height = height;
             Offset = offset;
             AddPerimeterEdges = addPerimeterEdges;
             AllowOutsideBoudary = allowOutsideBoundary;
-            Transform = transformation;
+            Orientation = orienatation;
 
             Material = BuiltInMaterials.Mass;
 
@@ -138,10 +157,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// List of points defining obstacle.
         /// </summary>
-        public List<Vector3> Points => Boundary?
-            .Vertices
-            .SelectMany(x => new List<Vector3> { x, x + new Vector3(0, 0, Height) })
-            .ToList() ?? new List<Vector3>();
+        public List<Vector3> Points => _primaryPolygons?.SelectMany(x => x.Vertices).ToList() ?? new List<Vector3>();
 
         /// <summary>
         /// Perimeter defining obstacle.
@@ -154,6 +170,16 @@ namespace Elements.Spatial.AdaptiveGrid
                 _boundary = value;
                 UpdatePolygons();
             }
+        }
+
+        /// <summary>
+        /// Additional information about obstacle orientation in space.
+        /// Use inverted orientation to work in local space of the obstacle.
+        /// </summary>
+        public Transform Orientation
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -233,7 +259,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Representation = new Representation(allPolygons.Select(x => new Lamina(x)).Cast<SolidOperation>().ToList());
         }
 
-        private bool DoesPolygonIntersectsWithLine(Polygon polygon, Line line, double tolerance = 1e-05)
+        private static bool DoesPolygonIntersectsWithLine(Polygon polygon, Line line, double tolerance = 1e-05)
         {
             var plane = polygon.Plane();
             if (!line.Intersects(plane, out var intersection, true))
@@ -252,7 +278,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         }
 
-        private bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
+        private static bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
         {
             if (polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
             {
@@ -286,11 +312,6 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             boundary = boundary.TransformedPolygon(boundaryTransform);
-
-            if (Transform != null)
-            {
-                boundary = boundary.TransformedPolygon(Transform);
-            }
 
             if (!boundary.IsClockWise())
             {
