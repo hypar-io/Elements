@@ -1067,7 +1067,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="points">Points to add and connect to the grid.</param>
         /// <param name="extendDistance">Distance at which lines are extended to existing edges.</param>
-        /// <returns></returns>
+        /// <returns>Vertices in order they are inserted, including already existing. Can contain duplicates.</returns>
         public List<Vertex> AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)
         {
             List<Vertex> vertices = new List<Vertex>();
@@ -1075,16 +1075,31 @@ namespace Elements.Spatial.AdaptiveGrid
             for (int i = 0; i < points.Count - 1; i++)
             {
                 var segmentLength = (points[i + 1] - points[i]).Length();
+                // Find any intersections between infinite segment and grid eges.
                 var hits = IntersectGraph(points[i], points[i + 1]);
-
-                int index = LastNegativeHit(hits, segmentLength);
-                if (index < 0 || index + 1 >= hits.Count)
+                // If none - just insert segment into grid. 
+                if (!hits.Any())
                 {
+                    var start = AddVertex(points[i]);
+                    var end = AddVertex(points[i + 1]);
+                    if (!vertices.Any() || vertices.Last().Id != start.Id)
+                    {
+                        vertices.Add(start);
+                    }
+
+                    if (start.Id != end.Id)
+                    {
+                        AddEdge(points[i], points[i + 1], false);
+                        vertices.Add(end);
+                    }
                     continue;
                 }
 
+                // Each segment is extended both sides if next intersection is less than extendDistance away.
+                // Extend start or add is as is if it's too far away.
+                int index = LastNegativeHit(hits, segmentLength);
                 Vertex lastCut;
-                if (hits[index].DistanceAlongLine < -extendDistance)
+                if (index < 0 || hits[index].DistanceAlongLine < -extendDistance)
                 {
                     lastCut = AddVertex(points[i]);
                 }
@@ -1104,9 +1119,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     lastCut = CutEdge(hits[index].Edge, cutPoint);
                 }
 
+                // Ignore consequent duplicate vertices. Duplicates are still possible though.
                 index++;
-                vertices.Add(lastCut);
+                if (!vertices.Any() || vertices.Last().Id != lastCut.Id)
+                {
+                    vertices.Add(lastCut);
+                }
 
+                // Insert any ordered intersection between start and end
                 while (index < hits.Count && hits[index].DistanceAlongLine < segmentLength + Tolerance)
                 {
                     var newCut = InsertHit(hits[index], lastCut);
@@ -1118,9 +1138,12 @@ namespace Elements.Spatial.AdaptiveGrid
                     index++;
                 }
 
-                if (index < hits.Count && !hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
+                // Snap segment end to the first outside intersection if it's not too far away.
+                // If it's not there or too far away - just insert end point as is.
+                if (!hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
                 {
-                    var finalCut = InsertFinalCut(hits[index], lastCut, points[i + 1], segmentLength + extendDistance);
+                    var hit = index < hits.Count ? hits[index] : (null, 0, 0, 0);
+                    var finalCut = InsertFinalCut(hit, lastCut, points[i + 1], segmentLength + extendDistance);
                     if (finalCut != null)
                     {
                         vertices.Add(finalCut);
@@ -1232,7 +1255,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Vertex lastCut, Vector3 endPoint, double maxDistance)
         {
             Vertex finalCut;
-            if (hit.DistanceAlongLine > maxDistance)
+            if (hit.Edge == null || hit.DistanceAlongLine > maxDistance)
             {
                 finalCut = AddVertex(endPoint);
                 if (finalCut.Id != lastCut.Id)
