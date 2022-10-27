@@ -240,8 +240,10 @@ namespace Elements.Tests
                 v => new Vector3(v.X, v.Y, configuration.MainLayer)));
 
             var hints = new List<RoutingHintLine>();
-            hints.Add(new RoutingHintLine(hintPolyline, 0.01, 0.2, true));
-            hints.Add(new RoutingHintLine(offsetPolyline, 0.1, 0.1, false));
+            hints.Add(new RoutingHintLine(hintPolyline, 
+                factor: 0.01, influence: 0.2, userDefined: true, is2D: true));
+            hints.Add(new RoutingHintLine(offsetPolyline,
+                factor: 0.1, influence: 0.1, userDefined: false, is2D: true));
 
             var box = new BBox3(new Vector3(3, 6, 0), new Vector3(7, 7, 3));
             var obstacle = Obstacle.FromBBox(box);
@@ -402,9 +404,12 @@ namespace Elements.Tests
             Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
 
             //9. Set configurations for hint and offset lines.
-            var hint = new RoutingHintLine(hintPolyline, 0.01, 0.1, true);
-            var offset1 = new RoutingHintLine(firstOffsetPolyline, 0.9, 0.1, false);
-            var offset2 = new RoutingHintLine(secondOffsetPolyline, 0.9, 0.1, false);
+            var hint = new RoutingHintLine(hintPolyline, 
+                factor: 0.01, influence: 0.1, userDefined: true, is2D: true);
+            var offset1 = new RoutingHintLine(firstOffsetPolyline,
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
+            var offset2 = new RoutingHintLine(secondOffsetPolyline,
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
             var hints = new List<RoutingHintLine> { hint, offset1, offset2 };
 
             //10. Run algorithm
@@ -520,9 +525,12 @@ namespace Elements.Tests
             Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
 
             //9. Set configurations for hint and offset lines. Split them into groups.
-            var hint = new RoutingHintLine(hintPolyline, 0.01, 0.1, true);
-            var offset1 = new RoutingHintLine(firstOffsetPolyline, 0.9, 0.1, false);
-            var offset2 = new RoutingHintLine(secondOffsetPolyline, 0.9, 0.1, false);
+            var hint = new RoutingHintLine(hintPolyline,
+                factor: 0.01, influence: 0.1, userDefined: true, is2D: true);
+            var offset1 = new RoutingHintLine(firstOffsetPolyline, 
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
+            var offset2 = new RoutingHintLine(secondOffsetPolyline, 
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
             var hints = new List<List<RoutingHintLine>>
             {
                 new List<RoutingHintLine>{ hint, offset1},
@@ -649,7 +657,7 @@ namespace Elements.Tests
             //6. Run routing with a hint line.
             var hint = new RoutingHintLine(
                 new Polyline(new Vector3[] { new Vector3(2, 2, 0), new Vector3(2, 8, 0) }),
-                0.1, 0.1, false);
+                factor: 0.1, influence: 0.1, userDefined: false, is2D: true);
             tree = alg.BuildSimpleNetwork(inputVertices, exits, new List<RoutingHintLine> { hint });
 
             //Find most efficient path from (0, 4) 
@@ -837,6 +845,48 @@ namespace Elements.Tests
                 new Vector3(4, 0, 0)
             };
             CheckTree(grid, first.Id, route, expectedPath);
+        }
+
+        [Fact]
+        public void AdaptiveGraphRouting3DHintLineCheck()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { new Vector3(2, 2), new Vector3(5, 5), new Vector3(8, 8) });
+
+            var hintPath = new Vector3[] {
+                new Vector3(2, 5, 0),
+                new Vector3(3, 5, 0),
+                new Vector3(4, 5, 1),
+                new Vector3(5, 5, 1),
+                new Vector3(6, 5, 0),
+                new Vector3(7, 5, 0)
+            };
+
+            grid.AddVerticesWithCustomExtension(hintPath, 2);
+            var hint = new RoutingHintLine(new Polyline(hintPath), 
+                factor: 0.1, influence: 0, userDefined: true, is2D: false);
+
+            var c = new RoutingConfiguration();
+            var routing = new AdaptiveGraphRouting(grid, c);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5), out var inputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5), out var outputId, grid.Tolerance));
+            var input = new RoutingVertex(inputId, 0);
+            var route = routing.BuildSpanningTree(
+                new List<RoutingVertex> { input }, outputId, new List<RoutingHintLine> { hint }, TreeOrder.ClosestToFurthest);
+
+            var expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 5, 0),
+                new Vector3(2, 5, 0),
+                new Vector3(3, 5, 0),
+                new Vector3(4, 5, 1),
+                new Vector3(5, 5, 1),
+                new Vector3(6, 5, 0),
+                new Vector3(8, 5, 0),
+                new Vector3(10, 5, 0),
+            };
+            CheckTree(grid, inputId, route, expectedPath);
         }
 
         private static void CheckTree(
