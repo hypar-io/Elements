@@ -1,7 +1,7 @@
 ﻿using Elements.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -21,11 +21,18 @@ namespace Elements.Spatial.AdaptiveGrid
         public RoutingHintLine(
             Polyline polyline, double factor, double influence, bool userDefined, bool is2D)
         {
-            Polyline = polyline;
             Factor = factor;
             InfluenceDistance = influence;
             UserDefined = userDefined;
             Is2D = is2D;
+            if (Is2D)
+            {
+                Polyline = new Polyline(polyline.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
+            }
+            else
+            {
+                Polyline = polyline;
+            }
         }
 
         /// <summary>
