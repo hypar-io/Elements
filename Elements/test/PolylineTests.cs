@@ -339,66 +339,66 @@ namespace Elements.Geometry.Tests
         public static IEnumerable<object[]> GetPolygonIntersectsTestData()
         {
             //Polyline is inside boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)),
-                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1)) 
+                new Polyline(new Vector3(2, 0), new Vector3(-2, 0), new Vector3(-2, 1))
             };
 
             //Polyline both ends outside boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -5)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2))
             };
 
             //Polyline end is on polygon boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2)) 
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, -2))
             };
 
             //Polyline start is on polygon boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2)) 
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin, new Vector3(0, 2))
             };
 
             //Polyline end is inside boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(1, 5), new Vector3(1,0), Vector3.Origin),
-                new Polyline(new Vector3(1, 2), new Vector3(1, 0), Vector3.Origin) 
+                new Polyline(new Vector3(1, 2), new Vector3(1, 0), Vector3.Origin)
             };
 
             //Polyline start is inside boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), Vector3.Origin),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin) 
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), Vector3.Origin)
             };
 
             //Polyline end is boundary vertex
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, -5), new Vector3(-1, 0), new Vector3(3, 2)),
-                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), new Vector3(3, 2)) 
+                new Polyline(new Vector3(-1, -2), new Vector3(-1, 0), new Vector3(3, 2))
             };
 
             //Polyline start is boundary vertex
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 5)),
-                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2)) 
+                new Polyline(new Vector3(-3, -2), new Vector3(-1, 0), new Vector3(-1, 2))
             };
 
             //Polyline segment is part of boundary
-            yield return new object[] 
-            { 
+            yield return new object[]
+            {
                 new Polyline(new Vector3(-1, 5), new Vector3(-1, 0), new Vector3(3, 0), new Vector3(3, 1)),
-                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), new Vector3(3, 0)) 
+                new Polyline(new Vector3(-1, 2), new Vector3(-1, 0), new Vector3(3, 0))
             };
         }
 
@@ -541,7 +541,7 @@ namespace Elements.Geometry.Tests
             var expectedSubsegment = new Polyline(new Vector3(2, 0), new Vector3(2, 2), new Vector3(0, 2));
 
             var result = polyline.Intersects(polygon, out var sharedSegments);
-            
+
             Assert.True(result);
             Assert.Collection(sharedSegments, sharedSegment => Assert.Equal(expectedSubsegment, sharedSegment));
         }
@@ -557,7 +557,7 @@ namespace Elements.Geometry.Tests
 
             var start = new Vector3(-5, -3);
             var end = new Vector3(5, 3);
-            
+
             var result = polyline.GetSubsegment(start, end);
 
             var expectedResult = new Polyline(
@@ -570,7 +570,7 @@ namespace Elements.Geometry.Tests
 
             var reversedResult = polyline.GetSubsegment(end, start);
             var reversedExpectedResult = expectedResult.Reversed();
-            
+
             Assert.Equal(reversedExpectedResult, reversedResult);
 
             var pointOutsidePolyline = Vector3.Origin;
@@ -631,6 +631,122 @@ namespace Elements.Geometry.Tests
             Model.AddElement(curve);
             Model.AddElement(movedCrv);
             Model.AddElement(bezier);
+        }
+
+        [Fact]
+        public void PolylineForceAngleCompliance()
+        {
+            var path = new List<Vector3>
+            {
+                new Vector3(0, 10, 2),
+                new Vector3(0, 8, 2),
+                new Vector3(4, 5, 2),
+                new Vector3(4, 3, 2),
+                new Vector3(1, 2, 2),
+                new Vector3(1, 0, 2),
+                new Vector3(0, 0, 1.1),
+                new Vector3(0, 0, 0)
+            };
+            var polyline = new Polyline(path);
+            var angles = new List<double> { 90, 45 };
+            var normalizedPathStart = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceStart, NormalizationType.Start);
+            var normalizedPathMiddle = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceMiddle, NormalizationType.Middle);
+            var normalizedPathEnd = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceEnd, NormalizationType.End);
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPathStart));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEnd));
+
+            // Get 45 degree between first, second and third segments.
+            var pathStartSegments = normalizedPathStart.Segments();
+            Assert.True(pathStartSegments[1].Direction().AngleTo(pathStartSegments[0].Direction()).ApproximatelyEquals(45));
+            Assert.True(pathStartSegments[2].Direction().AngleTo(pathStartSegments[1].Direction()).ApproximatelyEquals(45));
+            Assert.Equal(new Vector3(0, 9, 2), pathStartSegments[1].Start);
+            Assert.Equal(new Vector3(4, 5, 2), pathStartSegments[1].End);
+
+            var pathMiddleSegments = normalizedPathMiddle.Segments();
+            Assert.True(pathMiddleSegments[1].Direction().AngleTo(pathMiddleSegments[0].Direction()).ApproximatelyEquals(45));
+            Assert.True(pathMiddleSegments[2].Direction().AngleTo(pathMiddleSegments[1].Direction()).ApproximatelyEquals(45));
+            Assert.Equal(new Vector3(0, 8.5, 2), pathMiddleSegments[1].Start);
+            Assert.Equal(new Vector3(4, 4.5, 2), pathMiddleSegments[1].End);
+
+            var pathEndSegments = normalizedPathEnd.Segments();
+            Assert.True(pathEndSegments[1].Direction().AngleTo(pathEndSegments[0].Direction()).ApproximatelyEquals(45));
+            Assert.True(pathEndSegments[2].Direction().AngleTo(pathEndSegments[1].Direction()).ApproximatelyEquals(45));
+            Assert.Equal(new Vector3(0, 8, 2), pathEndSegments[1].Start);
+            Assert.Equal(new Vector3(4, 4, 2), pathEndSegments[1].End);
+        }
+
+        private static bool CheckPolylineAngles(List<double> angles, Polyline polyline)
+        {
+            for (var i = 1; i < polyline.Vertices.Count - 1; i++)
+            {
+                var a = polyline.Vertices[i - 1];
+                var b = polyline.Vertices[i];
+                var c = polyline.Vertices[i + 1];
+                var angle = (b - a).AngleTo((c - b));
+                if (!angle.ApproximatelyEquals(180, 0.1) && !angle.ApproximatelyEquals(0, 0.1)
+                    && !angles.Any(ang => angle.ApproximatelyEquals(ang, 0.1)
+                                          ||  (angle - 90).ApproximatelyEquals(ang, 0.1)))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        [Fact]
+        public void PolylineForceAngleCompliance3dPath()
+        {
+            Name = nameof(PolylineForceAngleCompliance3dPath);
+            var path = new List<Vector3>
+            {
+                new Vector3(2, 1, 2),
+                new Vector3(2, 3, 2),
+                new Vector3(4, 4.5, 2),
+                new Vector3(4, 5, 3),
+                new Vector3(4, 7, 3),
+                new Vector3(7, 8, 3),
+                new Vector3(7, 5, 3),
+                new Vector3(7, 2, 5)
+            };
+
+            var polyline = new Polyline(path);
+            var angles = new List<double> { 90, 45 };
+            var normalizedPathStart = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, NormalizationType.Start);
+            var normalizedPathMiddle = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, NormalizationType.Middle);
+            var normalizedPathEnd = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, NormalizationType.End);
+            Model.AddElement(new ModelCurve(polyline, BuiltInMaterials.Black));
+            Model.AddElement(new ModelCurve(normalizedPathStart, BuiltInMaterials.XAxis));
+            Model.AddElement(new ModelCurve(normalizedPathMiddle, BuiltInMaterials.YAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEnd, BuiltInMaterials.ZAxis));
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPathStart));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEnd));
+        }
+
+        [Fact]
+        public void PolylineForceAngleComplianceWithCollinearPoints()
+        {
+            Name = nameof(PolylineForceAngleComplianceWithCollinearPoints);
+            var angles = new List<double> { 90, 45 };
+            var polyline = new Polyline(new List<Vector3> { new Vector3(), new Vector3(1, 3), new Vector3(5, 3), new Vector3(10, 3) });
+
+            var normalizedPathMiddle = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceMiddle, NormalizationType.Middle);
+            var normalizedPathEnd = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceEnd, NormalizationType.End);
+            var normalizedPathEndYAxisReferenceVector = polyline.ForceAngleCompliance(angles, new Vector3(0, 1), out var distanceStartYAxis, NormalizationType.End);
+
+            Model.AddElement(new ModelCurve(polyline, BuiltInMaterials.Black));
+            Model.AddElement(new ModelCurve(normalizedPathMiddle, BuiltInMaterials.XAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEnd, BuiltInMaterials.YAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEndYAxisReferenceVector, BuiltInMaterials.ZAxis));
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
+            // TODO This case is currently not working. Fix ForceAngleCompliance to handle this.
+            Assert.False(CheckPolylineAngles(angles, normalizedPathEnd));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEndYAxisReferenceVector));
         }
     }
 }
