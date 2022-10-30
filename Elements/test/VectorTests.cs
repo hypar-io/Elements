@@ -131,6 +131,13 @@ namespace Elements.Tests
 
             v = Vector3.Origin;
             Assert.Equal(0.0, v.DistanceTo(p));
+
+            p = new Plane(new Vector3(2, 3, 5), Vector3.XAxis);
+            v = new Vector3(2, 1.0, 0.5);
+            Assert.Equal(0.0, v.DistanceTo(p));
+
+            v = new Vector3(2.5, 1.0, 0.5);
+            Assert.Equal(0.5, v.DistanceTo(p));
         }
 
         [Fact]
