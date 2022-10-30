@@ -1121,6 +1121,9 @@ namespace Elements.Geometry.Tests
             // end of the polygon AND at the end of the polyline.
             Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
             Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            // Test value close to u=0.0 within tolerance
+            Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
+            Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
 
             this.Model.AddElement(new ModelCurve(polyCircle));
 
@@ -1881,6 +1884,18 @@ namespace Elements.Geometry.Tests
             var polygon = new Polygon(points);
             polygon = polygon.CollinearPointsRemoved();
             Assert.Equal(4, polygon.Vertices.Count());
+
+            var points2 = new Vector3[] {
+                (0, 0, 0),
+                (10, 0.0001, 0),
+                (20, 0, 0),
+                (20, 20, 0),
+                (10, 20.0001, 0),
+                (0, 20, 0)
+            };
+            var polygon2 = new Polygon(points2);
+            Assert.NotEqual(4, polygon2.CollinearPointsRemoved().Vertices.Count());
+            Assert.Equal(4, polygon2.CollinearPointsRemoved(0.001).Vertices.Count());
         }
 
         [Fact]
@@ -2054,6 +2069,18 @@ namespace Elements.Geometry.Tests
             // verify does not throw
             var polygon = JsonConvert.DeserializeObject<Polygon>(json);
             Assert.NotNull(polygon);
+        }
+
+        [Fact]
+        public void U()
+        {
+            var u = Polygon.U(10, 20, 2);
+        }
+
+        [Fact]
+        public void UThicknessGreaterThanWidthOverTwoThrows()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Polygon.U(10, 10, 6));
         }
     }
 }

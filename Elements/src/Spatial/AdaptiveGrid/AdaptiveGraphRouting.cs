@@ -16,170 +16,6 @@ namespace Elements.Spatial.AdaptiveGrid
         private RoutingConfiguration _configuration;
 
         /// <summary>
-        /// Structure that holds information about polylines that are used to guide routing.
-        /// </summary>
-        public struct RoutingHintLine
-        {
-            /// <summary>
-            /// Construct new RoutingHintLine structure.
-            /// </summary>
-            /// <param name="polyline">Geometry of HintLine.</param>
-            /// <param name="factor">Cost multiplier.</param>
-            /// <param name="influence">How far it affects.</param>
-            /// <param name="userDefined">Is user defined.</param>
-            public RoutingHintLine(
-                Polyline polyline, double factor, double influence, bool userDefined)
-            {
-                Polyline = polyline;
-                Factor = factor;
-                InfluenceDistance = influence;
-                UserDefined = userDefined;
-            }
-
-            /// <summary>
-            /// 2D Polyline geometry representation with an influence that is extended on both sides in Z direction.
-            /// </summary>
-            public readonly Polyline Polyline;
-
-            /// <summary>
-            /// Cost multiplier for edges that lie within the Influence distance to the line.
-            /// </summary>
-            public readonly double Factor;
-
-            /// <summary>
-            /// How far away from the line, edge travel cost is affected.
-            /// Both sides of an edge and its middle point should be within influence range.
-            /// </summary>
-            public readonly double InfluenceDistance;
-
-            /// <summary>
-            /// Is line created by the user or from internal parameters?
-            /// User defined lines are preferred for input Vertex connection.
-            /// </summary>
-            public readonly bool UserDefined;
-        }
-
-        /// <summary>
-        /// Structure that holds additional information about inlet vertex
-        /// </summary>
-        public struct RoutingVertex
-        {
-            /// <summary>
-            /// Construct new RoutingVertex structure.
-            /// </summary>
-            /// <param name="id">Id of the vertex in the grid.</param>
-            /// <param name="isolationRadius"> Distance, other sections of the route can't travel near this vertex.</param>
-            /// <param name="guides">Additional vertices this vertex need to travel through.</param>
-            public RoutingVertex(
-                ulong id, double isolationRadius, List<ulong> guides = null)
-            {
-                Id = id;
-                IsolationRadius = isolationRadius;
-                Guides = guides;
-            }
-
-            /// <summary>
-            /// Id of the vertex in the grid.
-            /// </summary>
-            public ulong Id;
-
-            /// <summary>
-            /// Additional vertices this vertex need to travel through
-            /// </summary>
-            public List<ulong> Guides;
-
-            /// <summary>
-            /// Distance closer than which, other sections of the route can't travel near this vertex. 
-            /// Distance is in base plane of the gird, without elevation.
-            /// </summary>
-            public double IsolationRadius;
-        }
-
-        /// <summary>
-        /// Object that holds common parameters that affect routing.
-        /// </summary>
-        public struct RoutingConfiguration
-        {
-            /// <summary>
-            /// Construct new RoutingConfiguration structure.
-            /// </summary>
-            /// <param name="turnCost">Travel cost penalty if route changes it's direction.</param>
-            /// <param name="mainLayer">Elevation at which route prefers to travel.</param>
-            /// <param name="layerPenalty">Penalty if route travels through an elevation different from MainLayer.</param>
-            /// <param name="supportedAngles">List of angles route can turn.</param>
-            public RoutingConfiguration(double turnCost = 0,
-                                        double mainLayer = 0,
-                                        double layerPenalty = 1,
-                                        List<double> supportedAngles = null)
-            {
-                TurnCost = turnCost;
-                MainLayer = mainLayer;
-                LayerPenalty = layerPenalty;
-                SupportedAngles = supportedAngles;
-                if (SupportedAngles != null && !SupportedAngles.Contains(0))
-                {
-                    SupportedAngles.Add(0);
-                }
-            }
-
-            /// <summary>
-            /// Travel cost penalty if route changes it's direction.
-            /// </summary>
-            public readonly double TurnCost;
-
-            /// <summary>
-            /// Elevation at which route prefers to travel.
-            /// </summary>
-            public readonly double MainLayer;
-
-            /// <summary>
-            /// Travel cost penalty if route travels through an elevation different from MainLayer.
-            /// </summary>
-            public readonly double LayerPenalty;
-
-            /// <summary>
-            /// List of angles route can turn. Angles are between 0 and 90. 0 is auto-included.
-            /// For turn angle bigger than 90 degrees - 180 degrees minus angle is checked.
-            /// For example, 135 is the same as 45.
-            /// </summary>
-            public readonly List<double> SupportedAngles;
-        }
-
-        /// <summary>
-        /// Enumeration that indicates one of two possible paths in routing.
-        /// There are cases when we need to collect more than one path and
-        /// only after some time we can decide which one is better.
-        /// </summary>
-        public enum BranchSide
-        {
-            /// <summary>
-            /// Indicator that first, "left", path is preferred.
-            /// </summary>
-            Left,
-
-            /// <summary>
-            /// Indicator that second, "right" path is preferred.
-            /// </summary>
-            Right
-        }
-
-        /// <summary>
-        /// Order at which leaf terminal are connected into the tree.
-        /// </summary>
-        public enum TreeOrder
-        {
-            /// <summary>
-            /// Closest from remaining terminals is routed first.
-            /// </summary>
-            ClosestToFurthest,
-
-            /// <summary>
-            /// Furthest from remaining terminals is routed first.
-            /// </summary>
-            FurthestToClosest
-        }
-
-        /// <summary>
         /// Filter function definition.
         /// </summary>
         /// <param name="start">Last Vertex in the route.</param>
@@ -206,7 +42,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Routing supports checking if a Vertex can be added to the path.
-        /// New vertex must pass all filter functions to be accepted. 
+        /// New vertex must pass all filter functions to be accepted.
         /// </summary>
         /// <param name="f">New filter function.</param>
         public void AddRoutingFilter(RoutingFilter f)
@@ -239,7 +75,7 @@ namespace Elements.Spatial.AdaptiveGrid
             foreach (var edge in _grid.GetEdges())
             {
                 //There is only one edge for vertex pair, if this is changed -
-                //we will need to check edges for uniqueness, 
+                //we will need to check edges for uniqueness,
                 var v0 = _grid.GetVertex(edge.StartId);
                 var v1 = _grid.GetVertex(edge.EndId);
                 Line l = new Line(v0.Point, v1.Point);
@@ -304,21 +140,16 @@ namespace Elements.Spatial.AdaptiveGrid
         /// vertices are connected to the network using Dijkstra algorithm.
         /// </summary>
         /// <param name="leafVertices">Vertices to connect into the system with extra information attached.</param>
-        /// <param name="trunkPathVertices">End vertices, connected in the same order as provided. Exit location goes first.</param>
+        /// <param name="trunkVertex">End vertex id.</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line is required.</param>
         /// <param name="order">In which order tree is constructed</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSpanningTree(
             IList<RoutingVertex> leafVertices,
-            IList<ulong> trunkPathVertices,
+            ulong trunkVertex,
             IEnumerable<RoutingHintLine> hintLines,
             TreeOrder order)
         {
-            if (!hintLines.Any())
-            {
-                throw new ArgumentException("At least one hint line is required to guide the tree");
-            }
-
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
@@ -330,116 +161,35 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var weights = CalculateWeights(hintLines);
 
-            var vertexTree = new Dictionary<ulong, ulong?>();
-            vertexTree[trunkPathVertices.First()] = null;
+            var leafToTrunkTree = new Dictionary<ulong, ulong?>();
+            leafToTrunkTree[trunkVertex] = null;
             foreach (var inlet in leafVertices)
             {
-                vertexTree[inlet.Id] = null;
+                leafToTrunkTree[inlet.Id] = null;
             }
 
-            var hintGroups = hintLines.GroupBy(h => h.UserDefined);
-            var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
-            var defaultHints = hintGroups.SingleOrDefault(hg => hg.Key == false);
+            var userHints = hintLines.Where(h => h.UserDefined);
             var hintVertices = NearbyVertices(userHints, leafVertices);
-            var offsetVertices = NearbyVertices(defaultHints, leafVertices);
             //Hint lines can even go through excluded vertices
             allExcluded.ExceptWith(hintVertices.Select(hv => hv.Id));
 
-            //1. Connect tail points, starting from exit point.
-            //In other instances, algorithm goes towards the end, but here it's calculated backwards
-            //to take into account end direction of previous section in a cheaper way.
-            //Path is still added to tree from start to end.
-            //TO DO: investigate if this can be done through automatic hint lines
-            //TO DO: this section can be moved into `RouteAndAddTailVertices` function 
-            var droppipePath = new List<ulong>() { trunkPathVertices.Last() };
-            ulong? tailStartDirection = null;
-            for (int i = trunkPathVertices.Count - 1; i > 0 ; i--)
-            {
-                var c = ShortestPathDijkstra(trunkPathVertices[i], weights,
-                    out var travelCost, tailStartDirection, allExcluded);
-                var path = GetPathTo(c, trunkPathVertices[i - 1]);
-                AddPathToTree(trunkPathVertices[i], path, vertexTree);
-                tailStartDirection = path[path.Count - 2];
-                droppipePath.AddRange(path.Skip(1));
-            }
+            List<ulong> collectorTerminals = leafVertices.Select(lv => lv.Id).ToList();
 
-            //2. Connect inlets to  most efficient point on hint line.
-            var inletToTrunkPaths = new Dictionary<ulong, List<ulong>>();
-            var inletTouchPoint = new Dictionary<ulong, ulong>();
-            var inletConnections = new Dictionary<ulong, Dictionary<ulong, ulong>>();
-            var inletTravelCosts = new Dictionary<ulong, Dictionary<ulong, double>>();
-            List<ulong> collectorTerminals = new List<ulong>();
-            foreach (var inlet in leafVertices)
-            {
-                //TO DO: part of this section can be moved into `RouteLeaflVertex` function 
-                var combinedPath = new List<ulong>();
-                ulong? startDirection = null;
-                var otherExcluded = FilteredSet(allExcluded, excludedVertices[inlet.Id]);
-
-                ulong lastInChain = inlet.Id;
-                if (inlet.Guides != null && inlet.Guides.Any() &&
-                    !IsNearby(_grid.GetVertex(inlet.Id).Point, userHints))
-                {
-                    for (int i = 0; i < inlet.Guides.Count(); i++)
-                    {
-                        var c = ShortestPathDijkstra(lastInChain, weights,
-                            out var cost, startDirection, otherExcluded);
-                        var p = GetPathTo(c, inlet.Guides[i]);
-                        CombinePath(combinedPath, p.Take(p.Count - 1).ToList());
-                        inletConnections[lastInChain] = c;
-                        inletTravelCosts[lastInChain] = cost;
-                        lastInChain = inlet.Guides[i];
-                        startDirection = p[p.Count - 2];
-                    }
-                }
-
-                List<ulong> path = null;
-                var connections = ShortestPathDijkstra(lastInChain, weights,
-                    out var travelCost, startDirection, otherExcluded);
-                inletConnections[lastInChain] = connections;
-                inletTravelCosts[lastInChain] = travelCost;
-                var t1 = FindConnectionPoint(hintVertices, offsetVertices, travelCost);
-                var t2 = FindConnectionPoint(droppipePath, travelCost);
-                if (travelCost[t1] > travelCost[t2])
-                {
-                    path = GetPathTo(connections, t2);
-                }
-                else
-                {
-                    path = GetPathTo(connections, t1);
-                    collectorTerminals.Add(t1);
-
-                }
-                CombinePath(combinedPath, path);
-                inletToTrunkPaths[inlet.Id] = combinedPath;
-                inletTouchPoint[path.Last()] = inlet.Id;
-            }
-
-            //3. Join all individual pieces together. We start from a single connection
-            //path from droppipe and a set of connection points from the previous step.
+            //Join all individual pieces together. We start from a single connection
+            //path from trunk and a set of connection points from the previous step.
             //One at a time we choose the connection point that is cheapest to travel to existing
             //network and its path is added to the network until all are added.
-            HashSet<ulong> magnetTerminals = new HashSet<ulong>();
-            droppipePath.ForEach(p => magnetTerminals.Add(p));
+            HashSet<ulong> magnetTerminals = new HashSet<ulong>() { trunkVertex };
 
             var terminalInfo = new Dictionary<ulong, (
                 Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> Connections,
                 Dictionary<ulong, (double, double)> Costs)>();
-            foreach (var terminal in collectorTerminals)
+            foreach (var inlet in collectorTerminals)
             {
-                var inlet = inletTouchPoint[terminal];
-                var excluded = allExcluded;
-                var localExcluded = excludedVertices[inlet];
-                //Allow travel through excluded vertices of inlet only if it not yet left it's zone
-                if (localExcluded.Contains(terminal))
-                {
-                    excluded = FilteredSet(allExcluded, localExcluded);
-                }
-                var pathBefore = inletToTrunkPaths[inlet];
-                var vertexBefore = pathBefore[pathBefore.Count - 2];
-                var branchConns = ShortestBranchesDijkstra(terminal, weights,
-                    out var travelCost, vertexBefore, excluded);
-                terminalInfo[terminal] = (branchConns, travelCost);
+                var otherExcluded = FilteredSet(allExcluded, excludedVertices[inlet]);
+                var branchConns = ShortestBranchesDijkstra(inlet, weights,
+                    out var travelCost, null, otherExcluded);
+                terminalInfo[inlet] = (branchConns, travelCost);
             }
 
             //Distances are precomputed beforehand to avoid square complexity on Dijkstra algorithm.
@@ -454,7 +204,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     var info = terminalInfo[terminal];
                     var (localClosest, branchSide) = FindConnectionPoint(
-                        magnetTerminals, info.Costs, info.Connections, vertexTree, weights);
+                        magnetTerminals, info.Costs, info.Connections, leafToTrunkTree, weights);
                     var costs = info.Costs[localClosest];
                     var localBestCost = branchSide == BranchSide.Left ? costs.Item1 : costs.Item2;
                     if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
@@ -466,41 +216,11 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
 
                 path.ForEach(p => magnetTerminals.Add(p));
-                AddPathToTree(bestTerminal, path, vertexTree);
+                AddPathToTree(bestTerminal, path, leafToTrunkTree);
                 collectorTerminals.Remove(bestTerminal);
             }
 
-            //4. Inlets are added last. Trunk is already built, check for the best
-            //join point once again, better one might be found.
-            //TO DO: this section can be moved into `RerouteAndAddInletVertices` function 
-            foreach (var inlet in leafVertices)
-            {
-                var key = inlet.Id;
-                var oldPath = inletToTrunkPaths[inlet.Id];
-                if (inlet.Guides != null && inlet.Guides.Any() &&
-                    !IsNearby(_grid.GetVertex(inlet.Id).Point, userHints))
-                {
-                    var index = oldPath.IndexOf(inlet.Guides.Last());
-                    if (index != -1)
-                    {
-                        key = inlet.Guides.Last();
-                        var pathUntilKey = oldPath.Take(index + 1);
-                        AddPathToTree(inlet.Id, pathUntilKey.ToList(), vertexTree);
-                    }
-                }
-
-                //Don't change snapping point is distance is the same as before, as collector
-                //joint point is more preferable than perpendicular connection to the trunk
-                var oldTerminal = oldPath.Last();
-                ulong bestIndex = oldTerminal;
-                var costs = inletTravelCosts[key];
-                double bestCost = costs[bestIndex] - _grid.Tolerance;
-                var t = FindConnectionPoint(magnetTerminals, costs, bestIndex, bestCost);
-                var path = GetPathTo(inletConnections[key], t);
-                AddPathToTree(key, path, vertexTree);
-            }
-
-            return vertexTree;
+            return leafToTrunkTree;
         }
 
         /// <summary>
@@ -508,28 +228,21 @@ namespace Elements.Spatial.AdaptiveGrid
         /// hint lines and local end Vertex, and the exit Vertex.
         /// Route is created by using Dijkstra algorithm locally on different segments.
         /// Segments are merged together to form a single trunk. Starting from end, point by point,
-        /// segments are connected. Then, Vertices in each segments are connected as well, 
+        /// segments are connected. Then, Vertices in each segments are connected as well,
         /// forming a local trunk, connected with the main one.
         /// All parameter except "trunkPathVertices" are provided per section in the same order.
         /// </summary>
         /// <param name="leafVertices">Vertices to connect into the system with extra information attached.</param>
-        /// <param name="localTails">Anchor points that will form global tree between sections.</param>
-        /// <param name="trunkPathVertices">End vertices, connected in the same order as provided. Exit location goes first.</param>
+        /// <param name="trunkVertex">End vertex id.</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
         /// <param name="order">In which order tree is constructed</param>
         /// <returns>Travel routes from inputVertices to the last of tailVertices.</returns>
         public IDictionary<ulong, ulong?> BuildSpanningTree(
-            IList<List<RoutingVertex>> leafVertices, 
-            IList<ulong> localTails,
-            IList<ulong> trunkPathVertices,
+            IList<List<RoutingVertex>> leafVertices,
+            ulong trunkVertex,
             IList<List<RoutingHintLine>> hintLines,
             TreeOrder order)
         {
-            if (!hintLines.Any() || hintLines.Any(hl => hl == null || !hl.Any()))
-            {
-                throw new ArgumentException("At least one hint line in each group is required to guide the tree");
-            }
-
             var allLeafs = leafVertices.SelectMany(l => l).ToList();
             var allHints = hintLines.SelectMany(h => h).ToList();
 
@@ -543,13 +256,13 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             var weights = CalculateWeights(allHints);
-            var allUserHints = allHints.Where(h => h.UserDefined == true).ToList();
+            var allUserHints = allHints.Where(h => h.UserDefined == true);
             var nearbyHints = NearbyVertices(allUserHints, allLeafs);
             //Hint lines can even go through excluded vertices
             allExcluded.ExceptWith(nearbyHints.Select(nh => nh.Id));
 
             var vertexTree = new Dictionary<ulong, ulong?>();
-            vertexTree[trunkPathVertices.First()] = null;
+            vertexTree[trunkVertex] = null;
             foreach (var inlets in leafVertices)
             {
                 foreach (var inlet in inlets)
@@ -558,149 +271,28 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            //1. Connect global tail points, starting from exit point.
-            //In other instances, algorithm goes towards the end, but here it's calculated backwards
-            //to take into account end direction of previous section in a cheaper way.
-            //Path is still added to tree from start to end.
-            //TO DO: investigate if this can be done through automatic hint lines
-            //TO DO: this section can be moved into `RouteAndAddTailVertices` function 
-            var droppipePath = new List<ulong>() { trunkPathVertices.Last() };
-            ulong? tailStartDirection = null;
-            for (int i = trunkPathVertices.Count - 1; i > 0; i--)
-            {
-                var c = ShortestPathDijkstra(trunkPathVertices[i], weights,
-                    out var travelCost, tailStartDirection, allExcluded);
-                var path = GetPathTo(c, trunkPathVertices[i - 1]);
-                AddPathToTree(trunkPathVertices[i], path, vertexTree);
-                tailStartDirection = path[path.Count - 2];
-                droppipePath.AddRange(path.Skip(1));
-            }
-
-            //2. Connect ends of each sections together.
-            //Starting from the trunk created by global tail points.
-            //One at a time we choose the connection point that is cheapest to travel to existing
-            //network and its path is added to the network until all are added.
-            var tailsInfo = new Dictionary<ulong, (Dictionary<ulong, ulong> Connections,
-                                                   Dictionary<ulong, double> Costs)>();
-            for (int i = 0; i < localTails.Count; i++)
-            {
-                //Anchor point can travel through inlets, directly connected to hints.
-                var exceptions = leafVertices[i].Where(
-                    v => IsNearby(_grid.GetVertex(v.Id).Point, allUserHints));
-                var excluded = FilteredSet(
-                    allExcluded,
-                    exceptions.SelectMany(e => excludedVertices[e.Id]));
-                var connections = ShortestPathDijkstra(localTails[i], weights,
-                    out var travelCost, null, excluded);
-                tailsInfo[localTails[i]] = (connections, travelCost);
-            }
-
-            HashSet<ulong> magnetTail = new HashSet<ulong>();
-            magnetTail.Add(trunkPathVertices.Last());
-            var tailsCopy = new List<ulong>(localTails);
-            while (tailsCopy.Any())
-            {
-                List<ulong> path = null;
-                double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
-                ulong bestTerminal = 0u;
-                foreach (var terminal in tailsCopy)
-                {
-                    var info = tailsInfo[terminal];
-                    var localClosest = FindConnectionPoint(magnetTail, info.Costs);
-                    var localBestCost = info.Costs[localClosest];
-                    if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
-                    {
-                        path = GetPathTo(info.Connections, localClosest);
-                        bestTerminal = terminal;
-                        bestCost = localBestCost;
-                    }
-                }
-
-                path.ForEach(p => magnetTail.Add(p));
-                tailsCopy.Remove(bestTerminal);
-                AddPathToTree(bestTerminal, path, vertexTree);
-            }
-
             //Next steps are repeated independently for each input section
             for (int i = 0; i < leafVertices.Count; i++)
             {
-                var hintGroups = hintLines[i].GroupBy(h => h.UserDefined);
-                var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
-                var defaultHints = hintGroups.SingleOrDefault(hg => hg.Key == false);
-                var hintVertices = NearbyVertices(userHints, leafVertices[i]);
-                var offsetVertices = NearbyVertices(defaultHints, leafVertices[i]);
-
-                var inletToTrunkPaths = new Dictionary<ulong, List<ulong>>();
-                var inletTouchPoint = new Dictionary<ulong, ulong>();
-                var inletConnections = new Dictionary<ulong, Dictionary<ulong, ulong>>();
-                var inletTravelCosts = new Dictionary<ulong, Dictionary<ulong, double>>();
-                List<ulong> collectorTerminals = new List<ulong>();
+                List<ulong> collectorTerminals = leafVertices[i].Select(lv => lv.Id).ToList();
                 List<ulong> path = null;
 
-                //3. Connect inlets to  most efficient point on hint line.
-                //User defined hint lines have priority, unless they are too far away.
-                foreach (var inlet in leafVertices[i])
-                {
-                    //TO DO: part of this section can be moved into `RouteLeaflVertex` function 
-                    var combinedPath = new List<ulong>();
-                    ulong? startDirection = null;
-                    var otherExcluded = FilteredSet(allExcluded, excludedVertices[inlet.Id]);
-
-                    ulong lastInChain = inlet.Id;
-                    if (inlet.Guides != null && inlet.Guides.Any() &&
-                        !IsNearby(_grid.GetVertex(inlet.Id).Point, userHints))
-                    {
-                        for (int j = 0; j < inlet.Guides.Count(); j++)
-                        {
-                            var innerCons = ShortestPathDijkstra(lastInChain, weights,
-                                out var innerCosts, startDirection, otherExcluded);
-                            var p = GetPathTo(innerCons, inlet.Guides[j]);
-                            CombinePath(combinedPath, p.Take(p.Count - 1).ToList());
-                            inletConnections[lastInChain] = innerCons;
-                            inletTravelCosts[lastInChain] = innerCosts;
-                            lastInChain = inlet.Guides[j];
-                            startDirection = p[p.Count - 2];
-                        }
-                    }
-
-                    var connections = ShortestPathDijkstra(lastInChain, weights,
-                        out var travelCost, startDirection, otherExcluded);
-                    inletConnections[lastInChain] = connections;
-                    inletTravelCosts[lastInChain] = travelCost;
-                    var t = FindConnectionPoint(hintVertices, offsetVertices, travelCost);
-                    path = GetPathTo(connections, t);
-                    collectorTerminals.Add(t);
-
-                    CombinePath(combinedPath, path);
-                    inletToTrunkPaths[inlet.Id] = combinedPath;
-                    inletTouchPoint[path.Last()] = inlet.Id;
-                }
-
-                //4. Join all individual pieces together. We start from a single connection
+                //Join all individual pieces together. We start from a single connection
                 //path from droppipe and a set of connection points from the previous step.
                 //One at a time we choose the connection point that is cheapest to travel to existing
                 //network and its path is added to the network until all are added.
-                HashSet<ulong> magnetTerminals = new HashSet<ulong>();
-                magnetTerminals.Add(localTails[i]);
+                HashSet<ulong> magnetTerminals = new HashSet<ulong> { trunkVertex };
 
                 var terminalInfo = new Dictionary<ulong, (
                     Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> Connections,
                     Dictionary<ulong, (double, double)> Costs)>();
-                foreach (var terminal in collectorTerminals)
+                foreach (var inlet in collectorTerminals)
                 {
-                    var inlet = inletTouchPoint[terminal];
-                    var excluded = allExcluded;
-                    var localExcluded = excludedVertices[inlet];
+                    var excluded = FilteredSet(allExcluded, excludedVertices[inlet]);
                     //Allow travel through excluded vertices of inlet only if it not yet left it's zone
-                    if (localExcluded.Contains(terminal))
-                    {
-                        excluded = FilteredSet(allExcluded, localExcluded);
-                    }
-                    var pathBefore = inletToTrunkPaths[inlet];
-                    var vertexBefore = pathBefore[pathBefore.Count - 2];
-                    var connections = ShortestBranchesDijkstra(terminal, weights,
-                        out var travelCost, vertexBefore, excluded);
-                    terminalInfo[terminal] = (connections, travelCost);
+                    var connections = ShortestBranchesDijkstra(inlet, weights,
+                        out var travelCost, null, excluded);
+                    terminalInfo[inlet] = (connections, travelCost);
                 }
 
                 //Distances are precomputed beforehand to avoid square complexity on Dijkstra algorithm.
@@ -730,41 +322,6 @@ namespace Elements.Spatial.AdaptiveGrid
                     AddPathToTree(closestTerminal, path, vertexTree);
                     collectorTerminals.Remove(closestTerminal);
                 }
-
-                foreach (var t in magnetTail)
-                {
-                    magnetTerminals.Add(t);
-                }
-
-                //5. Inlets are added last. Trunk is already built, check for the best
-                //join point once again, better one might be found.
-                //TO DO: this section can be moved into `RerouteAndAddInletVertices` function 
-                foreach (var inlet in leafVertices[i])
-                {
-                    var key = inlet.Id;
-                    var oldPath = inletToTrunkPaths[inlet.Id];
-                    if (inlet.Guides != null && inlet.Guides.Any() &&
-                        !IsNearby(_grid.GetVertex(inlet.Id).Point, userHints))
-                    {
-                        var index = oldPath.IndexOf(inlet.Guides.Last());
-                        if (index != -1)
-                        {
-                            key = inlet.Guides.Last();
-                            var pathUntilKey = oldPath.Take(index + 1);
-                            AddPathToTree(inlet.Id, pathUntilKey.ToList(), vertexTree);
-                        }
-                    }
-
-                    //Don't change snapping point is distance is the same as before, as collector
-                    //joint point is more preferable than perpendicular connection to the trunk
-                    var oldTerminal = oldPath.Last();
-                    ulong bestIndex = oldTerminal;
-                    var costs = inletTravelCosts[key];
-                    double bestCost = costs[bestIndex] - _grid.Tolerance;
-                    var t = FindConnectionPoint(magnetTerminals, costs, bestIndex, bestCost);
-                    path = GetPathTo(inletConnections[key], t);
-                    AddPathToTree(key, path, vertexTree);
-                }
             }
 
             return vertexTree;
@@ -782,7 +339,7 @@ namespace Elements.Spatial.AdaptiveGrid
         public IDictionary<ulong, ulong?> BuildSimpleNetwork(
             IList<RoutingVertex> leafVertices,
             IList<ulong> exits,
-            IEnumerable<RoutingHintLine> hintLines)
+            IEnumerable<RoutingHintLine> hintLines = null)
         {
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
@@ -817,7 +374,9 @@ namespace Elements.Spatial.AdaptiveGrid
 
             foreach (var inlet in leafVertices)
             {
-                var connections = ShortestPathDijkstra(inlet.Id, weights, out var travelCost);
+                var excluded = FilteredSet(allExcluded, excludedVertices[inlet.Id]);
+                var connections = ShortestPathDijkstra(
+                    inlet.Id, weights, out var travelCost, excluded: excluded);
                 var exit = FindConnectionPoint(exits, travelCost);
                 var path = GetPathTo(connections, exit);
                 AddPathToTree(inlet.Id, path, vertexTree);
@@ -835,19 +394,17 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Also some edges are not allowed at all by setting factor to infinity.
         /// </summary>
         /// <param name="hintLines">Lines that affect travel factor for edges</param>
-        /// <returns>For each edge - its length and extra traveling factor</returns>
-        private Dictionary<ulong, (double Length, double Factor)> CalculateWeights(
+        /// <returns>For each edge - its precalculated additional information.</returns>
+        private Dictionary<ulong, EdgeInfo> CalculateWeights(
             IEnumerable<RoutingHintLine> hintLines)
         {
-            var weights = new Dictionary<ulong, (double Length, double Factor)>();
+            var weights = new Dictionary<ulong, EdgeInfo>();
             var mainAxis = _grid.Transform.XAxis;
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
                 var v1 = _grid.GetVertex(e.EndId);
                 var vector = (v1.Point - v0.Point);
-                var w = vector.Length();
-
                 var angle = vector.AngleTo(mainAxis);
                 if (angle > 90)
                 {
@@ -857,7 +414,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (_configuration.SupportedAngles != null &&
                     !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle, 0.01)))
                 {
-                    weights[e.Id] = (w, double.PositiveInfinity);
+                    weights[e.Id] = new EdgeInfo(_grid, e, double.PositiveInfinity);
                 }
                 else
                 {
@@ -890,7 +447,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
                     }
 
-                    weights[e.Id] = (w, hintFactor * offsetFactor * layerFactor);
+                    weights[e.Id] = new EdgeInfo(_grid, e, hintFactor * offsetFactor * layerFactor);
                 }
             }
 
@@ -908,11 +465,15 @@ namespace Elements.Spatial.AdaptiveGrid
             var excludedVertices = new Dictionary<ulong, List<ulong>>();
             foreach (var inlet in inletTerminals)
             {
-                var adjustedTolerance = inlet.IsolationRadius - Vector3.EPSILON;
                 var ip = _grid.GetVertex(inlet.Id).Point;
                 var set = new List<ulong>();
                 excludedVertices[inlet.Id] = set;
+                if (inlet.IsolationRadius.ApproximatelyEquals(0))
+                {
+                    continue;
+                }
 
+                var adjustedTolerance = inlet.IsolationRadius - Vector3.EPSILON;
                 foreach (var v in _grid.GetVertices())
                 {
                     var p = v.Point;
@@ -940,7 +501,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="pathDirections">Next Vertex dictionary for Vertices that are already part of the route</param>
         /// <returns>Dictionary that have travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ulong> ShortestPathDijkstra(
-            ulong start, Dictionary<ulong, (double Length, double Factor)> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
             out Dictionary<ulong, double> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null,
             Dictionary<ulong, ulong?> pathDirections = null)
@@ -953,12 +514,23 @@ namespace Elements.Spatial.AdaptiveGrid
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
                 ulong u = pq.PopMin();
+
+                //All vertices that can be reached from start vertex are visited.
+                //Ignore once only unreachable are left.
+                var cost = travelCost[u];
+                if (cost == double.MaxValue)
+                {
+                    break;
+                }
+
                 if (excluded != null && excluded.Contains(u))
                 {
                     continue;
                 }
 
+                var beforeId = path[u];
                 var vertex = _grid.GetVertex(u);
+
                 foreach (var e in vertex.Edges)
                 {
                     var edgeWeight = edgeWeights[e.Id];
@@ -976,18 +548,9 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     //Don't go back to where we just came from.
-                    var beforeId = path[u];
                     if (beforeId == v.Id)
                     {
                         continue;
-                    }
-
-                    //All vertices that can be reached from start vertex are visited.
-                    //Ignore once only unreachable are left.
-                    var cost = travelCost[u];
-                    if (cost == double.MaxValue)
-                    {
-                        break;
                     }
 
                     //User defined filter functions
@@ -1008,7 +571,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
@@ -1016,13 +579,13 @@ namespace Elements.Spatial.AdaptiveGrid
                         var vertexBefore = _grid.GetVertex(beforeId);
                         if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, vertexBefore.Id, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, vertexBefore.Id, edgeWeights);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
                             !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, v, vertexAfter.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, v, vertexAfter.Value, edgeWeights);
                         }
                     }
 
@@ -1052,7 +615,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="excluded">Vertices that are not allowed to visit</param>
         /// <returns>Dictionary that have two travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> ShortestBranchesDijkstra(
-            ulong start, Dictionary<ulong, (double Length, double Factor)> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
             out Dictionary<ulong, (double, double)> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
@@ -1121,7 +684,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += CalculateTurnCost(edgeWeight.Factor, vertex, startDirection.Value, edgeWeights);
+                            newWeight += CalculateTurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
@@ -1133,8 +696,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
-                            leftCost += CalculateTurnCost(
-                                edgeWeight.Factor, vertex, leftBefore.Id, edgeWeights);
+                            leftCost += CalculateTurnCost(edgeWeight, vertex, leftBefore.Id, edgeWeights);
                         }
 
                         var rigthCost = Double.MaxValue;
@@ -1144,8 +706,7 @@ namespace Elements.Spatial.AdaptiveGrid
                             rigthCost = cost.Item2 + newWeight;
                             if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += CalculateTurnCost(
-                                    edgeWeight.Factor, vertex, rigthBefore.Id, edgeWeights);
+                                rigthCost += CalculateTurnCost(edgeWeight, vertex, rigthBefore.Id, edgeWeights);
                             }
                         }
 
@@ -1197,26 +758,34 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Calculate turn cost between two edges.
-        /// Turn cost should take into account cost factor of given edges.
+        /// If turn is not vertical, turn cost should take into account cost factor of given edges.
         /// Otherwise hint paths with several turns would be ignored because of extra cost.
         /// The turn factor is multiplied by minimum of two edges factor.
         /// </summary>
-        /// <param name="edgeFactor">Edge factor of the first edge</param>
+        /// <param name="edgeInfo">Edge informations for the first edge</param>
         /// <param name="sharedVertex">Id of the vertex, common for two edges</param>
         /// <param name="thirdVertexId">Third vertex Id</param>
         /// <param name="edgeWeights">Precalculated length and factor for each edge</param>
         /// <returns></returns>
         private double CalculateTurnCost(
-            double edgeFactor, Vertex sharedVertex, ulong thirdVertexId,
-            IDictionary<ulong, (double Lenght, double Factor)> edgeWeights)
+            EdgeInfo edgeInfo, Vertex sharedVertex, ulong thirdVertexId,
+            IDictionary<ulong, EdgeInfo> edgeWeights)
         {
             var otherEdge = sharedVertex.Edges.Where(
                 edge => edge.StartId == thirdVertexId || edge.EndId == thirdVertexId).FirstOrDefault();
             var otherWeight = edgeWeights[otherEdge.Id];
+
+            //Do not modify turn cost if either of edges is not horizontal.
+            //This prevents "free to travel" loops under 2d hint lines.
+            if (edgeInfo.HasVerticalChange || otherWeight.HasVerticalChange)
+            {
+                return _configuration.TurnCost;
+            }
+
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
-            //fully inside hint line influence area. 
-            return _configuration.TurnCost * Math.Min(edgeFactor, otherWeight.Factor);
+            //fully inside hint line influence area.
+            return _configuration.TurnCost * Math.Min(edgeInfo.Factor, otherWeight.Factor);
         }
 
         private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
@@ -1335,8 +904,18 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private bool IsNearby(Vector3 v, IEnumerable<RoutingHintLine> hints)
         {
-            return hints != null &&
-                hints.Any(c => new Vector3(v.X, v.Y).DistanceTo(c.Polyline) < c.InfluenceDistance);
+            if (hints != null)
+            {
+                foreach(var hint in hints)
+                {
+                    var target = hint.Is2D ? new Vector3(v.X, v.Y) : v;
+                    if (target.DistanceTo(hint.Polyline) < hint.InfluenceDistance)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private bool IsAffectedBy(
@@ -1347,10 +926,10 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
         {
-            var vs_2d = new Vector3(start.X, start.Y);
-            var ve_2d = new Vector3(end.X, end.Y);
-            //Vertical edges are not affected by hint lines
-            if (!vs_2d.IsAlmostEqualTo(ve_2d, _grid.Tolerance) &&
+            Vector3 vs = hint.Is2D ? new Vector3(start.X, start.Y) : start;
+            Vector3 ve = hint.Is2D ? new Vector3(end.X, end.Y) : end;
+            //Vertical edges are not affected by hint 2D lines
+            if (!hint.Is2D || !vs.IsAlmostEqualTo(ve, _grid.Tolerance) &&
                 Math.Abs(start.Z - end.Z) < _grid.Tolerance)
             {
                 foreach (var segment in hint.Polyline.Segments())
@@ -1358,18 +937,18 @@ namespace Elements.Spatial.AdaptiveGrid
                     double lowClosest = 1;
                     double hiClosest = 0;
 
-                    var dot = segment.Direction().Dot((ve_2d - vs_2d).Unitized());
+                    var dot = segment.Direction().Dot((ve - vs).Unitized());
                     if (!Math.Abs(dot).ApproximatelyEquals(1))
                     {
                         continue;
                     }
 
-                    if (vs_2d.DistanceTo(segment) < hint.InfluenceDistance)
+                    if (vs.DistanceTo(segment) < hint.InfluenceDistance)
                     {
                         lowClosest = 0;
                     }
 
-                    if (ve_2d.DistanceTo(segment) < hint.InfluenceDistance)
+                    if (ve.DistanceTo(segment) < hint.InfluenceDistance)
                     {
                         hiClosest = 1;
                     }
@@ -1379,12 +958,12 @@ namespace Elements.Spatial.AdaptiveGrid
                         return true;
                     }
 
-                    var edgeLine2d = new Line(vs_2d, ve_2d);
+                    var edgeLine = new Line(vs, ve);
                     Action<Vector3> check = (Vector3 p) =>
                     {
-                        if (p.DistanceTo(edgeLine2d, out var closest) < hint.InfluenceDistance)
+                        if (p.DistanceTo(edgeLine, out var closest) < hint.InfluenceDistance)
                         {
-                            var t = (closest - vs_2d).Length() / edgeLine2d.Length();
+                            var t = (closest - vs).Length() / edgeLine.Length();
                             if (t < lowClosest)
                             {
                                 lowClosest = t;
@@ -1402,7 +981,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
                     var minResulution = Math.Max(_grid.Tolerance, hint.InfluenceDistance);
                     if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine2d.Length() > minResulution)
+                        (hiClosest - lowClosest) * edgeLine.Length() > minResulution)
                     {
                         return true;
                     }
@@ -1430,30 +1009,12 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private ulong FindConnectionPoint(
-            IEnumerable<Vertex> hintVertices,
-            IEnumerable<Vertex> offsetVertices,
-            IDictionary<ulong, double> travelCost)
-        {
-            ulong bestIndex = 0;
-            double bestCost = double.MaxValue;
-            foreach (var v in hintVertices)
-            {
-                Compare(v.Id, travelCost, ref bestCost, ref bestIndex);
-            }
-            foreach (var v in offsetVertices)
-            {
-                Compare(v.Id, travelCost, ref bestCost, ref bestIndex);
-            }
-            return bestIndex;
-        }
-
         private (ulong, BranchSide) FindConnectionPoint(
             IEnumerable<ulong> collection,
             IDictionary<ulong, (double, double)> travelCost,
             IDictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> connections,
             IDictionary<ulong, ulong?> tree,
-            IDictionary<ulong, (double Length, double Factor)> weights)
+            IDictionary<ulong, EdgeInfo> weights)
 
         {
             ulong bestIndex = 0;
@@ -1482,7 +1043,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV1.Id || e.EndId == beforeV1.Id).First();
                                 var edgeWeight = weights[edge.Id];
-                                cost1 += CalculateTurnCost(edgeWeight.Factor, activeV, nextV.Id, weights);
+                                cost1 += CalculateTurnCost(edgeWeight, activeV, nextV.Id, weights);
                             }
                         }
 
@@ -1494,7 +1055,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 var edge = activeV.Edges.Where(
                                     e => e.StartId == beforeV2.Id || e.EndId == beforeV2.Id).First();
                                 var edgeWeight = weights[edge.Id];
-                                cost2 += CalculateTurnCost(edgeWeight.Factor, activeV, nextV.Id, weights);
+                                cost2 += CalculateTurnCost(edgeWeight, activeV, nextV.Id, weights);
                             }
 
                         }

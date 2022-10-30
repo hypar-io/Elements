@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Elements.Spatial;
 
 namespace Elements.Geometry
 {
@@ -89,7 +90,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 || u < 0.0)
+            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
             {
                 throw new Exception("The parameter t must be between 0.0 and 1.0.");
             }
@@ -388,7 +389,8 @@ namespace Elements.Geometry
 
             // If max hit of one coordinate is smaller then min hit of other - line hits planes outside the box.
             // In other words line just goes by.
-            if (t0x > t1y || t0y > t1x)
+            var length = d.Length();
+            if ((t0x - t1y) * length > tolerance || (t0y - t1x) * length > tolerance)
             {
                 return false;
             }
@@ -420,7 +422,6 @@ namespace Elements.Geometry
                 return false;
             }
 
-            var length = d.Length();
             var dMin = tMin * length;
             var dMax = tMax * length;
 
@@ -482,12 +483,13 @@ namespace Elements.Geometry
         /// Test if a point lies within tolerance of this line segment.
         /// </summary>
         /// <param name="point">The point to test.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="tolerance">An optional distance tolerance.
         /// When true, any point within tolerance of the end points will be considered on the line.
         /// When false, points precisely at the ends of the line will not be considered on the line.</param>
-        public bool PointOnLine(Vector3 point, bool includeEnds = false)
+        public bool PointOnLine(Vector3 point, bool includeEnds = false, double tolerance = Vector3.EPSILON)
         {
-            return Line.PointOnLine(point, Start, End, includeEnds);
+            return Line.PointOnLine(point, Start, End, includeEnds, tolerance);
         }
 
         /// <summary>
@@ -496,12 +498,13 @@ namespace Elements.Geometry
         /// <param name="point">The point to test.</param>
         /// <param name="start">The start point of the line segment.</param>
         /// <param name="end">The end point of the line segment.</param>
-        /// <param name="includeEnds">Consider a point at the endpoint as on the line.
+        /// <param name="includeEnds">Consider a point at the endpoint as on the line.</param>
+        /// <param name="tolerance">An optional distance tolerance.
         /// When true, any point within tolerance of the end points will be considered on the line.
         /// When false, points precisely at the ends of the line will not be considered on the line.</param>
-        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)
+        public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false, double tolerance = Vector3.EPSILON)
         {
-            if (includeEnds && (point.IsAlmostEqualTo(start) || point.IsAlmostEqualTo(end)))
+            if (includeEnds && (point.IsAlmostEqualTo(start, tolerance) || point.IsAlmostEqualTo(end, tolerance)))
             {
                 return true;
             }
@@ -511,7 +514,7 @@ namespace Elements.Geometry
             if (lambda > 0 && lambda < 1)
             {
                 var pointOnLine = start + lambda * delta;
-                return pointOnLine.IsAlmostEqualTo(point);
+                return pointOnLine.IsAlmostEqualTo(point, tolerance);
             }
             return false;
         }
@@ -1033,30 +1036,43 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Check if this line is collinear with other line
+        /// Check if this line is collinear with another line.
         /// </summary>
-        /// <param name="line">Line to check</param>
+        /// <param name="line">Line to check.</param>
+        /// <param name="tolerance">If points are within this distance of a fit line, they will be considered collinear.</param>
         /// <returns></returns>
-        public bool IsCollinear(Line line)
+        public bool IsCollinear(Line line, double tolerance = Vector3.EPSILON)
         {
             var vectors = new Vector3[] { Start, End, line.Start, line.End };
-            return vectors.AreCollinearByDistance();
+            return vectors.AreCollinearByDistance(tolerance);
         }
 
         /// <summary>
-        /// Check if line overlap with other line
+        /// Check if this line overlaps with another line.
+        /// </summary>
+        /// <param name="line">Line to check.</param>
+        /// <param name="overlap">Overlapping line or null when lines do not overlap.</param>
+        /// <returns>Returns true when lines overlap and false when they do not.</returns>
+        public bool TryGetOverlap(Line line, out Line overlap)
+        {
+            return TryGetOverlap(line, Vector3.EPSILON, out overlap);
+        }
+
+        /// <summary>
+        /// Check if this line overlaps with another line.
         /// </summary>
         /// <param name="line">Line to check</param>
-        /// <param name="overlap">Overlapping line or null when lines do not overlap</param>
-        /// <returns>Returns true when lines overlap and false when they do not</returns>
-        public bool TryGetOverlap(Line line, out Line overlap)
+        /// <param name="tolerance">Tolerance for distance-based checks.</param>
+        /// <param name="overlap">Overlapping line or null when lines do not overlap.</param>
+        /// <returns>Returns true when lines overlap and false when they do not.</returns>
+        public bool TryGetOverlap(Line line, double tolerance, out Line overlap)
         {
             overlap = null;
 
             if (line == null)
                 return false;
 
-            if (!IsCollinear(line))
+            if (!IsCollinear(line, tolerance))
                 return false;
 
             //order vertices of lines
@@ -1065,21 +1081,21 @@ namespace Elements.Geometry
             var orderedVectors = vectors.OrderBy(v => (v - Start).Dot(direction)).ToList();
 
             //check if 2nd point lies on both lines
-            if (!PointOnLine(orderedVectors[1], Start, End, true) || !PointOnLine(orderedVectors[1], line.Start, line.End, true))
+            if (!PointOnLine(orderedVectors[1], Start, End, true, tolerance) || !PointOnLine(orderedVectors[1], line.Start, line.End, true, tolerance))
                 return false;
 
             //check if 3rd point lies on both lines
-            if (!PointOnLine(orderedVectors[2], Start, End, true) || !PointOnLine(orderedVectors[2], line.Start, line.End, true))
+            if (!PointOnLine(orderedVectors[2], Start, End, true, tolerance) || !PointOnLine(orderedVectors[2], line.Start, line.End, true, tolerance))
                 return false;
 
             //edge case when lines share only point
-            if (orderedVectors[1].IsAlmostEqualTo(orderedVectors[2]))
+            if (orderedVectors[1].IsAlmostEqualTo(orderedVectors[2], tolerance))
                 return false;
 
             var overlappingLine = new Line(orderedVectors[1], orderedVectors[2]);
 
             //keep the same direction as original line
-            overlap = direction.IsAlmostEqualTo(overlappingLine.Direction())
+            overlap = direction.Dot(overlappingLine.Direction()) > 0
                 ? overlappingLine
                 : overlappingLine.Reversed();
 
@@ -1269,6 +1285,38 @@ namespace Elements.Geometry
         {
             return Start.DistanceTo(plane).ApproximatelyEquals(0, tolerance)
                 && End.DistanceTo(plane).ApproximatelyEquals(0, tolerance);
+        }
+
+        /// <summary>
+        /// A string representation of the line.
+        /// </summary>
+        public override string ToString()
+        {
+            return $"start: {Start}, end: {End}";
+        }
+    }
+
+    /// <summary>
+    /// Line extension methods.
+    /// </summary>
+    public static class LineExtensions
+    {
+        /// <summary>
+        /// Offset the lines. The resulting polygon will have acute angles.
+        /// </summary>
+        /// <param name="lines">List of lines to offset.</param>
+        /// <param name="distance">The distance to offset.</param>
+        /// <returns></returns>
+        public static List<Polygon> Offset(this List<Line> lines, double distance)
+        {
+            if (lines == null || lines.Count == 0)
+                return new List<Polygon>();
+
+            var heg = HalfEdgeGraph2d.Construct(lines, true);
+            var polylines = heg.Polylinize();
+            var offsets = polylines.SelectMany(l => l.OffsetWithAcuteAngle(distance / 2)).ToList();
+            
+            return offsets;
         }
     }
 }
