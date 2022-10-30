@@ -90,6 +90,7 @@ namespace Elements.Playground
 "Elements",
 "Elements.Geometry",
 "Elements.Geometry.Solids",
+"Elements.Spatial",
 "Elements.Geometry.Profiles",
 "Elements.Validators"
         }, concurrentBuild: false), globalsType: typeof(Globals));
