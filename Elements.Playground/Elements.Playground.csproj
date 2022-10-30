@@ -6,7 +6,9 @@
     <BlazorEnableCompression>false</BlazorEnableCompression>
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
     <PublishTrimmed>false</PublishTrimmed>
-    <RunAOTCompilation>true</RunAOTCompilation>
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <!-- Don't cache boot resources to avoid checksum failures for re-bundled files. -->
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
   </PropertyGroup>
 
   <ItemGroup>
