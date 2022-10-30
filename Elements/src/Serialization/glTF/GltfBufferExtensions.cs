@@ -71,7 +71,7 @@ namespace Elements.Serialization.glTF
                     foreach (var buffView in referringViews)
                     {
                         buffView.Buffer = 0;
-                        buffView.ByteOffset += index + 1;
+                        buffView.ByteOffset += index;
                     }
                 }
 

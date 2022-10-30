@@ -19,7 +19,7 @@ namespace Elements.Spatial
         #region Properties
 
         /// <summary>
-        /// An optional type designation for this cell.  
+        /// An optional type designation for this cell.
         /// </summary>
         public string Type { get; set; }
 
@@ -72,7 +72,7 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Returns true if this 1D Grid has no subdivisions / sub-grids. 
+        /// Returns true if this 1D Grid has no subdivisions / sub-grids.
         /// </summary>
         public bool IsSingleCell => Cells == null || Cells.Count == 0;
 
@@ -82,7 +82,7 @@ namespace Elements.Spatial
 
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
-        // rather than a subcurve. 
+        // rather than a subcurve.
         internal Curve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
@@ -95,7 +95,7 @@ namespace Elements.Spatial
         private Grid2d parent;
 
         // if this is a cell belonging to a parent grid, this is where we store the very topmost grid. This
-        // is useful in serialization so we only store the base curve once. 
+        // is useful in serialization so we only store the base curve once.
         private Grid1d topLevelParentGrid;
 
         [JsonPropertyName("TopLevelParentCurve")]
@@ -192,7 +192,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// This constructor is only for internal use by subdivision / split methods. 
+        /// This constructor is only for internal use by subdivision / split methods.
         /// </summary>
         /// <param name="topLevelParent">The top level grid1d, containing the base curve</param>
         /// <param name="domain">The domain of the new subdivided segment</param>
@@ -211,7 +211,7 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Split the grid at a normalized parameter from 0 to 1 along its domain. 
+        /// Split the grid at a normalized parameter from 0 to 1 along its domain.
         /// </summary>
         /// <param name="t">The parameter at which to split.</param>
         public void SplitAtParameter(double t)
@@ -287,7 +287,7 @@ namespace Elements.Spatial
                     cellsToInsert.ForEach(c => c.Cells = new List<Grid1d>());
                     Cells.InsertRange(index, cellsToInsert);
                     // The split of "cellToSplit" could have resulted in any number of new cells;
-                    // these need to be reallocated to the correct parent. 
+                    // these need to be reallocated to the correct parent.
                     var childrenToReallocate = cellToSplit.Cells;
                     foreach (var child in childrenToReallocate)
                     {
@@ -306,7 +306,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Split a cell at a relative position measured from its domain start or end. 
+        /// Split a cell at a relative position measured from its domain start or end.
         /// </summary>
         /// <param name="position">The relative position at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
@@ -317,7 +317,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// This private method is called by public SplitAtOffset, as well as by SplitAtPoint, which calculates its position relative to the 
+        /// This private method is called by public SplitAtOffset, as well as by SplitAtPoint, which calculates its position relative to the
         /// overall curve domain, rather than relative to the grid's own (possibly different) subdomain.
         /// </summary>
         /// <param name="position">The relative position at which to split.</param>
@@ -330,7 +330,7 @@ namespace Elements.Spatial
             position = fromEnd ? domain.Max - position : domain.Min + position;
             if (PositionIsAtCellEdge(position))
             {
-                return; // this should be swallowed silently rather than left for Domain.Includes to handle.  
+                return; // this should be swallowed silently rather than left for Domain.Includes to handle.
             }
             if (!domain.Includes(position))
             {
@@ -347,7 +347,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Split a cell at a list of relative positions measured from its domain start or end. 
+        /// Split a cell at a list of relative positions measured from its domain start or end.
         /// </summary>
         /// <param name="positions">The relative positions at which to split.</param>
         /// <param name="fromEnd">If true, measure the position from the end rather than the start</param>
@@ -448,7 +448,7 @@ namespace Elements.Spatial
         #region Divide Methods
 
         /// <summary>
-        /// Divide the grid into N even subdivisions. Grids that are already subdivided will fail. 
+        /// Divide the grid into N even subdivisions. Grids that are already subdivided will fail.
         /// </summary>
         /// <param name="n">Number of subdivisions</param>
         public void DivideByCount(int n)
@@ -497,7 +497,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Divide a grid by constant length subdivisions, starting from a point location. 
+        /// Divide a grid by constant length subdivisions, starting from a point location.
         /// </summary>
         /// <param name="length">The length of subdivisions</param>
         /// <param name="point">The point at which to begin subdividing.</param>
@@ -508,7 +508,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Divide a grid by constant length subdivisions, starting from a position. 
+        /// Divide a grid by constant length subdivisions, starting from a position.
         /// </summary>
         /// <param name="length">The length of subdivisions</param>
         /// <param name="position">The position along the domain at which to begin subdividing.</param>
@@ -562,7 +562,7 @@ namespace Elements.Spatial
 
         /// <summary>
         /// Divide a grid by constant length subdivisions, with a variable division mode to control how leftover
-        /// space is handled. 
+        /// space is handled.
         /// </summary>
         /// <param name="length">The division length</param>
         /// <param name="divisionMode">How to handle leftover / partial remainder panels </param>
@@ -624,7 +624,7 @@ namespace Elements.Spatial
 
         /// <summary>
         /// Divide a grid by a pattern of lengths. Type names will be automatically generated, repetition will be governed by PatternMode,
-        /// and remainder handling will be governed by DivisionMode. 
+        /// and remainder handling will be governed by DivisionMode.
         /// </summary>
         /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
         /// <param name="patternMode">How to apply/repeat the pattern</param>
@@ -641,7 +641,7 @@ namespace Elements.Spatial
 
         /// <summary>
         /// Divide a grid by a pattern of named lengths. Repetition will be governed by PatternMode,
-        /// and remainder handling will be governed by DivisionMode. 
+        /// and remainder handling will be governed by DivisionMode.
         /// </summary>
         /// <param name="lengthPattern">A pattern of lengths to apply to the grid</param>
         /// <param name="patternMode">How to apply/repeat the pattern</param>
@@ -678,12 +678,12 @@ namespace Elements.Spatial
             }
 
             var totalPatternLength = patternSegments.Select(s => s.length).Sum();
-            if (totalPatternLength > Domain.Length)
+            if (totalPatternLength > Domain.Length + Vector3.EPSILON)
             {
                 throw new ArgumentException("The grid could not be constructed. Pattern length exceeds grid length.");
             }
 
-            var remainderSize = Domain.Length - totalPatternLength;
+            var remainderSize = totalPatternLength.ApproximatelyEquals(Domain.Length) ? 0 : Domain.Length - totalPatternLength;
 
             switch (divisionMode)
             {
@@ -757,7 +757,7 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Populate a list of pattern segments by repeating a pattern up to the length of the grid domain. 
+        /// Populate a list of pattern segments by repeating a pattern up to the length of the grid domain.
         /// </summary>
         /// <param name="lengthPattern"></param>
         /// <param name="patternSegments"></param>
@@ -825,7 +825,7 @@ namespace Elements.Spatial
         }
 
         /// <summary>
-        /// Retrieve the grid cell (as a Grid1d) at a length along the domain. 
+        /// Retrieve the grid cell (as a Grid1d) at a length along the domain.
         /// </summary>
         /// <param name="pos">The position in the grid's domain to find</param>
         /// <returns>The cell at this position, if found, or this grid if it is a single cell.</returns>
@@ -864,7 +864,7 @@ namespace Elements.Spatial
                         return i;
                     }
                 }
-                return Cells.Count - 1; // default to last cell 
+                return Cells.Count - 1; // default to last cell
             }
 
         }
@@ -882,7 +882,7 @@ namespace Elements.Spatial
 
 
         /// <summary>
-        /// Get the points at the ends and in-between all cells. 
+        /// Get the points at the ends and in-between all cells.
         /// </summary>
         /// <param name="recursive">If true, separators will be retrieved from child cells as well.</param>
         /// <returns>A list of Vector3d points representing the boundaries between cells.</returns>
@@ -992,12 +992,12 @@ namespace Elements.Spatial
     }
 
     /// <summary>
-    /// Describe how a target length should be treated 
+    /// Describe how a target length should be treated
     /// </summary>
     public enum EvenDivisionMode
     {
         /// <summary>
-        /// Closest match for a target length, can be greater or smaller in practice. 
+        /// Closest match for a target length, can be greater or smaller in practice.
         /// </summary>
         Nearest,
         /// <summary>
@@ -1011,7 +1011,7 @@ namespace Elements.Spatial
     }
 
     /// <summary>
-    /// Different ways to handle the "remainder" when dividing an arbitrary length by a fixed size  
+    /// Different ways to handle the "remainder" when dividing an arbitrary length by a fixed size
     /// </summary>
     public enum FixedDivisionMode
     {

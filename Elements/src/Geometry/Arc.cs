@@ -110,7 +110,7 @@ namespace Elements.Geometry
         /// <returns>A Vector3 representing the point along the arc.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 || u < 0.0)
+            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
             {
                 throw new ArgumentOutOfRangeException($"The value provided for parameter u, {u}, must be between 0.0 and 1.0.");
             }

@@ -1,9 +1,6 @@
 {% if HasDescription -%}
 /// <summary>{{ Description | csharpdocs }}</summary>
 {% endif -%}
-{% if HasDiscriminator -%}
-[JsonConverter(typeof(ElementConverter<{{ClassName}}>))]
-{% endif -%}
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
 {% if InheritsExceptionSchema -%}
 [JsonObjectAttribute]
@@ -50,7 +47,7 @@
     [System.ComponentModel.DataAnnotations.RegularExpression(@"{{ property.RegularExpressionValue }}")]
 {%   endif -%}
 {%   if property.IsStringEnum -%}
-    [JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
 {%   endif -%}
 {%   if property.IsDate and UseDateFormatConverter -%}
     [JsonConverter(typeof(DateFormatConverter))]

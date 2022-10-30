@@ -552,5 +552,16 @@ namespace Elements.Tests
                 Model.AddElement(ge);
             }
         }
+
+        [Fact]
+        public void ProfilesWoundClockwiseSplitCorrectly()
+        {
+            Name = nameof(ProfilesWoundClockwiseSplitCorrectly);
+            var polygon = new Polygon((0, 0, 0), (0, 10, 0), (10, 10, 0), (10, 0, 0));
+            var polylineOffsetInside = new Polygon((3, 3), (3, 7), (7, 7), (7, 3));
+            var extendedLines = polylineOffsetInside.Segments().Select(s => s.ExtendTo(polygon, true).ToPolyline(1)).ToList();
+            var splitResults = Elements.Geometry.Profile.Split(new[] { new Profile(polygon) }, extendedLines);
+            Assert.Equal(9, splitResults.Count);
+        }
     }
 }

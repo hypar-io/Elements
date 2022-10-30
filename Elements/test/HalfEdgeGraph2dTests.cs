@@ -49,5 +49,21 @@ namespace Elements.Tests
             Assert.Equal(2, polygons.Count);
             Assert.Single(polygons.Where(p => p.Normal().Dot(Vector3.ZAxis) > 0));
         }
+
+        [Fact]
+        public void HalfEdgeGraphUsingPolylinize()
+        {
+            Name = nameof(HalfEdgeGraphUsingPolylinize);
+            // not in order and inconsistently wound
+            var lines = new List<Line> {
+                new Line((0,0), (10,0)),
+                new Line((10,0), (4,4)),
+                new Line((10,0), (10,10)),
+            };
+            var heg = HalfEdgeGraph2d.Construct(lines, true);
+            var polygons = heg.Polylinize();
+            Assert.Single(polygons);
+            Model.AddElement(polygons[0]);
+        }
     }
 }

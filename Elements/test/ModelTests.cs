@@ -384,5 +384,16 @@ namespace Elements.Tests
             model.AddElement(panel);
             return model;
         }
+
+        [Fact]
+        public void ReadsExampleModels()
+        {
+            var models = Directory.EnumerateFiles("../../../models/ExampleModels", "*.json");
+            foreach (var modelPath in models)
+            {
+                var json = File.ReadAllText(modelPath);
+                var model = Model.FromJson(json);
+            }
+        }
     }
 }

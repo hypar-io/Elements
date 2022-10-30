@@ -563,7 +563,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 || u > 1.0)
+            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
             {
                 throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
             }
@@ -644,6 +644,123 @@ namespace Elements.Geometry
             var isCycle = this.Vertices.Count > 2 && this.Vertices[0].DistanceTo(this.Vertices.Last()) <= offset / 2;
             var segments = this.Segments();
 
+            // Step through each point, collecting info on what its join will look like.
+            var joinInfo = GetOffsetPoints(isCycle, segments, offset, flip);
+
+            // Create a polygon for each point's join, connecting back to the end of the previous point's join.
+            for (var joinIndex = 0; joinIndex < joinInfo.Count; joinIndex++)
+            {
+                if (joinIndex == 0 && !isCycle)
+                {
+                    continue;
+                }
+
+                var joinPoints = joinInfo[joinIndex];
+                var previousJoinPoints = joinIndex > 0 ? joinInfo[joinIndex - 1] : joinInfo.Last();
+                var vertices = new List<Vector3>();
+                vertices.Add(previousJoinPoints.Last());
+                vertices.Add(previousJoinPoints[previousJoinPoints.Length - 2]);
+                vertices.AddRange(joinPoints);
+                var polygon = new Polygon(vertices);
+                if (polygon.IsClockWise())
+                {
+                    polygons.Add(polygon.Reversed());
+                }
+                else
+                {
+                    polygons.Add(polygon);
+                }
+            }
+
+            return polygons.ToArray();
+        }
+
+        /// <summary>
+        /// A naïve control-point-only 2D open offset. This algorithm does not
+        /// do any self-intersection checking.
+        /// </summary>
+        /// <param name="offset">The offset distance.</param>
+        /// <returns>A new polyline with the same number of control points.</returns>
+        public Polyline OffsetOpen(double offset)
+        {
+            var newVertices = new List<Vector3>();
+            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
+            if (segments.Count == 1)
+            {
+                return new Polyline(segments[0].Start, segments[0].End);
+            }
+            for (int i = 0; i < segments.Count - 1; i++)
+            {
+                var currSegment = segments[i];
+                var nextSegment = segments[i + 1];
+                if (i == 0)
+                {
+                    newVertices.Add(currSegment.Start);
+                }
+
+                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
+                {
+                    newVertices.Add(currSegment.End);
+                }
+                else
+                {
+                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
+                    {
+                        newVertices.Add(intersection);
+                    }
+                    else
+                    {
+                        newVertices.Add(currSegment.End);
+                    }
+                }
+
+                if (i == segments.Count - 2)
+                {
+                    newVertices.Add(nextSegment.End);
+                }
+            }
+            var polyline = new Polyline(newVertices);
+            if (polyline.Vertices.Count < 2)
+            {
+                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
+            }
+            return polyline;
+        }
+
+        /// <summary>
+        /// Offset this polyline by the specified amount. The resulting polygon will have acute angles.
+        /// </summary>
+        /// <remarks>This blunts sharp corners to keep widths close to the target.</remarks>
+        /// <param name="offset">The amount to offset.</param>
+        public Polygon[] OffsetWithAcuteAngle(double offset)
+        {
+            var polygons = new List<Polygon>();
+            if (this.Vertices.Count <= 1)
+            {
+                return polygons.ToArray();
+            }
+
+            var isCycle = this.Vertices.Count > 2 && this.Vertices[0].DistanceTo(this.Vertices.Last()) <= offset / 2;
+            var segments = this.Segments();
+
+            // Step through each point, collecting info on what its join will look like.
+            var joinInfo = GetOffsetPoints(isCycle, segments, offset, false, true);
+
+            polygons.Add(new Polygon(joinInfo.SelectMany(p => p).ToList()));
+
+            return polygons.ToArray();
+        }
+        
+        /// <summary>
+        /// Return offset points for polyline
+        /// </summary>
+        /// <param name="isCycle">The polyline has the shape of a circle.</param>
+        /// <param name="segments">List of polyline segments.</param>
+        /// <param name="offset">The amount to offset.</param>
+        /// <param name="flip">Offset on the opposite of the default side. The default is to draw on the +X side of a polyline that goes up the +Y axis.</param>
+        /// <param name="isSkipOriginVertices">Option to specify whether to skip the original polyline points.</param>
+        private List<Vector3[]> GetOffsetPoints(bool isCycle, Line[] segments, double offset, bool flip, bool isSkipOriginVertices = false)
+        {
             // Step through each point, collecting info on what its join will look like.
             var joinInfo = new List<Vector3[]>();
             for (var vertexIndex = 0; vertexIndex < this.Vertices.Count; vertexIndex++)
@@ -740,7 +857,7 @@ namespace Elements.Geometry
                     }
 
                     var isAcuteExteriorAngle = false;
-                    if (intersects)
+                    if (intersects && !isSkipOriginVertices)
                     {
                         isAcuteExteriorAngle = nextOffsetSegment.Direction().Dot((offsetIntersection - vertex).Unitized()) < Math.Cos(Math.PI * -3 / 4);
                     }
@@ -751,8 +868,8 @@ namespace Elements.Geometry
                         (previousOffsetSegment.End.DistanceTo(offsetIntersection) > offset ||
                         nextOffsetSegment.Start.DistanceTo(offsetIntersection) > offset))
                     {
-                        var offsetPoint1 = previousOffsetSegment.Direction() * offset + previousOffsetSegment.End;
-                        var offsetPoint2 = nextOffsetSegment.Direction() * (offset * -1) + nextOffsetSegment.Start;
+                        var offsetPoint1 = previousOffsetSegment.End + (isSkipOriginVertices ? new Vector3() : previousOffsetSegment.Direction() * offset);
+                        var offsetPoint2 = nextOffsetSegment.Start + (isSkipOriginVertices ? new Vector3() : nextOffsetSegment.Direction() * (offset * -1));
                         joinPoints.Add(offsetPoint1);
                         if (offsetPoint1.DistanceTo(offsetPoint2) != 0)
                         {
@@ -777,88 +894,14 @@ namespace Elements.Geometry
                     continue;
                 }
 
-                joinPoints.Add(vertex);
+                if (!isSkipOriginVertices)
+                {
+                    joinPoints.Add(vertex);
+                }
                 joinInfo.Add(joinPoints.ToArray());
             }
 
-            // Create a polygon for each point's join, connecting back to the end of the previous point's join.
-            for (var joinIndex = 0; joinIndex < joinInfo.Count; joinIndex++)
-            {
-                if (joinIndex == 0 && !isCycle)
-                {
-                    continue;
-                }
-
-                var joinPoints = joinInfo[joinIndex];
-                var previousJoinPoints = joinIndex > 0 ? joinInfo[joinIndex - 1] : joinInfo.Last();
-                var vertices = new List<Vector3>();
-                vertices.Add(previousJoinPoints.Last());
-                vertices.Add(previousJoinPoints[previousJoinPoints.Length - 2]);
-                vertices.AddRange(joinPoints);
-                var polygon = new Polygon(vertices);
-                if (polygon.IsClockWise())
-                {
-                    polygons.Add(polygon.Reversed());
-                }
-                else
-                {
-                    polygons.Add(polygon);
-                }
-            }
-
-            return polygons.ToArray();
-        }
-
-        /// <summary>
-        /// A naïve control-point-only 2D open offset. This algorithm does not
-        /// do any self-intersection checking.
-        /// </summary>
-        /// <param name="offset">The offset distance.</param>
-        /// <returns>A new polyline with the same number of control points.</returns>
-        public Polyline OffsetOpen(double offset)
-        {
-            var newVertices = new List<Vector3>();
-            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
-            if (segments.Count == 1)
-            {
-                return new Polyline(segments[0].Start, segments[0].End);
-            }
-            for (int i = 0; i < segments.Count - 1; i++)
-            {
-                var currSegment = segments[i];
-                var nextSegment = segments[i + 1];
-                if (i == 0)
-                {
-                    newVertices.Add(currSegment.Start);
-                }
-
-                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
-                {
-                    newVertices.Add(currSegment.End);
-                }
-                else
-                {
-                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
-                    {
-                        newVertices.Add(intersection);
-                    }
-                    else
-                    {
-                        newVertices.Add(currSegment.End);
-                    }
-                }
-
-                if (i == segments.Count - 2)
-                {
-                    newVertices.Add(nextSegment.End);
-                }
-            }
-            var polyline = new Polyline(newVertices);
-            if (polyline.Vertices.Count < 2)
-            {
-                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
-            }
-            return polyline;
+            return joinInfo;
         }
 
         /// <summary>
@@ -1066,7 +1109,6 @@ namespace Elements.Geometry
         public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
         {
             sharedSegments = new List<Polyline>();
-            var polygonSegments = polygon.Segments();
 
             var intersections = polygon.Segments()
                 .SelectMany(x =>
@@ -1074,7 +1116,8 @@ namespace Elements.Geometry
                     Intersects(x, out var result, includeEnds: true);
                     return result;
                 })
-                .OrderBy(x => GetParameterAt(x))
+                .UniqueWithinTolerance()
+                .OrderBy(GetParameterAt)
                 .ToList();
 
             if (intersections.Count == 0)
@@ -1085,28 +1128,18 @@ namespace Elements.Geometry
                 }
                 return sharedSegments.Any();
             }
-
-            var filteredIntersections = new List<Vector3>();
-            foreach(var intersection in intersections)
-            {
-                if(filteredIntersections.Any(x => x.IsAlmostEqualTo(intersection)))
-                {
-                    continue;
-                }
-                filteredIntersections.Add(intersection);
-            }
-
+            
             if (polygon.Contains(Start))
             {
-                var intersection = filteredIntersections.First();
+                var intersection = intersections.First();
                 var startSegment = GetSubsegment(Start, intersection);
                 sharedSegments.Add(startSegment);
-                filteredIntersections.Remove(intersection);
+                intersections.Remove(intersection);
             }
 
-            for (int i = 1; i < filteredIntersections.Count; i += 2)
+            for (var i = 0; i < intersections.Count - 1; i ++)
             {
-                var subsegment = GetSubsegment(filteredIntersections[i - 1], filteredIntersections[i]);
+                var subsegment = GetSubsegment(intersections[i], intersections[i+1]);
                 if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
@@ -1115,7 +1148,7 @@ namespace Elements.Geometry
 
             if (polygon.Contains(End))
             {
-                var intersection = filteredIntersections.Last();
+                var intersection = intersections.Last();
                 var endSegment = GetSubsegment(intersection, End);
                 sharedSegments.Add(endSegment);
             }
@@ -1144,36 +1177,34 @@ namespace Elements.Geometry
                 return null;
             }
 
-            var firstParameter = 0d;
-            var lastParameter = 0d;
-            var vertices = new List<Vector3>();
-            var lastVertex = Vector3.Origin;
-
-            if (startParameter < endParameter)
+            List<Vector3> filteredVertices;
+            
+            if (startParameter > endParameter)
             {
-                firstParameter = startParameter;
-                lastParameter = endParameter;
-                vertices.Add(start);
-                lastVertex = end;
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter < startParameter && parameter > endParameter;
+                    })
+                    .Reverse()
+                    .ToList();
             }
             else
             {
-                firstParameter = endParameter;
-                lastParameter = startParameter;
-                vertices.Add(end);
-                lastVertex = start;
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter > startParameter && parameter < endParameter;
+                    })
+                    .ToList();
             }
+            
+            filteredVertices.Insert(0, start);
+            filteredVertices.Add(end);
 
-            var verticesToAdd = Vertices.Where(x =>
-            {
-                var parameter = GetParameterAt(x);
-                return parameter > firstParameter && parameter < lastParameter;
-            });
-
-            vertices.AddRange(verticesToAdd);
-            vertices.Add(lastVertex);
-
-            return new Polyline(vertices);
+            return new Polyline(filteredVertices);
         }
     }
 
