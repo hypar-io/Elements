@@ -644,8 +644,7 @@ namespace Elements.Geometry.Tests
                 new Vector3(4, 3, 2),
                 new Vector3(1, 2, 2),
                 new Vector3(1, 0, 2),
-                new Vector3(0, 0, 1.1),
-                new Vector3(0, 0, 0)
+                new Vector3(0, 0, 2)
             };
             var polyline = new Polyline(path);
             var angles = new List<double> { 90, 45 };
@@ -657,7 +656,7 @@ namespace Elements.Geometry.Tests
             Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
             Assert.True(CheckPolylineAngles(angles, normalizedPathEnd));
 
-            // Get 45 degree between first, second and third segments.
+            // Get 45 degree between first, second and third segments. All other angles of the polyline are 90 degrees.
             var pathStartSegments = normalizedPathStart.Segments();
             Assert.True(pathStartSegments[1].Direction().AngleTo(pathStartSegments[0].Direction()).ApproximatelyEquals(45));
             Assert.True(pathStartSegments[2].Direction().AngleTo(pathStartSegments[1].Direction()).ApproximatelyEquals(45));
@@ -675,9 +674,14 @@ namespace Elements.Geometry.Tests
             Assert.True(pathEndSegments[2].Direction().AngleTo(pathEndSegments[1].Direction()).ApproximatelyEquals(45));
             Assert.Equal(new Vector3(0, 8, 2), pathEndSegments[1].Start);
             Assert.Equal(new Vector3(4, 4, 2), pathEndSegments[1].End);
+
+            // Check that the first vertex has not changed.
+            Assert.Equal(polyline.Start, normalizedPathStart.Start);
+            Assert.Equal(polyline.Start, normalizedPathMiddle.Start);
+            Assert.Equal(polyline.Start, normalizedPathEnd.Start);
         }
 
-        private static bool CheckPolylineAngles(List<double> angles, Polyline polyline)
+        private static bool CheckPolylineAngles(List<double> supportedAngles, Polyline polyline)
         {
             for (var i = 1; i < polyline.Vertices.Count - 1; i++)
             {
@@ -685,9 +689,10 @@ namespace Elements.Geometry.Tests
                 var b = polyline.Vertices[i];
                 var c = polyline.Vertices[i + 1];
                 var angle = (b - a).AngleTo((c - b));
-                if (!angle.ApproximatelyEquals(180, 0.1) && !angle.ApproximatelyEquals(0, 0.1)
-                    && !angles.Any(ang => angle.ApproximatelyEquals(ang, 0.1)
-                                          ||  (angle - 90).ApproximatelyEquals(ang, 0.1)))
+                var isAngleSupported = supportedAngles.Any(ang => angle.ApproximatelyEquals(ang, 0.1) || (angle - 90).ApproximatelyEquals(ang, 0.1));
+                if (!angle.ApproximatelyEquals(180, 0.1)
+                    && !angle.ApproximatelyEquals(0, 0.1)
+                    && !isAngleSupported)
                 {
                     return false;
                 }

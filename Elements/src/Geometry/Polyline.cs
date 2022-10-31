@@ -1211,9 +1211,10 @@ namespace Elements.Geometry
         /// <summary>
         /// Make the polyline correspond to the supported angles by moving the vertices slightly.
         /// The result polyline will have only allowed angles, but vertices positions can be changed.
+        /// The first vertex is never moved.
         /// </summary>
         /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
-        /// <param name="referenceVector">Vector to aling first segment of polyline with.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
         /// <param name="pathType">
         /// The path type.
         /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
@@ -1261,8 +1262,8 @@ namespace Elements.Geometry
                     direction.ProjectOnto(incomingDirection).Length().ApproximatelyEquals(0))
                 {
                     // When path drastically changes direction - (1, 2, 2) -> (1, 0, 2) -> (0, 0, 0) for example,
-                    // angle will the 90 degrees regardless if third point is (0, 0, 0), (0, 0, 1) or (0, 0, 1.5).
-                    // These points still need to be align to avoid bad angles further in the path.
+                    // angle will be 90 degrees regardless if third point is (0, 0, 0), (0, 0, 1) or (0, 0, 1.5).
+                    // These points still need to be aligned to avoid bad angles further in the path.
                     // Reference vector is used in this case as cross product of 3 previous points.
                     if (i < normalized.Count - 2)
                     {
@@ -1343,7 +1344,7 @@ namespace Elements.Geometry
         /// The result polyline will have only allowed angles, but vertices positions can be changed.
         /// </summary>
         /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
-        /// <param name="referenceVector">Vector to aling first segment of polyline with.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
         /// <param name="pathType">
         /// The path type.
         /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
@@ -1380,12 +1381,12 @@ namespace Elements.Geometry
         /// Calculate a point X on infinite B->C line, that intersects with A->(B+d) line, where d is displacement.
         /// </summary>
         private Vector3? DisplacementAlignedPoint(Vector3 a, Vector3 b, Vector3 c,
-            Vector3 displacementDirection, double displacementDistace)
+            Vector3 displacementDirection, double displacementDistance)
         {
-            var roughtEndPoint = b - displacementDirection * displacementDistace;
-            Plane plane = new Plane(a, roughtEndPoint, c);
+            var roughEndPoint = b - displacementDirection * displacementDistance;
+            Plane plane = new Plane(a, roughEndPoint, c);
             var bcProjected = new Line(b, c).Projected(plane);
-            Line displacementLine = new Line(a, roughtEndPoint);
+            Line displacementLine = new Line(a, roughEndPoint);
             if (displacementLine.Intersects(bcProjected, out var position, infinite: true))
             {
                 return position;
