@@ -8,6 +8,7 @@
 - `AdaptiveGrid.HintExtendDistance`
 - `AdaptiveGrid.SnapshotEdgesOnPlane(Plane plane, IEnumerable<Edge> edgesToCheck)`
 - `AdaptiveGrid.InsertSnapshot(List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect)`
+- `RoutingHintLine.Is2D`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
@@ -16,7 +17,7 @@
 ### Changed
 
 - `Line.PointOnLine` - added `tolerance` parameter.
-- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` now extends only up to `HintExtendDistance` distance and inserts not exttended points as is otherwise ever if they are not touching the grid.
 - Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
 - Moved `BranchSide`, `RoutingVertex`, `RoutingConfiguration`, `RoutingHintLine`, `TreeOrder` from `AdaptiveGraphRouting` to their own files.
 - `RoutingVertex` - removed `Guides`.
