@@ -390,17 +390,44 @@ namespace Elements.Serialization.glTF
             return materialDict;
         }
 
+        /// <summary>
+        /// Add a custom Material extension.
+        /// </summary>
         private static void AddExtension(Gltf gltf, glTFLoader.Schema.Material gltfMaterial, string extensionName, Dictionary<string, object> extensionAttributes)
         {
             if (gltfMaterial.Extensions == null)
             {
                 gltfMaterial.Extensions = new Dictionary<string, object>();
             }
+            AddExtension(gltf, extensionName, extensionAttributes);
+            gltfMaterial.Extensions.Add(extensionName, extensionAttributes);
+        }
+
+        /// <summary>
+        /// Add a custom Node extension.
+        /// </summary>
+        private static void AddExtension(Gltf gltf, glTFLoader.Schema.Node gltfNode, string extensionName, Dictionary<string, object> extensionAttributes)
+        {
+            if (gltfNode.Extensions == null)
+            {
+                gltfNode.Extensions = new Dictionary<string, object>();
+            }
+            AddExtension(gltf, extensionName, extensionAttributes);
+            gltfNode.Extensions.Add(extensionName, extensionAttributes);
+        }
+
+        /// <summary>
+        /// Add a generic custom extension.
+        /// </summary>
+        /// <param name="gltf"></param>
+        /// <param name="extensionName"></param>
+        /// <param name="extensionAttributes"></param>
+        private static void AddExtension(Gltf gltf, string extensionName, Dictionary<string, object> extensionAttributes)
+        {
             if (!gltf.ExtensionsUsed.Contains(extensionName))
             {
                 gltf.ExtensionsUsed = new List<string>(gltf.ExtensionsUsed) { extensionName }.ToArray();
             }
-            gltfMaterial.Extensions.Add(extensionName, extensionAttributes);
         }
 
         private static Image CreateImage(string path, List<BufferView> bufferViews, List<byte> buffer, out bool textureHasTransparency)
@@ -890,6 +917,12 @@ namespace Elements.Serialization.glTF
             return true;
         }
 
+        /// <summary>
+        /// If true, the model will write content elements using an experimental
+        /// GLTF extension. This extension is not yet finalized and may change.
+        /// </summary>
+        public static bool UseReferencedContentExtension { get; set; } = false;
+
         internal static Gltf InitializeGlTF(Model model,
                                             out List<byte[]> allBuffers,
                                             out List<BaseError> errors,
@@ -909,7 +942,7 @@ namespace Elements.Serialization.glTF
             // geometry for an element is, and we should tighten this up.
             var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
             var buffer = new List<byte>(elementCount * GraphicsBuffers.PreallocationSize());
-            var contentElementCount = model.AllElementsAssignableFromType<ContentElement>().Count();
+            var contentElementCount = UseReferencedContentExtension ? 0 : model.AllElementsAssignableFromType<ContentElement>().Count();
             allBuffers = new List<byte[]>(contentElementCount * GraphicsBuffers.PreallocationSize()) { Array.Empty<byte>() };
 
             var gltf = new Gltf();
@@ -1135,7 +1168,8 @@ namespace Elements.Serialization.glTF
 
             if (e is GeometricElement element)
             {
-                if (typeof(ContentElement).IsAssignableFrom(e.GetType()))
+                var contentElement = element as ContentElement;
+                if (contentElement != null && !UseReferencedContentExtension)
                 {
                     var content = e as ContentElement;
                     Stream glbStream = GetGlbStreamFromPath(content.GltfLocation);
@@ -1165,7 +1199,14 @@ namespace Elements.Serialization.glTF
                             // This element is not used for instancing.
                             // apply scale transform here to bring the content glb into meters
                             var transform = content.Transform.Scaled(content.GltfScaleToMeters);
-                            NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
+                            var nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
+
+                            if (contentElement != null && UseReferencedContentExtension)
+                            {
+                                AddExtension(gltf, nodes[nodeId], "HYPAR_referenced_content", new Dictionary<string, object> {
+                                    {"contentUrl", contentElement.GltfLocation}
+                                });
+                            }
                         }
                         else
                         {
@@ -1189,7 +1230,8 @@ namespace Elements.Serialization.glTF
                                                                 nodes,
                                                                 materialId,
                                                                 ref meshId,
-                                                                content);
+                                                                content,
+                                                                out int _);
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
                             meshElementMap.Add(e.Id, new List<int> { meshId });
@@ -1210,10 +1252,17 @@ namespace Elements.Serialization.glTF
                                                             nodes,
                                                             materialId,
                                                             ref meshId,
-                                                            geometricElement);
+                                                            geometricElement,
+                                                            out int nodeId);
                     if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
                     {
                         meshElementMap.Add(e.Id, new List<int> { meshId });
+                    }
+                    if (nodeId > -1 && contentElement != null && UseReferencedContentExtension)
+                    {
+                        AddExtension(gltf, nodes[nodeId], "HYPAR_referenced_content", new Dictionary<string, object> {
+                            {"contentUrl", contentElement.GltfLocation}
+                        });
                     }
                 }
             }
@@ -1221,13 +1270,19 @@ namespace Elements.Serialization.glTF
             if (e is ElementInstance i)
             {
                 var transform = new Transform();
-                if (i.BaseDefinition is ContentElement)
+                if (i.BaseDefinition is ContentElement contentElementBaseDefinition)
                 {
                     // if we have a stored node for this object, we use that when adding it to the gltf.
                     if (nodeElementMap.TryGetValue(i.BaseDefinition.Id, out _))
                     {
                         transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform, i.Id);
+                        var node = NodeUtilities.AddInstanceAsCopyOfNode(nodes, nodeElementMap[i.BaseDefinition.Id], transform, i.Id);
+                        if (UseReferencedContentExtension)
+                        {
+                            AddExtension(gltf, node, "HYPAR_referenced_content", new Dictionary<string, object> {
+                                {"contentUrl", contentElementBaseDefinition.GltfLocation}
+                            });
+                        }
                     }
                     else
                     {
@@ -1239,7 +1294,18 @@ namespace Elements.Serialization.glTF
                             transform.Concatenate(baseTransform);
                         }
                         transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                        var addedNodes = NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                        if (UseReferencedContentExtension)
+                        {
+                            foreach (var nodeIndex in addedNodes)
+                            {
+                                var node = nodes[nodeIndex];
+                                AddExtension(gltf, node, "HYPAR_referenced_content", new Dictionary<string, object> {
+                                {"contentUrl", contentElementBaseDefinition.GltfLocation}
+                                });
+                            }
+                        }
+
                     }
                 }
                 else
@@ -1428,11 +1494,12 @@ namespace Elements.Serialization.glTF
                                                            List<Node> nodes,
                                                            string materialId,
                                                            ref int meshId,
-                                                           GeometricElement geometricElement)
+                                                           GeometricElement geometricElement,
+                                                           out int nodeId)
         {
             geometricElement.UpdateRepresentations();
             geometricElement.UpdateBoundsAndComputeSolid();
-
+            nodeId = -1;
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
             // is to ensure that openings have some geometry that will be used
@@ -1462,7 +1529,7 @@ namespace Elements.Serialization.glTF
 
                 if (!geometricElement.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
+                    nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
                 }
                 return meshId;
             }
