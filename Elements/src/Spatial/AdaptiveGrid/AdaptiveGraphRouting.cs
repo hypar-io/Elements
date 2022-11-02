@@ -1038,11 +1038,15 @@ namespace Elements.Spatial.AdaptiveGrid
                         candidateBranch = BranchSide.Right;
                     }
 
+                    //Connection point with the lower cost is better. 
                     if (candidateCost > bestCost + Vector3.EPSILON)
                     {
                         continue;
                     }
 
+                    //If two ways to travel from point A to point B has the same cost,
+                    //the one is used that joins the tree without a turn. 
+                    //We both need/don't need a turn - first path is chosen.
                     if (costs.Item1.ApproximatelyEquals(costs.Item2) &&
                         tree.TryGetValue(index, out var node) && node.Trunk != null)
                     {
@@ -1074,6 +1078,8 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
                     }
 
+                    //If several connection points on the tree have the same cost,
+                    //one is chosen that is closer to the end.
                     if (candidateCost.ApproximatelyEquals(bestCost))
                     {
                         if (bestCostToTrunk < 0)
