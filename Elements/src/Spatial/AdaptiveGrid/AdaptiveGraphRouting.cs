@@ -282,8 +282,10 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private void RouteBranch(
-            List<ulong> leafTerminals, ulong trunkTerminal,
-            HashSet<ulong> allExcluded, Dictionary<ulong, List<ulong>> excludedPerVertex,
+            List<ulong> leafTerminals,
+            ulong trunkTerminal,
+            HashSet<ulong> allExcluded,
+            Dictionary<ulong, List<ulong>> excludedPerVertex,
             Dictionary<ulong, EdgeInfo> weights,
             TreeOrder order,
             Dictionary<ulong, TreeNode> leafsToTrunkTree)
@@ -292,6 +294,8 @@ namespace Elements.Spatial.AdaptiveGrid
             //path from droppipe and a set of connection points from the previous step.
             //One at a time we choose the connection point that is cheapest to travel to existing
             //network and its path is added to the network until all are added.
+            //Magnet terminals are all of the vertices that are currently part of the tree.
+            //They are used as the list of good destinations while routing the leaves so that we join the tree as soon as possible."
             HashSet<ulong> magnetTerminals = new HashSet<ulong> { trunkTerminal };
 
             var terminalInfo = new Dictionary<ulong, (
@@ -515,8 +519,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeWeight = edgeWeights[e.Id];
-                    if (edgeWeight.Factor == double.PositiveInfinity)
+                    var edgeInfo = edgeWeights[e.Id];
+                    if (edgeInfo.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }
@@ -542,7 +546,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
-                    var newWeight = travelCost[u] + EdgeCost(edgeWeight);
+                    var newWeight = travelCost[u] + EdgeCost(edgeInfo);
 
                     //We need as little change of direction as possible. A penalty is added if
                     //a) We have a turn traveling to the next vertex.
@@ -553,7 +557,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, vertex, startDirection.Value, edgeWeights);
                         }
                     }
                     else
@@ -561,13 +565,13 @@ namespace Elements.Spatial.AdaptiveGrid
                         var vertexBefore = _grid.GetVertex(beforeId);
                         if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeWeight, vertex, vertexBefore.Id, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, vertex, vertexBefore.Id, edgeWeights);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
                             !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
-                            newWeight += TurnCost(edgeWeight, v, vertexAfter.Value, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, v, vertexAfter.Value, edgeWeights);
                         }
                     }
 
@@ -591,13 +595,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Produced dictionary has "Left/Right" label using which two best routes per vertex can be retried.
         /// </summary>
         /// <param name="start">Start Vertex</param>
-        /// <param name="edgeWeights">Dictionary of Edge Id to the cost of traveling though it</param>
+        /// <param name="edgeInfos">Dictionary of Edge Id to precomputed information about it</param>
         /// <param name="travelCost">Output dictionary where traveling costs are stored per Vertex for two possible branches</param>
         /// <param name="startDirection">Previous Vertex, if start Vertex is already part of the Route</param>
         /// <param name="excluded">Vertices that are not allowed to visit</param>
         /// <returns>Dictionary that have two travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> ShortestBranchesDijkstra(
-            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeInfos,
             out Dictionary<ulong, (double, double)> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
@@ -618,7 +622,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var vertex = _grid.GetVertex(u);
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeWeight = edgeWeights[e.Id];
+                    var edgeWeight = edgeInfos[e.Id];
                     if (edgeWeight.Factor == double.PositiveInfinity)
                     {
                         continue;
@@ -666,7 +670,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeWeight, vertex, startDirection.Value, edgeWeights);
+                            newWeight += TurnCost(edgeWeight, vertex, startDirection.Value, edgeInfos);
                         }
                     }
                     else
@@ -678,7 +682,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
-                            leftCost += TurnCost(edgeWeight, vertex, leftBefore.Id, edgeWeights);
+                            leftCost += TurnCost(edgeWeight, vertex, leftBefore.Id, edgeInfos);
                         }
 
                         var rigthCost = Double.MaxValue;
@@ -688,7 +692,7 @@ namespace Elements.Spatial.AdaptiveGrid
                             rigthCost = cost.Item2 + newWeight;
                             if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += TurnCost(edgeWeight, vertex, rigthBefore.Id, edgeWeights);
+                                rigthCost += TurnCost(edgeWeight, vertex, rigthBefore.Id, edgeInfos);
                             }
                         }
 

@@ -421,20 +421,8 @@ namespace Elements.Tests
             alg.BuildSpanningTree(inputVertices, tailVertex, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
 
             //Results visualization
-            List<Line> lines = new List<Line>();
-            foreach (var input in inputVertices)
-            {
-                var node = tree[input.Id];
-                while (node.Trunk != null)
-                {
-                    lines.Add(new Line(grid.GetVertex(node.Id).Point,
-                                       grid.GetVertex(node.Trunk.Id).Point));
-                    node = node.Trunk;
-                }
-            }
-            ModelLines ml = new ModelLines(lines, new Material("", new Color("red")));
-            this.Model.AddElements(alg.RenderElements(hints, keyPoints));
-            this.Model.AddElement(ml);
+            VisualizeRoutingTree(grid, inputVertices, tree);
+            VisualizeGrid(alg, hints, keyPoints);
         }
 
         [Fact]
@@ -547,20 +535,8 @@ namespace Elements.Tests
                 inputVertices, tailVertex, new List<List<RoutingHintLine>>(), TreeOrder.ClosestToFurthest);
 
             //Result visualization
-            List<Line> lines = new List<Line>();
-            foreach (var input in inputVertices.SelectMany(iv => iv))
-            {
-                var node = tree[input.Id];
-                while (node.Trunk != null)
-                {
-                    lines.Add(new Line(grid.GetVertex(node.Id).Point,
-                                       grid.GetVertex(node.Trunk.Id).Point));
-                    node = node.Trunk;
-                }
-            }
-            ModelLines ml = new ModelLines(lines, new Material("", new Color("red")));
-            this.Model.AddElements(alg.RenderElements(hints.SelectMany(h => h).ToList(), keyPoints));
-            this.Model.AddElement(ml);
+            VisualizeRoutingTree(grid, inputVertices.SelectMany(iv => iv), tree);
+            VisualizeGrid(alg, hints.SelectMany(h => h).ToList(), keyPoints);
         }
 
         [Fact]
@@ -1063,6 +1039,34 @@ namespace Elements.Tests
                 new Vector3(0, 0, 0)
             };
             CheckTree(grid, inputId2, tree, expectedPath);
+        }
+
+        private void VisualizeRoutingTree(
+            AdaptiveGrid grid,
+            IEnumerable<RoutingVertex> routingVertices,
+            IDictionary<ulong, TreeNode> tree)
+        {
+            List<Line> lines = new List<Line>();
+            foreach (var input in routingVertices)
+            {
+                var node = tree[input.Id];
+                while (node.Trunk != null)
+                {
+                    lines.Add(new Line(grid.GetVertex(node.Id).Point,
+                                       grid.GetVertex(node.Trunk.Id).Point));
+                    node = node.Trunk;
+                }
+            }
+            ModelLines ml = new ModelLines(lines, new Material("", new Color("red")));
+            this.Model.AddElement(ml);
+        }
+
+        private void VisualizeGrid(
+            AdaptiveGraphRouting alg,
+            IList<RoutingHintLine> hints, 
+            IList<Vector3> keyPoints)
+        {
+            this.Model.AddElements(alg.RenderElements(hints, keyPoints));
         }
 
         private static void CheckTree(
