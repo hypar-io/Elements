@@ -480,14 +480,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Higher level algorithm then decides which one of them to use as an end point.
         /// </summary>
         /// <param name="start">Start Vertex</param>
-        /// <param name="edgeWeights">Dictionary of Edge Id to the cost of traveling though it</param>
+        /// <param name="edgeInfos">Dictionary of Edge Id to precomputed information about it</param>
         /// <param name="travelCost">Output dictionary where traveling cost is stored per Vertex</param>
         /// <param name="startDirection">Previous Vertex, if start Vertex is already part of the Route</param>
         /// <param name="excluded">Vertices that are not allowed to visit</param>
         /// <param name="pathDirections">Next Vertex dictionary for Vertices that are already part of the route</param>
         /// <returns>Dictionary that have travel routes from each Vertex back to start Vertex.</returns>
         public Dictionary<ulong, ulong> ShortestPathDijkstra(
-            ulong start, Dictionary<ulong, EdgeInfo> edgeWeights,
+            ulong start, Dictionary<ulong, EdgeInfo> edgeInfos,
             out Dictionary<ulong, double> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null,
             Dictionary<ulong, ulong?> pathDirections = null)
@@ -519,7 +519,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeInfo = edgeWeights[e.Id];
+                    var edgeInfo = edgeInfos[e.Id];
                     if (edgeInfo.Factor == double.PositiveInfinity)
                     {
                         continue;
@@ -557,7 +557,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeInfo, vertex, startDirection.Value, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, vertex, startDirection.Value, edgeInfos);
                         }
                     }
                     else
@@ -565,13 +565,13 @@ namespace Elements.Spatial.AdaptiveGrid
                         var vertexBefore = _grid.GetVertex(beforeId);
                         if (!Vector3.AreCollinearByAngle(vertexBefore.Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeInfo, vertex, vertexBefore.Id, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, vertex, vertexBefore.Id, edgeInfos);
                         }
                         if (pathDirections != null &&
                             pathDirections.TryGetValue(v.Id, out var vertexAfter) && vertexAfter.HasValue &&
                             !Vector3.AreCollinearByAngle(vertex.Point, v.Point, _grid.GetVertex(vertexAfter.Value).Point))
                         {
-                            newWeight += TurnCost(edgeInfo, v, vertexAfter.Value, edgeWeights);
+                            newWeight += TurnCost(edgeInfo, v, vertexAfter.Value, edgeInfos);
                         }
                     }
 
@@ -1135,13 +1135,13 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var edge = vertex.GetEdge(node.Trunk.Id);
                 Vertex next = _grid.GetVertex(node.Trunk.Id);
-                var edgeWeight = weights[edge.Id];
-                cost += EdgeCost(edgeWeight);
+                var edgeInfo = weights[edge.Id];
+                cost += EdgeCost(edgeInfo);
 
                 if (before != null &&
                     !Vector3.AreCollinearByAngle(before.Point, vertex.Point, next.Point))
                 {
-                    cost += TurnCost(edgeWeight, vertex, before.Id, weights);
+                    cost += TurnCost(edgeInfo, vertex, before.Id, weights);
                 }
 
                 before = vertex;
