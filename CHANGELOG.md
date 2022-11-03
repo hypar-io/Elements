@@ -11,6 +11,7 @@
 - `RoutingHintLine.Is2D`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `Elements.Spatial.AdaptiveGrid.TreeNode`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 - `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
 
@@ -23,7 +24,7 @@
 - `RoutingVertex` - removed `Guides`.
 - `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
 - `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
-- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- `AdaptiveGraphRouting.BuildSpanningTree` and `AdaptiveGraphRouting.BuildSimpleNetwork` now return `IDictionary<ulong, TreeNode>`.
 - Don't log all vertex creation actions during Debug mode geometry generation.
 - `Polyline.GetSubsegment` changes direction of output polyline when parameters reversed
 - `Line.IsCollinear` - added `tolerance` parameter.
