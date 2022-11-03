@@ -622,8 +622,8 @@ namespace Elements.Spatial.AdaptiveGrid
                 var vertex = _grid.GetVertex(u);
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeWeight = edgeInfos[e.Id];
-                    if (edgeWeight.Factor == double.PositiveInfinity)
+                    var edgeInfo = edgeInfos[e.Id];
+                    if (edgeInfo.Factor == double.PositiveInfinity)
                     {
                         continue;
                     }
@@ -658,7 +658,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     //Compute cost of each its neighbors as cost of vertex we came from plus cost of edge.
-                    var newWeight = EdgeCost(edgeWeight);
+                    var newWeight = EdgeCost(edgeInfo);
                     BranchSide bestBranch = BranchSide.Left;
 
                     //We need as little change of direction as possible. A penalty is added if
@@ -670,7 +670,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         if (startDirection.HasValue &&
                             !Vector3.AreCollinearByAngle(_grid.GetVertex(startDirection.Value).Point, vertex.Point, v.Point))
                         {
-                            newWeight += TurnCost(edgeWeight, vertex, startDirection.Value, edgeInfos);
+                            newWeight += TurnCost(edgeInfo, vertex, startDirection.Value, edgeInfos);
                         }
                     }
                     else
@@ -682,7 +682,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         var leftCost = cost.Item1 + newWeight;
                         if (!leftCollinear)
                         {
-                            leftCost += TurnCost(edgeWeight, vertex, leftBefore.Id, edgeInfos);
+                            leftCost += TurnCost(edgeInfo, vertex, leftBefore.Id, edgeInfos);
                         }
 
                         var rigthCost = Double.MaxValue;
@@ -692,7 +692,7 @@ namespace Elements.Spatial.AdaptiveGrid
                             rigthCost = cost.Item2 + newWeight;
                             if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += TurnCost(edgeWeight, vertex, rigthBefore.Id, edgeInfos);
+                                rigthCost += TurnCost(edgeInfo, vertex, rigthBefore.Id, edgeInfos);
                             }
                         }
 
@@ -751,14 +751,14 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="edgeInfo">Edge informations for the first edge</param>
         /// <param name="sharedVertex">Id of the vertex, common for two edges</param>
         /// <param name="thirdVertexId">Third vertex Id</param>
-        /// <param name="edgeWeights">Precalculated length and factor for each edge</param>
+        /// <param name="edgeInfos">Precalculated information for each edge</param>
         /// <returns></returns>
         private double TurnCost(
             EdgeInfo edgeInfo, Vertex sharedVertex, ulong thirdVertexId,
-            IDictionary<ulong, EdgeInfo> edgeWeights)
+            IDictionary<ulong, EdgeInfo> edgeInfos)
         {
             var otherEdge = sharedVertex.GetEdge(thirdVertexId);
-            var otherWeight = edgeWeights[otherEdge.Id];
+            var otherWeight = edgeInfos[otherEdge.Id];
 
             //Do not modify turn cost if either of edges is not horizontal.
             //This prevents "free to travel" loops under 2d hint lines.
