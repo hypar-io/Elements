@@ -22,6 +22,11 @@ namespace Elements.Serialization.SVG
             return svgLine;
         }
 
+        public static SvgLine ToSvgLine(this Line line, SvgDrawingPlan drawingPlan, SvgContext context)
+        {
+            return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+        }
+
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
         {
             return new SvgPolygon()
@@ -34,9 +39,19 @@ namespace Elements.Serialization.SVG
             };
         }
 
+        public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgDrawingPlan drawingPlan, SvgContext context)
+        {
+            return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+        }
+
         public static SvgUnit ToXUserUnit(this double x, Vector3 min)
         {
             return new SvgUnit(SvgUnitType.User, (float)(x - min.X));
+        }
+
+        public static SvgUnit ToXUserUnit(this double x, SvgDrawingPlan drawingPlan)
+        {
+            return ToXUserUnit(x, drawingPlan.GetSceneBounds().Min);
         }
 
         public static SvgUnit ToYUserUnit(this double y, float h, Vector3 min)
@@ -45,15 +60,25 @@ namespace Elements.Serialization.SVG
             return new SvgUnit(SvgUnitType.User, (float)(h + min.Y - y));
         }
 
+        public static SvgUnit ToYUserUnit(this double y, SvgDrawingPlan drawingPlan)
+        {
+            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.GetSceneBounds().Min);
+        }
+
         public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, Vector3 min, float h)
         {
             var ptCollection = new SvgPointCollection();
             foreach (var pt in points)
             {
-                ptCollection.Add(new SvgUnit(pt.X.ToXUserUnit(min)));
-                ptCollection.Add(new SvgUnit(pt.Y.ToYUserUnit(h, min)));
+                ptCollection.Add(new SvgUnit(pt.X.ToXUserUnit(min).Value));
+                ptCollection.Add(new SvgUnit(pt.Y.ToYUserUnit(h, min).Value));
             }
             return ptCollection;
+        }
+
+        public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgDrawingPlan drawingPlan)
+        {
+            return ToSvgPointCollection(points, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight);
         }
     }
 }
