@@ -751,7 +751,7 @@ namespace Elements.Geometry
 
             return polygons.ToArray();
         }
-        
+
         /// <summary>
         /// Return offset points for polyline
         /// </summary>
@@ -1129,7 +1129,7 @@ namespace Elements.Geometry
                 }
                 return sharedSegments.Any();
             }
-            
+
             if (polygon.Contains(Start))
             {
                 var intersection = intersections.First();
@@ -1138,9 +1138,9 @@ namespace Elements.Geometry
                 intersections.Remove(intersection);
             }
 
-            for (var i = 0; i < intersections.Count - 1; i ++)
+            for (var i = 0; i < intersections.Count - 1; i++)
             {
-                var subsegment = GetSubsegment(intersections[i], intersections[i+1]);
+                var subsegment = GetSubsegment(intersections[i], intersections[i + 1]);
                 if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
@@ -1179,7 +1179,7 @@ namespace Elements.Geometry
             }
 
             List<Vector3> filteredVertices;
-            
+
             if (startParameter > endParameter)
             {
                 filteredVertices = Vertices
@@ -1201,11 +1201,200 @@ namespace Elements.Geometry
                     })
                     .ToList();
             }
-            
+
             filteredVertices.Insert(0, start);
             filteredVertices.Add(end);
 
             return new Polyline(filteredVertices);
+        }
+
+        /// <summary>
+        /// Make the polyline correspond to the supported angles by moving the vertices slightly.
+        /// The result polyline will have only allowed angles, but vertices positions can be changed.
+        /// The first vertex is never moved.
+        /// </summary>
+        /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
+        /// <param name="pathType">
+        /// The path type.
+        /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
+        /// - NormalizationType.Start: move B vertex
+        /// - NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions
+        /// - NormalizationType.End : move C vertex
+        /// </param>
+        /// <param name="furthestDistancePointsMoved">The furthest distance that any point moved.</param>
+        /// <returns>The result polyline that has only allowed angles.</returns>
+        public Polyline ForceAngleCompliance(IEnumerable<double> supportedAngles,
+            Vector3 referenceVector, out double furthestDistancePointsMoved, NormalizationType pathType = NormalizationType.Start)
+        {
+            if (supportedAngles.Any(a => a > 90 || a < 0))
+            {
+                throw new ArgumentException("Supported angles must be between 0 and 90");
+            }
+
+            List<Vector3> normalized = Vertices.ToList();
+
+            for (int i = 0; i < normalized.Count - 1; i++)
+            {
+                NormalizationType localType = pathType;
+                if (i == 0)
+                {
+                    localType = NormalizationType.End;
+                }
+                else if (i == normalized.Count - 2)
+                {
+                    localType = NormalizationType.Start;
+                }
+
+                Vector3 incomingDirection = referenceVector;
+                if (i > 0)
+                {
+                    incomingDirection = (normalized[i] - normalized[i - 1]).Unitized();
+                    if (i > 1)
+                    {
+                        var before = (normalized[i - 1] - normalized[i - 2]).Unitized();
+                        referenceVector = before.Cross(incomingDirection);
+                    }
+                }
+
+                var direction = (normalized[i + 1] - normalized[i]).Unitized();
+                if (direction.Dot(incomingDirection).Equals(0) ||
+                    direction.ProjectOnto(incomingDirection).Length().ApproximatelyEquals(0))
+                {
+                    // When path drastically changes direction - (1, 2, 2) -> (1, 0, 2) -> (0, 0, 0) for example,
+                    // angle will be 90 degrees regardless if third point is (0, 0, 0), (0, 0, 1) or (0, 0, 1.5).
+                    // These points still need to be aligned to avoid bad angles further in the path.
+                    // Reference vector is used in this case as cross product of 3 previous points.
+                    if (i < normalized.Count - 2)
+                    {
+                        incomingDirection = referenceVector.Dot(direction) < 0 ? referenceVector.Negate() : referenceVector;
+                        localType = NormalizationType.End;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                double incomingAngle = direction.AngleTo(incomingDirection);
+                if (incomingAngle.ApproximatelyEquals(180, 0.1) || incomingAngle.ApproximatelyEquals(0, 0.1) ||
+                    supportedAngles.Any(a => incomingAngle.ApproximatelyEquals(a, 0.1) ||
+                                            (incomingAngle - 90).ApproximatelyEquals(a, 0.1)))
+                {
+                    continue;
+                }
+
+                double angleDelta = 180;
+                double bestFitAngle = -1;
+                foreach (var angle in supportedAngles)
+                {
+                    var delta = Math.Abs(angle - incomingAngle);
+                    if (delta < angleDelta)
+                    {
+                        bestFitAngle = angle;
+                        angleDelta = delta;
+                    }
+                }
+
+                double directionalDistance = AngleAlignedDistance(
+                    normalized[i], normalized[i + 1], incomingDirection, bestFitAngle, out var cornerPoint);
+                var directionalVector = normalized[i] - cornerPoint;
+
+                switch (localType)
+                {
+                    case NormalizationType.Start:
+                        {
+                            normalized[i] = cornerPoint + directionalVector.Unitized() * directionalDistance;
+                        }
+                        break;
+                    case NormalizationType.Middle:
+                        {
+                            var delta = (directionalDistance - directionalVector.Length()) / 2;
+                            normalized[i] = cornerPoint + directionalVector.Unitized() * (directionalDistance - delta);
+
+                            var point = DisplacementAlignedPoint(
+                                normalized[i], normalized[i + 1], normalized[i + 2], directionalVector.Unitized(), delta);
+                            if (point.HasValue)
+                            {
+                                normalized[i + 1] = point.Value;
+                            }
+                        }
+                        break;
+                    default:
+                    case NormalizationType.End:
+                        {
+                            var delta = directionalDistance - directionalVector.Length();
+                            var point = DisplacementAlignedPoint(
+                                normalized[i], normalized[i + 1], normalized[i + 2], directionalVector.Unitized(), delta);
+                            if (point.HasValue)
+                            {
+                                normalized[i + 1] = point.Value;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            furthestDistancePointsMoved = normalized.Zip(Vertices, (a, b) => a.DistanceTo(b)).Max();
+            return new Polyline(normalized);
+        }
+
+        /// <summary>
+        /// Make the polyline correspond to the supported angles by moving the vertices slightly.
+        /// The result polyline will have only allowed angles, but vertices positions can be changed.
+        /// </summary>
+        /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
+        /// <param name="pathType">
+        /// The path type.
+        /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
+        /// - NormalizationType.Start: move B vertex
+        /// - NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions
+        /// - NormalizationType.End : move C vertex
+        /// </param>
+        /// <returns>The result polyline that has only allowed angles.</returns>
+        public Polyline ForceAngleCompliance(IEnumerable<double> supportedAngles,
+            Vector3 referenceVector, NormalizationType pathType = NormalizationType.Start)
+        {
+            return ForceAngleCompliance(supportedAngles, referenceVector, out _, pathType);
+        }
+
+        /// <summary>
+        /// Calculate distance from corner point, so point X = cornerPoint + incoming * D has needed angle (cornerPoint -> X -> end)
+        /// </summary>
+        private double AngleAlignedDistance(Vector3 start, Vector3 end, Vector3 incoming, double angle, out Vector3 cornerPoint)
+        {
+            var dot = (end - start).Dot(incoming);
+            cornerPoint = start + incoming * dot;
+            double directionalDistance = 0;
+
+            if (!angle.ApproximatelyEquals(90, 0.1))
+            {
+                var perdendicularDistance = (end - cornerPoint).Length();
+                directionalDistance = perdendicularDistance / Math.Tan(Units.DegreesToRadians(angle));
+            }
+
+            return directionalDistance;
+        }
+
+        /// <summary>
+        /// Calculate a point X on infinite B->C line, that intersects with A->(B+d) line, where d is displacement.
+        /// </summary>
+        private Vector3? DisplacementAlignedPoint(Vector3 a, Vector3 b, Vector3 c,
+            Vector3 displacementDirection, double displacementDistance)
+        {
+            var roughEndPoint = b - displacementDirection * displacementDistance;
+            Plane plane = new Plane(a, roughEndPoint, c);
+            var bcProjected = new Line(b, c).Projected(plane);
+            Line displacementLine = new Line(a, roughEndPoint);
+            if (displacementLine.Intersects(bcProjected, out var position, infinite: true))
+            {
+                return position;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -1256,5 +1445,24 @@ namespace Elements.Geometry
         /// If open, ends are joined and treated as a closed polygon
         /// </summary>
         ClosedPolygon,
+    }
+
+    /// <summary>
+    /// Normalization type.
+    /// </summary>
+    public enum NormalizationType
+    {
+        /// <summary>
+        /// During normalization move start points of segments.
+        /// </summary>
+        Start,
+        /// <summary>
+        /// During normalization move end points of segments.
+        /// </summary>
+        End,
+        /// <summary>
+        /// During normalization move both start and end vertices in approximately equivalent proportions.
+        /// </summary>
+        Middle
     }
 }

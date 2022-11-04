@@ -677,6 +677,54 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Add3DVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { new Vector3(2, 2), new Vector3(5, 5), new Vector3(8, 8) });
+
+            var toInsert = new Vector3[] {
+                new Vector3(2, 5, 0),
+                new Vector3(3, 5, 0),
+                new Vector3(4, 5, 1),
+                new Vector3(5, 5, 1),
+                new Vector3(6, 5, 0),
+                new Vector3(7, 5, 0)
+            };
+
+            var verticesBefore = grid.GetVertices().Count;
+            grid.AddVerticesWithCustomExtension(toInsert, 2);
+            //Start point already exist and the last one is snapped.
+            Assert.Equal(verticesBefore + 4, grid.GetVertices().Count);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(3, 5, 0), out var id, grid.Tolerance));
+            var vertex = grid.GetVertex(id);
+            Assert.Equal(3, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(2, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 0)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(4, 5, 1), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(2, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(3, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5, 1), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(2, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(6, 5, 0)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(6, 5, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(3, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(8, 5, 0)));
+        }
+
+        [Fact]
         public void AdaptiveGridVertexGetEdgeOtherVertexId()
         {
             var grid = SampleGrid();
