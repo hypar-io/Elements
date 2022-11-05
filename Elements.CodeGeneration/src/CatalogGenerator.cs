@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Elements.Geometry;
 using System.Reflection;
 using Elements.Generate.StringUtils;
+using System.Globalization;
 
 namespace Elements.Generate
 {
@@ -65,6 +66,7 @@ namespace Elements.Generate
 
             var templateText = File.ReadAllText(CatalogTemplatePath);
             var template = DotLiquid.Template.Parse(templateText);
+            CultureInfo.CurrentCulture = new CultureInfo("en-US");
             var result = template.Render(Hash.FromAnonymousObject(new
             {
                 catalog = catalog

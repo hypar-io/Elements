@@ -29,6 +29,7 @@
 - `Line.IsCollinear` - added `tolerance` parameter.
 - `Polygon.CollinearPointsRemoved` - added `tolerance` parameter.
 - `Line.TryGetOverlap` - added `tolerance` parameter.
+- `CatalogGenerator` always uses en-US culture.
 
 ### Fixed
 
