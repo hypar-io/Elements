@@ -35,7 +35,7 @@ namespace Elements.Serialization.SVG
         /// It can be used to create SvgElements
         /// (e.g. polygon.ToSvgPolygon(e.DrawingPlan, e.DrawingPlan.FrontContext) or e.DrawingPlan.CreateText(..))</param>
         /// <param name="element"></param>
-        public ElementSerializationEventArgs(SvgDrawingPlan drawingPlan, Element element)
+        public ElementSerializationEventArgs(SvgSection drawingPlan, Element element)
         {
             DrawingPlan = drawingPlan;
             Element = element;
@@ -44,7 +44,7 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// The instance of the drawing plan where the event occured
         /// </summary>
-        public SvgDrawingPlan DrawingPlan { get; }
+        public SvgSection DrawingPlan { get; }
 
         /// <summary>
         /// Gets or sets if element was processed by user and should be excluded from the further calculations

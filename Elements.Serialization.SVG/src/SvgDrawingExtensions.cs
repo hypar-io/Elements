@@ -22,7 +22,7 @@ namespace Elements.Serialization.SVG
             return svgLine;
         }
 
-        public static SvgLine ToSvgLine(this Line line, SvgDrawingPlan drawingPlan, SvgContext context)
+        public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
         {
             return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
         }
@@ -39,7 +39,7 @@ namespace Elements.Serialization.SVG
             };
         }
 
-        public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgDrawingPlan drawingPlan, SvgContext context)
+        public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
         {
             return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
         }
@@ -49,7 +49,7 @@ namespace Elements.Serialization.SVG
             return new SvgUnit(SvgUnitType.User, (float)(x - min.X));
         }
 
-        public static SvgUnit ToXUserUnit(this double x, SvgDrawingPlan drawingPlan)
+        public static SvgUnit ToXUserUnit(this double x, SvgSection drawingPlan)
         {
             return ToXUserUnit(x, drawingPlan.GetSceneBounds().Min);
         }
@@ -60,7 +60,7 @@ namespace Elements.Serialization.SVG
             return new SvgUnit(SvgUnitType.User, (float)(h + min.Y - y));
         }
 
-        public static SvgUnit ToYUserUnit(this double y, SvgDrawingPlan drawingPlan)
+        public static SvgUnit ToYUserUnit(this double y, SvgSection drawingPlan)
         {
             return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.GetSceneBounds().Min);
         }
@@ -76,7 +76,7 @@ namespace Elements.Serialization.SVG
             return ptCollection;
         }
 
-        public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgDrawingPlan drawingPlan)
+        public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgSection drawingPlan)
         {
             return ToSvgPointCollection(points, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight);
         }
