@@ -532,7 +532,7 @@ namespace Elements.Serialization.SVG
                 ViewBoxHeight = (float)(bounds.Max.Y - bounds.Min.Y);
                 float max = Math.Max(ViewBoxWidth, ViewBoxHeight);
                 doc.ViewBox = new SvgViewBox((wOld - ViewBoxWidth) / 2.0f, (ViewBoxHeight - hOld) / 2.0f, ViewBoxWidth, ViewBoxHeight);
-                doc.CustomAttributes.Add("transform", $"rotate({rotation} {ViewBoxWidth / 2.0} {ViewBoxHeight / 2.0})");// translate({(w - wOld) / 2.0} {(hOld - h) / 2.0})");
+                doc.CustomAttributes.Add("transform", $"rotate({rotation} {ViewBoxWidth / 2.0} {ViewBoxHeight / 2.0})");
             }
         }
 
