@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+### Changed
+- Remove the BBox3 validator.
+
 ## 1.3.0
 
 ### Added
