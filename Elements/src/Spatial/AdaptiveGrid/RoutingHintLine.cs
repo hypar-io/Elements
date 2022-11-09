@@ -1,7 +1,7 @@
 ﻿using Elements.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -17,13 +17,22 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="factor">Cost multiplier.</param>
         /// <param name="influence">How far it affects.</param>
         /// <param name="userDefined">Is user defined.</param>
+        /// <param name="is2D">Should polyline be virtually extended by Z coordinate.</param>
         public RoutingHintLine(
-            Polyline polyline, double factor, double influence, bool userDefined)
+            Polyline polyline, double factor, double influence, bool userDefined, bool is2D)
         {
-            Polyline = polyline;
             Factor = factor;
             InfluenceDistance = influence;
             UserDefined = userDefined;
+            Is2D = is2D;
+            if (Is2D)
+            {
+                Polyline = new Polyline(polyline.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
+            }
+            else
+            {
+                Polyline = polyline;
+            }
         }
 
         /// <summary>
@@ -47,5 +56,10 @@ namespace Elements.Spatial.AdaptiveGrid
         /// User defined lines are preferred for input Vertex connection.
         /// </summary>
         public readonly bool UserDefined;
+
+        /// <summary>
+        /// Should polyline be virtually extended by Z coordinate.
+        /// </summary>
+        public readonly bool Is2D;
     }
 }

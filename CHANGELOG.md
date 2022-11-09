@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0
+
+### Changed
+- Remove the BBox3 validator.
+
 ## 1.3.0
 
 ### Added
@@ -8,26 +13,29 @@
 - `AdaptiveGrid.HintExtendDistance`
 - `AdaptiveGrid.SnapshotEdgesOnPlane(Plane plane, IEnumerable<Edge> edgesToCheck)`
 - `AdaptiveGrid.InsertSnapshot(List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect)`
+- `RoutingHintLine.Is2D`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `Elements.Spatial.AdaptiveGrid.TreeNode`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 - `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
 
 ### Changed
 
 - `Line.PointOnLine` - added `tolerance` parameter.
-- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` how extends only up to `HintExtendDistance` distance.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` now extends only up to `HintExtendDistance` distance and inserts not exttended points as is otherwise ever if they are not touching the grid.
 - Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
 - Moved `BranchSide`, `RoutingVertex`, `RoutingConfiguration`, `RoutingHintLine`, `TreeOrder` from `AdaptiveGraphRouting` to their own files.
 - `RoutingVertex` - removed `Guides`.
 - `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
 - `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
-- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- `AdaptiveGraphRouting.BuildSpanningTree` and `AdaptiveGraphRouting.BuildSimpleNetwork` now return `IDictionary<ulong, TreeNode>`.
 - Don't log all vertex creation actions during Debug mode geometry generation.
 - `Polyline.GetSubsegment` changes direction of output polyline when parameters reversed
 - `Line.IsCollinear` - added `tolerance` parameter.
 - `Polygon.CollinearPointsRemoved` - added `tolerance` parameter.
 - `Line.TryGetOverlap` - added `tolerance` parameter.
+- `CatalogGenerator` always uses en-US culture.
 
 ### Fixed
 
