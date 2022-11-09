@@ -24,6 +24,8 @@ namespace Elements.Geometry
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
+        private static readonly Vector3 _min = new Vector3(double.MinValue, double.MinValue);
+        private static readonly Vector3 _max = new Vector3(double.MaxValue, double.MaxValue);
 
         /// <summary>
         /// Create a vector.
@@ -71,6 +73,22 @@ namespace Elements.Geometry
         public static Vector3 Origin
         {
             get { return _origin; }
+        }
+
+        /// <summary>
+        /// The smallest possible value of a Elements.Vector
+        /// </summary>
+        public static Vector3 Min
+        {
+            get { return _min; }
+        }
+
+        /// <summary>
+        /// The largest possible value of a Elements.Vector
+        /// </summary>
+        public static Vector3 Max
+        {
+            get { return _max; }
         }
 
         /// <summary>
