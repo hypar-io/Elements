@@ -1041,6 +1041,107 @@ namespace Elements.Tests
             CheckTree(grid, inputId2, tree, expectedPath);
         }
 
+        [Fact]
+        public void AdaptiveGraphRoutingGoesDown()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddVertices(new Vector3[] {
+                new Vector3(0, 0, 5),
+                new Vector3(0, 0, 0),
+                new Vector3(8, 0, 0),
+                new Vector3(9, 0, 0),
+                new Vector3(20, 0, 0),
+                new Vector3(20, 0, -5)
+            }, AdaptiveGrid.VerticesInsertionMethod.Connect);
+
+            grid.AddVertices(new Vector3[] {
+                new Vector3(5, 0, 5),
+                new Vector3(5, 0, 0),
+            }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            grid.AddVertices(new Vector3[] {
+                new Vector3(10, 0, 5),
+                new Vector3(10, 0, 0),
+            }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            grid.AddVertices(new Vector3[] {
+                new Vector3(15, 0, 5),
+                new Vector3(15, 0, 0),
+            }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+
+            var snapshot = grid.SnapshotEdgesOnPlane(Plane.XY);
+            var obstacle = Obstacle.FromLine(
+                new Line(new Vector3(8.5, 0, 1), new Vector3(8.5, 0, -1)), offset: 0.5);
+            Assert.True(grid.SubtractObstacle(obstacle));
+            grid.InsertSnapshot(snapshot, new Transform(0, 0, -1), true);
+
+
+            var c = new RoutingConfiguration(turnCost: 1, layerPenalty: 2);
+            var routing = new AdaptiveGraphRouting(grid, c);
+            routing.AddRoutingFilter((Vertex start, Vertex end) => start.Point.Z > end.Point.Z - Vector3.EPSILON);
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var inputId0, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 5), out var inputId1, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0, 5), out var inputId2, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(15, 0, 5), out var inputId3, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0, -5), out var outputId, grid.Tolerance));
+            var inputs = new List<RoutingVertex> {
+                new RoutingVertex(inputId0, 0),
+                new RoutingVertex(inputId1, 0),
+                new RoutingVertex(inputId2, 0),
+                new RoutingVertex(inputId3, 0),
+            };
+            var tree = routing.BuildSpanningTree(inputs, outputId, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
+
+            var expectedPath = new List<Vector3>()
+            {
+                new Vector3(15, 0, 5),
+                new Vector3(15, 0, 0),
+                new Vector3(15, 0, -1),
+                new Vector3(20,  0, -1),
+                new Vector3(20,  0, -5),
+            };
+            CheckTree(grid, inputId3, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(10, 0, 5),
+                new Vector3(10, 0, 0),
+                new Vector3(10, 0, -1),
+                new Vector3(15,  0, -1),
+                new Vector3(20,  0, -1),
+                new Vector3(20,  0, -5),
+            };
+            CheckTree(grid, inputId2, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(5, 0, 5),
+                new Vector3(5, 0, 0),
+                new Vector3(8, 0, 0),
+                new Vector3(8, 0, -1),
+                new Vector3(9, 0, -1),
+                new Vector3(10, 0, -1),
+                new Vector3(15,  0, -1),
+                new Vector3(20,  0, -1),
+                new Vector3(20,  0, -5),
+            };
+            CheckTree(grid, inputId1, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(0, 0, 5),
+                new Vector3(0, 0, 0),
+                new Vector3(5, 0, 0),
+                new Vector3(8, 0, 0),
+                new Vector3(8, 0, -1),
+                new Vector3(9, 0, -1),
+                new Vector3(10, 0, -1),
+                new Vector3(15,  0, -1),
+                new Vector3(20,  0, -1),
+                new Vector3(20,  0, -5),
+            };
+            CheckTree(grid, inputId0, tree, expectedPath);
+        }
         private void VisualizeRoutingTree(
             AdaptiveGrid grid,
             IEnumerable<RoutingVertex> routingVertices,
