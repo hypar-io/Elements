@@ -152,7 +152,6 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(6, 6, 6), new Vector3(1, 1, 1));
             var doesIntersect2 = ray2.Intersects(extrude, out List<Vector3> result2);
             Assert.True(doesIntersect2);
-
         }
 
         [Fact]
@@ -277,6 +276,23 @@ namespace Elements.Tests
             intersection = ray1.Intersects(ray2, out _, out intersectionType, false);
             Assert.False(intersection);
             Assert.Equal(Ray.RayIntersectionResult.None, intersectionType);
+        }
+
+        [Fact]
+        public void ParallelRayPointingInOppositeDirection()
+        {
+            var ray = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+            Assert.False(ray.Intersects(new Vector3(1, 0, 0), new Vector3(3, 0, 0), out _, out _));
+        }
+
+        [Fact]
+        public void DistanceToRay()
+        {
+            var ray = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+            Assert.Equal(1, new Vector3(1, 0, 0).DistanceTo(ray));
+            Assert.Equal(0, new Vector3(0, 0, 0).DistanceTo(ray));
+            Assert.Equal(1, new Vector3(0, 1, 0).DistanceTo(ray));
+            Assert.Equal(0, new Vector3(-5, 0, 0).DistanceTo(ray));
         }
 
         [Fact]

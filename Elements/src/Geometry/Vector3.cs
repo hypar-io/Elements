@@ -373,9 +373,18 @@ namespace Elements.Geometry
         /// <param name="ray">The target ray.</param>
         public double DistanceTo(Ray ray)
         {
+            var q = this;
             var d = ray.Direction;
-            var t0 = d.Dot(this - ray.Origin) / d.Dot(d);
-            return (this - (ray.Origin + t0 * d)).Length();
+            var pOrg = ray.Origin;
+            var t = d.Dot(q - pOrg) / d.Length(); // t will be [0,1]
+            var q1 = pOrg + t * d;
+
+            if (t < 0)
+            {
+                return q.DistanceTo(pOrg);
+            }
+
+            return q1.DistanceTo(q);
         }
 
         /// <summary>
