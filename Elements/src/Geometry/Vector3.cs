@@ -24,8 +24,8 @@ namespace Elements.Geometry
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
-        private static readonly Vector3 _min = new Vector3(double.MinValue, double.MinValue);
-        private static readonly Vector3 _max = new Vector3(double.MaxValue, double.MaxValue);
+        private static readonly Vector3 _min = new Vector3(double.MinValue, double.MinValue, double.MinValue);
+        private static readonly Vector3 _max = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
 
         /// <summary>
         /// Create a vector.
@@ -869,7 +869,7 @@ namespace Elements.Geometry
         /// <param name="c">The third point.</param>
         /// <param name="tolerance">Distance tolerance.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
-        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON) 
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON)
         {
             var vectorList = new List<Vector3> { a, b, c };
             return vectorList.AreCollinearByDistance(tolerance);

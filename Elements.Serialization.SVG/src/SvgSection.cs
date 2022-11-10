@@ -413,7 +413,7 @@ namespace Elements.Serialization.SVG
                     if (element.Value is GeometricElement geo)
                     {
                         geo.UpdateRepresentations();
-                        if (geo.Representation.SolidOperations.All(v => v.IsVoid))
+                        if (geo.Representation == null || geo.Representation.SolidOperations.All(v => v.IsVoid))
                         {
                             continue;
                         }
