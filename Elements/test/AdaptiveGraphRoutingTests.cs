@@ -1142,6 +1142,85 @@ namespace Elements.Tests
             };
             CheckTree(grid, inputId0, tree, expectedPath);
         }
+
+        [Fact]
+        public void AdaptiveGraphRoutingWarinigs()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddEdge(new Vector3(0, 0, 0), new Vector3(20, 0, 0)); // collector line
+            //TODO: without middle point isolation radius doesn't work.
+            //We probably would need to revisit how it's applied (on edges?)
+            grid.AddVertices(new List<Vector3>(){
+                new Vector3(0, 5, 0),
+                new Vector3(0, 3, 0),
+                new Vector3(0, 0, 0) }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut); 
+            grid.AddEdge(new Vector3(0.1, 3, 0), new Vector3(0.1, 0, 0)); //two lines too close.
+            grid.AddEdge(new Vector3(5, -5, 0), new Vector3(5, -1, 0)); // not connected to collector.
+            grid.AddEdge(new Vector3(5, 5, 0), new Vector3(10, 0, 0)); //45 degree edge.
+            grid.AddVertices(new List<Vector3>() {
+                new Vector3(15, -5, 0),
+                new Vector3(15, -2, -1),
+                new Vector3(15, 0, 0) },
+                AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut); //goes underground.
+
+            grid.TryGetVertexIndex(new Vector3(0, 5, 0), out var id0, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(0.1, 3, 0), out var id1, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(5, -5, 0), out var id2, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(5, 5, 0), out var id3, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(15, -5, 0), out var id4, grid.Tolerance);
+            List<RoutingVertex> leafs = new List<RoutingVertex>(){
+                new RoutingVertex(id0, 0.5),
+                new RoutingVertex(id1, 0.5),
+                new RoutingVertex(id2, 0.5),
+                new RoutingVertex(id3, 0.5),
+                new RoutingVertex(id4, 0.5),
+            };
+            grid.TryGetVertexIndex(new Vector3(20, 0, 0), out var trunk, grid.Tolerance);
+
+            RoutingConfiguration config = new RoutingConfiguration();  
+            AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
+            alg.BuildSpanningTree(leafs, trunk, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
+            Assert.Equal(2, alg.ErrorMessages.Count);
+            var disconnected = alg.ErrorMessages.Where(e => e.MessageText.Contains(id2.ToString())).First();
+            Assert.Contains("not connected", disconnected.MessageText);
+            var tooClose = alg.ErrorMessages.Where(e => e.MessageText.Contains(id0.ToString())).First();
+            Assert.Contains("other inputs", tooClose.MessageText);
+
+            //Fix the issues
+            leafs[1] = new RoutingVertex(leafs[1].Id, 0.05);
+            var missingEdge = grid.AddEdge(new Vector3(5, -1, 0), new Vector3(5, 0, 0)).First();
+            alg.BuildSpanningTree(leafs, trunk, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
+            Assert.Empty(alg.ErrorMessages);
+
+            //Check other functions
+            grid.RemoveEdge(missingEdge);
+            config = new RoutingConfiguration(supportedAngles: new List<double>() { 90 });
+            alg = new AdaptiveGraphRouting(grid, config);
+            alg.BuildSpanningTree(
+                leafs.Select(l => new List<RoutingVertex>() { l }).ToList(),
+                trunk,
+                new List<List<RoutingHintLine>>(),
+                TreeOrder.ClosestToFurthest);
+            Assert.Equal(2, alg.ErrorMessages.Count);
+            disconnected = alg.ErrorMessages.Where(e => e.MessageText.Contains(id2.ToString())).First();
+            Assert.Contains("not connected", disconnected.MessageText);
+            var wrongAngle = alg.ErrorMessages.Where(e => e.MessageText.Contains(id3.ToString())).First();
+            Assert.Contains("angle", wrongAngle.MessageText);
+
+            grid.AddEdge(new Vector3(5, -1, 0), new Vector3(5, 0, 0)).First();
+            config = new RoutingConfiguration(supportedAngles: new List<double>() { 90, 45 });
+            alg = new AdaptiveGraphRouting(grid, config);
+            alg.AddRoutingFilter((Vertex l, Vertex r) => { return l.Point.Z >= 0 && r.Point.Z >= 0; });
+            alg.BuildSpanningTree(
+                leafs.Select(l => new List<RoutingVertex>() { l }).ToList(),
+                trunk,
+                new List<List<RoutingHintLine>>(),
+                TreeOrder.ClosestToFurthest);
+            Assert.Single(alg.ErrorMessages);
+            var filtered = alg.ErrorMessages.Where(e => e.MessageText.Contains(id4.ToString())).First();
+            Assert.Contains("filter", filtered.MessageText);
+        }
+
         private void VisualizeRoutingTree(
             AdaptiveGrid grid,
             IEnumerable<RoutingVertex> routingVertices,
