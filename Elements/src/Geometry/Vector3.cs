@@ -301,7 +301,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
+        /// Calculate a counterclockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
@@ -369,24 +369,19 @@ namespace Elements.Geometry
 
         /// <summary>
         /// The distance from this point to the ray.
+        /// The ray is treated as being infinitely long.
         /// </summary>
         /// <param name="ray">The target ray.</param>
         public double DistanceTo(Ray ray)
         {
-            var q = this;
-            var d = ray.Direction;
-            var pOrg = ray.Origin;
-            var t = d.Dot(q - pOrg) / d.Length(); // t will be [0,1]
-            var closestPointOnRay = pOrg + t * d;
+            var t = ProjectedParameterOn(ray);
+            var closestPointOnRay = ray.Origin + t * ray.Direction;
+            return closestPointOnRay.DistanceTo(this);
+        }
 
-            if (t < 0)
-            {
-                // The point is "behind" the ray. 
-                // Return the distance to the ray's origin.
-                return closestPointOnRay.DistanceTo(pOrg);
-            }
-
-            return closestPointOnRay.DistanceTo(q);
+        internal double ProjectedParameterOn(Ray ray)
+        {
+            return ray.Direction.Dot(this - ray.Origin) / ray.Direction.Length(); // t will be [0,1]
         }
 
         /// <summary>

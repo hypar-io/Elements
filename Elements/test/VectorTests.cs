@@ -62,8 +62,7 @@ namespace Elements.Tests
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, a)));
 
             var angle = new Vector3(-1, -0.1, 0).PlaneAngleTo(Vector3.XAxis, Vector3.ZAxis);
-            Assert.True(angle > 180);
-
+            Assert.True(angle < 180);
         }
 
         [Fact]
