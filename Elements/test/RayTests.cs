@@ -221,6 +221,65 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void CoincidentRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.Coincident, intersectionType);
+
+            ray2 = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+            intersection = ray1.Intersects(ray2, out _, out intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.Coincident, intersectionType);
+        }
+
+        [Fact]
+        public void ParallelRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(0, 0, 1), Vector3.XAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.False(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.Parallel, intersectionType);
+        }
+
+        [Fact]
+        public void IntersectingRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.Intersect, intersectionType);
+        }
+
+        [Fact]
+        public void SkewedRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, 5), Vector3.ZAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.False(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.None, intersectionType);
+        }
+
+        [Fact]
+        public void IntersectingRaysIgnoringDirection()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis.Negate());
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType, true);
+            Assert.True(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.Intersect, intersectionType);
+
+            intersection = ray1.Intersects(ray2, out _, out intersectionType, false);
+            Assert.False(intersection);
+            Assert.Equal(Ray.RayIntersectionResult.None, intersectionType);
+        }
+
+        [Fact]
         public void RayShadowTest()
         {
             this.Name = "RayShadowTest";

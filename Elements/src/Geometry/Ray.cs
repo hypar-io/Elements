@@ -9,7 +9,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public struct Ray : IEquatable<Ray>
+    public partial struct Ray : IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
@@ -157,29 +157,13 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
         internal bool Intersects(Face face, out Vector3 result)
         {
-            var plane = face.Plane();
-            if (Intersects(plane, out Vector3 intersection))
+            if (Intersects(face.Outer.ToPolygon(), out Vector3 intersection, out _))
             {
-                var boundaryPolygon = face.Outer.ToPolygon();
-                var voids = face.Inner?.Select(v => v.ToPolygon())?.ToList();
-                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
-                var transformFromPolygon = new Transform(transformToPolygon);
-                transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<(Vector3 from, Vector3 to)> curveList = boundaryPolygon.Edges();
-                if (voids != null)
-                {
-                    curveList = curveList.Union(voids.SelectMany(v => v.Edges()));
-                }
-                curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
-
-                if (Polygon.Contains2D(curveList, transformedIntersection, out _))
-                {
-                    result = intersection;
-                    return true;
-                }
+                result = intersection;
+                return true;
             }
-            result = default(Vector3);
+
+            result = default;
             return false;
         }
 
@@ -192,7 +176,7 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
         public bool Intersects(Polygon polygon, out Vector3 result, out Containment containment)
         {
-            var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
+            var plane = polygon.Plane();
             if (Intersects(plane, out Vector3 test))
             {
                 // Check the intersection against all the polygon's vertices.
@@ -295,25 +279,64 @@ namespace Elements.Geometry
         /// <returns>True if the rays intersect, otherwise false.</returns>
         public bool Intersects(Ray ray, out Vector3 result, bool ignoreRayDirection = false)
         {
+            return Intersects(ray, out result, out _, ignoreRayDirection);
+        }
+
+        /// <summary>
+        /// Does this ray intersect the provided ray?
+        /// </summary>
+        /// <param name="ray">The ray to intersect.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <param name="intersectionResult">An enumeration of possible ray intersection result types.</param>
+        /// <param name="ignoreRayDirection">If true, the direction of the rays will be ignored.</param>
+        /// <returns>True if the rays intersect, otherwise false.</returns>
+        public bool Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)
+        {
             var p1 = this.Origin;
             var p2 = ray.Origin;
             var d1 = this.Direction;
             var d2 = ray.Direction;
 
-            if (d1.IsParallelTo(d2))
+            var t1 = (p2 - p1).Cross(d2).Dot(d1.Cross(d2)) / Math.Pow(d1.Cross(d2).Length(), 2);
+            var t2 = (p2 - p1).Cross(d1).Dot(d1.Cross(d2)) / Math.Pow(d1.Cross(d2).Length(), 2);
+
+            if (double.IsNaN(t1) && double.IsNaN(t2))
             {
-                result = default(Vector3);
-                return false;
+                // Rays are coincident or parallel. 
+
+                // Check distance of p2 to this ray
+                var d = p2.DistanceTo(this);
+
+                if (!d.ApproximatelyEquals(0))
+                {
+                    result = default;
+                    intersectionResult = RayIntersectionResult.Parallel;
+                    return false;
+                }
+                else
+                {
+                    result = Origin;
+                    intersectionResult = RayIntersectionResult.Coincident;
+                    return true;
+                }
             }
 
-            var t1 = (((p2 - p1).Cross(d2)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
-            var t2 = (((p2 - p1).Cross(d1)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
-            result = p1 + d1 * t1;
-            if (ignoreRayDirection)
+            var a = p1 + d1 * t1;
+            var b = p2 + d2 * t2;
+
+            result = default;
+
+            if (a.IsAlmostEqualTo(b))
             {
-                return true;
+                // The rays intersect
+                var valid = ignoreRayDirection || t1 >= 0 && t2 >= 0;
+                intersectionResult = valid ? RayIntersectionResult.Intersect : RayIntersectionResult.None;
+                result = valid ? a : default;
+                return valid;
             }
-            return t1 >= 0 && t2 >= 0;
+
+            intersectionResult = RayIntersectionResult.None;
+            return false;
         }
 
         /// <summary>
@@ -333,13 +356,14 @@ namespace Elements.Geometry
         /// <param name="start">The start of the line segment.</param>
         /// <param name="end">The end of the line segment.</param>
         /// <param name="result">The location of the intersection.</param>
+        /// <param name="intersectionResult">The nature of the ray intersection.</param>
         /// <returns>True if the ray intersects, otherwise false.</returns>
-        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result, out RayIntersectionResult intersectionResult)
         {
             var d = (end - start).Unitized();
             var l = start.DistanceTo(end);
             var otherRay = new Ray(start, d);
-            if (Intersects(otherRay, out Vector3 rayResult))
+            if (Intersects(otherRay, out Vector3 rayResult, out intersectionResult))
             {
                 // Quick out if the result is exactly at the 
                 // start or the end of the line.
@@ -350,7 +374,7 @@ namespace Elements.Geometry
                 }
                 else if ((rayResult - start).Length() > l)
                 {
-                    result = default(Vector3);
+                    result = default;
                     return false;
                 }
                 else
@@ -359,8 +383,20 @@ namespace Elements.Geometry
                     return true;
                 }
             }
-            result = default(Vector3);
+            result = default;
             return false;
+        }
+
+        /// <summary>
+        /// Does this ray intersect a line segment defined by start and end?
+        /// </summary>
+        /// <param name="start">The start of the line segment.</param>
+        /// <param name="end">The end of the line segment.</param>
+        /// <param name="result">The location of the intersection.</param>
+        /// <returns>True if the ray intersects, otherwise false.</returns>
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        {
+            return Intersects(start, end, out result, out _);
         }
 
         /// <summary>
