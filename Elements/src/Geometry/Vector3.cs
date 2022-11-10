@@ -301,7 +301,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a counter-clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
+        /// Calculate a clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
@@ -346,12 +346,36 @@ namespace Elements.Geometry
         #region DistanceTo methods
         /// <summary>
         /// The distance from this point to b.
+        /// For fast distance comparison between points, use SquaredDistanceTo(...).
         /// </summary>
         /// <param name="v">The target vector.</param>
         /// <returns>The distance between this vector and the provided vector.</returns>
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+
+        /// <summary>
+        /// The squared distance from this point to b.
+        /// Use this method when you want to make rapid distance comparisons
+        /// between points, and the actual distance is not important.
+        /// </summary>
+        /// <param name="v">The target vector.</param>
+        /// <returns>The distance between this vector and the provided vector.</returns>
+        public double SquaredDistanceTo(Vector3 v)
+        {
+            return Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2);
+        }
+
+        /// <summary>
+        /// The distance from this point to the ray.
+        /// </summary>
+        /// <param name="ray">The target ray.</param>
+        public double DistanceTo(Ray ray)
+        {
+            var d = ray.Direction;
+            var t0 = d.Dot(this - ray.Origin) / d.Dot(d);
+            return (this - (ray.Origin + t0 * d)).Length();
         }
 
         /// <summary>
@@ -392,7 +416,10 @@ namespace Elements.Geometry
 
         private double DistanceToEdgeInternal(Vector3 start, Vector3 end, out Vector3 closestPoint)
         {
-            var lambda = (this - start).Dot(end - start) / (end - start).Dot(end - start);
+            var d1 = this - start;
+            var d2 = end - start;
+
+            var lambda = d1.Dot(d2) / d2.Dot(d2);
             if (lambda >= 1)
             {
                 closestPoint = end;
@@ -405,7 +432,7 @@ namespace Elements.Geometry
             }
             else
             {
-                closestPoint = (start + lambda * (end - start));
+                closestPoint = start + lambda * d2;
                 return this.DistanceTo(closestPoint);
             }
         }
@@ -851,7 +878,7 @@ namespace Elements.Geometry
         /// <param name="c">The third point.</param>
         /// <param name="tolerance">Distance tolerance.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
-        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON) 
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON)
         {
             var vectorList = new List<Vector3> { a, b, c };
             return vectorList.AreCollinearByDistance(tolerance);
@@ -1010,6 +1037,40 @@ namespace Elements.Geometry
         public static implicit operator Vector3((int X, int Y) vector)
         {
             return new Vector3(vector.X, vector.Y);
+        }
+
+        /// <summary>
+        /// Construct X and Y vectors from the provided Z vector.
+        /// Construction is done by projecting the Z vector onto the global XY
+        /// plane and using the resulting vector to find the right (+X) vector,
+        /// then the forward (+Y) vectors.
+        /// </summary>
+        /// <param name="origin">The origin.</param>
+        /// <param name="zAxis">The z vector.</param>
+        /// <returns>A tuple containing the X and Y vectors.</returns>
+        internal static (Vector3 X, Vector3 Y) ConstructBasisVectorsFromZAxis(Vector3 origin, Vector3 zAxis)
+        {
+            Vector3 x = XAxis;
+            Vector3 y = YAxis;
+
+            if (!zAxis.IsParallelTo(ZAxis))
+            {
+                // Project up onto the ortho plane
+                var p = new Plane(origin, zAxis);
+                var test = ZAxis.Project(p);
+                x = test.Cross(zAxis).Unitized();
+                y = x.Cross(zAxis.Negate()).Unitized();
+            }
+            else
+            {
+                // Ensure that we have a right-handed coordinate system.
+                if (zAxis.Dot(ZAxis).ApproximatelyEquals(-1))
+                {
+                    y = YAxis.Negate();
+                }
+            }
+
+            return (x, y);
         }
     }
 }
