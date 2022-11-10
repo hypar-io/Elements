@@ -377,14 +377,16 @@ namespace Elements.Geometry
             var d = ray.Direction;
             var pOrg = ray.Origin;
             var t = d.Dot(q - pOrg) / d.Length(); // t will be [0,1]
-            var q1 = pOrg + t * d;
+            var closestPointOnRay = pOrg + t * d;
 
             if (t < 0)
             {
-                return q.DistanceTo(pOrg);
+                // The point is "behind" the ray. 
+                // Return the distance to the ray's origin.
+                return closestPointOnRay.DistanceTo(pOrg);
             }
 
-            return q1.DistanceTo(q);
+            return closestPointOnRay.DistanceTo(q);
         }
 
         /// <summary>
