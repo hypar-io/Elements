@@ -395,7 +395,7 @@ namespace Elements.Geometry
             {
                 allEdges = allEdges.Union(Voids.SelectMany(v => v.Edges()));
             }
-            return Polygon.Contains2D(allEdges, point, out containment);
+            return Polygon.Contains(allEdges, point, out containment);
         }
 
         /// <summary>

@@ -540,14 +540,14 @@ namespace Elements.Geometry
             var is3D = Vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains2D(Edges(), location, out containment);
+                return Contains(Edges(), location, out containment);
             }
 
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
             var groundSegments = Edges(transformToGround);
             var groundLocation = transformToGround.OfPoint(location);
-            return Contains2D(groundSegments, groundLocation, out containment);
+            return Contains(groundSegments, groundLocation, out containment);
         }
 
         internal bool Contains3D(Polygon polygon)
@@ -556,7 +556,7 @@ namespace Elements.Geometry
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains2D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
+        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
         {
             int windingNumber = 0;
 
@@ -777,7 +777,7 @@ namespace Elements.Geometry
             var allInside = true;
             foreach (var vertex in polygon.Vertices)
             {
-                Contains2D(Edges(), vertex, out Containment containment);
+                Contains(Edges(), vertex, out Containment containment);
                 if (containment == Containment.Outside)
                 {
                     return false;
@@ -798,7 +798,7 @@ namespace Elements.Geometry
             // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
             foreach (var vertex in Vertices)
             {
-                Contains2D(polygon.Edges(), vertex, out Containment containment);
+                Contains(polygon.Edges(), vertex, out Containment containment);
                 if (containment == Containment.Inside)
                 {
                     return false;
