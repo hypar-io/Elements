@@ -301,7 +301,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate a counterclockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
+        /// Calculate a counter-clockwise plane angle between this vector and the provided vector, projected to the plane perpendicular to the provided normal.
         /// </summary>
         /// <param name="v">The vector with which to measure the angle.</param>
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
@@ -345,8 +345,7 @@ namespace Elements.Geometry
 
         #region DistanceTo methods
         /// <summary>
-        /// The distance from this point to b.
-        /// For fast distance comparison between points, use SquaredDistanceTo(...).
+        /// The distance from this point to v.
         /// </summary>
         /// <param name="v">The target vector.</param>
         /// <returns>The distance between this vector and the provided vector.</returns>
