@@ -556,14 +556,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     //Edge or start vertex is not traversable.
                     if (edgeInfo.Factor == CONDITIONS_NOT_MET || cost == CONDITIONS_NOT_MET)
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
                     //Vertex is excluded or shortest path is already found.
                     if ((excluded != null && excluded.Contains(id)))
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -571,7 +571,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     //Check if edge passes user defined filter functions
                     if (_filters.Any(f => !f(vertex, v)))
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -636,7 +636,7 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
             PriorityQueue<ulong> pq = PreparePriorityQueue(
-                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Rigth)> path,
+                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
                 out travelCost);
 
             while (!pq.Empty())
@@ -661,7 +661,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     //Don't go back to where we just came from.
                     //If vertex is removed from queue - best path is already found for it.
                     var id = e.StartId == u ? e.EndId : e.StartId;
-                    if (before.Left.Id == id || before.Rigth.Id == id || !pq.Contains(id))
+                    if (before.Left.Id == id || before.Right.Id == id || !pq.Contains(id))
                     {
                         continue;
                     }
@@ -672,14 +672,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     //Edge or start vertex is not traversable.
                     if (edgeInfo.Factor == CONDITIONS_NOT_MET || cost.Item1 == CONDITIONS_NOT_MET)
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
                     //Vertex is excluded or shortest path is already found.
                     if (excluded != null && excluded.Contains(id))
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -687,7 +687,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     //Check if edge passes user defined filter functions
                     if (_filters.Any(f => !f(vertex, v)))
                     {
-                        MarkExpeniseRoute(pq, travelCost, path, id, u, bestCost);
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -719,26 +719,26 @@ namespace Elements.Spatial.AdaptiveGrid
                             leftCost += TurnCost(edgeInfo, vertex, leftBefore.Id, edgeInfos);
                         }
 
-                        var rigthCost = NOT_CONNECTED;
-                        if (before.Rigth.Id != 0)
+                        var rightCost = NOT_CONNECTED;
+                        if (before.Right.Id != 0)
                         {
-                            var rigthBefore = _grid.GetVertex(before.Rigth.Id);
-                            rigthCost = cost.Item2 + newWeight;
-                            if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
+                            var rightBefore = _grid.GetVertex(before.Right.Id);
+                            rightCost = cost.Item2 + newWeight;
+                            if (!Vector3.AreCollinearByAngle(rightBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += TurnCost(edgeInfo, vertex, rigthBefore.Id, edgeInfos);
+                                rightCost += TurnCost(edgeInfo, vertex, rightBefore.Id, edgeInfos);
                             }
                         }
 
                         //Then choose the path that has lower accumulated value.
-                        if (leftCost < rigthCost)
+                        if (leftCost < rightCost)
                         {
                             newWeight = leftCost;
                             bestBranch = BranchSide.Left;
                         }
                         else
                         {
-                            newWeight = rigthCost;
+                            newWeight = rightCost;
                             bestBranch = BranchSide.Right;
                         }
                     }
@@ -1186,7 +1186,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return cost;
         }
 
-        private void MarkExpeniseRoute(PriorityQueue<ulong> pq,
+        private void MarkExpensiveRoute(PriorityQueue<ulong> pq,
                                        IDictionary<ulong, double> travelCost,
                                        IDictionary<ulong, ulong> path,
                                        ulong id, ulong before, double bestCost)
@@ -1199,10 +1199,10 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private void MarkExpeniseRoute(
+        private void MarkExpensiveRoute(
             PriorityQueue<ulong> pq,
             Dictionary<ulong, (double Left, double Right)> travelCost,
-            Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Rigth)> path,
+            Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
             ulong id, ulong before, (double Left, double Right) bestCost)
         {
             if (bestCost.Left == NOT_CONNECTED)
