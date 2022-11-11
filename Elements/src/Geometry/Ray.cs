@@ -9,7 +9,7 @@ namespace Elements.Geometry
     /// <summary>
     /// An infinite ray starting at origin and pointing towards direction.
     /// </summary>
-    public partial struct Ray : IEquatable<Ray>
+    public struct Ray : IEquatable<Ray>
     {
         /// <summary>
         /// The origin of the ray.
