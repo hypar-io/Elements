@@ -1315,7 +1315,7 @@ namespace Elements.Geometry
             var heg = HalfEdgeGraph2d.Construct(lines, true);
             var polylines = heg.Polylinize();
             var offsets = polylines.SelectMany(l => l.OffsetWithAcuteAngle(distance / 2)).ToList();
-            
+
             return offsets;
         }
     }
