@@ -4,6 +4,8 @@ using Elements.Spatial.AdaptiveGrid;
 using Elements.Geometry;
 using System.Linq;
 using Elements.Geometry.Solids;
+using Elements.Annotations;
+using System.Text;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -15,6 +17,9 @@ namespace Elements.Spatial.AdaptiveGrid
         private AdaptiveGrid _grid;
         private RoutingConfiguration _configuration;
 
+        private const double NOT_CONNECTED = double.PositiveInfinity;
+        private const double CONDITIONS_NOT_MET = double.MaxValue;
+
         /// <summary>
         /// Filter function definition.
         /// </summary>
@@ -23,6 +28,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public delegate bool RoutingFilter(Vertex start, Vertex end);
         private List<RoutingFilter> _filters = new List<RoutingFilter>();
+
+        /// <summary>
+        /// List of error messages that occur during routing.
+        /// Are reset on the beginning of each routing operation.
+        /// </summary>
+        public List<Message> ErrorMessages = new List<Message>();
 
         /// <summary>
         /// Create AdaptiveGraphRouting objects and store core parameters for further use.
@@ -150,6 +161,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<RoutingHintLine> hintLines,
             TreeOrder order)
         {
+            ErrorMessages.Clear();
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
@@ -196,6 +208,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IList<List<RoutingHintLine>> hintLines,
             TreeOrder order)
         {
+            ErrorMessages.Clear();
             var allLeafs = leafVertices.SelectMany(l => l).ToList();
             var allHints = hintLines.SelectMany(h => h).ToList();
 
@@ -242,6 +255,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IList<ulong> exits,
             IEnumerable<RoutingHintLine> hintLines = null)
         {
+            ErrorMessages.Clear(); 
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
@@ -273,9 +287,13 @@ namespace Elements.Spatial.AdaptiveGrid
                 var excluded = FilteredSet(allExcluded, excludedVertices[inlet.Id]);
                 var connections = ShortestPathDijkstra(
                     inlet.Id, weights, out var travelCost, excluded: excluded);
-                var exit = FindConnectionPoint(exits, travelCost);
-                var path = GetPathTo(connections, exit);
-                AddPathToTree(inlet.Id, path, leafsToTrunkTree);
+                var bestCost = NOT_CONNECTED;
+                var exit = FindConnectionPoint(exits, travelCost, ref bestCost);
+                if (CheckAccessability(inlet.Id, bestCost, allExcluded.Any()))
+                {
+                    var path = GetPathTo(connections, exit);
+                    AddPathToTree(inlet.Id, path, leafsToTrunkTree);
+                }
             }
 
             return leafsToTrunkTree;
@@ -301,13 +319,19 @@ namespace Elements.Spatial.AdaptiveGrid
             var terminalInfo = new Dictionary<ulong, (
                 Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> Connections,
                 Dictionary<ulong, (double, double)> Costs)>();
+            List<ulong> validLeafTerminals = new List<ulong>();
             foreach (var inlet in leafTerminals)
             {
                 var excluded = FilteredSet(allExcluded, excludedPerVertex[inlet]);
                 //Allow travel through excluded vertices of inlet only if it not yet left it's zone
                 var connections = ShortestBranchesDijkstra(inlet, weights,
                     out var travelCost, null, excluded);
-                terminalInfo[inlet] = (connections, travelCost);
+
+                if (CheckAccessability(inlet, travelCost[trunkTerminal].Item1, allExcluded.Any()))
+                {
+                    terminalInfo[inlet] = (connections, travelCost);
+                    validLeafTerminals.Add(inlet);
+                }
             }
 
             List<ulong> appliedLeafs = new List<ulong>();
@@ -315,18 +339,19 @@ namespace Elements.Spatial.AdaptiveGrid
             //Distances are precomputed beforehand to avoid square complexity on Dijkstra algorithm.
             //When terminal is connected to the trunk - we can choose one of two routing options,
             //considering also if any of them need extra turn when connected.
-            while (leafTerminals.Any())
+            while (validLeafTerminals.Any())
             {
                 ulong closestTerminal = 0;
                 List<ulong> path = null;
                 double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
-                foreach (var terminal in leafTerminals)
+                foreach (var terminal in validLeafTerminals)
                 {
                     var info = terminalInfo[terminal];
                     var (localClosest, branch) = FindConnectionPoint(
                         magnetTerminals, info.Costs, info.Connections, leafsToTrunkTree, weights);
                     var costs = info.Costs[localClosest];
                     var localBestCost = branch == BranchSide.Left ? costs.Item1 : costs.Item2;
+
                     if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
                     {
                         path = GetPathTo(info.Connections, localClosest, branch);
@@ -335,10 +360,13 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
                 }
 
-                path.ForEach(p => magnetTerminals.Add(p));
-                AddPathToTree(closestTerminal, path, leafsToTrunkTree);
-                leafTerminals.Remove(closestTerminal);
-                appliedLeafs.Add(closestTerminal);
+                if (path != null && closestTerminal != 0)
+                {
+                    path.ForEach(p => magnetTerminals.Add(p));
+                    AddPathToTree(closestTerminal, path, leafsToTrunkTree);
+                    validLeafTerminals.Remove(closestTerminal);
+                    appliedLeafs.Add(closestTerminal);
+                }
             }
 
             //Find closest connection from leafs once again.
@@ -400,7 +428,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (_configuration.SupportedAngles != null &&
                     !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle, 0.01)))
                 {
-                    weights[e.Id] = new EdgeInfo(_grid, e, double.PositiveInfinity);
+                    weights[e.Id] = new EdgeInfo(_grid, e, CONDITIONS_NOT_MET);
                 }
                 else
                 {
@@ -504,14 +532,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 //All vertices that can be reached from start vertex are visited.
                 //Ignore once only unreachable are left.
                 var cost = travelCost[u];
-                if (cost == double.MaxValue)
+                if (cost == NOT_CONNECTED)
                 {
                     break;
-                }
-
-                if (excluded != null && excluded.Contains(u))
-                {
-                    continue;
                 }
 
                 var beforeId = path[u];
@@ -519,29 +542,36 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeInfo = edgeInfos[e.Id];
-                    if (edgeInfo.Factor == double.PositiveInfinity)
-                    {
-                        continue;
-                    }
-
-                    var id = e.StartId == u ? e.EndId : e.StartId;
-                    var v = _grid.GetVertex(id);
-
-                    if ((excluded != null && excluded.Contains(id)) || !pq.Contains(id))
-                    {
-                        continue;
-                    }
-
                     //Don't go back to where we just came from.
-                    if (beforeId == v.Id)
+                    //If vertex is removed from queue - best path is already found for it.
+                    var id = e.StartId == u ? e.EndId : e.StartId;
+                    if (beforeId == id || !pq.Contains(id))
                     {
                         continue;
                     }
 
-                    //User defined filter functions
+                    var edgeInfo = edgeInfos[e.Id];
+                    var bestCost = travelCost[id];
+
+                    //Edge or start vertex is not traversable.
+                    if (edgeInfo.Factor == CONDITIONS_NOT_MET || cost == CONDITIONS_NOT_MET)
+                    {
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
+                        continue;
+                    }
+
+                    //Vertex is excluded or shortest path is already found.
+                    if ((excluded != null && excluded.Contains(id)))
+                    {
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
+                        continue;
+                    }
+
+                    var v = _grid.GetVertex(id);
+                    //Check if edge passes user defined filter functions
                     if (_filters.Any(f => !f(vertex, v)))
                     {
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -606,7 +636,7 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
             PriorityQueue<ulong> pq = PreparePriorityQueue(
-                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Rigth)> path,
+                start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
                 out travelCost);
 
             while (!pq.Empty())
@@ -614,46 +644,50 @@ namespace Elements.Spatial.AdaptiveGrid
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
                 ulong u = pq.PopMin();
-                if (excluded != null && excluded.Contains(u))
+
+                //All vertices that can be reached from start vertex are visited.
+                //Ignore once only unreachable are left.
+                var cost = travelCost[u];
+                if (cost.Item1 == NOT_CONNECTED)
                 {
-                    continue;
+                    break;
                 }
 
                 var vertex = _grid.GetVertex(u);
+                var before = path[u];
+
                 foreach (var e in vertex.Edges)
                 {
-                    var edgeInfo = edgeInfos[e.Id];
-                    if (edgeInfo.Factor == double.PositiveInfinity)
-                    {
-                        continue;
-                    }
-
-                    var id = e.StartId == u ? e.EndId : e.StartId;
-                    var v = _grid.GetVertex(id);
-
-                    if ((excluded != null && excluded.Contains(id)) || !pq.Contains(id))
-                    {
-                        continue;
-                    }
-
                     //Don't go back to where we just came from.
-                    var before = path[u];
-                    if (before.Left.Id == v.Id || before.Rigth.Id == v.Id)
+                    //If vertex is removed from queue - best path is already found for it.
+                    var id = e.StartId == u ? e.EndId : e.StartId;
+                    if (before.Left.Id == id || before.Right.Id == id || !pq.Contains(id))
                     {
                         continue;
                     }
 
-                    //All vertices that can be reached from start vertex are visited.
-                    //Ignore once only unreachable are left.
-                    var cost = travelCost[u];
-                    if (cost.Item1 == double.MaxValue)
+                    var edgeInfo = edgeInfos[e.Id];
+                    var bestCost = travelCost[id];
+ 
+                    //Edge or start vertex is not traversable.
+                    if (edgeInfo.Factor == CONDITIONS_NOT_MET || cost.Item1 == CONDITIONS_NOT_MET)
                     {
-                        break;
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
+                        continue;
                     }
 
-                    //User defined filter functions
+                    //Vertex is excluded or shortest path is already found.
+                    if (excluded != null && excluded.Contains(id))
+                    {
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
+                        continue;
+                    }
+
+                    var v = _grid.GetVertex(id);
+                    //Check if edge passes user defined filter functions
                     if (_filters.Any(f => !f(vertex, v)))
                     {
+                        MarkExpensiveRoute(pq, travelCost, path, id, u, bestCost);
                         continue;
                     }
 
@@ -685,26 +719,26 @@ namespace Elements.Spatial.AdaptiveGrid
                             leftCost += TurnCost(edgeInfo, vertex, leftBefore.Id, edgeInfos);
                         }
 
-                        var rigthCost = Double.MaxValue;
-                        if (before.Rigth.Id != 0)
+                        var rightCost = NOT_CONNECTED;
+                        if (before.Right.Id != 0)
                         {
-                            var rigthBefore = _grid.GetVertex(before.Rigth.Id);
-                            rigthCost = cost.Item2 + newWeight;
-                            if (!Vector3.AreCollinearByAngle(rigthBefore.Point, vertex.Point, v.Point))
+                            var rightBefore = _grid.GetVertex(before.Right.Id);
+                            rightCost = cost.Item2 + newWeight;
+                            if (!Vector3.AreCollinearByAngle(rightBefore.Point, vertex.Point, v.Point))
                             {
-                                rigthCost += TurnCost(edgeInfo, vertex, rigthBefore.Id, edgeInfos);
+                                rightCost += TurnCost(edgeInfo, vertex, rightBefore.Id, edgeInfos);
                             }
                         }
 
                         //Then choose the path that has lower accumulated value.
-                        if (leftCost < rigthCost)
+                        if (leftCost < rightCost)
                         {
                             newWeight = leftCost;
                             bestBranch = BranchSide.Left;
                         }
                         else
                         {
-                            newWeight = rigthCost;
+                            newWeight = rightCost;
                             bestBranch = BranchSide.Right;
                         }
                     }
@@ -718,7 +752,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         travelCost[id] = (newWeight, oldCost.Item1);
                         path[id] = ((u, bestBranch), oldPath.Left);
-                        if (oldCost.Item1 == double.MaxValue)
+                        if (oldCost.Item1 == NOT_CONNECTED)
                         {
                             //When we first meet the vertex we need to slow it down to allow
                             //other slightly slower path but with potentially better turn to reach it.
@@ -793,7 +827,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (vertices[i].Id != start)
                 {
                     indices.Add(vertices[i].Id);
-                    travelCost[vertices[i].Id] = double.MaxValue;
+                    travelCost[vertices[i].Id] = NOT_CONNECTED;
                 }
                 path[vertices[i].Id] = 0;
             }
@@ -819,7 +853,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (vertices[i].Id != start)
                 {
                     indices.Add(vertices[i].Id);
-                    travelCost[vertices[i].Id] = (double.MaxValue, double.MaxValue);
+                    travelCost[vertices[i].Id] = (NOT_CONNECTED, NOT_CONNECTED);
                 }
                 path[vertices[i].Id] = ((0, BranchSide.Left), (0, BranchSide.Left));
             }
@@ -936,7 +970,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             Vector3 vs = hint.Is2D ? new Vector3(start.X, start.Y) : start;
             Vector3 ve = hint.Is2D ? new Vector3(end.X, end.Y) : end;
-            //Vertical edges are not affected by hint 2D lines
+            //Vertical edges are not affected by 2D hint lines
             if (!hint.Is2D || !vs.IsAlmostEqualTo(ve, _grid.Tolerance) &&
                 Math.Abs(start.Z - end.Z) < _grid.Tolerance)
             {
@@ -1026,7 +1060,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         {
             ulong bestIndex = 0;
-            double bestCost = double.MaxValue;
+            double bestCost = NOT_CONNECTED;
             BranchSide bestBranch = BranchSide.Left;
             double bestCostToTrunk = -1;
 
@@ -1113,8 +1147,9 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private ulong FindConnectionPoint(IEnumerable<ulong> collection,
             IDictionary<ulong, double> travelCost,
-            ulong bestIndex = 0, double bestCost = double.MaxValue)
+            ref double bestCost)
         {
+            ulong bestIndex = 0;
             foreach (var v in collection)
             {
                 Compare(v, travelCost, ref bestCost, ref bestIndex);
@@ -1151,6 +1186,33 @@ namespace Elements.Spatial.AdaptiveGrid
             return cost;
         }
 
+        private void MarkExpensiveRoute(PriorityQueue<ulong> pq,
+                                       IDictionary<ulong, double> travelCost,
+                                       IDictionary<ulong, ulong> path,
+                                       ulong id, ulong before, double bestCost)
+        {
+            if (bestCost == NOT_CONNECTED)
+            {
+                travelCost[id] = CONDITIONS_NOT_MET;
+                pq.UpdatePriority(id, CONDITIONS_NOT_MET);
+                path[id] = before;
+            }
+        }
+
+        private void MarkExpensiveRoute(
+            PriorityQueue<ulong> pq,
+            Dictionary<ulong, (double Left, double Right)> travelCost,
+            Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
+            ulong id, ulong before, (double Left, double Right) bestCost)
+        {
+            if (bestCost.Left == NOT_CONNECTED)
+            {
+                travelCost[id] = (CONDITIONS_NOT_MET, NOT_CONNECTED);
+                pq.UpdatePriority(id, CONDITIONS_NOT_MET);
+                path[id] = ((before, BranchSide.Left), (0, BranchSide.Left));
+            }
+        }
+
         private HashSet<ulong> FilteredSet(HashSet<ulong> hashSet, IEnumerable<ulong> exceptions)
         {
             var setCopy = new HashSet<ulong>(hashSet);
@@ -1177,6 +1239,74 @@ namespace Elements.Spatial.AdaptiveGrid
                 Material = new Material("Grid Key Points", new Color(0.6, 0.2, 0.8, 0.5)) //Dark Orchid
             };
             return mp;
+        }
+
+        private bool CheckAccessability(
+            ulong terminal,
+            double cost,
+            bool haveExcludedVertices)
+        {
+            if (cost == NOT_CONNECTED)
+            {
+                var vertex = _grid.GetVertex(terminal);
+                ErrorMessages.Add(Message.FromPoint(
+                    $"Input vertex {vertex.Id} is not connected with any exit vertices in the grid.",
+                    vertex.Point));
+                return false;
+            }
+            else if (cost == CONDITIONS_NOT_MET)
+            {
+                var vertex = _grid.GetVertex(terminal);
+                bool userFilters = _filters.Any();
+                bool angleFilters = _configuration.SupportedAngles != null &&
+                                    _configuration.SupportedAngles.Any();
+                List<string> reasons = new List<string>();
+                if (haveExcludedVertices)
+                {
+                    reasons.Add("isolation distance around other inputs");
+                }
+
+                if (userFilters)
+                {
+                    reasons.Add("user defined filter functions");
+                }
+
+                if (angleFilters)
+                {
+                    reasons.Add("list of supported angles");
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"Input vertex {vertex.Id} does not have correct route to any exit vertices");
+                if (reasons.Any())
+                {
+                    sb.Append(" due to");
+                    for (int i = 0; i < reasons.Count; i++)
+                    {
+                        if (i != 0)
+                        {
+                            if (i == reasons.Count - 1)
+                            {
+                                sb.Append(" or ");
+                            }
+                            else if (i > 0)
+                            {
+                                sb.Append(", ");
+                            }
+                        }
+
+                        sb.Append(reasons[i]);
+                    }
+                    sb.Append(".");
+                }
+
+                ErrorMessages.Add(Message.FromPoint(sb.ToString(), vertex.Point));
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

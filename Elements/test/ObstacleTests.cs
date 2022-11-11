@@ -347,7 +347,7 @@ namespace Elements
             grid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 45));
             boundary = new Polygon(new List<Vector3> { new Vector3(0, 0), new Vector3(-5, 5), new Vector3(0, 10), new Vector3(5, 5) });
             grid.AddFromExtrude(boundary, Vector3.ZAxis, 1, new List<Vector3> { new Vector3(0, 0) });
-            centerLine = new Line(new Vector3(0, 0), new Vector3(0, 0, 2));
+            centerLine = new Line(new Vector3(0, 0, 2), new Vector3(0, 0));
             var verticalObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true);
             expectedPoints = new List<Vector3>()
             {

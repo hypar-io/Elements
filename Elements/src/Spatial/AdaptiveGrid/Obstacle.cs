@@ -117,12 +117,13 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             else
             {
+                var lowPoint = line.Start.Z < line.End.Z ? line.Start : line.End;
                 polygon = new Polygon
                 (
-                    line.Start + offset * (Vector3.XAxis + Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis - Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis.Negate() - Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis.Negate() + Vector3.YAxis - Vector3.ZAxis)
+                    lowPoint + offset * (Vector3.XAxis + Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis - Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis.Negate() - Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis.Negate() + Vector3.YAxis - Vector3.ZAxis)
                 );
                 height += line.Length();
             }
