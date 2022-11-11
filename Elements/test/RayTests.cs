@@ -186,7 +186,6 @@ namespace Elements.Tests
             var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
             Assert.True(doesIntersect);
             Assert.Equal(new Vector3(4, 0, 0), result[0]);
-
         }
 
         [Fact]
@@ -222,8 +221,10 @@ namespace Elements.Tests
         [Fact]
         public void CoincidentRays()
         {
+            // Coincident, staggered rays.
             var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
-            var ray2 = new Ray(Vector3.Origin, Vector3.XAxis);
+
+            var ray2 = new Ray(new Vector3(-1, 0, 0), Vector3.XAxis);
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
             Assert.True(intersection);
             Assert.Equal(Ray.RayIntersectionResult.Coincident, intersectionType);
@@ -288,10 +289,19 @@ namespace Elements.Tests
         [Fact]
         public void DistanceToRay()
         {
+            // A ray pointing along the negative X axis.
             var ray = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
-            Assert.Equal(1, new Vector3(1, 0, 0).DistanceTo(ray));
+
+            // A point "behind" the ray.
+            Assert.Equal(0, new Vector3(1, 0, 0).DistanceTo(ray));
+
+            // A point at the ray's origin.
             Assert.Equal(0, new Vector3(0, 0, 0).DistanceTo(ray));
+
+            // A point 1 unit from the ray's origin.
             Assert.Equal(1, new Vector3(0, 1, 0).DistanceTo(ray));
+
+            // A point -5 units along the ray
             Assert.Equal(0, new Vector3(-5, 0, 0).DistanceTo(ray));
         }
 

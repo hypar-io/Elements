@@ -29,7 +29,7 @@ namespace Elements.Geometry
         public Ray(Vector3 origin, Vector3 direction)
         {
             this.Origin = origin;
-            this.Direction = direction;
+            this.Direction = direction.Unitized();
         }
 
         /// <summary>
@@ -304,11 +304,23 @@ namespace Elements.Geometry
             {
                 // Rays are coincident or parallel. 
 
-                // Check distance of p2 to this ray
-                var d = p2.DistanceTo(this);
-
-                if (!d.ApproximatelyEquals(0))
+                var tt1 = p1.ProjectedParameterOn(ray);
+                var opposite = d1.Dot(d2).ApproximatelyEquals(-1);
+                if (tt1 < 0 && opposite)
                 {
+                    // Rays are disjoint pointing in different directions
+                    result = default;
+                    intersectionResult = RayIntersectionResult.None;
+                    return false;
+                }
+
+                // Check for parallel by testing distances to opposite rays.
+                // If the distances are equal and non-zero, the rays are parallel.
+                var d = p2.DistanceTo(this);
+                var dd = p1.DistanceTo(ray);
+                if (d.ApproximatelyEquals(dd) && !d.ApproximatelyEquals(0))
+                {
+                    // Parallel
                     result = default;
                     intersectionResult = RayIntersectionResult.Parallel;
                     return false;
