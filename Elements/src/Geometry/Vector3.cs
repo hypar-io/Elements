@@ -356,18 +356,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The squared distance from this point to b.
-        /// Use this method when you want to make rapid distance comparisons
-        /// between points, and the actual distance is not important.
-        /// </summary>
-        /// <param name="v">The target vector.</param>
-        /// <returns>The distance between this vector and the provided vector.</returns>
-        public double SquaredDistanceTo(Vector3 v)
-        {
-            return Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2);
-        }
-
-        /// <summary>
         /// The distance from this point to the ray.
         /// The ray is treated as being infinitely long.
         /// </summary>
