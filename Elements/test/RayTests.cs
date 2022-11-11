@@ -227,12 +227,12 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(-1, 0, 0), Vector3.XAxis);
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
             Assert.True(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.Coincident, intersectionType);
+            Assert.Equal(RayIntersectionResult.Coincident, intersectionType);
 
             ray2 = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
             intersection = ray1.Intersects(ray2, out _, out intersectionType);
             Assert.True(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.Coincident, intersectionType);
+            Assert.Equal(RayIntersectionResult.Coincident, intersectionType);
         }
 
         [Fact]
@@ -242,7 +242,7 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(0, 0, 1), Vector3.XAxis);
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
             Assert.False(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.Parallel, intersectionType);
+            Assert.Equal(RayIntersectionResult.Parallel, intersectionType);
         }
 
         [Fact]
@@ -252,7 +252,7 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis);
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
             Assert.True(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.Intersect, intersectionType);
+            Assert.Equal(RayIntersectionResult.Intersect, intersectionType);
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(5, 5), Vector3.ZAxis);
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
             Assert.False(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.None, intersectionType);
+            Assert.Equal(RayIntersectionResult.None, intersectionType);
         }
 
         [Fact]
@@ -272,11 +272,11 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis.Negate());
             var intersection = ray1.Intersects(ray2, out _, out var intersectionType, true);
             Assert.True(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.Intersect, intersectionType);
+            Assert.Equal(RayIntersectionResult.Intersect, intersectionType);
 
             intersection = ray1.Intersects(ray2, out _, out intersectionType, false);
             Assert.False(intersection);
-            Assert.Equal(Ray.RayIntersectionResult.None, intersectionType);
+            Assert.Equal(RayIntersectionResult.None, intersectionType);
         }
 
         [Fact]
