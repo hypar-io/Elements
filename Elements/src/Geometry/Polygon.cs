@@ -163,7 +163,7 @@ namespace Elements.Geometry
         /// </returns>
         public bool Contains(Vector3 point, out Containment containment)
         {
-            return Contains3D(Edges(), point, out containment);
+            return Contains3D(point, out containment);
         }
 
         /// <summary>
@@ -526,18 +526,26 @@ namespace Elements.Geometry
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
-        internal static bool Contains3D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
+        internal bool Contains3D(Vector3 location, out Containment containment)
         {
-            var vertices = edges.Select(edge => edge.from).ToList();
-            var is3D = vertices.Any(vertex => vertex.Z != 0);
+            // Test that the test point is in the same plane
+            // as the polygon.
+            var transformTo3D = Vertices.ToTransform();
+            if (!location.DistanceTo(transformTo3D.XY()).ApproximatelyEquals(0))
+            {
+                containment = Containment.Outside;
+                return false;
+            }
+
+            var is3D = Vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains2D(edges, location, out containment);
+                return Contains2D(Edges(), location, out containment);
             }
-            var transformTo3D = vertices.ToTransform();
+
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = edges.Select(edge => (transformToGround.OfPoint(edge.from), transformToGround.OfPoint(edge.to)));
+            var groundSegments = Edges(transformToGround);
             var groundLocation = transformToGround.OfPoint(location);
             return Contains2D(groundSegments, groundLocation, out containment);
         }
@@ -723,7 +731,7 @@ namespace Elements.Geometry
             containment = Containment.Inside;
             foreach (var v in polygon.Vertices)
             {
-                Polygon.Contains3D(Edges(), v, out var foundContainment);
+                Contains3D(v, out var foundContainment);
                 if (foundContainment == Containment.Outside)
                 {
                     return false;
@@ -2224,13 +2232,13 @@ namespace Elements.Geometry
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges(Transform transform = null)
         {
             for (var i = 0; i < this.Vertices.Count; i++)
             {
                 var from = this.Vertices[i];
                 var to = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-                yield return (from, to);
+                yield return transform != null ? (transform.OfPoint(from), transform.OfPoint(to)) : (from, to);
             }
         }
 

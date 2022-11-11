@@ -141,6 +141,14 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void DoesNotContainPointNotInPlane()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            var point = new Vector3(0, 0, 2);
+            Assert.False(rect.Contains(point));
+        }
+
+        [Fact]
         public void Contains()
         {
             var v1 = new Vector3();
