@@ -1812,11 +1812,53 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void PolygonContains3D()
         {
-            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(rect.Contains3D(rect.Centroid()));
+            Name = nameof(PolygonContains3D);
+            var t = new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized());
+            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(t);
+            Assert.True(rect.Contains(rect.Centroid()));
 
-            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(star.Contains3D(star.Centroid()));
+            var v1 = new Vector3(2.5, -2.5);
+            Assert.True(rect.Contains(t.OfPoint(v1), out _));
+            Model.AddElement(new ModelCurve(rect));
+            var arc = new Circle(v1, 0.1);
+            Model.AddElement(new ModelCurve(arc.ToPolygon().Transformed(t)));
+
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            Model.AddElement(new ModelCurve(star));
+            var centroid = star.Centroid();
+            Assert.True(star.Contains(centroid));
+            var arc2 = new Circle(centroid, 0.1);
+            Model.AddElement(new ModelCurve(arc2.ToPolygon().TransformedPolygon(t)));
+        }
+
+        [Fact]
+        public void PointAtLowerRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, -2.5), out _));
+        }
+
+        [Fact]
+        public void PointAtUpperRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointOnEdgeIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(0, -2.5), out _));
+            Assert.True(rect.Contains(new Vector3(2.5, 0), out _));
+            Assert.True(rect.Contains(new Vector3(0, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointInCenterIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3()));
         }
 
         [Fact]
@@ -2180,6 +2222,14 @@ namespace Elements.Geometry.Tests
             Assert.Null(trimmed);
             Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
             Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void BigRectangleContainsSmallRectangle()
+        {
+            var r1 = Polygon.Rectangle(2, 2);
+            var r2 = Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(new Vector3(0.5, 0.5), Vector3.ZAxis));
+            Assert.True(r1.Contains3D(r2));
         }
     }
 }

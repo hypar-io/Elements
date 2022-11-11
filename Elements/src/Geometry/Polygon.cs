@@ -141,27 +141,29 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge or vertex when compared on a shared plane.
         /// </summary>
-        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
+        /// <param name="point">The point to compare to this polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.
+        /// Returns true if the supplied point is within this polygon when compared on a shared plane.
         /// </returns>
-        public bool Contains(Vector3 vector)
+        public bool Contains(Vector3 point)
         {
-            Contains(vector, out Containment containment);
+            Contains(point, out Containment containment);
             return containment == Containment.Inside;
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon in 3D, using a 2D method.
+        /// Tests if the supplied point is within this polygon in 3D, using a 2D method.
         /// </summary>
-        /// <param name="vector">The position to test.</param>
+        /// <param name="point">The point to compare to this polygon.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
-        /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
-        public bool Contains(Vector3 vector, out Containment containment)
+        /// <returns>
+        /// Returns true if the supplied point is within this polygon when compared on a shared plane.
+        /// </returns>
+        public bool Contains(Vector3 point, out Containment containment)
         {
-            return Contains3D(Edges(), vector, out containment);
+            return Contains3D(Edges(), point, out containment);
         }
 
         /// <summary>
@@ -326,7 +328,7 @@ namespace Elements.Geometry
                     var a = ClosestIndexOf(newVertices, intersections[i], i);
                     var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
 
-                    if (!Contains3D(newVertices[a].Average(newVertices[b])))
+                    if (!Contains(newVertices[a].Average(newVertices[b]), out _))
                     {
                         continue;
                     }
@@ -401,7 +403,7 @@ namespace Elements.Geometry
         /// Polygon.Intersects(Plane plane, ...) method.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
-        /// <param name="result">The points resulting from the intersection
+        /// <param name="intersections">The points resulting from the intersection
         /// of the two polygons.</param>
         /// <param name="sort">Should the resulting intersections be sorted along
         /// the plane?</param>
@@ -409,10 +411,10 @@ namespace Elements.Geometry
         /// The result collection may have duplicate vertices where intersection
         /// with a vertex occurs as there is one intersection associated with each
         /// edge attached to the vertex.</returns>
-        internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
+        internal bool Intersects3d(Polygon polygon, out List<Vector3> intersections, bool sort = true)
         {
             var p = this._plane;
-            result = new List<Vector3>();
+            intersections = new List<Vector3>();
             var targetP = polygon._plane;
 
             if (p.IsCoplanar(targetP))
@@ -424,36 +426,42 @@ namespace Elements.Geometry
 
             // Intersect the polygon against this polygon's plane.
             // Keep the points that lie within the polygon.
-            if (polygon.Intersects(p, out List<Vector3> results, false, false))
+            if (polygon.Intersects(p, out List<Vector3> results, sort: false))
             {
                 foreach (var r in results)
                 {
-                    if (this.Contains3D(r))
+                    if (this.Contains(r, out _))
                     {
-                        result.Add(r);
+                        if (!intersections.Contains(r))
+                        {
+                            intersections.Add(r);
+                        }
                     }
                 }
             }
 
             // Intersect this polygon against the target polygon's plane.
             // Keep the points within the target polygon.
-            if (this.Intersects(targetP, out List<Vector3> results2, false, false))
+            if (this.Intersects(targetP, out List<Vector3> results2, sort: false))
             {
                 foreach (var r in results2)
                 {
-                    if (polygon.Contains3D(r))
+                    if (polygon.Contains(r, out _))
                     {
-                        result.Add(r);
+                        if (!intersections.Contains(r))
+                        {
+                            intersections.Add(r);
+                        }
                     }
                 }
             }
 
             if (sort)
             {
-                result.Sort(new DirectionComparer(d));
+                intersections.Sort(new DirectionComparer(d));
             }
 
-            return result.Count > 0;
+            return intersections.Count > 0;
         }
 
         private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
@@ -490,9 +498,9 @@ namespace Elements.Geometry
             results = new List<Vector3>();
             var d = this.Normal().Cross(plane.Normal).Unitized();
 
-            foreach (var s in this.Segments())
+            foreach (var (from, to) in this.Edges())
             {
-                if (s.Intersects(plane, out Vector3 result))
+                if (Line.Intersects(plane, from, to, out Vector3 result))
                 {
                     if (distinct)
                     {
@@ -534,61 +542,9 @@ namespace Elements.Geometry
             return Contains2D(groundSegments, groundLocation, out containment);
         }
 
-        /// <summary>
-        /// Does this polygon contain the specified point?
-        /// https://en.wikipedia.org/wiki/Point_in_polygon
-        /// </summary>
-        /// <param name="point">The point to test.</param>
-        /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point)
-        {
-            var p = this.Plane();
-
-            if (!point.DistanceTo(p).ApproximatelyEquals(0))
-            {
-                return false;
-            }
-
-            var t = new Transform(point, p.Normal);
-
-            // Intersect a ray in the plane
-            // of the polygon and intersect with the polygon edges.
-            var ray = new Ray(point, t.XAxis);
-            var intersections = 0;
-            foreach (var (from, to) in this.Edges())
-            {
-                if (ray.Intersects(from, to, out Vector3 result))
-                {
-                    if (result.IsAlmostEqualTo(from))
-                    {
-                        // Is 'to' to the left of the ray?
-                        var d = (to - from).PlaneAngleTo(ray.Direction, p.Normal);
-                        if (d < 180)
-                        {
-                            intersections++;
-                        }
-                    }
-                    else if (result.IsAlmostEqualTo(to))
-                    {
-                        // is 'from' to the left of the ray?
-                        var d = (from - to).PlaneAngleTo(ray.Direction, p.Normal);
-                        if (d < 180)
-                        {
-                            intersections++;
-                        }
-                    }
-                    else
-                    {
-                        intersections++;
-                    }
-                }
-            }
-            return intersections % 2 != 0;
-        }
-
         internal bool Contains3D(Polygon polygon)
         {
-            return polygon.Vertices.All(v => this.Contains3D(v));
+            return polygon.Vertices.All(v => this.Contains(v, out _));
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
@@ -1124,9 +1080,9 @@ namespace Elements.Geometry
                         if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
                         {
                             // Test containment in the current splitting polygon.
-                            if (polygon.Contains3D(xsect)
-                                && inner.Contains3D(xsect)
-                                && this.Contains3D(xsect))
+                            if (polygon.Contains(xsect)
+                                && inner.Contains(xsect)
+                                && this.Contains(xsect))
                             {
                                 if (!results[i].Contains(xsect))
                                 {

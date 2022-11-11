@@ -189,7 +189,7 @@ namespace Elements.Geometry
                 }
 
                 result = test;
-                if (polygon.Contains3D(test))
+                if (polygon.Contains(test))
                 {
                     containment = Containment.Inside;
                     return true;

@@ -484,7 +484,7 @@ namespace Elements.Geometry
         public double DistanceTo(Polygon polygon, out Vector3 closestPoint)
         {
             var pointOnPolygonPlane = this.Project(polygon.Plane());
-            if (polygon.Contains(pointOnPolygonPlane, out var containment))
+            if (polygon.Contains(pointOnPolygonPlane, out _))
             {
                 closestPoint = pointOnPolygonPlane;
                 return this.DistanceTo(pointOnPolygonPlane);

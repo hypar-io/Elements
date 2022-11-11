@@ -751,7 +751,7 @@ namespace Elements.Geometry
 
             return polygons.ToArray();
         }
-        
+
         /// <summary>
         /// Return offset points for polyline
         /// </summary>
@@ -1129,7 +1129,7 @@ namespace Elements.Geometry
                 }
                 return sharedSegments.Any();
             }
-            
+
             if (polygon.Contains(Start))
             {
                 var intersection = intersections.First();
@@ -1138,9 +1138,9 @@ namespace Elements.Geometry
                 intersections.Remove(intersection);
             }
 
-            for (var i = 0; i < intersections.Count - 1; i ++)
+            for (var i = 0; i < intersections.Count - 1; i++)
             {
-                var subsegment = GetSubsegment(intersections[i], intersections[i+1]);
+                var subsegment = GetSubsegment(intersections[i], intersections[i + 1]);
                 if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
@@ -1179,7 +1179,7 @@ namespace Elements.Geometry
             }
 
             List<Vector3> filteredVertices;
-            
+
             if (startParameter > endParameter)
             {
                 filteredVertices = Vertices
@@ -1201,7 +1201,7 @@ namespace Elements.Geometry
                     })
                     .ToList();
             }
-            
+
             filteredVertices.Insert(0, start);
             filteredVertices.Add(end);
 
