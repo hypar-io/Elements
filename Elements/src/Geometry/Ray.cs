@@ -179,19 +179,9 @@ namespace Elements.Geometry
             var plane = polygon.Plane();
             if (Intersects(plane, out Vector3 test))
             {
-                // Check the intersection against all the polygon's vertices.
-                // If the intersection is at a vertex, the point is contained.
-                if (polygon.Vertices.Any(v => v.IsAlmostEqualTo(test)))
+                if (polygon.Contains(test, out containment))
                 {
                     result = test;
-                    containment = Containment.CoincidesAtVertex;
-                    return true;
-                }
-
-                result = test;
-                if (polygon.Contains(test, out _))
-                {
-                    containment = Containment.Inside;
                     return true;
                 }
             }
