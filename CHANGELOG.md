@@ -5,6 +5,8 @@
 ### Added
 
 - `AdaptiveGraphRouting.ErrorMessages`
+- `Elements.Animation`
+- `Element.Animation`
 
 ### Changed
 

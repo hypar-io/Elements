@@ -18,9 +18,9 @@ namespace Elements.Tests
 
             var j = 1.0;
             var count = 10;
-            for (var i = 0.0; i < 360.0; i += 360.0 / (double)count)
+            for (var i = 0.0; i < 360.0; i += 360.0 / count)
             {
-                var m2 = new Mass(prof, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)), new Transform());
+                var m2 = new Mass(prof, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)));
 
                 // Scale the mass.
                 m2.Transform.Scale(new Vector3(j, j, j));
@@ -30,10 +30,47 @@ namespace Elements.Tests
 
                 // Rotate the mass.
                 m2.Transform.Rotate(Vector3.ZAxis, i);
+
                 this.Model.AddElement(m2);
+
                 j += 1.0 / (double)count;
             }
             // </example>
+        }
+
+        [Fact]
+        public void Animation()
+        {
+            this.Name = "Animation";
+
+            var m1 = new Mass(Polygon.Rectangle(1.0, 1.0), 1.0, new Material("yellow", Colors.Yellow));
+            this.Model.AddElement(m1);
+
+            Profile prof = Polygon.Rectangle(1.0, 1.0);
+
+            var j = 1.0;
+            var count = 10;
+            for (var i = 0.0; i < 360.0; i += 360.0 / count)
+            {
+                var m2 = new Mass(prof, 1.0, new Material($"color_{j}", new Color((float)j - 1.0f, 0.0f, 0.0f, 1.0f)));
+
+                var t = new Transform();
+                t.Move(new Vector3(3, 0, 0));
+                t.Rotate(Vector3.ZAxis, i);
+
+                this.Model.AddElement(m2);
+
+                m2.Animation = new Animation();
+                m2.Animation.AddRotationKeyframe(Vector3.ZAxis, 0.0, 0.0);
+                m2.Animation.AddTranslationKeyframe(Vector3.Origin, 0.0);
+                m2.Animation.AddScaleKeyframe(Vector3.Origin, 0.0);
+
+                m2.Animation.AddTranslationKeyframe(t.Origin, 3.0);
+                m2.Animation.AddRotationKeyframe(Vector3.ZAxis, i, 3.1);
+                m2.Animation.AddScaleKeyframe(new Vector3(j, j, j), 2.9);
+
+                j += 1.0 / count;
+            }
         }
 
         [Fact]
