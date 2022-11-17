@@ -152,7 +152,6 @@ namespace Elements.Tests
             var ray2 = new Ray(new Vector3(6, 6, 6), new Vector3(1, 1, 1));
             var doesIntersect2 = ray2.Intersects(extrude, out List<Vector3> result2);
             Assert.True(doesIntersect2);
-
         }
 
         [Fact]
@@ -187,7 +186,6 @@ namespace Elements.Tests
             var doesIntersect = ray.Intersects(extrude, out List<Vector3> result);
             Assert.True(doesIntersect);
             Assert.Equal(new Vector3(4, 0, 0), result[0]);
-
         }
 
         [Fact]
@@ -218,6 +216,93 @@ namespace Elements.Tests
             Assert.False(ray1.Intersects(ray2, out result));
 
             Assert.True(ray1.Intersects(ray2, out result, true));
+        }
+
+        [Fact]
+        public void CoincidentRays()
+        {
+            // Coincident, staggered rays.
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+
+            var ray2 = new Ray(new Vector3(-1, 0, 0), Vector3.XAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(RayIntersectionResult.Coincident, intersectionType);
+
+            ray2 = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+            intersection = ray1.Intersects(ray2, out _, out intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(RayIntersectionResult.Coincident, intersectionType);
+        }
+
+        [Fact]
+        public void ParallelRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(0, 0, 1), Vector3.XAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.False(intersection);
+            Assert.Equal(RayIntersectionResult.Parallel, intersectionType);
+        }
+
+        [Fact]
+        public void IntersectingRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.True(intersection);
+            Assert.Equal(RayIntersectionResult.Intersect, intersectionType);
+        }
+
+        [Fact]
+        public void SkewedRays()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, 5), Vector3.ZAxis);
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType);
+            Assert.False(intersection);
+            Assert.Equal(RayIntersectionResult.None, intersectionType);
+        }
+
+        [Fact]
+        public void IntersectingRaysIgnoringDirection()
+        {
+            var ray1 = new Ray(Vector3.Origin, Vector3.XAxis);
+            var ray2 = new Ray(new Vector3(5, -5), Vector3.YAxis.Negate());
+            var intersection = ray1.Intersects(ray2, out _, out var intersectionType, true);
+            Assert.True(intersection);
+            Assert.Equal(RayIntersectionResult.Intersect, intersectionType);
+
+            intersection = ray1.Intersects(ray2, out _, out intersectionType, false);
+            Assert.False(intersection);
+            Assert.Equal(RayIntersectionResult.None, intersectionType);
+        }
+
+        [Fact]
+        public void ParallelRayPointingInOppositeDirection()
+        {
+            var ray = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+            Assert.False(ray.Intersects(new Vector3(1, 0, 0), new Vector3(3, 0, 0), out _, out _));
+        }
+
+        [Fact]
+        public void DistanceToRay()
+        {
+            // A ray pointing along the negative X axis.
+            var ray = new Ray(Vector3.Origin, Vector3.XAxis.Negate());
+
+            // A point "behind" the ray.
+            Assert.Equal(0, new Vector3(1, 0, 0).DistanceTo(ray));
+
+            // A point at the ray's origin.
+            Assert.Equal(0, new Vector3(0, 0, 0).DistanceTo(ray));
+
+            // A point 1 unit from the ray's origin.
+            Assert.Equal(1, new Vector3(0, 1, 0).DistanceTo(ray));
+
+            // A point -5 units along the ray
+            Assert.Equal(0, new Vector3(-5, 0, 0).DistanceTo(ray));
         }
 
         [Fact]

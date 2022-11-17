@@ -28,6 +28,9 @@
 - `Elements.Spatial.AdaptiveGrid.TreeNode`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 - `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
+- `Vector3.DistanceTo(Ray ray)`
+- `Ray.Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)`
+- `RayIntersectionResult`
 
 ### Changed
 
