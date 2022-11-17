@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
@@ -31,9 +30,10 @@ namespace Elements
         [JsonIgnore]
         public Animation Animation { get; set; }
 
+        /// <summary>
         /// The element's bounds.
         /// The bounds are only available when the geometry has been
-        /// updated using UpdateBoundsAndComputeSolid(),
+        /// updated using UpdateBoundsAndComputeSolid().
         /// </summary>
         [JsonIgnore]
         public BBox3 Bounds => _bounds;
