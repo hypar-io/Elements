@@ -1,8 +1,68 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- `AdaptiveGraphRouting.ErrorMessages`
+- `Elements.Animation`
+- `Element.Animation`
+
+### Changed
+
+- Remove the BBox3 validator.
+
+### Fixed
+
+- Fix `Obstacle.FromLine` if line is vertical and start point is positioned higher than end.
+
+## 1.3.0
+
+### Added
+
+- `AdaptiveGrid.AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)`
+- `AdaptiveGrid.HintExtendDistance`
+- `AdaptiveGrid.SnapshotEdgesOnPlane(Plane plane, IEnumerable<Edge> edgesToCheck)`
+- `AdaptiveGrid.InsertSnapshot(List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect)`
+- `RoutingHintLine.Is2D`
+- `Obstacle.Orientation`
+- `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `Elements.Spatial.AdaptiveGrid.TreeNode`
+- `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
+- `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
+- `Vector3.DistanceTo(Ray ray)`
+- `Ray.Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)`
+- `RayIntersectionResult`
+
+### Changed
+
+- `Line.PointOnLine` - added `tolerance` parameter.
+- `AdaptiveGrid.AddVertices` with `ConnectCutAndExtend` now extends only up to `HintExtendDistance` distance and inserts not exttended points as is otherwise ever if they are not touching the grid.
+- Created `EdgeInfo` structure in `AdaptiveGraphRouting` instead of a value pair. Added `HasVerticalChange` parameter to it.
+- Moved `BranchSide`, `RoutingVertex`, `RoutingConfiguration`, `RoutingHintLine`, `TreeOrder` from `AdaptiveGraphRouting` to their own files.
+- `RoutingVertex` - removed `Guides`.
+- `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
+- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- `AdaptiveGraphRouting.BuildSpanningTree` and `AdaptiveGraphRouting.BuildSimpleNetwork` now return `IDictionary<ulong, TreeNode>`.
+- Don't log all vertex creation actions during Debug mode geometry generation.
+- `Polyline.GetSubsegment` changes direction of output polyline when parameters reversed
+- `Line.IsCollinear` - added `tolerance` parameter.
+- `Polygon.CollinearPointsRemoved` - added `tolerance` parameter.
+- `Line.TryGetOverlap` - added `tolerance` parameter.
+- `CatalogGenerator` always uses en-US culture.
+
+### Fixed
+
+- `Line.Intersects` for `BBox3` - better detection of line with one intersection that just touches box corner.
+- `Obstacle.FromWall` and `Obstacle.FromLine` produced wrong `Points` when diagonal.
+- `AdaptiveGridRouting.BuildSimpleNetwork` now correctly uses `RoutingVertex.IsolationRadius`.
+- Fix #898
+- `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` fix bug when odd number of intersections between polyline and polygon
+
 ## 1.2.0
 
 ### Added
+
 - `Polygon(IList<Vector3> @vertices, bool disableValidation = false)`
 - `Polygon(bool disableValidation, params Vector3[] vertices)`
 - `Polyline(IList<Vector3> @vertices, bool disableValidation = false)`
@@ -16,8 +76,10 @@
 - `AdaptiveGrid.Obstacle.Intersects(Line line, double tolerance = 1e-05)` method
 - `AdaptiveGrid.Obstacle.IsInside(Vector3 point, double tolerance = 1e-05)` method
 - `Elements.SVG.SvgSection.CreatePlanFromFromModels(IList<Model> models, double elevation, SvgContext frontContext, SvgContext backContext, string path, bool showGrid = true, double gridHeadExtension = 2.0, double gridHeadRadius = 0.5, PlanRotation planRotation = PlanRotation.Angle, double planRotationDegrees = 0.0)`
-- `Elements.Animation`
-- `Element.Animation`
+- `Polygons.U`
+- `Network.FindAllClosedRegions(List<Vector3> allNodeLocations)`
+- `Network.TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData, List<Vector3> allNodeLocations, List<LocalEdge> visitedEdges, Network<T> network)`
+- `GeometricElement.Intersects(Plane plane, out Dictionary<Guid, List<Polygon>> intersectionPolygons, out Dictionary<Guid, List<Polygon>> beyondPolygons, out Dictionary<Guid, List<Line>> lines)`
 
 ### Changed
 
@@ -36,6 +98,7 @@
 - #805
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
+- `Obstacle.FromWall` was failing when producing a polygon.
 
 ## 1.1.0
 

@@ -40,7 +40,7 @@ namespace Elements
             int i = 1;
             foreach (var item in uniqueCollection.Skip(1))
             {
-                _priorities.Add((item, double.MaxValue));
+                _priorities.Add((item, double.PositiveInfinity));
                 _positions[item] = i;
                 i++;
             }

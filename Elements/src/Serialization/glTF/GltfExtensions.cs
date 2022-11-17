@@ -1290,7 +1290,7 @@ namespace Elements.Serialization.glTF
                 }
             }
 
-            if (e is GeometricElement ge)
+            if (e is GeometricElement ge && !ge.IsElementDefinition)
             {
                 if (ge.TryToGraphicsBuffers(out List<GraphicsBuffers> gb, out string id, out MeshPrimitive.ModeEnum? mode))
                 {
