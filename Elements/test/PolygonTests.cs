@@ -141,6 +141,14 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void DoesNotContainPointNotInPlane()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            var point = new Vector3(0, 0, 2);
+            Assert.False(rect.Contains(point));
+        }
+
+        [Fact]
         public void Contains()
         {
             var v1 = new Vector3();
@@ -1121,6 +1129,9 @@ namespace Elements.Geometry.Tests
             // end of the polygon AND at the end of the polyline.
             Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
             Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            // Test value close to u=0.0 within tolerance
+            Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
+            Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
 
             this.Model.AddElement(new ModelCurve(polyCircle));
 
@@ -1504,25 +1515,35 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void PolygonIsTrimmedWithPlane()
+        public void PolygonIsTrimmedAbovePlane()
         {
-            this.Name = nameof(PolygonIsTrimmedWithPlane);
+            this.Name = nameof(PolygonIsTrimmedAbovePlane);
 
             var r = new Random();
 
             // Trim above
             var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
-            // t.Rotate(Vector3.XAxis, 15);
             var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmed = polygon.Trimmed(plane);
             Assert.Single(trimmed);
             var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
             this.Model.AddElement(new ModelCurve(polygon));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
             this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
             this.Model.AddElements(panels);
+        }
+
+        [Fact]
+        public void PolygonIsTrimmedBelowPlane()
+        {
+            this.Name = nameof(PolygonIsTrimmedBelowPlane);
+            var r = new Random();
 
             // Trim below
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmedReverse = polygon.Trimmed(plane, true);
             Assert.Equal<int>(2, trimmedReverse.Count);
             var move = new Transform(0, 0, 0);
@@ -1532,8 +1553,17 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(polygon, transform: move));
             this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, transform: move)));
             this.Model.AddElements(panel2);
+        }
+
+        [Fact]
+        public void TrimPolygonThroughVertex()
+        {
+            this.Name = nameof(TrimPolygonThroughVertex);
+            var r = new Random();
 
             // Trim through vertex
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             var vertexTrimPlane = new Plane(new Vector3(0, 0, polygon.Vertices[7].Z), Vector3.ZAxis);
             var trimmedAtVertex = polygon.Trimmed(vertexTrimPlane, true);
             Assert.Equal<int>(2, trimmedAtVertex.Count);
@@ -1542,6 +1572,48 @@ namespace Elements.Geometry.Tests
             this.Model.AddElements(panel3);
             this.Model.AddElements(trimmedAtVertex.Select(t => new ModelCurve(t, transform: move2)));
             this.Model.AddElement(new ModelCurve(polygon, transform: move2));
+        }
+
+        [Fact]
+        public void TrimPolygonThroughTwoVertices()
+        {
+            Name = nameof(TrimPolygonThroughTwoVertices);
+            var shape = Polygon.Ngon(4);
+            var plane = new Plane(Vector3.Origin, Vector3.YAxis);
+            var trimmed = shape.Trimmed(plane);
+            Assert.Single(trimmed);
+            if (trimmed != null)
+            {
+                Model.AddElement(new Panel(trimmed[0]));
+            }
+            else
+            {
+                Model.AddElement(new Panel(shape));
+            }
+
+            Model.AddElement(new Panel(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(shape));
+        }
+
+        [Fact]
+        public void TrimPolygonThroughVertexAndEdge()
+        {
+            Name = nameof(TrimPolygonThroughVertexAndEdge);
+            var shape = Polygon.Ngon(4);
+            var plane = new Plane(shape.Vertices[0], new Vector3(0.01, 1, 0).Unitized());
+            var trimmed = shape.Trimmed(plane);
+            Assert.Single(trimmed);
+            if (trimmed != null)
+            {
+                Model.AddElement(new Panel(trimmed[0]));
+            }
+            else
+            {
+                Model.AddElement(new Panel(shape));
+            }
+
+            Model.AddElement(new Panel(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(shape));
         }
 
         [Fact]
@@ -1748,11 +1820,53 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void PolygonContains3D()
         {
-            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(rect.Contains3D(rect.Centroid(), true));
+            Name = nameof(PolygonContains3D);
+            var t = new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized());
+            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(t);
+            Assert.True(rect.Contains(rect.Centroid()));
 
-            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(star.Contains3D(star.Centroid(), true));
+            var v1 = new Vector3(2.5, -2.5);
+            Assert.True(rect.Contains(t.OfPoint(v1), out _));
+            Model.AddElement(new ModelCurve(rect));
+            var arc = new Circle(v1, 0.1);
+            Model.AddElement(new ModelCurve(arc.ToPolygon().Transformed(t)));
+
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            Model.AddElement(new ModelCurve(star));
+            var centroid = star.Centroid();
+            Assert.True(star.Contains(centroid));
+            var arc2 = new Circle(centroid, 0.1);
+            Model.AddElement(new ModelCurve(arc2.ToPolygon().TransformedPolygon(t)));
+        }
+
+        [Fact]
+        public void PointAtLowerRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, -2.5), out _));
+        }
+
+        [Fact]
+        public void PointAtUpperRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointOnEdgeIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(0, -2.5), out _));
+            Assert.True(rect.Contains(new Vector3(2.5, 0), out _));
+            Assert.True(rect.Contains(new Vector3(0, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointInCenterIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3()));
         }
 
         [Fact]
@@ -1881,6 +1995,18 @@ namespace Elements.Geometry.Tests
             var polygon = new Polygon(points);
             polygon = polygon.CollinearPointsRemoved();
             Assert.Equal(4, polygon.Vertices.Count());
+
+            var points2 = new Vector3[] {
+                (0, 0, 0),
+                (10, 0.0001, 0),
+                (20, 0, 0),
+                (20, 20, 0),
+                (10, 20.0001, 0),
+                (0, 20, 0)
+            };
+            var polygon2 = new Polygon(points2);
+            Assert.NotEqual(4, polygon2.CollinearPointsRemoved().Vertices.Count());
+            Assert.Equal(4, polygon2.CollinearPointsRemoved(0.001).Vertices.Count());
         }
 
         [Fact]
@@ -2054,6 +2180,64 @@ namespace Elements.Geometry.Tests
             // verify does not throw
             var polygon = JsonConvert.DeserializeObject<Polygon>(json);
             Assert.NotNull(polygon);
+        }
+
+        [Fact]
+        public void U()
+        {
+            var u = Polygon.U(10, 20, 2);
+        }
+
+        [Fact]
+        public void UThicknessGreaterThanWidthOverTwoThrows()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Polygon.U(10, 10, 6));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon1()
+        {
+            Name = nameof(TrimSkyPlanePolygon1);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":5.456602446962343,\"Y\":-0.9024812458451947,\"Z\":60.0},{\"X\":22.56585182362492,\"Y\":32.63913758323735,\"Z\":60.0},{\"X\":12.232537580045737,\"Y\":37.91005939478421,\"Z\":31.000000000000313},{\"X\":-4.876711796617052,\"Y\":4.3684405657018885,\"Z\":30.9999999999996}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Single(trimmed);
+            Model.AddElement(new Panel(trimmed[0]));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon2()
+        {
+            Name = nameof(TrimSkyPlanePolygon2);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":14.11044881100593,\"Y\":-5.316723034955274,\"Z\":60.0},{\"X\":24.445333749146343,\"Y\":-10.58844604232641,\"Z\":30.999999999999876},{\"X\":40.96973706172442,\"Y\":23.25149700325788,\"Z\":30.999999999999172},{\"X\":30.63485212358372,\"Y\":28.523220010629068,\"Z\":60.0}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Single(trimmed);
+            Model.AddElement(new Panel(trimmed[0]));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon3()
+        {
+            Name = nameof(TrimSkyPlanePolygon3);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":23.128761583107114,\"Y\":-13.28462370583442,\"Z\":30.99999999999992},{\"X\":23.12876158310712,\"Y\":-13.284623705834392,\"Z\":-7.588341022412967E-15},{\"X\":40.969737061724466,\"Y\":23.251497003257874,\"Z\":-4.6993153936072985E-15},{\"X\":40.96973706172446,\"Y\":23.251497003257846,\"Z\":30.99999999999918}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Null(trimmed);
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void BigRectangleContainsSmallRectangle()
+        {
+            var r1 = Polygon.Rectangle(2, 2);
+            var r2 = Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(new Vector3(0.5, 0.5), Vector3.ZAxis));
+            Assert.True(r1.Contains3D(r2));
         }
     }
 }

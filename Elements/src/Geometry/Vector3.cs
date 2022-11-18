@@ -345,13 +345,30 @@ namespace Elements.Geometry
 
         #region DistanceTo methods
         /// <summary>
-        /// The distance from this point to b.
+        /// The distance from this point to v.
         /// </summary>
         /// <param name="v">The target vector.</param>
         /// <returns>The distance between this vector and the provided vector.</returns>
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+
+        /// <summary>
+        /// The distance from this point to the ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="ray">The target ray.</param>
+        public double DistanceTo(Ray ray)
+        {
+            var t = ProjectedParameterOn(ray);
+            var closestPointOnRay = ray.Origin + t * ray.Direction;
+            return closestPointOnRay.DistanceTo(this);
+        }
+
+        internal double ProjectedParameterOn(Ray ray)
+        {
+            return ray.Direction.Dot(this - ray.Origin) / ray.Direction.Length(); // t will be [0,1]
         }
 
         /// <summary>
@@ -392,7 +409,10 @@ namespace Elements.Geometry
 
         private double DistanceToEdgeInternal(Vector3 start, Vector3 end, out Vector3 closestPoint)
         {
-            var lambda = (this - start).Dot(end - start) / (end - start).Dot(end - start);
+            var d1 = this - start;
+            var d2 = end - start;
+
+            var lambda = d1.Dot(d2) / d2.Dot(d2);
             if (lambda >= 1)
             {
                 closestPoint = end;
@@ -405,7 +425,7 @@ namespace Elements.Geometry
             }
             else
             {
-                closestPoint = (start + lambda * (end - start));
+                closestPoint = start + lambda * d2;
                 return this.DistanceTo(closestPoint);
             }
         }
@@ -463,7 +483,7 @@ namespace Elements.Geometry
         public double DistanceTo(Polygon polygon, out Vector3 closestPoint)
         {
             var pointOnPolygonPlane = this.Project(polygon.Plane());
-            if (polygon.Contains(pointOnPolygonPlane, out var containment))
+            if (polygon.Contains(pointOnPolygonPlane, out _))
             {
                 closestPoint = pointOnPolygonPlane;
                 return this.DistanceTo(pointOnPolygonPlane);
@@ -851,7 +871,7 @@ namespace Elements.Geometry
         /// <param name="c">The third point.</param>
         /// <param name="tolerance">Distance tolerance.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
-        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON) 
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON)
         {
             var vectorList = new List<Vector3> { a, b, c };
             return vectorList.AreCollinearByDistance(tolerance);
@@ -1010,6 +1030,40 @@ namespace Elements.Geometry
         public static implicit operator Vector3((int X, int Y) vector)
         {
             return new Vector3(vector.X, vector.Y);
+        }
+
+        /// <summary>
+        /// Construct X and Y vectors from the provided Z vector.
+        /// Construction is done by projecting the Z vector onto the global XY
+        /// plane and using the resulting vector to find the right (+X) vector,
+        /// then the forward (+Y) vectors.
+        /// </summary>
+        /// <param name="origin">The origin.</param>
+        /// <param name="zAxis">The z vector.</param>
+        /// <returns>A tuple containing the X and Y vectors.</returns>
+        internal static (Vector3 X, Vector3 Y) ConstructBasisVectorsFromZAxis(Vector3 origin, Vector3 zAxis)
+        {
+            Vector3 x = XAxis;
+            Vector3 y = YAxis;
+
+            if (!zAxis.IsParallelTo(ZAxis))
+            {
+                // Project up onto the ortho plane
+                var p = new Plane(origin, zAxis);
+                var test = ZAxis.Project(p);
+                x = test.Cross(zAxis).Unitized();
+                y = x.Cross(zAxis.Negate()).Unitized();
+            }
+            else
+            {
+                // Ensure that we have a right-handed coordinate system.
+                if (zAxis.Dot(ZAxis).ApproximatelyEquals(-1))
+                {
+                    y = YAxis.Negate();
+                }
+            }
+
+            return (x, y);
         }
     }
 }

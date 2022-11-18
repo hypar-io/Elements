@@ -13,7 +13,7 @@ namespace Elements.Tests
         {
             List<int> ids = new List<int>() { 10, 2, 4, 6, 3, 5 };
             PriorityQueue<int> pq = new PriorityQueue<int>(ids);
-            //First in ids is set to 0, others to double.MaxValue 
+            //First in ids is set to 0, others to double.PositiveInfinity 
             Assert.Equal(10, pq.PopMin());
             pq.UpdatePriority(4, 10);
             pq.UpdatePriority(5, 7);
