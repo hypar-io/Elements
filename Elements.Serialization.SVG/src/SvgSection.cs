@@ -109,7 +109,7 @@ namespace Elements.Serialization.SVG
         };
 
         /// <summary>
-        /// Gets or sets if gridlines exist, should they be shown in the plan.
+        /// Should grid lines be shown in the section?
         /// </summary>
         public bool ShowGrid { get; set; } = true;
 
@@ -335,8 +335,8 @@ namespace Elements.Serialization.SVG
                 TextAnchor = SvgTextAnchor.Middle,
                 Transforms = new Svg.Transforms.SvgTransformCollection() { new SvgRotate((float)angle, x.Value, y.Value), new SvgTranslate(0, 0.2f) }
             };
-            svgText.CustomAttributes.Add("style", "font-family: Areal; font-size: 0.5; fill:black");
 
+            svgText.CustomAttributes.Add("style", "font-family: Areal; font-size: 0.5; fill:black");
             return svgText;
         }
 

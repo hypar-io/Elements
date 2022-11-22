@@ -14,11 +14,31 @@ namespace Elements.Serialization.SVG
                 StartY = line.Start.Y.ToYUserUnit(h, min),
                 EndX = line.End.X.ToXUserUnit(min),
                 EndY = line.End.Y.ToYUserUnit(h, min),
-                Stroke = context.Stroke,
                 StrokeWidth = context.StrokeWidth,
-                StrokeDashArray = context.StrokeDashArray
+                StrokeDashArray = context.StrokeDashArray,
             };
 
+            // If use properties to set color, the generated SVG has color names like this: fill:'Black',
+            // but expected value is fill:black
+            string style = string.Empty;
+            if (context.Fill != null)
+            {
+                style += $"fill:{context.Fill.Colour.Name.ToLower()}";
+            }
+
+            if (context.Stroke != null)
+            {
+                if (!string.IsNullOrEmpty(style))
+                {
+                    style += "; ";
+                }
+                style += $"stroke:{context.Stroke.Colour.Name.ToLower()}";
+            }
+
+            if (!string.IsNullOrEmpty(style))
+            {
+                svgLine.CustomAttributes.Add("style", style);
+            }
             return svgLine;
         }
 

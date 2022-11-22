@@ -76,7 +76,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The smallest possible value of a Elements.Vector
+        /// The smallest possible value of a Vector3.
         /// </summary>
         public static Vector3 Min
         {
@@ -84,7 +84,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The largest possible value of a Elements.Vector
+        /// The largest possible value of a Vector3.
         /// </summary>
         public static Vector3 Max
         {
