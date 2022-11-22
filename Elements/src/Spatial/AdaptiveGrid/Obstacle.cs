@@ -128,9 +128,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 height += line.Length();
             }
 
-            
+
             return new Obstacle(polygon, height, 0, addPerimeterEdges, allowOutsideBoundary, frame);
-         }
+        }
 
         /// <summary>
         /// Create an obstacle from a list of points.
@@ -268,7 +268,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 return false;
             }
 
-            if (!polygon.Contains3D(intersection))
+            if (!polygon.Contains(intersection, out _))
             {
                 return false;
             }
@@ -281,7 +281,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private static bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
         {
-            if (polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
+            if (polygon.Contains(line.Start, out _) || polygon.Contains(line.End, out _))
             {
                 return true;
             }

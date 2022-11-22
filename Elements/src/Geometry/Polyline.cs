@@ -152,13 +152,13 @@ namespace Elements.Geometry
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges(Transform transform = null)
         {
             for (var i = 0; i < Vertices.Count - 1; i++)
             {
                 var from = Vertices[i];
                 var to = Vertices[i + 1];
-                yield return (from, to);
+                yield return transform != null ? (transform.OfPoint(from), transform.OfPoint(to)) : (from, to);
             }
         }
 

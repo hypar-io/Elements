@@ -113,7 +113,7 @@ namespace Elements
 
             var result = obstacle.Intersects(polyline);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Elements
             Assert.True(horizontalObstacle.Intersects(horizontalLineOnBottom));
 
             var horizontalLineOnSide = horizontalLine.TransformedLine(new Transform(offset, 0, 0));
-            Assert.False(horizontalObstacle.Intersects(horizontalLineOnSide));
+            Assert.True(horizontalObstacle.Intersects(horizontalLineOnSide));
 
             var horizontalLineIntersecting = horizontalLine.TransformedLine(new Transform(0, offset, 0));
             Assert.True(horizontalObstacle.Intersects(horizontalLineIntersecting));
