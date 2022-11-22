@@ -5,6 +5,7 @@
 ### Added
 
 - `AdaptiveGraphRouting.ErrorMessages`
+- `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 
 ### Changed
 
@@ -28,7 +29,6 @@
 - `Elements.Spatial.AdaptiveGrid.TreeNode`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 - `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
-- `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 
 ### Changed
 
