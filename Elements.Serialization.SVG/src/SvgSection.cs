@@ -1,5 +1,8 @@
 using Elements.Geometry;
+using SkiaSharp;
 using Svg;
+using Svg.Skia;
+using Svg.Transforms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,12 +35,113 @@ namespace Elements.Serialization.SVG
     }
 
     /// <summary>
-    /// 
+    /// A section of a model serialized to SVG.
     /// </summary>
-    public static class SvgSection
+    public class SvgSection
     {
+        #region Private fields
+
+        private readonly List<Model> _models = new List<Model>();
+        private Dictionary<string, Line> _gridLines = new Dictionary<string, Line>();
+        private readonly double _elevation;
+        private BBox3 _sceneBounds;
+
+        #endregion
+
+        #region Events
+
         /// <summary>
-        /// Create a plan of a model at the provided elevation and save the 
+        /// This event occurs before an element is added to the svg scene.
+        /// It can be used to customize element creation.
+        /// </summary>
+        public event EventHandler<ElementSerializationEventArgs>? OnElementDrawing;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of SvgDrawingPlan class.
+        /// </summary>
+        /// <param name="models">A collection of models to include in the plan.</param>
+        /// <param name="elevation">The elevation at which the plan will be cut.</param>
+        public SvgSection(IList<Model> models, double elevation)
+        {
+            this._models.AddRange(models);
+            this._elevation = elevation;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// The svg context which defines settings for elements cut by the cut plane.
+        /// </summary>
+        public SvgContext FrontContext { get; set; } = new SvgContext()
+        {
+            Fill = new SvgColourServer(System.Drawing.Color.Black),
+            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f)
+        };
+
+        /// <summary>
+        /// The svg context which defines settings for elements behind the cut plane.
+        /// </summary>
+        public SvgContext BackContext { get; set; } = new SvgContext()
+        {
+            Stroke = new SvgColourServer(System.Drawing.Color.Black),
+            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f)
+        };
+
+        /// <summary>
+        /// The svg context which defines settings for the grid elements.
+        /// </summary>
+        public SvgContext GridContext { get; set; } = new SvgContext()
+        {
+            Stroke = new SvgColourServer(Colors.Black),
+            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f),
+            StrokeDashArray = new SvgUnitCollection(){
+                    new SvgUnit(SvgUnitType.User, 0.3f),
+                    new SvgUnit(SvgUnitType.User, 0.025f),
+                    new SvgUnit(SvgUnitType.User, 0.05f),
+                    new SvgUnit(SvgUnitType.User, 0.025f),
+                }
+        };
+
+        /// <summary>
+        /// Should grid lines be shown in the section?
+        /// </summary>
+        public bool ShowGrid { get; set; } = true;
+
+        /// <summary>
+        /// The extension of the grid head past the bounds of the drawing in the created plan.
+        /// </summary>
+        public double GridHeadExtension { get; set; } = 2.0;
+
+        /// <summary>
+        /// The radius of grid heads in the created plan.
+        /// </summary>
+        public double GridHeadRadius { get; set; } = 0.5;
+
+        /// <summary>
+        /// How should the plan be rotated relative to the page.
+        /// </summary>
+        public PlanRotation PlanRotation { get; set; } = PlanRotation.Angle;
+
+        /// <summary>
+        /// An additional amount to rotate the plan.
+        /// </summary>
+        public double PlanRotationDegrees { get; set; } = 0.0;
+
+        internal float ViewBoxWidth { get; private set; }
+        internal float ViewBoxHeight { get; private set; }
+
+        #endregion
+
+        #region Public logic
+
+        /// <summary>
+        /// Create a plan of a model at the provided elevation and save the
         /// resulting section to the provided path.
         /// </summary>
         /// <param name="models">A collection of models to include in the plan.</param>
@@ -88,30 +192,191 @@ namespace Elements.Serialization.SVG
                                                 PlanRotation planRotation = PlanRotation.Angle,
                                                 double planRotationDegrees = 0.0)
         {
-            var rotation = GetRotationValueForPlan(models, planRotation, planRotationDegrees);
+            return CreatePlanFromModels(models, elevation, frontContext, backContext, out _, showGrid, gridHeadExtension, gridHeadRadius,
+                    planRotation, planRotationDegrees);
+        }
+
+        /// <summary>
+        /// Generate a plan of a model at the provided elevation.
+        /// </summary>
+        /// <param name="models">A collection of models to include in the plan.</param>
+        /// <param name="elevation">The elevation at which the plan will be cut.</param>
+        /// <param name="frontContext">An svg context which defines settings for elements cut by the cut plane.</param>
+        /// <param name="backContext">An svg context which defines settings for elements behind the cut plane.</param>
+        /// <param name="sceneBounds">The scene bounds. It can be used to add elements to the output document</param>
+        /// <param name="showGrid">If gridlines exist, should they be shown in the plan?</param>
+        /// <param name="gridHeadExtension">The extension of the grid head past the bounds of the drawing in the created plan.</param>
+        /// <param name="gridHeadRadius">The radius of grid heads in the created plan.</param>
+        /// <param name="planRotation">How should the plan be rotated relative to the page?</param>
+        /// <param name="planRotationDegrees">An additional amount to rotate the plan.</param>
+        public static SvgDocument CreatePlanFromModels(IList<Model> models,
+                                                double elevation,
+                                                SvgContext frontContext,
+                                                SvgContext backContext,
+                                                out BBox3 sceneBounds,
+                                                bool showGrid = true,
+                                                double gridHeadExtension = 2.0,
+                                                double gridHeadRadius = 0.5,
+                                                PlanRotation planRotation = PlanRotation.Angle,
+                                                double planRotationDegrees = 0.0)
+        {
+            var drawingPlan = new SvgSection(models, elevation);
+            drawingPlan.BackContext = backContext;
+            drawingPlan.FrontContext = frontContext;
+            drawingPlan.ShowGrid = showGrid;
+            drawingPlan.GridHeadExtension = gridHeadExtension;
+            drawingPlan.GridHeadRadius = gridHeadRadius;
+            drawingPlan.PlanRotation = planRotation;
+            drawingPlan.PlanRotationDegrees = planRotationDegrees;
+
+            var doc = drawingPlan.CreateSvgDocument();
+            sceneBounds = drawingPlan.GetSceneBounds();
+            return doc;
+        }
+
+        /// <summary>
+        /// Create a plan of a model and save the resulting section to the provided stream.
+        /// </summary>
+        /// <param name="stream">The stream to write the SVG data</param>
+        public void SaveAsSvg(Stream stream)
+        {
+            var doc = CreateSvgDocument();
+            doc.Write(stream);
+        }
+
+        /// <summary>
+        /// Create a plan of a model and save the resulting section to the provided path.
+        /// </summary>
+        /// <param name="path">The location on disk to write the SVG file</param>
+        public void SaveAsSvg(string path)
+        {
+            var svgPath = System.IO.Path.ChangeExtension(path, ".svg");
+            using (var stream = new FileStream(svgPath, FileMode.Create, FileAccess.Write))
+            {
+                SaveAsSvg(stream);
+            }
+        }
+
+        /// <summary>
+        /// Create a plan of a model and save the resulting section to the provided path.
+        /// </summary>
+        /// <param name="path">The location on disk to write the PDF file</param>
+        /// <param name="saveOptions">The pdf save options: page size, mergin</param>
+        public void SaveAsPdf(string path, PdfSaveOptions saveOptions)
+        {
+            var pdfPath = System.IO.Path.ChangeExtension(path, ".pdf");
+            using (var stream = new FileStream(pdfPath, FileMode.Create, FileAccess.Write))
+            {
+                SaveAsPdf(stream, saveOptions);
+            }
+        }
+
+        /// <summary>
+        /// Create a plan of a model and save the resulting section to the provided stream.
+        /// </summary>
+        /// <param name="stream">The stream to write the PDF data</param>
+        /// <param name="saveOptions">The pdf save options: page size, mergin</param>
+        public void SaveAsPdf(Stream stream, PdfSaveOptions saveOptions)
+        {
+            var pageHeight = saveOptions.PageHeight;
+            var pageWidth = saveOptions.PageWidth;
+            var margin = saveOptions.Margin;
+
+            using var document = SKDocument.CreatePdf(stream);
+            var path = System.IO.Path.GetTempFileName();
+            path = System.IO.Path.ChangeExtension(path, ".svg");
+
+            using (var svg = new SKSvg())
+            {
+                var svgStream = new MemoryStream();
+                SaveAsSvg(path);
+                if (svg.Load(path) is { } && svg.Picture != null)
+                {
+                    if (svg.Picture.CullRect.Width > svg.Picture.CullRect.Height)
+                    {
+                        var tmp = pageHeight;
+                        pageHeight = pageWidth;
+                        pageWidth = tmp;
+                    }
+
+                    using (var pdfCanvas = document.BeginPage(pageWidth, pageHeight))
+                    {
+                        float scale = Math.Min((pageHeight - margin * 2) / svg.Picture.CullRect.Height,
+                            (pageWidth - margin * 2) / svg.Picture.CullRect.Width);
+                        var matrix = SKMatrix.CreateScale(scale, scale);
+                        matrix = SKMatrix.Concat(SKMatrix.CreateTranslation(margin, margin), matrix);
+                        pdfCanvas.DrawPicture(svg.Picture, ref matrix);
+                    }
+
+                    document.EndPage();
+                }
+            }
+
+            document.Close();
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        /// <summary>
+        /// Create SvgText element.
+        /// </summary>
+        /// <param name="text">The content.</param>
+        /// <param name="location">The element location at the model.</param>
+        /// <param name="angle">The angle of the content.</param>
+        /// <returns></returns>
+        public SvgText CreateText(string text, Vector3 location, double angle)
+        {
+            var x = location.X.ToXUserUnit(this);
+            var y = location.Y.ToYUserUnit(this);
+
+            var svgText = new SvgText(text)
+            {
+                X = new SvgUnitCollection() { x },
+                Y = new SvgUnitCollection() { y },
+                TextAnchor = SvgTextAnchor.Middle,
+                Transforms = new Svg.Transforms.SvgTransformCollection() { new SvgRotate((float)angle, x.Value, y.Value), new SvgTranslate(0, 0.2f) }
+            };
+
+            svgText.CustomAttributes.Add("style", "font-family: Areal; font-size: 0.5; fill:black");
+            return svgText;
+        }
+
+
+        /// <summary>
+        /// Generate a plan of a model.
+        /// </summary>
+        public SvgDocument CreateSvgDocument()
+        {
+            _sceneBounds = SvgSection.ComputeSceneBounds(_models);
 
             var doc = new SvgDocument
             {
                 Fill = SvgPaintServer.None
             };
-            doc.CustomAttributes.Add("transform", $"rotate({rotation} 0 0)");
 
-            var sceneBounds = ComputeSceneBounds(models);
+            var rotation = SvgSection.GetRotationValueForPlan(_models, PlanRotation, PlanRotationDegrees);
 
-            var plane = new Plane(new Vector3(0, 0, elevation), Vector3.ZAxis);
-            Draw(models,
-                 sceneBounds,
-                 plane,
-                 doc,
-                 frontContext,
-                 backContext,
-                 showGrid,
-                 gridHeadExtension,
-                 gridHeadRadius,
-                 rotation);
+            _gridLines.Clear();
+            if (ShowGrid)
+            {
+                _gridLines = ExtendSceneWithGridLines();
+            }
 
+            CreateViewBox(doc, rotation);
+            Draw(doc, rotation);
             return doc;
         }
+
+        /// <summary>
+        /// Get the scene bounds.
+        /// </summary>
+        public BBox3 GetSceneBounds()
+        {
+            return _sceneBounds;
+        }
+
+        #endregion
+
+        #region Private logic
 
         private static double GetRotationValueForPlan(IList<Model> models, PlanRotation rotation, double angle)
         {
@@ -138,72 +403,73 @@ namespace Elements.Serialization.SVG
             };
         }
 
-        private static void Draw(IList<Model> models,
-                                 BBox3 sceneBounds,
-                                 Plane plane,
-                                 SvgDocument doc,
-                                 SvgContext frontContext,
-                                 SvgContext backContext,
-                                 bool showGrid,
-                                 double gridHeadExtension,
-                                 double gridHeadRadius,
-                                 double rotation)
+        private static BBox3 ComputeSceneBounds(IList<Model> models)
         {
-            var gridContext = new SvgContext()
-            {
-                Stroke = new SvgColourServer(Colors.Black),
-                StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f),
-                StrokeDashArray = new SvgUnitCollection(){
-                    new SvgUnit(SvgUnitType.User, 0.3f),
-                    new SvgUnit(SvgUnitType.User, 0.025f),
-                    new SvgUnit(SvgUnitType.User, 0.05f),
-                    new SvgUnit(SvgUnitType.User, 0.025f),
-                }
-            };
-
-            // Grow the bounds by the size of the grid and grid heads
-            var gridLines = new Dictionary<string, Line>();
-            if (showGrid)
-            {
-                foreach (var g in models.SelectMany(m => m.AllElementsOfType<GridLine>()).ToList())
-                {
-                    var gl = (Line)g.Curve;
-                    var d = gl.Direction();
-                    var start = gl.Start + d.Negate() * gridHeadExtension;
-                    var end = gl.End + d * gridHeadExtension;
-                    gridLines.Add(g.Name, new Line(start, end));
-
-                    var l = start + new Vector3(-gridHeadRadius, 0);
-                    var r = start + new Vector3(gridHeadRadius, 0);
-                    var t = start + new Vector3(0, gridHeadRadius);
-                    var b = start + new Vector3(0, -gridHeadRadius);
-
-                    sceneBounds.Extend(start, end, l, r, t, b);
-                }
-            }
-
-            var w = (float)(sceneBounds.Max.X - sceneBounds.Min.X);
-            var h = (float)(sceneBounds.Max.Y - sceneBounds.Min.Y);
-
-            if (rotation == 0.0)
-            {
-                doc.ViewBox = new SvgViewBox(0, 0, w, h);
-            }
-            else
-            {
-                // Compute a new bounding box around the rotated
-                // bounding box, to ensure that we our viewbox isn't too small.
-                var t = new Transform(Vector3.Origin);
-                t.Rotate(rotation);
-                var bounds = new BBox3(sceneBounds.Corners().Select(v => t.OfPoint(v)));
-                w = (float)(bounds.Max.X - bounds.Min.X);
-                h = (float)(bounds.Max.Y - bounds.Min.Y);
-                doc.ViewBox = new SvgViewBox(0, 0, w, h);
-            }
-
+            var bounds = new BBox3(Vector3.Max, Vector3.Min);
             foreach (var model in models)
             {
-                model.Intersect(plane,
+                foreach (var element in model.Elements)
+                {
+                    if (element.Value is GeometricElement geo)
+                    {
+                        geo.UpdateRepresentations();
+                        if (geo.Representation == null || geo.Representation.SolidOperations.All(v => v.IsVoid))
+                        {
+                            continue;
+                        }
+                        geo.UpdateBoundsAndComputeSolid();
+
+                        var bbMax = geo.Transform.OfPoint(geo._bounds.Max);
+                        var bbMin = geo.Transform.OfPoint(geo._bounds.Min);
+                        bounds.Extend(new[] { bbMax, bbMin });
+                    }
+                }
+            }
+
+            return bounds;
+        }
+
+        private void Draw(SvgDocument doc, double rotation)
+        {
+            var plane = new Plane(new Vector3(0, 0, _elevation), Vector3.ZAxis);
+            var customElementsBeforeGrid = new List<SvgElement>();
+            var customElementsAfterGrid = new List<SvgElement>();
+
+            foreach (var model in _models)
+            {
+                var modelWithoutCustomElements = model;
+                if (OnElementDrawing != null)
+                {
+                    var elements = new Dictionary<Guid, Element>();
+                    foreach (var element in model.Elements)
+                    {
+                        var e = new ElementSerializationEventArgs(this, element.Value);
+                        OnElementDrawing.Invoke(this, e);
+                        if (e.IsProcessed)
+                        {
+                            switch (e.CreationSequence)
+                            {
+                                case ElementSerializationEventArgs.CreationSequences.AfterGridLines:
+                                    customElementsAfterGrid.AddRange(e.SvgElements);
+                                    break;
+                                case ElementSerializationEventArgs.CreationSequences.BeforeGridLines:
+                                    customElementsBeforeGrid.AddRange(e.SvgElements);
+                                    break;
+                                case ElementSerializationEventArgs.CreationSequences.Immediately:
+                                    e.SvgElements.ForEach(el => doc.Children.Add(el));
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            elements.Add(element.Key, element.Value);
+                        }
+                    }
+
+                    modelWithoutCustomElements = new Model(model.Transform, elements);
+                }
+
+                modelWithoutCustomElements.Intersect(plane,
                                 out Dictionary<Guid, List<Polygon>> intersecting,
                                 out Dictionary<Guid, List<Polygon>> back,
                                 out Dictionary<Guid, List<Line>> lines);
@@ -212,7 +478,7 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var p in intersectingPolygon.Value)
                     {
-                        doc.Children.Add(p.ToSvgPolygon(sceneBounds.Min, h, frontContext));
+                        doc.Children.Add(p.ToSvgPolygon(_sceneBounds.Min, ViewBoxHeight, FrontContext));
                     }
                 }
 
@@ -220,7 +486,7 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var p in backPolygon.Value)
                     {
-                        doc.Children.Add(p.ToSvgPolygon(sceneBounds.Min, h, backContext));
+                        doc.Children.Add(p.ToSvgPolygon(_sceneBounds.Min, ViewBoxHeight, BackContext));
                     }
                 }
 
@@ -228,84 +494,101 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var l in line.Value)
                     {
-                        doc.Children.Add(l.ToSvgLine(sceneBounds.Min, h, frontContext));
+                        doc.Children.Add(l.ToSvgLine(_sceneBounds.Min, ViewBoxHeight, FrontContext));
                     }
                 }
+
             }
 
-            if (showGrid)
-            {
-                foreach (var line in gridLines)
-                {
-                    doc.Children.Add(line.Value.ToSvgLine(sceneBounds.Min, h, gridContext));
-                    doc.Children.Add(new SvgCircle()
-                    {
-                        CenterX = line.Value.Start.X.ToXUserUnit(sceneBounds.Min),
-                        CenterY = line.Value.Start.Y.ToYUserUnit(h, sceneBounds.Min),
-                        Radius = new SvgUnit(SvgUnitType.User, (float)gridHeadRadius),
-                        Stroke = new SvgColourServer(Colors.Black),
-                        Fill = new SvgColourServer(Colors.White),
-                        StrokeWidth = gridContext.StrokeWidth
-                    });
-
-                    var x = line.Value.Start.X.ToXUserUnit(sceneBounds.Min);
-                    var y = line.Value.Start.Y.ToYUserUnit(h, sceneBounds.Min);
-
-                    var text = new SvgText(line.Key.ToString())
-                    {
-                        X = new SvgUnitCollection() { x },
-                        Y = new SvgUnitCollection() { y },
-                        FontStyle = SvgFontStyle.Normal,
-                        FontSize = new SvgUnit(SvgUnitType.User, 0.5f),
-                        FontFamily = "Arial",
-                        Fill = new SvgColourServer(Colors.Black),
-                        TextAnchor = SvgTextAnchor.Middle,
-                        BaselineShift = (-0.2).ToString(), // TODO: Bit of a magic number here to center the text
-                    };
-
-                    // TODO: Figure out how to add the transform-origin attribute
-                    // text.CustomAttributes.Add("transform-origin", $"{x * -1} {y * -1}");
-                    text.CustomAttributes.Add("transform", $"rotate({-1 * rotation} {x} {y})");
-                    doc.Children.Add(text);
-                }
-            }
+            customElementsBeforeGrid.ForEach(el => doc.Children.Add(el));
+            DrawGridLines(doc, rotation, _gridLines);
+            customElementsAfterGrid.ForEach(el => doc.Children.Add(el));
         }
 
-        private static BBox3 ComputeSceneBounds(IList<Model> models)
+        private void CreateViewBox(SvgDocument doc, double rotation)
         {
-            var max = new Vector3(double.MinValue, double.MinValue);
-            var min = new Vector3(double.MaxValue, double.MaxValue);
+            ViewBoxWidth = (float)(_sceneBounds.Max.X - _sceneBounds.Min.X);
+            ViewBoxHeight = (float)(_sceneBounds.Max.Y - _sceneBounds.Min.Y);
 
-            foreach (var model in models)
+
+            if (rotation == 0.0)
             {
-                foreach (var element in model.Elements)
-                {
-                    if (element.Value is GeometricElement geo)
-                    {
-                        geo.UpdateRepresentations();
-                        geo.UpdateBoundsAndComputeSolid();
-
-                        if (geo._bounds.Max.X > max.X)
-                        {
-                            max.X = geo._bounds.Max.X;
-                        }
-                        if (geo._bounds.Max.Y > max.Y)
-                        {
-                            max.Y = geo._bounds.Max.Y;
-                        }
-                        if (geo._bounds.Min.X < min.X)
-                        {
-                            min.X = geo._bounds.Min.X;
-                        }
-                        if (geo._bounds.Min.Y < min.Y)
-                        {
-                            min.Y = geo._bounds.Min.Y;
-                        }
-                    }
-                }
+                doc.ViewBox = new SvgViewBox(0, 0, ViewBoxWidth, ViewBoxHeight);
             }
-
-            return new BBox3(min, max);
+            else
+            {
+                // Compute a new bounding box around the rotated
+                // bounding box, to ensure that we our viewbox isn't too small.
+                var t = new Transform(Vector3.Origin);
+                t.Rotate(rotation);
+                var bounds = new BBox3(_sceneBounds.Corners().Select(v => t.OfPoint(v)));
+                var wOld = ViewBoxWidth;
+                var hOld = ViewBoxHeight;
+                ViewBoxWidth = (float)(bounds.Max.X - bounds.Min.X);
+                ViewBoxHeight = (float)(bounds.Max.Y - bounds.Min.Y);
+                float max = Math.Max(ViewBoxWidth, ViewBoxHeight);
+                doc.ViewBox = new SvgViewBox((wOld - ViewBoxWidth) / 2.0f, (ViewBoxHeight - hOld) / 2.0f, ViewBoxWidth, ViewBoxHeight);
+                doc.CustomAttributes.Add("transform", $"rotate({rotation} {ViewBoxWidth / 2.0} {ViewBoxHeight / 2.0})");
+            }
         }
+
+        private void DrawGridLines(SvgDocument doc, double rotation, Dictionary<string, Line> gridLines)
+        {
+            foreach (var line in gridLines)
+            {
+                doc.Children.Add(line.Value.ToSvgLine(_sceneBounds.Min, ViewBoxHeight, GridContext));
+                doc.Children.Add(new SvgCircle()
+                {
+                    CenterX = line.Value.Start.X.ToXUserUnit(_sceneBounds.Min),
+                    CenterY = line.Value.Start.Y.ToYUserUnit(ViewBoxHeight, _sceneBounds.Min),
+                    Radius = new SvgUnit(SvgUnitType.User, (float)GridHeadRadius),
+                    Stroke = new SvgColourServer(Colors.Black),
+                    Fill = new SvgColourServer(Colors.White),
+                    StrokeWidth = GridContext.StrokeWidth
+                });
+
+                var x = line.Value.Start.X.ToXUserUnit(_sceneBounds.Min);
+                var y = line.Value.Start.Y.ToYUserUnit(ViewBoxHeight, _sceneBounds.Min);
+
+                var text = new SvgText(line.Key.ToString())
+                {
+                    X = new SvgUnitCollection() { x },
+                    Y = new SvgUnitCollection() { y },
+                    FontStyle = SvgFontStyle.Normal,
+                    FontSize = new SvgUnit(SvgUnitType.User, 0.5f),
+                    FontFamily = "Areal",
+                    Fill = new SvgColourServer(Colors.Black),
+                    TextAnchor = SvgTextAnchor.Middle,
+                };
+                text.CustomAttributes.Add("transform", $"rotate({-1 * rotation} {x} {y}), translate(0, 0.2)");
+                doc.Children.Add(text);
+            }
+        }
+
+        /// <summary>
+        /// Grow the bounds by the size of the grid and grid heads
+        /// </summary>
+        private Dictionary<string, Line> ExtendSceneWithGridLines()
+        {
+            var gridLines = new Dictionary<string, Line>();
+            foreach (var g in _models.SelectMany(m => m.AllElementsOfType<GridLine>()).ToList())
+            {
+                var gl = (Line)g.Curve;
+                var d = gl.Direction();
+                var start = gl.Start + d.Negate() * GridHeadExtension;
+                var end = gl.End + d * GridHeadExtension;
+                gridLines.Add(g.Name, new Line(start, end));
+
+                var l = start + new Vector3(-GridHeadRadius, 0);
+                var r = start + new Vector3(GridHeadRadius, 0);
+                var t = start + new Vector3(0, GridHeadRadius);
+                var b = start + new Vector3(0, -GridHeadRadius);
+
+                _sceneBounds.Extend(start, end, l, r, t, b);
+            }
+            return gridLines;
+        }
+
+        #endregion
     }
 }
