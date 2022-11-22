@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- `AdaptiveGraphRouting.ErrorMessages`
+
+### Changed
+
+- Remove the BBox3 validator.
+
+### Fixed
+
+- Fix `Obstacle.FromLine` if line is vertical and start point is positioned higher than end.
+
 ## 1.3.0
 
 ### Added
