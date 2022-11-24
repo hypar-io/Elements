@@ -701,6 +701,76 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
+        /// <summary>
+        /// Store points of edges both vertices of which are located at the given plane.
+        /// Use with InsertSnapshot to duplicate vertices to a new elevation,
+        /// while allowing modification of the original edges before duplication takes place.
+        /// </summary>
+        /// <param name="plane">Plane to retrieve edges from.</param>
+        /// <param name="edgesToCheck">Optional. Edges to check, all by default .</param>
+        /// <returns>Position pair for each edge stored.</returns>
+        public List<(Vector3 Start, Vector3 End)> SnapshotEdgesOnPlane(
+            Plane plane, IEnumerable<Edge> edgesToCheck = null)
+        {
+            if (edgesToCheck == null)
+            {
+                edgesToCheck = GetEdges();
+            }
+
+            List<(Vector3, Vector3)> snapshot = new List<(Vector3, Vector3)>();
+            foreach (var e in edgesToCheck)
+            {
+                var sv = GetVertex(e.StartId);
+                var ev = GetVertex(e.EndId);
+                if (sv != null && Math.Abs(sv.Point.DistanceTo(plane)) < Tolerance &&
+                    ev != null && Math.Abs(ev.Point.DistanceTo(plane)) < Tolerance)
+                {
+                    snapshot.Add((sv.Point, ev.Point));
+                }
+            }
+            return snapshot;
+        }
+
+        /// <summary>
+        /// Duplicate stored edges with transformation applied.
+        /// Use with InsertSnapshot to move a list of existing or previously existed edges to the new location,
+        /// for example, copy edges from one elevation to another.
+        /// </summary>
+        /// <param name="storedEdges">Edge positions to duplicate.</param>
+        /// <param name="transform">Transformation to apply to all of the new edges.</param>
+        /// <param name="connect">Optional. Connect each new vertex with it's original vertex if it still exist.</param>
+        public void InsertSnapshot(
+            List<(Vector3 Start, Vector3 End)> storedEdges, Transform transform, bool connect = true)
+        {
+            HashSet<ulong> alreadyConnected = new HashSet<ulong>();
+
+            foreach (var (Start, End) in storedEdges)
+            {
+                var newSV = AddVertex(transform.OfPoint(Start));
+                var newEV = AddVertex(transform.OfPoint(End));
+                AddEdge(newSV.Id, newEV.Id);
+
+                if (connect)
+                {
+                    // The same vertex can be part of multiple edges.
+                    // Cache to avoid expensive cut operations.
+                    if (!alreadyConnected.Contains(newSV.Id) && 
+                        TryGetVertexIndex(Start, out var id, Tolerance))
+                    {
+                        AddEdge(newSV.Id, id);
+                        alreadyConnected.Add(newSV.Id);
+                    }
+
+                    if (!alreadyConnected.Contains(newEV.Id) &&
+                        TryGetVertexIndex(End, out id, Tolerance))
+                    {
+                        AddEdge(newEV.Id, id);
+                        alreadyConnected.Add(newEV.Id);
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Private logic
@@ -997,7 +1067,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="points">Points to add and connect to the grid.</param>
         /// <param name="extendDistance">Distance at which lines are extended to existing edges.</param>
-        /// <returns></returns>
+        /// <returns>Vertices in order they are inserted, including already existing. Can contain duplicates.</returns>
         public List<Vertex> AddVerticesWithCustomExtension(IList<Vector3> points, double extendDistance)
         {
             List<Vertex> vertices = new List<Vertex>();
@@ -1005,16 +1075,31 @@ namespace Elements.Spatial.AdaptiveGrid
             for (int i = 0; i < points.Count - 1; i++)
             {
                 var segmentLength = (points[i + 1] - points[i]).Length();
+                // Find any intersections between infinite segment and grid eges.
                 var hits = IntersectGraph(points[i], points[i + 1]);
-
-                int index = LastNegativeHit(hits, segmentLength);
-                if (index < 0 || index + 1 >= hits.Count)
+                // If none - just insert segment into grid. 
+                if (!hits.Any())
                 {
+                    var start = AddVertex(points[i]);
+                    var end = AddVertex(points[i + 1]);
+                    if (!vertices.Any() || vertices.Last().Id != start.Id)
+                    {
+                        vertices.Add(start);
+                    }
+
+                    if (start.Id != end.Id)
+                    {
+                        AddEdge(points[i], points[i + 1], false);
+                        vertices.Add(end);
+                    }
                     continue;
                 }
 
+                // Each segment is extended both sides if next intersection is less than extendDistance away.
+                // Extend start or add is as is if it's too far away.
+                int index = LastNegativeHit(hits, segmentLength);
                 Vertex lastCut;
-                if (hits[index].DistanceAlongLine < -extendDistance)
+                if (index < 0 || hits[index].DistanceAlongLine < -extendDistance)
                 {
                     lastCut = AddVertex(points[i]);
                 }
@@ -1034,9 +1119,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     lastCut = CutEdge(hits[index].Edge, cutPoint);
                 }
 
+                // Ignore consequent duplicate vertices. Duplicates are still possible though.
                 index++;
-                vertices.Add(lastCut);
+                if (!vertices.Any() || vertices.Last().Id != lastCut.Id)
+                {
+                    vertices.Add(lastCut);
+                }
 
+                // Insert any ordered intersection between start and end
                 while (index < hits.Count && hits[index].DistanceAlongLine < segmentLength + Tolerance)
                 {
                     var newCut = InsertHit(hits[index], lastCut);
@@ -1048,9 +1138,12 @@ namespace Elements.Spatial.AdaptiveGrid
                     index++;
                 }
 
-                if (index < hits.Count && !hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
+                // Snap segment end to the first outside intersection if it's not too far away.
+                // If it's not there or too far away - just insert end point as is.
+                if (!hits[index - 1].DistanceAlongLine.ApproximatelyEquals(segmentLength, Tolerance))
                 {
-                    var finalCut = InsertFinalCut(hits[index], lastCut, points[i + 1], segmentLength + extendDistance);
+                    var hit = index < hits.Count ? hits[index] : (null, 0, 0, 0);
+                    var finalCut = InsertFinalCut(hit, lastCut, points[i + 1], segmentLength + extendDistance);
                     if (finalCut != null)
                     {
                         vertices.Add(finalCut);
@@ -1162,7 +1255,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Vertex lastCut, Vector3 endPoint, double maxDistance)
         {
             Vertex finalCut;
-            if (hit.DistanceAlongLine > maxDistance)
+            if (hit.Edge == null || hit.DistanceAlongLine > maxDistance)
             {
                 finalCut = AddVertex(endPoint);
                 if (finalCut.Id != lastCut.Id)

@@ -117,19 +117,20 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             else
             {
+                var lowPoint = line.Start.Z < line.End.Z ? line.Start : line.End;
                 polygon = new Polygon
                 (
-                    line.Start + offset * (Vector3.XAxis + Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis - Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis.Negate() - Vector3.YAxis - Vector3.ZAxis),
-                    line.Start + offset * (Vector3.XAxis.Negate() + Vector3.YAxis - Vector3.ZAxis)
+                    lowPoint + offset * (Vector3.XAxis + Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis - Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis.Negate() - Vector3.YAxis - Vector3.ZAxis),
+                    lowPoint + offset * (Vector3.XAxis.Negate() + Vector3.YAxis - Vector3.ZAxis)
                 );
                 height += line.Length();
             }
 
-            
+
             return new Obstacle(polygon, height, 0, addPerimeterEdges, allowOutsideBoundary, frame);
-         }
+        }
 
         /// <summary>
         /// Create an obstacle from a list of points.
@@ -267,7 +268,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 return false;
             }
 
-            if (!polygon.Contains3D(intersection))
+            if (!polygon.Contains(intersection, out _))
             {
                 return false;
             }
@@ -280,7 +281,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private static bool IntersectsWithHorizontalPolygon(Polygon polygon, Line line, double tolerance = 1e-05)
         {
-            if (polygon.Contains3D(line.Start) || polygon.Contains3D(line.End))
+            if (polygon.Contains(line.Start, out _) || polygon.Contains(line.End, out _))
             {
                 return true;
             }

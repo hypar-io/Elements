@@ -133,6 +133,41 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridSubtractBoxAddPerimeter()
+        {
+            var adaptiveGrid = new AdaptiveGrid();
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
+
+            var points = new List<Vector3>();
+            for (int i = 1; i < 10; i++)
+            {
+                points.Add(new Vector3(i, i, 1));
+            }
+
+            adaptiveGrid.AddFromExtrude(polygon, Vector3.ZAxis, 2, points);
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4, 1), out var borderId);
+            var borderV = adaptiveGrid.GetVertex(borderId);
+            var numEdges = borderV.Edges.Count;
+            var numVertices = adaptiveGrid.GetVertices().Count;
+
+            var o = Obstacle.FromBBox(
+                new BBox3(new Vector3(4.9, 4.9, 0), new Vector3(5.1, 5.1, 2)),
+                addPerimeterEdges: true);
+            adaptiveGrid.SubtractObstacle(o);
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 5, 1), out _));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(5, 4.9, 1), out _));
+
+            Assert.Equal(numEdges, borderV.Edges.Count);
+            //There are 3 elevations: extrusion is done from 0 to 2 and split points are at  1.
+            //On each elevation one vertex is removed and 8 added as box perimeter.
+            //TODO: elevations are not connected!!!
+            Assert.Equal(numVertices + (3 * 7), adaptiveGrid.GetVertices().Count);
+        }
+
+        [Fact]
         public void AdaptiveGridSubtractBoxSmallDifference()
         {
             var edgesNumber = 75;
@@ -642,6 +677,54 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void Add3DVerticesWithCustomExtension()
+        {
+            var grid = new AdaptiveGrid();
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+                                new List<Vector3> { new Vector3(2, 2), new Vector3(5, 5), new Vector3(8, 8) });
+
+            var toInsert = new Vector3[] {
+                new Vector3(2, 5, 0),
+                new Vector3(3, 5, 0),
+                new Vector3(4, 5, 1),
+                new Vector3(5, 5, 1),
+                new Vector3(6, 5, 0),
+                new Vector3(7, 5, 0)
+            };
+
+            var verticesBefore = grid.GetVertices().Count;
+            grid.AddVerticesWithCustomExtension(toInsert, 2);
+            //Start point already exist and the last one is snapped.
+            Assert.Equal(verticesBefore + 4, grid.GetVertices().Count);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(3, 5, 0), out var id, grid.Tolerance));
+            var vertex = grid.GetVertex(id);
+            Assert.Equal(3, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(2, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 0)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(4, 5, 1), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(2, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(3, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5, 1), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(2, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(6, 5, 0)));
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(6, 5, 0), out id, grid.Tolerance));
+            vertex = grid.GetVertex(id);
+            Assert.Equal(3, vertex.Edges.Count);
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 0)));
+            Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(8, 5, 0)));
+        }
+
+        [Fact]
         public void AdaptiveGridVertexGetEdgeOtherVertexId()
         {
             var grid = SampleGrid();
@@ -941,6 +1024,57 @@ namespace Elements.Tests
             startVertex = grid.AddVertex(new Vector3(30, 5), s);
             Assert.Null(s.MiddleVertex);
             Assert.Contains(startVertex.Edges, e => e.StartId == s.EndVertex.Id || e.EndId == s.EndVertex.Id);
+        }
+        
+        [Fact]
+        public void AdaptiveGridStoreAndDuplicateElevation()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
+            grid.AddFromExtrude(polygon, Vector3.ZAxis, 1, new List<Vector3>() { new Vector3(5, 5) });
+            grid.AddEdge(new Vector3(0, 5, 1), new Vector3(0, 5, 2), false);
+            grid.AddEdge(new Vector3(10, 5, 1), new Vector3(10, 5, 4), false);
+
+            var plane = new Plane(new Vector3(0, 0, 1), Vector3.ZAxis);
+            var snapshot = grid.SnapshotEdgesOnPlane(plane);
+            Assert.Equal(12, snapshot.Count);
+
+            grid.TryGetVertexIndex(new Vector3(5, 0, 1), out var id, grid.Tolerance);
+            grid.RemoveVertex(grid.GetVertex(id));
+            var edgesBefore = grid.GetEdges().Count;
+
+            var transform = new Transform(0, 0, 2);
+            grid.InsertSnapshot(snapshot, transform);
+            Assert.Equal(edgesBefore + 20, grid.GetEdges().Count);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5, 3), out id, grid.Tolerance));
+            var v = grid.GetVertex(id);
+            Assert.Equal(4, v.Edges.Count);
+            var neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(0, 10, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.Contains(new Vector3(0, 5, 2), neighbourPoints);
+            Assert.DoesNotContain(new Vector3(0, 5, 1), neighbourPoints);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 3), out id, grid.Tolerance));
+            v = grid.GetVertex(id);
+            Assert.Equal(3, v.Edges.Count);
+            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.DoesNotContain(new Vector3(5, 0, 1), neighbourPoints);
+
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5, 3), out id, grid.Tolerance));
+            v = grid.GetVertex(id);
+            Assert.Equal(5, v.Edges.Count);
+            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 10, 3), neighbourPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
+            Assert.Contains(new Vector3(10, 5, 1), neighbourPoints);
+            Assert.Contains(new Vector3(10, 5, 4), neighbourPoints);
         }
 
         //          (4)

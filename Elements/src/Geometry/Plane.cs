@@ -176,5 +176,21 @@ namespace Elements.Geometry
             result = default;
             return false;
         }
+
+        /// <summary>
+        /// The world XY Plane.
+        /// </summary>
+        public static Plane XY => new Plane(Vector3.Origin, Vector3.ZAxis);
+
+        /// <summary>
+        /// The world YZ Plane.
+        /// </summary>
+        public static Plane YZ => new Plane(Vector3.Origin, Vector3.XAxis);
+
+        /// <summary>
+        /// The world XZ Plane.
+        /// </summary>
+        public static Plane XZ => new Plane(Vector3.Origin, Vector3.YAxis);
+
     }
 }
