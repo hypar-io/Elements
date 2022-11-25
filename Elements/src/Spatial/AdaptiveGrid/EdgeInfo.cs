@@ -23,7 +23,14 @@ namespace Elements.Spatial.AdaptiveGrid
             var vector = (v1.Point - v0.Point);
             Length = vector.Length();
             Factor = factor;
-            HasVerticalChange = Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance;
+            HasVerticalChange = false;
+            Flags = EdgeFlags.None;
+
+            if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
+            {
+                Flags &= EdgeFlags.HasVerticalChange;
+                HasVerticalChange = true;
+            }
         }
 
         /// <summary>
@@ -44,6 +51,49 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Are edge end points on different elevations.
         /// </summary>
+        [Obsolete("Use HasFlag(EdgeFlags.HasVerticalChange) instead")]
         public readonly bool HasVerticalChange;
+
+        /// <summary>
+        /// Additional information about the edge.
+        /// </summary>
+        public EdgeFlags Flags;
+
+        /// <summary>
+        /// Check if edge info has certain flag or combination of flags set.
+        /// </summary>
+        /// <param name="flag">Flag or combination of flags to check.</param>
+        /// <returns>True if edge have the flag included.</returns>
+        public bool HasFlag(EdgeFlags flag)
+        {
+            return (Flags & flag) != EdgeFlags.None;
+        }
+    }
+
+    /// <summary>
+    /// Bit set of flags storing describing information about edge.
+    /// </summary>
+    [Flags]
+    public enum EdgeFlags
+    {
+        /// <summary>
+        /// No flags set.
+        /// </summary>
+        None = 0,
+        
+        /// <summary>
+        /// Is edge affected by any 2D hint line.
+        /// </summary>
+        Hint2D = 1,
+
+        /// <summary>
+        /// Is edge affected by any 3D hint line.
+        /// </summary>
+        Hint3D = 2,
+
+        /// <summary>
+        /// Are edge end points on different elevations.
+        /// </summary>
+        HasVerticalChange = 4 
     }
 }

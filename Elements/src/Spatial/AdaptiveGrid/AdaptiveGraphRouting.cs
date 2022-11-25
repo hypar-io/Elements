@@ -12,7 +12,7 @@ namespace Elements.Spatial.AdaptiveGrid
     /// <summary>
     /// Class for routing through an AdaptiveGrid.
     /// </summary>
-    public class AdaptiveGraphRouting
+    public partial class AdaptiveGraphRouting
     {
         private AdaptiveGrid _grid;
         private RoutingConfiguration _configuration;
@@ -49,6 +49,19 @@ namespace Elements.Spatial.AdaptiveGrid
             //global information line boundaries, points, lines and obstacles.
             _grid = grid;
             _configuration = configuration;
+
+            if (!_configuration.LayerPenalty.ApproximatelyEquals(1))
+            { 
+                var plane = new Plane(new Vector3(0, 0, _configuration.MainLayer), Vector3.ZAxis);
+                var modifier = new WeightModifier(
+                    "Not Main Layer",
+                    new Func<Vertex, Vertex, bool>((a, b) =>
+                    {
+                        return Math.Abs(a.Point.Z - _configuration.MainLayer) > _grid.Tolerance ||
+                               Math.Abs(b.Point.Z - _configuration.MainLayer) > _grid.Tolerance;
+                    }),
+                    _configuration.LayerPenalty);
+            }
         }
 
         /// <summary>
@@ -72,12 +85,12 @@ namespace Elements.Spatial.AdaptiveGrid
         public IList<Element> RenderElements(IList<RoutingHintLine> hintLines,
                                              IList<Vector3> splitPoints)
         {
-            List<Line> normalEdgesMain = new List<Line>();
-            List<Line> hintEdgesMain = new List<Line>();
-            List<Line> offsetEdgesMain = new List<Line>();
-            List<Line> normalEdgesOther = new List<Line>();
-            List<Line> hintEdgesOther = new List<Line>();
-            List<Line> offsetEdgesOther = new List<Line>();
+            List<Line> normalEdgesCheap = new List<Line>();
+            List<Line> hintEdgesCheap = new List<Line>();
+            List<Line> offsetEdgesCheap = new List<Line>();
+            List<Line> normalEdgesExpensive = new List<Line>();
+            List<Line> hintEdgesExpensive = new List<Line>();
+            List<Line> offsetEdgesExpensive = new List<Line>();
 
             var hintGroups = hintLines.GroupBy(h => h.UserDefined);
             var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
@@ -90,38 +103,38 @@ namespace Elements.Spatial.AdaptiveGrid
                 var v0 = _grid.GetVertex(edge.StartId);
                 var v1 = _grid.GetVertex(edge.EndId);
                 Line l = new Line(v0.Point, v1.Point);
-                var mainLayer = OnMainLayer(v0, v1);
+                var modifierFactor = ModifierFactor(v0, v1);
                 if (IsAffectedBy(v0.Point, v1.Point, userHints))
                 {
-                    if (mainLayer == true)
+                    if (modifierFactor < 1 + _grid.Tolerance)
                     {
-                        hintEdgesMain.Add(l);
+                        hintEdgesCheap.Add(l);
                     }
                     else
                     {
-                        hintEdgesOther.Add(l);
+                        hintEdgesExpensive.Add(l);
                     }
                 }
                 else if (IsAffectedBy(v0.Point, v1.Point, defaultHints))
                 {
-                    if (mainLayer == true)
+                    if (modifierFactor < 1 + _grid.Tolerance)
                     {
-                        offsetEdgesMain.Add(l);
+                        offsetEdgesCheap.Add(l);
                     }
                     else
                     {
-                        offsetEdgesOther.Add(l);
+                        offsetEdgesExpensive.Add(l);
                     }
                 }
                 else
                 {
-                    if (mainLayer == true)
+                    if (modifierFactor < 1 + _grid.Tolerance)
                     {
-                        normalEdgesMain.Add(l);
+                        normalEdgesCheap.Add(l);
                     }
                     else
                     {
-                        normalEdgesOther.Add(l);
+                        normalEdgesExpensive.Add(l);
                     }
                 }
             }
@@ -129,17 +142,17 @@ namespace Elements.Spatial.AdaptiveGrid
             List<Element> visualizations = new List<Element>();
             visualizations.Add(VisualizePoints(splitPoints));
 
-            visualizations.Add(new ModelLines(normalEdgesMain, new Material(
+            visualizations.Add(new ModelLines(normalEdgesCheap, new Material(
                 "Normal Edges Main", Colors.Blue)));
-            visualizations.Add(new ModelLines(normalEdgesOther, new Material(
+            visualizations.Add(new ModelLines(normalEdgesExpensive, new Material(
                 "Normal Edges Other", Colors.Cobalt)));
-            visualizations.Add(new ModelLines(offsetEdgesMain, new Material(
+            visualizations.Add(new ModelLines(offsetEdgesCheap, new Material(
                 "Offset Edges Main", Colors.Orange)));
-            visualizations.Add(new ModelLines(offsetEdgesOther, new Material(
+            visualizations.Add(new ModelLines(offsetEdgesExpensive, new Material(
                 "Offset Edges Other", Colors.Yellow)));
-            visualizations.Add(new ModelLines(hintEdgesMain, new Material(
+            visualizations.Add(new ModelLines(hintEdgesCheap, new Material(
                 "Hint Edges Main", Colors.Green)));
-            visualizations.Add(new ModelLines(hintEdgesOther, new Material(
+            visualizations.Add(new ModelLines(hintEdgesExpensive, new Material(
                 "Hint Edges Other", Colors.Emerald)));
 
             return visualizations;
@@ -425,6 +438,8 @@ namespace Elements.Spatial.AdaptiveGrid
                     angle = 180 - angle;
                 }
 
+                EdgeFlags flags = EdgeFlags.None;
+
                 if (_configuration.SupportedAngles != null &&
                     !_configuration.SupportedAngles.Any(a => a.ApproximatelyEquals(angle, 0.01)))
                 {
@@ -434,11 +449,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     double hintFactor = 1;
                     double offsetFactor = 1;
-                    double layerFactor = 1;
-                    if (_configuration.LayerPenalty != 1 && !OnMainLayer(v0, v1))
-                    {
-                        layerFactor = _configuration.LayerPenalty;
-                    }
+                    double modifierFactor = ModifierFactor(v0, v1);
 
                     if (hintLines != null && hintLines.Any())
                     {
@@ -452,6 +463,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 if (l.UserDefined)
                                 {
                                     hintFactor = Math.Min(l.Factor, hintFactor);
+                                    flags &= l.Is2D ? EdgeFlags.Hint2D : EdgeFlags.Hint3D;
                                 }
                                 else
                                 {
@@ -461,7 +473,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         }
                     }
 
-                    weights[e.Id] = new EdgeInfo(_grid, e, hintFactor * offsetFactor * layerFactor);
+                    weights[e.Id] = new EdgeInfo(_grid, e, hintFactor * offsetFactor * modifierFactor);
                 }
             }
 
@@ -792,19 +804,32 @@ namespace Elements.Spatial.AdaptiveGrid
             IDictionary<ulong, EdgeInfo> edgeInfos)
         {
             var otherEdge = sharedVertex.GetEdge(thirdVertexId);
-            var otherWeight = edgeInfos[otherEdge.Id];
+            var otherInfo = edgeInfos[otherEdge.Id];
 
             //Do not modify turn cost if either of edges is not horizontal.
             //This prevents "free to travel" loops under 2d hint lines.
-            if (edgeInfo.HasVerticalChange || otherWeight.HasVerticalChange)
+            //If either of two edges are affected by 3d hint line - turn cost can be 
+            //discounted but still can't be bigger than TurnCost.
+            if (edgeInfo.HasFlag(EdgeFlags.HasVerticalChange) ||
+                otherInfo.HasFlag(EdgeFlags.HasVerticalChange))
             {
-                return _configuration.TurnCost;
+                var factor = 1d;
+                if (edgeInfo.HasFlag(EdgeFlags.Hint3D))
+                {
+                    factor = Math.Min(edgeInfo.Factor, 1);
+                }
+                else if (otherInfo.HasFlag(EdgeFlags.Hint3D))
+                {
+                    factor = Math.Min(otherInfo.Factor, 1);
+                }
+
+                return factor * _configuration.TurnCost;
             }
 
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
             //fully inside hint line influence area.
-            return _configuration.TurnCost * Math.Min(edgeInfo.Factor, otherWeight.Factor);
+            return _configuration.TurnCost * Math.Min(edgeInfo.Factor, otherInfo.Factor);
         }
 
         private double EdgeCost(EdgeInfo info)
@@ -950,8 +975,9 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 foreach(var hint in hints)
                 {
+                    var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
                     var target = hint.Is2D ? new Vector3(v.X, v.Y) : v;
-                    if (target.DistanceTo(hint.Polyline) < hint.InfluenceDistance)
+                    if (target.DistanceTo(hint.Polyline) <= influenceDistance)
                     {
                         return true;
                     }
@@ -968,6 +994,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
         {
+            var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
             Vector3 vs = hint.Is2D ? new Vector3(start.X, start.Y) : start;
             Vector3 ve = hint.Is2D ? new Vector3(end.X, end.Y) : end;
             //Vertical edges are not affected by 2D hint lines
@@ -985,12 +1012,12 @@ namespace Elements.Spatial.AdaptiveGrid
                         continue;
                     }
 
-                    if (vs.DistanceTo(segment) < hint.InfluenceDistance)
+                    if (vs.DistanceTo(segment) <= influenceDistance)
                     {
                         lowClosest = 0;
                     }
 
-                    if (ve.DistanceTo(segment) < hint.InfluenceDistance)
+                    if (ve.DistanceTo(segment) <= influenceDistance)
                     {
                         hiClosest = 1;
                     }
@@ -1003,7 +1030,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     var edgeLine = new Line(vs, ve);
                     Action<Vector3> check = (Vector3 p) =>
                     {
-                        if (p.DistanceTo(edgeLine, out var closest) < hint.InfluenceDistance)
+                        if (p.DistanceTo(edgeLine, out var closest) <= influenceDistance)
                         {
                             var t = (closest - vs).Length() / edgeLine.Length();
                             if (t < lowClosest)
@@ -1021,21 +1048,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     check(segment.Start);
                     check(segment.End);
 
-                    var minResulution = Math.Max(_grid.Tolerance, hint.InfluenceDistance);
                     if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine.Length() > minResulution)
+                        (hiClosest - lowClosest) * edgeLine.Length() > influenceDistance)
                     {
                         return true;
                     }
                 }
             }
             return false;
-        }
-
-        private bool OnMainLayer(Vertex v0, Vertex v1)
-        {
-            return Math.Abs(v0.Point.Z - _configuration.MainLayer) < _grid.Tolerance &&
-                   Math.Abs(v1.Point.Z - _configuration.MainLayer) < _grid.Tolerance;
         }
 
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
