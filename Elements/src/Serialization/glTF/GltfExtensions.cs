@@ -200,7 +200,8 @@ namespace Elements.Serialization.glTF
                 gltfMaterial.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
                 {
                     BaseColorFactor = material.Color.ToArray(true),
-                    MetallicFactor = 1.0f
+                    MetallicFactor = 1.0f,
+                    RoughnessFactor = 1.0f - (float)material.GlossinessFactor
                 };
                 gltfMaterial.DoubleSided = material.DoubleSided;
 
