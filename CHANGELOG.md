@@ -5,6 +5,7 @@
 ### Added
 
 - `AdaptiveGraphRouting.ErrorMessages`
+- `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 
 ### Changed
 
