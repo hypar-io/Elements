@@ -451,6 +451,10 @@ namespace Elements.Spatial.AdaptiveGrid
                     double offsetFactor = 1;
                     double modifierFactor = ModifierFactor(v0, v1);
 
+                    //TODO: consider unifying hint line, offset line and modifiers as single concept.
+                    //There still be functions for adding hint/offset lines but everything will be processes inside
+                    //as WeightModifier. Would need to solve function that takes list of groups and define how
+                    //multiply factors are combined together: by choosing one, combining, etc.
                     if (hintLines != null && hintLines.Any())
                     {
                         foreach (var l in hintLines)
@@ -463,6 +467,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 if (l.UserDefined)
                                 {
                                     hintFactor = Math.Min(l.Factor, hintFactor);
+                                    //Store the information if the edge was affected by 2D and (or) 3D hint line. 
                                     flags &= l.Is2D ? EdgeFlags.Hint2D : EdgeFlags.Hint3D;
                                 }
                                 else
@@ -810,15 +815,15 @@ namespace Elements.Spatial.AdaptiveGrid
             //This prevents "free to travel" loops under 2d hint lines.
             //If either of two edges are affected by 3d hint line - turn cost can be 
             //discounted but still can't be bigger than TurnCost.
-            if (edgeInfo.HasFlag(EdgeFlags.HasVerticalChange) ||
-                otherInfo.HasFlag(EdgeFlags.HasVerticalChange))
+            if (edgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange) ||
+                otherInfo.HasAnyFlag(EdgeFlags.HasVerticalChange))
             {
                 var factor = 1d;
-                if (edgeInfo.HasFlag(EdgeFlags.Hint3D))
+                if (edgeInfo.HasAnyFlag(EdgeFlags.Hint3D))
                 {
                     factor = Math.Min(edgeInfo.Factor, 1);
                 }
-                else if (otherInfo.HasFlag(EdgeFlags.Hint3D))
+                else if (otherInfo.HasAnyFlag(EdgeFlags.Hint3D))
                 {
                     factor = Math.Min(otherInfo.Factor, 1);
                 }

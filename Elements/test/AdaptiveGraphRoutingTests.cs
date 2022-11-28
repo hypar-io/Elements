@@ -271,12 +271,14 @@ namespace Elements.Tests
 
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
-            var func = new Func<Vertex, Vertex, bool>((a, b) =>
-            {
-                return Math.Abs(a.Point.Z - mainLayer) > grid.Tolerance ||
-                       Math.Abs(b.Point.Z - mainLayer) > grid.Tolerance;
-            });
-            alg.AddWeightModifier(new WeightModifier("Not Main Layer", func, 2));
+            alg.AddPlanarWeightModifier(
+                "Other Layer",
+                new Plane(new Vector3(0, 0, 1), Vector3.ZAxis),
+                2);
+            alg.AddPlanarWeightModifier(
+                "Downpipe Layer",
+                new Plane(new Vector3(0, 0, 0), Vector3.ZAxis),
+                2);
             var tree = alg.BuildSpanningTree(inputVertices, tailVertex, hints, TreeOrder.ClosestToFurthest);
 
             List<Vector3> expectedPath = new List<Vector3>()
@@ -1083,12 +1085,10 @@ namespace Elements.Tests
 
             var c = new RoutingConfiguration(turnCost: 1);
             var routing = new AdaptiveGraphRouting(grid, c);
-            var func = new Func<Vertex, Vertex, bool>((a, b) =>
-            {
-                return Math.Abs(a.Point.Z) > grid.Tolerance ||
-                       Math.Abs(b.Point.Z) > grid.Tolerance;
-            });
-            routing.AddWeightModifier(new WeightModifier("Not Main Layer", func, 2));
+            routing.AddPlanarWeightModifier(
+                "Not Main Layer",
+                new Plane(new Vector3(0, 0, -1), Vector3.ZAxis),
+                2);
             routing.AddRoutingFilter((Vertex start, Vertex end) => start.Point.Z > end.Point.Z - Vector3.EPSILON);
             Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var inputId0, grid.Tolerance));
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 5), out var inputId1, grid.Tolerance));
@@ -1253,7 +1253,7 @@ namespace Elements.Tests
             var alg = new AdaptiveGraphRouting(grid, new RoutingConfiguration(turnCost: 1));
             var center = new Vector3(5, 5);
 
-            //Add WeightModifier that wants you to travel through edges not to close and not to far.
+            //Add WeightModifier that wants you to travel through edges that are of medium length, between 1 and 3.5
             alg.AddWeightModifier(new WeightModifier(
                 "Test",
                 new Func<Vertex, Vertex, bool>((a, b) =>

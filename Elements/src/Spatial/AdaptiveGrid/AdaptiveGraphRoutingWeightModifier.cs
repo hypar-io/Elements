@@ -52,45 +52,44 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Create WeightModifier that sets factor to all edges lying on given plane.
+        /// Create WeightModifier that sets factor on all edges lying on a given plane.
         /// </summary>
         /// <param name="name">Name of new WeightModifier.</param>
         /// <param name="plane">Plane to check if edge lays on.</param>
         /// <param name="factor">Factor of new WeightModifier.</param>
         /// <returns>Created WeightModifier.</returns>
-        public WeightModifier AddPlaneModifier(string name, Plane plane, double factor)
+        public WeightModifier AddPlanarWeightModifier(string name, Plane plane, double factor)
         {
             var modifier = new WeightModifier(
                 name,
                 new Func<Vertex, Vertex, bool>((a, b) =>
                 {
-                    return plane.SignedDistanceTo(a.Point) > _grid.Tolerance ||
-                           plane.SignedDistanceTo(b.Point) > _grid.Tolerance;
+                    return Math.Abs(plane.SignedDistanceTo(a.Point)) < _grid.Tolerance &&
+                           Math.Abs(plane.SignedDistanceTo(b.Point)) < _grid.Tolerance;
                 }),
                 factor);
             AddWeightModifier(modifier);
             return modifier;
         }
 
+        /// <summary>
+        /// Check if edge passes any modifier check and return the lowest value among them.
+        /// Returns 1 if no modifiers applied.
+        /// </summary>
+        /// <param name="a">Start Vertex</param>
+        /// <param name="b">End Vertex</param>
         private double ModifierFactor(Vertex a, Vertex b)
         {
-            double modifierFactor = -1;
+            double modifierFactor = double.MaxValue;
             foreach (var modifier in _weightModifiers)
             {
                 if (modifier.Value.Condition(a, b))
                 {
-                    if (modifierFactor == -1)
-                    {
-                        modifierFactor = modifier.Value.Factor;
-                    }
-                    else
-                    {
-                        modifierFactor = Math.Min(modifierFactor, modifier.Value.Factor);
-                    }
+                    modifierFactor = Math.Min(modifierFactor, modifier.Value.Factor);
                 }
             }
 
-            return modifierFactor != -1 ? modifierFactor : 1;
+            return modifierFactor != double.MaxValue ? modifierFactor : 1;
         }
     }
 }

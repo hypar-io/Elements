@@ -5,17 +5,17 @@ using System.Text;
 namespace Elements.Spatial.AdaptiveGrid
 {
     /// <summary>
-    /// Object that hold function that allows to apply factor multiplier to edge travel cost.
-    /// If edge passes check of several WeightModifier objects - lowest factor is chosen.
+    /// Object that lets you apply an edge weight factor to edges that meet a Condition filter function.
+    /// If an edge meets the nameof(Condition) of several WeightModifier objects the lowest factor is chosen.
     /// </summary>
     public class WeightModifier
     {
         /// <summary>
-        /// 
+        /// Basic constructor for a WeightModifier
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="condition"></param>
-        /// <param name="factor"></param>
+        /// <param name="name">Name of the modifier.</param>
+        /// <param name="condition">Filter function.</param>
+        /// <param name="factor">Weight to be applied.</param>
         public WeightModifier(string name, Func<Vertex, Vertex, bool> condition, double factor)
         {
             Name = name;
@@ -24,17 +24,17 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        ///  WeightModifier description.
+        ///  WeightModifier name.
         /// </summary>
         public readonly string Name;
 
         /// <summary>
-        /// Function, edge need to pass, can include additional data, captured by lambda.
+        /// Filter function that the determines if this WeightModifier applies to an edge.
         /// </summary>
         public Func<Vertex, Vertex, bool> Condition;
 
         /// <summary>
-        /// Multiplier number that is applied to edge traveling cost.
+        /// Weight to be applied according to this WeightModifier.
         /// </summary>
         public double Factor;
     }

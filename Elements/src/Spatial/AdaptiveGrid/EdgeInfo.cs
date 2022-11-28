@@ -57,43 +57,29 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Additional information about the edge.
         /// </summary>
-        public EdgeFlags Flags;
+        internal EdgeFlags Flags;
 
         /// <summary>
-        /// Check if edge info has certain flag or combination of flags set.
+        /// Check if edge info has a certain flag or combination of flags set.
         /// </summary>
-        /// <param name="flag">Flag or combination of flags to check.</param>
+        /// <param name="flag">Flag or combination of flags to check.
+        /// For example: HasFlag(Hint2D) or HasFlag(Hint2D | Hint3D).</param>
         /// <returns>True if edge have the flag included.</returns>
-        public bool HasFlag(EdgeFlags flag)
+        public bool HasAnyFlag(EdgeFlags flag)
         {
             return (Flags & flag) != EdgeFlags.None;
         }
-    }
-
-    /// <summary>
-    /// Bit set of flags storing describing information about edge.
-    /// </summary>
-    [Flags]
-    public enum EdgeFlags
-    {
-        /// <summary>
-        /// No flags set.
-        /// </summary>
-        None = 0,
-        
-        /// <summary>
-        /// Is edge affected by any 2D hint line.
-        /// </summary>
-        Hint2D = 1,
 
         /// <summary>
-        /// Is edge affected by any 3D hint line.
+        /// Add a flag or combinations of flags. 
+        /// Adding a flag more than once has no effect.
         /// </summary>
-        Hint3D = 2,
-
-        /// <summary>
-        /// Are edge end points on different elevations.
-        /// </summary>
-        HasVerticalChange = 4 
+        /// <param name="flags">Flag or combination of flags to add.</param>
+        /// For example: AddFlags(Hint2D) or AddFlags(Hint2D | Hint3D).</param>
+        /// <returns></returns>
+        public void AddFlags(EdgeFlags flags)
+        {
+            Flags |= flags;
+        }
     }
 }
