@@ -14,12 +14,37 @@ namespace Elements.Serialization.SVG
                 StartY = line.Start.Y.ToYUserUnit(h, min),
                 EndX = line.End.X.ToXUserUnit(min),
                 EndY = line.End.Y.ToYUserUnit(h, min),
-                Stroke = context.Stroke,
                 StrokeWidth = context.StrokeWidth,
-                StrokeDashArray = context.StrokeDashArray
+                StrokeDashArray = context.StrokeDashArray,
             };
 
+            // If use properties to set color, the generated SVG has color names like this: fill:'Black',
+            // but expected value is fill:black
+            string style = string.Empty;
+            if (context.Fill != null)
+            {
+                style += $"fill:{context.Fill.Colour.Name.ToLower()}";
+            }
+
+            if (context.Stroke != null)
+            {
+                if (!string.IsNullOrEmpty(style))
+                {
+                    style += "; ";
+                }
+                style += $"stroke:{context.Stroke.Colour.Name.ToLower()}";
+            }
+
+            if (!string.IsNullOrEmpty(style))
+            {
+                svgLine.CustomAttributes.Add("style", style);
+            }
             return svgLine;
+        }
+
+        public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
+        {
+            return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
         }
 
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
@@ -34,9 +59,19 @@ namespace Elements.Serialization.SVG
             };
         }
 
+        public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
+        {
+            return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+        }
+
         public static SvgUnit ToXUserUnit(this double x, Vector3 min)
         {
             return new SvgUnit(SvgUnitType.User, (float)(x - min.X));
+        }
+
+        public static SvgUnit ToXUserUnit(this double x, SvgSection drawingPlan)
+        {
+            return ToXUserUnit(x, drawingPlan.GetSceneBounds().Min);
         }
 
         public static SvgUnit ToYUserUnit(this double y, float h, Vector3 min)
@@ -45,15 +80,25 @@ namespace Elements.Serialization.SVG
             return new SvgUnit(SvgUnitType.User, (float)(h + min.Y - y));
         }
 
+        public static SvgUnit ToYUserUnit(this double y, SvgSection drawingPlan)
+        {
+            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.GetSceneBounds().Min);
+        }
+
         public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, Vector3 min, float h)
         {
             var ptCollection = new SvgPointCollection();
             foreach (var pt in points)
             {
-                ptCollection.Add(new SvgUnit(pt.X.ToXUserUnit(min)));
-                ptCollection.Add(new SvgUnit(pt.Y.ToYUserUnit(h, min)));
+                ptCollection.Add(new SvgUnit(pt.X.ToXUserUnit(min).Value));
+                ptCollection.Add(new SvgUnit(pt.Y.ToYUserUnit(h, min).Value));
             }
             return ptCollection;
+        }
+
+        public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgSection drawingPlan)
+        {
+            return ToSvgPointCollection(points, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight);
         }
     }
 }
