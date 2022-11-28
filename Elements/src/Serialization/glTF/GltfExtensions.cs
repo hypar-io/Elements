@@ -197,11 +197,16 @@ namespace Elements.Serialization.glTF
                 var gltfMaterial = new glTFLoader.Schema.Material();
                 newMaterials.Add(gltfMaterial);
 
+                // Previously, we used the KHR_materials_pbrSpecularGlossiness extension.
+                // When Khronos deprecated this, we converted to metallic/roughness,
+                // using a conversion strategy from Don McCurdy's glTF transform:
+                // https://github.com/donmccurdy/glTF-Transform/blob/d77ca6a12c5b56efa1b6594806450dd38df19b25/packages/functions/src/metal-rough.ts#L25
+
                 gltfMaterial.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
                 {
                     BaseColorFactor = material.Color.ToArray(true),
-                    MetallicFactor = 1.0f,
-                    RoughnessFactor = 1.0f - (float)material.GlossinessFactor
+                    RoughnessFactor = 1.0f - (float)material.GlossinessFactor,
+                    MetallicFactor = 0
                 };
                 gltfMaterial.DoubleSided = material.DoubleSided;
 
@@ -217,14 +222,16 @@ namespace Elements.Serialization.glTF
                 {
                     // We convert to a linear color space
                     gltfMaterial.Extensions = new Dictionary<string, object>{
-                        {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
-                            {"diffuseFactor", new[]{
-                                Geometry.Color.SRGBToLinear(material.Color.Red),
-                                Geometry.Color.SRGBToLinear(material.Color.Green),
-                                Geometry.Color.SRGBToLinear(material.Color.Blue),
-                                material.Color.Alpha}},
-                            {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
-                            {"glossinessFactor", material.GlossinessFactor}
+                        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md
+                        {"KHR_materials_specular", new Dictionary<string, object>{
+                            {"specularFactor", material.SpecularFactor},
+                            {"specularColorFactor", new[]{1.0,1.0,1.0}},
+                            //specularTexture - not used
+                            //specularColorTexture - not used
+                        }},
+                        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md
+                        {"KHR_materials_ior", new Dictionary<string, object>{
+                            {"ior", 1000}, //https://github.com/KhronosGroup/glTF/pull/1719#issuecomment-674365677
                         }}
                     };
                 }
@@ -255,10 +262,6 @@ namespace Elements.Serialization.glTF
                     gltfMaterial.PbrMetallicRoughness.BaseColorTexture = textureInfo;
                     textureInfo.Index = texId;
                     textureInfo.TexCoord = 0;
-                    if (!material.Unlit)
-                    {
-                        ((Dictionary<string, object>)gltfMaterial.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = textureInfo;
-                    }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {
@@ -765,8 +768,6 @@ namespace Elements.Serialization.glTF
             };
             gltf.Scenes = new[] { scene };
 
-            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness", "KHR_materials_unlit" };
-
             var buffer = new List<byte>();
             var bufferViews = new List<BufferView>();
 
@@ -947,11 +948,13 @@ namespace Elements.Serialization.glTF
 
             var lights = model.AllElementsOfType<Light>().ToList();
             gltf.ExtensionsUsed = lights.Any() ? new[] {
-                "KHR_materials_pbrSpecularGlossiness",
+                "KHR_materials_specular",
+                "KHR_materials_ior",
                 "KHR_materials_unlit",
                 "KHR_lights_punctual"
             } : new[] {
-                "KHR_materials_pbrSpecularGlossiness",
+                "KHR_materials_specular",
+                "KHR_materials_ior",
                 "KHR_materials_unlit"};
 
             var bufferViews = new List<BufferView>();
