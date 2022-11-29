@@ -20,18 +20,38 @@ namespace Elements.Spatial.AdaptiveGrid
         None = 0,
 
         /// <summary>
-        /// Is edge affected by any 2D hint line.
+        /// Is edge affected by user defined 2D hint line.
         /// </summary>
-        Hint2D = 1,
+        UserDefinedHint2D = 1,
 
         /// <summary>
-        /// Is edge affected by any 3D hint line.
+        /// Is edge affected by user defined 3D hint line.
         /// </summary>
-        Hint3D = 2,
+        UserDefinedHint3D = 2,
+
+        /// <summary>
+        /// Is edge affected by hidden 2D hint line.
+        /// </summary>
+        HiddenHint2D = 4,
+
+        /// <summary>
+        /// Is edge affected by hidden 2D hint line.
+        /// </summary>
+        HiddenHint3D = 8,
+
+        /// <summary>
+        /// Is edge affected by hidden hint line.
+        /// </summary>
+        UserDefinedHint = UserDefinedHint2D | UserDefinedHint3D,
+
+        /// <summary>
+        /// Is edge affected by hidden hint line.
+        /// </summary>
+        HiddenHint = HiddenHint2D | HiddenHint3D,
 
         /// <summary>
         /// Are edge end points on different elevations.
         /// </summary>
-        HasVerticalChange = 4
+        HasVerticalChange = 16
     }
 }

@@ -85,12 +85,14 @@ namespace Elements.Spatial.AdaptiveGrid
         public IList<Element> RenderElements(IList<RoutingHintLine> hintLines,
                                              IList<Vector3> splitPoints)
         {
-            List<Line> normalEdgesCheap = new List<Line>();
-            List<Line> hintEdgesCheap = new List<Line>();
-            List<Line> offsetEdgesCheap = new List<Line>();
-            List<Line> normalEdgesExpensive = new List<Line>();
-            List<Line> hintEdgesExpensive = new List<Line>();
-            List<Line> offsetEdgesExpensive = new List<Line>();
+            var normalEdgesCheap = new List<(Line, double)>();
+            var hintEdgesCheap = new List<(Line, double)>();
+            var offsetEdgesCheap = new List<(Line, double)>();
+            var normalEdgesExpensive = new List<(Line, double)>();
+            var hintEdgesExpensive = new List<(Line, double)>();
+            var offsetEdgesExpensive = new List<(Line, double)>();
+
+            var infos = CalculateEdgeInfos(hintLines);
 
             var hintGroups = hintLines.GroupBy(h => h.UserDefined);
             var userHints = hintGroups.SingleOrDefault(hg => hg.Key == true);
@@ -103,38 +105,39 @@ namespace Elements.Spatial.AdaptiveGrid
                 var v0 = _grid.GetVertex(edge.StartId);
                 var v1 = _grid.GetVertex(edge.EndId);
                 Line l = new Line(v0.Point, v1.Point);
-                var modifierFactor = ModifierFactor(v0, v1);
-                if (IsAffectedBy(v0.Point, v1.Point, userHints))
+
+                var info = infos[edge.Id];
+                if (info.HasAnyFlag(EdgeFlags.UserDefinedHint))
                 {
-                    if (modifierFactor < 1 + _grid.Tolerance)
+                    if (info.Factor < 1 + _grid.Tolerance)
                     {
-                        hintEdgesCheap.Add(l);
+                        hintEdgesCheap.Add((l, info.Factor));
                     }
                     else
                     {
-                        hintEdgesExpensive.Add(l);
+                        hintEdgesExpensive.Add((l, info.Factor));
                     }
                 }
-                else if (IsAffectedBy(v0.Point, v1.Point, defaultHints))
+                else if (info.HasAnyFlag(EdgeFlags.HiddenHint))
                 {
-                    if (modifierFactor < 1 + _grid.Tolerance)
+                    if (info.Factor < 1 + _grid.Tolerance)
                     {
-                        offsetEdgesCheap.Add(l);
+                        offsetEdgesCheap.Add((l, info.Factor));
                     }
                     else
                     {
-                        offsetEdgesExpensive.Add(l);
+                        offsetEdgesExpensive.Add((l, info.Factor));
                     }
                 }
                 else
                 {
-                    if (modifierFactor < 1 + _grid.Tolerance)
+                    if (info.Factor < 1 + _grid.Tolerance)
                     {
-                        normalEdgesCheap.Add(l);
+                        normalEdgesCheap.Add((l, info.Factor));
                     }
                     else
                     {
-                        normalEdgesExpensive.Add(l);
+                        normalEdgesExpensive.Add((l, info.Factor));
                     }
                 }
             }
@@ -142,18 +145,25 @@ namespace Elements.Spatial.AdaptiveGrid
             List<Element> visualizations = new List<Element>();
             visualizations.Add(VisualizePoints(splitPoints));
 
-            visualizations.Add(new ModelLines(normalEdgesCheap, new Material(
-                "Normal Edges Main", Colors.Blue)));
-            visualizations.Add(new ModelLines(normalEdgesExpensive, new Material(
-                "Normal Edges Other", Colors.Cobalt)));
-            visualizations.Add(new ModelLines(offsetEdgesCheap, new Material(
-                "Offset Edges Main", Colors.Orange)));
-            visualizations.Add(new ModelLines(offsetEdgesExpensive, new Material(
-                "Offset Edges Other", Colors.Yellow)));
-            visualizations.Add(new ModelLines(hintEdgesCheap, new Material(
-                "Hint Edges Main", Colors.Green)));
-            visualizations.Add(new ModelLines(hintEdgesExpensive, new Material(
-                "Hint Edges Other", Colors.Emerald)));
+            var add = new Action<List<(Line, double)>, string, Color>((list, name, c) =>
+            {
+                var groups = list.GroupBy(i => i.Item2);
+                foreach (var g in groups)
+                {
+                    var lines = g.Select(l => l.Item1).ToList();
+                    var model = new ModelLines(lines, new Material(name, c));
+                    model.AdditionalProperties["Factor"] = g.Key;
+                    visualizations.Add(model);
+
+                }
+            });
+
+            add(normalEdgesCheap, "Normal Edges Main", Colors.Blue);
+            add(normalEdgesExpensive, "Normal Edges Other", Colors.Cobalt);
+            add(offsetEdgesCheap, "Offset Edges Main", Colors.Orange);
+            add(offsetEdgesExpensive, "Offset Edges Other", Colors.Yellow);
+            add(hintEdgesCheap, "Hint Edges Main", Colors.Green);
+            add(hintEdgesExpensive, "Hint Edges Other", Colors.Emerald);
 
             return visualizations;
         }
@@ -184,7 +194,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(hintLines);
+            var weights = CalculateEdgeInfos(hintLines);
 
             var leafsToTrunkTree = new Dictionary<ulong, TreeNode>();
             leafsToTrunkTree[trunkVertex] = new TreeNode(trunkVertex);
@@ -234,7 +244,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(allHints);
+            var weights = CalculateEdgeInfos(allHints);
             var allUserHints = allHints.Where(h => h.UserDefined == true);
             var nearbyHints = NearbyVertices(allUserHints, allLeafs);
             //Hint lines can even go through excluded vertices
@@ -278,7 +288,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 item.Value.ForEach(v => allExcluded.Add(v));
             }
 
-            var weights = CalculateWeights(hintLines);
+            var weights = CalculateEdgeInfos(hintLines);
 
             var leafsToTrunkTree = new Dictionary<ulong, TreeNode>();
             foreach (var trunk in exits)
@@ -422,7 +432,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="hintLines">Lines that affect travel factor for edges</param>
         /// <returns>For each edge - its precalculated additional information.</returns>
-        private Dictionary<ulong, EdgeInfo> CalculateWeights(
+        private Dictionary<ulong, EdgeInfo> CalculateEdgeInfos(
             IEnumerable<RoutingHintLine> hintLines)
         {
             var weights = new Dictionary<ulong, EdgeInfo>();
@@ -468,11 +478,12 @@ namespace Elements.Spatial.AdaptiveGrid
                                 {
                                     hintFactor = Math.Min(l.Factor, hintFactor);
                                     //Store the information if the edge was affected by 2D and (or) 3D hint line. 
-                                    flags &= l.Is2D ? EdgeFlags.Hint2D : EdgeFlags.Hint3D;
+                                    flags &= l.Is2D ? EdgeFlags.UserDefinedHint2D : EdgeFlags.UserDefinedHint3D;
                                 }
                                 else
                                 {
                                     offsetFactor = Math.Min(l.Factor, offsetFactor);
+                                    flags &= l.Is2D ? EdgeFlags.HiddenHint2D : EdgeFlags.HiddenHint3D;
                                 }
                             }
                         }
@@ -819,11 +830,11 @@ namespace Elements.Spatial.AdaptiveGrid
                 otherInfo.HasAnyFlag(EdgeFlags.HasVerticalChange))
             {
                 var factor = 1d;
-                if (edgeInfo.HasAnyFlag(EdgeFlags.Hint3D))
+                if (edgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
                 {
                     factor = Math.Min(edgeInfo.Factor, 1);
                 }
-                else if (otherInfo.HasAnyFlag(EdgeFlags.Hint3D))
+                else if (otherInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
                 {
                     factor = Math.Min(otherInfo.Factor, 1);
                 }
