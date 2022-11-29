@@ -4,8 +4,19 @@ using System.Collections.Generic;
 
 namespace Elements.Serialization.SVG
 {
+    /// <summary>
+    /// Extension methods for drawing elements to SVG.
+    /// </summary>
     public static class SvgDrawingExtensions
     {
+        /// <summary>
+        /// Convert a geometric line to an SVG line.
+        /// </summary>
+        /// <param name="line">The line to be drawn.</param>
+        /// <param name="min">The minimum</param>
+        /// <param name="h"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static SvgLine ToSvgLine(this Line line, Vector3 min, float h, SvgContext context)
         {
             var svgLine = new SvgLine
@@ -42,6 +53,13 @@ namespace Elements.Serialization.SVG
             return svgLine;
         }
 
+        /// <summary>
+        /// Convert a geometric line to an SVG using a section and a context.
+        /// </summary>
+        /// <param name="line">The line to be converted.</param>
+        /// <param name="drawingPlan">The SvgSection containing the scene boundaries.</param>
+        /// <param name="context">The SVG context.</param>
+        /// <returns></returns>
         public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
         {
             return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
@@ -59,6 +77,13 @@ namespace Elements.Serialization.SVG
             };
         }
 
+        /// <summary>
+        /// Convert a geometric polygon to an SVG polygon.
+        /// </summary>
+        /// <param name="polygon">The polygon to be converted.</param>
+        /// <param name="drawingPlan">The SvgSection containing the scene boundaries.</param>
+        /// <param name="context">The SVG context.</param>
+        /// <returns></returns>
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
         {
             return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);

@@ -59,6 +59,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Example")]
         public void InstanceContentElement()
         {
+            this.Name = nameof(InstanceContentElement);
             var model = this.Model;
             // <example>
             var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",

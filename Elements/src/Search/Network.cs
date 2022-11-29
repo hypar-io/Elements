@@ -31,7 +31,14 @@ namespace Elements.Search
             VertexIndex2 = vertexIndex2;
         }
 
+        /// <summary>
+        /// Index of the first vertex of the edge.
+        /// </summary>
         public int VertexIndex1 { get; }
+
+        /// <summary>
+        /// Index of the second vertex of the edge.
+        /// </summary>
         public int VertexIndex2 { get; }
 
         /// <summary>
@@ -199,7 +206,7 @@ namespace Elements.Search
             // Use a line sweep algorithm to identify intersection events.
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
 
-            // Order the linesweep events from top to bottom then left to right.
+            // Order the line sweep events from top to bottom then left to right.
             // The practical result of this is that the sweep line is not exactly
             // horizontal but moves as if at a slight incline. This solves for
             // all perpendicular cases.
@@ -214,10 +221,10 @@ namespace Elements.Search
             }).GroupBy(x => x.location).Select(g =>
             {
                 // TODO: Is there a way to make this faster?
-                // We're grouping by coordinate which is SLOW and is 
-                // only neccessary in the case where we have coincident points.
+                // We're grouping by coordinate which is SLOW and is
+                // only necessary in the case where we have coincident points.
 
-                // Group by the event coordinate as lines may share start 
+                // Group by the event coordinate as lines may share start
                 // or end points.
                 return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
             }).OrderBy(e => -e.Point.Y).OrderBy(e => e.Point.X);
@@ -262,7 +269,7 @@ namespace Elements.Search
 
                                     // TODO: Come up with a better solution for
                                     // storing only the intersection points without
-                                    // needing Contains(). 
+                                    // needing Contains().
                                     if (!allIntersectionLocations.Contains(result))
                                     {
                                         allIntersectionLocations.Add(result);
@@ -337,7 +344,7 @@ namespace Elements.Search
             // will be used to find an existing point if one exists.
             allNodeLocations = new List<Vector3>();
 
-            // Loop over all segment intersection data, sorting the 
+            // Loop over all segment intersection data, sorting the
             // data by distance from the segment's start point, and
             // creating new vertices and edges as necessary.
             var adjacencyList = new AdjacencyList<T>();
@@ -352,7 +359,7 @@ namespace Elements.Search
                     var x = segmentIntersections[segmentData.Key][i];
 
                     // We only add points as intersections if they're not at
-                    // the start or end 
+                    // the start or end
                     prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
@@ -372,7 +379,7 @@ namespace Elements.Search
         /// of traversal.
         /// </summary>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <returns>A collection of integers representing the indices of the nodes 
+        /// <returns>A collection of integers representing the indices of the nodes
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
@@ -534,7 +541,7 @@ namespace Elements.Search
                                             int previousIndex,
                                             bool twoWayEdges)
         {
-            // Find an existing intersection location, 
+            // Find an existing intersection location,
             // or create a new one.
             var newIndex = allNodeLocations.IndexOf(location);
             if (newIndex == -1)
@@ -621,7 +628,7 @@ namespace Elements.Search
                 var indexStr = $"{i}: {string.Join(",", EdgesAt(i).Select(e => e.Item1.ToString()))}";
                 textData.Add((nodeLocations[i], Vector3.ZAxis, Vector3.XAxis, indexStr, color));
 
-                // Break up text data objects to avoid overflowing maximum 
+                // Break up text data objects to avoid overflowing maximum
                 // texture and geometry buffer sizes.
                 if (textData.Count > 100 || i == count - 1)
                 {
@@ -635,7 +642,7 @@ namespace Elements.Search
 
         /// <summary>
         /// Traverse the network from the specified node index.
-        /// Traversal concludes when there are no more 
+        /// Traversal concludes when there are no more
         /// available nodes to traverse.
         /// </summary>
         /// <param name="start">The starting point of the traversal.</param>
@@ -657,7 +664,7 @@ namespace Elements.Search
 
             // Track the trailing edge from a specific index.
             // This will be used to compare traversal to avoid passing
-            // over where the path has previously travelled.
+            // over where the path has previously traveled.
             var lastIndexMap = new Dictionary<int, (int start, int end)>();
 
             while (currentIndex != -1)
@@ -735,7 +742,7 @@ namespace Elements.Search
 
                 if (edges.First.Value.Item1 != currentIndex)
                 {
-                    // If there's only one connected vertex and 
+                    // If there's only one connected vertex and
                     // it's not the current vertex, return it.
                     return edges.First.Value.Item1;
                 }

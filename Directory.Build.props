@@ -1,19 +1,21 @@
 <Project>
-  <PropertyGroup>
-    <Authors>Hypar, Inc.</Authors>
-    <Company>Hypar, Inc.</Company>
-    <Copyright>Hypar, Inc. 2020</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageOutputPath>$(SolutionDir)nupkg</PackageOutputPath>
-    <PackageProjectUrl>https://github.com/hypar-io/CLI</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/hypar-io/CLI</RepositoryUrl>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>$(Version)</Version>
-    <PackageOutputPath>../../nupkg</PackageOutputPath>
-    <RepositoryType>git</RepositoryType>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Hypar, Inc.</Authors>
+        <Company>Hypar, Inc.</Company>
+        <Copyright>Hypar, Inc. 2020</Copyright>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>AEC, Architecture, Structure, Engineering</PackageTags>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageOutputPath>$(SolutionDir)nupkg</PackageOutputPath>
+        <PackageProjectUrl>https://github.com/hypar-io/CLI</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/hypar-io/CLI</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>$(Version)</Version>
+        <PackageOutputPath>../../nupkg</PackageOutputPath>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NoWarn>NU5104</NoWarn>
+    </PropertyGroup>
 </Project>
