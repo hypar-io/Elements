@@ -1077,6 +1077,20 @@ namespace Elements.Tests
             Assert.Contains(new Vector3(10, 5, 4), neighbourPoints);
         }
 
+        [Fact]
+        public void EdgeInfoFlagsTest()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
+            grid.AddFromPolygon(polygon, new List<Vector3>() { new Vector3(5, 5) });
+            EdgeInfo info = new EdgeInfo(grid, grid.GetEdges().First());
+            info.AddFlags(EdgeFlags.UserDefinedHint2D | EdgeFlags.HasVerticalChange);
+            Assert.True(info.HasAnyFlag(EdgeFlags.HasVerticalChange));
+            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
+            Assert.False(info.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
+            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
+        }
+
         //          (4)
         //         /   \
         //        /     \
