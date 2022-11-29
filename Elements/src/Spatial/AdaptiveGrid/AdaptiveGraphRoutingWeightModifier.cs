@@ -73,7 +73,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Check if edge passes any modifier check and return the lowest value among them.
+        /// Check if edge passes any modifier check and returns the lowest value among them.
         /// Returns 1 if no modifiers applied.
         /// </summary>
         /// <param name="a">Start Vertex</param>

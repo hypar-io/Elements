@@ -63,7 +63,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Check if edge info has a certain flag or combination of flags set.
         /// </summary>
         /// <param name="flag">Flag or combination of flags to check.
-        /// For example: HasFlag(Hint2D) or HasFlag(Hint2D | Hint3D).</param>
+        /// For example: HasAnyFlag(Hint2D) or HasAnyFlag(Hint2D | Hint3D).</param>
         /// <returns>True if edge have the flag included.</returns>
         public bool HasAnyFlag(EdgeFlags flag)
         {

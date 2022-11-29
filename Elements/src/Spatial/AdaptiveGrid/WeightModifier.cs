@@ -6,7 +6,7 @@ namespace Elements.Spatial.AdaptiveGrid
 {
     /// <summary>
     /// Object that lets you apply an edge weight factor to edges that meet a Condition filter function.
-    /// If an edge meets the nameof(Condition) of several WeightModifier objects the lowest factor is chosen.
+    /// If an edge meets the condition of several WeightModifier objects the lowest factor is chosen.
     /// </summary>
     public class WeightModifier
     {
@@ -29,7 +29,7 @@ namespace Elements.Spatial.AdaptiveGrid
         public readonly string Name;
 
         /// <summary>
-        /// Filter function that the determines if this WeightModifier applies to an edge.
+        /// Filter function that determines if this WeightModifier applies to an edge.
         /// </summary>
         public Func<Vertex, Vertex, bool> Condition;
 

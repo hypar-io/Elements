@@ -462,9 +462,9 @@ namespace Elements.Spatial.AdaptiveGrid
                     double modifierFactor = ModifierFactor(v0, v1);
 
                     //TODO: consider unifying hint line, offset line and modifiers as single concept.
-                    //There still be functions for adding hint/offset lines but everything will be processes inside
-                    //as WeightModifier. Would need to solve function that takes list of groups and define how
-                    //multiply factors are combined together: by choosing one, combining, etc.
+                    //There will still be functions for adding hint/offset lines but everything will be processed inside
+                    //as WeightModifier. We would need to decide on the function that takes a list of these weight modifier
+                    //groups and defines how multiple factors are combined together: by choosing one, combining, etc.
                     if (hintLines != null && hintLines.Any())
                     {
                         foreach (var l in hintLines)
