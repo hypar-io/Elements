@@ -52,7 +52,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Create WeightModifier that sets factor on all edges lying on a given plane.
+        /// Create WeightModifier that sets the factor on all edges lying on a given plane.
         /// </summary>
         /// <param name="name">Name of new WeightModifier.</param>
         /// <param name="plane">Plane to check if edge lays on.</param>
