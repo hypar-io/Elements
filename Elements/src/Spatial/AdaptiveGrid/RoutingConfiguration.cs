@@ -13,8 +13,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Construct new RoutingConfiguration structure.
         /// </summary>
         /// <param name="turnCost">Travel cost penalty if route changes it's direction.</param>
-        /// <param name="mainLayer">Elevation at which route prefers to travel.</param>
-        /// <param name="layerPenalty">Penalty if route travels through an elevation different from MainLayer.</param>
+        /// <param name="mainLayer">OBSOLETE. Elevation at which route prefers to travel.</param>
+        /// <param name="layerPenalty">OBSOLETE. Penalty if route travels through an elevation different from MainLayer.</param>
         /// <param name="supportedAngles">List of angles route can turn.</param>
         public RoutingConfiguration(double turnCost = 0,
                                     double mainLayer = 0,
@@ -39,11 +39,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Elevation at which route prefers to travel.
         /// </summary>
+        [Obsolete("Use WeightModified instead")]
         public readonly double MainLayer;
 
         /// <summary>
         /// Travel cost penalty if route travels through an elevation different from MainLayer.
         /// </summary>
+        [Obsolete("Use WeightModified instead")]
         public readonly double LayerPenalty;
 
         /// <summary>
