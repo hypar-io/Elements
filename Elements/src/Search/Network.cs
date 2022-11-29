@@ -179,6 +179,19 @@ namespace Elements.Search
             return this._adjacencyList[i];
         }
 
+        private class XEqualityWithFallbackToYEqualityComparer : IComparer<Vector3>
+        {
+            public int Compare(Vector3 x, Vector3 y)
+            {
+                if (x.X.ApproximatelyEquals(y.X))
+                {
+                    return y.Y.CompareTo(x.Y);
+                }
+
+                return x.X.CompareTo(y.X);
+            }
+        }
+
         /// <summary>
         /// Construct a network from the intersections of a collection
         /// of items which are segmentable.
@@ -206,7 +219,15 @@ namespace Elements.Search
             var events = items.SelectMany((item, i) =>
             {
                 var segment = getSegment(item);
-                var leftMost = segment.Start.X < segment.End.X ? segment.Start : segment.End;
+                var leftMost = segment.Start;
+                if (segment.Start.X > segment.End.X)
+                {
+                    leftMost = segment.End;
+                }
+                else if (segment.Start.X.ApproximatelyEquals(segment.End.X))
+                {
+                    leftMost = segment.Start.Y < segment.End.Y ? segment.End : segment.Start;
+                }
                 return new (Vector3 location, int index, bool isLeftMost, T item)[]{
                     (segment.Start, i, segment.Start == leftMost, item),
                     (segment.End, i, segment.End == leftMost, item)
@@ -214,14 +235,15 @@ namespace Elements.Search
             }).GroupBy(x => x.location).Select(g =>
             {
                 // TODO: Is there a way to make this faster?
-                // We're grouping by coordinate which is SLOW and is 
+                // We're grouping by coordinate which is SLOW and is
                 // only neccessary in the case where we have coincident points.
 
-                // Group by the event coordinate as lines may share start 
+                // Group by the event coordinate as lines may share start
                 // or end points.
                 return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
-            }).OrderBy(e => -e.Point.Y).OrderBy(e => e.Point.X);
+            });
 
+            events = events.OrderBy(e => -e.Point.Y).OrderBy(e => e.Point, new XEqualityWithFallbackToYEqualityComparer());
             var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
             // Create a binary tree to contain all segments ordered by their
@@ -257,12 +279,18 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[data].Add(result);
-                                    segmentIntersections[pre.Data].Add(result);
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
+                                        segmentIntersections[data].Add(result);
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                    {
+                                        segmentIntersections[pre.Data].Add(result);
+                                    }
 
                                     // TODO: Come up with a better solution for
                                     // storing only the intersection points without
-                                    // needing Contains(). 
+                                    // needing Contains().
                                     if (!allIntersectionLocations.Contains(result))
                                     {
                                         allIntersectionLocations.Add(result);
@@ -274,8 +302,14 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[data].Add(result);
-                                    segmentIntersections[suc.Data].Add(result);
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
+                                        segmentIntersections[data].Add(result);
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                    {
+                                        segmentIntersections[suc.Data].Add(result);
+                                    }
 
                                     if (!allIntersectionLocations.Contains(result))
                                     {
@@ -293,8 +327,18 @@ namespace Elements.Search
                         {
                             if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
-                                segmentIntersections[pre.Data].Add(result);
-                                segmentIntersections[suc.Data].Add(result);
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
+                                    segmentIntersections[suc.Data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
+                                    segmentIntersections[pre.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -306,7 +350,14 @@ namespace Elements.Search
                         {
                             if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                             {
-                                segmentIntersections[pre.Data].Add(result);
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
+                                    segmentIntersections[pre.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -318,7 +369,14 @@ namespace Elements.Search
                         {
                             if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
-                                segmentIntersections[suc.Data].Add(result);
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
+                                    segmentIntersections[suc.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
@@ -326,8 +384,16 @@ namespace Elements.Search
                             }
                         }
 
-                        tree.Remove(data);
-                        segmentIntersections[data].Add(e.Point);
+                        //NOTE: Custom data comparer is used inside Find method. Sometimes it fails to compare elements and
+                        // as result the wrong element can be deleted. It shouldn't be the case after changes inside LeftMostPointComparer,
+                        // but I left this code here as a precaution
+                        if (tree.Find(data) != null && tree.Find(data).Data.Equals(data))
+                        {
+                            tree.Remove(data);
+                        }
+
+                        if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(e.Point)))
+                            segmentIntersections[data].Add(e.Point);
                     }
                 }
                 Debug.WriteLine(tree.ToString());
@@ -337,7 +403,7 @@ namespace Elements.Search
             // will be used to find an existing point if one exists.
             allNodeLocations = new List<Vector3>();
 
-            // Loop over all segment intersection data, sorting the 
+            // Loop over all segment intersection data, sorting the
             // data by distance from the segment's start point, and
             // creating new vertices and edges as necessary.
             var adjacencyList = new AdjacencyList<T>();
@@ -352,7 +418,7 @@ namespace Elements.Search
                     var x = segmentIntersections[segmentData.Key][i];
 
                     // We only add points as intersections if they're not at
-                    // the start or end 
+                    // the start or end
                     prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
@@ -372,7 +438,7 @@ namespace Elements.Search
         /// of traversal.
         /// </summary>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <returns>A collection of integers representing the indices of the nodes 
+        /// <returns>A collection of integers representing the indices of the nodes
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
@@ -534,7 +600,7 @@ namespace Elements.Search
                                             int previousIndex,
                                             bool twoWayEdges)
         {
-            // Find an existing intersection location, 
+            // Find an existing intersection location,
             // or create a new one.
             var newIndex = allNodeLocations.IndexOf(location);
             if (newIndex == -1)
@@ -621,7 +687,7 @@ namespace Elements.Search
                 var indexStr = $"{i}: {string.Join(",", EdgesAt(i).Select(e => e.Item1.ToString()))}";
                 textData.Add((nodeLocations[i], Vector3.ZAxis, Vector3.XAxis, indexStr, color));
 
-                // Break up text data objects to avoid overflowing maximum 
+                // Break up text data objects to avoid overflowing maximum
                 // texture and geometry buffer sizes.
                 if (textData.Count > 100 || i == count - 1)
                 {
@@ -634,8 +700,38 @@ namespace Elements.Search
         }
 
         /// <summary>
+        /// Draw bounded areas of the network as panels.
+        /// </summary>
+        /// <param name="allNodeLocations">All node locations in the network.</param>
+        public List<Panel> ToBoundedAreaPanels(List<Vector3> allNodeLocations)
+        {
+            var regions = FindAllClosedRegions(allNodeLocations);
+            var r = new Random();
+            var panels = new List<Panel>();
+
+            foreach (var region in regions)
+            {
+                var vertices = region.Select(i => allNodeLocations[i]).ToList();
+                Polygon poly = null;
+                try
+                {
+                    poly = new Polygon(vertices);
+                }
+                catch
+                {
+                    // This will happen for traversals of
+                    // straight edges.
+                    continue;
+                }
+                panels.Add(new Panel(poly, r.NextMaterial()));
+            }
+
+            return panels;
+        }
+
+        /// <summary>
         /// Traverse the network from the specified node index.
-        /// Traversal concludes when there are no more 
+        /// Traversal concludes when there are no more
         /// available nodes to traverse.
         /// </summary>
         /// <param name="start">The starting point of the traversal.</param>
@@ -735,13 +831,18 @@ namespace Elements.Search
 
                 if (edges.First.Value.Item1 != currentIndex)
                 {
-                    // If there's only one connected vertex and 
+                    // If there's only one connected vertex and
                     // it's not the current vertex, return it.
                     return edges.First.Value.Item1;
                 }
             }
 
             return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges, network);
+        }
+
+        private static bool PointIsUniqueIntersectionAlongLine(Vector3 point, Line line, List<Vector3> intersections)
+        {
+            return !intersections.Any(p => p.IsAlmostEqualTo(point)) && line.PointOnLine(point);
         }
     }
 }
