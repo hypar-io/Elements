@@ -5,11 +5,20 @@
 ### Added
 
 - `AdaptiveGraphRouting.ErrorMessages`
+- `EdgeInfo.Flags`
+- `Elements.Spatial.WeightModifier`
+- `AdaptiveGraphRouting.GetWeightModifier(string name)`
+- `AdaptiveGraphRouting.AddWeightModifier`,
+- `AdaptiveGraphRouting.RemoveWeightModifier`
+- `AdaptiveGraphRouting.ClearWeightModifiers`,
+- `AdaptiveGraphRouting.AddPlaneModifier(string name, Plane plane, double factor)`
 - `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 
 ### Changed
 
 - Remove the BBox3 validator.
+- `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
+- `EdgeInfo.HasVerticalChange` is set obsolete.
 
 ### Fixed
 
