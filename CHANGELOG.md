@@ -19,6 +19,7 @@
 - Remove the BBox3 validator.
 - `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
 - `EdgeInfo.HasVerticalChange` is set obsolete.
+- Enforce our warnings by treating them as errors.
 
 ### Fixed
 
