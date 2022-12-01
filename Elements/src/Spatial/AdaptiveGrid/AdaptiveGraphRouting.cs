@@ -85,12 +85,11 @@ namespace Elements.Spatial.AdaptiveGrid
         public IList<Element> RenderElements(IList<RoutingHintLine> hintLines,
                                              IList<Vector3> splitPoints)
         {
+            var normalEdges = new List<(Line, double)>();
             var normalEdgesCheap = new List<(Line, double)>();
-            var hintEdgesCheap = new List<(Line, double)>();
-            var offsetEdgesCheap = new List<(Line, double)>();
             var normalEdgesExpensive = new List<(Line, double)>();
-            var hintEdgesExpensive = new List<(Line, double)>();
-            var offsetEdgesExpensive = new List<(Line, double)>();
+            var hintEdges = new List<(Line, double)>();
+            var offsetEdges = new List<(Line, double)>();
 
             var infos = CalculateEdgeInfos(hintLines);
 
@@ -109,35 +108,25 @@ namespace Elements.Spatial.AdaptiveGrid
                 var info = infos[edge.Id];
                 if (info.HasAnyFlag(EdgeFlags.UserDefinedHint))
                 {
-                    if (info.Factor < 1 + _grid.Tolerance)
-                    {
-                        hintEdgesCheap.Add((l, info.Factor));
-                    }
-                    else
-                    {
-                        hintEdgesExpensive.Add((l, info.Factor));
-                    }
+                    hintEdges.Add((l, info.Factor));
                 }
                 else if (info.HasAnyFlag(EdgeFlags.HiddenHint))
                 {
-                    if (info.Factor < 1 + _grid.Tolerance)
-                    {
-                        offsetEdgesCheap.Add((l, info.Factor));
-                    }
-                    else
-                    {
-                        offsetEdgesExpensive.Add((l, info.Factor));
-                    }
+                    offsetEdges.Add((l, info.Factor));
                 }
                 else
                 {
-                    if (info.Factor < 1 + _grid.Tolerance)
+                    if (info.Factor < 1 - _grid.Tolerance)
                     {
                         normalEdgesCheap.Add((l, info.Factor));
                     }
-                    else
+                    else if (info.Factor > 1 + _grid.Tolerance)
                     {
                         normalEdgesExpensive.Add((l, info.Factor));
+                    }
+                    else
+                    {
+                        normalEdges.Add((l, info.Factor));
                     }
                 }
             }
@@ -158,12 +147,11 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             });
 
-            add(normalEdgesCheap, "Normal Edges Main", Colors.Blue);
-            add(normalEdgesExpensive, "Normal Edges Other", Colors.Cobalt);
-            add(offsetEdgesCheap, "Offset Edges Main", Colors.Orange);
-            add(offsetEdgesExpensive, "Offset Edges Other", Colors.Yellow);
-            add(hintEdgesCheap, "Hint Edges Main", Colors.Green);
-            add(hintEdgesExpensive, "Hint Edges Other", Colors.Emerald);
+            add(normalEdges, "Normal Edges", Colors.Blue);
+            add(normalEdgesCheap, "Normal Edges Discounted", Colors.Emerald);
+            add(normalEdgesExpensive, "Normal Edges Expensive", Colors.Purple);
+            add(offsetEdges, "Offset Edges Main", Colors.Orange);
+            add(hintEdges, "Hint Edges Main", Colors.Green);
 
             return visualizations;
         }
@@ -478,18 +466,20 @@ namespace Elements.Spatial.AdaptiveGrid
                                 {
                                     hintFactor = Math.Min(l.Factor, hintFactor);
                                     //Store the information if the edge was affected by 2D and (or) 3D hint line. 
-                                    flags &= l.Is2D ? EdgeFlags.UserDefinedHint2D : EdgeFlags.UserDefinedHint3D;
+                                    flags |= l.Is2D ? EdgeFlags.UserDefinedHint2D : EdgeFlags.UserDefinedHint3D;
                                 }
                                 else
                                 {
                                     offsetFactor = Math.Min(l.Factor, offsetFactor);
-                                    flags &= l.Is2D ? EdgeFlags.HiddenHint2D : EdgeFlags.HiddenHint3D;
+                                    flags |= l.Is2D ? EdgeFlags.HiddenHint2D : EdgeFlags.HiddenHint3D;
                                 }
                             }
                         }
                     }
 
-                    weights[e.Id] = new EdgeInfo(_grid, e, hintFactor * offsetFactor * modifierFactor);
+                    var info = new EdgeInfo(_grid, e, hintFactor * offsetFactor * modifierFactor);
+                    info.Flags = flags;
+                    weights[e.Id] = info;
                 }
             }
 
