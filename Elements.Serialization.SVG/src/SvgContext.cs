@@ -8,12 +8,12 @@ namespace Elements.Serialization.SVG
     public class SvgContext
     {
         /// <summary>
-        /// Fill color.
+        /// The fill color.
         /// </summary>
         public SvgColourServer? Fill { get; set; }
 
         /// <summary>
-        /// Stroke color.
+        /// The stroke color.
         /// </summary>
         public SvgColourServer? Stroke { get; set; }
 

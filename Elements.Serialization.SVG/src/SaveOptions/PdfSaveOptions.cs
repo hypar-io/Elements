@@ -6,17 +6,17 @@ namespace Elements.Serialization.SVG
     public class PdfSaveOptions
     {
         /// <summary>
-        /// What should the margin of the PDF be?.
+        /// The margin.
         /// </summary>
         public float Margin { get; set; } = 15;
 
         /// <summary>
-        /// What is the width of the PDF?
+        /// The page width.
         /// </summary>
         public float PageWidth { get; set; } = 840;
 
         /// <summary>
-        /// What is the height of the PDF?
+        /// The page height.
         /// </summary>
         public float PageHeight { get; set; } = 1188;
     }
