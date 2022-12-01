@@ -19,6 +19,8 @@
 - Remove the BBox3 validator.
 - `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
 - `EdgeInfo.HasVerticalChange` is set obsolete.
+- `AdaptiveGraphRouting.RenderElements` is no longer paint hint lines in two different colors. Instead regular edges are paint into three groups. Weights are included to additional properties of produced elements. 
+
 
 ### Fixed
 
