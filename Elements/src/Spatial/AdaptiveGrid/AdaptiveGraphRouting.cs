@@ -478,7 +478,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     var info = new EdgeInfo(_grid, e, hintFactor * offsetFactor * modifierFactor);
-                    info.Flags = flags;
+                    info.AddFlags(flags);
                     weights[e.Id] = info;
                 }
             }
@@ -990,12 +990,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
             return false;
-        }
-
-        private bool IsAffectedBy(
-            Vector3 start, Vector3 end, IEnumerable<RoutingHintLine> hints)
-        {
-            return hints != null && hints.Any(h => IsAffectedBy(start, end, h));
         }
 
         private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
