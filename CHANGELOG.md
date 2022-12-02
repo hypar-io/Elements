@@ -13,6 +13,7 @@
 - `AdaptiveGraphRouting.ClearWeightModifiers`,
 - `AdaptiveGraphRouting.AddPlaneModifier(string name, Plane plane, double factor)`
 - `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
+- `Network.TraverseLeftWithoutLeaves()`
 
 ### Changed
 
