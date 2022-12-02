@@ -495,11 +495,10 @@ namespace Elements.Search
         /// <summary>
         /// Traverse a network following the smallest plane angle between the current
         /// edge and the next candidate edge.
-        /// leaf nodes.
         /// </summary>
         /// <param name="traversalData">Data about the current step of the traversal.</param>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="visitedEdges">A collection of previously visited edges.</param>
         /// <param name="network">The network being traversed.</param>
         /// <returns>The next index to traverse.</returns>
         public static int TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
@@ -552,11 +551,10 @@ namespace Elements.Search
 
         /// <summary>
         /// Traverse a network following the left-most candidate edge relative to the current edge.
-        /// leaf nodes.
         /// </summary>
         /// <param name="traversalData">Data about the current step of the traversal.</param>
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
-        /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="visitedEdges">A collection of previously visited edges.</param>
         /// <param name="network">The network being traversed.</param>
         /// <returns>The next index to traverse.</returns>
         public static int TraverseLeftWithoutLeaves((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
