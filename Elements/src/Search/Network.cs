@@ -444,53 +444,22 @@ namespace Elements.Search
         {
             var result = new List<List<int>>();
 
-            var traversalStartIndices = new List<int>();
-            for (var i = 0; i < this.NodeCount(); i++)
-            {
-                var edgeCount = this.EdgesAt(i).Count();
-                // Leaf nodes
-                if (edgeCount == 1)
-                {
-                    traversalStartIndices.Add(i);
-                }
-            }
-
             var nodeVisits = new int[NodeCount()];
             var visitedEdges = new List<LocalEdge>();
-
-            foreach (var leafIndex in traversalStartIndices)
-            {
-                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
-
-                foreach (var index in path)
-                {
-                    nodeVisits[index] = nodeVisits[index] + 1;
-                }
-
-                MarkVisitedEdges(visitedEdges, path);
-
-                if (path.Count < 3)
-                {
-                    continue;
-                }
-
-                if (path[0] == path[path.Count - 1])
-                {
-                    result.Add(path);
-                }
-
-                Debug.WriteLine($"PATH: {string.Join(",", path)}");
-            }
 
             for (var i = 0; i < nodeVisits.Length; i++)
             {
                 var localEdgeCount = EdgesAt(i).Count();
-                if (localEdgeCount > nodeVisits[i])
+                if (localEdgeCount > 1 && localEdgeCount > nodeVisits[i])
                 {
-                    List<int> path = Traverse(i, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+                    Debug.WriteLine($"STARTING PATH AT INDEX: {i}");
+
+                    List<int> path = Traverse(i, TraverseLeftWithoutLeaves, allNodeLocations, visitedEdges, out List<int> visited);
 
                     if (path.Count < 2 || path[0] != path[path.Count - 1])
                     {
+                        Debug.WriteLine($"EXITING NON CLOSED PATH");
+                        Debug.WriteLine(string.Empty);
                         continue;
                     }
 
@@ -505,6 +474,8 @@ namespace Elements.Search
 
                     if (path.Count < 3)
                     {
+                        Debug.WriteLine($"EXITING PATH TOO SHORT");
+                        Debug.WriteLine(string.Empty);
                         continue;
                     }
 
@@ -513,7 +484,8 @@ namespace Elements.Search
                         result.Add(path);
                     }
 
-                    Debug.WriteLine($"PATH: {string.Join(",", path)}");
+                    Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
+                    Debug.WriteLine(string.Empty);
                 }
             }
 
@@ -521,7 +493,8 @@ namespace Elements.Search
         }
 
         /// <summary>
-        /// Traverse a network following the smallest plane angle path including
+        /// Traverse a network following the smallest plane angle between the current
+        /// edge and the next candidate edge.
         /// leaf nodes.
         /// </summary>
         /// <param name="traversalData">Data about the current step of the traversal.</param>
@@ -577,6 +550,59 @@ namespace Elements.Search
             return minIndex;
         }
 
+        /// <summary>
+        /// Traverse a network following the left-most candidate edge relative to the current edge.
+        /// leaf nodes.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of previously visited edge.</param>
+        /// <param name="network">The network being traversed.</param>
+        /// <returns>The next index to traverse.</returns>
+        public static int TraverseLeftWithoutLeaves((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges,
+                                               Network<T> network)
+        {
+            var minAngle = double.MaxValue;
+            var minIndex = -1;
+            var baseEdge = traversalData.previousIndex == -1 ? Vector3.YAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
+            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
+            foreach (var e in edgeIndices)
+            {
+                if (e == traversalData.previousIndex)
+                {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
+                    continue;
+                }
+
+                if (network.EdgesAt(e).Count() <= 1)
+                {
+                    Debug.WriteLine($"Skipping index {e} as leaf.");
+                    continue;
+                }
+
+                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
+                {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
+                var angle = 180 - baseEdge.PlaneAngleTo(localEdge);
+
+                Debug.WriteLine($"{traversalData.previousIndex}->{traversalData.currentIndex}:{traversalData.currentIndex}->{e}:{angle}");
+
+                if (angle >= 0 && angle < minAngle)
+                {
+                    Debug.WriteLine("Found minimum.");
+                    minAngle = angle;
+                    minIndex = e;
+                }
+            }
+            return minIndex;
+        }
         private static void MarkVisitedEdges(List<LocalEdge> visitedEdges, List<int> path)
         {
             for (int j = 0; j < path.Count - 1; j++)

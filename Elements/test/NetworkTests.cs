@@ -346,5 +346,38 @@ namespace Elements.Tests
 
             Model = model;
         }
+
+        [Fact]
+        public void FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions()
+        {
+            // --------------
+            // |      |      |\
+            // |      |      | \
+            // ---------------  |
+            // |      |      | /
+            // |      |      |/
+            // ---------------
+
+            this.Name = nameof(FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions);
+
+            var rect = Polygon.Rectangle(6, 2);
+            var a = new Line(new Vector3(0, 1), new Vector3(0, -1));
+            var b = new Line(new Vector3(-3, 0), new Vector3(3, 0));
+            var c = new Line(new Vector3(3, 1), new Vector3(5, 0));
+            var d = new Line(new Vector3(5, 0), new Vector3(3, -1));
+            var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
+            var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Equal(5, regions.Count);
+            var random = new Random(11);
+            foreach (var r in regions)
+            {
+                var poly = new Polygon(r.Select(i => allNodeLocations[i]).ToList());
+                this.Model.AddElement(new Panel(poly, random.NextMaterial()));
+            }
+
+            this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+        }
     }
 }
