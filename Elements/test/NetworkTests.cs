@@ -379,5 +379,41 @@ namespace Elements.Tests
             this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
             this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
         }
+
+        [Fact]
+        public void FindClosedRegionWithInnerSegments()
+        {
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 7)),
+                new Line((5, 7), (5, 5)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.True(regions.Count() == 1);
+
+        }
+
+        [Fact]
+        public void FindClosedRegionWithOuterSegments()
+        {
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 15)),
+                new Line((5, 15), (5, 17)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.True(regions.Count() == 1);
+
+        }
     }
 }
