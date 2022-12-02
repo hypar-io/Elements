@@ -28,7 +28,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
             {
-                Flags &= EdgeFlags.HasVerticalChange;
+                Flags |= EdgeFlags.HasVerticalChange;
                 HasVerticalChange = true;
             }
         }
