@@ -992,12 +992,6 @@ namespace Elements.Spatial.AdaptiveGrid
             return false;
         }
 
-        private bool IsAffectedBy(
-            Vector3 start, Vector3 end, IEnumerable<RoutingHintLine> hints)
-        {
-            return hints != null && hints.Any(h => IsAffectedBy(start, end, h));
-        }
-
         private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
         {
             var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
