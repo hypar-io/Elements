@@ -57,7 +57,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Additional information about the edge.
         /// </summary>
-        internal EdgeFlags Flags;
+        private EdgeFlags Flags;
 
         /// <summary>
         /// Check if edge info has a certain flag or combination of flags set.

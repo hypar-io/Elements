@@ -478,7 +478,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     }
 
                     var info = new EdgeInfo(_grid, e, hintFactor * offsetFactor * modifierFactor);
-                    info.Flags = flags;
+                    info.AddFlags(flags);
                     weights[e.Id] = info;
                 }
             }
