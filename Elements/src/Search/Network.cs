@@ -31,7 +31,14 @@ namespace Elements.Search
             VertexIndex2 = vertexIndex2;
         }
 
+        /// <summary>
+        /// The index of the first vertex.
+        /// </summary>
         public int VertexIndex1 { get; }
+
+        /// <summary>
+        /// The index of the second vertex.
+        /// </summary>
         public int VertexIndex2 { get; }
 
         /// <summary>
