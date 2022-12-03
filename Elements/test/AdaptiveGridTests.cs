@@ -1083,12 +1083,24 @@ namespace Elements.Tests
             AdaptiveGrid grid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
             grid.AddFromPolygon(polygon, new List<Vector3>() { new Vector3(5, 5) });
-            EdgeInfo info = new EdgeInfo(grid, grid.GetEdges().First());
-            info.AddFlags(EdgeFlags.UserDefinedHint2D | EdgeFlags.HasVerticalChange);
-            Assert.True(info.HasAnyFlag(EdgeFlags.HasVerticalChange));
-            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
-            Assert.False(info.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
-            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
+            grid.AddEdge(Vector3.Origin, new Vector3(0, 0, 5));
+
+            grid.TryGetVertexIndex(Vector3.Origin, out var id0);
+            grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var id1);
+            grid.TryGetVertexIndex(new Vector3(0, 5), out var id2);
+
+            var verticalEdge = grid.GetVertex(id0).Edges.First(e => e.StartId == id1 || e.EndId == id1);
+            var horizontalEdge = grid.GetVertex(id0).Edges.First(e => e.StartId == id2 || e.EndId == id2);
+            EdgeInfo verticalEdgeInfo = new EdgeInfo(grid, verticalEdge);
+            EdgeInfo horizontalEdgeInfo = new EdgeInfo(grid, horizontalEdge);
+            Assert.True(verticalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+            Assert.False(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+
+            horizontalEdgeInfo.AddFlags(EdgeFlags.UserDefinedHint2D | EdgeFlags.HasVerticalChange);
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
+            Assert.False(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
         }
 
         //          (4)
