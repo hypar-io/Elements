@@ -201,7 +201,7 @@ namespace Elements.Search
 
         /// <summary>
         /// Construct a network from the intersections of a collection
-        /// of items which are segmentable.
+        /// of items which provide segments in a shared plane.
         /// </summary>
         /// <param name="items">A collection of segmentable items.</param>
         /// <param name="getSegment">A delegate which returns a segment from an
