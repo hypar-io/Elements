@@ -365,7 +365,7 @@ namespace Elements.Tests
         [Fact]
         public void FindClosedRegionWithInnerSegments()
         {
-            this.Name = nameof(FindClosedRegionWithOuterSegments);
+            this.Name = nameof(FindClosedRegionWithInnerSegments);
             var lines = new[] {
                 new Line((0,0), (10, 0)),
                 new Line((10, 0), (10, 10)),
