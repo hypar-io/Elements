@@ -286,19 +286,7 @@ namespace Elements.Tests
 
             Assert.Equal(5, closedRegions.Count);
 
-            var r = new Random(23);
-            foreach (var region in closedRegions)
-            {
-                try
-                {
-                    var p = new Polygon(region.Select(i => allNodeLocations[i]).ToList());
-                    this.Model.AddElement(new Panel(p, r.NextMaterial()));
-                }
-                catch
-                {
-                    continue;
-                }
-            }
+            DrawNetwork(network, allNodeLocations, this.Model, closedRegions);
         }
 
         [Fact]
@@ -368,21 +356,16 @@ namespace Elements.Tests
             var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
             var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
             var regions = network.FindAllClosedRegions(allNodeLocations);
-            Assert.Equal(5, regions.Count);
-            var random = new Random(11);
-            foreach (var r in regions)
-            {
-                var poly = new Polygon(r.Select(i => allNodeLocations[i]).ToList());
-                this.Model.AddElement(new Panel(poly, random.NextMaterial()));
-            }
 
-            this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
-            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            // Assert.Equal(5, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
         }
 
         [Fact]
         public void FindClosedRegionWithInnerSegments()
         {
+            this.Name = nameof(FindClosedRegionWithOuterSegments);
             var lines = new[] {
                 new Line((0,0), (10, 0)),
                 new Line((10, 0), (10, 10)),
@@ -394,13 +377,27 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
-            Assert.True(regions.Count() == 1);
-
+            Assert.Single(regions);
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
         }
 
         [Fact]
         public void FindClosedRegionWithOuterSegments()
         {
+            // An intersecting path that ends at the edge 
+            // of a closed region.
+            //
+            //        /      
+            //       |      
+            // ---------------
+            // |             |
+            // |             |
+            // |             |
+            // |             | 
+            // |             |
+            // ---------------
+
+            this.Name = nameof(FindClosedRegionWithOuterSegments);
             var lines = new[] {
                 new Line((0,0), (10, 0)),
                 new Line((10, 0), (10, 10)),
@@ -412,8 +409,84 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
-            Assert.True(regions.Count() == 1);
 
+            Assert.Equal(2, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void IntersectingLeafPathFindsCorrectClosedRegions()
+        {
+            // An intersecting path that isn't a leaf, but still shouldn't
+            // be traversed.
+            //
+            // ---------------
+            // |             |
+            // |-------------|
+            // |             |
+            // |       /     | 
+            // |      |      |
+            // ---------------
+            //        |
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((5.00, -2.00), (4.00, 1.00)),
+                new Line((4.00, 1.00), (6.00, 2.00)),
+                new Line((6.00, 2.00), (5.00, 4.00)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(2, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void ThreeFourAndFiveSidedRegionsFound()
+        {
+            this.Name = nameof(ThreeFourAndFiveSidedRegionsFound);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((-2.96, -0.16), (2.13, 2.51)),
+                new Line((2.13, 2.51), (7.81, 2.51)),
+                new Line((7.81, 2.51), (13.11, 0.28)),
+                new Line((7.81, 2.51), (11.60, 4.88)),
+                new Line((2.13, 2.51), (-1.46, 4.62)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(5, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        private static void DrawNetwork<T>(Network<T> network, List<Vector3> allNodeLocations, Model model, List<List<int>> regions = null)
+        {
+            var random = new Random(11);
+
+            if (regions != null)
+            {
+                foreach (var r in regions)
+                {
+                    var poly = new Polygon(r.Select(i => allNodeLocations[i]).ToList());
+                    model.AddElement(new Panel(poly, random.NextMaterial()));
+                }
+            }
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
         }
     }
 }

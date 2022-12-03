@@ -444,9 +444,49 @@ namespace Elements.Search
         {
             var result = new List<List<int>>();
 
+            var traversalStartIndices = new List<int>();
+            for (var i = 0; i < this.NodeCount(); i++)
+            {
+                var edgeCount = this.EdgesAt(i).Count();
+                // Leaf nodes
+                if (edgeCount == 1)
+                {
+                    traversalStartIndices.Add(i);
+                }
+            }
+
             var nodeVisits = new int[NodeCount()];
             var visitedEdges = new List<LocalEdge>();
 
+            // Traverse from leaves first. This will capture paths where
+            // a leaf edge traverses into our out of a closed region.
+            foreach (var leafIndex in traversalStartIndices)
+            {
+                List<int> path = Traverse(leafIndex, TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
+
+                foreach (var index in path)
+                {
+                    nodeVisits[index] = nodeVisits[index] + 1;
+                }
+
+                MarkVisitedEdges(visitedEdges, path);
+
+                if (path.Count < 3)
+                {
+                    continue;
+                }
+
+                if (path[0] == path[path.Count - 1])
+                {
+                    result.Add(path);
+                }
+
+                Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
+                Debug.WriteLine(string.Empty);
+            }
+
+            // Traverse over all nodes. Edges found during the first
+            // traversal path will be skipped during traversal.
             for (var i = 0; i < nodeVisits.Length; i++)
             {
                 var localEdgeCount = EdgesAt(i).Count();
@@ -472,14 +512,14 @@ namespace Elements.Search
                         nodeVisits[index] = nodeVisits[index] + 1;
                     }
 
-                    if (path.Count < 3)
+                    if (IsTooShort(path))
                     {
                         Debug.WriteLine($"EXITING PATH TOO SHORT");
                         Debug.WriteLine(string.Empty);
                         continue;
                     }
 
-                    if (path[0] == path[path.Count - 1])
+                    if (IsClosed(path))
                     {
                         result.Add(path);
                     }
@@ -490,6 +530,16 @@ namespace Elements.Search
             }
 
             return result;
+        }
+
+        private bool IsTooShort(List<int> path)
+        {
+            return path.Count < 3;
+        }
+
+        private bool IsClosed(List<int> path)
+        {
+            return path[0] == path[path.Count - 1];
         }
 
         /// <summary>
@@ -571,12 +621,6 @@ namespace Elements.Search
                 if (e == traversalData.previousIndex)
                 {
                     Debug.WriteLine($"Skipping index {e} as previous.");
-                    continue;
-                }
-
-                if (network.EdgesAt(e).Count() <= 1)
-                {
-                    Debug.WriteLine($"Skipping index {e} as leaf.");
                     continue;
                 }
 
