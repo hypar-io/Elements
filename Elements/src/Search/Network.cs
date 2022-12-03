@@ -22,8 +22,8 @@ namespace Elements.Search
         /// <summary>
         /// Creates a new instance of Edge class
         /// </summary>
-        /// <param name="vertexIndex1">The index of the first vertex</param>
-        /// <param name="vertexIndex2">The index of the second vertex</param>
+        /// <param name="vertexIndex1">The index of the first vertex.</param>
+        /// <param name="vertexIndex2">The index of the second vertex.</param>
         public LocalEdge(int vertexIndex1, int vertexIndex2)
         {
             visitDirections = VisitDirections.None;
