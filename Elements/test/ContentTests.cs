@@ -4,6 +4,8 @@ using Elements.Serialization.glTF;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using glTFLoader;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -54,6 +56,37 @@ namespace Elements.Tests
             Assert.Equal(testCatalog.Id, loadedCatalog.Id);
             Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
             Assert.Equal("The Value", loadedCatalog.Content[0].AdditionalProperties["ImportantParameter"]);
+        }
+
+        [Fact]
+        public void MergeExtensions()
+        {
+            Name = nameof(MergeExtensions);
+            const string contentLocation = "../../../models/MergeGlTF/LittleShapes.glb";
+            var heated = new TestContentElem(contentLocation,
+                                      new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
+                                      new Vector3(),
+                                      new Transform(new Vector3(), Vector3.XAxis),
+                                      20,
+                                      BuiltInMaterials.Default,
+                                      null,
+                                      true,
+                                      Guid.NewGuid(),
+                                      "LittleShapes");
+            var anInstance = heated.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
+
+            var mergedModelPath = $"./models/{nameof(MergeExtensions)}.glb";
+            Model.AddElement(new Mass(Polygon.Rectangle(1, 1)));
+            Model.ToGlTF(mergedModelPath);
+            var gltfModelEmpty = Interface.LoadModel(mergedModelPath);
+            var initialExtensions = gltfModelEmpty.ExtensionsUsed;
+
+            Model.AddElement(anInstance);
+            var gltfContent = Interface.LoadModel(contentLocation);
+            var gltfModelMerged = Interface.LoadModel(mergedModelPath);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed.Except(initialExtensions));
+            Assert.All(gltfContent.ExtensionsUsed, (ext) => Assert.Contains(ext, gltfModelMerged.ExtensionsUsed));
         }
 
         [Fact, Trait("Category", "Example")]

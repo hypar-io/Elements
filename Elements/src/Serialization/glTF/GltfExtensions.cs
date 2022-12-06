@@ -38,10 +38,10 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// In normal function use, this should be set to null.
-        /// If not null and set to a valid directory path, gltfs loaded for 
+        /// If not null and set to a valid directory path, gltfs loaded for
         /// content elements will be cached to this directory, and can be
         /// explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
-        /// by `hypar run` and test capabilities to speed up repeated runs. 
+        /// by `hypar run` and test capabilities to speed up repeated runs.
         /// </summary>
         public static string GltfCachePath
         {
@@ -904,9 +904,9 @@ namespace Elements.Serialization.glTF
 
             // Attempt to pre-allocate these lists. This won't be perfect.
             // Before processing the geometry of an element we can't know
-            // how much to allocate. In the worst case, this will reduce 
+            // how much to allocate. In the worst case, this will reduce
             // the list resizing.
-            // TODO: In future work where we update element geometry during 
+            // TODO: In future work where we update element geometry during
             // UpdateRepresentations, we will know at this moment how big the
             // geometry for an element is, and we should tighten this up.
             var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
@@ -947,12 +947,12 @@ namespace Elements.Serialization.glTF
             gltf.Scenes = new[] { scene };
 
             var lights = model.AllElementsOfType<Light>().ToList();
-            gltf.ExtensionsUsed = lights.Any() ? new[] {
+            var extensions = lights.Any() ? new HashSet<string>() {
                 "KHR_materials_specular",
                 "KHR_materials_ior",
                 "KHR_materials_unlit",
                 "KHR_lights_punctual"
-            } : new[] {
+            } : new HashSet<string>() {
                 "KHR_materials_specular",
                 "KHR_materials_ior",
                 "KHR_materials_unlit"};
@@ -1025,6 +1025,7 @@ namespace Elements.Serialization.glTF
                                             textures,
                                             images,
                                             samplers,
+                                            extensions,
                                             meshes,
                                             nodes,
                                             meshElementMap,
@@ -1100,6 +1101,11 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
+            if (extensions.Count > 0)
+            {
+                gltf.ExtensionsUsed = extensions.ToArray();
+            }
+
             // This is a hack! For web assembly, the ToArray() call creates
             // a copy of all items in the list, and is extremely slow. We
             // get around this by accessing the underlying list directly.
@@ -1125,6 +1131,7 @@ namespace Elements.Serialization.glTF
                                                     List<Texture> textures,
                                                     List<Image> images,
                                                     List<Sampler> samplers,
+                                                    HashSet<string> extensions,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
@@ -1155,6 +1162,7 @@ namespace Elements.Serialization.glTF
                                                                  textures,
                                                                  images,
                                                                  samplers,
+                                                                 extensions,
                                                                  true,
                                                                  e.Id,
                                                                  out var parentNode);
