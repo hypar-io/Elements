@@ -26,6 +26,7 @@
 - Fix `Obstacle.FromLine` if line is vertical and start point is positioned higher than end.
 - Materials exported to glTF now have their `RoughnessFactor` set correctly.
 - Materials exported to glTF no longer use the `KHR_materials_pbrSpecularGlossiness` extension, as this extension is being sunset in favor of `KHR_materials_specular` and `KHR_materials_ior`.
+- Gltfs that are merged that require additional extensions will also merge their extensions.
 
 ## 1.3.0
 
