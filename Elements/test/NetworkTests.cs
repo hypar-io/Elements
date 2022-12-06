@@ -357,9 +357,20 @@ namespace Elements.Tests
             var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
             var regions = network.FindAllClosedRegions(allNodeLocations);
 
-            // Assert.Equal(5, regions.Count);
+            Assert.Equal(5, regions.Count);
 
             DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void ConcaveRegion()
+        {
+            this.Name = nameof(ConcaveRegion);
+            var l = Polygon.L(5, 7, 2);
+            var network = Network<Line>.FromSegmentableItems(l.Segments(), (line) => line, out var allNodeLocations, out var allIntersectionLocations);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Single(regions);
+            DrawNetwork(network, allNodeLocations, Model, regions);
         }
 
         [Fact]
@@ -377,7 +388,7 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
-            Assert.Single(regions);
+            Assert.Equal(2, regions.Count);
             DrawNetwork(network, allNodeLocations, this.Model, regions);
         }
 
