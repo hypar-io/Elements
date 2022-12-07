@@ -946,17 +946,19 @@ namespace Elements.Serialization.glTF
             };
             gltf.Scenes = new[] { scene };
 
+            var extensionsUsed = new HashSet<string> {
+                "KHR_materials_specular",
+                "KHR_materials_ior",
+                "KHR_materials_unlit"
+            };
+
             var lights = model.AllElementsOfType<Light>().ToList();
-            var extensions = lights.Any() ? new HashSet<string>() {
-                "KHR_materials_specular",
-                "KHR_materials_ior",
-                "KHR_materials_unlit",
-                "KHR_lights_punctual"
-            } : new HashSet<string>() {
-                "KHR_materials_specular",
-                "KHR_materials_ior",
-                "KHR_materials_unlit"};
-            gltf.ExtensionsUsed = extensions.ToArray(extensions.Count);
+            if (lights.Any())
+            {
+                extensionsUsed.Add("KHR_lights_punctual");
+            }
+
+            gltf.ExtensionsUsed = extensionsUsed.ToArray();
 
             var bufferViews = new List<BufferView>();
 
@@ -1026,7 +1028,7 @@ namespace Elements.Serialization.glTF
                                             textures,
                                             images,
                                             samplers,
-                                            extensions,
+                                            extensionsUsed,
                                             meshes,
                                             nodes,
                                             meshElementMap,
@@ -1102,9 +1104,9 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
-            if (extensions.Count > 0)
+            if (extensionsUsed.Count > 0)
             {
-                gltf.ExtensionsUsed = extensions.ToArray();
+                gltf.ExtensionsUsed = extensionsUsed.ToArray();
             }
 
             // This is a hack! For web assembly, the ToArray() call creates
