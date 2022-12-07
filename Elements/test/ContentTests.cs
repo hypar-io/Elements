@@ -62,8 +62,9 @@ namespace Elements.Tests
         public void MergeExtensions()
         {
             Name = nameof(MergeExtensions);
+            // This piece of content uses the KHR_materials_pbrSpecularGlossiness extension which is no longer used in our models.
             const string contentLocation = "../../../models/MergeGlTF/LittleShapes.glb";
-            var heated = new TestContentElem(contentLocation,
+            var littleShapeContent = new TestContentElem(contentLocation,
                                       new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
                                       new Vector3(),
                                       new Transform(new Vector3(), Vector3.XAxis),
@@ -73,7 +74,7 @@ namespace Elements.Tests
                                       true,
                                       Guid.NewGuid(),
                                       "LittleShapes");
-            var anInstance = heated.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
+            var anInstance = littleShapeContent.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
 
             var modelPath = $"./models/{nameof(MergeExtensions)}.glb";
             Model.AddElement(new Mass(Polygon.Rectangle(1, 1)));
