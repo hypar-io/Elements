@@ -19,7 +19,7 @@
 - Remove the BBox3 validator.
 - `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
 - `EdgeInfo.HasVerticalChange` is set obsolete.
-- `AdaptiveGraphRouting.RenderElements` is no longer paint hint lines in two different colors. Instead regular edges are paint into three groups. Weights are included to additional properties of produced elements. 
+- `AdaptiveGraphRouting.RenderElements` is no longer paint hint lines in two different colors. Instead regular edges are paint into three groups. Weights are included to additional properties of produced elements.
 
 
 ### Fixed
@@ -27,6 +27,8 @@
 - Fix `Obstacle.FromLine` if line is vertical and start point is positioned higher than end.
 - Materials exported to glTF now have their `RoughnessFactor` set correctly.
 - Materials exported to glTF no longer use the `KHR_materials_pbrSpecularGlossiness` extension, as this extension is being sunset in favor of `KHR_materials_specular` and `KHR_materials_ior`.
+- Gltfs that are merged that require additional extensions will also merge their extensions.
+- Don't try to save test models that have no name, they can interfere with each other because they want to save to the same file.
 
 ## 1.3.0
 

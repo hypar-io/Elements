@@ -27,6 +27,7 @@ namespace Elements.Serialization.glTF
                                         List<Texture> textures,
                                         List<Image> images,
                                         List<Sampler> samplers,
+                                        HashSet<string> extensions,
                                         bool shouldAddMaterials,
                                         System.Guid contentElementId,
                                         out ProtoNode parentNode
@@ -58,6 +59,11 @@ namespace Elements.Serialization.glTF
             {
                 originAccessor.BufferView = originAccessor.BufferView + buffViewIncrement;
                 accessors.Add(originAccessor);
+            }
+
+            foreach (var extension in loaded.ExtensionsUsed)
+            {
+                extensions.Add(extension);
             }
 
             var imageIncrement = images.Count;
