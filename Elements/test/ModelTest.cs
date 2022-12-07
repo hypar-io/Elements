@@ -57,7 +57,7 @@ namespace Elements.Tests
 
         public virtual void Dispose()
         {
-            if (this._model.Elements.Any())
+            if (this._model.Elements.Any() && !String.IsNullOrEmpty(this._name))
             {
                 if (this.GenerateGlb)
                 {

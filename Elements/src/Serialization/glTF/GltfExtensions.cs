@@ -956,6 +956,7 @@ namespace Elements.Serialization.glTF
                 "KHR_materials_specular",
                 "KHR_materials_ior",
                 "KHR_materials_unlit"};
+            gltf.ExtensionsUsed = extensions.ToArray(extensions.Count);
 
             var bufferViews = new List<BufferView>();
 
