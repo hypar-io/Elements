@@ -947,15 +947,18 @@ namespace Elements.Serialization.glTF
             gltf.Scenes = new[] { scene };
 
             var lights = model.AllElementsOfType<Light>().ToList();
-            var extensions = lights.Any() ? new HashSet<string>() {
-                "KHR_materials_specular",
-                "KHR_materials_ior",
-                "KHR_materials_unlit",
-                "KHR_lights_punctual"
-            } : new HashSet<string>() {
-                "KHR_materials_specular",
-                "KHR_materials_ior",
-                "KHR_materials_unlit"};
+            var extensions = lights.Any() ? new Dictionary<string, object>() {
+                {"KHR_materials_specular",new Dictionary<string, object>()},
+                {"KHR_materials_ior",new Dictionary<string, object>()},
+                {"KHR_materials_unlit",new Dictionary<string, object>()},
+                {"KHR_lights_punctual",new Dictionary<string, object>()},
+            } : new Dictionary<string, object>() {
+                {"KHR_materials_specular",new Dictionary<string, object>()},
+                {"KHR_materials_ior",new Dictionary<string, object>()},
+                {"KHR_materials_unlit",new Dictionary<string, object>()}
+                };
+            gltf.Extensions = extensions;
+            gltf.ExtensionsUsed = extensions.Keys.ToArray();
 
             var bufferViews = new List<BufferView>();
 
@@ -1101,10 +1104,9 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
-            if (extensions.Count > 0)
-            {
-                gltf.ExtensionsUsed = extensions.ToArray();
-            }
+            // the extension dictionary can have items added to it during merge, so we re-establish it here.
+            gltf.ExtensionsUsed = extensions.Keys.ToArray();
+            gltf.Extensions = extensions;
 
             // This is a hack! For web assembly, the ToArray() call creates
             // a copy of all items in the list, and is extremely slow. We
@@ -1131,7 +1133,7 @@ namespace Elements.Serialization.glTF
                                                     List<Texture> textures,
                                                     List<Image> images,
                                                     List<Sampler> samplers,
-                                                    HashSet<string> extensions,
+                                                    Dictionary<string, object> extensions,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
