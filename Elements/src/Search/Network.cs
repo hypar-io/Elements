@@ -605,7 +605,7 @@ namespace Elements.Search
                 }
 
                 var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
-                var angle = baseEdge.PlaneAngleTo(localEdge);
+                var angle = localEdge.PlaneAngleTo(baseEdge);
 
                 // The angle of traversal is not actually zero here,
                 // it's 180 (unless the path is invalid). We want to
