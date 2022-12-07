@@ -122,7 +122,6 @@ namespace Elements.Tests
         [Fact]
         public void BuiltInMaterialsAlwaysHaveSameId()
         {
-            Name = nameof(BuiltInMaterialsAlwaysHaveSameId);
             var m1 = BuiltInMaterials.Wood;
             this.Model.AddElement(m1);
             var json = this.Model.ToJson();

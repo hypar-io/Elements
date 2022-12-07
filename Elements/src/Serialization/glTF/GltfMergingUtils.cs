@@ -27,7 +27,7 @@ namespace Elements.Serialization.glTF
                                         List<Texture> textures,
                                         List<Image> images,
                                         List<Sampler> samplers,
-                                        Dictionary<string, object> extensions,
+                                        HashSet<string> extensions,
                                         bool shouldAddMaterials,
                                         System.Guid contentElementId,
                                         out ProtoNode parentNode
@@ -61,19 +61,9 @@ namespace Elements.Serialization.glTF
                 accessors.Add(originAccessor);
             }
 
-            foreach (var extension in loaded.Extensions ?? new Dictionary<string, object>())
-            {
-                if (!extensions.ContainsKey(extension.Key))
-                {
-                    extensions.Add(extension.Key, extension.Value);
-                }
-            }
             foreach (var extension in loaded.ExtensionsUsed)
             {
-                if (!extensions.ContainsKey(extension))
-                {
-                    extensions.Add(extension, new Dictionary<string, object>());
-                }
+                extensions.Add(extension);
             }
 
             var imageIncrement = images.Count;

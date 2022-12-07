@@ -75,16 +75,15 @@ namespace Elements.Tests
                                       "LittleShapes");
             var anInstance = heated.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
 
-            var modelPath = $"./models/{nameof(MergeExtensions)}.glb";
+            var mergedModelPath = $"./models/{nameof(MergeExtensions)}.glb";
             Model.AddElement(new Mass(Polygon.Rectangle(1, 1)));
-            Model.ToGlTF(modelPath);
-            var gltfModelEmpty = Interface.LoadModel(modelPath);
+            Model.ToGlTF(mergedModelPath);
+            var gltfModelEmpty = Interface.LoadModel(mergedModelPath);
             var initialExtensions = gltfModelEmpty.ExtensionsUsed;
 
-            var gltfContent = Interface.LoadModel(contentLocation);
             Model.AddElement(anInstance);
-            Model.ToGlTF(modelPath);
-            var gltfModelMerged = Interface.LoadModel(modelPath);
+            var gltfContent = Interface.LoadModel(contentLocation);
+            var gltfModelMerged = Interface.LoadModel(mergedModelPath);
             Assert.NotEmpty(gltfContent.ExtensionsUsed);
             Assert.NotEmpty(gltfContent.ExtensionsUsed.Except(initialExtensions));
             Assert.All(gltfContent.ExtensionsUsed, (ext) => Assert.Contains(ext, gltfModelMerged.ExtensionsUsed));
