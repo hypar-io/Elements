@@ -369,7 +369,7 @@ namespace Elements.Tests
             var l = Polygon.L(5, 7, 2);
             var network = Network<Line>.FromSegmentableItems(l.Segments(), (line) => line, out var allNodeLocations, out var allIntersectionLocations);
             var regions = network.FindAllClosedRegions(allNodeLocations);
-            Assert.Single(regions);
+            Assert.Equal(2, regions.Count);
             DrawNetwork(network, allNodeLocations, Model, regions);
         }
 
