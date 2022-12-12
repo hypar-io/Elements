@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 
 namespace Elements
@@ -106,6 +107,143 @@ namespace Elements
         }
 
         /// <summary>
+        /// Convert from decimal feet to feet and fractional inches
+        /// </summary>
+        public static string FeetToFeetAndFractionalInches(double decimalFeet, int roundDigits = 5, double precision = 1 / 64.0)
+        {
+            double wholeFeet = 0.0;
+            double partialFeet = 0.0;
+
+            if (decimalFeet < 0)
+            {
+                wholeFeet = Math.Ceiling(decimalFeet);
+                if (wholeFeet == 0)
+                    partialFeet = decimalFeet;
+                else
+                    partialFeet = wholeFeet - decimalFeet;
+            }
+            else
+            {
+                wholeFeet = Math.Floor(decimalFeet);
+                partialFeet = decimalFeet - wholeFeet;
+            }
+
+            string fractionalInches = InchesToFractionalInches(Math.Round(partialFeet * 12.0, roundDigits), precision: precision);
+
+            if (fractionalInches == "11 1\"" || fractionalInches == "12\"")
+            {
+                //add a foot to the whole feet
+                wholeFeet += 1.0;
+                fractionalInches = "0\"";
+            }
+            else if (fractionalInches == "-11 1\"" || fractionalInches == "-12\"")
+            {
+                wholeFeet -= 1.0;
+                fractionalInches = "0\"";
+            }
+
+            string feet = string.Empty;
+            if (wholeFeet != 0.0)
+                feet = string.Format("{0}'", wholeFeet);
+
+            if (wholeFeet.ApproximatelyEquals(0.0) && (partialFeet * 12.0).ApproximatelyEquals(0.0))
+                feet = "0'";
+
+            return string.Format("{0} {1}", feet, fractionalInches).Trim();
+        }
+
+        /// <summary>
+        /// Convert from decimal inches to fractional inches
+        /// </summary>
+        public static string InchesToFractionalInches(double decimalInches, int roundDigits = 5, double precision = 1 / 64.0)
+        {
+            decimalInches = RoundToSignificantDigits(decimalInches, roundDigits);
+            string inches = ParseWholeInchesToString(decimalInches);
+            string fraction = ParsePartialInchesToString(decimalInches, precision);
+            string sign = decimalInches < 0 ? "-" : string.Empty;
+
+            if (string.IsNullOrEmpty(inches) && string.IsNullOrEmpty(fraction))
+            {
+                return "0\"";
+            }
+
+            if (string.IsNullOrEmpty(fraction))
+            {
+                return string.Format("{0}{1}\"", sign, inches).Trim();
+            }
+
+            if (string.IsNullOrEmpty(inches))
+            {
+                return string.Format("{0}{1}\"", sign, fraction).Trim();
+            }
+
+            if (fraction == "1")
+            {
+                fraction = string.Empty;
+                inches = (double.Parse(inches) + 1).ToString(CultureInfo.InvariantCulture);
+                return string.Format("{0}{1}\"", sign, inches).Trim();
+            }
+
+            return string.Format("{0}{1} {2}\"", sign, inches, fraction).Trim();
+        }
+
+        private static double RoundToSignificantDigits(double value, int digits)
+        {
+            if (value.ApproximatelyEquals(0))
+            {
+                return 0;
+            }
+
+            double scale = Math.Pow(10, Math.Floor(Math.Log10(Math.Abs(value))) + 1);
+            return scale * Math.Round(value / scale, digits);
+        }
+
+        private static string ParseWholeInchesToString(double value)
+        {
+            double result = value < 0 ?
+                Math.Abs(System.Math.Ceiling(value)) :
+                Math.Abs(System.Math.Floor(value));
+
+            if (result.ApproximatelyEquals(0.0))
+            {
+                return string.Empty;
+            }
+
+            return result.ToString();
+        }
+
+        private static string ParsePartialInchesToString(double value, double precision = 1 / 64.0)
+        {
+            string result = value < 0 ?
+                CreateFraction(Math.Abs(value - Math.Ceiling(value)), precision) :
+                CreateFraction(Math.Abs(value - Math.Floor(value)), precision);
+
+            return result;
+        }
+
+        private static string CreateFraction(double value, double precision)
+        {
+            double numerator = Math.Round(value / precision);
+            double denominator = 1 / precision;
+
+            if (numerator.ApproximatelyEquals(denominator))
+                return "1";
+
+            if (numerator != 0.0)
+            {
+                while (numerator % 2 == 0.0)
+                {
+                    numerator = numerator / 2;
+                    denominator = denominator / 2;
+                }
+
+                return string.Format("{0}/{1}", numerator, denominator);
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Units of length.
         /// </summary>
         public enum LengthUnit
@@ -161,7 +299,7 @@ namespace Elements
 
         /// <summary>
         /// Unit types.
-        /// </summary>        
+        /// </summary>
         public enum UnitType
         {
             /// <summary>

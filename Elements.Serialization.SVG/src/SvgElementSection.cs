@@ -16,84 +16,6 @@ namespace Elements.Serialization.SVG
     /// </summary>
     public class SvgElementSection
     {
-        #region Nested Types
-
-        private class DimensionLine
-        {
-            /// <summary>
-            /// Initializes a new instance of DimensionLine class
-            /// </summary>
-            /// <param name="direction">The direction of the dimension line</param>
-            /// <param name="isNegative">If the dimension line is negative, the text is in the direction of the normal vector.
-            /// Otherwise - text is in the negative direction of the normal vector</param>
-            public DimensionLine(Vector3 direction, bool isNegative)
-            {
-                Direction = direction;
-                IsNegative = isNegative;
-                Normal = direction.Cross(Vector3.ZAxis);
-            }
-
-            public Vector3 Direction { get; }
-            public Vector3 Normal { get; }
-            public bool IsNegative { get; }
-        }
-
-        private class VertexAdapter
-        {
-            public VertexAdapter(Vector3 point, DimensionLine dimensionLine, Vector3 origin, LineAdapter line)
-            {
-                DimensionLine = dimensionLine;
-                Point = point;
-                Line = line;
-                Origin = origin;
-                Projection = GetProjection(0, null);
-            }
-
-            public Vector3 Point { get; }
-            public DimensionLine DimensionLine { get; }
-            public LineAdapter Line { get; }
-            public Vector3 Origin { get; }
-            public Vector3 Projection { get; }
-
-            public Vector3 GetProjection(double offset, Vector3? origin)
-            {
-                var max = origin ?? Origin;
-                var plane = new Plane(max + DimensionLine.Normal * offset, DimensionLine.Normal);
-                return Point.Project(plane);
-            }
-        }
-
-        private class LineAdapter
-        {
-            private Line _line;
-
-            public LineAdapter(Line line, bool isOpening = false)
-            {
-                _line = line;
-                IsOpening = isOpening;
-            }
-
-            public Line GetLine()
-            {
-                return _line;
-            }
-
-            public bool IsOpening { get; set; }
-            public Vector3 Start => _line.Start;
-            public Vector3 End => _line.End;
-            public Vector3 GetDirection()
-            {
-                if (IsOpening)
-                {
-                    return _line.Direction().Negate();
-                }
-
-                return _line.Direction();
-            }
-        }
-
-        #endregion
-
         #region Constants
 
         private const double _offsetToDimensionLabel = 0.3;
@@ -746,23 +668,9 @@ namespace Elements.Serialization.SVG
             }
         }
 
-        private static void Sort(DimensionLine dimensionLines, List<VertexAdapter> points)
+        private static void Sort(DimensionLine dimensionLine, List<VertexAdapter> points)
         {
-            points.Sort((a, b) =>
-            {
-                var dif = (a.Projection - b.Projection).Unitized();
-                if (dif.IsAlmostEqualTo(Vector3.Origin))
-                {
-                    return 0;
-                }
-
-                if (dif.IsAlmostEqualTo(dimensionLines.Direction))
-                {
-                    return 1;
-                }
-
-                return -1;
-            });
+            points.Sort(new VerticesOnVectorComparer(dimensionLine.Direction));
         }
 
         private SvgText CreateText(string text, Vector3 location, double angle)
