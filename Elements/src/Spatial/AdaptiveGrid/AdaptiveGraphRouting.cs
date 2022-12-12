@@ -812,25 +812,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var otherEdge = sharedVertex.GetEdge(thirdVertexId);
             var otherInfo = edgeInfos[otherEdge.Id];
 
-            //Do not modify turn cost if either of edges is not horizontal.
-            //This prevents "free to travel" loops under 2d hint lines.
-            //If either of two edges are affected by 3d hint line - turn cost can be 
-            //discounted but still can't be bigger than TurnCost.
-            if (edgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange) ||
-                otherInfo.HasAnyFlag(EdgeFlags.HasVerticalChange))
-            {
-                var factor = 1d;
-                if (edgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
-                {
-                    factor = Math.Min(edgeInfo.Factor, 1);
-                }
-                else if (otherInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
-                {
-                    factor = Math.Min(otherInfo.Factor, 1);
-                }
-
-                return factor * _configuration.TurnCost;
-            }
+            //TODO: This may lead to almost "free to travel" loops under 2d hint lines,
+            //if vertical edge between elevation is discounted as well.
 
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
