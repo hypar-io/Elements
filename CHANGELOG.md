@@ -15,6 +15,7 @@
 - `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 - `Network.TraverseLeftWithoutLeaves()`
 - `SvgElementSection`
+- `Units.FeetToFeetAndFractionalInches`, `Units.InchesToFractionalInches`
 
 ### Changed
 
