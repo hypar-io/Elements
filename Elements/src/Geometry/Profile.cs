@@ -831,7 +831,7 @@ namespace Elements.Geometry
                 {
                     // leave it alone
                 }
-                foreach (var vertex in profile.Perimeter.Vertices)
+                foreach (var vertex in profile.Perimeter.Vertices.Union(profile.Voids.SelectMany(v => v.Vertices)))
                 {
                     var indexOfFirstPointWithinDistance = points.FindIndex(p => p.DistanceTo(vertex) < tolerance);
                     if (indexOfFirstPointWithinDistance == -1)

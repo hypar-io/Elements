@@ -630,5 +630,17 @@ namespace Elements.Tests
             var uniquePoints = cleaned.SelectMany(c => c.Perimeter.Vertices).Distinct().ToList();
             Assert.True(uniquePoints.Count == 8);
         }
+
+        [Fact]
+        public void CleanProfilesPreservesValidProfiles()
+        {
+            var profiles = new Profile[] {
+                new Profile(new Polygon((20.83686, 24.77025), (-6.27588, 24.77025), (-6.27588, -1.78971), (20.83686, -1.78971)), new List<Polygon> {
+                    new Polygon((2.28049, 6.49027), (2.28049, 16.49027), (12.28049, 16.49027), (12.28049, 6.49027))
+                }),
+            };
+            var cleaned = profiles.Cleaned();
+            Assert.Single(cleaned);
+        }
     }
 }
