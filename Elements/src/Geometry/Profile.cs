@@ -822,9 +822,10 @@ namespace Elements.Geometry
                 // Try removing collinear points
                 try
                 {
-                    // squaring the tolerance seems to work well, but this was
-                    // determined experimentally. we may want to make this value configurable.
-                    profile.Perimeter = profile.Perimeter.CollinearPointsRemoved(tolerance * tolerance);
+                    // Reducing the tolerance this way seems to work well, but
+                    // this was determined experimentally. We may want to make
+                    // this value configurable.
+                    profile.Perimeter = profile.Perimeter.CollinearPointsRemoved(tolerance / 100);
                 }
                 catch
                 {
