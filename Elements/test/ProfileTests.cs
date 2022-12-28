@@ -587,7 +587,7 @@ namespace Elements.Tests
                 new Profile(new Polygon(h,c,d,e)),
                 new Profile(new Polygon(b,f,g,d)) // does not include c
             };
-            var cleaned = profiles.Clean();
+            var cleaned = profiles.Cleaned();
             // the "c" point should be present in all profiles
             Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 4) == 2);
             Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 5) == 1);
@@ -622,7 +622,7 @@ namespace Elements.Tests
                 new Profile(new Polygon(h2,c,d,e)),
                 new Profile(new Polygon(b2,f,g,d2))
             };
-            var cleaned = profiles.Clean();
+            var cleaned = profiles.Cleaned();
             // for the purposes of this test we are doing something "illegal" —
             // using `Distinct` on a set of points. Since for this test we only
             // care about exact equality, not "equality within tolerance," this

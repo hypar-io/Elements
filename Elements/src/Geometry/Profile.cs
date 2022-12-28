@@ -769,7 +769,7 @@ namespace Elements.Geometry
         /// <param name="tolerance">Below this distance, similar points will be
         /// merged.</param>
         /// <returns>A cleaned list of profiles.</returns>        
-        public static List<Profile> Clean(this IEnumerable<Profile> profiles, double tolerance = 0.01)
+        public static List<Profile> Cleaned(this IEnumerable<Profile> profiles, double tolerance = 0.01)
         {
             var cleaned = new List<Profile>();
             var points = new List<Vector3>();
