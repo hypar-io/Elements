@@ -562,5 +562,73 @@ namespace Elements.Tests
             var splitResults = Elements.Geometry.Profile.Split(new[] { new Profile(polygon) }, extendedLines);
             Assert.Equal(9, splitResults.Count);
         }
+
+        [Fact]
+        public void CleanProfilesSplitsAdjacentEdges()
+        {
+            Name = nameof(CleanProfilesSplitsAdjacentEdges);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var c = (10, 5);
+            var d = (10, 10);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h,c,d,e)),
+                new Profile(new Polygon(b,f,g,d)) // does not include c
+            };
+            var cleaned = profiles.Clean();
+            // the "c" point should be present in all profiles
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 4) == 2);
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 5) == 1);
+            Assert.True(cleaned.All(p => p.Perimeter.Vertices.Any((v) => v.DistanceTo(c) < 0.00001)));
+        }
+
+        [Fact]
+        public void CleanProfilesMergesNearbyEdgesAndVertices()
+        {
+            Name = nameof(CleanProfilesMergesNearbyEdgesAndVertices);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var b2 = (10.0001, -0.0001);
+            var c = (10, 5);
+            var d = (10, 10);
+            var d2 = (10.0001, 10.0001);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var h2 = (-0.0001, 5);
+
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h2,c,d,e)),
+                new Profile(new Polygon(b2,f,g,d2))
+            };
+            var cleaned = profiles.Clean();
+            // for the purposes of this test we are doing something "illegal" —
+            // using `Distinct` on a set of points. Since for this test we only
+            // care about exact equality, not "equality within tolerance," this
+            // is OK.
+            var uniquePoints = cleaned.SelectMany(c => c.Perimeter.Vertices).Distinct().ToList();
+            Assert.True(uniquePoints.Count == 8);
+        }
     }
 }

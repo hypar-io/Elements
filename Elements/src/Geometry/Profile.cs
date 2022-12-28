@@ -742,5 +742,125 @@ namespace Elements.Geometry
             return joinedProfiles;
         }
 
+        /// <summary>
+        /// Copy the "additional properties" metadata from one profile to another set of profiles.
+        /// </summary>
+        /// <param name="profiles">The target profiles receiving the new data.</param>
+        /// <param name="source">The source profiles from which the additional properties will be copied.</param>
+        public static void PropagateAdditionalProperties(this IEnumerable<Profile> profiles, Profile source)
+        {
+            foreach (var p in profiles)
+            {
+                p.AdditionalProperties = source.AdditionalProperties;
+            }
+        }
+
+        /// <summary>
+        /// For a given collection of profiles, make sure vertices within
+        /// tolerance of each other are at the same location. This is especially
+        /// useful for profiles that need to be edited in the Hypar interface
+        /// via an override.   
+        /// 
+        /// ⚠️ Note: this is not a highly precise routine, and
+        /// the shapes of the input profiles may be slightly distorted as a
+        /// result. 
+        /// </summary>
+        /// <param name="profiles">The profiles to clean.</param>
+        /// <param name="tolerance">Below this distance, similar points will be
+        /// merged.</param>
+        /// <returns>A cleaned list of profiles.</returns>        
+        public static List<Profile> Clean(this IEnumerable<Profile> profiles, double tolerance = 0.01)
+        {
+            var cleaned = new List<Profile>();
+            var points = new List<Vector3>();
+            Dictionary<Vector3, int> pointIndexMap = new Dictionary<Vector3, int>();
+            var profilesWithBridgesRemoved = new List<Profile>();
+
+            // Take a polygon and return a new polygon from nearby vertices, if found.
+            Polygon cinchPolygonToVertices(Polygon polygon)
+            {
+                var pointIndexList = new List<int>();
+                foreach (var segment in polygon.Segments())
+                {
+                    var pointsAlongSegment = points.Where(p => p.DistanceTo(segment) < tolerance).OrderBy(p => p.Dot(segment.Direction())).ToList();
+                    foreach (var pt in pointsAlongSegment)
+                    {
+                        var index = pointIndexMap[pt];
+                        if (!pointIndexList.Contains(index))
+                        {
+                            pointIndexList.Add(index);
+                        }
+                    }
+                }
+                return new Polygon(pointIndexList.Select(i => points[i]).ToList());
+            }
+
+            foreach (var p in profiles)
+            {
+                try
+                {
+                    // Often offsetting in and back out by the same distance
+                    // removes extraneous vertices and removes "bridge" edges,
+                    // where a profile has edges spanning between its perimeter
+                    // and an interior form (which looks like a void but is
+                    // actually a continuation of the perimeter thanks to the
+                    // "bridge"). 
+                    var offsetsIn = Profile.Offset(new[] { p }, -tolerance);
+                    var offsetsOut = Profile.Offset(offsetsIn, tolerance);
+                    offsetsOut.PropagateAdditionalProperties(p);
+                    profilesWithBridgesRemoved.AddRange(offsetsOut);
+                }
+                catch
+                {
+                    profilesWithBridgesRemoved.Add(p);
+                }
+            }
+            // establish the "point index map" which will map from original
+            // points to unique points 
+            foreach (var profile in profilesWithBridgesRemoved)
+            {
+                // Try removing collinear points
+                try
+                {
+                    // squaring the tolerance seems to work well, but this was
+                    // determined experimentally. we may want to make this value configurable.
+                    profile.Perimeter = profile.Perimeter.CollinearPointsRemoved(tolerance * tolerance);
+                }
+                catch
+                {
+                    // leave it alone
+                }
+                foreach (var vertex in profile.Perimeter.Vertices)
+                {
+                    var indexOfFirstPointWithinDistance = points.FindIndex(p => p.DistanceTo(vertex) < tolerance);
+                    if (indexOfFirstPointWithinDistance == -1)
+                    {
+                        points.Add(vertex);
+                        pointIndexMap[vertex] = points.Count - 1;
+                    }
+                    else
+                    {
+                        pointIndexMap[vertex] = indexOfFirstPointWithinDistance;
+                    }
+                }
+            }
+
+            foreach (var profile in profilesWithBridgesRemoved)
+            {
+                var perimeter = profile.Perimeter;
+                try
+                {
+                    var newPerimeter = cinchPolygonToVertices(profile.Perimeter);
+                    var newVoids = profile.Voids.Select(cinchPolygonToVertices).ToList();
+                    cleaned.Add(new Profile(newPerimeter, newVoids) { AdditionalProperties = profile.AdditionalProperties });
+                }
+                catch
+                {
+                    // swallow bad profiles
+                }
+            }
+
+            return cleaned;
+        }
     }
 }
