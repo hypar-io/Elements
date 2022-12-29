@@ -347,7 +347,9 @@ Triangles:{Triangles.Count}";
         {
             if (_octree == null)
             {
-                _octree = new PointOctree<Vertex>(Math.Max(_bbox.Max.DistanceTo(_bbox.Min), 100), _bbox.PointAt(0.5, 0.5, 0.5), Vector3.EPSILON);
+                // if we've never added any vertices, we may not have a valid bbox, so we have to guess at a default size.
+                var bbox = _bbox.IsValid() ? _bbox : new BBox3((-10, -10, -10), (10, 10, 10));
+                _octree = new PointOctree<Vertex>(Math.Max(bbox.Max.DistanceTo(bbox.Min), 100), bbox.PointAt(0.5, 0.5, 0.5), Vector3.EPSILON);
                 // make sure existing vertices are added to the octree — we're initializing it for the first time
                 foreach (var v in Vertices)
                 {

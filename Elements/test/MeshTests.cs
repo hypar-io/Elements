@@ -101,6 +101,14 @@ namespace Elements.Tests
             Assert.Equal(_rays.Count, pts.Count);
         }
 
+        [Fact]
+        public void MergeOnFirstVertexAdd()
+        {
+            var mesh = new Mesh();
+            mesh.AddVertex(new Vector3(0, 0, 0), merge: true);
+            // no execptions
+        }
+
         public class InputsWithMesh
         {
             [JsonConstructor]
