@@ -457,7 +457,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         foreach (var l in hintLines)
                         {
-                            if (IsAffectedBy(v0.Point, v1.Point, l))
+                            if (l.Affects(v0.Point, v1.Point, _grid.Tolerance))
                             {
                                 //If user defined and default hints are overlapped,
                                 //we want path to be aligned with default hints.
@@ -954,91 +954,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 return new List<Vertex>();
             }
 
-            return _grid.GetVertices().Where(
-                v => !excluded.Any(e => e.Id == v.Id) && IsNearby(v.Point, hints)).ToList();
-        }
-
-        private bool IsNearby(Vector3 v, IEnumerable<RoutingHintLine> hints)
-        {
-            if (hints != null)
-            {
-                foreach(var hint in hints)
-                {
-                    var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
-                    var target = hint.Is2D ? new Vector3(v.X, v.Y) : v;
-                    if (target.DistanceTo(hint.Polyline) <= influenceDistance)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
-        {
-            var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
-            Vector3 vs = hint.Is2D ? new Vector3(start.X, start.Y) : start;
-            Vector3 ve = hint.Is2D ? new Vector3(end.X, end.Y) : end;
-            //Vertical edges are not affected by 2D hint lines
-            if (!hint.Is2D || !vs.IsAlmostEqualTo(ve, _grid.Tolerance) &&
-                Math.Abs(start.Z - end.Z) < _grid.Tolerance)
-            {
-                foreach (var segment in hint.Polyline.Segments())
-                {
-                    double lowClosest = 1;
-                    double hiClosest = 0;
-
-                    var dot = segment.Direction().Dot((ve - vs).Unitized());
-                    if (!Math.Abs(dot).ApproximatelyEquals(1))
-                    {
-                        continue;
-                    }
-
-                    if (vs.DistanceTo(segment) <= influenceDistance)
-                    {
-                        lowClosest = 0;
-                    }
-
-                    if (ve.DistanceTo(segment) <= influenceDistance)
-                    {
-                        hiClosest = 1;
-                    }
-
-                    if (lowClosest < hiClosest)
-                    {
-                        return true;
-                    }
-
-                    var edgeLine = new Line(vs, ve);
-                    Action<Vector3> check = (Vector3 p) =>
-                    {
-                        if (p.DistanceTo(edgeLine, out var closest) <= influenceDistance)
-                        {
-                            var t = (closest - vs).Length() / edgeLine.Length();
-                            if (t < lowClosest)
-                            {
-                                lowClosest = t;
-                            }
-
-                            if (t > hiClosest)
-                            {
-                                hiClosest = t;
-                            }
-                        }
-                    };
-
-                    check(segment.Start);
-                    check(segment.End);
-
-                    if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine.Length() > influenceDistance)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return _grid.GetVertices().Where(v =>
+                !excluded.Any(e => e.Id == v.Id) && 
+                hints.Any(h => h.IsNearby(v.Point, _grid.Tolerance))).ToList();
         }
 
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
