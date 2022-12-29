@@ -400,6 +400,9 @@ namespace Elements.Spatial.AdaptiveGrid
             foreach (var leaf in appliedLeafs.Reverse<ulong>().Skip(1))
             {
                 var leafNode = leafsToTrunkTree[leaf];
+                //If other route goes though this leaf - in case if isolation radius is 0,
+                //do not try to optimize it, since it can lead to the whole subtree.
+                //TODO: make it possible to optimize subtrees and only leaf branches.
                 if(leafNode.Leafs.Any())
                 {
                     continue;
