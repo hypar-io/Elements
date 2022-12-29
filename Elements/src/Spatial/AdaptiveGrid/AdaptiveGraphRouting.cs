@@ -355,6 +355,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 ulong closestTerminal = 0;
                 List<ulong> path = null;
                 double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
+                double bestCostToTrunk = double.PositiveInfinity;
                 foreach (var terminal in validLeafTerminals)
                 {
                     var info = terminalInfo[terminal];
@@ -363,11 +364,23 @@ namespace Elements.Spatial.AdaptiveGrid
                     var costs = info.Costs[localClosest];
                     var localBestCost = branch == BranchSide.Left ? costs.Item1 : costs.Item2;
 
-                    if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
+                    bool sameCost = localBestCost.ApproximatelyEquals(bestCost);
+                    bool betterCost = order == TreeOrder.FurthestToClosest ?
+                        localBestCost > bestCost : localBestCost < bestCost;
+                    if (sameCost || betterCost)
                     {
+                        //If there are several connection points with the same cost - 
+                        //choose one that is closer to the trunk.
+                        var localCostToTrunk = CostToTrunk(leafsToTrunkTree[localClosest], weights);
+                        if (sameCost && localCostToTrunk >= bestCostToTrunk)
+                        {
+                            continue;
+                        }
+
                         path = GetPathTo(info.Connections, localClosest, branch);
                         closestTerminal = terminal;
                         bestCost = localBestCost;
+                        bestCostToTrunk = localCostToTrunk;
                     }
                 }
 
@@ -387,6 +400,14 @@ namespace Elements.Spatial.AdaptiveGrid
             foreach (var leaf in appliedLeafs.Reverse<ulong>().Skip(1))
             {
                 var leafNode = leafsToTrunkTree[leaf];
+                //If other route goes though this leaf - in case if isolation radius is 0,
+                //do not try to optimize it, since it can lead to the whole subtree.
+                //TODO: make it possible to optimize subtrees and only leaf branches.
+                if(leafNode.Leafs.Any())
+                {
+                    continue;
+                }
+
                 var leafPath = PathToFirstBranching(leafNode);
                 var localMagnets = magnetTerminals.Except(leafPath.Select(l => l.Id));
                 var info = terminalInfo[leaf];

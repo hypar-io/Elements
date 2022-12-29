@@ -97,6 +97,7 @@ namespace Elements.Annotations
         /// <param name="name">The name given to the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
         /// <returns></returns>
+        [Obsolete("Use FromCurve instead.")]
         public static Message FromLine(string messageText,
                                        Line line,
                                        MessageSeverity severity = MessageSeverity.Warning,
@@ -129,6 +130,36 @@ namespace Elements.Annotations
                                       toPipeLineTransform.Moved(new Vector3(0, 0, -sideLength / 2)),
                                       MaterialForSeverity(severity),
                                       new Representation(new[] { extrude }),
+                                      id: Guid.NewGuid(),
+                                      name: name ?? DefaultName);
+            return message;
+        }
+
+        /// <summary>
+        /// Create a simple message along a curve.
+        /// </summary>
+        /// <param name="messageText">The message to the user.</param>
+        /// <param name="curve"></param>
+        /// <param name="severity">The severity of the message.</param>
+        /// <param name="sideLength"></param>
+        /// <param name="name">The name given to the message.</param>
+        /// <param name="stackTrace">Any stack trace associated with the message.</param>
+        /// <returns></returns>
+        public static Message FromCurve(string messageText,
+                                           Curve curve,
+                                           MessageSeverity severity = MessageSeverity.Warning,
+                                           double sideLength = DefaultSideLength,
+                                           string name = null,
+                                           string stackTrace = null)
+        {
+            var profile = Polygon.Rectangle(sideLength, sideLength);
+            var sweep = new Sweep(profile, curve, 0, 0, 0, false);
+            var message = new Message(messageText,
+                                      stackTrace,
+                                      severity,
+                                      null,
+                                      MaterialForSeverity(severity),
+                                      new Representation(new[] { sweep }),
                                       id: Guid.NewGuid(),
                                       name: name ?? DefaultName);
             return message;
