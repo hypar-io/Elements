@@ -1286,6 +1286,46 @@ namespace Elements.Tests
             CheckTree(grid, start, tree, expectedPath);
         }
 
+        [Fact]
+        public void AdaptiveGraphRoutingEqualTransitions()
+        {
+            var grid = new AdaptiveGrid();
+            var keyPoints = new[] { 1, 3, 5, 7, 9 }.Select(i => new Vector3(i, i));
+            grid.AddFromPolygon(Polygon.Rectangle((0, 0), (10, 10)), keyPoints);
+
+            Assert.True(grid.TryGetVertexIndex((0, 5), out var end, grid.Tolerance));
+
+            var inputs = new List<Vector3>()
+            {
+                (3, 1), (3, 3), (3, 5), 
+                (5, 1), (5, 3), (5, 5), (5, 7), (5, 9), 
+                (7, 5), (7, 7), (7, 9)
+            };
+
+            var inputVertices = inputs.Select(i =>
+            {
+                Assert.True(grid.TryGetVertexIndex(i, out var id, grid.Tolerance));
+                return new RoutingVertex(id, 0);
+            }).ToList();
+
+            var hints = new List<RoutingHintLine>()
+            {
+                new RoutingHintLine(new Polyline(new Vector3[] { (3, 1), (3, 5) }), 0.5, 0, false, true),
+                new RoutingHintLine(new Polyline(new Vector3[] { (5, 1), (5, 9) }), 0.5, 0, false, true),
+                new RoutingHintLine(new Polyline(new Vector3[] { (7, 5), (7, 9) }), 0.5, 0, false, true)
+            };
+
+            var alg = new AdaptiveGraphRouting(grid, new RoutingConfiguration(turnCost: 1));
+            var tree = alg.BuildSpanningTree(inputVertices, end, hints, TreeOrder.ClosestToFurthest);
+
+            CheckTree(grid, inputVertices[0].Id, tree,
+                      new List<Vector3> { (3, 1), (3, 3), (3, 5), (1, 5), (0, 5) });
+            CheckTree(grid, inputVertices[3].Id, tree,
+                      new List<Vector3> { (5, 1), (5, 3), (5, 5), (3, 5), (1, 5), (0, 5) });
+            CheckTree(grid, inputVertices[10].Id, tree,
+                      new List<Vector3> { (7, 9), (7, 7), (7, 5), (5, 5), (3, 5), (1, 5), (0, 5) });
+        }
+
         private void VisualizeRoutingTree(
             AdaptiveGrid grid,
             IEnumerable<RoutingVertex> routingVertices,
