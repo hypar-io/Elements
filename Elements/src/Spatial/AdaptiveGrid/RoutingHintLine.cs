@@ -87,64 +87,76 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public bool Affects(Vector3 start, Vector3 end, double tolerance = Vector3.EPSILON)
         {
+            //Two points must be different.
+            if (start.IsAlmostEqualTo(end, tolerance))
+            {
+                return false;
+            }
+
             var influenceDistance = Math.Max(InfluenceDistance, tolerance);
+
+            //If hint line is 2D only use XY coordinates of a line.
             Vector3 vs = Is2D ? new Vector3(start.X, start.Y) : start;
             Vector3 ve = Is2D ? new Vector3(end.X, end.Y) : end;
-            //Vertical edges are not affected by 2D hint lines
-            if (!Is2D || !vs.IsAlmostEqualTo(ve, tolerance) && Math.Abs(start.Z - end.Z) < tolerance)
+
+            //Only horizontal edges are affected by 2D hint lines
+            if (Is2D && Math.Abs(start.Z - end.Z) > tolerance)
             {
-                foreach (var segment in Polyline.Segments())
+                return false;
+            }
+
+            foreach (var segment in Polyline.Segments())
+            {
+                double lowClosest = 1;
+                double hiClosest = 0;
+
+                //Line must be parallel to any polyline segment.
+                var dot = segment.Direction().Dot((ve - vs).Unitized());
+                if (!Math.Abs(dot).ApproximatelyEquals(1))
                 {
-                    double lowClosest = 1;
-                    double hiClosest = 0;
+                    continue;
+                }
 
-                    var dot = segment.Direction().Dot((ve - vs).Unitized());
-                    if (!Math.Abs(dot).ApproximatelyEquals(1))
-                    {
-                        continue;
-                    }
+                if (vs.DistanceTo(segment) <= influenceDistance)
+                {
+                    lowClosest = 0;
+                }
 
-                    if (vs.DistanceTo(segment) <= influenceDistance)
-                    {
-                        lowClosest = 0;
-                    }
+                if (ve.DistanceTo(segment) <= influenceDistance)
+                {
+                    hiClosest = 1;
+                }
 
-                    if (ve.DistanceTo(segment) <= influenceDistance)
-                    {
-                        hiClosest = 1;
-                    }
+                if (lowClosest < hiClosest)
+                {
+                    return true;
+                }
 
-                    if (lowClosest < hiClosest)
+                var edgeLine = new Line(vs, ve);
+                Action<Vector3> check = (Vector3 p) =>
+                {
+                    if (p.DistanceTo(edgeLine, out var closest) <= influenceDistance)
                     {
-                        return true;
-                    }
-
-                    var edgeLine = new Line(vs, ve);
-                    Action<Vector3> check = (Vector3 p) =>
-                    {
-                        if (p.DistanceTo(edgeLine, out var closest) <= influenceDistance)
+                        var t = (closest - vs).Length() / edgeLine.Length();
+                        if (t < lowClosest)
                         {
-                            var t = (closest - vs).Length() / edgeLine.Length();
-                            if (t < lowClosest)
-                            {
-                                lowClosest = t;
-                            }
-
-                            if (t > hiClosest)
-                            {
-                                hiClosest = t;
-                            }
+                            lowClosest = t;
                         }
-                    };
 
-                    check(segment.Start);
-                    check(segment.End);
-
-                    if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine.Length() > influenceDistance)
-                    {
-                        return true;
+                        if (t > hiClosest)
+                        {
+                            hiClosest = t;
+                        }
                     }
+                };
+
+                check(segment.Start);
+                check(segment.End);
+
+                if (hiClosest > lowClosest &&
+                    (hiClosest - lowClosest) * edgeLine.Length() > influenceDistance)
+                {
+                    return true;
                 }
             }
             return false;
