@@ -16,6 +16,8 @@
 - `Network.TraverseLeftWithoutLeaves()`
 - `Profile.Cleaned()`
 - `Message.FromCurve`
+- `RoutingHintLine.IsNearby`
+- `RoutingHintLine.Affects`
 
 ### Changed
 
