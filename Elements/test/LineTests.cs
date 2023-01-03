@@ -945,7 +945,6 @@ namespace Elements.Geometry.Tests
             Vector3 v1 = new Vector3(-1.2081608688024432, -0.7895298630691459, -1.8380319057295544);
             Vector3 v2 = new Vector3(1.561390631684935, -1.268325457190592, -0.48150972505691025);
             Vector3 v3 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
-            double tmp1 = v1.Dot(v2), tmp2 = v1.Dot(v3);
             double q1 = 0.31932651341597884, q2 = -0.8705916819804074, q3 = 2.7483887105972915, q4 = -2.4522354067395895;
             Line line1 = new Line(pt + q1 * v2, pt + q2 * v2);
             Line line2 = new Line(pt + q3 * v3 + v1, pt + q4 * v3 + v1);
