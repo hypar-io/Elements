@@ -902,5 +902,54 @@ namespace Elements.Geometry.Tests
 
             Assert.Equal(3, offset.Count());
         }
+
+        [Fact]
+        public void LineDistanceSame()
+        {
+            Vector3 pt = new Vector3(-2.685818406894334, -2.476879934864206, -0.5565494179776103);
+            Vector3 v = new Vector3(-2.3537985903693657, 2.407193267710168, -2.771078003386066);
+            double q1 = 0.21721224020356145, q2 = -1.006813808941921, q3 = 2.112519713576212;
+            Line line1 = new Line(pt, pt + q1 * v);
+            Line line2 = new Line(pt + q2 * v, pt + q3 * v);
+            Assert.Equal(0, line1.DistanceTo(line2), 12);
+        }
+
+        [Fact]
+        public void LineDistanceIntersect()
+        {
+            Vector3 pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
+            Vector3 v1 = new Vector3(2.465855774694745, 2.6356139841825836, 0.4933654383536945);
+            Vector3 v2 = new Vector3(1.0293808889279106, -2.4963706389774964, 1.5988855967507778);
+            double q1 = -1.5791413478212935, q2 = -2.81511586964034, q3 = 1.732636303417701, q4 = -0.9234662064172614;
+            Line line1 = new Line(pt + q1 * v1, pt + q2 * v1);
+            Line line2 = new Line(pt + q3 * v2, pt + q4 * v2);
+            Assert.Equal(0, line1.DistanceTo(line2), 12);
+        }
+
+        [Fact]
+        public void LineDistanceParallel()
+        {
+            Vector3 pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
+            Vector3 v1 = new Vector3(2.465855774694745, 2.6356139841825836, 0.4933654383536945);
+            Vector3 v2 = new Vector3(1.633720404719513, -1.8504262591965435, 1.7198011154858075);
+            double q1 = -1.5791413478212935, q2 = -2.81511586964034, q3 = 1.732636303417701, q4 = -0.9234662064172614;
+            Line line1 = new Line(pt + q1 * v1, pt + q2 * v1);
+            Line line2 = new Line(pt + q3 * v1 + v2, pt + q4 * v1 + v2);
+            Assert.Equal(v2.Length(), line1.DistanceTo(line2), 12);
+        }
+
+        [Fact]
+        public void LineDistanceGeneral()
+        {
+            Vector3 pt = new Vector3(-0.500280764727953, -2.9389849832575896, 1.9512390555224588);
+            Vector3 v1 = new Vector3(-1.2081608688024432, -0.7895298630691459, -1.8380319057295544);
+            Vector3 v2 = new Vector3(1.561390631684935, -1.268325457190592, -0.48150972505691025);
+            Vector3 v3 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
+            double tmp1 = v1.Dot(v2), tmp2 = v1.Dot(v3);
+            double q1 = 0.31932651341597884, q2 = -0.8705916819804074, q3 = 2.7483887105972915, q4 = -2.4522354067395895;
+            Line line1 = new Line(pt + q1 * v2, pt + q2 * v2);
+            Line line2 = new Line(pt + q3 * v3 + v1, pt + q4 * v3 + v1);
+            Assert.Equal(v1.Length(), line1.DistanceTo(line2), 12);
+        }
     }
 }
