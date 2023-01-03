@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using SkiaSharp;
 using Svg;
 using Svg.Skia;
@@ -14,7 +15,7 @@ namespace Elements.Serialization.SVG
     /// <summary>
     /// A section of an element serialized to SVG.
     /// </summary>
-    public class SvgElementSection
+    public class SvgFaceElevation
     {
         #region Constants
 
@@ -27,8 +28,8 @@ namespace Elements.Serialization.SVG
 
         #region Private fields
 
-        private readonly GeometricElement _element;
-        private readonly Vector3 _planNormal;
+        private readonly Face _face;
+        private readonly Vector3 _up;
 
         private readonly List<DimensionLine> supportedDimensionLines = new List<DimensionLine>()
         {
@@ -48,14 +49,14 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// Initializes a new instance of SvgElementSection class.
         /// </summary>
-        /// <param name="element">The element to include to the drawing.</param>
-        /// <param name="planNormal">The normal to the plane on which the element will be projected.
+        /// <param name="face">The element to include to the drawing.</param>
+        /// <param name="up">The normal to the face.
         /// NOTE: this class is tested and works well in cases when normal is orthogonal to the element face (i.e. normal to Drywall profile, normal to Wall profile).
         /// You can get unexpected results if your element is floor and normal is a vector at 45 degrees to the Z axis.</param>
-        public SvgElementSection(GeometricElement element, Vector3 planNormal)
+        public SvgFaceElevation(Face face, Vector3 up)
         {
-            _element = element;
-            _planNormal = planNormal;
+            _face = face;
+            _up = up;
             _transform = new Transform();
         }
 
@@ -105,8 +106,8 @@ namespace Elements.Serialization.SVG
 
             _sceneBounds = new BBox3(Vector3.Max, Vector3.Min);
             // collect element edges
-            var lines = GetLines(_element, out var innerLines);
-            _transform = new Transform(Vector3.Origin, _planNormal);
+            var lines = GetLines(out var innerLines);
+            _transform = new Transform(Vector3.Origin, _up);
             var invertedTransform = _transform.Inverted();
             var transformedLines = lines.Select(l => (Line)l.Transformed(invertedTransform)).ToList();
             transformedLines.ForEach(l => _sceneBounds.Extend(l.Start, l.End));
@@ -210,61 +211,43 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// Gets element edges
         /// </summary>
-        /// <param name="geometricElement"></param>
         /// <param name="innerLines">The set of inner edges (opening lines)</param>
         /// <returns>The set of outer edges</returns>
-        private List<Line> GetLines(GeometricElement geometricElement, out List<List<Line>> innerLines)
+        private List<Line> GetLines(out List<List<Line>> innerLines)
         {
             var lines = new List<Line>();
             var innerEdges = new List<List<Line>>();
-            geometricElement.Representation.SolidOperations.ToList().ForEach(s =>
+
+            var faceNormal = _face.Outer.ToPolygon().Normal();
+
+            var angle = faceNormal.AngleTo(_up);
+
+            foreach (var edge in _face.Outer.Edges)
             {
-                foreach (var face in s.Solid.Faces)
+                var a = edge.Edge.Left.Vertex.Point;
+                var b = edge.Edge.Right.Vertex.Point;
+                lines.Add(new Line(a, b));
+            }
+
+            if (_face.Inner != null)
+            {
+
+                foreach (var loop in _face.Inner)
                 {
-                    var faceNormal = face.Value.Outer.ToPolygon().Normal();
-
-                    // skip invisible faces
-                    if (faceNormal.Negate().IsAlmostEqualTo(_planNormal))
+                    if (!loop.Edges.Any())
                     {
                         continue;
                     }
-
-                    var angle = faceNormal.AngleTo(_planNormal);
-                    // skip orthogonal faces
-                    if (Math.Abs(angle).ApproximatelyEquals(90) || Math.Abs(angle).ApproximatelyEquals(270))
-                    {
-                        continue;
-                    }
-
-                    foreach (var edge in face.Value.Outer.Edges)
+                    var loopLines = new List<Line>();
+                    innerEdges.Add(loopLines);
+                    foreach (var edge in loop.Edges)
                     {
                         var a = edge.Edge.Left.Vertex.Point;
                         var b = edge.Edge.Right.Vertex.Point;
-                        lines.Add(new Line(a, b));
-                    }
-
-                    if (face.Value.Inner == null)
-                    {
-                        continue;
-                    }
-
-                    foreach (var loop in face.Value.Inner)
-                    {
-                        if (!loop.Edges.Any())
-                        {
-                            continue;
-                        }
-                        var loopLines = new List<Line>();
-                        innerEdges.Add(loopLines);
-                        foreach (var edge in loop.Edges)
-                        {
-                            var a = edge.Edge.Left.Vertex.Point;
-                            var b = edge.Edge.Right.Vertex.Point;
-                            loopLines.Add(new Line(a, b));
-                        }
+                        loopLines.Add(new Line(a, b));
                     }
                 }
-            });
+            }
 
             innerLines = new List<List<Line>>(innerEdges);
             return lines;
