@@ -851,6 +851,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Measures the distance between two lines
+        /// </summary>
+        /// <param name="other">The line to measure the distance to</param>
+        /// <returns></returns>
+        public double DistanceTo(Line other)
+        {
+            Vector3 dist = this.Start - other.Start;
+            dist -= dist.ProjectOnto(this.End - this.Start);
+            dist -= dist.ProjectOnto(other.End - other.Start);
+            return dist.Length();
+        }
+
+        /// <summary>
         /// Trim a line with a polygon.
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>
