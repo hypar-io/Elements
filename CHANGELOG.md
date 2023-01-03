@@ -14,6 +14,10 @@
 - `AdaptiveGraphRouting.AddPlaneModifier(string name, Plane plane, double factor)`
 - `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
 - `Network.TraverseLeftWithoutLeaves()`
+- `Profile.Cleaned()`
+- `Message.FromCurve`
+- `RoutingHintLine.IsNearby`
+- `RoutingHintLine.Affects`
 - `SvgElementSection`
 - `Units.FeetToFeetAndFractionalInches`, `Units.InchesToFractionalInches`
 
@@ -23,7 +27,9 @@
 - `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
 - `EdgeInfo.HasVerticalChange` is set obsolete.
 - `AdaptiveGraphRouting.RenderElements` is no longer paint hint lines in two different colors. Instead regular edges are paint into three groups. Weights are included to additional properties of produced elements.
-
+- Removed rule exception from `AdaptiveGraphRouting` that prevented vertical edges turn cost being discounter.
+- `Message.FromLine` is set obsolete.
+- In `AdaptiveGridRouting`, if there are several connection points with the same cost - choose one that is closer to the trunk.
 
 ### Fixed
 
@@ -32,6 +38,8 @@
 - Materials exported to glTF no longer use the `KHR_materials_pbrSpecularGlossiness` extension, as this extension is being sunset in favor of `KHR_materials_specular` and `KHR_materials_ior`.
 - Gltfs that are merged that require additional extensions will also merge their extensions.
 - Don't try to save test models that have no name, they can interfere with each other because they want to save to the same file.
+- Fixed an issue where `Grid2d.GetCells()` multiple times could fail to return the correct results on subsequent calls, because changes to the axis grids were not invalidating the grid's computed cells.
+- Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
 
 ## 1.3.0
 

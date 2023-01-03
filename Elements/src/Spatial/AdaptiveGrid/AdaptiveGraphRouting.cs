@@ -355,6 +355,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 ulong closestTerminal = 0;
                 List<ulong> path = null;
                 double bestCost = order == TreeOrder.FurthestToClosest ? double.NegativeInfinity : double.PositiveInfinity;
+                double bestCostToTrunk = double.PositiveInfinity;
                 foreach (var terminal in validLeafTerminals)
                 {
                     var info = terminalInfo[terminal];
@@ -363,11 +364,23 @@ namespace Elements.Spatial.AdaptiveGrid
                     var costs = info.Costs[localClosest];
                     var localBestCost = branch == BranchSide.Left ? costs.Item1 : costs.Item2;
 
-                    if (order == TreeOrder.FurthestToClosest ? localBestCost > bestCost : localBestCost < bestCost)
+                    bool sameCost = localBestCost.ApproximatelyEquals(bestCost);
+                    bool betterCost = order == TreeOrder.FurthestToClosest ?
+                        localBestCost > bestCost : localBestCost < bestCost;
+                    if (sameCost || betterCost)
                     {
+                        //If there are several connection points with the same cost - 
+                        //choose one that is closer to the trunk.
+                        var localCostToTrunk = CostToTrunk(leafsToTrunkTree[localClosest], weights);
+                        if (sameCost && localCostToTrunk >= bestCostToTrunk)
+                        {
+                            continue;
+                        }
+
                         path = GetPathTo(info.Connections, localClosest, branch);
                         closestTerminal = terminal;
                         bestCost = localBestCost;
+                        bestCostToTrunk = localCostToTrunk;
                     }
                 }
 
@@ -387,6 +400,14 @@ namespace Elements.Spatial.AdaptiveGrid
             foreach (var leaf in appliedLeafs.Reverse<ulong>().Skip(1))
             {
                 var leafNode = leafsToTrunkTree[leaf];
+                //If other route goes though this leaf - in case if isolation radius is 0,
+                //do not try to optimize it, since it can lead to the whole subtree.
+                //TODO: make it possible to optimize subtrees and only leaf branches.
+                if(leafNode.Leafs.Any())
+                {
+                    continue;
+                }
+
                 var leafPath = PathToFirstBranching(leafNode);
                 var localMagnets = magnetTerminals.Except(leafPath.Select(l => l.Id));
                 var info = terminalInfo[leaf];
@@ -457,7 +478,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     {
                         foreach (var l in hintLines)
                         {
-                            if (IsAffectedBy(v0.Point, v1.Point, l))
+                            if (l.Affects(v0.Point, v1.Point, _grid.Tolerance))
                             {
                                 //If user defined and default hints are overlapped,
                                 //we want path to be aligned with default hints.
@@ -812,25 +833,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var otherEdge = sharedVertex.GetEdge(thirdVertexId);
             var otherInfo = edgeInfos[otherEdge.Id];
 
-            //Do not modify turn cost if either of edges is not horizontal.
-            //This prevents "free to travel" loops under 2d hint lines.
-            //If either of two edges are affected by 3d hint line - turn cost can be 
-            //discounted but still can't be bigger than TurnCost.
-            if (edgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange) ||
-                otherInfo.HasAnyFlag(EdgeFlags.HasVerticalChange))
-            {
-                var factor = 1d;
-                if (edgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
-                {
-                    factor = Math.Min(edgeInfo.Factor, 1);
-                }
-                else if (otherInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D))
-                {
-                    factor = Math.Min(otherInfo.Factor, 1);
-                }
-
-                return factor * _configuration.TurnCost;
-            }
+            //TODO: This may lead to almost "free to travel" loops under 2d hint lines,
+            //if vertical edge between elevation is discounted as well.
 
             //Minimum factor makes algorithm prefer edges inside of hint lines even if they
             //have several turns but don't give advantage for the tiny edges that are
@@ -971,91 +975,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 return new List<Vertex>();
             }
 
-            return _grid.GetVertices().Where(
-                v => !excluded.Any(e => e.Id == v.Id) && IsNearby(v.Point, hints)).ToList();
-        }
-
-        private bool IsNearby(Vector3 v, IEnumerable<RoutingHintLine> hints)
-        {
-            if (hints != null)
-            {
-                foreach(var hint in hints)
-                {
-                    var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
-                    var target = hint.Is2D ? new Vector3(v.X, v.Y) : v;
-                    if (target.DistanceTo(hint.Polyline) <= influenceDistance)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool IsAffectedBy(Vector3 start, Vector3 end, RoutingHintLine hint)
-        {
-            var influenceDistance = Math.Max(hint.InfluenceDistance, _grid.Tolerance);
-            Vector3 vs = hint.Is2D ? new Vector3(start.X, start.Y) : start;
-            Vector3 ve = hint.Is2D ? new Vector3(end.X, end.Y) : end;
-            //Vertical edges are not affected by 2D hint lines
-            if (!hint.Is2D || !vs.IsAlmostEqualTo(ve, _grid.Tolerance) &&
-                Math.Abs(start.Z - end.Z) < _grid.Tolerance)
-            {
-                foreach (var segment in hint.Polyline.Segments())
-                {
-                    double lowClosest = 1;
-                    double hiClosest = 0;
-
-                    var dot = segment.Direction().Dot((ve - vs).Unitized());
-                    if (!Math.Abs(dot).ApproximatelyEquals(1))
-                    {
-                        continue;
-                    }
-
-                    if (vs.DistanceTo(segment) <= influenceDistance)
-                    {
-                        lowClosest = 0;
-                    }
-
-                    if (ve.DistanceTo(segment) <= influenceDistance)
-                    {
-                        hiClosest = 1;
-                    }
-
-                    if (lowClosest < hiClosest)
-                    {
-                        return true;
-                    }
-
-                    var edgeLine = new Line(vs, ve);
-                    Action<Vector3> check = (Vector3 p) =>
-                    {
-                        if (p.DistanceTo(edgeLine, out var closest) <= influenceDistance)
-                        {
-                            var t = (closest - vs).Length() / edgeLine.Length();
-                            if (t < lowClosest)
-                            {
-                                lowClosest = t;
-                            }
-
-                            if (t > hiClosest)
-                            {
-                                hiClosest = t;
-                            }
-                        }
-                    };
-
-                    check(segment.Start);
-                    check(segment.End);
-
-                    if (hiClosest > lowClosest &&
-                        (hiClosest - lowClosest) * edgeLine.Length() > influenceDistance)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return _grid.GetVertices().Where(v =>
+                !excluded.Any(e => e.Id == v.Id) && 
+                hints.Any(h => h.IsNearby(v.Point, _grid.Tolerance))).ToList();
         }
 
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
