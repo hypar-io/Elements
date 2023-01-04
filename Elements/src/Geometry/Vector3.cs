@@ -540,8 +540,6 @@ namespace Elements.Geometry
         /// <returns>A new vector which is the projection of a onto this vector.</returns>
         public Vector3 ProjectOnto(Vector3 a)
         {
-            if (a.IsZero())
-                return new Vector3(0, 0, 0);
             var b = this;
             return (a.Dot(b) / a.LengthSquared()) * a;
         }
