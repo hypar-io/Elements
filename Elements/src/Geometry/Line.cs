@@ -859,10 +859,11 @@ namespace Elements.Geometry
         {
             Vector3 dist = this.Start - other.Start;
             Vector3 v1 = this.End - this.Start;
-            Vector3 v2 = other.End - other.Start;
-            v2 -= v2.ProjectOnto(v1);
-            dist -= dist.ProjectOnto(v1);
-            dist -= dist.ProjectOnto(v2);
+            Vector3 v2 = v1.Cross(other.End - other.Start);
+            if (v2.IsZero())
+                dist -= dist.ProjectOnto(v1);
+            else
+                dist = dist.ProjectOnto(v2);
             return dist.Length();
         }
 
