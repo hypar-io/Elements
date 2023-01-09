@@ -140,10 +140,35 @@ namespace Elements.Tests
                 IsElementDefinition = true
             };
             var instance = baseDef.CreateInstance(new Transform(0, 0, 10), null);
+            var contentElement = new ContentElement("https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/a1cf1df6-0762-45e7-942b-7ba17d813ff4/HermanMiller_Collection_Eames_MoldedPlywood_DiningChair_MtlBase+-+Upholstered.glb",
+                                                              new BBox3((0, 0, 0), (1, 1, 1)),
+                                                              1,
+                                                              Vector3.XAxis,
+                                                              new Transform(),
+                                                              null,
+                                                              null,
+                                                              false,
+                                                              Guid.NewGuid(),
+                                                              "",
+                                                              "");
+            var singleElementBaseDef = new ContentElement("https://hypar-content-catalogs.s3-us-west-2.amazonaws.com/a1cf1df6-0762-45e7-942b-7ba17d813ff4/HermanMiller_Collection_Eames_MoldedPlywood_DiningChair_MtlBase+-+Upholstered.glb",
+                                                   new BBox3((0, 0, 0), (1, 1, 1)),
+                                                   1,
+                                                   Vector3.XAxis,
+                                                   new Transform(),
+                                                   null,
+                                                   null,
+                                                   true,
+                                                   Guid.NewGuid(),
+                                                   "",
+                                                   "");
+            var contentInstance = singleElementBaseDef.CreateInstance(new Transform(0, 0, 20), null);
             var model = new Model();
             model.AddElement(modelCurve);
             model.AddElement(mass);
             model.AddElement(instance);
+            model.AddElement(contentElement);
+            model.AddElement(contentInstance);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
             var gltfPath = Path.Combine(modelsDir, "Embedded-Ids.glb");
 
@@ -171,6 +196,20 @@ namespace Elements.Tests
                     n.Extensions.TryGetValue("HYPAR_info", out var info) &&
                     info is JObject j &&
                     j["id"].Value<string>() == instance.Id.ToString();
+            });
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                return n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
+                    info is JObject j &&
+                    j["id"].Value<string>() == contentElement.Id.ToString();
+            });
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                return n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
+                    info is JObject j &&
+                    j["id"].Value<string>() == contentInstance.Id.ToString();
             });
         }
     }

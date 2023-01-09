@@ -44,7 +44,7 @@ namespace Elements.Serialization.glTF
             return NodeUtilities.AddNodes(nodes, new[] { newNode }, parentId).First();
         }
 
-        internal static int CreateAndAddTransformNode(List<Node> nodes, Transform transform, int parentId)
+        internal static int CreateAndAddTransformNode(List<Node> nodes, Transform transform, int parentId, Guid? elementId = null)
         {
             if (transform != null)
             {
@@ -53,6 +53,10 @@ namespace Elements.Serialization.glTF
                 var c = transform.ZAxis;
 
                 var transNode = new Node();
+                if (elementId.HasValue)
+                {
+                    transNode.SetElementInfo(elementId.Value);
+                }
 
                 transNode.Matrix = new[]{
                     (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
@@ -83,9 +87,12 @@ namespace Elements.Serialization.glTF
             // transform, so that the transform can be modified in explore at
             // runtime (e.g. by a transform override) and have the expected effect.
             float[] elementTransform = TransformToMatrix(transform);
-            var newNode = new glTFLoader.Schema.Node();
-            newNode.Name = $"{instanceElementId}";
-            newNode.Matrix = elementTransform;
+            var newNode = new glTFLoader.Schema.Node
+            {
+                Name = $"{instanceElementId}",
+                Matrix = elementTransform
+            };
+            newNode.SetElementInfo(instanceElementId);
             nodes.Add(newNode);
             newNode.Children = new[] { nodes.Count };
 
@@ -165,15 +172,13 @@ namespace Elements.Serialization.glTF
         {
             var parentId = 0;
 
-            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
+            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId, elementId);
 
             // Add mesh node to gltf nodes
             var node = new Node
             {
                 Mesh = meshId
             };
-
-            node.SetElementInfo(elementId);
 
             var nodeId = AddNode(nodes, node, parentId);
             return nodeId;
