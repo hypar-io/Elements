@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json.Linq;
 
 namespace Elements.Tests
 {
@@ -126,6 +127,51 @@ namespace Elements.Tests
             var gltfPath = Path.Combine(modelsDir, "Beam-with-error.gltf");
             model.ToGlTF(gltfPath, out var errors);
             Assert.True(errors.Count == 1);
+        }
+
+        [Fact]
+        public void IdAndSelectabilityIsStoredInGLTF()
+        {
+            var modelCurve = new ModelCurve(new Circle((0, 0, 0), 10));
+            modelCurve.SetSelectable(false);
+            var mass = new Mass(Polygon.Rectangle(10, 10), 1);
+            var baseDef = new Mass(Polygon.Star(5, 2, 5), 1, BuiltInMaterials.XAxis)
+            {
+                IsElementDefinition = true
+            };
+            var instance = baseDef.CreateInstance(new Transform(0, 0, 10), null);
+            var model = new Model();
+            model.AddElement(modelCurve);
+            model.AddElement(mass);
+            model.AddElement(instance);
+            var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
+            var gltfPath = Path.Combine(modelsDir, "Embedded-Ids.glb");
+
+            model.ToGlTF(gltfPath, true);
+            var gltf = Interface.LoadModel(gltfPath);
+            Assert.Contains(gltf.ExtensionsUsed, (s) => "HYPAR_info" == s);
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                return n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
+                    info is JObject j &&
+                    j["id"].Value<string>() == modelCurve.Id.ToString() &&
+                    j["selectable"].Value<bool>() == false;
+            });
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                return n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
+                    info is JObject j &&
+                    j["id"].Value<string>() == mass.Id.ToString();
+            });
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                return n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
+                    info is JObject j &&
+                    j["id"].Value<string>() == instance.Id.ToString();
+            });
         }
     }
 }

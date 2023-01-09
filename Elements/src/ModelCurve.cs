@@ -18,8 +18,6 @@ namespace Elements
         /// </summary>
         public Curve Curve { get; set; }
 
-        private bool _isSelectable = true;
-
         /// <summary>
         /// Create a model curve.
         /// </summary>

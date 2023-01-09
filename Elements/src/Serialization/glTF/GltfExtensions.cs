@@ -482,7 +482,7 @@ namespace Elements.Serialization.glTF
                     }}
                 }
                 };
-
+                lightNode.SetElementInfo(light.Id);
                 var ml = light.Transform.Matrix;
                 lightNode.Matrix = new float[]{
                 (float)ml.m11, (float)ml.m12, (float)ml.m13, 0f,
@@ -649,7 +649,9 @@ namespace Elements.Serialization.glTF
                                         MeshPrimitive.ModeEnum mode,
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<Node> nodes,
-                                        Transform transform = null)
+                                        Guid? elementId = null,
+                                        Transform transform = null,
+                                        bool? selectable = null)
         {
             var m = new glTFLoader.Schema.Mesh
             {
@@ -730,6 +732,10 @@ namespace Elements.Serialization.glTF
             {
                 Mesh = meshes.Count - 1
             };
+            if (elementId.HasValue)
+            {
+                node.SetElementInfo(elementId.Value, selectable);
+            }
             NodeUtilities.AddNode(nodes, node, parentId);
 
             return meshes.Count - 1;
@@ -791,7 +797,7 @@ namespace Elements.Serialization.glTF
                                          gbuffers,
                                          meshes);
 
-            NodeUtilities.CreateNodeForMesh(meshId, nodes, null);
+            NodeUtilities.CreateNodeForMesh(meshId, nodes, Guid.Empty, null);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();
@@ -823,8 +829,7 @@ namespace Elements.Serialization.glTF
                                  new List<GraphicsBuffers>() { gb },
                                  MeshPrimitive.ModeEnum.LINES,
                                  meshes,
-                                 nodes,
-                                 null);
+                                 nodes);
             }
 
             if (verticesHighlighted.Count > 0)
@@ -840,8 +845,7 @@ namespace Elements.Serialization.glTF
                                  new List<GraphicsBuffers>() { gb },
                                  MeshPrimitive.ModeEnum.LINES,
                                  meshes,
-                                 nodes,
-                                 null);
+                                 nodes);
             }
 
             var buff = new glTFLoader.Schema.Buffer
@@ -949,7 +953,8 @@ namespace Elements.Serialization.glTF
             var extensionsUsed = new HashSet<string> {
                 "KHR_materials_specular",
                 "KHR_materials_ior",
-                "KHR_materials_unlit"
+                "KHR_materials_unlit",
+                "HYPAR_info"
             };
 
             var lights = model.AllElementsOfType<Light>().ToList();
@@ -1066,8 +1071,7 @@ namespace Elements.Serialization.glTF
                                      new List<GraphicsBuffers>() { gb },
                                      MeshPrimitive.ModeEnum.LINES,
                                      meshes,
-                                     nodes,
-                                     null);
+                                     nodes);
                 }
             }
 
@@ -1180,7 +1184,7 @@ namespace Elements.Serialization.glTF
                             // This element is not used for instancing.
                             // apply scale transform here to bring the content glb into meters
                             var transform = content.Transform.Scaled(content.GltfScaleToMeters);
-                            NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
+                            NodeUtilities.CreateNodeForMesh(meshId, nodes, content.Id, transform);
                         }
                         else
                         {
@@ -1254,14 +1258,14 @@ namespace Elements.Serialization.glTF
                             transform.Concatenate(baseTransform);
                         }
                         transform.Concatenate(i.Transform);
-                        NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                        NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform, i.Id);
                     }
                 }
                 else
                 {
                     transform.Concatenate(i.Transform);
                     // Lookup the corresponding mesh in the map.
-                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform, i.Id);
                 }
 
                 if (drawEdges)
@@ -1297,7 +1301,9 @@ namespace Elements.Serialization.glTF
                                      (MeshPrimitive.ModeEnum)mode,
                                      meshes,
                                      nodes,
-                                     ge.Transform);
+                                     ge.Id,
+                                     ge.Transform,
+                                     ge._isSelectable);
                 }
             }
 
@@ -1331,7 +1337,7 @@ namespace Elements.Serialization.glTF
                 var geom = (GeometricElement)e;
                 if (!geom.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Id, geom.Transform);
                 }
             }
         }
@@ -1477,7 +1483,7 @@ namespace Elements.Serialization.glTF
 
                 if (!geometricElement.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Id, geometricElement.Transform);
                 }
                 return meshId;
             }

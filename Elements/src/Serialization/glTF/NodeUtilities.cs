@@ -7,7 +7,7 @@ using glTFLoader.Schema;
 
 namespace Elements.Serialization.glTF
 {
-    internal class NodeUtilities
+    internal static class NodeUtilities
     {
         internal static int[] AddNodes(List<Node> nodes, IEnumerable<Node> newNodes, int? parent)
         {
@@ -133,10 +133,16 @@ namespace Elements.Serialization.glTF
         internal static int[] AddInstanceNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
-                                            Transform transform)
+                                            Transform transform,
+                                            Guid elementId)
         {
             float[] matrix = TransformToMatrix(transform);
-            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
+            var newNodes = meshIds.Select(meshId =>
+            {
+                var node = new Node() { Matrix = matrix, Mesh = meshId };
+                node.SetElementInfo(elementId);
+                return node;
+            });
             return AddNodes(nodes, newNodes, 0);
         }
 
@@ -155,22 +161,45 @@ namespace Elements.Serialization.glTF
             return matrix;
         }
 
-        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Guid elementId, Transform transform = null)
         {
             var parentId = 0;
 
             parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
 
             // Add mesh node to gltf nodes
-            var node = new Node();
-            node.Mesh = meshId;
+            var node = new Node
+            {
+                Mesh = meshId
+            };
+
+            node.SetElementInfo(elementId);
+
             var nodeId = AddNode(nodes, node, parentId);
             return nodeId;
         }
 
-        internal static void CreateNodeFromNode(List<glTFLoader.Schema.Node> nodes, Node parentNode, Transform transform)
+        public static void SetElementInfo(this Node node, Guid elementId, bool? selectable = null)
         {
-            var parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, 0);
+            if (node.Extensions == null)
+            {
+                node.Extensions = new Dictionary<string, object>();
+            }
+            if (selectable.HasValue)
+            {
+                node.Extensions["HYPAR_info"] = new Dictionary<string, object>
+                {
+                    {"id", elementId},
+                    {"selectable", selectable.Value}
+                };
+            }
+            else
+            {
+                node.Extensions["HYPAR_info"] = new Dictionary<string, object>
+            {
+                {"id", elementId}
+            };
+            }
         }
     }
 }
