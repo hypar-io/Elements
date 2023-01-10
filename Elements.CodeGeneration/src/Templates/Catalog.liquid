@@ -14,7 +14,7 @@ public static class {{ catalog.name | safeidentifierupper }} {
     public static List<ElementInstance> Reference = new List<ElementInstance> { {% for inst in catalog.reference_configuration %}
                                                             {{catalog.name | safeidentifierupper}}.{{inst.baseName | safeidentifierupper}}.CreateInstance(
                                                                                   {{inst.transform}},
-                                                                                  "{{inst.name}}"),
+                                                                                  @"{{inst.name | literalquotes}}"),
                                                         {%endfor%}
 
     };
