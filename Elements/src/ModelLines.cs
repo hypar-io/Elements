@@ -19,8 +19,6 @@ namespace Elements
         /// </summary>
         public IList<Line> Lines { get; set; }
 
-        private bool _isSelectable = false;
-
         /// <summary>
         /// Create a collection of lines. They share Material, Transformation and other parameters.
         /// </summary>

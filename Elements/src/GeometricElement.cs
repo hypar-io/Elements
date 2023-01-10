@@ -25,6 +25,11 @@ namespace Elements
         internal BBox3 _bounds;
         internal Csg.Solid _csg;
 
+        // Used to attach a "selectable: false" flag to the element in the
+        // generated GLB. NOTE: currently only considered in the "ModelLines /
+        // ModelPoints" pathways — this is not yet supported for mesh elements.
+        internal bool _isSelectable = true;
+
         /// <summary>
         /// The element's bounds.
         /// The bounds are only available when the geometry has been
