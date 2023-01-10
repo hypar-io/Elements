@@ -38,6 +38,7 @@
 - Don't try to save test models that have no name, they can interfere with each other because they want to save to the same file.
 - Fixed an issue where `Grid2d.GetCells()` multiple times could fail to return the correct results on subsequent calls, because changes to the axis grids were not invalidating the grid's computed cells.
 - Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
+- Handle quotes in string literals for content catalog code generation by doubling them up.
 
 ## 1.3.0
 
