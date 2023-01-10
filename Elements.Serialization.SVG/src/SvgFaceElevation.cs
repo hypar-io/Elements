@@ -49,10 +49,8 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// Initializes a new instance of SvgFaceElevation class.
         /// </summary>
-        /// <param name="face">The element to include to the drawing.</param>
+        /// <param name="face">The face to draw.</param>
         /// <param name="up">The normal to the face.
-        /// NOTE: this class is tested and works well in cases when normal is orthogonal to the element face (i.e. normal to Drywall profile, normal to Wall profile).
-        /// You can get unexpected results if your element is floor and normal is a vector at 45 degrees to the Z axis.</param>
         public SvgFaceElevation(Face face, Vector3 up)
         {
             _face = face;
