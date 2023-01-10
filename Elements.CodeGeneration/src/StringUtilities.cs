@@ -65,6 +65,15 @@ namespace Elements.Generate.StringUtils
             return cleanName;
         }
 
-    }
 
+        /// <summary>
+        /// returns a string with double quotes doubled, suitable for string literals.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string LiteralQuotes(this string str)
+        {
+            return str.Replace("\"", "\"\"");
+        }
+    }
 }
