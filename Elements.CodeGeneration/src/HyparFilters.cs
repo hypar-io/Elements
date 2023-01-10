@@ -53,10 +53,8 @@ namespace Elements.Generate
         /// <summary>
         /// Return a string that is literalized with double double quotes.
         /// </summary>
-        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
         /// <param name="input">The string to be formatted.</param>
-        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
-        public static string Literalquotes(Context context, string input, bool firstCharacterMustBeAlpha = true)
+        public static string Literalquotes(string input)
         {
             return input.LiteralQuotes();
         }
