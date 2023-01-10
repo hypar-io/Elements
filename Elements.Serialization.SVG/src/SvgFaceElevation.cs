@@ -47,7 +47,7 @@ namespace Elements.Serialization.SVG
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of SvgElementSection class.
+        /// Initializes a new instance of SvgFaceElevation class.
         /// </summary>
         /// <param name="face">The element to include to the drawing.</param>
         /// <param name="up">The normal to the face.
@@ -314,7 +314,7 @@ namespace Elements.Serialization.SVG
 
                 foreach (var line in opening)
                 {
-                    var axis = FindDimenssionLine(line, true);
+                    var axis = FindDimensionLine(line, true);
                     var lineAdapter = new LineAdapter(line, true);
                     var startAdapter = new VertexAdapter(line.Start, axis, boundaryDictionary[axis], lineAdapter);
                     faceProjections.Add(startAdapter);
@@ -410,7 +410,7 @@ namespace Elements.Serialization.SVG
 
             foreach (var line in lines)
             {
-                var dimensionLine = FindDimenssionLine(line, false);
+                var dimensionLine = FindDimensionLine(line, false);
                 var normalToLine = line.Direction().Cross(Vector3.ZAxis).Unitized();
 
                 // look for openings lines like this:
@@ -549,7 +549,7 @@ namespace Elements.Serialization.SVG
             return boundaryDictionary;
         }
 
-        private DimensionLine FindDimenssionLine(Line line, bool isOpening)
+        private DimensionLine FindDimensionLine(Line line, bool isOpening)
         {
             var lineDirection = line.Direction();
             if (isOpening)

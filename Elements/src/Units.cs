@@ -107,10 +107,10 @@ namespace Elements
         }
 
         /// <summary>
-        /// Convert from decimal feet to feet and fractional inches
+        /// Convert from decimal feet to feet and fractional inches.
         /// </summary>
         /// <param name="decimalFeet">The value to convert to a fractional inches representation.</param>
-        /// <param name="roundDigits"></param>
+        /// <param name="roundDigits">The number of fractional digits in the return value.</param>
         /// <param name="precision">Fractional precision described as a double. i.e. 1/64th -> 0.015625</param>
         /// <returns></returns>
         public static string FeetToFeetAndFractionalInches(double decimalFeet, int roundDigits = 5, double precision = 1 / 64.0)
@@ -160,7 +160,7 @@ namespace Elements
         /// Convert from decimal inches to fractional inches
         /// </summary>
         /// <param name="decimalInches">The value to convert to a fractional inches representation.</param>
-        /// <param name="roundDigits"></param>
+        /// <param name="roundDigits">The number of fractional digits in the return value.</param>
         /// <param name="precision">Fractional precision described as a double. i.e. 1/64th -> 0.015625</param>
         /// <returns></returns>
         public static string InchesToFractionalInches(double decimalInches, int roundDigits = 5, double precision = 1 / 64.0)
