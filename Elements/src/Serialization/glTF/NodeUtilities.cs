@@ -168,7 +168,7 @@ namespace Elements.Serialization.glTF
             return matrix;
         }
 
-        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Guid elementId, Transform transform = null)
+        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Guid? elementId = null, Transform transform = null)
         {
             var parentId = 0;
 
@@ -190,21 +190,17 @@ namespace Elements.Serialization.glTF
             {
                 node.Extensions = new Dictionary<string, object>();
             }
-            if (selectable.HasValue)
-            {
-                node.Extensions["HYPAR_info"] = new Dictionary<string, object>
+
+            var extensionDict = new Dictionary<string, object>
                 {
                     {"id", elementId},
-                    {"selectable", selectable.Value}
                 };
-            }
-            else
+
+            if (selectable.HasValue)
             {
-                node.Extensions["HYPAR_info"] = new Dictionary<string, object>
-            {
-                {"id", elementId}
-            };
+                extensionDict["selectable"] = selectable.Value;
             }
+            node.Extensions["HYPAR_info"] = extensionDict;
         }
     }
 }

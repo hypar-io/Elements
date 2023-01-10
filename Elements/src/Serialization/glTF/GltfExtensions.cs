@@ -797,7 +797,7 @@ namespace Elements.Serialization.glTF
                                          gbuffers,
                                          meshes);
 
-            NodeUtilities.CreateNodeForMesh(meshId, nodes, Guid.Empty, null);
+            NodeUtilities.CreateNodeForMesh(meshId, nodes);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();
