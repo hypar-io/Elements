@@ -11,8 +11,11 @@ namespace Elements.Algorithms
             n = graph.Length;
             g = new Dictionary<int, double>[n];
             for (var i = 0; i < n; ++i)
+            {
+                g[i] = new Dictionary<int, double>();
                 foreach (var (k, v) in graph[i])
                     g[i][k] = v;
+            }
             dsu = new DisjointSetUnion(n);
         }
 
@@ -20,6 +23,7 @@ namespace Elements.Algorithms
         {
             n = size;
             g = new Dictionary<int, double>[n];
+            for (var i = 0; i < n; ++i) g[i] = new Dictionary<int, double>();
             dsu = new DisjointSetUnion(n);
         }
 
@@ -52,11 +56,12 @@ namespace Elements.Algorithms
             else if (p != -1) e.Add((p, v, g[p][v]));
         }
 
-        public void GetTree(int[] vertices, out (int, int, double)[] edges)
+        public (int, int, double)[] GetTree(int[] vertices)
         {
-            Algorithms.PriorityQueue<double, (int, int)> q = new PriorityQueue<double, (int, int)>();
+            Algorithms.BinaryHeap<double, (int, int)> q = new BinaryHeap<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
+            for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
             var e = new List<(int, int, double)>();
             dsu.Reset();
             int cnt = vertices.Length;
@@ -64,21 +69,23 @@ namespace Elements.Algorithms
             foreach (var v in vertices)
             {
                 used[v] = 1;
-                foreach (var ed in g[v]) q.Insert(ed.Value, (v, ed.Key));
+                foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
             }
 
             while (cnt > 1 && !q.Empty)
             {
-                var tp = q.Pop();
+                var tp = q.Extract();
                 int u = tp.Item2.Item1, v = tp.Item2.Item2;
-                double l = tp.Item1;
+                double l = -tp.Item1;
                 if (!dsu.AddEdge(u, v)) continue;
 
-                --cnt;
                 gg[u][v] = gg[v][u] = l;
-                if (used[v] > 0) continue;
-                used[v] = 1;
-                foreach (var ed in g[v]) q.Insert(ed.Value, (v, ed.Key));
+                if (used[v] > 0) --cnt;
+                else
+                {
+                    used[v] = 1;
+                    foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
+                }
             }
 
             HashSet<int> hs = new HashSet<int>(vertices);
@@ -89,7 +96,7 @@ namespace Elements.Algorithms
                 dfs_trim(v, -1, ref gg, ref hs, ref used, ref e);
             }
 
-            edges = e.ToArray();
+            return e.ToArray();
         }
 
         public int Size { get { return n; } }
