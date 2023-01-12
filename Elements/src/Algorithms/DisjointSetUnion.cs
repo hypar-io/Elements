@@ -6,6 +6,7 @@ namespace Elements.Algorithms
 {
     class DisjointSetUnion
     {
+        // constructs an empty dsu that acts on n vertices
         public DisjointSetUnion(int size)
         {
             n = size;
@@ -16,6 +17,7 @@ namespace Elements.Algorithms
             Reset();
         }
 
+        // empties the dsu
         public void Reset()
         {
             for (var i = 0; i < n; ++i)
@@ -25,17 +27,14 @@ namespace Elements.Algorithms
             }
         }
 
-        public void Resize(int size)
-        {
-            n = size;
-            Reset();
-        }
-
+        // returns the root of the vertice's component, relabeling the closest parent links along the way
         public int GetParent(int v)
         {
             return v == p[v] ? v : p[v] = GetParent(p[v]);
         }
 
+        // inserts an edge into the structure, connects the smaller tree to the bigger
+        // returns whether the edge connects two separate components
         public bool AddEdge(int u, int v)
         {
             u = GetParent(u);
@@ -52,17 +51,20 @@ namespace Elements.Algorithms
             return true;
         }
 
+        // returns the size of the component, in which the vertex lies
         public int ComponentSize(int u)
         {
             return sz[GetParent(u)];
         }
 
+        // returns the number of vertices
         public int Size { get { return n; } }
+        // returns the number of components
         public int NumComponents  {  get { return n - e; } }
 
-        private int n;
-        private int e;
-        private int[] p;
-        private int[] sz;
+        private int n; // number of vertices
+        private int e; // number of edges that form a spanning tree
+        private int[] p; // the top-most certain parent of the vertex 
+        private int[] sz; // size of the vertex's subcomponent
     }
 }
