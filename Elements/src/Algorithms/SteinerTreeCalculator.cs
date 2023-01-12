@@ -6,6 +6,8 @@ namespace Elements.Algorithms
 {
     class SteinerTreeCalculator
     {
+        // initializes from a graph - an array of pairs (v, len) for each vertex u - vertices with which u is connected, len is the length of the edge
+        // graph must be undirected!
         public SteinerTreeCalculator((int, double)[][] graph)
         {
             n = graph.Length;
@@ -19,6 +21,7 @@ namespace Elements.Algorithms
             dsu = new DisjointSetUnion(n);
         }
 
+        // initializes an empty graph with n vertices
         public SteinerTreeCalculator(int size)
         {
             n = size;
@@ -27,23 +30,22 @@ namespace Elements.Algorithms
             dsu = new DisjointSetUnion(n);
         }
 
+        // adds an undirected weighed edge to the graph
         public void AddEdge(int u, int v, double l)
         {
             g[u][v] = g[v][u] = l;
         }
 
+        // removes an undirected edge from the graph
         public void RemoveEdge(int u, int v)
         {
             g[u].Remove(v);
             g[v].Remove(u);
         }
 
-        public void Resize(int size)
-        {
-            Array.Resize(ref g, size);
-            dsu.Resize(size);
-        }
-
+        // a helper function that removes hanging unnecessary vertices from the built steiner tree (based on dfs)
+        // it's always called from a necessary vertex
+        // asymptotic complexity: O(k), where k is the number of vertices in the subtree
         private void dfs_trim(int v, int p, ref Dictionary <int, double>[] g, ref HashSet<int> hs, ref int[] used, ref List<(int, int, double)> e)
         {
             used[v] = 2;
@@ -58,6 +60,17 @@ namespace Elements.Algorithms
 
         public (int, int, double)[] GetTree(int[] vertices)
         {
+            // Actually calculates a set of edges in a Steiner tree based in the given set of vertices
+            // Algorithm:
+            // We start with a set of 1-vertex trees (given vertices)
+            // We take the shortes edge originating in our forest, add it to the forest 
+            // We do so until we have no edges left or we've ended up with only one tree
+            // We trim the tree with our dfs_trim function
+            // Details:
+            // The heap contains a list of edges originating from our current forest
+            // used describes which vertices are currently in the forest
+            // gg describes the current subtree
+            // dsu is used to check that we do not create cycles in the forest
             Algorithms.BinaryHeap<double, (int, int)> q = new BinaryHeap<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
@@ -99,10 +112,11 @@ namespace Elements.Algorithms
             return e.ToArray();
         }
 
+        // returns the number of vertices in the graph
         public int Size { get { return n; } }
 
-        private int n;
-        private Dictionary<int, double>[] g;
-        private DisjointSetUnion dsu;
+        private int n; // number of vertices
+        private Dictionary<int, double>[] g; // compressed adjancency matrix
+        private DisjointSetUnion dsu; // helper dsu
     }
 }
