@@ -61,6 +61,8 @@ namespace Elements.Tests
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, b)));
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, a)));
 
+            var angle = new Vector3(-1, -0.1, 0).PlaneAngleTo(Vector3.XAxis, Vector3.ZAxis);
+            Assert.True(angle < 180);
         }
 
         [Fact]
@@ -514,9 +516,9 @@ namespace Elements.Tests
         public void ClosestPointOnInfiniteLine()
         {
             var line = new Line(Vector3.Origin, new Vector3(10, 10));
-            
+
             Assert.True(new Vector3(2, 8).ClosestPointOn(line, true).IsAlmostEqualTo(new Vector3(5, 5)));
-            
+
             var vector = new Vector3(-2, -8);
             var closestPointSegment = vector.ClosestPointOn(line);
             var closestPointInfinite = vector.ClosestPointOn(line, true);
@@ -534,22 +536,22 @@ namespace Elements.Tests
                 new Vector3(0, -0.000009, 0),
                 new Vector3(5, 5),
                 new Vector3(5, 5, 0.000009),
-                Vector3.Origin, 
+                Vector3.Origin,
                 new Vector3(5,5)
             };
 
             var result = vectorsList.UniqueWithinTolerance();
-            
-            Assert.Collection(result, 
+
+            Assert.Collection(result,
                 x => x.IsAlmostEqualTo(Vector3.Origin),
                 x => x.IsAlmostEqualTo(new Vector3(5, 5)));
         }
-        
+
         [Fact]
         public void UniqueWithinToleranceReturnsNewCollectionWithTolerance()
         {
             var tolerance = 0.2;
-            
+
             var vectorsList = new List<Vector3>
             {
                 new Vector3(0.1, 0, 0),
@@ -557,13 +559,13 @@ namespace Elements.Tests
                 new Vector3(0, -0.1, 0),
                 new Vector3(5, 5, 0.1),
                 new Vector3(5, 5),
-                Vector3.Origin, 
+                Vector3.Origin,
                 new Vector3(5,5)
             };
 
             var result = vectorsList.UniqueWithinTolerance(tolerance);
-            
-            Assert.Collection(result, 
+
+            Assert.Collection(result,
                 x => x.IsAlmostEqualTo(Vector3.Origin, tolerance),
                 x => x.IsAlmostEqualTo(new Vector3(5, 5), tolerance));
         }

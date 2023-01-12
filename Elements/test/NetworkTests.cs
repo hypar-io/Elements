@@ -286,19 +286,7 @@ namespace Elements.Tests
 
             Assert.Equal(5, closedRegions.Count);
 
-            var r = new Random(23);
-            foreach (var region in closedRegions)
-            {
-                try
-                {
-                    var p = new Polygon(region.Select(i => allNodeLocations[i]).ToList());
-                    this.Model.AddElement(new Panel(p, r.NextMaterial()));
-                }
-                catch
-                {
-                    continue;
-                }
-            }
+            DrawNetwork(network, allNodeLocations, this.Model, closedRegions);
         }
 
         [Fact]
@@ -310,12 +298,206 @@ namespace Elements.Tests
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
-            var r = new Random();
-            var regions = network.FindAllClosedRegions(allNodeLocations);
-            foreach (var region in regions)
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+        }
+
+        [Fact]
+        public void RevitWallsIntersectCorrectly()
+        {
+            this.Name = nameof(RevitWallsIntersectCorrectly);
+
+            var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
+            var model = Model.FromJson(json);
+            var walls = model.AllElementsOfType<WallByProfile>();
+            foreach (var wall in walls)
             {
-                Model.AddElement(new Panel(new Polygon(region.Select(i => new Vector3(allNodeLocations[i])).ToList()), r.NextMaterial()));
+                wall.Material = BuiltInMaterials.Mass;
             }
+            Assert.Equal(4, walls.Count());
+            var network = Network<WallByProfile>.FromSegmentableItems(walls.ToList(),
+                                                                      (wall) => { return wall.Centerline; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 3 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 4, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 1, 6, 7 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(6).Select(i => i.Item1), new List<int>() { 3 });
+            Assert.Equal(network.EdgesAt(7).Select(i => i.Item1), new List<int>() { 3 });
+
+            Model = model;
+        }
+
+        [Fact]
+        public void FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions()
+        {
+            // --------------
+            // |      |      |\
+            // |      |      | \
+            // ---------------  |
+            // |      |      | /
+            // |      |      |/
+            // ---------------
+
+            this.Name = nameof(FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions);
+
+            var rect = Polygon.Rectangle(6, 2);
+            var a = new Line(new Vector3(0, 1), new Vector3(0, -1));
+            var b = new Line(new Vector3(-3, 0), new Vector3(3, 0));
+            var c = new Line(new Vector3(3, 1), new Vector3(5, 0));
+            var d = new Line(new Vector3(5, 0), new Vector3(3, -1));
+            var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
+            var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(5, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void ConcaveRegion()
+        {
+            this.Name = nameof(ConcaveRegion);
+            var l = Polygon.L(5, 7, 2);
+            var network = Network<Line>.FromSegmentableItems(l.Segments(), (line) => line, out var allNodeLocations, out var allIntersectionLocations);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Equal(2, regions.Count);
+            DrawNetwork(network, allNodeLocations, Model, regions);
+        }
+
+        [Fact]
+        public void FindClosedRegionWithInnerSegments()
+        {
+            this.Name = nameof(FindClosedRegionWithInnerSegments);
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 7)),
+                new Line((5, 7), (5, 5)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Equal(2, regions.Count);
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void FindClosedRegionWithOuterSegments()
+        {
+            // An intersecting path that ends at the edge 
+            // of a closed region.
+            //
+            //        /      
+            //       |      
+            // ---------------
+            // |             |
+            // |             |
+            // |             |
+            // |             | 
+            // |             |
+            // ---------------
+
+            this.Name = nameof(FindClosedRegionWithOuterSegments);
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 15)),
+                new Line((5, 15), (5, 17)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(2, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void IntersectingLeafPathFindsCorrectClosedRegions()
+        {
+            // An intersecting path that isn't a leaf, but still shouldn't
+            // be traversed.
+            //
+            // ---------------
+            // |             |
+            // |-------------|
+            // |             |
+            // |       /     | 
+            // |      |      |
+            // ---------------
+            //        |
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((5.00, -2.00), (4.00, 1.00)),
+                new Line((4.00, 1.00), (6.00, 2.00)),
+                new Line((6.00, 2.00), (5.00, 4.00)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(2, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void ThreeFourAndFiveSidedRegionsFound()
+        {
+            this.Name = nameof(ThreeFourAndFiveSidedRegionsFound);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((-2.96, -0.16), (2.13, 2.51)),
+                new Line((2.13, 2.51), (7.81, 2.51)),
+                new Line((7.81, 2.51), (13.11, 0.28)),
+                new Line((7.81, 2.51), (11.60, 4.88)),
+                new Line((2.13, 2.51), (-1.46, 4.62)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(5, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        private static void DrawNetwork<T>(Network<T> network, List<Vector3> allNodeLocations, Model model, List<List<int>> regions = null)
+        {
+            var random = new Random(11);
+
+            if (regions != null)
+            {
+                foreach (var r in regions)
+                {
+                    var poly = new Polygon(r.Select(i => allNodeLocations[i]).ToList());
+                    model.AddElement(new Panel(poly, random.NextMaterial()));
+                }
+            }
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
         }
     }
 }

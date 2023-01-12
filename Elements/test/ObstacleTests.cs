@@ -113,7 +113,7 @@ namespace Elements
 
             var result = obstacle.Intersects(polyline);
 
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Elements
             Assert.True(horizontalObstacle.Intersects(horizontalLineOnBottom));
 
             var horizontalLineOnSide = horizontalLine.TransformedLine(new Transform(offset, 0, 0));
-            Assert.False(horizontalObstacle.Intersects(horizontalLineOnSide));
+            Assert.True(horizontalObstacle.Intersects(horizontalLineOnSide));
 
             var horizontalLineIntersecting = horizontalLine.TransformedLine(new Transform(0, offset, 0));
             Assert.True(horizontalObstacle.Intersects(horizontalLineIntersecting));
@@ -347,7 +347,7 @@ namespace Elements
             grid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 45));
             boundary = new Polygon(new List<Vector3> { new Vector3(0, 0), new Vector3(-5, 5), new Vector3(0, 10), new Vector3(5, 5) });
             grid.AddFromExtrude(boundary, Vector3.ZAxis, 1, new List<Vector3> { new Vector3(0, 0) });
-            centerLine = new Line(new Vector3(0, 0), new Vector3(0, 0, 2));
+            centerLine = new Line(new Vector3(0, 0, 2), new Vector3(0, 0));
             var verticalObstacle = Obstacle.FromLine(centerLine, 0.5, addPerimeterEdges: true);
             expectedPoints = new List<Vector3>()
             {

@@ -38,10 +38,10 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// In normal function use, this should be set to null.
-        /// If not null and set to a valid directory path, gltfs loaded for 
+        /// If not null and set to a valid directory path, gltfs loaded for
         /// content elements will be cached to this directory, and can be
         /// explicitly loaded by calling LoadGltfCacheFromDisk(). This is used
-        /// by `hypar run` and test capabilities to speed up repeated runs. 
+        /// by `hypar run` and test capabilities to speed up repeated runs.
         /// </summary>
         public static string GltfCachePath
         {
@@ -197,10 +197,16 @@ namespace Elements.Serialization.glTF
                 var gltfMaterial = new glTFLoader.Schema.Material();
                 newMaterials.Add(gltfMaterial);
 
+                // Previously, we used the KHR_materials_pbrSpecularGlossiness extension.
+                // When Khronos deprecated this, we converted to metallic/roughness,
+                // using a conversion strategy from Don McCurdy's glTF transform:
+                // https://github.com/donmccurdy/glTF-Transform/blob/d77ca6a12c5b56efa1b6594806450dd38df19b25/packages/functions/src/metal-rough.ts#L25
+
                 gltfMaterial.PbrMetallicRoughness = new MaterialPbrMetallicRoughness
                 {
                     BaseColorFactor = material.Color.ToArray(true),
-                    MetallicFactor = 1.0f
+                    RoughnessFactor = 1.0f - (float)material.GlossinessFactor,
+                    MetallicFactor = 0
                 };
                 gltfMaterial.DoubleSided = material.DoubleSided;
 
@@ -216,14 +222,16 @@ namespace Elements.Serialization.glTF
                 {
                     // We convert to a linear color space
                     gltfMaterial.Extensions = new Dictionary<string, object>{
-                        {"KHR_materials_pbrSpecularGlossiness", new Dictionary<string,object>{
-                            {"diffuseFactor", new[]{
-                                Geometry.Color.SRGBToLinear(material.Color.Red),
-                                Geometry.Color.SRGBToLinear(material.Color.Green),
-                                Geometry.Color.SRGBToLinear(material.Color.Blue),
-                                material.Color.Alpha}},
-                            {"specularFactor", new[]{material.SpecularFactor, material.SpecularFactor, material.SpecularFactor}},
-                            {"glossinessFactor", material.GlossinessFactor}
+                        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_specular/README.md
+                        {"KHR_materials_specular", new Dictionary<string, object>{
+                            {"specularFactor", material.SpecularFactor},
+                            {"specularColorFactor", new[]{1.0,1.0,1.0}},
+                            //specularTexture - not used
+                            //specularColorTexture - not used
+                        }},
+                        // https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_ior/README.md
+                        {"KHR_materials_ior", new Dictionary<string, object>{
+                            {"ior", 1000}, //https://github.com/KhronosGroup/glTF/pull/1719#issuecomment-674365677
                         }}
                     };
                 }
@@ -254,10 +262,6 @@ namespace Elements.Serialization.glTF
                     gltfMaterial.PbrMetallicRoughness.BaseColorTexture = textureInfo;
                     textureInfo.Index = texId;
                     textureInfo.TexCoord = 0;
-                    if (!material.Unlit)
-                    {
-                        ((Dictionary<string, object>)gltfMaterial.Extensions["KHR_materials_pbrSpecularGlossiness"])["diffuseTexture"] = textureInfo;
-                    }
 
                     if (textureDict.ContainsKey(material.Texture))
                     {
@@ -505,7 +509,7 @@ namespace Elements.Serialization.glTF
                     }}
                 }
                 };
-
+                lightNode.SetElementInfo(light.Id);
                 var ml = light.Transform.Matrix;
                 lightNode.Matrix = new float[]{
                 (float)ml.m11, (float)ml.m12, (float)ml.m13, 0f,
@@ -672,7 +676,9 @@ namespace Elements.Serialization.glTF
                                         MeshPrimitive.ModeEnum mode,
                                         List<glTFLoader.Schema.Mesh> meshes,
                                         List<Node> nodes,
-                                        Transform transform = null)
+                                        Guid? elementId = null,
+                                        Transform transform = null,
+                                        bool? selectable = null)
         {
             var m = new glTFLoader.Schema.Mesh
             {
@@ -753,6 +759,10 @@ namespace Elements.Serialization.glTF
             {
                 Mesh = meshes.Count - 1
             };
+            if (elementId.HasValue)
+            {
+                node.SetElementInfo(elementId.Value, selectable);
+            }
             NodeUtilities.AddNode(nodes, node, parentId);
 
             return meshes.Count - 1;
@@ -791,8 +801,6 @@ namespace Elements.Serialization.glTF
             };
             gltf.Scenes = new[] { scene };
 
-            gltf.ExtensionsUsed = new[] { "KHR_materials_pbrSpecularGlossiness", "KHR_materials_unlit" };
-
             var buffer = new List<byte>();
             var bufferViews = new List<BufferView>();
 
@@ -816,7 +824,7 @@ namespace Elements.Serialization.glTF
                                          gbuffers,
                                          meshes);
 
-            NodeUtilities.CreateNodeForMesh(meshId, nodes, null);
+            NodeUtilities.CreateNodeForMesh(meshId, nodes);
 
             var edgeCount = 0;
             var vertices = new List<Vector3>();
@@ -848,8 +856,7 @@ namespace Elements.Serialization.glTF
                                  new List<GraphicsBuffers>() { gb },
                                  MeshPrimitive.ModeEnum.LINES,
                                  meshes,
-                                 nodes,
-                                 null);
+                                 nodes);
             }
 
             if (verticesHighlighted.Count > 0)
@@ -865,8 +872,7 @@ namespace Elements.Serialization.glTF
                                  new List<GraphicsBuffers>() { gb },
                                  MeshPrimitive.ModeEnum.LINES,
                                  meshes,
-                                 nodes,
-                                 null);
+                                 nodes);
             }
 
             var buff = new glTFLoader.Schema.Buffer
@@ -935,9 +941,9 @@ namespace Elements.Serialization.glTF
 
             // Attempt to pre-allocate these lists. This won't be perfect.
             // Before processing the geometry of an element we can't know
-            // how much to allocate. In the worst case, this will reduce 
+            // how much to allocate. In the worst case, this will reduce
             // the list resizing.
-            // TODO: In future work where we update element geometry during 
+            // TODO: In future work where we update element geometry during
             // UpdateRepresentations, we will know at this moment how big the
             // geometry for an element is, and we should tighten this up.
             var elementCount = model.AllElementsAssignableFromType<GeometricElement>().Count();
@@ -977,14 +983,20 @@ namespace Elements.Serialization.glTF
             };
             gltf.Scenes = new[] { scene };
 
-            var lights = model.AllElementsOfType<Light>().ToList();
-            gltf.ExtensionsUsed = lights.Any() ? new[] {
-                "KHR_materials_pbrSpecularGlossiness",
+            var extensionsUsed = new HashSet<string> {
+                "KHR_materials_specular",
+                "KHR_materials_ior",
                 "KHR_materials_unlit",
-                "KHR_lights_punctual"
-            } : new[] {
-                "KHR_materials_pbrSpecularGlossiness",
-                "KHR_materials_unlit"};
+                "HYPAR_info"
+            };
+
+            var lights = model.AllElementsOfType<Light>().ToList();
+            if (lights.Any())
+            {
+                extensionsUsed.Add("KHR_lights_punctual");
+            }
+
+            gltf.ExtensionsUsed = extensionsUsed.ToArray();
 
             var bufferViews = new List<BufferView>();
 
@@ -1054,6 +1066,7 @@ namespace Elements.Serialization.glTF
                                             textures,
                                             images,
                                             samplers,
+                                            extensionsUsed,
                                             meshes,
                                             nodes,
                                             meshElementMap,
@@ -1091,8 +1104,7 @@ namespace Elements.Serialization.glTF
                                      new List<GraphicsBuffers>() { gb },
                                      MeshPrimitive.ModeEnum.LINES,
                                      meshes,
-                                     nodes,
-                                     null);
+                                     nodes);
                 }
             }
 
@@ -1129,6 +1141,11 @@ namespace Elements.Serialization.glTF
                 gltf.Meshes = meshes.ToArray(meshes.Count);
             }
 
+            if (extensionsUsed.Count > 0)
+            {
+                gltf.ExtensionsUsed = extensionsUsed.ToArray();
+            }
+
             // This is a hack! For web assembly, the ToArray() call creates
             // a copy of all items in the list, and is extremely slow. We
             // get around this by accessing the underlying list directly.
@@ -1154,6 +1171,7 @@ namespace Elements.Serialization.glTF
                                                     List<Texture> textures,
                                                     List<Image> images,
                                                     List<Sampler> samplers,
+                                                    HashSet<string> extensions,
                                                     List<glTFLoader.Schema.Mesh> meshes,
                                                     List<Node> nodes,
                                                     Dictionary<Guid, List<int>> meshElementMap,
@@ -1185,6 +1203,7 @@ namespace Elements.Serialization.glTF
                                                                  textures,
                                                                  images,
                                                                  samplers,
+                                                                 extensions,
                                                                  true,
                                                                  e.Id,
                                                                  out var parentNode);
@@ -1199,7 +1218,7 @@ namespace Elements.Serialization.glTF
                             // This element is not used for instancing.
                             // apply scale transform here to bring the content glb into meters
                             var transform = content.Transform.Scaled(content.GltfScaleToMeters);
-                            var nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, transform);
+                            var nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, content.Id, transform);
 
                             if (contentElement != null && UseReferencedContentExtension)
                             {
@@ -1294,7 +1313,7 @@ namespace Elements.Serialization.glTF
                             transform.Concatenate(baseTransform);
                         }
                         transform.Concatenate(i.Transform);
-                        var addedNodes = NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                        var addedNodes = NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform, i.Id);
                         if (UseReferencedContentExtension)
                         {
                             foreach (var nodeIndex in addedNodes)
@@ -1312,7 +1331,7 @@ namespace Elements.Serialization.glTF
                 {
                     transform.Concatenate(i.Transform);
                     // Lookup the corresponding mesh in the map.
-                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform);
+                    NodeUtilities.AddInstanceNode(nodes, meshElementMap[i.BaseDefinition.Id], transform, i.Id);
                 }
 
                 if (drawEdges)
@@ -1348,7 +1367,9 @@ namespace Elements.Serialization.glTF
                                      (MeshPrimitive.ModeEnum)mode,
                                      meshes,
                                      nodes,
-                                     ge.Transform);
+                                     ge.Id,
+                                     ge.Transform,
+                                     ge._isSelectable);
                 }
             }
 
@@ -1382,7 +1403,7 @@ namespace Elements.Serialization.glTF
                 var geom = (GeometricElement)e;
                 if (!geom.IsElementDefinition)
                 {
-                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Transform);
+                    NodeUtilities.CreateNodeForMesh(meshId, nodes, geom.Id, geom.Transform);
                 }
             }
         }
@@ -1529,7 +1550,7 @@ namespace Elements.Serialization.glTF
 
                 if (!geometricElement.IsElementDefinition)
                 {
-                    nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Transform);
+                    nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, geometricElement.Id, geometricElement.Transform);
                 }
                 return meshId;
             }

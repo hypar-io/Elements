@@ -23,7 +23,14 @@ namespace Elements.Spatial.AdaptiveGrid
             var vector = (v1.Point - v0.Point);
             Length = vector.Length();
             Factor = factor;
-            HasVerticalChange = Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance;
+            HasVerticalChange = false;
+            Flags = EdgeFlags.None;
+
+            if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
+            {
+                Flags |= EdgeFlags.HasVerticalChange;
+                HasVerticalChange = true;
+            }
         }
 
         /// <summary>
@@ -44,6 +51,35 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Are edge end points on different elevations.
         /// </summary>
+        [Obsolete("Use HasAnyFlag(EdgeFlags.HasVerticalChange) instead")]
         public readonly bool HasVerticalChange;
+
+        /// <summary>
+        /// Additional information about the edge.
+        /// </summary>
+        private EdgeFlags Flags;
+
+        /// <summary>
+        /// Check if edge info has a certain flag or combination of flags set.
+        /// </summary>
+        /// <param name="flag">Flag or combination of flags to check.
+        /// For example: HasAnyFlag(Hint2D) or HasAnyFlag(Hint2D | Hint3D).</param>
+        /// <returns>True if edge have the flag included.</returns>
+        public bool HasAnyFlag(EdgeFlags flag)
+        {
+            return (Flags & flag) != EdgeFlags.None;
+        }
+
+        /// <summary>
+        /// Add a flag or combinations of flags. 
+        /// Adding a flag more than once has no effect.
+        /// </summary>
+        /// <param name="flags">Flag or combination of flags to add.</param>
+        /// For example: AddFlags(Hint2D) or AddFlags(Hint2D | Hint3D).</param>
+        /// <returns></returns>
+        public void AddFlags(EdgeFlags flags)
+        {
+            Flags |= flags;
+        }
     }
 }

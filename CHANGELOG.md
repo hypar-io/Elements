@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- `AdaptiveGraphRouting.ErrorMessages`
+- `EdgeInfo.Flags`
+- `Elements.Spatial.WeightModifier`
+- `AdaptiveGraphRouting.GetWeightModifier(string name)`
+- `AdaptiveGraphRouting.AddWeightModifier`,
+- `AdaptiveGraphRouting.RemoveWeightModifier`
+- `AdaptiveGraphRouting.ClearWeightModifiers`,
+- `AdaptiveGraphRouting.AddPlaneModifier(string name, Plane plane, double factor)`
+- `SvgSection.SaveAsSvg`, `SvgSection.SaveAsPdf`
+- `Network.TraverseLeftWithoutLeaves()`
+- `Profile.Cleaned()`
+- `Message.FromCurve`
+- `RoutingHintLine.IsNearby`
+- `RoutingHintLine.Affects`
+
+### Changed
+
+- Remove the BBox3 validator.
+- `RoutingConfiguration.MainLayer` and `RoutingConfiguration.LayerPenalty` are set obsolete.
+- `EdgeInfo.HasVerticalChange` is set obsolete.
+- `AdaptiveGraphRouting.RenderElements` is no longer paint hint lines in two different colors. Instead regular edges are paint into three groups. Weights are included to additional properties of produced elements.
+- Removed rule exception from `AdaptiveGraphRouting` that prevented vertical edges turn cost being discounter.
+- `Message.FromLine` is set obsolete.
+- In `AdaptiveGridRouting`, if there are several connection points with the same cost - choose one that is closer to the trunk.
+- GLTF writing now includes an ad-hoc `HYPAR_info` extension which aids in mapping between GLTF content and element ids in the model.
+
+### Fixed
+
+- Fix `Obstacle.FromLine` if line is vertical and start point is positioned higher than end.
+- Materials exported to glTF now have their `RoughnessFactor` set correctly.
+- Materials exported to glTF no longer use the `KHR_materials_pbrSpecularGlossiness` extension, as this extension is being sunset in favor of `KHR_materials_specular` and `KHR_materials_ior`.
+- Gltfs that are merged that require additional extensions will also merge their extensions.
+- Don't try to save test models that have no name, they can interfere with each other because they want to save to the same file.
+- Fixed an issue where `Grid2d.GetCells()` multiple times could fail to return the correct results on subsequent calls, because changes to the axis grids were not invalidating the grid's computed cells.
+- Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
+- Handle quotes in string literals for content catalog code generation by doubling them up.
+
 ## 1.3.0
 
 ### Added
@@ -11,8 +52,12 @@
 - `RoutingHintLine.Is2D`
 - `Obstacle.Orientation`
 - `Elements.Spatial.AdaptiveGrid.EdgeInfo`
+- `Elements.Spatial.AdaptiveGrid.TreeNode`
 - `IEnumerable<Vector3>.UniqueWithinTolerance(double tolerance = Vector3.EPSILON)`
 - `Plane.XY`, `Plane.XZ`, and `Plane.YZ` static properties
+- `Vector3.DistanceTo(Ray ray)`
+- `Ray.Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)`
+- `RayIntersectionResult`
 
 ### Changed
 
@@ -23,12 +68,13 @@
 - `RoutingVertex` - removed `Guides`.
 - `AdaptiveGraphRouting.BuildSpanningTree` functions are simplified. Also, they use only single `tailPoint` now.
 - `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
-- `AdaptiveGraphRouting.BuildSpanningTree` no longer require to have at least one hint line.
+- `AdaptiveGraphRouting.BuildSpanningTree` and `AdaptiveGraphRouting.BuildSimpleNetwork` now return `IDictionary<ulong, TreeNode>`.
 - Don't log all vertex creation actions during Debug mode geometry generation.
 - `Polyline.GetSubsegment` changes direction of output polyline when parameters reversed
 - `Line.IsCollinear` - added `tolerance` parameter.
 - `Polygon.CollinearPointsRemoved` - added `tolerance` parameter.
 - `Line.TryGetOverlap` - added `tolerance` parameter.
+- `CatalogGenerator` always uses en-US culture.
 
 ### Fixed
 
@@ -78,6 +124,7 @@
 - `Polyline.Intersects(Polygon polygon, out List<Polyline> sharedSegments)` bug when polyline start/end is on polygon perimeter
 - `GltfBufferExtensions.CombineBufferAndFixRefs` bug when combining buffers from multiple gltf files.
 - `Obstacle.FromWall` was failing when producing a polygon.
+- `Network` incorrect tree building and search of intersections
 
 ## 1.1.0
 
