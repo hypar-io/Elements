@@ -71,7 +71,7 @@ namespace Elements.Serialization.glTF
             return parentId;
         }
 
-        internal static void AddInstanceAsCopyOfNode(
+        internal static Node AddInstanceAsCopyOfNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             ProtoNode nodeToCopy,
                                             Transform transform,
@@ -110,6 +110,7 @@ namespace Elements.Serialization.glTF
             nodes[0].Children = (nodes[0].Children ?? Array.Empty<int>()).Concat(new[] { nodes.Count - 2 }).ToArray();
 
             RecursivelyCopyNode(nodes, nodeToCopy);
+            return newNode;
         }
 
         private static int RecursivelyCopyNode(List<Node> nodes, ProtoNode nodeToCopy)
