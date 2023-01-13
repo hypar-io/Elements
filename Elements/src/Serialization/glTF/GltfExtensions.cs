@@ -1220,7 +1220,7 @@ namespace Elements.Serialization.glTF
                             var transform = content.Transform.Scaled(content.GltfScaleToMeters);
                             var nodeId = NodeUtilities.CreateNodeForMesh(meshId, nodes, content.Id, transform);
 
-                            if (contentElement != null && UseReferencedContentExtension)
+                            if (UseReferencedContentExtension)
                             {
                                 AddExtension(gltf, nodes[nodeId], "HYPAR_referenced_content", new Dictionary<string, object> {
                                     {"contentUrl", contentElement.GltfLocation}
