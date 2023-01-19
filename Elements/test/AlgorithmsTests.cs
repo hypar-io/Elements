@@ -114,9 +114,9 @@ namespace Elements.Algorithms.Tests
         }
 
         [Fact]
-        public void SteinerTreeTest()
+        public void SteinerTreeMk1Test()
         {
-            var graph = new SteinerTreeCalculator(6);
+            var graph = new SteinerTreeCalculator(7);
             graph.AddEdge(0, 1, 7);
             graph.AddEdge(2, 4, 3);
             graph.AddEdge(5, 3, 4);
@@ -127,12 +127,38 @@ namespace Elements.Algorithms.Tests
             graph.AddEdge(4, 3, 1);
             graph.AddEdge(1, 5, 5);
 
-            var edges = new HashSet<(int, int, double)>(graph.GetTree(new int[4] {0, 2, 4, 5 }));
+            var edges = new HashSet<(int, int, double)>(graph.GetTreeMk1(new int[4] {0, 2, 4, 5 }));
             Assert.Equal(4, edges.Count);
             Assert.True(edges.Contains((0, 5, 6)) || edges.Contains((5, 0, 6)));
             Assert.True(edges.Contains((3, 5, 4)) || edges.Contains((5, 3, 4)));
             Assert.True(edges.Contains((3, 4, 1)) || edges.Contains((4, 3, 1)));
             Assert.True(edges.Contains((3, 2, 1)) || edges.Contains((2, 3, 1)));
+        }
+
+        [Fact]
+        public void SteinerTreeMk2Test()
+        {
+            var graph = new SteinerTreeCalculator(7);
+            graph.AddEdge(0, 1, 7);
+            graph.AddEdge(2, 4, 3);
+            graph.AddEdge(5, 3, 4);
+            graph.AddEdge(1, 2, 1);
+            graph.AddEdge(5, 4, 10);
+            graph.AddEdge(2, 3, 1);
+            graph.AddEdge(0, 5, 6);
+            graph.AddEdge(4, 3, 1);
+            graph.AddEdge(1, 5, 5);
+
+            var tree = graph.GetTreeMk2(new int[4] { 0, 2, 4, 5 });
+            var edges = new HashSet<(int, int, double)>();
+            for (int i = 0; i < 7; ++i)
+                foreach (var ed in tree[i])
+                    edges.Add((i, ed.Key, ed.Value));
+            Assert.Equal(8, edges.Count);
+            Assert.True(edges.Contains((0, 5, 6)) && edges.Contains((5, 0, 6)));
+            Assert.True(edges.Contains((3, 5, 4)) && edges.Contains((5, 3, 4)));
+            Assert.True(edges.Contains((3, 4, 1)) && edges.Contains((4, 3, 1)));
+            Assert.True(edges.Contains((3, 2, 1)) && edges.Contains((2, 3, 1)));
         }
     }
 }
