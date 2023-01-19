@@ -90,11 +90,15 @@ namespace Elements.Algorithms
                 if (used[ed.Key] == 2) continue;
                 dfs_trim(ed.Key, v, ref g, ref hs, ref used, ref e);
             }
-            if (g[v].Count == 1 && !hs.Contains(v)) g[p].Remove(v);
+            if (g[v].Count == 1 && !hs.Contains(v))
+            {
+                g[p].Remove(v);
+                g[v].Remove(p);
+            }
             else if (p != -1) e.Add((p, v, g[p][v]));
         }
 
-        public (int, int, double)[] GetTree(int[] vertices, double alpha = 1.0, double beta = 0.0)
+        public (int, int, double)[] GetTreeMk1(int[] vertices)
         {
             // Actually calculates a set of edges in a Steiner tree based in the given set of vertices
             // Algorithm:
@@ -107,7 +111,46 @@ namespace Elements.Algorithms
             // used describes which vertices are currently in the forest
             // gg describes the current subtree
             // dsu is used to check that we do not create cycles in the forest
+            Algorithms.BinaryHeap<double, (int, int)> q = new BinaryHeap<double, (int, int)>();
+            int[] used = new int[n];
+            var gg = new Dictionary<int, double>[n];
+            for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
+            var dsu = new DisjointSetUnion(n);
 
+            int cnt = vertices.Length;
+            foreach (var v in vertices)
+            {
+                used[v] = 1;
+                foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
+            }
+            while (cnt > 1 && !q.Empty)
+            {
+                var tp = q.Extract();
+                int u = tp.Item2.Item1, v = tp.Item2.Item2;
+                double l = -tp.Item1;
+                if (!dsu.AddEdge(u, v)) continue;
+                gg[u][v] = gg[v][u] = l;
+                if (used[v] > 0) --cnt;
+                else
+                {
+                    used[v] = 1;
+                    foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
+                }
+            }
+
+            HashSet<int> hs = new HashSet<int>(vertices);
+            var e = new List<(int, int, double)>();
+            foreach (var v in vertices)
+            {
+                if (used[v] == 2) continue;
+                used[v] = 2;
+                dfs_trim(v, -1, ref gg, ref hs, ref used, ref e);
+            }
+            return e.ToArray();
+        }
+
+        public Dictionary<int, double>[] GetTreeMk2(int[] vertices, double alpha = 1.0, double beta = 0.0)
+        {
             var q = new BinaryHeap<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
@@ -133,10 +176,9 @@ namespace Elements.Algorithms
                 {
                     var tp = q.Extract();
                     int u = tp.Item2.Item1, v = tp.Item2.Item2;
-                    double l = -tp.Item1;
                     if (!dsu.AddEdge(u, v)) continue;
 
-                    gg[u][v] = gg[v][u] = l;
+                    gg[u][v] = gg[v][u] = g[u][v];
                     if (used[v] == 0)
                     {
                         used[v] = 1;
@@ -154,7 +196,8 @@ namespace Elements.Algorithms
                 dfs_trim(v, -1, ref gg, ref hs, ref used, ref e);
             }
 
-            return e.ToArray();
+            return gg;
+            //return e.ToArray();
         }
 
         // returns the number of vertices in the graph
