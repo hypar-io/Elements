@@ -200,6 +200,56 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Creates a Steiner tree on given vertices.
+        /// </summary>
+        /// <param name="vertices">List of base vertices</param>
+        /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
+        /// <param name="alpha">Contribution of the sum of weights of edges to the weight of the tree</param>
+        /// <param name="beta">Contribution of the sum of weights of paths to the weight of the tree</param>
+        /// <returns></returns>
+        public IDictionary<ulong, TreeNode> BuildSteinerTree(
+            IList<RoutingVertex> vertices,
+            IList<RoutingHintLine> hintLines,
+            double alpha = 1.0,
+            double beta  = 0.0)
+        {
+            ErrorMessages.Clear();
+
+            var graph_vertices = _grid.GetVertices();
+            var edges = _grid.GetEdges();
+            int n = graph_vertices.Count;
+            var graph_vertices_rev = new Dictionary<ulong, int>();
+            var weights = CalculateEdgeInfos(hintLines);
+            for (int i = 0; i < n; ++i) graph_vertices_rev[graph_vertices[i].Id] = i;
+            var allLeafs = vertices.Select(v => graph_vertices_rev[v.Id]).ToArray();
+
+            var graph = new Algorithms.SteinerTreeCalculator(n);
+            foreach (var edge in edges) graph.AddEdge(graph_vertices_rev[edge.StartId], graph_vertices_rev[edge.EndId], weights[edge.Id].Length*weights[edge.Id].Factor);
+            var tree = graph.GetTreeMk2(allLeafs, alpha, beta);
+            var out_tree = new Dictionary<ulong, TreeNode>();
+
+            var q = new Queue<(int,int)>();
+            q.Enqueue((allLeafs[0], -1));
+            while (q.Count > 0)
+            {
+                var (v, p) = q.Dequeue();
+                var out_v = new TreeNode(graph_vertices[v].Id);
+                if (p != -1) out_v.SetTrunk(out_tree[graph_vertices[p].Id]);
+                out_tree[graph_vertices[v].Id] = out_v;
+                
+                foreach (var ed in tree[v])
+                {
+                    int u = ed.Key;
+                    if (u == p) continue;
+
+                    q.Enqueue((u, v));
+                }
+            }
+
+            return out_tree;
+        }
+
+        /// <summary>
         /// Creates tree of routes between multiple sections, each having a set of input Vertices,
         /// hint lines and local end Vertex, and the exit Vertex.
         /// Route is created by using Dijkstra algorithm locally on different segments.
