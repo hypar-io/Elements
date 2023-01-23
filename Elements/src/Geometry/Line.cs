@@ -520,6 +520,36 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculates where the point is wrt to the line, assuming the point is on the actual line that goes through Start, End
+        /// </summary>
+        /// <param name="point">A point to be tested</param>
+        /// <returns></returns>
+        public int PointRelativePosition(Vector3 point)
+        {
+            double p, q, r;
+            if (!Start.X.ApproximatelyEquals(End.X, Vector3.EPSILON))
+            {
+                p = point.X;
+                q = Start.X;
+                r = End.X;
+            }
+            else if (!Start.Y.ApproximatelyEquals(End.Y, Vector3.EPSILON))
+            {
+                p = point.Y;
+                q = Start.Y;
+                r = End.Y;
+            }
+            else
+            {
+                p = point.Z;
+                q = Start.Z;
+                r = End.Z;
+            }
+
+            return p < q ? -1 : (p < r ? 0 : 1);
+        }
+
+        /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
         /// </summary>
         /// <param name="l">The length.</param>
@@ -866,10 +896,29 @@ namespace Elements.Geometry
             if (v2.IsZero())
             {
                 dist -= dist.ProjectOnto(v1);
+                Vector3 v3 = other.Start + dist, v4 = other.End + dist;
+                if (PointRelativePosition(v3) * PointRelativePosition(v4) == 1)
+                {
+                    double d1 = (v3 - this.Start).LengthSquared(), d2 = (v3 - this.End).LengthSquared();
+                    if (d1 < d2)
+                    {
+                        return Math.Sqrt(Math.Min(d1, (v4 - this.Start).LengthSquared()));
+                    }
+                    else
+                    {
+                        return Math.Sqrt(Math.Min(d2, (v4 - this.End).LengthSquared()));
+                    }
+                }
             }
             else
             {
                 dist = dist.ProjectOnto(v2);
+                Vector3 v3 = other.Start + dist - this.Start, v4 = other.Start + dist - this.End, v5 = other.End + dist - this.Start, v6 = other.End + dist - this.End;
+                if (v3.Cross(v4).Dot(v5.Cross(v6)) > 0 || v3.Cross(v5).Dot(v4.Cross(v6)) > 0)
+                {
+                    return Math.Sqrt(Math.Min(Math.Min(v3.LengthSquared(), v4.LengthSquared()), 
+                                              Math.Min(v5.LengthSquared(), v6.LengthSquared())));
+                }
             }
             return dist.Length();
         }
