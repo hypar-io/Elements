@@ -965,6 +965,40 @@ namespace Elements.Geometry.Tests
             Assert.Equal(v1.Length(), line1.DistanceTo(line2), 12);
         }
 
+        [Fact]
+        public void LineDistanceSimple()
+        {
+            //Right line has 1/2 slope, so lines should meet at (6, 2, 2)
+            //forming 1 by 2 triangle
+            Line left = new Line((2, 0, 1), (12, 0, 1));
+            Line right = new Line((6, 0, 6), (6, 3, 0));
+            Assert.Equal(Math.Sqrt(5), left.DistanceTo(right));
+
+            //Overlapping
+            left = new Line((3, 3), (6, 3));
+            right = new Line((4, 3), (5, 3));
+            Assert.Equal(0, left.DistanceTo(right));
+            right = new Line((4, 3), (7, 3));
+            Assert.Equal(0, left.DistanceTo(right));
+            right = new Line((2, 3), (5, 3));
+            Assert.Equal(0, left.DistanceTo(right));
+
+            //Collinear
+            left = new Line((3, 3), (6, 3));
+            right = new Line((7, 4), (9, 4));
+            Assert.Equal(1, left.DistanceTo(right));
+
+            //Parallel
+            left = new Line((5, 2), (5, 8));
+            right = new Line((7, 5), (7, 10));
+            Assert.Equal(2, left.DistanceTo(right));
+
+            //Intersecting
+            left = new Line((5, 5), (10, 10));
+            right = new Line((7, 0), (7, 10));
+            Assert.Equal(0, left.DistanceTo(right));
+        }
+
         #endregion
     }
 }
