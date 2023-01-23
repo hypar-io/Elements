@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Elements.Algorithms
 {
+    // Types of the tree initialization
+    // It relates to the way the SteinerTreeCalculator data structure keeps track of the connectivity components
+    // Manual     - the recomputation is done only when the Init function is called
+    // AutoInsert - Uses a dsu to keep track of the components, requires that there are no DeleteEdge operations
     public enum TreeInitializationType { Manual, AutoInsert };
 
     class SteinerTreeCalculator
@@ -28,24 +32,28 @@ namespace Elements.Algorithms
             if (type == TreeInitializationType.Manual) Init();
         }
 
-        private void dfs_init(int v, int id, ref Dictionary<int, double>[] g, ref int[] used)
+        // an auxiliary function for the Init operation
+        // marks all the vertices in a connectivity component, which contains a starting vertex
+        // uses the depth-first search
+        private void dfsInit(int v, int id, ref Dictionary<int, double>[] g, ref int[] used)
         {
             used[v] = 1;
             comp[v] = id;
             foreach (var ed in g[v])
             {
                 if (used[ed.Key] == 1) continue;
-                dfs_init(ed.Key, id, ref g, ref used);
+                dfsInit(ed.Key, id, ref g, ref used);
             }
         }
 
         // perpares the graph for the steiner tree calculation
+        // recalculates the connectivity components
         public void Init()
         {
             if (type != TreeInitializationType.Manual) return;
             var used = new int[n];
             for (int i = 0, id = 0; i < n; ++i)
-                if (used[i] == 0) dfs_init(i, id++, ref g, ref used);
+                if (used[i] == 0) dfsInit(i, id++, ref g, ref used);
         }
 
         // initializes an empty graph with n vertices
@@ -72,7 +80,9 @@ namespace Elements.Algorithms
             g[v].Remove(u);
         }
 
-        private int get_component_id(int v)
+        // a universal method to get an id of the connectivity component of a given vertex regardless of the initialization type
+        // returns -1 if an initialization type is not supported
+        private int getComponentId(int v)
         {
             if (type == TreeInitializationType.Manual) return comp[v];
             if (type == TreeInitializationType.AutoInsert) return dsu_main.GetParent(v);
@@ -82,13 +92,13 @@ namespace Elements.Algorithms
         // a helper function that removes hanging unnecessary vertices from the built steiner tree (based on dfs)
         // it's always called from a necessary vertex
         // asymptotic complexity: O(k), where k is the number of vertices in the subtree
-        private void dfs_trim(int v, int p, ref Dictionary <int, double>[] g, ref HashSet<int> hs, ref int[] used, ref List<(int, int, double)> e)
+        private void dfsTrim(int v, int p, ref Dictionary <int, double>[] g, ref HashSet<int> hs, ref int[] used, ref List<(int, int, double)> e)
         {
             used[v] = 2;
             foreach (var ed in g[v])
             {
                 if (used[ed.Key] == 2) continue;
-                dfs_trim(ed.Key, v, ref g, ref hs, ref used, ref e);
+                dfsTrim(ed.Key, v, ref g, ref hs, ref used, ref e);
             }
             if (g[v].Count == 1 && !hs.Contains(v))
             {
@@ -101,6 +111,7 @@ namespace Elements.Algorithms
         public (int, int, double)[] GetTreeMk1(int[] vertices)
         {
             // Actually calculates a set of edges in a Steiner tree based in the given set of vertices
+            // Important: It's an approximate algorithm, it does not deterministically give the actual Steiner tree
             // Algorithm:
             // We start with a set of 1-vertex trees (given vertices)
             // We take the shortes edge originating in our forest, add it to the forest 
@@ -111,6 +122,9 @@ namespace Elements.Algorithms
             // used describes which vertices are currently in the forest
             // gg describes the current subtree
             // dsu is used to check that we do not create cycles in the forest
+            // Asymptotic complexity: O((n+m)logn), where
+            //     n is the total number of vertices
+            //     m is the number of edges
             Algorithms.BinaryHeap<double, (int, int)> q = new BinaryHeap<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
@@ -144,11 +158,32 @@ namespace Elements.Algorithms
             {
                 if (used[v] == 2) continue;
                 used[v] = 2;
-                dfs_trim(v, -1, ref gg, ref hs, ref used, ref e);
+                dfsTrim(v, -1, ref gg, ref hs, ref used, ref e);
             }
             return e.ToArray();
         }
 
+        // Actually calculates a set of edges in a Steiner tree based in the given set of vertices
+        // Important: It's an approximate algorithm, it does not deterministically give the actual Steiner tree
+        // Algorithm:
+        // We start with a set of 1-vertex trees (given vertices)
+        // We weigh edges using the following formula:
+        //     \alpha * w + \beta * comp1_size * comp2_size * w, where
+        //     \alpha is given and it represents the contribution of the sum of the weights' of edges in a tree to the weight of the tree (we are looking for a tree with the minimal weight)
+        //     \beta is given and it represents the contribution of the sum of the weights' of paths in a tree to the weight of the tree (we are looking for a tree with the minimal weight)
+        //     w is the weight of the edge
+        //     comp1_size and comp2_size are the current sizes of the components which the edge connects
+        // We take the lightest edge originating in our forest, add it to the forest 
+        // We do so until we have no edges left or we've ended up with only one tree
+        // We trim the tree with our dfs_trim function
+        // Details:
+        // The heap contains a list of edges originating from our current forest
+        // used describes which vertices are currently in the forest
+        // gg describes the current subtree
+        // dsu is used to check that we do not create cycles in the forest
+        // Asymptotic complexity: O((n+m)logn), where
+        //     n is the total number of vertices
+        //     m is the number of edges
         public Dictionary<int, double>[] GetTreeMk2(int[] vertices, double alpha = 1.0, double beta = 0.0)
         {
             var q = new BinaryHeap<double, (int, int)>();
@@ -161,7 +196,7 @@ namespace Elements.Algorithms
             for (int i = 0; i < n; ++i) comp_cnt[i] = new List<int>();
             foreach (var v in vertices)
             {
-                comp_cnt[get_component_id(v)].Add(v);
+                comp_cnt[getComponentId(v)].Add(v);
             }
 
             for (int cmp = 0; cmp < n; ++cmp)
@@ -193,11 +228,10 @@ namespace Elements.Algorithms
             {
                 if (used[v] == 2) continue;
                 used[v] = 2;
-                dfs_trim(v, -1, ref gg, ref hs, ref used, ref e);
+                dfsTrim(v, -1, ref gg, ref hs, ref used, ref e);
             }
 
             return gg;
-            //return e.ToArray();
         }
 
         // returns the number of vertices in the graph

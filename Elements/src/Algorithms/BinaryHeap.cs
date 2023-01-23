@@ -4,9 +4,14 @@ using System.Text;
 
 namespace Elements.Algorithms
 {
-    // See
-    // https://en.wikipedia.org/wiki/Binary_heap
-    // for a detailed explanation of the operations
+    /// <summary>
+    /// A lightweight implementation of the maximal binary heap data structure
+    /// See
+    /// https://en.wikipedia.org/wiki/Binary_heap
+    /// for a detailed explanation of the operations
+    /// </summary>
+    /// <typeparam name="TKey">Type of the keys in the heap (must be comparable)</typeparam>
+    /// <typeparam name="TValue">Type of the values in the heap</typeparam>
     class BinaryHeap<TKey, TValue> where TKey : IComparable<TKey>
     {
         public BinaryHeap()

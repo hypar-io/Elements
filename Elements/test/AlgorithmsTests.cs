@@ -14,6 +14,9 @@ namespace Elements.Algorithms.Tests
             this.GenerateIfc = false;
         }
 
+        /// <summary>
+        /// Tests whether the Algorithms.DisjointSetUnion initializes without exceptions
+        /// </summary>
         [Fact]
         public void DsuInitTest()
         {
@@ -21,6 +24,9 @@ namespace Elements.Algorithms.Tests
             dsu = new DisjointSetUnion(1000);
         }
 
+        /// <summary>
+        /// tests whether the Algorithms.DisjointSetUnion works properly
+        /// </summary>
         [Fact]
         public void DsuTest()
         {
@@ -54,6 +60,9 @@ namespace Elements.Algorithms.Tests
             Assert.Equal(1, dsu.ComponentSize(4));
         }
 
+        /// <summary>
+        /// Tests whether the Algorithms.BinaryHeap data structure works properly
+        /// </summary>
         [Fact]
         public void BinaryHeapTest()
         {
@@ -113,6 +122,9 @@ namespace Elements.Algorithms.Tests
             tmp = heap.Extract(); Assert.Equal(0.5648140371541568, tmp.Item1, 12); Assert.Equal(330, tmp.Item2);
         }
 
+        /// <summary>
+        /// Tests whether the first, simple version of the Steiner tree calculation works well
+        /// </summary>
         [Fact]
         public void SteinerTreeMk1Test()
         {
@@ -135,6 +147,9 @@ namespace Elements.Algorithms.Tests
             Assert.True(edges.Contains((3, 2, 1)) || edges.Contains((2, 3, 1)));
         }
 
+        /// <summary>
+        /// Tests whether the second, more customizable version of the Steiner tree calculation works well
+        /// </summary>
         [Fact]
         public void SteinerTreeMk2Test()
         {
