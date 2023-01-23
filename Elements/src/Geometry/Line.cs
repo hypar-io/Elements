@@ -851,7 +851,10 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Measures the distance between two lines
+        /// Measures the distance between two lines.
+        /// Computes a cross product of the lines' directional vectors.
+        /// Case 1: It's zero, meaning the lines are collinear, which means we can simply orthogonalize a vector that connects points on different line wrt the directional vector.
+        /// Case 2: It's not zero, meaning the moving of the points on the two lines spans a 2-dimensional subspace of a 3-dimensional space, so the shortest segment connecting the lines will be collinear to the cross product.
         /// </summary>
         /// <param name="other">The line to measure the distance to</param>
         /// <returns></returns>
