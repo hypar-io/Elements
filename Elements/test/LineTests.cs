@@ -903,6 +903,8 @@ namespace Elements.Geometry.Tests
             Assert.Equal(3, offset.Count());
         }
 
+        #region Line distance parametric
+
         [Fact]
         public void LineDistanceSame()
         {
@@ -962,5 +964,7 @@ namespace Elements.Geometry.Tests
             Line line2 = new Line(pt + q3 * v3 + v1, pt + q4 * v3 + v1);
             Assert.Equal(v1.Length(), line1.DistanceTo(line2), 12);
         }
+
+        #endregion
     }
 }
