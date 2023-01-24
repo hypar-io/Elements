@@ -18,6 +18,8 @@
 - `Message.FromCurve`
 - `RoutingHintLine.IsNearby`
 - `RoutingHintLine.Affects`
+- `SvgFaceElevation`
+- `Units.FeetToFeetAndFractionalInches`, `Units.InchesToFractionalInches`
 
 ### Changed
 

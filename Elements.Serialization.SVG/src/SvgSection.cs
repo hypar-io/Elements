@@ -336,10 +336,9 @@ namespace Elements.Serialization.SVG
                 Transforms = new Svg.Transforms.SvgTransformCollection() { new SvgRotate((float)angle, x.Value, y.Value), new SvgTranslate(0, 0.2f) }
             };
 
-            svgText.CustomAttributes.Add("style", "font-family: Areal; font-size: 0.5; fill:black");
+            svgText.CustomAttributes.Add("style", "font-family: Arial; font-size: 0.5; fill:black");
             return svgText;
         }
-
 
         /// <summary>
         /// Generate a plan of a model.
@@ -556,7 +555,7 @@ namespace Elements.Serialization.SVG
                     Y = new SvgUnitCollection() { y },
                     FontStyle = SvgFontStyle.Normal,
                     FontSize = new SvgUnit(SvgUnitType.User, 0.5f),
-                    FontFamily = "Areal",
+                    FontFamily = "Arial",
                     Fill = new SvgColourServer(Colors.Black),
                     TextAnchor = SvgTextAnchor.Middle,
                 };
