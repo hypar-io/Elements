@@ -18,7 +18,7 @@
 - `Message.FromCurve`
 - `RoutingHintLine.IsNearby`
 - `RoutingHintLine.Affects`
-- `SvgElementSection`
+- `SvgFaceElevation`
 - `Units.FeetToFeetAndFractionalInches`, `Units.InchesToFractionalInches`
 
 ### Changed
