@@ -30,6 +30,7 @@
 - Removed rule exception from `AdaptiveGraphRouting` that prevented vertical edges turn cost being discounter.
 - `Message.FromLine` is set obsolete.
 - In `AdaptiveGridRouting`, if there are several connection points with the same cost - choose one that is closer to the trunk.
+- GLTF writing now includes an ad-hoc `HYPAR_info` extension which aids in mapping between GLTF content and element ids in the model.
 
 ### Fixed
 
@@ -40,6 +41,7 @@
 - Don't try to save test models that have no name, they can interfere with each other because they want to save to the same file.
 - Fixed an issue where `Grid2d.GetCells()` multiple times could fail to return the correct results on subsequent calls, because changes to the axis grids were not invalidating the grid's computed cells.
 - Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
+- Handle quotes in string literals for content catalog code generation by doubling them up.
 
 ## 1.3.0
 

@@ -112,7 +112,7 @@ namespace Elements.Generate
                     switch (value)
                     {
                         case string str:
-                            codeToAdd = $"@\"{str}\"";
+                            codeToAdd = $"@\"{str.LiteralQuotes()}\"";
                             break;
                         case Guid guid:
                             codeToAdd = $"new Guid(\"{guid}\")";
