@@ -44,7 +44,10 @@ namespace Elements.Algorithms
                 return false;
             ++e;
 
-            if (sz[u] < sz[v]) (u, v) = (v, u);
+            if (sz[u] < sz[v])
+            {
+                (u, v) = (v, u);
+            }
             p[v] = u;
             sz[u] += sz[v];
 
