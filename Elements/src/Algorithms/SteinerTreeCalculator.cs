@@ -125,7 +125,7 @@ namespace Elements.Algorithms
             // Asymptotic complexity: O((n+m)logn), where
             //     n is the total number of vertices
             //     m is the number of edges
-            Algorithms.BinaryHeap<double, (int, int)> q = new BinaryHeap<double, (int, int)>();
+            var q = new BinaryHeap<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
             for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();

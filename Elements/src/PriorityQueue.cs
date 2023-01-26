@@ -16,8 +16,8 @@ namespace Elements
         where TPriority : IComparable<TPriority>
         where TValue : IEquatable<TValue>
     {
-        private List<(TValue Value, TPriority Priority)> _priorities;
-        private Dictionary<TValue, int> _positions;
+        protected List<(TValue Value, TPriority Priority)> _priorities;
+        protected Dictionary<TValue, int> _positions;
 
         /// <summary>
         /// Creates an empty collection.
@@ -39,7 +39,7 @@ namespace Elements
             _positions = new Dictionary<TValue, int>();
 
             int i = 0;
-            foreach (var item in uniqueCollection.Skip(1))
+            foreach (var item in uniqueCollection)
             {
                 _priorities.Add((item, default(TPriority)));
                 _positions[item] = i;
@@ -189,9 +189,23 @@ namespace Elements
     /// A priority queue with double as its priority type.
     /// </summary>
     /// <typeparam name="TValue">The type of items. Must be equitable.</typeparam>
-    public class PriorityQueue<TValue> : PriorityQueue<double, TValue> where TValue : IEquatable<TValue> 
+    public class PriorityQueue<TValue> : PriorityQueue<double, TValue> where TValue : IEquatable<TValue>
     {
         public PriorityQueue() : base() { }
-        public PriorityQueue(IEnumerable<TValue> uniqueCollection) : base(uniqueCollection) { }
+        public PriorityQueue(IEnumerable<TValue> uniqueCollection) 
+        {
+            _priorities = new List<(TValue, double)>(uniqueCollection.Count());
+            _positions = new Dictionary<TValue, int>();
+            _priorities.Add((uniqueCollection.First(), 0d));
+            _positions[uniqueCollection.First()] = 0;
+
+            int i = 1;
+            foreach (var item in uniqueCollection.Skip(1))
+            {
+                _priorities.Add((item, double.PositiveInfinity));
+                _positions[item] = i;
+                i++;
+            }
+        }
     };
 }
