@@ -616,7 +616,7 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
-                ulong u = pq.PopMin();
+                ulong u = pq.PopMin().Value;
 
                 //All vertices that can be reached from start vertex are visited.
                 //Ignore once only unreachable are left.
@@ -732,7 +732,7 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
-                ulong u = pq.PopMin();
+                ulong u = pq.PopMin().Value;
 
                 //All vertices that can be reached from start vertex are visited.
                 //Ignore once only unreachable are left.

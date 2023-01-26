@@ -30,7 +30,7 @@ namespace Elements.Algorithms
         // returns the root of the vertice's component, relabeling the closest parent links along the way
         public int GetParent(int v)
         {
-            return v == parent[v] ? v : parent[v] = GetParent(p[v]);
+            return v == parent[v] ? v : parent[v] = GetParent(parent[v]);
         }
 
         // inserts an edge into the structure, connects the smaller tree to the bigger

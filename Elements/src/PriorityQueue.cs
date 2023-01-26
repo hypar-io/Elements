@@ -10,37 +10,38 @@ namespace Elements
     /// priority in constant time and be able update priority of an item with log complexity.
     /// Items are unique within the collection but priorities can have duplicate values.
     /// </summary>
-    /// <typeparam name="T">Type of the item. Must support hash and comparing.</typeparam>
-    public class PriorityQueue<T> where T : IComparable<T>
+    /// <typeparam name="TPriority">Type of items' priorities. Must support comparing.</typeparam>
+    /// <typeparam name="TValue">Type of items' values. Must be equitable.</typeparam>
+    public class PriorityQueue<TPriority, TValue> 
+        where TPriority : IComparable<TPriority>
+        where TValue : IEquatable<TValue>
     {
-        private List<(T Id, double Priority)> _priorities;
-        private Dictionary<T, int> _positions;
+        private List<(TValue Value, TPriority Priority)> _priorities;
+        private Dictionary<TValue, int> _positions;
 
         /// <summary>
         /// Creates an empty collection.
         /// </summary>
         public PriorityQueue()
         {
-            _priorities = new List<(T, double)>();
-            _positions = new Dictionary<T, int>();
+            _priorities = new List<(TValue, TPriority)>();
+            _positions = new Dictionary<TValue, int>();
         }
 
         /// <summary>
         /// Creates collection from input list.
-        /// First item in the list is set to priority 0, others with double.MaxValue.
+        /// All items in the list are set to priority 0
         /// </summary>
-        /// <param name="uniqueCollection">List of ids.</param>
-        public PriorityQueue(IEnumerable<T> uniqueCollection)
+        /// <param name="uniqueCollection">List of items.</param>
+        public PriorityQueue(IEnumerable<TValue> uniqueCollection)
         {
-            _priorities = new List<(T, double)>(uniqueCollection.Count());
-            _positions = new Dictionary<T, int>();
-            _priorities.Add((uniqueCollection.First(), 0d));
-            _positions[uniqueCollection.First()] = 0;
+            _priorities = new List<(TValue, TPriority)>(uniqueCollection.Count());
+            _positions = new Dictionary<TValue, int>();
 
-            int i = 1;
+            int i = 0;
             foreach (var item in uniqueCollection.Skip(1))
             {
-                _priorities.Add((item, double.PositiveInfinity));
+                _priorities.Add((item, default(TPriority)));
                 _positions[item] = i;
                 i++;
             }
@@ -50,75 +51,75 @@ namespace Elements
         /// Returns the lowest priority item from collection.
         /// Throws an exception if called on an empty collection.
         /// </summary>
-        /// <returns>Id of the item with lowest priority.</returns>
-        public T PopMin()
+        /// <returns>The item with lowest priority and its priority.</returns>
+        public (TValue Value, TPriority Priority) PopMin()
         {
             var min = _priorities[0];
             Swap(0, _priorities.Count - 1);
-            _positions.Remove(min.Id);
+            _positions.Remove(min.Value);
             _priorities.RemoveAt(_priorities.Count - 1);
             ShiftDown(0);
-            return min.Id;
+            return min;
         }
 
         /// <summary>
         /// Adds a new item to the collection.
-        /// If an item with id already exist in collection - it's priority will be updated.
+        /// If an equivalent item already exists in collection - it's priority will be updated.
         /// </summary>
-        /// <param name="id">Id of the item.</param>
+        /// <param name="value">The item.</param>
         /// <param name="priority">New priority.</param>
-        public void AddOrUpdate(T id, double priority)
+        public void AddOrUpdate(TValue value, TPriority priority)
         {
-            if (_positions.TryGetValue(id, out var index))
+            if (_positions.TryGetValue(value, out var index))
             {
                 Update(index, priority);
             }
             else
             {
-                _priorities.Add((id, priority));
-                _positions[id] = _priorities.Count - 1;
+                _priorities.Add((value, priority));
+                _positions[value] = _priorities.Count - 1;
                 ShiftUp(_priorities.Count - 1);
             }
         }
 
         /// <summary>
-        /// Checks if certain Id is in the queue.
+        /// Checks if certain item is in the queue.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public bool Contains(T id)
+        public bool Contains(TValue value)
         {
-            return _positions.ContainsKey(id);
+            return _positions.ContainsKey(value);
         }
 
         /// <summary>
-        /// Sets priority for the item with given id.
+        /// Sets priority for the item.
         /// Does nothing if item is not present in the queue.
         /// </summary>
-        /// <param name="id">Id of the item.</param>
+        /// <param name="value">The item.</param>
         /// <param name="priority">New priority.</param>
-        public void UpdatePriority(T id, double priority)
+        public void UpdatePriority(TValue value, TPriority priority)
         {
-            if (_positions.TryGetValue(id, out var index))
+            if (_positions.TryGetValue(value, out var index))
             {
                 Update(index, priority);
             }
         }
 
         /// <summary>
-        /// Is collection empty.
+        /// Is the collection empty.
         /// </summary>
         public bool Empty()
         {
             return !_priorities.Any();
         }
 
-        private void Update(int node, double priority)
+        private void Update(int node, TPriority priority)
         {
-            double oldPriority = _priorities[node].Priority;
-            _priorities[node] = (_priorities[node].Id, priority);
+            TPriority oldPriority = _priorities[node].Priority;
+            _priorities[node] = (_priorities[node].Value, priority);
 
-            if (priority < oldPriority)
+            if (priority.CompareTo(oldPriority) < 0)
             {
                 ShiftUp(node);
             }
@@ -145,14 +146,14 @@ namespace Elements
 
         private void Swap(int left, int right)
         {
-            _positions[_priorities[left].Id] = right;
-            _positions[_priorities[right].Id] = left;
+            _positions[_priorities[left].Value] = right;
+            _positions[_priorities[right].Value] = left;
             (_priorities[left], _priorities[right]) = (_priorities[right], _priorities[left]);
         }
 
         private void ShiftUp(int node)
         {
-            while (node > 0 && _priorities[Parent(node)].Priority > _priorities[node].Priority)
+            while (node > 0 && _priorities[Parent(node)].Priority.CompareTo(_priorities[node].Priority) > 0)
             {
                 Swap(Parent(node), node);
                 node = Parent(node);
@@ -166,12 +167,12 @@ namespace Elements
             int l = LeftChild(node);
             int r = RightChild(node);
 
-            if (l < count && _priorities[l].Priority < _priorities[min].Priority)
+            if (l < count && _priorities[l].Priority.CompareTo(_priorities[min].Priority) < 0)
             {
                 min = l;
             }
 
-            if (r < count && _priorities[r].Priority < _priorities[min].Priority)
+            if (r < count && _priorities[r].Priority.CompareTo(_priorities[min].Priority) < 0)
             {
                 min = r;
             }
@@ -183,4 +184,14 @@ namespace Elements
             }
         }
     }
+
+    /// <summary>
+    /// A priority queue with double as its priority type.
+    /// </summary>
+    /// <typeparam name="TValue">The type of items. Must be equitable.</typeparam>
+    public class PriorityQueue<TValue> : PriorityQueue<double, TValue> where TValue : IEquatable<TValue> 
+    {
+        public PriorityQueue() : base() { }
+        public PriorityQueue(IEnumerable<TValue> uniqueCollection) : base(uniqueCollection) { }
+    };
 }
