@@ -12,7 +12,8 @@ namespace Elements.Tests
         public void ConstructionFromCollection()
         {
             List<int> ids = new List<int>() { 10, 2, 4, 6, 3, 5 };
-            PriorityQueue<int> pq = new PriorityQueue<int>(ids);
+            var pq = new PriorityQueue<double, int>(ids, double.PositiveInfinity);
+            pq.AddOrUpdate(ids[0], 0);
             //First in ids is set to 0, others to double.PositiveInfinity 
             Assert.Equal(10, pq.PopMin().Value);
             pq.UpdatePriority(4, 10);
@@ -32,7 +33,7 @@ namespace Elements.Tests
         [Fact]
         public void ConstructingDynamically()
         {
-            PriorityQueue<int> pq = new PriorityQueue<int>();
+            var pq = new PriorityQueue<double, int>();
             pq.AddOrUpdate(1, 10);
             pq.AddOrUpdate(2, 7);
             pq.AddOrUpdate(3, 9);
@@ -58,7 +59,7 @@ namespace Elements.Tests
         [Fact]
         public void OverridesDuplicateIds()
         {
-            PriorityQueue<int> pq = new PriorityQueue<int>();
+            var pq = new PriorityQueue<double, int>();
             pq.AddOrUpdate(1, 10);
             pq.AddOrUpdate(2, 7);
             pq.AddOrUpdate(2, 12);

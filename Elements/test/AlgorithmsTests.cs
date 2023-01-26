@@ -61,68 +61,6 @@ namespace Elements.Algorithms.Tests
         }
 
         /// <summary>
-        /// Tests whether the Algorithms.BinaryHeap data structure works properly
-        /// </summary>
-        [Fact]
-        public void BinaryHeapTest()
-        {
-            var heap = new BinaryHeap<double, int>();
-            (double, int) tmp;
-            // the following code was used to generate the test
-            /*
-            import random as rnd
-            rnd.seed(123)
-
-            m = 27
-            n0 = 10
-            a = []
-            for _ in range(m):
-                n = len(a)
-                q1 = n0 / (n0 + n)
-    
-                r = rnd.random()
-    
-                if r < q1:
-                    k = rnd.random()
-                    v = rnd.randint(-10000, 10000)
-                    a.append((k,v))
-                    a = sorted(a)
-                    print("heap.Insert({}, {});".format(k, v))
-                else:
-                    k, v = a[-1]
-                    a = a[:-1]
-                    print("tmp = heap.Extract(); Assert.Equal({}, tmp.Item1, 12); Assert.Equal({}, tmp.Item2);".format(k, v))
-            */
-            heap.Insert(0.08718667752263232, 3344);
-            heap.Insert(0.8385035164743577, -8750);
-            heap.Insert(0.5623187149479814, 1167);
-            tmp = heap.Extract(); Assert.Equal(0.8385035164743577, tmp.Item1, 12); Assert.Equal(-8750, tmp.Item2);
-            heap.Insert(0.3372166571092755, 937);
-            heap.Insert(0.16377684475236043, 4295);
-            tmp = heap.Extract(); Assert.Equal(0.5623187149479814, tmp.Item1, 12); Assert.Equal(1167, tmp.Item2);
-            tmp = heap.Extract(); Assert.Equal(0.3372166571092755, tmp.Item1, 12); Assert.Equal(937, tmp.Item2);
-            heap.Insert(0.00659504022791213, 4690);
-            heap.Insert(0.043887451982234094, -5342);
-            heap.Insert(0.9066079782041607, -439);
-            tmp = heap.Extract(); Assert.Equal(0.9066079782041607, tmp.Item1, 12); Assert.Equal(-439, tmp.Item2);
-            heap.Insert(0.2653217052615633, -8796);
-            tmp = heap.Extract(); Assert.Equal(0.2653217052615633, tmp.Item1, 12); Assert.Equal(-8796, tmp.Item2);
-            heap.Insert(0.801496591292033, -3222);
-            tmp = heap.Extract(); Assert.Equal(0.801496591292033, tmp.Item1, 12); Assert.Equal(-3222, tmp.Item2);
-            heap.Insert(0.5648140371541568, 330);
-            heap.Insert(0.8929413092827728, 6801);
-            heap.Insert(0.5385194319363926, 9546);
-            tmp = heap.Extract(); Assert.Equal(0.8929413092827728, tmp.Item1, 12); Assert.Equal(6801, tmp.Item2);
-            heap.Insert(0.6684702219031471, 2272);
-            heap.Insert(0.847341781513193, -4054);
-            tmp = heap.Extract(); Assert.Equal(0.847341781513193, tmp.Item1, 12); Assert.Equal(-4054, tmp.Item2);
-            heap.Insert(0.4869051550185245, -1419);
-            heap.Insert(0.33691615279170617, 2818);
-            tmp = heap.Extract(); Assert.Equal(0.6684702219031471, tmp.Item1, 12); Assert.Equal(2272, tmp.Item2);
-            tmp = heap.Extract(); Assert.Equal(0.5648140371541568, tmp.Item1, 12); Assert.Equal(330, tmp.Item2);
-        }
-
-        /// <summary>
         /// Tests whether the first, simple version of the Steiner tree calculation works well
         /// </summary>
         [Fact]

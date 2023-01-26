@@ -33,7 +33,8 @@ namespace Elements
         /// All items in the list are set to priority 0
         /// </summary>
         /// <param name="uniqueCollection">List of items.</param>
-        public PriorityQueue(IEnumerable<TValue> uniqueCollection)
+        /// <param name="InitialPriority">A priority to be set for all items.</param>
+        public PriorityQueue(IEnumerable<TValue> uniqueCollection, TPriority InitialPriority = default(TPriority))
         {
             _priorities = new List<(TValue, TPriority)>(uniqueCollection.Count());
             _positions = new Dictionary<TValue, int>();
@@ -41,7 +42,7 @@ namespace Elements
             int i = 0;
             foreach (var item in uniqueCollection)
             {
-                _priorities.Add((item, default(TPriority)));
+                _priorities.Add((item, InitialPriority));
                 _positions[item] = i;
                 i++;
             }
@@ -184,28 +185,4 @@ namespace Elements
             }
         }
     }
-
-    /// <summary>
-    /// A priority queue with double as its priority type.
-    /// </summary>
-    /// <typeparam name="TValue">The type of items. Must be equitable.</typeparam>
-    public class PriorityQueue<TValue> : PriorityQueue<double, TValue> where TValue : IEquatable<TValue>
-    {
-        public PriorityQueue() : base() { }
-        public PriorityQueue(IEnumerable<TValue> uniqueCollection) 
-        {
-            _priorities = new List<(TValue, double)>(uniqueCollection.Count());
-            _positions = new Dictionary<TValue, int>();
-            _priorities.Add((uniqueCollection.First(), 0d));
-            _positions[uniqueCollection.First()] = 0;
-
-            int i = 1;
-            foreach (var item in uniqueCollection.Skip(1))
-            {
-                _priorities.Add((item, double.PositiveInfinity));
-                _positions[item] = i;
-                i++;
-            }
-        }
-    };
 }

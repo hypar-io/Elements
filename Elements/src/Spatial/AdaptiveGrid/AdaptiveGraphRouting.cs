@@ -609,7 +609,7 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null,
             Dictionary<ulong, ulong?> pathDirections = null)
         {
-            PriorityQueue<ulong> pq = PreparePriorityQueue(
+            PriorityQueue<double, ulong> pq = PreparePriorityQueue(
                 start, out Dictionary<ulong, ulong> path, out travelCost);
 
             while (!pq.Empty())
@@ -724,7 +724,7 @@ namespace Elements.Spatial.AdaptiveGrid
             out Dictionary<ulong, (double, double)> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
-            PriorityQueue<ulong> pq = PreparePriorityQueue(
+            PriorityQueue<double, ulong> pq = PreparePriorityQueue(
                 start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
                 out travelCost);
 
@@ -897,7 +897,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return info.Length * info.Factor;
         }
 
-        private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
+        private PriorityQueue<double, ulong> PreparePriorityQueue(ulong start,
             out Dictionary<ulong, ulong> path, out Dictionary<ulong, double> travelCost)
         {
             path = new Dictionary<ulong, ulong>();
@@ -918,11 +918,12 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             travelCost[start] = 0;
 
-            PriorityQueue<ulong> pq = new PriorityQueue<ulong>(indices);
+            PriorityQueue<double, ulong> pq = new PriorityQueue<double, ulong>(indices, double.PositiveInfinity);
+            pq.UpdatePriority(indices[0], 0);
             return pq;
         }
 
-        private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
+        private PriorityQueue<double, ulong> PreparePriorityQueue(ulong start,
             out Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> path,
             out Dictionary<ulong, (double, double)> travelCost)
         {
@@ -944,7 +945,8 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             travelCost[start] = (0, 0);
 
-            PriorityQueue<ulong> pq = new PriorityQueue<ulong>(indices);
+            PriorityQueue<double, ulong> pq = new PriorityQueue<double, ulong>(indices, double.PositiveInfinity);
+            pq.AddOrUpdate(indices[0], 0);
             return pq;
         }
 
@@ -1178,7 +1180,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return cost;
         }
 
-        private void MarkExpensiveRoute(PriorityQueue<ulong> pq,
+        private void MarkExpensiveRoute(PriorityQueue<double, ulong> pq,
                                        IDictionary<ulong, double> travelCost,
                                        IDictionary<ulong, ulong> path,
                                        ulong id, ulong before, double bestCost)
@@ -1192,7 +1194,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private void MarkExpensiveRoute(
-            PriorityQueue<ulong> pq,
+            PriorityQueue<double, ulong> pq,
             Dictionary<ulong, (double Left, double Right)> travelCost,
             Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
             ulong id, ulong before, (double Left, double Right) bestCost)

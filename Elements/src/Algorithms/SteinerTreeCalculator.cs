@@ -125,7 +125,7 @@ namespace Elements.Algorithms
             // Asymptotic complexity: O((n+m)logn), where
             //     n is the total number of vertices
             //     m is the number of edges
-            var q = new BinaryHeap<double, (int, int)>();
+            var q = new PriorityQueue<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
             for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
@@ -135,20 +135,20 @@ namespace Elements.Algorithms
             foreach (var v in vertices)
             {
                 used[v] = 1;
-                foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
+                foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), ed.Value);
             }
-            while (cnt > 1 && !q.Empty)
+            while (cnt > 1 && !q.Empty())
             {
-                var tp = q.Extract();
-                int u = tp.Item2.Item1, v = tp.Item2.Item2;
-                double l = -tp.Item1;
+                var tp = q.PopMin();
+                int u = tp.Item1.Item1, v = tp.Item1.Item2;
+                double l = tp.Item2;
                 if (!dsu.AddEdge(u, v)) continue;
                 gg[u][v] = gg[v][u] = l;
                 if (used[v] > 0) --cnt;
                 else
                 {
                     used[v] = 1;
-                    foreach (var ed in g[v]) q.Insert(-ed.Value, (v, ed.Key));
+                    foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key) , ed.Value);
                 }
             }
 
@@ -186,7 +186,7 @@ namespace Elements.Algorithms
         //     m is the number of edges
         public Dictionary<int, double>[] GetTreeMk2(int[] vertices, double alpha = 1.0, double beta = 0.0)
         {
-            var q = new BinaryHeap<double, (int, int)>();
+            var q = new PriorityQueue<double, (int, int)>();
             int[] used = new int[n];
             var gg = new Dictionary<int, double>[n];
             for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
@@ -204,20 +204,20 @@ namespace Elements.Algorithms
                 foreach (var v in comp_cnt[cmp])
                 {
                     used[v] = 1;
-                    foreach (var ed in g[v]) q.Insert(-(alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key)), (v, ed.Key));
+                    foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
                 }
 
-                while (!q.Empty)
+                while (!q.Empty())
                 {
-                    var tp = q.Extract();
-                    int u = tp.Item2.Item1, v = tp.Item2.Item2;
+                    var tp = q.PopMin();
+                    int u = tp.Item1.Item1, v = tp.Item1.Item2;
                     if (!dsu.AddEdge(u, v)) continue;
 
                     gg[u][v] = gg[v][u] = g[u][v];
                     if (used[v] == 0)
                     {
                         used[v] = 1;
-                        foreach (var ed in g[v]) q.Insert(-(alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key)), (v, ed.Key));
+                        foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
                     }
                 }
             }
