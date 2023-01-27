@@ -209,11 +209,11 @@ namespace Elements
             Assert.Equal(diagonalObstacle.Points.Count, expectedPoints.Count);
             Assert.True(diagonalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
             grid.SubtractObstacle(diagonalObstacle);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Equal(4, vertex.Edges.Count());
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(9.292891, 10, 0)));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Equal(4, vertex.Edges.Count());
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(10, 9.292891, 0)));
@@ -337,10 +337,10 @@ namespace Elements
             Assert.Equal(diagonalObstacle.Points.Count, expectedPoints.Count);
             Assert.True(diagonalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
             grid.SubtractObstacle(diagonalObstacle);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0.70711, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(9.292891, 10, 0)));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.70711, 0, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(10, 9.292891, 0)));
 
@@ -363,7 +363,7 @@ namespace Elements
             Assert.Equal(verticalObstacle.Points.Count, expectedPoints.Count);
             Assert.True(verticalObstacle.Points.All(p => expectedPoints.Any(e => e.IsAlmostEqualTo(p))));
             grid.SubtractObstacle(verticalObstacle);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0.5, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0.5, 0.5, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(1, 0, 0)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(0, 1, 0)));
