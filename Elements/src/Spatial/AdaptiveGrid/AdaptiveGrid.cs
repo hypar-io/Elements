@@ -350,12 +350,31 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Whether a vertex location already exists in the AdaptiveGrid.
+        /// A vertex with each coordinate less than AdaptiveGrid.Tolerance away is considered suitable.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="id">The ID of the Vertex, if a match is found.</param>
+        /// <returns>True if any Vertex is close enough.</returns>
+        public bool TryGetVertexIndex(Vector3 point, out ulong id)
+        {
+            var zDict = GetAddressParent(_verticesLookup, point, tolerance: Tolerance);
+            if (zDict == null)
+            {
+                id = 0;
+                return false;
+            }
+            return TryGetValue(zDict, point.Z, out id, Tolerance);
+        }
+
+        /// <summary>
+        /// Whether a vertex location already exists in the AdaptiveGrid.
         /// </summary>
         /// <param name="point"></param>
         /// <param name="id">The ID of the Vertex, if a match is found.</param>
         /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns></returns>
-        public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = null)
+        /// <returns>True if any Vertex is close enough.</returns>
+        [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
+        public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
         {
             var zDict = GetAddressParent(_verticesLookup, point, tolerance: tolerance);
             if (zDict == null)
@@ -374,7 +393,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New or existing Vertex.</returns>
         public Vertex AddVertex(Vector3 point)
         {
-            if (!TryGetVertexIndex(point, out var id, Tolerance))
+            if (!TryGetVertexIndex(point, out var id))
             {
                 var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
                 id = this._vertexId;
@@ -755,14 +774,14 @@ namespace Elements.Spatial.AdaptiveGrid
                     // The same vertex can be part of multiple edges.
                     // Cache to avoid expensive cut operations.
                     if (!alreadyConnected.Contains(newSV.Id) && 
-                        TryGetVertexIndex(Start, out var id, Tolerance))
+                        TryGetVertexIndex(Start, out var id))
                     {
                         AddEdge(newSV.Id, id);
                         alreadyConnected.Add(newSV.Id);
                     }
 
                     if (!alreadyConnected.Contains(newEV.Id) &&
-                        TryGetVertexIndex(End, out id, Tolerance))
+                        TryGetVertexIndex(End, out id))
                     {
                         AddEdge(newEV.Id, id);
                         alreadyConnected.Add(newEV.Id);
