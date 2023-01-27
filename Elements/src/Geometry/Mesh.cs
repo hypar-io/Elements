@@ -1,12 +1,12 @@
 using Elements.Search;
 using Elements.Serialization.JSON;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using static Elements.Units;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -22,11 +22,9 @@ namespace Elements.Geometry
         private readonly Dictionary<int, Vertex> _vertexMap = new Dictionary<int, Vertex>();
 
         /// <summary>The mesh's vertices.</summary>
-        [JsonProperty("Vertices", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Vertex> Vertices { get; set; }
 
         /// <summary>The mesh's triangles.</summary>
-        [JsonProperty("Triangles", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Triangle> Triangles { get; set; }
 
         private BBox3 _bbox = new BBox3(new List<Vector3> { });

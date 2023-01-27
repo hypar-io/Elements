@@ -6,7 +6,6 @@ using System.Linq;
 using glTFLoader.Schema;
 using System;
 using System.IO;
-using Newtonsoft.Json;
 using Elements.Geometry.Solids;
 using Newtonsoft.Json.Linq;
 
@@ -83,7 +82,7 @@ namespace Elements.Tests
         public void ThinObjectsGenerateCorrectly()
         {
             var json = File.ReadAllText("../../../models/Geometry/Single-Panel.json");
-            var panel = JsonConvert.DeserializeObject<Panel>(json);
+            var panel = Element.Deserialize<Panel>(json);
             var model = new Model();
             model.AddElement(panel);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");

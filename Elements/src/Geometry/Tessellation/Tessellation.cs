@@ -35,6 +35,8 @@ namespace Elements.Geometry.Tessellation
                     tesses.Add(target.GetTess());
                 }
             }
+            // Console.WriteLine($"tess: {sw.ElapsedMilliseconds}ms for tessellation.");
+            // sw.Restart();
 
             // Pre-allocate a buffer big enough to hold all the tessellations
             var buffer = (IGraphicsBuffers)Activator.CreateInstance(typeof(T));

@@ -3,7 +3,8 @@ using Elements.Interfaces;
 using System;
 using Elements.Geometry.Solids;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -29,6 +30,7 @@ namespace Elements
         /// <summary>
         /// The untransformed profile of the floor.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         /// <summary>
@@ -47,6 +49,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The floor's id.</param>
         /// <param name="name">The floor's name.</param>
+        [JsonConstructor]
         public Floor(Profile profile,
                      double thickness,
                      Transform transform = null,

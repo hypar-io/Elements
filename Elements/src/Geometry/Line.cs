@@ -2,7 +2,7 @@ using Elements.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Spatial;
 
 namespace Elements.Geometry
@@ -16,11 +16,9 @@ namespace Elements.Geometry
     public class Line : Curve, IEquatable<Line>
     {
         /// <summary>The start of the line.</summary>
-        [JsonProperty("Start", Required = Required.AllowNull)]
         public Vector3 Start { get; set; }
 
         /// <summary>The end of the line.</summary>
-        [JsonProperty("End", Required = Required.AllowNull)]
         public Vector3 End { get; set; }
 
         /// <summary>

@@ -1,5 +1,5 @@
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -55,15 +55,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>The X component of the vector.</summary>
-        [JsonProperty("X", Required = Required.Always)]
         public double X { get; set; }
 
         /// <summary>The Y component of the vector.</summary>
-        [JsonProperty("Y", Required = Required.Always)]
         public double Y { get; set; }
 
         /// <summary>The Z component of the vector.</summary>
-        [JsonProperty("Z", Required = Required.Always)]
         public double Z { get; set; }
 
         /// <summary>

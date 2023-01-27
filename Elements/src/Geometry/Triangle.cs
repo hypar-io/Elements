@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -12,12 +12,10 @@ namespace Elements.Geometry
     public class Triangle
     {
         /// <summary>The triangle's vertices.</summary>
-        [JsonProperty("Vertices", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
 
         /// <summary>The triangle's normal.</summary>
-        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>

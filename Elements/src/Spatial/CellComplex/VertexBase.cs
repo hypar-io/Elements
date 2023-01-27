@@ -1,5 +1,5 @@
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Spatial.CellComplex
 {
@@ -36,20 +36,18 @@ namespace Elements.Spatial.CellComplex
         /// For deserialization only!
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="point"></param>
+        /// <param name="value"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
         [JsonConstructor]
-        internal VertexBase(ulong id, Vector3 point, string name = null) : base(id, null)
+        public VertexBase(ulong id, Vector3 value, string name = null) : base(id, null)
         {
-            this.Value = point;
+            this.Value = value;
             this.Name = name;
         }
 
         /// <summary>
         /// Get the Vector3 that represents this Vertex or Orientation.
         /// </summary>
-        /// <returns></returns>
         public override Vector3 GetGeometry()
         {
             return this.Value;
@@ -59,7 +57,6 @@ namespace Elements.Spatial.CellComplex
         ///  Get the shortest distance from a point to the geometry representing this vertex.
         /// </summary>
         /// <param name="point"></param>
-        /// <returns></returns>
         public override double DistanceTo(Vector3 point)
         {
             return point.DistanceTo(this.GetGeometry());

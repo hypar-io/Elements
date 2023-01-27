@@ -1,7 +1,7 @@
 #pragma warning disable CS1591
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Profiles
 {
@@ -12,6 +12,9 @@ namespace Elements.Geometry.Profiles
         public double Ht;
         public double h;
         public double B;
+
+        // Ignore to avoid serialization clash with 'B'
+        [JsonIgnore]
         public double b;
         public double tnom;
         public double tdes;

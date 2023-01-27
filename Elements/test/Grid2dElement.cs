@@ -1,14 +1,12 @@
 using Elements.Spatial;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
     /// <summary>Just a test</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public partial class Grid2dElement : Element
     {
         /// <summary>contains a grid</summary>
-        [JsonProperty("Grid", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Grid2d Grid { get; set; }
 
         [JsonConstructor]

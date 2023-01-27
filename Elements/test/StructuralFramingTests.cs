@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 using System.Diagnostics;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
@@ -21,8 +22,11 @@ namespace Elements.Tests
 
         private WideFlangeProfile _testProfile;
 
-        public StructuralFramingTests()
+        private ITestOutputHelper _output;
+
+        public StructuralFramingTests(ITestOutputHelper output)
         {
+            _output = output;
             _testProfile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100);
         }
 

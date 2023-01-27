@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Collections;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Elements.Serialization.JSON;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
+using System.Text.Json;
+using System.Diagnostics;
 using Elements.Search;
 using Elements.Spatial;
 
@@ -23,18 +25,15 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+        public IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
         /// <summary>
         /// Construct a model.
@@ -212,27 +211,20 @@ namespace Elements
         /// </summary>
         public string ToJson(bool indent = false, bool gatherSubElements = true)
         {
+            // TODO: Remove this excess model creation when the JSON serializer
+            // supports recursive write out and all receivers are capable of 
+            // receiving updated JSON.
             var exportModel = CreateExportModel(gatherSubElements);
 
-            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
-        }
-
-        /// <summary>
-        /// Serialize the model to JSON using default arguments.
-        /// </summary>
-        public string ToJson()
-        {
-            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
-            return ToJson(false, true);
-        }
-
-        /// <summary>
-        /// Serialize the model to JSON to match default arguments.
-        /// TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.
-        /// </summary>
-        public string ToJson(bool indent = false)
-        {
-            return ToJson(indent, true);
+            var serializerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = indent,
+                IncludeFields = true, // needed for tuple support
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+            serializerOptions.Converters.Add(new ElementConverterFactory());
+            serializerOptions.Converters.Add(new SolidConverter());
+            return JsonSerializer.Serialize(exportModel, serializerOptions);
         }
 
         /// <summary>
@@ -244,15 +236,16 @@ namespace Elements
         {
             var exportModel = CreateExportModel(gatherSubElements);
 
-            // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
-            // https://www.newtonsoft.com/json/help/html/Performance.htm
             using (FileStream s = File.Create(path))
-            using (StreamWriter writer = new StreamWriter(s))
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(writer))
             {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(jsonWriter, exportModel);
-                jsonWriter.Flush();
+                var serializerOptions = new JsonSerializerOptions()
+                {
+                    IncludeFields = true, // needed for tuple support
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
+                serializerOptions.Converters.Add(new ElementConverterFactory());
+                serializerOptions.Converters.Add(new SolidConverter());
+                JsonSerializer.Serialize(s, exportModel, serializerOptions);
             }
         }
 
@@ -369,40 +362,199 @@ namespace Elements
             return exportModel;
         }
 
+        public static Model GeometricElementModelFromJson(string json)
+        {
+            var resolver = new ElementReferenceResolver(null, default);
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            // Read materials, profiles, geometric elements
+            var elements = new Dictionary<Guid, Element>();
+
+            using (var doc = JsonDocument.Parse(json))
+            {
+                var root = doc.RootElement;
+                var elementsElement = root.GetProperty("Elements");
+                var transform = JsonSerializer.Deserialize<Transform>(root.GetProperty("Transform"));
+
+                Debug.WriteLine($"JSON: {sw.ElapsedMilliseconds}ms for parsing json");
+                sw.Restart();
+
+                foreach (var element in elementsElement.EnumerateObject())
+                {
+                    Element e = null;
+                    var discriminator = element.Value.GetProperty("discriminator").GetString();
+                    var id = element.Value.GetProperty("Id").GetGuid();
+                    element.Value.TryGetProperty("Name", out var nameProp);
+                    string name;
+                    {
+                        name = nameProp.GetString();
+                    }
+
+                    switch (discriminator)
+                    {
+                        // TODO: Big assumption here - that things are in the right order.
+                        case "Elements.Material":
+                            var colorProp = element.Value.GetProperty("Color");
+                            var color = new Color(
+                                colorProp.GetProperty("Red").GetDouble(),
+                                colorProp.GetProperty("Green").GetDouble(),
+                                colorProp.GetProperty("Blue").GetDouble(),
+                                colorProp.GetProperty("Alpha").GetDouble()
+                            );
+                            var spec = element.Value.GetProperty("SpecularFactor").GetDouble();
+                            var gloss = element.Value.GetProperty("GlossinessFactor").GetDouble();
+
+                            // TODO: Handle all the other color properties
+
+                            e = new Material(name, color, spec, gloss, id: id);
+                            break;
+                        case "Elements.Geometry.Profile":
+                            var perimeter = JsonSerializer.Deserialize<Geometry.Polygon>(element.Value.GetProperty("Perimeter"));
+                            var voids = JsonSerializer.Deserialize<List<Geometry.Polygon>>(element.Value.GetProperty("Voids"));
+                            e = new Profile(perimeter, voids, id, name);
+                            break;
+                        case "Elements.ElementInstance":
+                            var baseDefinition = (GeometricElement)resolver.ResolveReference(element.Value.GetProperty("BaseDefinition").GetString());
+                            var elementTransform = JsonSerializer.Deserialize<Transform>(element.Value.GetProperty("Transform"));
+                            e = new ElementInstance(baseDefinition, elementTransform, name, id);
+                            break;
+                        case "Elements.ModelCurve":
+                            continue;
+                        case "Elements.GridLine":
+                            continue;
+                        default:
+
+                            if (element.Value.TryGetProperty("Perimeter", out _) && element.Value.TryGetProperty("Voids", out _))
+                            {
+                                // TODO: We're handling profile-like things in this way.
+                                perimeter = JsonSerializer.Deserialize<Geometry.Polygon>(element.Value.GetProperty("Perimeter"));
+                                voids = JsonSerializer.Deserialize<List<Geometry.Polygon>>(element.Value.GetProperty("Voids"));
+                                e = new Profile(perimeter, voids, id, name);
+                                break;
+                            }
+
+                            // Qualify element as a geometric element by seeing 
+                            // whether it has a representation.
+                            if (element.Value.TryGetProperty("Representation", out var repProperty))
+                            {
+                                var solidOps = new List<SolidOperation>();
+                                foreach (var solidOp in repProperty.GetProperty("SolidOperations").EnumerateArray())
+                                {
+                                    SolidOperation op = null;
+                                    var isVoid = false;
+                                    if (solidOp.TryGetProperty("IsVoid", out var isVoidElement))
+                                    {
+                                        isVoid = isVoidElement.GetBoolean();
+                                    }
+
+                                    switch (solidOp.GetProperty("discriminator").GetString())
+                                    {
+                                        case "Elements.Geometry.Solids.Extrude":
+                                            var profile = (Profile)resolver.ResolveReference(solidOp.GetProperty("Profile").GetString());
+                                            var height = solidOp.GetProperty("Height").GetDouble();
+                                            var direction = JsonSerializer.Deserialize<Vector3>(solidOp.GetProperty("Direction"));
+                                            op = new Extrude(profile, height, direction, isVoid);
+                                            break;
+                                        case "Elements.Geometry.Solids.Sweep":
+                                            profile = (Profile)resolver.ResolveReference(solidOp.GetProperty("Profile").GetString());
+                                            var curve = DeserializeCurve(solidOp.GetProperty("Curve"));
+                                            var startSetback = solidOp.GetProperty("StartSetback").GetDouble();
+                                            var endSetback = solidOp.GetProperty("EndSetback").GetDouble();
+                                            var profileRotation = 0.0;
+                                            if (solidOp.TryGetProperty("ProfileRotation", out var rotation))
+                                            {
+                                                profileRotation = rotation.GetDouble();
+                                            }
+                                            op = new Sweep(profile, curve, startSetback, endSetback, profileRotation, isVoid);
+                                            break;
+                                        case "Elements.Geometry.Solids.Lamina":
+                                            perimeter = JsonSerializer.Deserialize<Geometry.Polygon>(solidOp.GetProperty("Perimeter"));
+                                            op = new Lamina(perimeter, isVoid);
+                                            break;
+                                    }
+                                    solidOps.Add(op);
+                                }
+                                var rep = new Representation(solidOps);
+                                elementTransform = JsonSerializer.Deserialize<Transform>(element.Value.GetProperty("Transform"));
+                                var material = (Material)resolver.ResolveReference(element.Value.GetProperty("Material").GetString());
+                                var elementId = element.Value.GetProperty("Id").GetGuid();
+                                var isElementDefinition = element.Value.GetProperty("IsElementDefinition").GetBoolean();
+                                e = new GeometricElement(elementTransform, material, rep, isElementDefinition, elementId, name);
+
+                                if (solidOps.Count == 1)
+                                {
+                                    rep.SkipCSGUnion = true;
+                                }
+                            }
+                            break;
+                    }
+                    if (e != null)
+                    {
+                        elements.Add(id, e);
+                        resolver.AddReference(id.ToString(), e);
+                    }
+                }
+
+                Debug.WriteLine($"JSON: {sw.ElapsedMilliseconds}ms for deserializing all elements.");
+                sw.Restart();
+
+                var model = new Model(transform, elements);
+                return model;
+            }
+        }
+
         /// <summary>
         /// Deserialize a model from JSON.
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
-        /// <param name="errors">A collection of deserialization errors.</param>
-        /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
-        public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
+        public static Model FromJson(string json)
         {
-            // When user elements have been loaded into the app domain, they haven't always been
-            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
-            // but is useful here, at the Model level, to ensure user types are available.
-            var deserializationErrors = new List<string>();
-            if (forceTypeReload)
+            var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
+
+            Model model = null;
+            using (var document = JsonDocument.Parse(json))
             {
-                JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
-                deserializationErrors.AddRange(typeLoadErrors);
+                JsonElement root = document.RootElement;
+                JsonElement elementsElement = root.GetProperty("Elements");
+
+                var options = new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true,
+                    IncludeFields = true // needed for tuples
+                };
+                options.Converters.Add(new SolidConverter());
+
+                // Our custom reference handler will cache elements by id as
+                // they are deserialized, supporting reading elements by id
+                // from JSON.
+                var refHandler = new ElementReferenceHandler(typeCache, elementsElement);
+                options.ReferenceHandler = refHandler;
+
+                // Use the model converter here so that we have a chance to 
+                // intercept the creation of elements when things go wrong.
+                // Using the model converter adds 100ms because it has to
+                // call deserialize for each element and trap if the element
+                // is null and report an error.
+                // options.Converters.Add(new ModelConverter());
+
+                model = JsonSerializer.Deserialize<Model>(json, options);
+
+                // Resetting the reference handler, empties the internal
+                // elements cache.
+                refHandler.Reset(typeCache, elementsElement);
             }
 
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
+            // Remove null elements that are the result of the deserializer
+            // not being able to handle an element.
+            foreach (var nullElement in model.Elements.Where(e => e.Value == null).ToList())
             {
-                Error = (sender, args) =>
-                {
-                    deserializationErrors.Add(args.ErrorContext.Error.Message);
-                    args.ErrorContext.Handled = true;
-                }
-            });
-            errors = deserializationErrors;
-            JsonInheritanceConverter.Elements.Clear();
-            return model;
-        }
+                model.Elements.Remove(nullElement);
+            }
 
-        public static Model FromJson(string json, bool forceTypeReload = false)
-        {
-            return FromJson(json, out _, forceTypeReload);
+            return model;
         }
 
         private List<Element> RecursiveGatherSubElements(object obj)
@@ -451,7 +603,7 @@ namespace Elements
             {
                 // This query had a nice little speed boost when we filtered for
                 // valid types first then filtered for custom attributes.
-                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<System.Text.Json.Serialization.JsonIgnoreAttribute>() == null).ToList();
                 properties.Add(t, constrainedProps);
             }
 
@@ -552,6 +704,24 @@ namespace Elements
         {
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(SolidOperation).IsAssignableFrom(t);
+        }
+
+        private static Curve DeserializeCurve(JsonElement jsonCurve)
+        {
+            var discriminator = jsonCurve.GetProperty("discriminator").GetString();
+            switch (discriminator)
+            {
+                case "Elements.Geometry.Line":
+                    return JsonSerializer.Deserialize<Geometry.Line>(jsonCurve);
+                case "Elements.Geometry.Polygon":
+                    return JsonSerializer.Deserialize<Geometry.Polygon>(jsonCurve);
+                case "Elements.Geometry.Polyline":
+                    return JsonSerializer.Deserialize<Polyline>(jsonCurve);
+                case "Elements.Geometry.Arc":
+                    return JsonSerializer.Deserialize<Arc>(jsonCurve);
+                default:
+                    throw new JsonException($"The curve type, {discriminator}, could not be deserialized.");
+            }
         }
     }
 

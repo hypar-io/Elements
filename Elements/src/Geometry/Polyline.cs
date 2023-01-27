@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,6 @@ namespace Elements.Geometry
         internal BBox3 _bounds;
 
         /// <summary>The vertices of the polygon.</summary>
-        [JsonProperty("Vertices", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(2)]
         public IList<Vector3> Vertices { get; set; } = new List<Vector3>();

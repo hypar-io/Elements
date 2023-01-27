@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -8,11 +8,9 @@ namespace Elements.Geometry
     public struct UV
     {
         /// <summary>The U coordinate.</summary>
-        [JsonProperty("U", Required = Required.Always)]
         public double U { get; set; }
 
         /// <summary>The V coordinate.</summary>
-        [JsonProperty("V", Required = Required.Always)]
         public double V { get; set; }
 
         /// <summary>

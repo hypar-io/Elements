@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using Elements.Geometry;
 using Xunit;
 
@@ -67,7 +68,7 @@ namespace Elements.Serialization.DXF.Tests
             var renderer = new DXF.ModelToDxf();
 
             var configJson = File.ReadAllText("../../../TestModels/cad-standard.json");
-            var config = Newtonsoft.Json.JsonConvert.DeserializeObject<MappingConfiguration>(configJson);
+            var config = JsonSerializer.Deserialize<MappingConfiguration>(configJson);
             renderer.SetMappingConfiguration(config);
             var stream = renderer.Render(model);
             stream.Position = 0;

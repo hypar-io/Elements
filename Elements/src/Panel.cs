@@ -2,6 +2,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
@@ -16,7 +17,7 @@ namespace Elements
         /// <summary>
         /// The perimeter of the panel.
         /// </summary>
-        public Polygon Perimeter { get; }
+        public Polygon Perimeter { get; internal set; }
 
         /// <summary>
         /// Create a panel.
@@ -29,6 +30,7 @@ namespace Elements
         /// <param name="id">The id of the panel.</param>
         /// <param name="name">The name of the panel.</param>
         /// <exception>Thrown when the provided perimeter points are not coplanar.</exception>
+        [JsonConstructor]
         public Panel(Polygon perimeter,
                      Material material = null,
                      Transform transform = null,

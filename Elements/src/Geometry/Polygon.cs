@@ -3,7 +3,7 @@ using Elements.Search;
 using Elements.Spatial;
 using Elements.Validators;
 using LibTessDotNet.Double;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
