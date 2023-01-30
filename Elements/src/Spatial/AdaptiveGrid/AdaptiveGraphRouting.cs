@@ -202,13 +202,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Creates a Steiner tree on given vertices.
         /// </summary>
-        /// <param name="vertices">List of base vertices</param>
+        /// <param name="leafVertices">List of base vertices</param>
+        /// <param name="trunkVertex">The root of the resulting tree</param>
         /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
         /// <param name="alpha">Contribution of the sum of weights of edges to the weight of the tree</param>
         /// <param name="beta">Contribution of the sum of weights of paths to the weight of the tree</param>
         /// <returns></returns>
         public IDictionary<ulong, TreeNode> BuildSteinerTree(
-            IList<RoutingVertex> vertices,
+            IList<RoutingVertex> leafVertices,
+            ulong trunkVertex,
             IList<RoutingHintLine> hintLines,
             double alpha = 1.0,
             double beta  = 0.0)
@@ -221,7 +223,10 @@ namespace Elements.Spatial.AdaptiveGrid
             var graph_vertices_rev = new Dictionary<ulong, int>();
             var weights = CalculateEdgeInfos(hintLines);
             for (int i = 0; i < n; ++i) graph_vertices_rev[graph_vertices[i].Id] = i;
-            var allLeafs = vertices.Select(v => graph_vertices_rev[v.Id]).ToArray();
+
+            var leafs = leafVertices.Select(v => graph_vertices_rev[v.Id]).ToList();
+            leafs.Add(graph_vertices_rev[trunkVertex]);
+            var allLeafs = leafs.ToArray();
 
             var graph = new Algorithms.SteinerTreeCalculator(n);
             foreach (var edge in edges) graph.AddEdge(graph_vertices_rev[edge.StartId], graph_vertices_rev[edge.EndId], weights[edge.Id].Length*weights[edge.Id].Factor);
@@ -229,7 +234,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var out_tree = new Dictionary<ulong, TreeNode>();
 
             var q = new Queue<(int,int)>();
-            q.Enqueue((allLeafs[0], -1));
+            q.Enqueue((graph_vertices_rev[trunkVertex], -1));
             while (q.Count > 0)
             {
                 var (v, p) = q.Dequeue();
