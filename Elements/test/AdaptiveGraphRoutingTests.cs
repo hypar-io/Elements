@@ -184,6 +184,55 @@ namespace Elements.Tests
             Assert.Equal(8.6, travelCosts[outV].Item2);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void AdaptiveGridRoutingBestIndividualRoute(bool old)
+        {
+            var inputs = new List<(int,int)>
+            {
+                (-5, 10), (4, 5), (2, 12)
+            };
+
+            var lines = new List<List<Vector3>>()
+            {
+                new List<Vector3>{ (0, 0), (0, 10) },
+                new List<Vector3>{ (-5, 10), (2, 10) },
+                new List<Vector3>{ (2, 12), (2, 5) },
+                new List<Vector3>{ (4, 5), (0, 5) }
+            };
+
+            var grid = new AdaptiveGrid();
+            foreach (var line in lines)
+            {
+                grid.AddVertices(line, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+            }
+
+            var inputVertices = inputs.Select(i =>
+            {
+                Assert.True(grid.TryGetVertexIndex(i, out var id, grid.Tolerance));
+                return new RoutingVertex(id, 0);
+            }).ToList();
+
+            Assert.True(grid.TryGetVertexIndex((0, 0), out var end, grid.Tolerance));
+
+            var alg = new AdaptiveGraphRouting(grid, new RoutingConfiguration(turnCost: 1));
+            var hints = new List<RoutingHintLine>();
+
+            IDictionary<ulong, TreeNode> tree;
+            if (old)
+                tree = alg.BuildSpanningTree(inputVertices, end, hints, TreeOrder.ClosestToFurthest);
+            else
+                tree = alg.BuildSteinerTree(inputVertices.ToList(), end, hints);
+
+            CheckTree(grid, inputVertices[0].Id, tree,
+                      new List<Vector3> { (-5, 10), (0, 10), (0, 5), (0, 0) });
+            CheckTree(grid, inputVertices[1].Id, tree,
+                      new List<Vector3> { (4, 5), (2, 5), (0, 5), (0, 0) });
+            CheckTree(grid, inputVertices[2].Id, tree,
+                      new List<Vector3> { (2, 12), (2, 10), (0, 10), (0, 5), (0, 0) });
+        }
+
         [Fact]
         public void AdaptiveGraphRoutingGeneralTestSteiner()
         {
@@ -208,12 +257,14 @@ namespace Elements.Tests
             {
                 new Vector3(5, 2, 3),
                 new Vector3(5, 5, 3),
-                new Vector3(5, 8, 3),
-                new Vector3(5, 10, 0),
+                new Vector3(5, 8, 3)
             };
+
+            var tailPoint = new Vector3(5, 10, 0);
 
             var keyPoints = new List<Vector3>();
             keyPoints.AddRange(inputPoints);
+            keyPoints.Add(tailPoint);
 
             var hintPolyline = new Polyline(new List<Vector3>()
             {
@@ -265,6 +316,8 @@ namespace Elements.Tests
                 }
             }
 
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
             alg.AddPlanarWeightModifier(
@@ -275,7 +328,7 @@ namespace Elements.Tests
                 "Downpipe Layer",
                 new Plane(new Vector3(0, 0, 0), Vector3.ZAxis),
                 2);
-            var tree = alg.BuildSteinerTree(inputVertices, hints);
+            var tree = alg.BuildSteinerTree(inputVertices, tailVertex, hints);
 
             List<Vector3> expectedPath = new List<Vector3>()
             {
@@ -581,7 +634,7 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGraphRoutingSimpleTreeExampleSteiner()
         {
-            this.Name = "Adaptive_Graph_Routing_Simple_Steiner";
+            this.Name = "Adaptive_Graph_Routing_Simple";
             //1. Define boundaries of the grid. 
             Polygon boundary = new Polygon(new List<Vector3>()
             {
@@ -600,12 +653,15 @@ namespace Elements.Tests
                 new Vector3(12, 5, 0),
                 new Vector3(9, 8, 0),
                 new Vector3(11, 12, 0),
-                new Vector3(12, 20, 0),
             };
+
+            //3. Define end point.
+            var tailPoint = new Vector3(12, 20, 0);
 
             //4. All significant points must be added as key points.
             var keyPoints = new List<Vector3>();
             keyPoints.AddRange(inputPoints);
+            keyPoints.Add(tailPoint);
 
             //5. Define hint and offset lines.
             var firstOffsetPolyline = new Polyline(new List<Vector3>(){
@@ -649,6 +705,8 @@ namespace Elements.Tests
                 }
             }
 
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+
             //9. Set configurations for hint and offset lines.
             var hint = new RoutingHintLine(hintPolyline,
                 factor: 0.01, influence: 0.1, userDefined: true, is2D: true);
@@ -661,11 +719,10 @@ namespace Elements.Tests
             //10. Run algorithm
             var config = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
-            ulong tailVertex = 0;
-            var tree = alg.BuildSteinerTree(inputVertices, hints);
+            var tree = alg.BuildSteinerTree(inputVertices, tailVertex, hints);
 
             //Not throws if no hint lines
-            alg.BuildSteinerTree(inputVertices, new List<RoutingHintLine>());
+            alg.BuildSteinerTree(inputVertices, tailVertex, new List<RoutingHintLine>());
 
             //Results visualization
             VisualizeRoutingTree(grid, inputVertices, tree);
