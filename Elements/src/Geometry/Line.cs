@@ -520,36 +520,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculates where the point is wrt to the line, assuming the point is on the actual line that goes through Start, End
-        /// </summary>
-        /// <param name="point">A point to be tested</param>
-        /// <returns></returns>
-        public int PointRelativePosition(Vector3 point)
-        {
-            double p, q, r;
-            if (!Start.X.ApproximatelyEquals(End.X, Vector3.EPSILON))
-            {
-                p = point.X;
-                q = Start.X;
-                r = End.X;
-            }
-            else if (!Start.Y.ApproximatelyEquals(End.Y, Vector3.EPSILON))
-            {
-                p = point.Y;
-                q = Start.Y;
-                r = End.Y;
-            }
-            else
-            {
-                p = point.Z;
-                q = Start.Z;
-                r = End.Z;
-            }
-
-            return p < q ? -1 : (p < r ? 0 : 1);
-        }
-
-        /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
         /// </summary>
         /// <param name="l">The length.</param>
@@ -882,45 +852,59 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Measures the distance between two lines.
-        /// Computes a cross product of the lines' directional vectors.
-        /// Case 1: It's zero, meaning the lines are collinear, which means we can simply orthogonalize a vector that connects points on different line wrt the directional vector.
-        /// Case 2: It's not zero, meaning the moving of the points on the two lines spans a 2-dimensional subspace of a 3-dimensional space, so the shortest segment connecting the lines will be collinear to the cross product.
         /// </summary>
         /// <param name="other">The line to measure the distance to</param>
         /// <returns></returns>
         public double DistanceTo(Line other)
         {
-            Vector3 dist = this.Start - other.Start;
-            Vector3 v1 = this.End - this.Start;
-            Vector3 v2 = v1.Cross(other.End - other.Start);
-            if (v2.IsZero())
+            Vector3 dStartStart = this.Start - other.Start;
+            Vector3 vThis = this.End - this.Start, 
+                    vOther = other.End - other.Start;
+            Vector3 cross = vThis.Cross(vOther);
+            if (cross.IsZero()) // directional vectors are collinear
             {
-                dist -= dist.ProjectOnto(v1);
-                Vector3 v3 = other.Start + dist, v4 = other.End + dist;
-                if (PointRelativePosition(v3) * PointRelativePosition(v4) == 1)
+                if (vOther.Dot(dStartStart) < 0) // the projection of this.Start is outside of the other, closer to other.Start
                 {
-                    double d1 = (v3 - this.Start).LengthSquared(), d2 = (v3 - this.End).LengthSquared();
-                    if (d1 < d2)
+                    Vector3 dEndStart = this.End - other.Start;
+                    if (vOther.Dot(dEndStart) < 0) // the projection of this.End is outside of the other, closer to the other.Start
                     {
-                        return Math.Sqrt(Math.Min(d1, (v4 - this.Start).LengthSquared()));
+                        return Math.Sqrt(Math.Min(dStartStart.LengthSquared(), dEndStart.LengthSquared()));
                     }
-                    else
+                    // otherwise the projection of this contains other.Start
+                }
+                else // the projection og this.Start is either inside the other or outside, but closer to other.End
+                {
+                    Vector3 dStartEnd = this.Start - other.End;
+                    if (vOther.Dot(dStartEnd) > 0) // the projection of this.Start is outside of the other, closer to other.End
                     {
-                        return Math.Sqrt(Math.Min(d2, (v4 - this.End).LengthSquared()));
+                        Vector3 dEndEnd = this.End - other.End;
+                        if (vOther.Dot(dEndEnd) > 0) // the projection of this.End is outside of the other, closer to other.End
+                        {
+                            return Math.Sqrt(Math.Min(dStartEnd.LengthSquared(), dEndEnd.LengthSquared()));
+                        }
+                        // otherwise the projection of this contains other.End
                     }
+                    // otherwise the projection of this.Start is inside other
+                }
+                dStartStart -= dStartStart.ProjectOnto(vThis);
+            }
+            else // directional vectors are not collinear, they span a 2-dimensional space, so the shortest segment connection two lines is collinear to their cross product
+            {
+                dStartStart = dStartStart.ProjectOnto(cross); // the shortest segment
+                Vector3 vStartStart = other.Start + dStartStart - this.Start, 
+                        vStartEnd = other.Start + dStartStart - this.End, 
+                        vEndStart = other.End + dStartStart - this.Start, 
+                        vEndEnd = other.End + dStartStart - this.End;
+                // other + dStartStart and this are now in the same plane
+                // we check whether other is fully on one side of this or vice versa, id est whether this and other + dStartStart intersect
+                if (vStartStart.Cross(vStartEnd).Dot(vEndStart.Cross(vEndEnd)) > 0 || vStartStart.Cross(vEndStart).Dot(vStartEnd.Cross(vEndEnd)) > 0) 
+                {
+                    return Math.Min(Math.Min(this.Start.DistanceTo(other), this.End.DistanceTo(other)), 
+                                    Math.Min(other.Start.DistanceTo(this), other.End.DistanceTo(this)));
                 }
             }
-            else
-            {
-                dist = dist.ProjectOnto(v2);
-                Vector3 v3 = other.Start + dist - this.Start, v4 = other.Start + dist - this.End, v5 = other.End + dist - this.Start, v6 = other.End + dist - this.End;
-                if (v3.Cross(v4).Dot(v5.Cross(v6)) > 0 || v3.Cross(v5).Dot(v4.Cross(v6)) > 0)
-                {
-                    return Math.Sqrt(Math.Min(Math.Min(v3.LengthSquared(), v4.LengthSquared()), 
-                                              Math.Min(v5.LengthSquared(), v6.LengthSquared())));
-                }
-            }
-            return dist.Length();
+
+            return dStartStart.Length();
         }
 
         /// <summary>
