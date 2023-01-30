@@ -936,6 +936,11 @@ namespace Elements.Geometry.Tests
             right = new Line((7, 0), (7, 10));
             Assert.Equal(0, left.DistanceTo(right));
 
+            // Used to fail
+            left = new Line((5, 5), (5, 8));
+            right = new Line((3, 1), (3, 4));
+            Assert.Equal(Math.Sqrt(5), left.DistanceTo(right));
+
             // the test is for the DistanceTo function (case of the equal lines)
             Vector3 pt = new Vector3(-2.685818406894334, -2.476879934864206, -0.5565494179776103);
             Vector3 v = new Vector3(-2.3537985903693657, 2.407193267710168, -2.771078003386066);
