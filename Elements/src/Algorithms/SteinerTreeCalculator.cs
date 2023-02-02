@@ -16,15 +16,15 @@ namespace Elements.Algorithms
         // graph must be undirected!
         public SteinerTreeCalculator((int, double)[][] graph, TreeInitializationType type = TreeInitializationType.Manual)
         {
-            this.type = type;
+            this._type = type;
 
-            n = graph.Length;
-            g = new Dictionary<int, double>[n];
-            if (type == TreeInitializationType.AutoInsert) dsu_main = new DisjointSetUnion(n);
-            if (type == TreeInitializationType.Manual) comp = new int[n];
-            for (var i = 0; i < n; ++i)
+            _numVertices = graph.Length;
+            _graph = new Dictionary<int, double>[_numVertices];
+            if (type == TreeInitializationType.AutoInsert) _dsuMain = new DisjointSetUnion(_numVertices);
+            if (type == TreeInitializationType.Manual) _componentId = new int[_numVertices];
+            for (var i = 0; i < _numVertices; ++i)
             {
-                g[i] = new Dictionary<int, double>();
+                _graph[i] = new Dictionary<int, double>();
                 foreach (var (k, v) in graph[i])
                     AddEdge(i, k, v);
             }
@@ -38,7 +38,7 @@ namespace Elements.Algorithms
         private void dfsInit(int v, int id, ref Dictionary<int, double>[] g, ref int[] used)
         {
             used[v] = 1;
-            comp[v] = id;
+            _componentId[v] = id;
             foreach (var ed in g[v])
             {
                 if (used[ed.Key] == 1) continue;
@@ -50,42 +50,42 @@ namespace Elements.Algorithms
         // recalculates the connectivity components
         public void Init()
         {
-            if (type != TreeInitializationType.Manual) return;
-            var used = new int[n];
-            for (int i = 0, id = 0; i < n; ++i)
-                if (used[i] == 0) dfsInit(i, id++, ref g, ref used);
+            if (_type != TreeInitializationType.Manual) return;
+            var used = new int[_numVertices];
+            for (int i = 0, id = 0; i < _numVertices; ++i)
+                if (used[i] == 0) dfsInit(i, id++, ref _graph, ref used);
         }
 
         // initializes an empty graph with n vertices
         public SteinerTreeCalculator(int size, TreeInitializationType type = TreeInitializationType.Manual)
         {
-            n = size;
-            g = new Dictionary<int, double>[n];
-            if (type == TreeInitializationType.AutoInsert) dsu_main = new DisjointSetUnion(n);
-            if (type == TreeInitializationType.Manual) comp = new int[n];
-            for (var i = 0; i < n; ++i) g[i] = new Dictionary<int, double>();
+            _numVertices = size;
+            _graph = new Dictionary<int, double>[_numVertices];
+            if (type == TreeInitializationType.AutoInsert) _dsuMain = new DisjointSetUnion(_numVertices);
+            if (type == TreeInitializationType.Manual) _componentId = new int[_numVertices];
+            for (var i = 0; i < _numVertices; ++i) _graph[i] = new Dictionary<int, double>();
         }
 
         // adds an undirected weighed edge to the graph
         public void AddEdge(int u, int v, double l)
         {
-            g[u][v] = g[v][u] = l;
-            if (type == TreeInitializationType.AutoInsert) dsu_main.AddEdge(u, v);
+            _graph[u][v] = _graph[v][u] = l;
+            if (_type == TreeInitializationType.AutoInsert) _dsuMain.AddEdge(u, v);
         }
 
         // removes an undirected edge from the graph
         public void RemoveEdge(int u, int v)
         {
-            g[u].Remove(v);
-            g[v].Remove(u);
+            _graph[u].Remove(v);
+            _graph[v].Remove(u);
         }
 
         // a universal method to get an id of the connectivity component of a given vertex regardless of the initialization type
         // returns -1 if an initialization type is not supported
         private int getComponentId(int v)
         {
-            if (type == TreeInitializationType.Manual) return comp[v];
-            if (type == TreeInitializationType.AutoInsert) return dsu_main.GetParent(v);
+            if (_type == TreeInitializationType.Manual) return _componentId[v];
+            if (_type == TreeInitializationType.AutoInsert) return _dsuMain.GetParent(v);
             return -1;
         }
 
@@ -126,16 +126,16 @@ namespace Elements.Algorithms
             //     n is the total number of vertices
             //     m is the number of edges
             var q = new PriorityQueue<double, (int, int)>();
-            int[] used = new int[n];
-            var gg = new Dictionary<int, double>[n];
-            for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
-            var dsu = new DisjointSetUnion(n);
+            int[] used = new int[_numVertices];
+            var gg = new Dictionary<int, double>[_numVertices];
+            for (var i = 0; i < _numVertices; ++i) gg[i] = new Dictionary<int, double>();
+            var dsu = new DisjointSetUnion(_numVertices);
 
             int cnt = vertices.Length;
             foreach (var v in vertices)
             {
                 used[v] = 1;
-                foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), ed.Value);
+                foreach (var ed in _graph[v]) q.AddOrUpdate((v, ed.Key), ed.Value);
             }
             while (cnt > 1 && !q.Empty())
             {
@@ -148,7 +148,7 @@ namespace Elements.Algorithms
                 else
                 {
                     used[v] = 1;
-                    foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key) , ed.Value);
+                    foreach (var ed in _graph[v]) q.AddOrUpdate((v, ed.Key) , ed.Value);
                 }
             }
 
@@ -187,24 +187,24 @@ namespace Elements.Algorithms
         public Dictionary<int, double>[] GetTreeMk2(int[] vertices, double alpha = 1.0, double beta = 0.0)
         {
             var q = new PriorityQueue<double, (int, int)>();
-            int[] used = new int[n];
-            var gg = new Dictionary<int, double>[n];
-            for (var i = 0; i < n; ++i) gg[i] = new Dictionary<int, double>();
-            var dsu = new DisjointSetUnion(n);
+            int[] used = new int[_numVertices];
+            var gg = new Dictionary<int, double>[_numVertices];
+            for (var i = 0; i < _numVertices; ++i) gg[i] = new Dictionary<int, double>();
+            var dsu = new DisjointSetUnion(_numVertices);
 
-            var comp_cnt = new List<int>[n];
-            for (int i = 0; i < n; ++i) comp_cnt[i] = new List<int>();
+            var comp_cnt = new List<int>[_numVertices];
+            for (int i = 0; i < _numVertices; ++i) comp_cnt[i] = new List<int>();
             foreach (var v in vertices)
             {
                 comp_cnt[getComponentId(v)].Add(v);
             }
 
-            for (int cmp = 0; cmp < n; ++cmp)
+            for (int cmp = 0; cmp < _numVertices; ++cmp)
             {
                 foreach (var v in comp_cnt[cmp])
                 {
                     used[v] = 1;
-                    foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
+                    foreach (var ed in _graph[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
                 }
 
                 while (!q.Empty())
@@ -213,11 +213,11 @@ namespace Elements.Algorithms
                     int u = tp.Item1.Item1, v = tp.Item1.Item2;
                     if (!dsu.AddEdge(u, v)) continue;
 
-                    gg[u][v] = gg[v][u] = g[u][v];
+                    gg[u][v] = gg[v][u] = _graph[u][v];
                     if (used[v] == 0)
                     {
                         used[v] = 1;
-                        foreach (var ed in g[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
+                        foreach (var ed in _graph[v]) q.AddOrUpdate((v, ed.Key), alpha * ed.Value + beta * ed.Value * dsu.ComponentSize(v) * dsu.ComponentSize(ed.Key));
                     }
                 }
             }
@@ -235,12 +235,12 @@ namespace Elements.Algorithms
         }
 
         // returns the number of vertices in the graph
-        public int Size { get { return n; } }
+        public int Size { get { return _numVertices; } }
 
-        private int n; // number of vertices
-        private Dictionary<int, double>[] g; // compressed adjancency matrix
-        private int[] comp; // component id of each vertex
-        private TreeInitializationType type; // components computation type
-        private DisjointSetUnion dsu_main; // dsu for the whole graph
+        private int _numVertices; // number of vertices
+        private Dictionary<int, double>[] _graph; // compressed adjancency matrix
+        private int[] _componentId; // component id of each vertex
+        private TreeInitializationType _type; // components computation type
+        private DisjointSetUnion _dsuMain; // dsu for the whole graph
     }
 }
