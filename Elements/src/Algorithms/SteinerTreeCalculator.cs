@@ -222,7 +222,6 @@ namespace Elements.Algorithms
                 {
                     continue;
                 }
-                used[v] = 2;
                 dfsTrim(v, -1, ref gg, ref hs, ref used, ref e);
             }
             return e.ToArray();
@@ -310,7 +309,6 @@ namespace Elements.Algorithms
                 {
                     continue;
                 }
-                used[v] = 2;
                 dfsTrim(v, -1, ref gg, ref hs, ref used, ref e);
             }
 
