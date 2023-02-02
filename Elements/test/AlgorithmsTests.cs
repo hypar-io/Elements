@@ -105,8 +105,12 @@ namespace Elements.Algorithms.Tests
             var tree = graph.GetTreeMk2(new int[4] { 0, 2, 4, 5 });
             var edges = new HashSet<(int, int, double)>();
             for (int i = 0; i < 7; ++i)
+            {
                 foreach (var ed in tree[i])
+                {
                     edges.Add((i, ed.Key, ed.Value));
+                }
+            }
             Assert.Equal(8, edges.Count);
             Assert.True(edges.Contains((0, 5, 6)) && edges.Contains((5, 0, 6)));
             Assert.True(edges.Contains((3, 5, 4)) && edges.Contains((5, 3, 4)));
