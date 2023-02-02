@@ -221,9 +221,13 @@ namespace Elements.Tests
 
             IDictionary<ulong, TreeNode> tree;
             if (old)
+            {
                 tree = alg.BuildSpanningTree(inputVertices, end, hints, TreeOrder.ClosestToFurthest);
+            }
             else
+            {
                 tree = alg.BuildSteinerTree(inputVertices.ToList(), end, hints);
+            }
 
             CheckTree(grid, inputVertices[0].Id, tree,
                       new List<Vector3> { (-5, 10), (0, 10), (0, 5), (0, 0) });
