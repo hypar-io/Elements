@@ -861,24 +861,30 @@ namespace Elements.Geometry
             Vector3 vThis = this.End - this.Start, 
                     vOther = other.End - other.Start;
             Vector3 cross = vThis.Cross(vOther);
-            if (cross.IsZero()) // directional vectors are collinear
+            // directional vectors are collinear
+            if (cross.IsZero()) 
             {
-                if (vOther.Dot(dStartStart) < 0) // the projection of this.Start is outside of the other, closer to other.Start
+                // the projection of this.Start is outside of the other, closer to other.Start
+                if (vOther.Dot(dStartStart) < 0) 
                 {
                     Vector3 dEndStart = this.End - other.Start;
-                    if (vOther.Dot(dEndStart) < 0) // the projection of this.End is outside of the other, closer to the other.Start
+                    // the projection of this.End is outside of the other, closer to the other.Start
+                    if (vOther.Dot(dEndStart) < 0) 
                     {
                         return Math.Sqrt(Math.Min(dStartStart.LengthSquared(), dEndStart.LengthSquared()));
                     }
                     // otherwise the projection of this contains other.Start
                 }
-                else // the projection og this.Start is either inside the other or outside, but closer to other.End
+                // the projection og this.Start is either inside the other or outside, but closer to other.End
+                else
                 {
                     Vector3 dStartEnd = this.Start - other.End;
-                    if (vOther.Dot(dStartEnd) > 0) // the projection of this.Start is outside of the other, closer to other.End
+                    // the projection of this.Start is outside of the other, closer to other.End
+                    if (vOther.Dot(dStartEnd) > 0) 
                     {
                         Vector3 dEndEnd = this.End - other.End;
-                        if (vOther.Dot(dEndEnd) > 0) // the projection of this.End is outside of the other, closer to other.End
+                        // the projection of this.End is outside of the other, closer to other.End
+                        if (vOther.Dot(dEndEnd) > 0) 
                         {
                             return Math.Sqrt(Math.Min(dStartEnd.LengthSquared(), dEndEnd.LengthSquared()));
                         }
@@ -888,7 +894,8 @@ namespace Elements.Geometry
                 }
                 dStartStart -= dStartStart.ProjectOnto(vThis);
             }
-            else // directional vectors are not collinear, they span a 2-dimensional space, so the shortest segment connection two lines is collinear to their cross product
+            // directional vectors are not collinear, they span a 2-dimensional space, so the shortest segment connection two lines is collinear to their cross product
+            else
             {
                 dStartStart = dStartStart.ProjectOnto(cross); // the shortest segment
                 Vector3 vStartStart = other.Start + dStartStart - this.Start, 
