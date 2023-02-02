@@ -9,10 +9,10 @@ namespace Elements.Algorithms
         // constructs an empty dsu that acts on n vertices
         public DisjointSetUnion(int n)
         {
-            numVertices = n;
-            numEdges = 0;
-            parent = new int[n];
-            size = new int[n];
+            _numVertices = n;
+            _numEdges = 0;
+            _parent = new int[n];
+            _size = new int[n];
 
             Reset();
         }
@@ -20,17 +20,17 @@ namespace Elements.Algorithms
         // empties the dsu
         public void Reset()
         {
-            for (var i = 0; i < numVertices; ++i)
+            for (var i = 0; i < _numVertices; ++i)
             {
-                parent[i] = i;
-                size[i] = 1;
+                _parent[i] = i;
+                _size[i] = 1;
             }
         }
 
         // returns the root of the vertice's component, relabeling the closest parent links along the way
         public int GetParent(int v)
         {
-            return v == parent[v] ? v : parent[v] = GetParent(parent[v]);
+            return v == _parent[v] ? v : _parent[v] = GetParent(_parent[v]);
         }
 
         // inserts an edge into the structure, connects the smaller tree to the bigger
@@ -44,14 +44,14 @@ namespace Elements.Algorithms
             {
                 return false;
             }
-            ++numEdges;
+            ++_numEdges;
 
-            if (size[u] < size[v])
+            if (_size[u] < _size[v])
             {
                 (u, v) = (v, u);
             }
-            parent[v] = u;
-            size[u] += size[v];
+            _parent[v] = u;
+            _size[u] += _size[v];
 
             return true;
         }
@@ -59,17 +59,17 @@ namespace Elements.Algorithms
         // returns the size of the component, in which the vertex lies
         public int ComponentSize(int u)
         {
-            return size[GetParent(u)];
+            return _size[GetParent(u)];
         }
 
         // returns the number of vertices
-        public int Size { get { return numVertices; } }
+        public int Size { get { return _numVertices; } }
         // returns the number of components
-        public int NumComponents  {  get { return numVertices - numEdges; } }
+        public int NumComponents  {  get { return _numVertices - _numEdges; } }
 
-        private int numVertices; // number of vertices
-        private int numEdges; // number of edges that form a spanning tree
-        private int[] parent; // the top-most certain parent of the vertex 
-        private int[] size; // size of the vertex's subcomponent
+        private int _numVertices; // number of vertices
+        private int _numEdges; // number of edges that form a spanning tree
+        private int[] _parent; // the top-most certain parent of the vertex 
+        private int[] _size; // size of the vertex's subcomponent
     }
 }
