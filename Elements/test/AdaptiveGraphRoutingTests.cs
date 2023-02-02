@@ -184,6 +184,209 @@ namespace Elements.Tests
             Assert.Equal(8.6, travelCosts[outV].Item2);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void AdaptiveGridRoutingBestIndividualRoute(bool old)
+        {
+            var inputs = new List<(int,int)>
+            {
+                (-5, 10), (4, 5), (2, 12)
+            };
+
+            var lines = new List<List<Vector3>>()
+            {
+                new List<Vector3>{ (0, 0), (0, 10) },
+                new List<Vector3>{ (-5, 10), (2, 10) },
+                new List<Vector3>{ (2, 12), (2, 5) },
+                new List<Vector3>{ (4, 5), (0, 5) }
+            };
+
+            var grid = new AdaptiveGrid();
+            foreach (var line in lines)
+            {
+                grid.AddVertices(line, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
+            }
+
+            var inputVertices = inputs.Select(i =>
+            {
+                Assert.True(grid.TryGetVertexIndex(i, out var id, grid.Tolerance));
+                return new RoutingVertex(id, 0);
+            }).ToList();
+
+            Assert.True(grid.TryGetVertexIndex((0, 0), out var end, grid.Tolerance));
+
+            var alg = new AdaptiveGraphRouting(grid, new RoutingConfiguration(turnCost: 1));
+            var hints = new List<RoutingHintLine>();
+
+            IDictionary<ulong, TreeNode> tree;
+            if (old)
+            {
+                tree = alg.BuildSpanningTree(inputVertices, end, hints, TreeOrder.ClosestToFurthest);
+            }
+            else
+            {
+                tree = alg.BuildSteinerTree(inputVertices.ToList(), end, hints);
+            }
+
+            CheckTree(grid, inputVertices[0].Id, tree,
+                      new List<Vector3> { (-5, 10), (0, 10), (0, 5), (0, 0) });
+            CheckTree(grid, inputVertices[1].Id, tree,
+                      new List<Vector3> { (4, 5), (2, 5), (0, 5), (0, 0) });
+            CheckTree(grid, inputVertices[2].Id, tree,
+                      new List<Vector3> { (2, 12), (2, 10), (0, 10), (0, 5), (0, 0) });
+        }
+
+        [Fact]
+        public void AdaptiveGraphRoutingGeneralTestSteiner()
+        {
+            double mainLayer = 2;
+            Polygon mainRegionBoundary = new Polygon(new List<Vector3>()
+            {
+                new Vector3(0, 0, 1),
+                new Vector3(10, 0, 1),
+                new Vector3(10, 10, 1),
+                new Vector3(0, 10, 1)
+            });
+
+            Polygon auxilaryRegionBoundary = new Polygon(new List<Vector3>()
+            {
+                new Vector3(0, 10, 0),
+                new Vector3(10, 10, 0),
+                new Vector3(10, 10, 3),
+                new Vector3(0, 10, 3)
+            });
+
+            var inputPoints = new List<Vector3>()
+            {
+                new Vector3(5, 2, 3),
+                new Vector3(5, 5, 3),
+                new Vector3(5, 8, 3)
+            };
+
+            var tailPoint = new Vector3(5, 10, 0);
+
+            var keyPoints = new List<Vector3>();
+            keyPoints.AddRange(inputPoints);
+            keyPoints.Add(tailPoint);
+
+            var hintPolyline = new Polyline(new List<Vector3>()
+            {
+                new Vector3(6, 6),
+                new Vector3(3, 6),
+                new Vector3(3, 7),
+                new Vector3(6, 7),
+
+            });
+            keyPoints.AddRange(hintPolyline.Vertices.Select(
+                v => new Vector3(v.X, v.Y, mainLayer)));
+
+            var offsetPolyline = new Polyline(new List<Vector3>()
+            {
+                new Vector3(6, 2),
+                new Vector3(6, 10),
+                new Vector3(5, 10)
+            });
+            keyPoints.AddRange(offsetPolyline.Vertices.Select(
+                v => new Vector3(v.X, v.Y, mainLayer)));
+
+            var hints = new List<RoutingHintLine>();
+            hints.Add(new RoutingHintLine(hintPolyline,
+                factor: 0.01, influence: 0.2, userDefined: true, is2D: true));
+            hints.Add(new RoutingHintLine(offsetPolyline,
+                factor: 0.1, influence: 0.1, userDefined: false, is2D: true));
+
+            var box = new BBox3(new Vector3(3, 6, 0), new Vector3(7, 7, 3));
+            var obstacle = Obstacle.FromBBox(box);
+            keyPoints.AddRange(box.Corners());
+
+            AdaptiveGrid grid = new AdaptiveGrid();
+            grid.AddFromExtrude(mainRegionBoundary, Vector3.ZAxis, 1, keyPoints);
+            grid.AddFromPolygon(auxilaryRegionBoundary, keyPoints);
+            foreach (var input in inputPoints)
+            {
+                var p = new Vector3(input.X, input.Y, mainLayer);
+                Assert.True(grid.TryGetVertexIndex(p, out ulong down, grid.Tolerance));
+                grid.AddVertex(input, new ConnectVertexStrategy(grid.GetVertex(down)));
+            }
+            grid.SubtractObstacle(obstacle);
+
+            var inputVertices = new List<RoutingVertex>();
+            foreach (var input in inputPoints)
+            {
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                {
+                    inputVertices.Add(new RoutingVertex(id, 0.5));
+                }
+            }
+
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+
+            var configuration = new RoutingConfiguration(turnCost: 1);
+            AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
+            alg.AddPlanarWeightModifier(
+                "Other Layer",
+                new Plane(new Vector3(0, 0, 1), Vector3.ZAxis),
+                2);
+            alg.AddPlanarWeightModifier(
+                "Downpipe Layer",
+                new Plane(new Vector3(0, 0, 0), Vector3.ZAxis),
+                2);
+            var tree = alg.BuildSteinerTree(inputVertices, tailVertex, hints);
+
+            List<Vector3> expectedPath = new List<Vector3>()
+            {
+                new Vector3(5, 8, 3),
+                new Vector3(5, 8, 2),
+                new Vector3(6, 8, 2),
+                new Vector3(6, 10, 2),
+                new Vector3(5, 10, 2),
+                new Vector3(5, 10, 1),
+                new Vector3(5, 10, 0)
+            };
+
+            CheckTree(grid, inputVertices[2].Id, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(5, 5, 3),
+                new Vector3(5, 5, 2),
+                new Vector3(5, 6, 2),
+                new Vector3(3, 6, 2),
+                new Vector3(3, 7, 2),
+                new Vector3(5, 7, 2),
+                new Vector3(6, 7, 2),
+                new Vector3(6, 8, 2),
+                new Vector3(6, 10, 2),
+                new Vector3(5, 10, 2),
+                new Vector3(5, 10, 1),
+                new Vector3(5, 10, 0)
+            };
+
+            CheckTree(grid, inputVertices[1].Id, tree, expectedPath);
+
+            expectedPath = new List<Vector3>()
+            {
+                new Vector3(5, 2, 3),
+                new Vector3(5, 2, 2),
+                new Vector3(6, 2, 2),
+                new Vector3(6, 5, 2),
+                new Vector3(6, 6, 2),
+                new Vector3(5, 6, 2),
+                new Vector3(3, 6, 2),
+                new Vector3(3, 7, 2),
+                new Vector3(5, 7, 2),
+                new Vector3(6, 7, 2),
+                new Vector3(6, 8, 2),
+                new Vector3(6, 10, 2),
+                new Vector3(5, 10, 2),
+                new Vector3(5, 10, 1),
+                new Vector3(5, 10, 0),
+            };
+
+            CheckTree(grid, inputVertices[0].Id, tree, expectedPath);
+        }
+
         [Fact]
         public void AdaptiveGraphRoutingGeneralTest()
         {
@@ -433,6 +636,104 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGraphRoutingSimpleTreeExampleSteiner()
+        {
+            this.Name = "Adaptive_Graph_Routing_Simple";
+            //1. Define boundaries of the grid. 
+            Polygon boundary = new Polygon(new List<Vector3>()
+            {
+                new Vector3(0, 0, 0),
+                new Vector3(20, 0, 0),
+                new Vector3(20, 25, 0),
+                new Vector3(0, 25, 0)
+            });
+
+            //2. Define start points.
+            var inputPoints = new List<Vector3>()
+            {
+                new Vector3(2, 5, 0),
+                new Vector3(2, 10, 0),
+                new Vector3(8, 15, 0),
+                new Vector3(12, 5, 0),
+                new Vector3(9, 8, 0),
+                new Vector3(11, 12, 0),
+            };
+
+            //3. Define end point.
+            var tailPoint = new Vector3(12, 20, 0);
+
+            //4. All significant points must be added as key points.
+            var keyPoints = new List<Vector3>();
+            keyPoints.AddRange(inputPoints);
+            keyPoints.Add(tailPoint);
+
+            //5. Define hint and offset lines.
+            var firstOffsetPolyline = new Polyline(new List<Vector3>(){
+                new Vector3(5, 2),
+                new Vector3(5, 20)
+            });
+            keyPoints.AddRange(firstOffsetPolyline.Vertices);
+
+            var secondOffsetPolyline = new Polyline(new List<Vector3>()
+            {
+                new Vector3(15, 2),
+                new Vector3(15, 20)
+            });
+            keyPoints.AddRange(secondOffsetPolyline.Vertices);
+
+            var hintPolyline = new Polyline(new List<Vector3>()
+            {
+                new Vector3(5, 17),
+                new Vector3(15, 17),
+
+            });
+            keyPoints.AddRange(hintPolyline.Vertices);
+
+            //6. Define obstacles.
+            var box = new BBox3(new Vector3(11, 14, 0), new Vector3(17, 18, 0));
+            var obstacle = Obstacle.FromBBox(box);
+            keyPoints.AddRange(box.Corners());
+
+            //7. Create grid.
+            AdaptiveGrid grid = new AdaptiveGrid();
+            grid.AddFromPolygon(boundary, keyPoints);
+            grid.SubtractObstacle(obstacle);
+
+            //8. Get indices's for start and end vertices
+            var inputVertices = new List<RoutingVertex>();
+            foreach (var input in inputPoints)
+            {
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                {
+                    inputVertices.Add(new RoutingVertex(id, 0.5));
+                }
+            }
+
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+
+            //9. Set configurations for hint and offset lines.
+            var hint = new RoutingHintLine(hintPolyline,
+                factor: 0.01, influence: 0.1, userDefined: true, is2D: true);
+            var offset1 = new RoutingHintLine(firstOffsetPolyline,
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
+            var offset2 = new RoutingHintLine(secondOffsetPolyline,
+                factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
+            var hints = new List<RoutingHintLine> { hint, offset1, offset2 };
+
+            //10. Run algorithm
+            var config = new RoutingConfiguration(turnCost: 1);
+            AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
+            var tree = alg.BuildSteinerTree(inputVertices, tailVertex, hints);
+
+            //Not throws if no hint lines
+            alg.BuildSteinerTree(inputVertices, tailVertex, new List<RoutingHintLine>());
+
+            //Results visualization
+            VisualizeRoutingTree(grid, inputVertices, tree);
+            VisualizeGrid(alg, hints, keyPoints);
+        }
+
+        [Fact]
         public void AdaptiveGraphRoutingGroupedTreeExample()
         {
             this.Name = "Adaptive_Graph_Routing_Groups";
@@ -521,9 +822,9 @@ namespace Elements.Tests
             //9. Set configurations for hint and offset lines. Split them into groups.
             var hint = new RoutingHintLine(hintPolyline,
                 factor: 0.01, influence: 0.1, userDefined: true, is2D: true);
-            var offset1 = new RoutingHintLine(firstOffsetPolyline, 
+            var offset1 = new RoutingHintLine(firstOffsetPolyline,
                 factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
-            var offset2 = new RoutingHintLine(secondOffsetPolyline, 
+            var offset2 = new RoutingHintLine(secondOffsetPolyline,
                 factor: 0.9, influence: 0.1, userDefined: false, is2D: true);
             var hints = new List<List<RoutingHintLine>>
             {

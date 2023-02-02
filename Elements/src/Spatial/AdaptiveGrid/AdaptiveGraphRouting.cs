@@ -200,6 +200,73 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Creates a Steiner tree on given vertices.
+        /// </summary>
+        /// <param name="leafVertices">List of base vertices</param>
+        /// <param name="trunkVertex">The root of the resulting tree</param>
+        /// <param name="hintLines">Collection of lines that routes are attracted to. At least one hint line per group is required.</param>
+        /// <param name="alpha">Contribution of the sum of weights of edges to the weight of the tree</param>
+        /// <param name="beta">Contribution of the sum of weights of paths to the weight of the tree</param>
+        /// <returns></returns>
+        public IDictionary<ulong, TreeNode> BuildSteinerTree(
+            IList<RoutingVertex> leafVertices,
+            ulong trunkVertex,
+            IList<RoutingHintLine> hintLines,
+            double alpha = 1.0,
+            double beta  = 0.0)
+        {
+            ErrorMessages.Clear();
+
+            var graph_vertices = _grid.GetVertices();
+            var edges = _grid.GetEdges();
+            int n = graph_vertices.Count;
+            var graph_vertices_rev = new Dictionary<ulong, int>();
+            var weights = CalculateEdgeInfos(hintLines);
+            for (int i = 0; i < n; ++i)
+            {
+                graph_vertices_rev[graph_vertices[i].Id] = i;
+            }
+
+            var leafs = leafVertices.Select(v => graph_vertices_rev[v.Id]).ToList();
+            leafs.Add(graph_vertices_rev[trunkVertex]);
+            var allLeafs = leafs.ToArray();
+
+            var graph = new Algorithms.SteinerTreeCalculator(n);
+            foreach (var edge in edges)
+            {
+                graph.AddEdge(graph_vertices_rev[edge.StartId], graph_vertices_rev[edge.EndId], weights[edge.Id].Length * weights[edge.Id].Factor);
+            }
+            var tree = graph.GetTreeMk2(allLeafs, alpha, beta);
+            var out_tree = new Dictionary<ulong, TreeNode>();
+
+            var q = new Queue<(int,int)>();
+            q.Enqueue((graph_vertices_rev[trunkVertex], -1));
+            while (q.Count > 0)
+            {
+                var (v, p) = q.Dequeue();
+                var out_v = new TreeNode(graph_vertices[v].Id);
+                if (p != -1)
+                {
+                    out_v.SetTrunk(out_tree[graph_vertices[p].Id]);
+                }
+                out_tree[graph_vertices[v].Id] = out_v;
+                
+                foreach (var ed in tree[v])
+                {
+                    int u = ed.Key;
+                    if (u == p)
+                    {
+                        continue;
+                    }
+
+                    q.Enqueue((u, v));
+                }
+            }
+
+            return out_tree;
+        }
+
+        /// <summary>
         /// Creates tree of routes between multiple sections, each having a set of input Vertices,
         /// hint lines and local end Vertex, and the exit Vertex.
         /// Route is created by using Dijkstra algorithm locally on different segments.
@@ -559,14 +626,14 @@ namespace Elements.Spatial.AdaptiveGrid
             ulong? startDirection = null, HashSet<ulong> excluded = null,
             Dictionary<ulong, ulong?> pathDirections = null)
         {
-            PriorityQueue<ulong> pq = PreparePriorityQueue(
+            PriorityQueue<double, ulong> pq = PreparePriorityQueue(
                 start, out Dictionary<ulong, ulong> path, out travelCost);
 
             while (!pq.Empty())
             {
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
-                ulong u = pq.PopMin();
+                ulong u = pq.PopMin().Value;
 
                 //All vertices that can be reached from start vertex are visited.
                 //Ignore once only unreachable are left.
@@ -674,7 +741,7 @@ namespace Elements.Spatial.AdaptiveGrid
             out Dictionary<ulong, (double, double)> travelCost,
             ulong? startDirection = null, HashSet<ulong> excluded = null)
         {
-            PriorityQueue<ulong> pq = PreparePriorityQueue(
+            PriorityQueue<double, ulong> pq = PreparePriorityQueue(
                 start, out Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
                 out travelCost);
 
@@ -682,7 +749,7 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 //At each step retrieve the vertex with the lowest travel cost and
                 //remove it, so it can't be visited again.
-                ulong u = pq.PopMin();
+                ulong u = pq.PopMin().Value;
 
                 //All vertices that can be reached from start vertex are visited.
                 //Ignore once only unreachable are left.
@@ -847,7 +914,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return info.Length * info.Factor;
         }
 
-        private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
+        private PriorityQueue<double, ulong> PreparePriorityQueue(ulong start,
             out Dictionary<ulong, ulong> path, out Dictionary<ulong, double> travelCost)
         {
             path = new Dictionary<ulong, ulong>();
@@ -868,11 +935,12 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             travelCost[start] = 0;
 
-            PriorityQueue<ulong> pq = new PriorityQueue<ulong>(indices);
+            PriorityQueue<double, ulong> pq = new PriorityQueue<double, ulong>(indices, double.PositiveInfinity);
+            pq.UpdatePriority(indices[0], 0);
             return pq;
         }
 
-        private PriorityQueue<ulong> PreparePriorityQueue(ulong start,
+        private PriorityQueue<double, ulong> PreparePriorityQueue(ulong start,
             out Dictionary<ulong, ((ulong, BranchSide), (ulong, BranchSide))> path,
             out Dictionary<ulong, (double, double)> travelCost)
         {
@@ -894,7 +962,8 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             travelCost[start] = (0, 0);
 
-            PriorityQueue<ulong> pq = new PriorityQueue<ulong>(indices);
+            PriorityQueue<double, ulong> pq = new PriorityQueue<double, ulong>(indices, double.PositiveInfinity);
+            pq.AddOrUpdate(indices[0], 0);
             return pq;
         }
 
@@ -1128,7 +1197,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return cost;
         }
 
-        private void MarkExpensiveRoute(PriorityQueue<ulong> pq,
+        private void MarkExpensiveRoute(PriorityQueue<double, ulong> pq,
                                        IDictionary<ulong, double> travelCost,
                                        IDictionary<ulong, ulong> path,
                                        ulong id, ulong before, double bestCost)
@@ -1142,7 +1211,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private void MarkExpensiveRoute(
-            PriorityQueue<ulong> pq,
+            PriorityQueue<double, ulong> pq,
             Dictionary<ulong, (double Left, double Right)> travelCost,
             Dictionary<ulong, ((ulong Id, BranchSide Side) Left, (ulong Id, BranchSide Side) Right)> path,
             ulong id, ulong before, (double Left, double Right) bestCost)
