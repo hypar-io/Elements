@@ -222,14 +222,20 @@ namespace Elements.Spatial.AdaptiveGrid
             int n = graph_vertices.Count;
             var graph_vertices_rev = new Dictionary<ulong, int>();
             var weights = CalculateEdgeInfos(hintLines);
-            for (int i = 0; i < n; ++i) graph_vertices_rev[graph_vertices[i].Id] = i;
+            for (int i = 0; i < n; ++i)
+            {
+                graph_vertices_rev[graph_vertices[i].Id] = i;
+            }
 
             var leafs = leafVertices.Select(v => graph_vertices_rev[v.Id]).ToList();
             leafs.Add(graph_vertices_rev[trunkVertex]);
             var allLeafs = leafs.ToArray();
 
             var graph = new Algorithms.SteinerTreeCalculator(n);
-            foreach (var edge in edges) graph.AddEdge(graph_vertices_rev[edge.StartId], graph_vertices_rev[edge.EndId], weights[edge.Id].Length*weights[edge.Id].Factor);
+            foreach (var edge in edges)
+            {
+                graph.AddEdge(graph_vertices_rev[edge.StartId], graph_vertices_rev[edge.EndId], weights[edge.Id].Length * weights[edge.Id].Factor);
+            }
             var tree = graph.GetTreeMk2(allLeafs, alpha, beta);
             var out_tree = new Dictionary<ulong, TreeNode>();
 
@@ -239,13 +245,19 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var (v, p) = q.Dequeue();
                 var out_v = new TreeNode(graph_vertices[v].Id);
-                if (p != -1) out_v.SetTrunk(out_tree[graph_vertices[p].Id]);
+                if (p != -1)
+                {
+                    out_v.SetTrunk(out_tree[graph_vertices[p].Id]);
+                }
                 out_tree[graph_vertices[v].Id] = out_v;
                 
                 foreach (var ed in tree[v])
                 {
                     int u = ed.Key;
-                    if (u == p) continue;
+                    if (u == p)
+                    {
+                        continue;
+                    }
 
                     q.Enqueue((u, v));
                 }
