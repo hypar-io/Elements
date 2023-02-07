@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0
+
+### Added
+
+- `Extrude` Solid Operation supports an optional `Flipped` parameter to purposely turn its normals inside out.
+
 ## 1.4.0
 
 ### Added
