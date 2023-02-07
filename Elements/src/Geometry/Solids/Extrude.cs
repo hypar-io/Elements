@@ -12,6 +12,7 @@ namespace Elements.Geometry.Solids
         private Profile _profile;
         private double _height;
         private Vector3 _direction;
+        private bool _flipped;
 
         /// <summary>The id of the profile to extrude.</summary>
         [JsonProperty("Profile", Required = Required.AllowNull)]
@@ -59,6 +60,21 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        /// <summary>Is the extrusion flipped inside out?</summary>
+        [JsonProperty("Flipped")]
+        public bool Flipped
+        {
+            get { return _flipped; }
+            set
+            {
+                if (_flipped != value)
+                {
+                    _flipped = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// Construct an extrusion.
         /// </summary>
@@ -67,7 +83,7 @@ namespace Elements.Geometry.Solids
         /// <param name="direction"></param>
         /// <param name="isVoid"></param>
         [JsonConstructor]
-        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
+        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid = false, bool flipped = false)
             : base(isVoid)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -81,6 +97,7 @@ namespace Elements.Geometry.Solids
             this._profile = @profile;
             this._height = @height;
             this._direction = @direction;
+            this._flipped = flipped;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();
@@ -88,7 +105,7 @@ namespace Elements.Geometry.Solids
 
         private void UpdateGeometry()
         {
-            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction);
+            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction, this._flipped);
         }
     }
 }
