@@ -1441,15 +1441,6 @@ namespace Elements.Spatial.AdaptiveGrid
             return true;
         }
 
-        /// <summary>
-        /// A version of TryGetValue on a dictionary that optionally takes in a tolerance when running the comparison.
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="key">Number to search for.</param>
-        /// <param name="value">Value if match was found.</param>
-        /// <param name="tolerance">Amount of tolerance in the search for the key.</param>
-        /// <typeparam name="T">The type of the dictionary values.</typeparam>
-        /// <returns>Whether a match was found.</returns>
         private static IEnumerable<T> GetValue<T>(Dictionary<double, T> dict, double key, double? tolerance = null)
 
         {
@@ -1469,14 +1460,6 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        /// <summary>
-        /// In a dictionary of x, y, and z coordinates, gets last level dictionary of z values.
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="point"></param>
-        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
-        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
         private ulong GetVertexFromDictionary(Vector3 point,
                                               out Dictionary<double, Dictionary<double, ulong>> yzDict,
                                               out Dictionary<double, ulong> zDict,
@@ -1501,14 +1484,6 @@ namespace Elements.Spatial.AdaptiveGrid
             return 0;
         }
 
-        /// <summary>
-        /// In a dictionary of x, y, and z coordinates, gets last level dictionary of z values.
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="point"></param>
-        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
-        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
         private void AddVertexToDictionary(Vertex vertex,
                                            Dictionary<double, Dictionary<double, ulong>> yzDict,
                                            Dictionary<double, ulong> zDict)
