@@ -908,10 +908,10 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
                 else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
                 {
-                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
-                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
-                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
-                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
+                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start, false, Tolerance);
+                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End, false, Tolerance);
+                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true, Tolerance);
+                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true, Tolerance);
                     // new edge is inside old edge
                     if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge &&
                         AddEdgeInsideExisting(edgeV0, edgeV1, startVertex, endVertex))
