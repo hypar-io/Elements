@@ -61,9 +61,8 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Properties
 
         /// <summary>
-        /// Tolerance for points being considered the same.
-        /// Applies individually to X, Y, and Z coordinates, not the cumulative difference!
-        /// Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.
+        /// Distance tolerance for points being considered the same.
+        /// Tolerance is twice the epsilon because gird uses single tolerance for individual coordinates snapping.
         /// </summary>
         public double Tolerance { get; } = Vector3.EPSILON * 2;
 
@@ -357,13 +356,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>True if any Vertex is close enough.</returns>
         public bool TryGetVertexIndex(Vector3 point, out ulong id)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, tolerance: Tolerance);
+            var zDict = GetAddressParent(_verticesLookup, point, tolerance: Tolerance / 2);
             if (zDict == null)
             {
                 id = 0;
                 return false;
             }
-            return TryGetValue(zDict, point.Z, out id, Tolerance);
+            return TryGetValue(zDict, point.Z, out id, Tolerance / 2);
         }
 
         /// <summary>
@@ -395,7 +394,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             if (!TryGetVertexIndex(point, out var id))
             {
-                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
+                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance / 2);
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
                 zDict[point.Z] = id;
@@ -1295,14 +1294,14 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
-            var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance);
+            var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance / 2);
             if (zDict == null)
             {
                 return;
             }
             zDict.Remove(vertex.Point.Z);
 
-            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance);
+            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance / 2);
             if (zDict.Count == 0)
             {
                 yzDict.Remove(vertex.Point.Y);
