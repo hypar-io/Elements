@@ -356,13 +356,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>True if any Vertex is close enough.</returns>
         public bool TryGetVertexIndex(Vector3 point, out ulong id)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, tolerance: Tolerance / 2);
-            if (zDict == null)
-            {
-                id = 0;
-                return false;
-            }
-            return TryGetValue(zDict, point.Z, out id, Tolerance / 2);
+            id = GetVertexFromDictionary(point, out _, out _, tolerance: Tolerance / 2);
+            return id != 0;
         }
 
         /// <summary>
@@ -375,13 +370,8 @@ namespace Elements.Spatial.AdaptiveGrid
         [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
         public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, tolerance: tolerance);
-            if (zDict == null)
-            {
-                id = 0;
-                return false;
-            }
-            return TryGetValue(zDict, point.Z, out id, tolerance);
+            id = GetVertexFromDictionary(point, out _, out _, tolerance: tolerance);
+            return id != 0; 
         }
 
         /// <summary>
@@ -392,14 +382,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New or existing Vertex.</returns>
         public Vertex AddVertex(Vector3 point)
         {
-            if (!TryGetVertexIndex(point, out var id))
+            var id = GetVertexFromDictionary(point, out var yzDict, out var zDict, Tolerance / 2);
+            if (id == 0)
             {
-                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance / 2);
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
-                zDict[point.Z] = id;
+                AddVertexToDictionary(vertex, yzDict, zDict);
                 _vertices[id] = vertex;
                 this._vertexId++;
+                return vertex;
             }
 
             return GetVertex(id);
@@ -1294,22 +1285,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
-            var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance / 2);
-            if (zDict == null)
-            {
-                return;
-            }
-            zDict.Remove(vertex.Point.Z);
-
-            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance / 2);
-            if (zDict.Count == 0)
-            {
-                yzDict.Remove(vertex.Point.Y);
-            }
-            if (yzDict.Count == 0)
-            {
-                _verticesLookup.Remove(vertex.Point.X);
-            }
+            DeleteVertexFromDictionary(vertex);
         }
 
         private Grid2d CreateGridFromPolygon(Polygon boundingPolygon)
@@ -1474,24 +1450,23 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="tolerance">Amount of tolerance in the search for the key.</param>
         /// <typeparam name="T">The type of the dictionary values.</typeparam>
         /// <returns>Whether a match was found.</returns>
-        private static bool TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, double? tolerance = null)
+        private static IEnumerable<T> GetValue<T>(Dictionary<double, T> dict, double key, double? tolerance = null)
+
         {
-            if (dict.TryGetValue(key, out value))
+            if (dict.TryGetValue(key, out var value))
             {
-                return true;
+                yield return value;
             }
-            if (tolerance != null)
+            else if (tolerance != null)
             {
-                foreach (var curKey in dict.Keys)
+                foreach (var kvp in dict)
                 {
-                    if (Math.Abs(curKey - key) <= tolerance)
+                    if (Math.Abs(key - kvp.Key) <= tolerance)
                     {
-                        value = dict[curKey];
-                        return true;
+                        yield return kvp.Value;
                     }
                 }
             }
-            return false;
         }
 
         /// <summary>
@@ -1502,35 +1477,74 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
         /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
         /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
-        private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, bool addAddressIfNonExistent = false, double? tolerance = null)
+        private ulong GetVertexFromDictionary(Vector3 point,
+                                              out Dictionary<double, Dictionary<double, ulong>> yzDict,
+                                              out Dictionary<double, ulong> zDict,
+                                              double? tolerance = null)
         {
-            if (!TryGetValue(dict, point.X, out var yzDict, tolerance))
+            yzDict = null;
+            zDict = null;
+
+            foreach (var yz in GetValue(_verticesLookup, point.X, tolerance))
             {
-                if (addAddressIfNonExistent)
+                yzDict = yz;
+                foreach (var z in GetValue(yzDict, point.Y, tolerance))
                 {
-                    yzDict = new Dictionary<double, Dictionary<double, ulong>>();
-                    dict.Add(point.X, yzDict);
-                }
-                else
-                {
-                    return null;
+                    zDict = z;
+                    foreach (var id in GetValue(zDict, point.Z, tolerance))
+                    {
+                        return id;
+                    }
                 }
             }
 
-            if (!TryGetValue(yzDict, point.Y, out var zDict, tolerance))
+            return 0;
+        }
+
+        /// <summary>
+        /// In a dictionary of x, y, and z coordinates, gets last level dictionary of z values.
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="point"></param>
+        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
+        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
+        /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
+        private void AddVertexToDictionary(Vertex vertex,
+                                           Dictionary<double, Dictionary<double, ulong>> yzDict,
+                                           Dictionary<double, ulong> zDict)
+        {
+            if (yzDict == null)
             {
-                if (addAddressIfNonExistent)
-                {
-                    zDict = new Dictionary<double, ulong>();
-                    yzDict.Add(point.Y, zDict);
-                }
-                else
-                {
-                    return null;
-                }
+                yzDict = new Dictionary<double, Dictionary<double, ulong>>();
+                _verticesLookup.Add(vertex.Point.X, yzDict);
             }
 
-            return zDict;
+            if (zDict == null)
+            {
+                zDict = new Dictionary<double, ulong>();
+                yzDict.Add(vertex.Point.Y, zDict);
+            }
+
+            zDict[vertex.Point.Z] = vertex.Id;
+        }
+
+        private void DeleteVertexFromDictionary(Vertex vertex)
+        {
+            var id = GetVertexFromDictionary(vertex.Point, out var yzDict, out var zDict, Tolerance / 2);
+            if (id == 0 || id != vertex.Id || zDict == null || yzDict == null)
+            {
+                throw new Exception("Vertex can't be removed. Coordinate dictionary is broken.");
+            }
+
+            zDict.Remove(vertex.Point.Z);
+            if (zDict.Count == 0)
+            {
+                yzDict.Remove(vertex.Point.Y);
+            }
+            if (yzDict.Count == 0)
+            {
+                _verticesLookup.Remove(vertex.Point.X);
+            }
         }
 
         #endregion
