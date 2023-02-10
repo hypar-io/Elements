@@ -40,7 +40,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
         // Vertex lookup by x, y, z coordinate.
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _xyzLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         #endregion
 
@@ -62,7 +62,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Distance tolerance for points being considered the same.
-        /// Tolerance is twice the epsilon because gird uses single tolerance for individual coordinates snapping.
+        /// Tolerance is twice the epsilon because grid uses single tolerance for individual coordinates snapping.
         /// </summary>
         public double Tolerance { get; } = Vector3.EPSILON * 2;
 
@@ -382,12 +382,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New or existing Vertex.</returns>
         public Vertex AddVertex(Vector3 point)
         {
-            var id = GetVertexFromDictionary(point, out var yzDict, out var zDict, Tolerance / 2);
+            var id = GetVertexFromDictionary(point, out var yzLookup, out var zLookup, Tolerance / 2);
             if (id == 0)
             {
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
-                AddVertexToDictionary(vertex, yzDict, zDict);
+                AddVertexToDictionary(vertex, yzLookup, zLookup);
                 _vertices[id] = vertex;
                 this._vertexId++;
                 return vertex;
@@ -1441,7 +1441,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return true;
         }
 
-        private static IEnumerable<T> GetValue<T>(Dictionary<double, T> dict, double key, double? tolerance = null)
+        private static IEnumerable<T> GetValues<T>(Dictionary<double, T> dict, double key, double? tolerance = null)
 
         {
             if (dict.TryGetValue(key, out var value))
@@ -1461,20 +1461,20 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private ulong GetVertexFromDictionary(Vector3 point,
-                                              out Dictionary<double, Dictionary<double, ulong>> yzDict,
-                                              out Dictionary<double, ulong> zDict,
+                                              out Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                              out Dictionary<double, ulong> zLookup,
                                               double? tolerance = null)
         {
-            yzDict = null;
-            zDict = null;
+            yzLookup = null;
+            zLookup = null;
 
-            foreach (var yz in GetValue(_verticesLookup, point.X, tolerance))
+            foreach (var yzToId in GetValues(_xyzLookup, point.X, tolerance))
             {
-                yzDict = yz;
-                foreach (var z in GetValue(yzDict, point.Y, tolerance))
+                yzLookup = yzToId;
+                foreach (var zToId in GetValues(yzLookup, point.Y, tolerance))
                 {
-                    zDict = z;
-                    foreach (var id in GetValue(zDict, point.Z, tolerance))
+                    zLookup = zToId;
+                    foreach (var id in GetValues(zLookup, point.Z, tolerance))
                     {
                         return id;
                     }
@@ -1485,40 +1485,40 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private void AddVertexToDictionary(Vertex vertex,
-                                           Dictionary<double, Dictionary<double, ulong>> yzDict,
-                                           Dictionary<double, ulong> zDict)
+                                           Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                           Dictionary<double, ulong> zLookup)
         {
-            if (yzDict == null)
+            if (yzLookup == null)
             {
-                yzDict = new Dictionary<double, Dictionary<double, ulong>>();
-                _verticesLookup.Add(vertex.Point.X, yzDict);
+                yzLookup = new Dictionary<double, Dictionary<double, ulong>>();
+                _xyzLookup.Add(vertex.Point.X, yzLookup);
             }
 
-            if (zDict == null)
+            if (zLookup == null)
             {
-                zDict = new Dictionary<double, ulong>();
-                yzDict.Add(vertex.Point.Y, zDict);
+                zLookup = new Dictionary<double, ulong>();
+                yzLookup.Add(vertex.Point.Y, zLookup);
             }
 
-            zDict[vertex.Point.Z] = vertex.Id;
+            zLookup[vertex.Point.Z] = vertex.Id;
         }
 
         private void DeleteVertexFromDictionary(Vertex vertex)
         {
-            var id = GetVertexFromDictionary(vertex.Point, out var yzDict, out var zDict, Tolerance / 2);
-            if (id == 0 || id != vertex.Id || zDict == null || yzDict == null)
+            var id = GetVertexFromDictionary(vertex.Point, out var yzLookup, out var zLookup, Tolerance / 2);
+            if (id == 0 || id != vertex.Id || zLookup == null || yzLookup == null)
             {
                 throw new Exception("Vertex can't be removed. Coordinate dictionary is broken.");
             }
 
-            zDict.Remove(vertex.Point.Z);
-            if (zDict.Count == 0)
+            zLookup.Remove(vertex.Point.Z);
+            if (zLookup.Count == 0)
             {
-                yzDict.Remove(vertex.Point.Y);
+                yzLookup.Remove(vertex.Point.Y);
             }
-            if (yzDict.Count == 0)
+            if (yzLookup.Count == 0)
             {
-                _verticesLookup.Remove(vertex.Point.X);
+                _xyzLookup.Remove(vertex.Point.X);
             }
         }
 

@@ -9,27 +9,36 @@ namespace Elements
 {
     public class ClipperTest
     {
+        /// <summary>
+        /// This test highlights properties of clipper:
+        /// - It modifies input data due to integer nature, but not more than half of provided tolerance per coordinate.
+        /// - Overall deviation is no more than tolerance.
+        /// - Coordinate is ignored, result point will have z set to 0.
+        /// If any of the properties are changed this test will react and fail.
+        /// </summary>
         [Fact]
-        public void CliperChangesInputNumbers()
+        public void ClipperChangesInputNumbers()
         {
-            var range = Enumerable.Range(1, 100);
+            var range = Enumerable.Range(0, 100);
             var vertices = new List<Vector3>();
-            var random = new Random();
+
+            //Use twice the tolerance to emphasize that number can be modified to up to half of it.
+            var tolerance = Vector3.EPSILON * 2;
+            Func<double, double> noise = (r) => { return (r + 1) / 100.0 * tolerance; };
+
             var z = 1.23456789;
-            random.NextDouble();
-            vertices.AddRange(range.Select(r => new Vector3(
-                r + (random.NextDouble() - 0.5) * Vector3.EPSILON, 0, z)));
-            vertices.AddRange(range.Select(r => new Vector3(
-                100, r + (random.NextDouble() - 0.5) * Vector3.EPSILON, z)));
-            vertices.AddRange(range.Reverse().Select(r => new Vector3(
-                r + (random.NextDouble() - 0.5) * Vector3.EPSILON, 100, z)));
-            vertices.AddRange(range.Reverse().Select(r => new Vector3(
-                0, r + (random.NextDouble() - 0.5) * Vector3.EPSILON, z)));
+            vertices.AddRange(range.SkipLast(1).Select(
+                r => new Vector3(r + noise(r), 0, z)));
+            vertices.AddRange(range.SkipLast(1).Select(
+                r => new Vector3(100, r + noise(r), z)));
+            vertices.AddRange(range.Reverse().SkipLast(1).Select(
+                r => new Vector3(r + noise(r), 100, z)));
+            vertices.AddRange(range.Reverse().SkipLast(1).Select(
+                r => new Vector3(0, r + noise(r), z)));
 
             Polygon polygon = new Polygon(vertices);
             polygon = polygon.TransformedPolygon(new Transform().Rotated(Vector3.ZAxis, 25));
 
-            var tolerance = Vector3.EPSILON * 2;
             var clipperPath = polygon.ToClipperPath(tolerance);
             var changedPolygon = clipperPath.ToPolygon(tolerance);
             Assert.Equal(polygon.Vertices.Count, changedPolygon.Vertices.Count);
