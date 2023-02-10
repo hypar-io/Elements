@@ -1078,6 +1078,22 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridFindsCorrectVertex()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var v0 = grid.AddVertex(new Vector3(0.999992, 1.000005, 9));
+            var v1 = grid.AddVertex(new Vector3(1.000008, 1.000005, 1));
+            var v2 = grid.AddVertex(new Vector3(1, 0.999995, 4));
+
+            Assert.True(grid.TryGetVertexIndex((1, 1, 9), out var id0));
+            Assert.True(grid.TryGetVertexIndex((1, 1, 1), out var id1));
+            Assert.True(grid.TryGetVertexIndex((1, 1, 4), out var id2));
+            Assert.Equal(v0.Id, id0);
+            Assert.Equal(v1.Id, id1);
+            Assert.Equal(v2.Id, id2);
+        }
+
+        [Fact]
         public void EdgeInfoFlagsTest()
         {
             AdaptiveGrid grid = new AdaptiveGrid();

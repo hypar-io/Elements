@@ -40,7 +40,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
 
         // Vertex lookup by x, y, z coordinate.
-        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _verticesLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
+        private Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> _xyzLookup = new Dictionary<double, Dictionary<double, Dictionary<double, ulong>>>();
 
         #endregion
 
@@ -61,9 +61,8 @@ namespace Elements.Spatial.AdaptiveGrid
         #region Properties
 
         /// <summary>
-        /// Tolerance for points being considered the same.
-        /// Applies individually to X, Y, and Z coordinates, not the cumulative difference!
-        /// Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.
+        /// Distance tolerance for points being considered the same.
+        /// Tolerance is twice the epsilon because grid uses single tolerance for individual coordinates snapping.
         /// </summary>
         public double Tolerance { get; } = Vector3.EPSILON * 2;
 
@@ -357,13 +356,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>True if any Vertex is close enough.</returns>
         public bool TryGetVertexIndex(Vector3 point, out ulong id)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, tolerance: Tolerance);
-            if (zDict == null)
-            {
-                id = 0;
-                return false;
-            }
-            return TryGetValue(zDict, point.Z, out id, Tolerance);
+            id = GetFromXYZLookup(point, out _, out _, tolerance: Tolerance / 2);
+            return id != 0;
         }
 
         /// <summary>
@@ -376,13 +370,8 @@ namespace Elements.Spatial.AdaptiveGrid
         [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
         public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
         {
-            var zDict = GetAddressParent(_verticesLookup, point, tolerance: tolerance);
-            if (zDict == null)
-            {
-                id = 0;
-                return false;
-            }
-            return TryGetValue(zDict, point.Z, out id, tolerance);
+            id = GetFromXYZLookup(point, out _, out _, tolerance: tolerance);
+            return id != 0; 
         }
 
         /// <summary>
@@ -393,14 +382,15 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New or existing Vertex.</returns>
         public Vertex AddVertex(Vector3 point)
         {
-            if (!TryGetVertexIndex(point, out var id))
+            var id = GetFromXYZLookup(point, out var yzLookup, out var zLookup, Tolerance / 2);
+            if (id == 0)
             {
-                var zDict = GetAddressParent(_verticesLookup, point, true, Tolerance);
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
-                zDict[point.Z] = id;
+                AddToXYZLookup(vertex, yzLookup, zLookup);
                 _vertices[id] = vertex;
                 this._vertexId++;
+                return vertex;
             }
 
             return GetVertex(id);
@@ -908,10 +898,10 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
                 else if (oldEdgeLine.Direction().IsParallelTo(newEdgeLine.Direction()))
                 {
-                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start);
-                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End);
-                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true);
-                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true);
+                    var isNewEdgeStartOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.Start, false, Tolerance);
+                    var isNewEdgeEndOnOldEdge = oldEdgeLine.PointOnLine(newEdgeLine.End, false, Tolerance);
+                    var isOldEdgeStartOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.Start, true, Tolerance);
+                    var isOldEdgeEndOnNewEdge = newEdgeLine.PointOnLine(oldEdgeLine.End, true, Tolerance);
                     // new edge is inside old edge
                     if (isNewEdgeStartOnOldEdge && isNewEdgeEndOnOldEdge &&
                         AddEdgeInsideExisting(edgeV0, edgeV1, startVertex, endVertex))
@@ -1295,22 +1285,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
-            var zDict = GetAddressParent(_verticesLookup, vertex.Point, tolerance: Tolerance);
-            if (zDict == null)
-            {
-                return;
-            }
-            zDict.Remove(vertex.Point.Z);
-
-            TryGetValue(_verticesLookup, vertex.Point.X, out var yzDict, Tolerance);
-            if (zDict.Count == 0)
-            {
-                yzDict.Remove(vertex.Point.Y);
-            }
-            if (yzDict.Count == 0)
-            {
-                _verticesLookup.Remove(vertex.Point.X);
-            }
+            DeleteFromXYZLookup(vertex);
         }
 
         private Grid2d CreateGridFromPolygon(Polygon boundingPolygon)
@@ -1466,72 +1441,85 @@ namespace Elements.Spatial.AdaptiveGrid
             return true;
         }
 
-        /// <summary>
-        /// A version of TryGetValue on a dictionary that optionally takes in a tolerance when running the comparison.
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="key">Number to search for.</param>
-        /// <param name="value">Value if match was found.</param>
-        /// <param name="tolerance">Amount of tolerance in the search for the key.</param>
-        /// <typeparam name="T">The type of the dictionary values.</typeparam>
-        /// <returns>Whether a match was found.</returns>
-        private static bool TryGetValue<T>(Dictionary<double, T> dict, double key, out T value, double? tolerance = null)
+        private static IEnumerable<T> GetValues<T>(Dictionary<double, T> dict, double key, double? tolerance = null)
+
         {
-            if (dict.TryGetValue(key, out value))
+            if (dict.TryGetValue(key, out var value))
             {
-                return true;
+                yield return value;
             }
-            if (tolerance != null)
+            else if (tolerance != null)
             {
-                foreach (var curKey in dict.Keys)
+                foreach (var kvp in dict)
                 {
-                    if (Math.Abs(curKey - key) <= tolerance)
+                    if (Math.Abs(key - kvp.Key) <= tolerance)
                     {
-                        value = dict[curKey];
-                        return true;
+                        yield return kvp.Value;
                     }
                 }
             }
-            return false;
         }
 
-        /// <summary>
-        /// In a dictionary of x, y, and z coordinates, gets last level dictionary of z values.
-        /// </summary>
-        /// <param name="dict"></param>
-        /// <param name="point"></param>
-        /// <param name="addAddressIfNonExistent">Whether to create the dictionary address if it didn't previously exist.</param>
-        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns>The created or existing last level of values. This can be null if the dictionary address didn't exist previously, and we chose not to add it.</returns>
-        private static Dictionary<double, ulong> GetAddressParent(Dictionary<double, Dictionary<double, Dictionary<double, ulong>>> dict, Vector3 point, bool addAddressIfNonExistent = false, double? tolerance = null)
+        private ulong GetFromXYZLookup(Vector3 point,
+                                       out Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                       out Dictionary<double, ulong> zLookup,
+                                       double? tolerance = null)
         {
-            if (!TryGetValue(dict, point.X, out var yzDict, tolerance))
+            yzLookup = null;
+            zLookup = null;
+
+            foreach (var yzToId in GetValues(_xyzLookup, point.X, tolerance))
             {
-                if (addAddressIfNonExistent)
+                yzLookup = yzToId;
+                foreach (var zToId in GetValues(yzLookup, point.Y, tolerance))
                 {
-                    yzDict = new Dictionary<double, Dictionary<double, ulong>>();
-                    dict.Add(point.X, yzDict);
-                }
-                else
-                {
-                    return null;
+                    zLookup = zToId;
+                    foreach (var id in GetValues(zLookup, point.Z, tolerance))
+                    {
+                        return id;
+                    }
                 }
             }
 
-            if (!TryGetValue(yzDict, point.Y, out var zDict, tolerance))
+            return 0;
+        }
+
+        private void AddToXYZLookup(Vertex vertex,
+                                    Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                    Dictionary<double, ulong> zLookup)
+        {
+            if (yzLookup == null)
             {
-                if (addAddressIfNonExistent)
-                {
-                    zDict = new Dictionary<double, ulong>();
-                    yzDict.Add(point.Y, zDict);
-                }
-                else
-                {
-                    return null;
-                }
+                yzLookup = new Dictionary<double, Dictionary<double, ulong>>();
+                _xyzLookup.Add(vertex.Point.X, yzLookup);
             }
 
-            return zDict;
+            if (zLookup == null)
+            {
+                zLookup = new Dictionary<double, ulong>();
+                yzLookup.Add(vertex.Point.Y, zLookup);
+            }
+
+            zLookup[vertex.Point.Z] = vertex.Id;
+        }
+
+        private void DeleteFromXYZLookup(Vertex vertex)
+        {
+            var id = GetFromXYZLookup(vertex.Point, out var yzLookup, out var zLookup, Tolerance / 2);
+            if (id == 0 || id != vertex.Id || zLookup == null || yzLookup == null)
+            {
+                throw new Exception("Vertex can't be removed. Coordinate dictionary is broken.");
+            }
+
+            zLookup.Remove(vertex.Point.Z);
+            if (zLookup.Count == 0)
+            {
+                yzLookup.Remove(vertex.Point.Y);
+            }
+            if (yzLookup.Count == 0)
+            {
+                _xyzLookup.Remove(vertex.Point.X);
+            }
         }
 
         #endregion

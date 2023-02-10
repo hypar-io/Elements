@@ -31,6 +31,7 @@
 - `Message.FromLine` is set obsolete.
 - In `AdaptiveGridRouting`, if there are several connection points with the same cost - choose one that is closer to the trunk.
 - GLTF writing now includes an ad-hoc `HYPAR_info` extension which aids in mapping between GLTF content and element ids in the model.
+- `AdaptiveGrid.Tolerance` is not distance tolerance. Half the tolerance is used for individual coordinates snapping inside the grid.
 
 ### Fixed
 
@@ -42,6 +43,7 @@
 - Fixed an issue where `Grid2d.GetCells()` multiple times could fail to return the correct results on subsequent calls, because changes to the axis grids were not invalidating the grid's computed cells.
 - Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
 - Handle quotes in string literals for content catalog code generation by doubling them up.
+- Fix `AdaptiveGrid.TryGetVertexIndex` returning `false` for existing vertex if other vertex has similar X or Y coordinate.
 
 ## 1.3.0
 
