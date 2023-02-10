@@ -356,7 +356,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>True if any Vertex is close enough.</returns>
         public bool TryGetVertexIndex(Vector3 point, out ulong id)
         {
-            id = GetVertexFromDictionary(point, out _, out _, tolerance: Tolerance / 2);
+            id = GetFromXYZLookup(point, out _, out _, tolerance: Tolerance / 2);
             return id != 0;
         }
 
@@ -370,7 +370,7 @@ namespace Elements.Spatial.AdaptiveGrid
         [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
         public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
         {
-            id = GetVertexFromDictionary(point, out _, out _, tolerance: tolerance);
+            id = GetFromXYZLookup(point, out _, out _, tolerance: tolerance);
             return id != 0; 
         }
 
@@ -382,12 +382,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>New or existing Vertex.</returns>
         public Vertex AddVertex(Vector3 point)
         {
-            var id = GetVertexFromDictionary(point, out var yzLookup, out var zLookup, Tolerance / 2);
+            var id = GetFromXYZLookup(point, out var yzLookup, out var zLookup, Tolerance / 2);
             if (id == 0)
             {
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
-                AddVertexToDictionary(vertex, yzLookup, zLookup);
+                AddToXYZLookup(vertex, yzLookup, zLookup);
                 _vertices[id] = vertex;
                 this._vertexId++;
                 return vertex;
@@ -1285,7 +1285,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var vertex = _vertices[id];
             _vertices.Remove(id);
-            DeleteVertexFromDictionary(vertex);
+            DeleteFromXYZLookup(vertex);
         }
 
         private Grid2d CreateGridFromPolygon(Polygon boundingPolygon)
@@ -1460,10 +1460,10 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
-        private ulong GetVertexFromDictionary(Vector3 point,
-                                              out Dictionary<double, Dictionary<double, ulong>> yzLookup,
-                                              out Dictionary<double, ulong> zLookup,
-                                              double? tolerance = null)
+        private ulong GetFromXYZLookup(Vector3 point,
+                                       out Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                       out Dictionary<double, ulong> zLookup,
+                                       double? tolerance = null)
         {
             yzLookup = null;
             zLookup = null;
@@ -1484,9 +1484,9 @@ namespace Elements.Spatial.AdaptiveGrid
             return 0;
         }
 
-        private void AddVertexToDictionary(Vertex vertex,
-                                           Dictionary<double, Dictionary<double, ulong>> yzLookup,
-                                           Dictionary<double, ulong> zLookup)
+        private void AddToXYZLookup(Vertex vertex,
+                                    Dictionary<double, Dictionary<double, ulong>> yzLookup,
+                                    Dictionary<double, ulong> zLookup)
         {
             if (yzLookup == null)
             {
@@ -1503,9 +1503,9 @@ namespace Elements.Spatial.AdaptiveGrid
             zLookup[vertex.Point.Z] = vertex.Id;
         }
 
-        private void DeleteVertexFromDictionary(Vertex vertex)
+        private void DeleteFromXYZLookup(Vertex vertex)
         {
-            var id = GetVertexFromDictionary(vertex.Point, out var yzLookup, out var zLookup, Tolerance / 2);
+            var id = GetFromXYZLookup(vertex.Point, out var yzLookup, out var zLookup, Tolerance / 2);
             if (id == 0 || id != vertex.Id || zLookup == null || yzLookup == null)
             {
                 throw new Exception("Vertex can't be removed. Coordinate dictionary is broken.");
