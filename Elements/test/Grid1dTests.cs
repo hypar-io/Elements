@@ -198,8 +198,7 @@ namespace Elements.Tests
             var grid = new Grid1d(bezier1);
             grid.DivideByApproximateLength(0.5, EvenDivisionMode.RoundUp);
             var cellGeometry = grid.GetCells().Select(cl => cl.GetCellGeometry());
-            Assert.Equal(25, cellGeometry.Count());
-
+            Assert.Equal(26, cellGeometry.Count());
 
             var r = 2.0;
             var a1 = new Arc(new Vector3(5, 0), r, -90.0, 90.0);
@@ -314,12 +313,25 @@ namespace Elements.Tests
             var pattern = new List<(string, double)>
             {
                 ("Solid", 1),
-                ("Glazing", 3),
-                ("Fin", 0.2)
+                ("Glazing", 2),
+                ("Fin", 1.1)
             };
             Exception ex = Assert.Throws<ArgumentException>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
             Assert.Equal("The grid could not be constructed. Pattern length exceeds grid length.", ex.Message);
+        }
+
+        [Fact]
+        public void PatternWithinEpsilonOfLengthDoesNotThrowException()
+        {
+            var grid = new Grid1d(4);
+            var pattern = new List<(string, double)>
+            {
+                ("Solid", 1),
+                ("Glazing", 2),
+                ("Fin", 1.000001)
+            };
+            grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds);
         }
 
         [Fact]

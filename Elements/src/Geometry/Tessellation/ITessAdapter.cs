@@ -8,11 +8,6 @@ namespace Elements.Geometry.Tessellation
     internal interface ITessAdapter
     {
         /// <summary>
-        /// Does this target require tessellation?
-        /// </summary>
-        bool RequiresTessellation();
-
-        /// <summary>
         /// Get the tessellation.
         /// </summary>
         Tess GetTess();

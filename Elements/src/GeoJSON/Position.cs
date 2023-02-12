@@ -11,11 +11,11 @@ namespace Elements.GeoJSON
     public class Position
     {
         /// <summary>The latitude in decimal degrees.</summary>
-        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("latitude", Required = Required.Always)]
         public double Latitude { get; set; }
 
         /// <summary>The longitude in decimal degrees.</summary>
-        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("longitude", Required = Required.Always)]
         public double Longitude { get; set; }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Elements.GeoJSON
         /// </summary>
         /// <param name="latitude">The latitude.</param>
         /// <param name="longitude">The longitude.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Position(double @latitude, double @longitude)
         {
             this.Latitude = @latitude;

@@ -241,6 +241,20 @@ namespace Elements.Tests
 
             Assert.Equal(upT.YAxis, downT.YAxis.Negate());
         }
+
+        [Fact]
+        public void Transform_RotateAboutPoint()
+        {
+            Name = nameof(Transform_RotateAboutPoint);
+            var worldOrigin = new Transform();
+            Model.AddElements(worldOrigin.ToModelCurves());
+            var rectangle = Polygon.Rectangle((3, 4), (5, 8));
+            var center = rectangle.Centroid();
+            var rectangleRotatedAboutCenter = rectangle.TransformedPolygon(new Transform().RotatedAboutPoint(center, Vector3.ZAxis, 90));
+            Model.AddElement(rectangle);
+            Model.AddElement(rectangleRotatedAboutCenter);
+            Assert.Equal(center, rectangleRotatedAboutCenter.Centroid());
+        }
     }
 
 }

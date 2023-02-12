@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Solids;
+using Elements.Search;
 
 namespace Elements.Geometry
 {
@@ -28,7 +29,7 @@ namespace Elements.Geometry
         public Ray(Vector3 origin, Vector3 direction)
         {
             this.Origin = origin;
-            this.Direction = direction;
+            this.Direction = direction.Unitized();
         }
 
         /// <summary>
@@ -156,29 +157,13 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
         internal bool Intersects(Face face, out Vector3 result)
         {
-            var plane = face.Plane();
-            if (Intersects(plane, out Vector3 intersection))
+            if (Intersects(face.Outer.ToPolygon(), out Vector3 intersection, out _))
             {
-                var boundaryPolygon = face.Outer.ToPolygon();
-                var voids = face.Inner?.Select(v => v.ToPolygon())?.ToList();
-                var transformToPolygon = new Transform(plane.Origin, plane.Normal);
-                var transformFromPolygon = new Transform(transformToPolygon);
-                transformFromPolygon.Invert();
-                var transformedIntersection = transformFromPolygon.OfPoint(intersection);
-                IEnumerable<(Vector3 from, Vector3 to)> curveList = boundaryPolygon.Edges();
-                if (voids != null)
-                {
-                    curveList = curveList.Union(voids.SelectMany(v => v.Edges()));
-                }
-                curveList = curveList.Select(l => (transformFromPolygon.OfPoint(l.from), transformFromPolygon.OfPoint(l.to)));
-
-                if (Polygon.Contains(curveList, transformedIntersection, out _))
-                {
-                    result = intersection;
-                    return true;
-                }
+                result = intersection;
+                return true;
             }
-            result = default(Vector3);
+
+            result = default;
             return false;
         }
 
@@ -191,22 +176,12 @@ namespace Elements.Geometry
         /// <returns>True if an intersection occurs, otherwise false. If true, check the intersection result for the location of the intersection.</returns>
         public bool Intersects(Polygon polygon, out Vector3 result, out Containment containment)
         {
-            var plane = new Plane(polygon.Vertices.First(), polygon.Vertices);
+            var plane = polygon.Plane();
             if (Intersects(plane, out Vector3 test))
             {
-                // Check the intersection against all the polygon's vertices.
-                // If the intersection is at a vertex, the point is contained.
-                if (polygon.Vertices.Any(v => v.IsAlmostEqualTo(test)))
+                if (polygon.Contains(test, out containment))
                 {
                     result = test;
-                    containment = Containment.CoincidesAtVertex;
-                    return true;
-                }
-
-                result = test;
-                if (polygon.Contains3D(test))
-                {
-                    containment = Containment.Inside;
                     return true;
                 }
             }
@@ -282,15 +257,7 @@ namespace Elements.Geometry
 
         public bool Intersects(Mesh mesh, out Vector3 result)
         {
-            result = default;
-            foreach (var t in mesh.Triangles)
-            {
-                if (this.Intersects(t, out result))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return mesh.Intersects(this, out result);
         }
 
         /// <summary>
@@ -302,25 +269,76 @@ namespace Elements.Geometry
         /// <returns>True if the rays intersect, otherwise false.</returns>
         public bool Intersects(Ray ray, out Vector3 result, bool ignoreRayDirection = false)
         {
+            return Intersects(ray, out result, out _, ignoreRayDirection);
+        }
+
+        /// <summary>
+        /// Does this ray intersect the provided ray?
+        /// </summary>
+        /// <param name="ray">The ray to intersect.</param>
+        /// <param name="result">The location of intersection.</param>
+        /// <param name="intersectionResult">An enumeration of possible ray intersection result types.</param>
+        /// <param name="ignoreRayDirection">If true, the direction of the rays will be ignored.</param>
+        /// <returns>True if the rays intersect, otherwise false.</returns>
+        public bool Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)
+        {
             var p1 = this.Origin;
             var p2 = ray.Origin;
             var d1 = this.Direction;
             var d2 = ray.Direction;
 
-            if (d1.IsParallelTo(d2))
+            var t1 = (p2 - p1).Cross(d2).Dot(d1.Cross(d2)) / Math.Pow(d1.Cross(d2).Length(), 2);
+            var t2 = (p2 - p1).Cross(d1).Dot(d1.Cross(d2)) / Math.Pow(d1.Cross(d2).Length(), 2);
+
+            if (double.IsNaN(t1) && double.IsNaN(t2))
             {
-                result = default(Vector3);
-                return false;
+                // Rays are coincident or parallel. 
+
+                var tt1 = p1.ProjectedParameterOn(ray);
+                var opposite = d1.Dot(d2).ApproximatelyEquals(-1);
+                if (tt1 < 0 && opposite)
+                {
+                    // Rays are disjoint pointing in different directions
+                    result = default;
+                    intersectionResult = RayIntersectionResult.None;
+                    return false;
+                }
+
+                // Check for parallel by testing distances to opposite rays.
+                // If the distances are equal and non-zero, the rays are parallel.
+                var d = p2.DistanceTo(this);
+                var dd = p1.DistanceTo(ray);
+                if (d.ApproximatelyEquals(dd) && !d.ApproximatelyEquals(0))
+                {
+                    // Parallel
+                    result = default;
+                    intersectionResult = RayIntersectionResult.Parallel;
+                    return false;
+                }
+                else
+                {
+                    result = Origin;
+                    intersectionResult = RayIntersectionResult.Coincident;
+                    return true;
+                }
             }
 
-            var t1 = (((p2 - p1).Cross(d2)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
-            var t2 = (((p2 - p1).Cross(d1)).Dot(d1.Cross(d2))) / Math.Pow(d1.Cross(d2).Length(), 2);
-            result = p1 + d1 * t1;
-            if (ignoreRayDirection)
+            var a = p1 + d1 * t1;
+            var b = p2 + d2 * t2;
+
+            result = default;
+
+            if (a.IsAlmostEqualTo(b))
             {
-                return true;
+                // The rays intersect
+                var valid = ignoreRayDirection || t1 >= 0 && t2 >= 0;
+                intersectionResult = valid ? RayIntersectionResult.Intersect : RayIntersectionResult.None;
+                result = valid ? a : default;
+                return valid;
             }
-            return t1 >= 0 && t2 >= 0;
+
+            intersectionResult = RayIntersectionResult.None;
+            return false;
         }
 
         /// <summary>
@@ -340,13 +358,14 @@ namespace Elements.Geometry
         /// <param name="start">The start of the line segment.</param>
         /// <param name="end">The end of the line segment.</param>
         /// <param name="result">The location of the intersection.</param>
+        /// <param name="intersectionResult">The nature of the ray intersection.</param>
         /// <returns>True if the ray intersects, otherwise false.</returns>
-        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result, out RayIntersectionResult intersectionResult)
         {
             var d = (end - start).Unitized();
             var l = start.DistanceTo(end);
             var otherRay = new Ray(start, d);
-            if (Intersects(otherRay, out Vector3 rayResult))
+            if (Intersects(otherRay, out Vector3 rayResult, out intersectionResult))
             {
                 // Quick out if the result is exactly at the 
                 // start or the end of the line.
@@ -357,7 +376,7 @@ namespace Elements.Geometry
                 }
                 else if ((rayResult - start).Length() > l)
                 {
-                    result = default(Vector3);
+                    result = default;
                     return false;
                 }
                 else
@@ -366,8 +385,38 @@ namespace Elements.Geometry
                     return true;
                 }
             }
-            result = default(Vector3);
+            result = default;
             return false;
+        }
+
+        /// <summary>
+        /// Does this ray intersect a line segment defined by start and end?
+        /// </summary>
+        /// <param name="start">The start of the line segment.</param>
+        /// <param name="end">The end of the line segment.</param>
+        /// <param name="result">The location of the intersection.</param>
+        /// <returns>True if the ray intersects, otherwise false.</returns>
+        public bool Intersects(Vector3 start, Vector3 end, out Vector3 result)
+        {
+            return Intersects(start, end, out result, out _);
+        }
+
+        /// <summary>
+        /// Find points in the collection that are within the provided distance of this ray.
+        /// </summary>
+        /// <param name="points">The collection of points to search</param>
+        /// <param name="distance">The maximum distance from the ray.</param>
+        /// <returns>Points that are within the given distance of the ray.</returns>
+        public Vector3[] NearbyPoints(IEnumerable<Vector3> points, double distance)
+        {
+            // TODO: calibrate these values
+            var octree = new PointOctree<Vector3>(10000, (0, 0, 0), (float)Vector3.EPSILON * 100);
+            foreach (var point in points)
+            {
+                octree.Add(point, point);
+            }
+            var nearbyPoints = octree.GetNearby(this, (float)distance);
+            return nearbyPoints;
         }
 
         /// <summary>

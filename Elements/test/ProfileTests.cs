@@ -77,6 +77,96 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void ProfileComplexUnionAll()
+        {
+            this.Name = "ProfileComplexUnionAll";
+            var profile1 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(19.3124, 32.0831),
+                new Vector3(19.3072, 42.1189),
+                new Vector3(19.3124, 42.1189),
+                new Vector3(19.3124, 50.1435),
+                new Vector3(70.7491, 50.1435),
+                new Vector3(70.7491, 43.6189),
+                new Vector3(72.2491, 43.6189),
+                new Vector3(72.2491, 51.6435),
+                new Vector3(17.8124, 51.6435),
+                new Vector3(17.8124, 22.5907),
+                new Vector3(19.3124, 22.5907)
+            }));
+            var profile2 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(72.2491, 30.6189),
+                new Vector3(70.7491, 30.6189),
+                new Vector3(70.7491, 10.8835),
+                new Vector3(72.2491, 10.8835)
+            }));
+            var profile3 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(70.7491, 24.0907),
+                new Vector3(19.3124, 24.0907),
+                new Vector3(19.3124, 22.5907),
+                new Vector3(70.7491, 22.5907)
+            }));
+            var profile4 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(19.3072, 42.1189),
+                new Vector3(19.3124, 42.1189),
+                new Vector3(19.3124, 43.5831),
+                new Vector3( 8.0830, 43.5831),
+                new Vector3( 8.0830, 42.0831),
+                new Vector3(19.3072, 42.0831)
+            }));
+            var profile5 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(17.8124, 51.6435),
+                new Vector3( 8.0830, 51.6435),
+                new Vector3( 8.0830, 50.1435),
+                new Vector3(17.8124, 50.1435)
+            }));
+            var profile6 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(86.4220, 43.6189),
+                new Vector3(75.3654, 43.6189),
+                new Vector3(75.3654, 42.1189),
+                new Vector3(86.4220, 42.1189)
+            }));
+            var profile7 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(32.5299, 30.6189),
+                new Vector3(31.0299, 30.6189),
+                new Vector3(31.0299, 22.5907),
+                new Vector3(32.5299, 22.5907)
+            }));
+            var profile8 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(58.8651, 30.6189),
+                new Vector3(56.7315, 30.6189),
+                new Vector3(56.7315, 24.0907),
+                new Vector3(58.8651, 24.0907)
+            }));
+            var profile9 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(81.0193, 56.0046),
+                new Vector3(81.0193, 31.7802),
+                new Vector3(75.3654, 31.7802),
+                new Vector3(75.3654, 30.6189),
+                new Vector3(82.1806, 30.6189),
+                new Vector3(82.1806, 56.0046)
+            }));
+            var profile10 = new Profile(new Polygon(new Vector3[] {
+                new Vector3(75.3654, 43.6189),
+                new Vector3(17.8124, 43.6189),
+                new Vector3(17.8124, 30.6189),
+                new Vector3(75.3654, 30.6189)
+                /*void*/            }), new Polygon(new Vector3[] {
+                new Vector3(73.8707, 32.0831),
+                new Vector3(19.3124, 32.0831),
+                new Vector3(19.3072, 42.1189),
+                new Vector3(73.8654, 42.1189)
+            }));
+            var unions = Geometry.Profile.UnionAll(new[] {
+                profile1, profile2, profile3, profile4, profile5,
+                profile6, profile7, profile8, profile9, profile10 });
+            Assert.Single(unions);
+            var union = unions.First();
+            Assert.Equal(6, union.Voids.Count);
+            Assert.DoesNotContain(union.Perimeter.Vertices, v => union.Perimeter.Segments().Any(s => s.PointOnLine(v)));
+            Assert.DoesNotContain(union.Voids, vp => vp.Vertices.Any(v => vp.Segments().Any(s => s.PointOnLine(v))));
+        }
+
+        [Fact]
         public void ProfileDifference()
         {
             Name = "Profile Difference";
@@ -411,6 +501,146 @@ namespace Elements.Tests
             {
                 Model.AddElement(new ModelCurve(s, rand.NextMaterial(), new Transform(0, 0, rand.NextDouble())));
             }
+        }
+
+        [Fact]
+        public void ProfileInvalidWontThrow()
+        {
+            //This test shows that two non overlapping Polygons can still for a Profile
+            //without throwing exception, this is NOT showcase of correct behavior.
+            var p1 = Polygon.Rectangle(new Vector3(0, 0), new Vector3(2, 2));
+            var p2 = Polygon.Rectangle(new Vector3(3, 0), new Vector3(5, 2));
+            var profile = new Profile(p1, p2);
+            Assert.DoesNotContain(profile.Perimeter.Vertices, v => profile.Voids.First().Contains(v));
+            Assert.DoesNotContain(profile.Voids.First().Vertices, v => profile.Perimeter.Contains(v));
+        }
+
+        [Fact]
+        public void DifferenceToleratesBadGeometry()
+        {
+            Name = nameof(DifferenceToleratesBadGeometry);
+            var cp = JsonConvert.DeserializeObject<List<Profile>>(File.ReadAllText("../../../models/Geometry/corridorProfiles.json"));
+            var lb = JsonConvert.DeserializeObject<Profile>(File.ReadAllText("../../../models/Geometry/levelBoundary.json"));
+            var results = Elements.Geometry.Profile.Difference(new[] { lb }, cp);
+            Model.AddElements(results);
+            Model.AddElements(results.SelectMany(r => r.ToModelCurves()));
+            Assert.Equal(2115.667, results.Sum(r => Math.Abs(r.Area())), 3);
+        }
+
+        [Fact]
+        public void SplitComplexProfileWithInnerVoids()
+        {
+            Name = nameof(SplitComplexProfileWithInnerVoids);
+            var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
+            var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
+            var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
+            var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
+            var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
+            // Value determined experimentally. If this test breaks, verify output visually —
+            // it's not necessarily the end of the world if the number changes slightly, but we want to
+            // make sure the results look sensible.
+            Assert.Equal(441, splits.Count);
+            var random = new Random(11);
+            foreach (var s in splits)
+            {
+                var ge = new GeometricElement()
+                {
+                    Representation = new Geometry.Solids.Lamina(s),
+                    Material = random.NextMaterial()
+                };
+                Model.AddElement(ge);
+            }
+        }
+
+        [Fact]
+        public void ProfilesWoundClockwiseSplitCorrectly()
+        {
+            Name = nameof(ProfilesWoundClockwiseSplitCorrectly);
+            var polygon = new Polygon((0, 0, 0), (0, 10, 0), (10, 10, 0), (10, 0, 0));
+            var polylineOffsetInside = new Polygon((3, 3), (3, 7), (7, 7), (7, 3));
+            var extendedLines = polylineOffsetInside.Segments().Select(s => s.ExtendTo(polygon, true).ToPolyline(1)).ToList();
+            var splitResults = Elements.Geometry.Profile.Split(new[] { new Profile(polygon) }, extendedLines);
+            Assert.Equal(9, splitResults.Count);
+        }
+
+        [Fact]
+        public void CleanProfilesSplitsAdjacentEdges()
+        {
+            Name = nameof(CleanProfilesSplitsAdjacentEdges);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var c = (10, 5);
+            var d = (10, 10);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h,c,d,e)),
+                new Profile(new Polygon(b,f,g,d)) // does not include c
+            };
+            var cleaned = profiles.Cleaned();
+            // the "c" point should be present in all profiles
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 4) == 2);
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 5) == 1);
+            Assert.True(cleaned.All(p => p.Perimeter.Vertices.Any((v) => v.DistanceTo(c) < 0.00001)));
+        }
+
+        [Fact]
+        public void CleanProfilesMergesNearbyEdgesAndVertices()
+        {
+            Name = nameof(CleanProfilesMergesNearbyEdgesAndVertices);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var b2 = (10.0001, -0.0001);
+            var c = (10, 5);
+            var d = (10, 10);
+            var d2 = (10.0001, 10.0001);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var h2 = (-0.0001, 5);
+
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h2,c,d,e)),
+                new Profile(new Polygon(b2,f,g,d2))
+            };
+            var cleaned = profiles.Cleaned();
+            // for the purposes of this test we are doing something "illegal" —
+            // using `Distinct` on a set of points. Since for this test we only
+            // care about exact equality, not "equality within tolerance," this
+            // is OK.
+            var uniquePoints = cleaned.SelectMany(c => c.Perimeter.Vertices).Distinct().ToList();
+            Assert.True(uniquePoints.Count == 8);
+        }
+
+        [Fact]
+        public void CleanProfilesPreservesValidProfiles()
+        {
+            var profiles = new Profile[] {
+                new Profile(new Polygon((20.83686, 24.77025), (-6.27588, 24.77025), (-6.27588, -1.78971), (20.83686, -1.78971)), new List<Polygon> {
+                    new Polygon((2.28049, 6.49027), (2.28049, 16.49027), (12.28049, 16.49027), (12.28049, 6.49027))
+                }),
+            };
+            var cleaned = profiles.Cleaned();
+            Assert.Single(cleaned);
         }
     }
 }

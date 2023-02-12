@@ -12,6 +12,8 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
+using Elements.Search;
+using Elements.Spatial;
 
 namespace Elements
 {
@@ -21,16 +23,16 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [Newtonsoft.Json.JsonProperty("Transform", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
-        [Newtonsoft.Json.JsonProperty("Elements", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
@@ -40,10 +42,13 @@ namespace Elements
         /// <param name="origin">The origin of the model.</param>
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
         {
+
+#pragma warning disable CS0618
             this.Origin = @origin;
+#pragma warning restore CS0618
             this.Transform = @transform;
             this.Elements = @elements;
         }
@@ -93,9 +98,9 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement element1)
+            if (element is GeometricElement geo)
             {
-                element1.UpdateRepresentations();
+                geo.UpdateRepresentations();
             }
 
             if (gatherSubElements)
@@ -181,13 +186,25 @@ namespace Elements
         }
 
         /// <summary>
-        /// Get all entities of the specified Type.
+        /// Get all elements of the type T.
         /// </summary>
-        /// <typeparam name="T">The Type of element to return.</typeparam>
+        /// <typeparam name="T">The type of element to return.</typeparam>
         /// <returns>A collection of elements of the specified type.</returns>
-        public IEnumerable<T> AllElementsOfType<T>()
+        public IEnumerable<T> AllElementsOfType<T>() where T : Element
         {
-            return this.Elements.Values.OfType<T>();
+            return Elements.Values.OfType<T>();
+        }
+
+        /// <summary>
+        /// Get all elements assignable from type T. This will include
+        /// types which derive from T and types which implement T if T 
+        /// is an interface.
+        /// </summary>
+        /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
+        /// <returns>A collection of elements derived from the specified type.</returns>
+        public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
+        {
+            return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }
 
         /// <summary>
@@ -236,6 +253,104 @@ namespace Elements
                 var serializer = new JsonSerializer();
                 serializer.Serialize(jsonWriter, exportModel);
                 jsonWriter.Flush();
+            }
+        }
+
+        /// <summary>
+        /// Intersect the model with the provided plane.
+        /// </summary>
+        /// <param name="plane">The intersection plane.</param>
+        /// <param name="intersectionPolygons">A collection of polygons resulting from the 
+        /// intersection of the plane with all elements in the model.</param>
+        /// <param name="beyondPolygons">A collection of polygons resulting from intersection
+        /// of the beyond plane with all elements in the model.</param>
+        /// <param name="lines">A collection of line segments resulting from intersection of the plane
+        /// with all elements in the model.</param>
+        public void Intersect(Plane plane,
+                              out Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
+                              out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
+                              out Dictionary<Guid, List<Geometry.Line>> lines)
+        {
+            UpdateBoundsAndComputedSolids();
+
+            var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
+            var intersectingElements = geos.Where(geo => geo._bounds.Intersects(plane, out _)).ToList();
+
+            var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>();
+            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition._bounds.Intersects(plane, out _, geo.Transform)).ToList();
+
+            var allIntersectingElements = new List<Element>();
+            allIntersectingElements.AddRange(intersectingInstances);
+            allIntersectingElements.AddRange(intersectingElements);
+
+            IntersectElementsWithPlane(plane, allIntersectingElements, out intersectionPolygons, out beyondPolygons, out lines);
+        }
+
+        /// <summary>
+        /// Update the representations of all geometric elements in the model.
+        /// </summary>
+        public void UpdateRepresentations()
+        {
+            foreach (var geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
+            {
+                geo.UpdateRepresentations();
+            }
+        }
+
+        /// <summary>
+        /// Update the bounds and computed solids of all geometric elements in the model.
+        /// </summary>
+        public void UpdateBoundsAndComputedSolids()
+        {
+            foreach (GeometricElement geo in Elements.Values.Where(e => e is GeometricElement).Cast<GeometricElement>())
+            {
+                geo.UpdateBoundsAndComputeSolid();
+            }
+        }
+
+        private void IntersectElementsWithPlane(Plane plane,
+                                       List<Element> intersecting,
+                                       out Dictionary<Guid, List<Geometry.Polygon>> intersectionPolygons,
+                                       out Dictionary<Guid, List<Geometry.Polygon>> beyondPolygons,
+                                       out Dictionary<Guid, List<Geometry.Line>> lines)
+        {
+            intersectionPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            beyondPolygons = new Dictionary<Guid, List<Geometry.Polygon>>();
+            lines = new Dictionary<Guid, List<Geometry.Line>>();
+
+            foreach (var element in intersecting)
+            {
+                GeometricElement geo = null;
+                if (element is GeometricElement)
+                {
+                    geo = element as GeometricElement;
+                }
+                else if (element is ElementInstance instance)
+                {
+                    geo = instance.BaseDefinition;
+                }
+
+                if (geo._csg == null)
+                {
+                    continue;
+                }
+
+                if (geo.Intersects(plane, out var xsectP, out var beyondP, out var xsectL))
+                {
+                    foreach (var kvp in xsectP)
+                    {
+                        intersectionPolygons.Add(kvp.Key, kvp.Value);
+                    }
+                    foreach (var kvp in beyondP)
+                    {
+                        beyondPolygons.Add(kvp.Key, kvp.Value);
+                    }
+                    foreach (var kvp in xsectL)
+                    {
+                        lines.Add(kvp.Key, kvp.Value);
+                    }
+                }
+
             }
         }
 

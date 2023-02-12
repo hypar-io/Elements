@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Vector3Extensions
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -124,7 +133,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool AreCollinear(this IList&lt;Vector3&gt; points)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use AreCollinearByDistance instead&quot;)]
+public static bool AreCollinear(this IList&lt;Vector3&gt; points)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -140,6 +150,54 @@
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">points</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3Extensions_AreCollinearByDistance_" data-uid="Elements.Geometry.Vector3Extensions.AreCollinearByDistance*"></a>
+  <h4 id="Elements_Geometry_Vector3Extensions_AreCollinearByDistance_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Double_" data-uid="Elements.Geometry.Vector3Extensions.AreCollinearByDistance(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Double)">AreCollinearByDistance(IList&lt;Vector3&gt;, Double)</h4>
+  <div class="markdown level1 summary"><p>Check whether three points are on the same line withing certain distance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AreCollinearByDistance(this IList&lt;Vector3&gt; points, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>List of points to check. Order is not important.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>Distance tolerance.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -242,6 +300,50 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Vector3Extensions_BestFitLine_" data-uid="Elements.Geometry.Vector3Extensions.BestFitLine*"></a>
+  <h4 id="Elements_Geometry_Vector3Extensions_BestFitLine_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.BestFitLine(System.Collections.Generic.IList{Elements.Geometry.Vector3})">BestFitLine(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Return an approximate fit line through a set of points using the least squares method.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Line BestFitLine(this IList&lt;Vector3&gt; points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to fit. Should have at least 2 distinct points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><p>An approximate fit line through a set of points using the least squares method.
+If there is less than 2 distinct points, returns null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Vector3Extensions_FitLine_" data-uid="Elements.Geometry.Vector3Extensions.FitLine*"></a>
   <h4 id="Elements_Geometry_Vector3Extensions_FitLine_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.FitLine(System.Collections.Generic.IList{Elements.Geometry.Vector3})">FitLine(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Return an approximate fit line through a set of points.
@@ -283,7 +385,7 @@ to span the length of the points.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
-        <td><p>A line roughly running through the set of points.</p>
+        <td><p>A line roughly running through the set of points, or null if the points are nearly coincident.</p>
 </td>
       </tr>
     </tbody>
@@ -376,6 +478,48 @@ to span the length of the points.</p>
         <td><span class="xref">System.Double</span>[]</td>
         <td><p>An array containing x,y,z,x1,y1,z1,x2,y2,z2,...</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3Extensions_ToGraphicsBuffers_" data-uid="Elements.Geometry.Vector3Extensions.ToGraphicsBuffers*"></a>
+  <h4 id="Elements_Geometry_Vector3Extensions_ToGraphicsBuffers_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.ToGraphicsBuffers(System.Collections.Generic.IList{Elements.Geometry.Vector3})">ToGraphicsBuffers(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Convert a list of vertices to a GraphicsBuffers object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GraphicsBuffers ToGraphicsBuffers(this IList&lt;Vector3&gt; vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">vertices</span></td>
+        <td><p>The vertices to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

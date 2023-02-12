@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// The abstract base class for all curves.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>
@@ -26,14 +27,21 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="startSetback">The offset parameter from the start of the curve.</param>
         /// <param name="endSetback">The offset parameter from the end of the curve.</param>
+        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
         /// <returns>A collection of transforms.</returns>
-        public virtual Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0)
+        public virtual Transform[] Frames(double startSetback = 0.0,
+                                          double endSetback = 0.0,
+                                          double additionalRotation = 0.0)
         {
             var parameters = GetSampleParameters(startSetback, endSetback);
             var transforms = new Transform[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
                 transforms[i] = TransformAt(parameters[i]);
+                if (additionalRotation != 0.0)
+                {
+                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
+                }
             }
             return transforms;
         }
@@ -67,10 +75,9 @@ namespace Elements.Geometry
         public virtual Polyline ToPolyline(int divisions = 10)
         {
             var pts = new List<Vector3>(divisions + 1);
-            var div = 1.0 / (double)divisions;
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0; t <= divisions; t++)
             {
-                pts.Add(PointAt(t));
+                pts.Add(PointAt(t * 1.0 / divisions));
             }
             return new Polyline(pts);
         }
@@ -97,9 +104,9 @@ namespace Elements.Geometry
         /// <param name="c">The curve to convert.</param>
         public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
 
-        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        internal GraphicsBuffers ToGraphicsBuffers()
         {
-            return this.RenderVertices().ToGraphicsBuffers(lineLoop);
+            return this.RenderVertices().ToGraphicsBuffers();
         }
     }
 }

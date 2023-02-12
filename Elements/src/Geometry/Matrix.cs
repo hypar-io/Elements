@@ -12,7 +12,7 @@ namespace Elements.Geometry
     public partial class Matrix : IEquatable<Matrix>
     {
         /// <summary>The components of the matrix.</summary>
-        [Newtonsoft.Json.JsonProperty("Components", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Components", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(12)]
         [System.ComponentModel.DataAnnotations.MaxLength(12)]
@@ -22,7 +22,7 @@ namespace Elements.Geometry
         /// Construct a matrix.
         /// </summary>
         /// <param name="components">The components of the matrix.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Matrix(double[] @components)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -525,6 +525,20 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Get the hash code for the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            int hash = 19;
+            foreach (var component in Components)
+            {
+                hash = hash * 31 + component.GetHashCode();
+            }
+            return hash;
         }
     }
 }

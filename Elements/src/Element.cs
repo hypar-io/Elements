@@ -1,11 +1,12 @@
 using System;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
     /// An object which is identified with a unique identifier and a name.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract class Element : System.ComponentModel.INotifyPropertyChanged
     {
         private System.Guid _id;
@@ -16,7 +17,7 @@ namespace Elements
         /// </summary>
         /// <param name="id">The unique id of the element.</param>
         /// <param name="name">The name of the element.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Element(System.Guid @id = default(Guid), string @name = null)
         {
             this._id = @id;
@@ -29,7 +30,7 @@ namespace Elements
         }
 
         /// <summary>A unique id.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Id", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id
         {
@@ -45,7 +46,7 @@ namespace Elements
         }
 
         /// <summary>A name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Name", Required = Required.AllowNull)]
         public string Name
         {
             get { return _name; }

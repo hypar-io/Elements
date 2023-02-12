@@ -9,6 +9,7 @@ using System.Text;
 using Elements.Geometry.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
+using LibTessDotNet.Double;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -105,12 +106,14 @@ namespace Elements.Geometry.Solids
         /// <param name="curve">The curve along which to sweep.</param>
         /// <param name="startSetback">The setback distance of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback distance of the sweep from the end of the curve.</param>
+        /// <param name="profileRotation">The rotation of the profile.</param>
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
                                                 ICurve curve,
                                                 double startSetback = 0,
-                                                double endSetback = 0)
+                                                double endSetback = 0,
+                                                double profileRotation = 0)
         {
             var solid = new Solid();
 
@@ -130,7 +133,7 @@ namespace Elements.Geometry.Solids
             var ssb = startSetback / l;
             var esb = endSetback / l;
 
-            var transforms = curve.Frames(ssb, esb);
+            var transforms = curve.Frames(ssb, esb, profileRotation);
 
             if (curve is Polygon)
             {
@@ -847,6 +850,120 @@ namespace Elements.Geometry.Solids
             {
                 e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
             }
+        }
+        internal Csg.Solid ToCsg()
+        {
+            var polygons = new List<Csg.Polygon>(Faces.Values.Count);
+
+            ushort faceId = 0;
+            foreach (var f in Faces.Values)
+            {
+                var tess = new Tess
+                {
+                    NoEmptyPolygons = true,
+                };
+
+                var a = f.Outer.Edges[0].Vertex.Point;
+                var b = f.Outer.Edges[1].Vertex.Point;
+                var c = f.Outer.Edges[2].Vertex.Point;
+                (Vector3 U, Vector3 V) = Tessellation.Tessellation.ComputeBasisAndNormalForTriangle(a, b, c, out var normal);
+
+                // Create the csg vertices first then use them to create
+                // the tessellation vertices. This way we can pass the
+                // texture coordinates AND the vertex tag through tessellation
+                // to be used for lookup on the other side.
+
+                var outerVerts = f.Outer.ToCsgVertexArray(U, V);
+                var outerContourArray = outerVerts.ToContourVertexArray(faceId);
+                tess.AddContour(outerContourArray);
+
+                // Map csg vertices by tag.
+                var csgVertices = new Dictionary<int, Csg.Vertex>();
+
+                foreach (var v in outerVerts)
+                {
+                    csgVertices.Add(v.Tag, v);
+                }
+
+                if (f.Inner != null)
+                {
+                    foreach (var loop in f.Inner)
+                    {
+                        var innerVerts = loop.ToCsgVertexArray(U, V);
+                        foreach (var v in innerVerts)
+                        {
+                            csgVertices.Add(v.Tag, v);
+                        }
+
+                        var innerContourArray = innerVerts.ToContourVertexArray(faceId);
+                        tess.AddContour(innerContourArray);
+                    }
+                }
+
+                // Always tessellate to 3 sided polygons because CSGs
+                // require convex polys.
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
+
+                for (var i = 0; i < tess.Elements.Count(); i += 3)
+                {
+                    var v1 = tess.Vertices[tess.Elements[i]];
+                    var v2 = tess.Vertices[tess.Elements[i + 1]];
+                    var v3 = tess.Vertices[tess.Elements[i + 2]];
+
+                    Csg.Vertex av = null;
+                    Csg.Vertex bv = null;
+                    Csg.Vertex cv = null;
+
+                    if (v1.Data == null)
+                    {
+                        // It's a new vertex created during tessellation.
+                        var avv = v1.Position.ToCsgVector3();
+                        av = new Csg.Vertex(new Csg.Vector3D(v1.Position.X, v1.Position.Y, v1.Position.Z), new Csg.Vector2D(U.Dot(avv.X, avv.Y, avv.Z), V.Dot(avv.X, avv.Y, avv.Z)));
+                    }
+                    else
+                    {
+                        var vData1 = ((UV uv, int tag, int faceId))v1.Data;
+                        av = csgVertices[vData1.tag];
+                    }
+
+                    if (v2.Data == null)
+                    {
+                        var bvv = v2.Position.ToCsgVector3();
+                        bv = new Csg.Vertex(bvv, new Csg.Vector2D(U.Dot(bvv.X, bvv.Y, bvv.Z), V.Dot(bvv.X, bvv.Y, bvv.Z)));
+                    }
+                    else
+                    {
+                        var vData2 = ((UV uv, int tag, int faceId))v2.Data;
+                        bv = csgVertices[vData2.tag];
+                    }
+
+                    if (v3.Data == null)
+                    {
+                        var cvv = v3.Position.ToCsgVector3();
+                        cv = new Csg.Vertex(cvv, new Csg.Vector2D(U.Dot(cvv.X, cvv.Y, cvv.Z), V.Dot(cvv.X, cvv.Y, cvv.Z)));
+                    }
+                    else
+                    {
+                        var vData3 = ((UV uv, int tag, int faceId))v3.Data;
+                        cv = csgVertices[vData3.tag];
+                    }
+
+                    // Don't allow us to create a csg that has zero
+                    // area triangles.
+                    var ab = bv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var ac = cv.Pos.ToVector3() - av.Pos.ToVector3();
+                    var area = ab.Cross(ac).Length() / 2;
+                    if (area == 0.0)
+                    {
+                        continue;
+                    }
+
+                    var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
+                    polygons.Add(p);
+                }
+                faceId++;
+            }
+            return Csg.Solid.FromPolygons(polygons);
         }
     }
 }

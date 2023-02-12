@@ -57,7 +57,7 @@ namespace Elements.Validators
                 return _validator;
             }
         }
-
+#pragma warning disable CS0612
         private Dictionary<Type, IValidator> _validators;
 
         private Validator()
@@ -75,7 +75,7 @@ namespace Elements.Validators
                 _validators.Add(v.ValidatesType, v);
             }
         }
-
+#pragma warning restore CS0612
         /// <summary>
         /// Gets the first validator for the supplied T.
         /// </summary>

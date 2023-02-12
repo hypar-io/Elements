@@ -23,13 +23,13 @@ namespace Elements
         /// <param name="name">The brace's name.</param>
         public Brace(Curve curve,
                      Profile profile,
-                     Material material,
+                     Material material = null,
                      double startSetback = 0.0,
                      double endSetback = 0.0,
                      double rotation = 0.0,
                      Transform transform = null,
                      bool isElementDefinition = false,
-                     Guid id = default(Guid),
+                     Guid id = default,
                      string name = null)
             : base(curve,
                    profile,

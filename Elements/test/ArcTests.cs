@@ -61,6 +61,7 @@ namespace Hypar.Tests
             Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(1.0));
             Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(0.5));
             Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(0.0));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(-1e-15));
         }
 
         [Fact]
@@ -103,6 +104,8 @@ namespace Hypar.Tests
             var arc = new Arc(Vector3.Origin, 1, 10, 20);
             var p = arc.ToPolyline(10);
             Assert.Equal(10, p.Segments().Length);
+            Assert.Equal(arc.Start, p.Vertices[0]);
+            Assert.Equal(arc.End, p.Vertices[p.Vertices.Count - 1]);
         }
 
         [Fact]
@@ -111,6 +114,8 @@ namespace Hypar.Tests
             var c = new Circle(Vector3.Origin, 1);
             var p = c.ToPolygon(10);
             Assert.Equal(10, p.Segments().Length);
+            Assert.Equal(c.Start, p.Vertices[0]);
+            Assert.Equal(c.End, p.Vertices[0]);
         }
     }
 }

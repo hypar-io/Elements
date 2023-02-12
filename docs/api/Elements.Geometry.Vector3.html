@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Vector3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -207,6 +216,29 @@ public Vector3(double x, double y, double z)</code></pre>
   </table>
   <h3 id="fields">Fields
   </h3>
+  <h4 id="Elements_Geometry_Vector3_COS_ANGLE_EPSILON" data-uid="Elements.Geometry.Vector3.COS_ANGLE_EPSILON">COS_ANGLE_EPSILON</h4>
+  <div class="markdown level1 summary"><p>A tolerance for angle comparison operation of cos of 0.001 degrees.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const double COS_ANGLE_EPSILON = 0.99999999984769128</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h4 id="Elements_Geometry_Vector3_EPSILON" data-uid="Elements.Geometry.Vector3.EPSILON">EPSILON</h4>
   <div class="markdown level1 summary"><p>A tolerance for comparison operations of 1e-5.</p>
 </div>
@@ -457,7 +489,8 @@ you should use Vector3.PlaneAngleTo.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use AreCollinearByDistance or AreCollinearByAngle instead&quot;)]
+public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -485,6 +518,131 @@ you should use Vector3.PlaneAngleTo.</p>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">c</span></td>
         <td><p>The third point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the points are on the same line, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_AreCollinearByAngle_" data-uid="Elements.Geometry.Vector3.AreCollinearByAngle*"></a>
+  <h4 id="Elements_Geometry_Vector3_AreCollinearByAngle_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Vector3.AreCollinearByAngle(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">AreCollinearByAngle(Vector3, Vector3, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Check whether three points are on the same line within certain angle.
+Order is important since unsigned abc angle is checked.
+This function is much faster than AreCollinearByDistance but angle deviation scales with the distance of points being compared.
+If points are far away from each other they might appear collinear even if there are large distance offsets between them.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = 0.99999999984769128)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">cosAngleTolerance</span></td>
+        <td><p>Angle tolerance as cos.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_AreCollinearByDistance_" data-uid="Elements.Geometry.Vector3.AreCollinearByDistance*"></a>
+  <h4 id="Elements_Geometry_Vector3_AreCollinearByDistance_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Vector3.AreCollinearByDistance(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">AreCollinearByDistance(Vector3, Vector3, Vector3, Double)</h4>
+  <div class="markdown level1 summary"><p>Check whether three points are on the same line within certain distance.
+This function is slower than AreCollinearByAngle and less suitable for high complexity code.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = 1E-05)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>Distance tolerance.</p>
 </td>
       </tr>
     </tbody>
@@ -708,19 +866,19 @@ you should use Vector3.PlaneAngleTo.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</p>
+        <td><p>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are collinear.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3_ClosestPointOn_" data-uid="Elements.Geometry.Vector3.ClosestPointOn*"></a>
-  <h4 id="Elements_Geometry_Vector3_ClosestPointOn_Elements_Geometry_Line_" data-uid="Elements.Geometry.Vector3.ClosestPointOn(Elements.Geometry.Line)">ClosestPointOn(Line)</h4>
+  <h4 id="Elements_Geometry_Vector3_ClosestPointOn_Elements_Geometry_Line_System_Boolean_" data-uid="Elements.Geometry.Vector3.ClosestPointOn(Elements.Geometry.Line,System.Boolean)">ClosestPointOn(Line, Boolean)</h4>
   <div class="markdown level1 summary"><p>Get the closest point on the line from this point.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 ClosestPointOn(Line line)</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 ClosestPointOn(Line line, bool infinite = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -736,6 +894,12 @@ you should use Vector3.PlaneAngleTo.</p>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><span class="parametername">line</span></td>
         <td><p>The line on which to find the closest point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">infinite</span></td>
+        <td><p>If true, line will be treated as infinite. (False by default)</p>
 </td>
       </tr>
     </tbody>
@@ -1279,6 +1443,56 @@ polyline, and output the location of the closest point on that polyline.</p>
         <td><span class="xref">System.Double</span></td>
         <td><p>The distance between this vector and the provided vector.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Vector3_DistanceTo_" data-uid="Elements.Geometry.Vector3.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Vector3_DistanceTo_System_ValueTuple_Elements_Geometry_Vector3_Elements_Geometry_Vector3__Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3.DistanceTo(System.ValueTuple{Elements.Geometry.Vector3,Elements.Geometry.Vector3},Elements.Geometry.Vector3@)">DistanceTo((Vector3 from, Vector3 to), out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Find the distance from this point to the edge, and output the location
+of the closest point on that line.
+Using formula from <a href="https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd">https://diego.assencio.com/?index=ec3d5dfdfc0b6a0d147a656f0af332bd</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo((Vector3 from, Vector3 to) edge, out Vector3 closestPoint)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">edge</span></td>
+        <td><p>The edge to find the distance to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">closestPoint</span></td>
+        <td><p>The point on the line that is closest to this point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

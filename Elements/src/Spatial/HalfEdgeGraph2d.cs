@@ -236,39 +236,7 @@ namespace Elements.Spatial
             // edges are never added.
             while (edgesPerVertex.Any(l => l.Count > 0))
             {
-                var currentEdgeList = new List<(int from, int to, int? tag)>();
-                // pick a starting point
-                var startingSet = edgesPerVertex.First(l => l.Count > 0);
-                var currentSegment = startingSet[0];
-                startingSet.RemoveAt(0);
-                var initialFrom = currentSegment.from;
-
-                // loop until we reach the point at which we started for this polygon loop.
-                // Since we have a finite set of edges, and we consume / remove every edge we traverse,
-                // we must eventually either find an edge that points back to our start, or hit
-                // a dead end where no more edges are available (in which case we throw an exception) 
-                while (currentSegment.to != initialFrom)
-                {
-                    currentEdgeList.Add(currentSegment);
-                    var toVertex = vertices[currentSegment.to];
-                    var fromVertex = vertices[currentSegment.from];
-
-                    var vectorToTest = fromVertex - toVertex;
-                    // get all segments pointing outwards from our "to" vertex
-                    var possibleNextSegments = edgesPerVertex[currentSegment.to];
-                    if (possibleNextSegments.Count == 0)
-                    {
-                        // this should never happen.
-                        throw new Exception("Something went wrong building polygons from split results. Unable to proceed.");
-                    }
-                    // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
-                    var n = normal == default ? Vector3.ZAxis : normal;
-                    var nextSegment = possibleNextSegments.OrderBy(cand => vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n)).Last();
-
-                    possibleNextSegments.Remove(nextSegment);
-                    currentSegment = nextSegment;
-                }
-                currentEdgeList.Add(currentSegment);
+                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal);
                 var currentVertexList = new List<Vector3>();
 
                 // remove duplicate edges in the same new polygon, 
@@ -329,6 +297,134 @@ namespace Elements.Spatial
                 }
             }
             return newPolygons;
+        }
+
+        /// <summary>
+        /// Calculate the closed polylines in this graph.
+        /// </summary>
+        /// <param name="predicate">A predicate used during the final step of polylinization to determine if edges are
+        /// valid.</param>
+        /// <param name="normal">The normal of the plane in which graph traversal for polyline construction will occur.
+        /// If no normal is provided, the +Z axis is used.</param>
+        /// <returns>A collection of polylines.</returns>
+        public List<Polyline> Polylinize(Func<int?, bool> predicate = null, Vector3 normal = default(Vector3))
+        {
+            return Polylinize(predicate, (points) => new Polyline(points), normal);
+        }
+
+        /// <summary>
+        /// A generic polylinizer which can be used to construct different data results from the polylinization process —
+        /// for instance, if your polylines are not planar, you can create polylines from them, or output point collections directly.
+        /// </summary>
+        internal List<T> Polylinize<T>(Func<int?, bool> predicate = null, Func<IList<Vector3>, T> resultProcess = null, Vector3 normal = default)
+        {
+            var edgesPerVertex = new List<List<(int from, int to, int? tag)>>(this.EdgesPerVertex);
+            var vertices = this.Vertices;
+            var newPolylines = new List<T>();
+
+            // construct polylines from half edge graph.
+            // remove edges from edgesPerVertex as they get "consumed" by a polyline,
+            // and stop when you run out of edges. 
+            // Guranteed to terminate because every loop step removes at least 1 edge, and
+            // edges are never added.
+            while (edgesPerVertex.Any(l => l.Count > 0))
+            {
+                var currentEdgeList = GetEdgeList(edgesPerVertex, vertices, normal, true);
+
+                if (predicate != null)
+                {
+                    if (currentEdgeList.Any(e => predicate(e.tag)))
+                    {
+                        continue;
+                    }
+                }
+
+                var currentVertexList = new List<Vector3>();
+                foreach (var edge in currentEdgeList)
+                {
+                    currentVertexList.Add(vertices[edge.from]);
+                    currentVertexList.Add(vertices[edge.to]);
+                }
+
+                // if we have a wholly-contained polyline, this cleanup can result in a totally empty list,
+                // so we check before trying to construct a polyline.
+                if (currentVertexList.Count > 0)
+                {
+                    newPolylines.Add(resultProcess(currentVertexList));
+                }
+            }
+
+            return newPolylines;
+        }
+
+        /// <summary>
+        /// Return edge list using picking the next segment forming the largest counter-clockwise angle with edge opposite
+        /// </summary>
+        private List<(int from, int to, int? tag)> GetEdgeList(List<List<(int from, int to, int? tag)>> edgesPerVertex, List<Vector3> vertices, Vector3 normal = default, bool polyline = false)
+        {
+            var currentEdgeList = new List<(int from, int to, int? tag)>();
+            // pick a starting point
+            var startingSet = edgesPerVertex.First(l => l.Count > 0);
+            var currentSegment = startingSet[0];
+
+            // loop until we reach the point at which we started for this polygon loop.
+            // Since we have a finite set of edges, and we consume / remove every edge we traverse,
+            // we must eventually either find an edge that points back to our start, or hit
+            // a dead end where no more edges are available (in which case we throw an exception) 
+            while (true)
+            {
+                currentEdgeList.Add(currentSegment);
+
+                if (!polyline && currentSegment.to == startingSet[0].from)
+                {
+                    break;
+                }
+                var toVertex = vertices[currentSegment.to];
+                var fromVertex = vertices[currentSegment.from];
+
+                var vectorToTest = fromVertex - toVertex;
+                // get all segments pointing outwards from our "to" vertex
+                var possibleNextSegments = edgesPerVertex[currentSegment.to];
+                if (!polyline)
+                {
+                    // for polyline tracing, we want to look ahead to the next
+                    // segment, and only terminate if the next segment is the
+                    // first segment, so we don't exclude it.
+                    possibleNextSegments = possibleNextSegments.Except(currentEdgeList).ToList();
+                }
+                if (possibleNextSegments.Count == 0)
+                {
+                    // we may have come to a dead end or the end of a loop.
+                    break;
+                }
+                // at every node, we pick the next segment forming the largest counter-clockwise angle with our opposite.
+                var n = normal == default ? Vector3.ZAxis : normal;
+                var nextSegment = possibleNextSegments.OrderBy(cand =>
+                {
+                    var ccwAngle = vectorToTest.PlaneAngleTo(vertices[cand.to] - vertices[cand.from], n);
+                    if (!polyline)
+                    {
+                        return ccwAngle;
+                    }
+                    if (ccwAngle < Vector3.EPSILON)
+                    {
+                        ccwAngle = 360;
+                    }
+                    return 360 - ccwAngle;
+                }).Last();
+                currentSegment = nextSegment;
+                if (currentSegment == startingSet[0])
+                {
+                    break;
+                }
+            }
+
+            foreach (var segment in currentEdgeList)
+            {
+                edgesPerVertex[segment.from].Remove(segment);
+            }
+
+            return currentEdgeList;
         }
     }
 }

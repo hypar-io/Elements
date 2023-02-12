@@ -29,8 +29,9 @@ namespace Elements.Geometry.Interfaces
         /// </summary>
         /// <param name="startSetback">The offset from the start of the ICurve.</param>
         /// <param name="endSetback">The offset from the end of the ICurve.</param>
+        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
         /// <returns>A collection of Transforms.</returns>
-        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0);
+        Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0, double additionalRotation = 0.0);
 
         /// <summary>
         /// Get the bounding box of this curve.

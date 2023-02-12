@@ -247,6 +247,17 @@ namespace Elements
             return GetGrid().V.GetCells().Count(cell => cell.Type?.Contains(_spaceCellName) == false);
         }
 
+        /// <summary>
+        /// Get the tile cells as Grid2d.
+        /// </summary>
+        /// <returns>List of tiles grids.</returns>
+        public List<Grid2d> GetTileCells()
+        {
+            return GetGrid().GetCells()
+                    .Where(c => c.Type?.Contains(_spaceCellName) == false)
+                    .ToList();
+        }
+
         private List<Polygon> BuildCeilingTiles()
         {
             var cells = GetGrid().GetCells();

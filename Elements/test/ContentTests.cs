@@ -4,6 +4,8 @@ using Elements.Serialization.glTF;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using glTFLoader;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -42,7 +44,6 @@ namespace Elements.Tests
             var str = boxType2.ToString();
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
 
-
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, new List<Element>(), Guid.NewGuid(), "test");
 
             var savePath = "../../../models/ContentCatalog.json";
@@ -55,6 +56,39 @@ namespace Elements.Tests
             Assert.Equal(testCatalog.Id, loadedCatalog.Id);
             Assert.Equal(testCatalog.Content.Count, loadedCatalog.Content.Count);
             Assert.Equal("The Value", loadedCatalog.Content[0].AdditionalProperties["ImportantParameter"]);
+        }
+
+        [Fact]
+        public void MergeExtensions()
+        {
+            Name = nameof(MergeExtensions);
+            // This piece of content uses the KHR_materials_pbrSpecularGlossiness extension which is no longer used in our models.
+            const string contentLocation = "../../../models/MergeGlTF/LittleShapes.glb";
+            var littleShapeContent = new TestContentElem(contentLocation,
+                                      new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
+                                      new Vector3(),
+                                      new Transform(new Vector3(), Vector3.XAxis),
+                                      20,
+                                      BuiltInMaterials.Default,
+                                      null,
+                                      true,
+                                      Guid.NewGuid(),
+                                      "LittleShapes");
+            var anInstance = littleShapeContent.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
+
+            var modelPath = $"./models/{nameof(MergeExtensions)}.glb";
+            Model.AddElement(new Mass(Polygon.Rectangle(1, 1)));
+            Model.ToGlTF(modelPath);
+            var gltfModelEmpty = Interface.LoadModel(modelPath);
+            var initialExtensions = gltfModelEmpty.ExtensionsUsed;
+
+            var gltfContent = Interface.LoadModel(contentLocation);
+            Model.AddElement(anInstance);
+            Model.ToGlTF(modelPath);
+            var gltfModelMerged = Interface.LoadModel(modelPath);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed.Except(initialExtensions));
+            Assert.All(gltfContent.ExtensionsUsed, (ext) => Assert.Contains(ext, gltfModelMerged.ExtensionsUsed));
         }
 
         [Fact, Trait("Category", "Example")]
@@ -93,10 +127,10 @@ namespace Elements.Tests
             model.AddElement(twoDuck);
             // </example>
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            model.ToGlTF("./models/ContentInstancing.glb");
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}.glb");
             var firstRun = sw.Elapsed.TotalSeconds;
             sw.Restart();
-            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}.gltf", false);
             var secondRun = sw.Elapsed.TotalSeconds;
             Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }

@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ModelLines
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ModelLines
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.59.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.ModelLines">
+  
+  <h1 id="Elements_ModelLines" data-uid="Elements.ModelLines" class="text-break">Class ModelLines
+  </h1>
+  <div class="markdown level0 summary"><p>A collection of lines which are visible in 3D.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div id="model"></div>
+  
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
+    renderer.setSize( div.clientWidth, div.clientHeight );
+    renderer.setClearColor( 0x000000, 0 );
+  
+    div.appendChild( renderer.domElement );
+  
+    var controls = new OrbitControls( camera, renderer.domElement );
+  
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
+    scene.add( light );
+  
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
+  
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
+  
+    window.addEventListener( 'resize', onWindowResize, false );
+  
+    // Instantiate a loader
+    var loader = new GLTFLoader();
+  
+    // Load a glTF resource
+    loader.load(
+      // resource URL
+      '../models/Elements_ModelLines.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+        scene.add( gltf.scene );
+        fitCameraToObject(scene, 2.0, controls);
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      },
+      // called when loading has errors
+      function ( error ) {
+        console.log( 'An error happened' );
+      }
+    );
+  
+    var animate = function () {
+      requestAnimationFrame( animate );
+      renderer.render( scene, camera );
+    };
+  
+    function onWindowResize(){
+      var div = document.getElementById("model");
+      camera.aspect = div.clientWidth / div.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize( div.clientWidth, div.clientHeight );
+    };
+  
+    const fitCameraToObject = function ( object, offset, orbitControls ) {
+  
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
+  
+      const center = new Vector3();
+      boundingBox.getCenter(center);
+      const size = new Vector3();
+      boundingBox.getSize(size);
+  
+      // get the max side of the bounding box
+      const maxDim = Math.max( size.x, size.y, size.z ) * 3;
+      const fov = camera.fov * ( Math.PI / 180 );
+      let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
+      
+      // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
+      // object filling the whole canvas
+      if( offset !== undefined && offset !== 0 ) {
+        cameraZ *= offset;
+      } 
+  
+      camera.position.set( center.x, center.y, cameraZ );
+      
+      // set the far plane of the camera so that it easily encompasses the whole object
+      const minZ = boundingBox.min.z;
+      const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
+  
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
+  
+      if ( orbitControls !== undefined ) {
+  
+        // set camera to rotate around center of loaded object
+        orbitControls.target = center;
+  
+        // prevent camera from zooming out far enough to create far plane cutoff
+        orbitControls.maxDistance = cameraToFarEdge * 2;
+      }
+    };
+  
+    animate();
+  </script><h5 id="Elements_ModelLines"><strong>Examples</strong></h5>
+  <pre><code class="lang-csharp" name="Main">var lines = new List&lt;Line&gt;()
+{
+    new Line(new Vector3(0, 0), new Vector3(0, 5)),
+    new Line(new Vector3(0, 0), new Vector3(5, 0)),
+    new Line(new Vector3(0, 5), new Vector3(5, 5)),
+    new Line(new Vector3(5, 0), new Vector3(5, 5)),
+    new Line(new Vector3(0, 0), new Vector3(5, 5))
+};
+
+var modelLines = new ModelLines(lines, new Material(&quot;Yellow&quot;, Colors.Yellow));
+</code></pre>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
+    <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
+    <div class="level3"><span class="xref">ModelLines</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.html">Elements</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_ModelLines_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ModelLines : GeometricElement, INotifyPropertyChanged</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_ModelLines__ctor_" data-uid="Elements.ModelLines.#ctor*"></a>
+  <h4 id="Elements_ModelLines__ctor_System_Collections_Generic_IList_Elements_Geometry_Line__Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.ModelLines.#ctor(System.Collections.Generic.IList{Elements.Geometry.Line},Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">ModelLines(IList&lt;Line&gt;, Material, Transform, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Create a collection of lines. They share Material, Transformation and other parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public ModelLines(IList&lt;Line&gt; lines = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>The lines.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The material. Specular and glossiness components will be ignored.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The model lines transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the model lines.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the model lines.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_ModelLines_Lines_" data-uid="Elements.ModelLines.Lines*"></a>
+  <h4 id="Elements_ModelLines_Lines" data-uid="Elements.ModelLines.Lines">Lines</h4>
+  <div class="markdown level1 summary"><p>The lines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;Line&gt; Lines { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_ModelLines_SetSelectable_" data-uid="Elements.ModelLines.SetSelectable*"></a>
+  <h4 id="Elements_ModelLines_SetSelectable_System_Boolean_" data-uid="Elements.ModelLines.SetSelectable(System.Boolean)">SetSelectable(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Set whether these model lines should be selectable in the web UI.
+Lines are not selectable by default.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSelectable(bool selectable)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">selectable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_ModelLines_TryToGraphicsBuffers_" data-uid="Elements.ModelLines.TryToGraphicsBuffers*"></a>
+  <h4 id="Elements_ModelLines_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___" data-uid="Elements.ModelLines.TryToGraphicsBuffers(System.Collections.Generic.List{Elements.Geometry.GraphicsBuffers}@,System.String@,System.Nullable{glTFLoader.Schema.MeshPrimitive.ModeEnum}@)">TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt;, out String, out Nullable&lt;MeshPrimitive.ModeEnum&gt;)</h4>
+  <div class="markdown level1 summary"><p>Get graphics buffers and other metadata required to modify a GLB.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt; graphicsBuffers, out string id, out MeshPrimitive.ModeEnum? mode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a>&gt;</td>
+        <td><span class="parametername">graphicsBuffers</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">glTFLoader.Schema.MeshPrimitive.ModeEnum</span>&gt;</td>
+        <td><span class="parametername">mode</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if there is graphicsbuffers data applicable to add, false otherwise.
+Out variables should be ignored if the return value is false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt;, out String, out Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

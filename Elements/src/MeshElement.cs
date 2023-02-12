@@ -31,15 +31,17 @@ namespace Elements
         /// Construct an import mesh element.
         /// </summary>
         /// <param name="mesh">The element's mesh.</param>
-        /// <param name="material">The element's material.</param>
         /// <param name="transform">The element's transform.</param>
+        /// <param name="material">The element's material.</param>
+        /// <param name="representation">The element's representation.</param>
         /// <param name="isElementDefinition">Is this element a definition?</param>
         /// <param name="id">The element's id.</param>
         /// <param name="name">The element's name.</param>
         [JsonConstructor]
         public MeshElement(Mesh mesh,
-                            Material material = null,
                             Transform transform = null,
+                            Material material = null,
+                            Representation representation = null,
                             bool isElementDefinition = false,
                             Guid id = default(Guid),
                             string name = null) : base(transform == null ? new Transform() : transform,
@@ -50,6 +52,15 @@ namespace Elements
                                                        name)
         {
             this._mesh = mesh;
+        }
+
+        /// <summary>
+        /// Empty constructor for compatibility purposes. It is best to use the
+        /// structured constructor with arguments, to ensure the mesh is correctly created.
+        /// </summary>
+        public MeshElement() : base()
+        {
+            _mesh = new Mesh();
         }
 
         internal MeshElement(Material material = null,

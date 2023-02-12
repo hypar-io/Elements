@@ -18,8 +18,6 @@ namespace Elements
         /// </summary>
         public Curve Curve { get; set; }
 
-        private bool _isSelectable = true;
-
         /// <summary>
         /// Create a model curve.
         /// </summary>
@@ -56,16 +54,23 @@ namespace Elements
             this._isSelectable = selectable;
         }
 
-        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        internal GraphicsBuffers ToGraphicsBuffers()
         {
-            return this.Curve.ToGraphicsBuffers(lineLoop);
+            return this.Curve.ToGraphicsBuffers();
         }
 
-        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = this._isSelectable ? $"{this.Id}_curve" : $"unselectable_{this.Id}_curve";
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
-            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers(true) };
+            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
+            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers() };
             return true;
         }
     }

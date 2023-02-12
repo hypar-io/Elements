@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Search
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -89,6 +98,14 @@ according to their &quot;sameness&quot; with the provided vector.</p>
       <h4><a class="xref" href="Elements.Search.DistanceComparer.html">DistanceComparer</a></h4>
       <section><p>A comparer used to order collections of points based on
 their distance from a provided point.</p>
+</section>
+      <h4><a class="xref" href="Elements.Search.DoubleToleranceComparer.html">DoubleToleranceComparer</a></h4>
+      <section><p>Double comparer that treats all numbers within tolerance as the same.
+This comparer doesn't use hash code as it is <em>impossible</em> to create a hashing
+algorithm that consistently returns identical values for any two points
+within tolerance of each other.
+Note that any item that is not within tolerance of other key is set as a new key.
+This mean that keys are not always whole number in the middle of a range.</p>
 </section>
       <h4><a class="xref" href="Elements.Search.Network-1.html">Network&lt;T&gt;</a></h4>
       <section><p>A network composed of nodes and edges with associated data.

@@ -5,7 +5,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// The base class for all operations which create solids.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract class SolidOperation
     {
         internal Solid _solid;
@@ -25,14 +25,14 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>Is the solid operation a void operation?</summary>
-        [Newtonsoft.Json.JsonProperty("IsVoid", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("IsVoid", Required = Required.Always)]
         public bool IsVoid { get; set; } = false;
 
         /// <summary>
         /// Construct a solid operation.
         /// </summary>
         /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public SolidOperation(bool @isVoid)
         {
             this.IsVoid = @isVoid;

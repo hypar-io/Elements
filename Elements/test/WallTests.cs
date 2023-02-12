@@ -10,12 +10,13 @@ namespace Elements.Tests
         public void Example()
         {
             this.Name = "Elements_StandardWall";
+
             // <example>
             // Create a wall.
             var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 10, 0));
             var wall = new StandardWall(line, 0.1, 3.0);
-            wall.AddOpening(1, 2, 1, 2);
-            wall.AddOpening(3, 1, 1, 2);
+            wall.AddOpening(1, 2, 1, 1);
+            wall.AddOpening(3, 1, 3.5, 1.5);
             // </example>
 
             this.Model.AddElement(wall);

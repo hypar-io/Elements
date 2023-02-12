@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class MeshElement
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.58.1.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -23,7 +23,16 @@
     <meta property="docfx:rel" content="../">
     
     <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -81,40 +90,39 @@
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
-  <script type="text/javascript" src="../js/three.js"></script>
-  <script type="text/javascript" src="../js/GLTFLoader.js"></script>
-  <script type="text/javascript" src="../js/OrbitControls.js"></script>
-  <script>
-    var scene = new THREE.Scene();
-    var div = document.getElementById("model")
-    var camera = new THREE.PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
   
-    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  <script type="module-shim">
+    import { Scene, PerspectiveCamera, WebGLRenderer, HemisphereLight, AxesHelper, Color, GridHelper, Box3, sRGBEncoding, Vector3, DirectionalLight} from 'three';
+    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  
+    var scene = new Scene();
+    var div = document.getElementById("model")
+    var camera = new PerspectiveCamera( 75, div.clientWidth/div.clientHeight, 0.1, 1000 );
+  
+    var renderer = new WebGLRenderer({ alpha: true, antialias: true });
+    renderer.physicallyCorrectLights = true;
+    renderer.outputEncoding = sRGBEncoding;
     renderer.setSize( div.clientWidth, div.clientHeight );
     renderer.setClearColor( 0x000000, 0 );
+  
     div.appendChild( renderer.domElement );
   
-    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+    var controls = new OrbitControls( camera, renderer.domElement );
   
-    var light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+    var light = new HemisphereLight( 0xffffbb, 0x080820, 1 );
     scene.add( light );
   
-    var axesHelper = new THREE.AxesHelper( 2 );
-    scene.add( axesHelper );
+    const directionalLight = new DirectionalLight( 0xffffff, 1.0 );
+    scene.add( directionalLight );
   
-    var size = 100;
-    var divisions = 100;
-    var colorCenterLine = new THREE.Color( 0xa0a0a0 );
-    // var colorGrid = new THREE.Color( 0xdbdbdb );
-    // var gridHelper = new THREE.GridHelper( size, divisions, colorCenterLine, colorGrid);
-    // scene.add( gridHelper );
+    var axesHelper = new AxesHelper( 2 );
+    scene.add( axesHelper );
   
     window.addEventListener( 'resize', onWindowResize, false );
   
-    
-  
     // Instantiate a loader
-    var loader = new THREE.GLTFLoader();
+    var loader = new GLTFLoader();
   
     // Load a glTF resource
     loader.load(
@@ -122,28 +130,16 @@
       '../models/Elements_MeshElement.glb',
       // called when the resource is loaded
       function ( gltf ) {
-  
         scene.add( gltf.scene );
-  
-        gltf.animations; // Array<THREE.AnimationClip>
-        gltf.scene; // THREE.Scene
-        gltf.scenes; // Array<THREE.Scene>
-        gltf.cameras; // Array<THREE.Camera>
-        gltf.asset; // Object
-  
-        fitCameraToObject(gltf.scene, 2.0, controls)
+        fitCameraToObject(scene, 2.0, controls);
       },
       // called while loading is progressing
       function ( xhr ) {
-  
         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-  
       },
       // called when loading has errors
       function ( error ) {
-  
         console.log( 'An error happened' );
-  
       }
     );
   
@@ -161,15 +157,17 @@
   
     const fitCameraToObject = function ( object, offset, orbitControls ) {
   
-      const boundingBox = new THREE.Box3();
-      boundingBox.setFromObject( object );
+      let boundingBox = new Box3();
+      boundingBox.setFromObject( object, true );
   
-      const center = boundingBox.getCenter();
-      const size = boundingBox.getSize();
+      const center = new Vector3();
+      boundingBox.getCenter(center);
+      const size = new Vector3();
+      boundingBox.getSize(size);
   
       // get the max side of the bounding box
       const maxDim = Math.max( size.x, size.y, size.z ) * 3;
-      const fov = this.camera.fov * ( Math.PI / 180 );
+      const fov = camera.fov * ( Math.PI / 180 );
       let cameraZ = Math.abs( maxDim / 4 * Math.tan( fov * 2 ) );
       
       // offset the camera as desired - usually a value of ~ 1.25 is good to prevent
@@ -184,8 +182,8 @@
       const minZ = boundingBox.min.z;
       const cameraToFarEdge = ( minZ < 0 ) ? -minZ + cameraZ : cameraZ - minZ;
   
-      this.camera.far = cameraToFarEdge * 3;
-      this.camera.updateProjectionMatrix();
+      camera.far = cameraToFarEdge * 3;
+      camera.updateProjectionMatrix();
   
       if ( orbitControls !== undefined ) {
   
@@ -227,7 +225,7 @@ for (var u = 0; u &lt; gridSize; u += 1)
     }
 }
 mesh.ComputeNormals();
-var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Lime));
+var meshElement = new MeshElement(mesh, material: new Material(&quot;Lime&quot;, Colors.Lime));
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -272,6 +270,9 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -319,14 +320,24 @@ var meshElement = new MeshElement(mesh, new Material(&quot;Lime&quot;, Colors.Li
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_MeshElement__ctor_" data-uid="Elements.MeshElement.#ctor*"></a>
-  <h4 id="Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Material_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Material,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">MeshElement(Mesh, Material, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_MeshElement__ctor" data-uid="Elements.MeshElement.#ctor">MeshElement()</h4>
+  <div class="markdown level1 summary"><p>Empty constructor for compatibility purposes. It is best to use the
+structured constructor with arguments, to ensure the mesh is correctly created.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MeshElement()</code></pre>
+  </div>
+  <a id="Elements_MeshElement__ctor_" data-uid="Elements.MeshElement.#ctor*"></a>
+  <h4 id="Elements_MeshElement__ctor_Elements_Geometry_Mesh_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.MeshElement.#ctor(Elements.Geometry.Mesh,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">MeshElement(Mesh, Transform, Material, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct an import mesh element.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public MeshElement(Mesh mesh, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+public MeshElement(Mesh mesh, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -345,15 +356,21 @@ public MeshElement(Mesh mesh, Material material = null, Transform transform = nu
 </td>
       </tr>
       <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The element's transform.</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
         <td><span class="parametername">material</span></td>
         <td><p>The element's material.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The element's transform.</p>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The element's representation.</p>
 </td>
       </tr>
       <tr>

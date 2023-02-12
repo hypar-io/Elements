@@ -16,12 +16,10 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Example")]
         public void Example()
         {
-            this.Name = "Elements_ModelText";
+            Name = "Elements_ModelText";
 
             // <example>
-            var target = new Vector3(15, 20);
             var squareSize = 25.0;
-            var maxDistance = Math.Sqrt(Math.Pow(squareSize, 2) + Math.Pow(squareSize, 2));
 
             var texts = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
             var dir = Vector3.YAxis.Negate();
@@ -36,7 +34,7 @@ namespace Elements.Tests
             }
 
             // Create a model text object.
-            var modelText = new ModelText(texts, FontSize.PT36, 5);
+            var modelText = new ModelText(texts, FontSize.PT36, 30);
             // </example>
 
             this.Model.AddElement(modelText);

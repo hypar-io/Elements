@@ -61,6 +61,8 @@ namespace Elements.Tests
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, b)));
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, a)));
 
+            var angle = new Vector3(-1, -0.1, 0).PlaneAngleTo(Vector3.XAxis, Vector3.ZAxis);
+            Assert.True(angle < 180);
         }
 
         [Fact]
@@ -131,6 +133,13 @@ namespace Elements.Tests
 
             v = Vector3.Origin;
             Assert.Equal(0.0, v.DistanceTo(p));
+
+            p = new Plane(new Vector3(2, 3, 5), Vector3.XAxis);
+            v = new Vector3(2, 1.0, 0.5);
+            Assert.Equal(0.0, v.DistanceTo(p));
+
+            v = new Vector3(2.5, 1.0, 0.5);
+            Assert.Equal(0.5, v.DistanceTo(p));
         }
 
         [Fact]
@@ -420,15 +429,49 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void Collinear()
+        public void CollinearByDistance()
         {
             Vector3 p0 = new Vector3(0, 0, 0);
             Vector3 p1 = new Vector3(10, 10, 10);
             Vector3 p2 = new Vector3(20, 20, 20);
             Vector3 p3 = new Vector3(15, 5, 20);
 
-            Assert.True(Vector3.AreCollinear(p0, p1, p2));
-            Assert.False(Vector3.AreCollinear(p0, p1, p3));
+            Vector3 p4 = new Vector3(0, -118.7170, 13.8152);
+            Vector3 p5 = new Vector3(0, -80.4465, 13.8152);
+            Vector3 p6 = new Vector3(0, -118.7170, 13.8173);
+            Vector3 p7 = new Vector3(0, 33.5632, 13.8173);
+
+            Assert.True(Vector3.AreCollinearByDistance(p0, p1, p2));
+            Assert.False(Vector3.AreCollinearByDistance(p0, p1, p3));
+
+            var zeroPlane = new Plane(Vector3.Origin, Vector3.YAxis);
+            Assert.False(p4.Project(zeroPlane).IsAlmostEqualTo(p6.Project(zeroPlane)));
+            Assert.False(Vector3.AreCollinearByDistance(p4, p5, p6));
+            Assert.False(Vector3.AreCollinearByDistance(p4, p5, p7));
+        }
+
+        [Fact]
+        public void CollinearByAngle()
+        {
+            Vector3 p0 = new Vector3(0, 0, 0);
+            Vector3 p1 = new Vector3(10, 10, 10);
+            Vector3 p2 = new Vector3(20, 20, 20);
+            Vector3 p3 = new Vector3(15, 5, 20);
+
+            Assert.True(Vector3.AreCollinearByDistance(p0, p1, p2));
+            Assert.False(Vector3.AreCollinearByDistance(p0, p1, p3));
+
+            // Small angle delta can accumulate significant distance delta
+            Vector3 p4 = new Vector3(10000, 0);
+            Vector3 p5 = new Vector3(20000, 0.1);
+            Assert.True(Vector3.AreCollinearByAngle(p0, p4, p5));
+            Assert.False(Vector3.AreCollinearByAngle(p0, p4, p5, Math.Cos(Units.DegreesToRadians(0.0001))));
+
+            // Order is important
+            Vector3 p6 = new Vector3(10, 0);
+            Vector3 p7 = new Vector3(10, 0.0001);
+            Assert.False(Vector3.AreCollinearByAngle(p0, p6, p7));
+            Assert.True(Vector3.AreCollinearByAngle(p6, p0, p7));
         }
 
         [Fact]
@@ -445,9 +488,9 @@ namespace Elements.Tests
             Vector3 p7 = new Vector3(2, 0);
 
             Assert.True(p1.IsAlmostEqualTo(p2));
-            Assert.True(new[] { p0, p1, p2, p3 }.AreCollinear());
+            Assert.True(new[] { p0, p1, p2, p3 }.AreCollinearByDistance());
             Assert.True(p5.IsAlmostEqualTo(p6));
-            Assert.True(new[] { p4, p5, p6, p7 }.AreCollinear());
+            Assert.True(new[] { p4, p5, p6, p7 }.AreCollinearByDistance());
         }
 
         [Fact]
@@ -467,6 +510,64 @@ namespace Elements.Tests
             var a = new Vector3(1, 2, 3);
             var b = new Vector3(3, 2, 1);
             Assert.NotEqual(a.GetHashCode(), b.GetHashCode());
+        }
+
+        [Fact]
+        public void ClosestPointOnInfiniteLine()
+        {
+            var line = new Line(Vector3.Origin, new Vector3(10, 10));
+
+            Assert.True(new Vector3(2, 8).ClosestPointOn(line, true).IsAlmostEqualTo(new Vector3(5, 5)));
+
+            var vector = new Vector3(-2, -8);
+            var closestPointSegment = vector.ClosestPointOn(line);
+            var closestPointInfinite = vector.ClosestPointOn(line, true);
+            Assert.True(closestPointSegment.IsAlmostEqualTo(new Vector3(0, 0)));
+            Assert.True(closestPointInfinite.IsAlmostEqualTo(new Vector3(-5, -5)));
+        }
+
+        [Fact]
+        public void UniqueWithinToleranceReturnsNewCollection()
+        {
+            var vectorsList = new List<Vector3>
+            {
+                Vector3.Origin,
+                new Vector3(0.000009, 0, 0),
+                new Vector3(0, -0.000009, 0),
+                new Vector3(5, 5),
+                new Vector3(5, 5, 0.000009),
+                Vector3.Origin,
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.UniqueWithinTolerance();
+
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(Vector3.Origin),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5)));
+        }
+
+        [Fact]
+        public void UniqueWithinToleranceReturnsNewCollectionWithTolerance()
+        {
+            var tolerance = 0.2;
+
+            var vectorsList = new List<Vector3>
+            {
+                new Vector3(0.1, 0, 0),
+                Vector3.Origin,
+                new Vector3(0, -0.1, 0),
+                new Vector3(5, 5, 0.1),
+                new Vector3(5, 5),
+                Vector3.Origin,
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.UniqueWithinTolerance(tolerance);
+
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(Vector3.Origin, tolerance),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5), tolerance));
         }
     }
 }

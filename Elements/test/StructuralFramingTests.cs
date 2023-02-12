@@ -37,17 +37,17 @@ namespace Elements.Tests
 
             // Create a straight beam.
             var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
-            var linearBeam = new Beam(line, profile, BuiltInMaterials.Wood, 0, 0, 15);
+            var linearBeam = new Beam(line, profile, 0, 0, 15, material: BuiltInMaterials.Wood);
             var lineT = line.TransformAt(0).ToModelCurves(linearBeam.Transform);
 
             // Create a polygon beam.
             var polygon = Polygon.Ngon(5, 2);
-            var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6, 0, 0));
+            var polygonBeam = new Beam(polygon, profile, 0, 0, 45, new Transform(6, 0, 0), BuiltInMaterials.Steel);
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
             var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-            var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12, 0, 0));
+            var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
             // </example>
 
@@ -89,7 +89,7 @@ namespace Elements.Tests
                     break;
             }
 
-            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel, startSetback, endSetback);
+            var beam = new Beam(cl, this._testProfile, material: BuiltInMaterials.Steel) { StartSetback = startSetback, EndSetback = endSetback };
             Assert.Equal(BuiltInMaterials.Steel, beam.Material);
             Assert.Equal(cl, beam.Curve);
 
@@ -100,7 +100,7 @@ namespace Elements.Tests
         public void NonLinearVolumeException()
         {
             Curve cl = ModelTest.TestArc;
-            var beam = new Beam(cl, this._testProfile, BuiltInMaterials.Steel);
+            var beam = new Beam(cl, this._testProfile, material: BuiltInMaterials.Steel);
             Assert.Throws<InvalidOperationException>(() => beam.Volume());
         }
 
@@ -119,7 +119,7 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x + 1, 3, z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var beam = new Beam(line, profile, material: new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -147,7 +147,7 @@ namespace Elements.Tests
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
                 var m = new Material(Guid.NewGuid().ToString(), color, 0.1f, 0.5f);
                 this.Model.AddElement(m);
-                var beam = new Beam(line, profile, m);
+                var beam = new Beam(line, profile, material: m);
                 this.Model.AddElement(beam, false);
                 x += 2.0;
                 if (x > 20.0)
@@ -169,7 +169,7 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var beam = new Beam(line, profile, material: new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -191,7 +191,7 @@ namespace Elements.Tests
             {
                 var color = new Color((float)(x / 20.0), (float)(z / profiles.Count), 0.0f, 1.0f);
                 var line = new Line(new Vector3(x, 0, z), new Vector3(x, 3, z));
-                var beam = new Beam(line, profile, new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
+                var beam = new Beam(line, profile, material: new Material(Guid.NewGuid().ToString(), color, 0.0f, 0.0f));
                 this.Model.AddElement(beam);
                 x += 2.0;
                 if (x > 20.0)
@@ -212,7 +212,7 @@ namespace Elements.Tests
         public void Column()
         {
             this.Name = "Column";
-            var column = new Column(Vector3.Origin, 3.0, this._testProfile);
+            var column = new Column(Vector3.Origin, 3.0, null, this._testProfile);
             Assert.Equal(BuiltInMaterials.Steel, column.Material);
             Assert.Equal(3.0, column.Curve.Length());
             this.Model.AddElement(column);
@@ -237,7 +237,7 @@ namespace Elements.Tests
             var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc);
             // Normal setbacks
-            var beam = new Beam(line, this._testProfile, BuiltInMaterials.Steel, 2.0, 2.0);
+            var beam = new Beam(line, this._testProfile, 2, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam);
 
             var line1 = new Line(new Vector3(2, 0, 0), new Vector3(5, 3, 0));
@@ -248,7 +248,7 @@ namespace Elements.Tests
             // Setbacks longer in total than the beam.
             // We are testing to ensure that the beam gets created
             // without throwing. It will not have setbacks.
-            var beam1 = new Beam(line1, this._testProfile, BuiltInMaterials.Steel, sb, sb);
+            var beam1 = new Beam(line1, this._testProfile, sb, sb, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam1);
         }
 
@@ -267,15 +267,15 @@ namespace Elements.Tests
             for (var x = 0.0; x <= 5.0; x += 1.0)
             {
                 var line = new Line(new Vector3(x, 0, 0), new Vector3(x, 5, x));
-                var straightBeam = new Beam(line, profile, rotation: x * (360.0 / 5.0));
+                var straightBeam = new Beam(line, profile, 0, 0, x * (360.0 / 5.0));
                 this.Model.AddElement(straightBeam);
             }
         }
 
-        [Fact]
+        [Fact, Trait("Category", "Examples")]
         public async void Joists()
         {
-            Name = nameof(Joists);
+            Name = "Elements_Joist";
 
             // <joist-example>
             var xSpacing = 10.0;
@@ -329,7 +329,7 @@ namespace Elements.Tests
                     Model.AddElement(innerJoistInstance);
                 }
             }
-            // <joist-example>
+            // </joist-example>
         }
     }
 }
