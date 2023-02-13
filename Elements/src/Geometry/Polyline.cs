@@ -1300,6 +1300,20 @@ namespace Elements.Geometry
                     normalized[i], normalized[i + 1], incomingDirection, bestFitAngle, out var cornerPoint);
                 var directionalVector = normalized[i] - cornerPoint;
 
+                if (bestFitAngle.ApproximatelyEquals(0))
+                {
+                    switch (localType)
+                    {
+                        case NormalizationType.Start:
+                        case NormalizationType.Middle:
+                            normalized[i] = cornerPoint;
+                            break;
+                        default:
+                            normalized[i + 1] = cornerPoint;
+                            break;
+                    }
+                    continue;
+                }
                 switch (localType)
                 {
                     case NormalizationType.Start:
