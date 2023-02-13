@@ -50,19 +50,19 @@ namespace Elements.Algorithms
             if (_treap == null) throw new Exception("The Treap is non-existent");
             if (t == null) return false;
 
+            if (t.right != null)
+            {
+                t = t.right.Min;
+                return true;
+            }
             while (t != null)
             {
-                if (t.right != null)
-                {
-                    t = t.right.Min;
-                    return true;
-                }
-                TreapNode<TKey> p = t.parent;
-                if (p.left == t) return true;
-                t = p;
+                TreapNode<TKey> q = t;
+                t = t.parent;
+                if (t != null && t.left == q) return true;
             }
 
-            return true;
+            return false;
         }
 
         public bool MovePrevious()
@@ -73,21 +73,23 @@ namespace Elements.Algorithms
                 t = _treap.Root;
                 if (t == null) return false;
                 t = t.Max;
+                return true;
             }
 
+            if (t.left != null)
+            {
+                t = t.left.Max;
+                return true;
+            }
             while (t != null)
             {
-                if (t.left != null)
-                {
-                    t = t.left.Max;
-                    return true;
-                }
-                TreapNode<TKey> p = t.parent;
-                if (p.right == t) return true;
-                t = p;
+                TreapNode<TKey> q = t;
+                t = t.parent;
+                if (t != null && t.right == q) return true;
             }
 
-            return true;
+            t = _treap.Root.Min;
+            return false;
         }
     }
 
@@ -130,7 +132,7 @@ namespace Elements.Algorithms
 
     public class Treap<TKey>
     {
-        static Random priorityGenerator = new Random();
+        static Random priorityGenerator = new Random(228);
         static int nextPriority() { return priorityGenerator.Next(); } 
 
         private Comparer<TKey> _cmp;
@@ -229,12 +231,12 @@ namespace Elements.Algorithms
             t.parent = null;
             if (t.left != null)
             {
-                t.left.parent = root;
+                t.left.parent = t;
                 t.sz += t.left.sz;
             }
             if (t.right != null)
             {
-                t.right.parent = root;
+                t.right.parent = t;
                 t.sz += t.right.sz;
             }
         }
