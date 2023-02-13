@@ -851,61 +851,64 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Measures the distance between two lines.
+        /// Measure the distance between two lines.
         /// </summary>
-        /// <param name="other">The line to measure the distance to</param>
-        /// <returns></returns>
+        /// <param name="other">The line to measure the distance to.</param>
         public double DistanceTo(Line other)
         {
             Vector3 dStartStart = this.Start - other.Start;
-            Vector3 vThis = this.End - this.Start,
-                    vOther = other.End - other.Start;
+            Vector3 vThis = this.End - this.Start;
+            Vector3 vOther = other.End - other.Start;
             Vector3 cross = vThis.Cross(vOther);
-            // directional vectors are collinear
+            // line vectors are collinear - two segments share the same infinite line on the infinite line.
             if (cross.IsZero())
             {
-                // the projection of this.Start is outside of the other, closer to other.Start
+                // if start of this line is "before" start of the other line.
                 if (vOther.Dot(dStartStart) < 0)
                 {
                     Vector3 dEndStart = this.End - other.Start;
-                    // the projection of this.End is outside of the other, closer to the other.Start
+                    // and end of this line is "before" start of the other line - line are not overlapping,
+                    // otherwise the projection of this contains other.Start
                     if (vOther.Dot(dEndStart) < 0)
                     {
+                        // the projection of this line is outside of the other, closer to other.Start
                         return Math.Sqrt(Math.Min(dStartStart.LengthSquared(), dEndStart.LengthSquared()));
                     }
-                    // otherwise the projection of this contains other.Start
                 }
-                // the projection og this.Start is either inside the other or outside, but closer to other.End
                 else
                 {
                     Vector3 dStartEnd = this.Start - other.End;
-                    // the projection of this.Start is outside of the other, closer to other.End
+                    // if end of this line is "after" end of the other line,
+                    // otherwise the projection of this.Start is inside other.
                     if (vOther.Dot(dStartEnd) > 0)
                     {
                         Vector3 dEndEnd = this.End - other.End;
-                        // the projection of this.End is outside of the other, closer to other.End
+                        // and start of this line is "after" end of the other line.
                         if (vOther.Dot(dEndEnd) > 0)
                         {
+                            // the projection of this line is outside of the other, closer to other.End
                             return Math.Sqrt(Math.Min(dStartEnd.LengthSquared(), dEndEnd.LengthSquared()));
                         }
-                        // otherwise the projection of this contains other.End
                     }
-                    // otherwise the projection of this.Start is inside other
                 }
                 dStartStart -= dStartStart.ProjectOnto(vThis);
             }
-            // directional vectors are not collinear, they span a 2-dimensional space, so the shortest segment connection two lines is collinear to their cross product
+            // line vectors are not collinear, their directions share the common plane.
             else
             {
-                dStartStart = dStartStart.ProjectOnto(cross); // the shortest segment
-                Vector3 vStartStart = other.Start + dStartStart - this.Start,
-                        vStartEnd = other.Start + dStartStart - this.End,
-                        vEndStart = other.End + dStartStart - this.Start,
-                        vEndEnd = other.End + dStartStart - this.End;
+                // dStartStart length is distance to the common plane. 
+                dStartStart = dStartStart.ProjectOnto(cross);
+                Vector3 vStartStart = other.Start + dStartStart - this.Start;
+                Vector3 vStartEnd = other.Start + dStartStart - this.End;
+                Vector3 vEndStart = other.End + dStartStart - this.Start;
+                Vector3 vEndEnd = other.End + dStartStart - this.End;
                 // other + dStartStart and this are now in the same plane
-                // we check whether other is fully on one side of this or vice versa, id est whether this and other + dStartStart intersect
-                if (vStartStart.Cross(vStartEnd).Dot(vEndStart.Cross(vEndEnd)) > 0 || vStartStart.Cross(vEndStart).Dot(vStartEnd.Cross(vEndEnd)) > 0)
+                // check if other is fully on one side of this or vice versa,
+                // in other words, if  this and `other + dStartStart` intersect on a shred plane
+                if (vStartStart.Cross(vStartEnd).Dot(vEndStart.Cross(vEndEnd)) > 0 ||
+                    vStartStart.Cross(vEndStart).Dot(vStartEnd.Cross(vEndEnd)) > 0)
                 {
+                    // if not intersect - shortest distance is minimum distance from a point to other line.
                     return Math.Min(Math.Min(this.Start.DistanceTo(other), this.End.DistanceTo(other)),
                                     Math.Min(other.Start.DistanceTo(this), other.End.DistanceTo(this)));
                 }
