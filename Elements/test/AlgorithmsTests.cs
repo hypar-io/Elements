@@ -126,195 +126,187 @@ namespace Elements.Algorithms.Tests
             Func<double, int> f = x => sqr((int)Math.Floor(x));
             TreapIterator<double> it = null;
 
+            // Step 0
             t.Insert(6.95426297609277);
             it = t.LowerBound<int>(73, f);
             Assert.True(it.IsEnd);
-            t.Insert(4.668336850892139);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.95426297609277, it.Get, 12);
+            // Step 1
+            t.Insert(5.665417755480634);
             it = t.UpperBound<int>(99, f);
             Assert.True(it.IsEnd);
-            t.Erase(4.668336850892139);
-            it = t.LowerBound<int>(74, f);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.95426297609277, it.Get, 12);
+            // Step 2
+            t.Erase(5.665417755480634);
+            it = t.LowerBound<int>(39, f);
             Assert.True(it.IsEnd);
+            Assert.False(it.MoveNext());
+            // Step 3
             t.Erase(6.95426297609277);
-            it = t.UpperBound<int>(88, f);
+            it = t.UpperBound<int>(72, f);
             Assert.True(it.IsEnd);
-            t.Insert(9.968305186093815);
-            it = t.UpperBound<int>(46, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.968305186093815, it.Get, 12);
-            t.Insert(7.2758999021797095);
+            Assert.False(it.MovePrevious());
+            // Step 4
+            t.Insert(8.458901392754028);
             it = t.LowerBound<int>(72, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.968305186093815, it.Get, 12);
-            t.Insert(9.461649947205427);
-            it = t.LowerBound<int>(72, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(6.341147827834378);
-            it = t.UpperBound<int>(9, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(7.769533068454868);
+            Assert.True(it.IsEnd);
+            Assert.False(it.MoveNext());
+            // Step 5
+            t.Insert(0.7628652995883478);
             it = t.UpperBound<int>(32, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(7.514583784635568);
-            it = t.UpperBound<int>(43, f);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.False(it.MoveNext());
+            // Step 6
+            t.Insert(3.9858345198441683);
+            it = t.UpperBound<int>(34, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(7.2758999021797095, it.Get, 12);
-            t.Insert(3.3516617169510354);
-            it = t.LowerBound<int>(11, f);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.False(it.MoveNext());
+            // Step 7
+            t.Insert(0.8811150703804027);
+            it = t.UpperBound<int>(17, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(1.3657418286513001);
-            it = t.UpperBound<int>(47, f);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.False(it.MoveNext());
+            // Step 8
+            t.Erase(3.9858345198441683);
+            it = t.LowerBound<int>(0, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(7.2758999021797095, it.Get, 12);
-            t.Insert(0.04604221033719047);
-            it = t.UpperBound<int>(2, f);
+            Assert.Equal(0.7628652995883478, it.Get, 12);
+            Assert.False(it.MovePrevious());
+            // Step 9
+            t.Insert(1.0666842462211046);
+            it = t.UpperBound<int>(87, f);
+            Assert.True(it.IsEnd);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            // Step 10
+            t.Insert(9.902345635845744);
+            it = t.LowerBound<int>(33, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(3.3516617169510354, it.Get, 12);
-            t.Insert(3.910145978780913);
-            it = t.LowerBound<int>(10, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(3.1139312769220395);
-            it = t.UpperBound<int>(13, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(1.0666842462211046, it.Get, 12);
+            // Step 11
             t.Insert(2.5257839781072278);
             it = t.UpperBound<int>(37, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(7.2758999021797095, it.Get, 12);
-            t.Insert(1.1644555376648569);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(2.5257839781072278, it.Get, 12);
+            // Step 12
+            t.Insert(6.622395637737052);
             it = t.UpperBound<int>(100, f);
             Assert.True(it.IsEnd);
-            t.Erase(3.910145978780913);
-            it = t.LowerBound<int>(79, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(8.909218330191965);
-            it = t.UpperBound<int>(8, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(3.1139312769220395, it.Get, 12);
-            t.Erase(8.909218330191965);
+            Assert.False(it.MoveNext());
+            // Step 13
+            t.Insert(6.2457546115220905);
             it = t.UpperBound<int>(41, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(7.2758999021797095, it.Get, 12);
-            t.Insert(9.778862801144165);
-            it = t.UpperBound<int>(17, f);
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 14
+            t.Erase(6.2457546115220905);
+            it = t.UpperBound<int>(25, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Erase(7.514583784635568);
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            Assert.True(it.MoveNext());
+            Assert.Equal(8.458901392754028, it.Get, 12);
+            // Step 15
+            t.Erase(9.902345635845744);
             it = t.UpperBound<int>(30, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(4.993021988651475);
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(2.5257839781072278, it.Get, 12);
+            // Step 16
+            t.Erase(8.458901392754028);
             it = t.UpperBound<int>(20, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(9.961401425557991);
-            it = t.LowerBound<int>(71, f);
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(2.5257839781072278, it.Get, 12);
+            // Step 17
+            t.Erase(0.8811150703804027);
+            it = t.LowerBound<int>(5, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(4.542821006542316);
-            it = t.UpperBound<int>(54, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(9.961401425557991);
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            Assert.False(it.MoveNext());
+            // Step 18
+            t.Insert(4.263346549515394);
             it = t.LowerBound<int>(90, f);
             Assert.True(it.IsEnd);
-            t.Erase(4.993021988651475);
-            it = t.LowerBound<int>(42, f);
+            Assert.False(it.MoveNext());
+            // Step 19
+            t.Erase(0.7628652995883478);
+            it = t.UpperBound<int>(27, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(7.2758999021797095, it.Get, 12);
-            t.Insert(6.362479679379018);
-            it = t.LowerBound<int>(91, f);
-            Assert.True(it.IsEnd);
-            t.Insert(2.0763767101690735);
-            it = t.UpperBound<int>(81, f);
-            Assert.True(it.IsEnd);
-            t.Insert(3.081700759859334);
-            it = t.UpperBound<int>(76, f);
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(4.263346549515394, it.Get, 12);
+            // Step 20
+            t.Insert(6.484569168862656);
+            it = t.LowerBound<int>(6, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(2.917931795345816);
-            it = t.LowerBound<int>(94, f);
-            Assert.True(it.IsEnd);
-            t.Erase(3.081700759859334);
-            it = t.UpperBound<int>(49, f);
+            Assert.Equal(4.263346549515394, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(2.5257839781072278, it.Get, 12);
+            // Step 21
+            t.Insert(2.953355210915051);
+            it = t.UpperBound<int>(19, f);
             Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
+            Assert.Equal(6.484569168862656, it.Get, 12);
+            Assert.True(it.MoveNext());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 22
+            t.Insert(5.963838801378268);
+            it = t.UpperBound<int>(37, f);
+            Assert.True(it.IsEnd);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 23
+            t.Erase(2.5257839781072278);
+            it = t.LowerBound<int>(38, f);
+            Assert.True(it.IsEnd);
+            Assert.False(it.MoveNext());
+            // Step 24
             t.Insert(1.5455745882032579);
             it = t.UpperBound<int>(59, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(7.2758999021797095);
-            it = t.UpperBound<int>(49, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(9.968305186093815);
-            it = t.LowerBound<int>(60, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(0.04604221033719047);
+            Assert.True(it.IsEnd);
+            Assert.False(it.MoveNext());
+            // Step 25
+            t.Insert(3.8913227990191035);
+            it = t.UpperBound<int>(65, f);
+            Assert.True(it.IsEnd);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 26
+            t.Insert(3.4735212506625626);
             it = t.UpperBound<int>(87, f);
             Assert.True(it.IsEnd);
-            t.Erase(1.1644555376648569);
-            it = t.UpperBound<int>(39, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(7.769533068454868, it.Get, 12);
-            t.Insert(0.8706102360098822);
-            it = t.LowerBound<int>(48, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(7.769533068454868, it.Get, 12);
-            t.Insert(1.640156058632718);
-            it = t.UpperBound<int>(58, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(7.769533068454868);
-            it = t.UpperBound<int>(76, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(0.8706102360098822);
-            it = t.LowerBound<int>(32, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(3.321827142348303);
-            it = t.LowerBound<int>(40, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(2.0444424601961764);
-            it = t.LowerBound<int>(74, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(2.0444424601961764);
-            it = t.UpperBound<int>(97, f);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 27
+            t.Insert(3.2907627531754424);
+            it = t.LowerBound<int>(100, f);
             Assert.True(it.IsEnd);
-            t.Insert(0.5744047511014572);
-            it = t.LowerBound<int>(49, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(2.5257839781072278);
-            it = t.UpperBound<int>(40, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Erase(4.542821006542316);
-            it = t.UpperBound<int>(44, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
-            t.Insert(7.699804678387859);
-            it = t.UpperBound<int>(1, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(2.0763767101690735, it.Get, 12);
-            t.Erase(1.5455745882032579);
-            it = t.UpperBound<int>(9, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(6.341147827834378, it.Get, 12);
-            t.Insert(2.7834535910992377);
-            it = t.UpperBound<int>(51, f);
-            Assert.False(it.IsEnd);
-            Assert.Equal(9.461649947205427, it.Get, 12);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
+            // Step 28
+            t.Insert(4.847498101295202);
+            it = t.UpperBound<int>(58, f);
+            Assert.True(it.IsEnd);
+            Assert.False(it.MoveNext());
+            // Step 29
+            t.Erase(6.484569168862656);
+            it = t.LowerBound<int>(90, f);
+            Assert.True(it.IsEnd);
+            Assert.True(it.MovePrevious());
+            Assert.Equal(6.622395637737052, it.Get, 12);
         }
     }
 }
