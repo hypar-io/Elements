@@ -187,6 +187,158 @@ namespace Elements.Spatial.AdaptiveGrid
             return AddFromGrid(grid, edgesBefore);
         }
 
+        public HashSet<Edge> AddFromPolygonMk2(Polygon boundingPolygon, IEnumerable<Vector3> keyPoints)
+        {
+            var grid = CreateGridFromPolygon(boundingPolygon);
+            var edgesBefore = GetEdges();
+            SplitGrid(grid, keyPoints);
+            SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
+
+            var cells = grid.GetCells();
+            var addedEdges = new HashSet<Edge>();
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+
+            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+            {
+                var v0 = AddVertex(start);
+                var v1 = AddVertex(end);
+                if (v0 != v1)
+                {
+                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
+                    edgeCandidates.Add(pair);
+                }
+            };
+
+            foreach (var cell in cells)
+            {
+                foreach (var cellGeometry in boundingPolygon.Intersection((Polygon)cell.GetCellGeometry()) ?? new List<Polygon>())
+                {
+                    var polygon = (Polygon)cellGeometry;
+                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
+                    {
+                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
+                    }
+                    add(polygon.Vertices.Last(), polygon.Vertices.First());
+                }
+            }
+
+            foreach (var edge in edgeCandidates)
+            {
+                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
+            }
+
+            return addedEdges;
+        }
+
+        internal struct Segment
+        {
+            public Vector3 a, b, minX, maxX, minY, maxY;
+            public bool hor, vert;
+            public double tan1, tan2, tol;
+
+            public Segment(Vector3 from, Vector3 to, double tolerance)
+            {
+                a = from;
+                b = to;
+                (minX, maxX) = a.X < b.X ? (a, b) : (b, a);
+                (minY, maxY) = a.Y < b.Y ? (a, b) : (b, a);
+                tol = tolerance;
+                hor = maxY.Y - minY.Y < tolerance;
+                vert = maxX.X - minX.X < tolerance;
+                tan1 = vert ? 0 : (b.Y - a.Y) / (b.X - a.X);
+                tan2 = hor ? 0 : (b.X - a.X) / (b.Y - a.Y);
+            }
+
+            public double MinYAtX(double x)
+            {
+                return vert ? minY.Y : (x - a.X) * tan1 + a.Y;
+            }
+
+            public double MaxYAtX(double x)
+            {
+                return vert ? maxY.Y : (x - a.X) * tan1 + a.Y;
+            }
+
+            public double MinXAtY(double y)
+            {
+                return hor ? minX.X : (y - a.Y) * tan2 + a.X;
+            }
+
+            public double MaxXAtY(double y)
+            {
+                return hor ? maxX.X : (y - a.Y) * tan2 + a.X;
+            }
+
+            public int CompareToY(Segment other)
+            {
+                if (this.minX.X < other.minX.X - tol) return this.MinYAtX(other.minX.X).CompareTo(other.minX.Y);
+                if (other.minX.X < this.minX.X - tol) return this.minX.Y.CompareTo(other.MinYAtX(this.minX.X));
+                if ((this.minX - other.minX).IsZero()) return this.maxX.Y.CompareTo(other.maxX.Y);
+                return this.minX.Y.CompareTo(other.minX.Y);
+            }
+
+            public int CompareToX(Segment other)
+            {
+                if (this.minY.Y < other.minY.Y - tol) return this.MinXAtY(other.minY.Y).CompareTo(other.minY.X);
+                if (other.minY.Y < this.minY.Y - tol) return this.minY.X.CompareTo(other.MinXAtY(this.minY.Y));
+                if ((this.minY - other.minY).IsZero()) return this.maxY.X.CompareTo(other.maxY.X);
+                return this.minY.X.CompareTo(other.minY.X);
+            }
+        }
+
+        public HashSet<Edge> AddFromPolygonFast(Polygon boundingPolygon, IEnumerable<Vector3> keyPoints)
+        {
+            var edgesBefore = GetEdges();
+            var boundingPolygonPlane = boundingPolygon.Plane();
+
+            var primaryAxisDirection = Transform.XAxis - Transform.XAxis.Dot(boundingPolygonPlane.Normal) * boundingPolygonPlane.Normal;
+            if (primaryAxisDirection.IsZero())
+            {
+                primaryAxisDirection = Transform.ZAxis - Transform.ZAxis.Dot(boundingPolygonPlane.Normal) * boundingPolygonPlane.Normal;
+            }
+            var fromPlane = new Transform(boundingPolygon.Vertices.FirstOrDefault(), primaryAxisDirection, boundingPolygon.Normal());
+            var toPlane = new Transform(fromPlane).Inverted();
+
+            boundingPolygon.Transform(toPlane);
+            if (!boundingPolygon.Plane().Equals(Plane.XY)) throw new Exception("Oops! The polygon is still not in the XY plane...");
+
+            var intersectionPoints = new List<Vector3>(keyPoints.Select(p => toPlane.OfPoint(p)));
+            foreach (var edge in edgesBefore)
+            {
+                if (GetLine(edge).TransformedLine(toPlane).Intersects(Plane.XY, out var intersectionPoint))
+                {
+                    intersectionPoints.Add(intersectionPoint);
+                }
+            }
+
+            var polygonSegments = boundingPolygon.Edges().Select(e => new Segment(e.from, e.to, Tolerance)).ToList();
+            int n = polygonSegments.Count;
+            int m = intersectionPoints.Count;
+            var curEdges = new SortedSet<int>(Comparer <int>.Create((s1, s2) => polygonSegments[s1].CompareToY(polygonSegments[s2])));
+            var points = new List<(double, int)>();
+            var newIntersectionPoints = new Vector3[2 * n + m];
+            for (int i = 0; i < n; ++i)
+            {
+                points[i * 2] = ((polygonSegments[i].minX.X, i));
+                points[i* 2 + 1] = (polygonSegments[i].maxX.X, i + n + m);
+            }
+            for (int j = 0; j < m; ++j)
+            {
+                points[j + 2 * n] = (intersectionPoints[j].X, j + n);
+            }
+            points.Sort();
+            for (int i = 0; i < points.Count; ++i)
+            {
+                int j = points[i].Item2;
+                if (j < n) curEdges.Add(j);
+                else if (j < n + m)
+                {
+                }
+            }
+
+            return new HashSet<Edge>();
+        }
+
         /// <summary>
         /// Intersect the grid with a list of obstacles.
         /// </summary>
