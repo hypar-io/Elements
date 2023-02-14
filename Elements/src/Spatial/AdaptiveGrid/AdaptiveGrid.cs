@@ -157,7 +157,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var grid = CreateGridFromPolygon(transformedPolygonBottom);
                 SplitGrid(grid, keyPoints);
                 SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                var addedEdges = AddFromGrid(grid, edgesBefore);
+                var addedEdges = AddFromGridWithBoundingPolygon(grid, transformedPolygonBottom, edgesBefore);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
@@ -166,7 +166,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     grid = CreateGridFromPolygon(transformedPolygonTop);
                     SplitGrid(grid, keyPoints);
                     SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                    AddFromGrid(grid, edgesBefore);
+                    AddFromGridWithBoundingPolygon(grid, transformedPolygonTop, edgesBefore);
                 }
             }
         }
@@ -194,40 +194,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgesBefore = GetEdges();
             SplitGrid(grid, keyPoints);
             SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-
-            var cells = grid.GetCells();
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
-
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
-            {
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
-                if (v0 != v1)
-                {
-                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
-                    edgeCandidates.Add(pair);
-                }
-            };
-
-            foreach (var cell in cells)
-            {
-                Polygon boundary = (Polygon)cell.GetCellGeometry();
-                if (boundary == null) continue;
-
-                foreach (var gridEdge in boundary.Edges())
-                {
-                    var trimmedSegments = new Line(gridEdge.from, gridEdge.to).Trim(boundingPolygon, out var tmp, true);
-                    foreach (var trimmedSegment in trimmedSegments) add(trimmedSegment.Start, trimmedSegment.End);
-                }
-            }
-
-            foreach (var edge in edgeCandidates)
-            {
-                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
-            }
-
-            return addedEdges;
+            return AddFromGridWithBoundingPolygon(grid, boundingPolygon, edgesBefore);
         }
 
         internal struct Segment
@@ -1600,6 +1567,43 @@ namespace Elements.Spatial.AdaptiveGrid
                         add(polygon.Vertices[i], polygon.Vertices[i + 1]);
                     }
                     add(polygon.Vertices.Last(), polygon.Vertices.First());
+                }
+            }
+
+            foreach (var edge in edgeCandidates)
+            {
+                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
+            }
+
+            return addedEdges;
+        }
+
+        private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon, IEnumerable<Edge> edgesToIntersect)
+        {
+            var cells = grid.GetCells();
+            var addedEdges = new HashSet<Edge>();
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+
+            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+            {
+                var v0 = AddVertex(start);
+                var v1 = AddVertex(end);
+                if (v0 != v1)
+                {
+                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
+                    edgeCandidates.Add(pair);
+                }
+            };
+
+            foreach (var cell in cells)
+            {
+                Polygon boundary = (Polygon)cell.GetCellGeometry();
+                if (boundary == null) continue;
+
+                foreach (var gridEdge in boundary.Edges())
+                {
+                    var trimmedSegments = new Line(gridEdge.from, gridEdge.to).Trim(boundingPolygon, out var tmp, true);
+                    foreach (var trimmedSegment in trimmedSegments) add(trimmedSegment.Start, trimmedSegment.End);
                 }
             }
 
