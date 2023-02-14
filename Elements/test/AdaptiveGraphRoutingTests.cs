@@ -33,7 +33,7 @@ namespace Elements.Tests
 
             //Remove center vertex leaving only 8 perimeter vertices
             AdaptiveGrid grid = new AdaptiveGrid();
-            grid.AddFromPolygon(region, keyPoints);
+            grid.AddFromPolygonMk2(region, keyPoints);
             var obstacle = Obstacle.FromBBox(new BBox3(
                 new Vector3(3, 3, 0), new Vector3(7, 7, 0)));
             grid.SubtractObstacle(obstacle);
@@ -115,7 +115,7 @@ namespace Elements.Tests
             };
 
             AdaptiveGrid grid = new AdaptiveGrid();
-            grid.AddFromPolygon(region, keyPoints);
+            grid.AddFromPolygonMk2(region, keyPoints);
 
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
@@ -302,7 +302,7 @@ namespace Elements.Tests
 
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromExtrude(mainRegionBoundary, Vector3.ZAxis, 1, keyPoints);
-            grid.AddFromPolygon(auxilaryRegionBoundary, keyPoints);
+            grid.AddFromPolygonMk2(auxilaryRegionBoundary, keyPoints);
             foreach (var input in inputPoints)
             {
                 var p = new Vector3(input.X, input.Y, mainLayer);
@@ -452,7 +452,7 @@ namespace Elements.Tests
 
             AdaptiveGrid grid = new AdaptiveGrid();
             grid.AddFromExtrude(mainRegionBoundary, Vector3.ZAxis, 1, keyPoints);
-            grid.AddFromPolygon(auxilaryRegionBoundary, keyPoints);
+            grid.AddFromPolygonMk2(auxilaryRegionBoundary, keyPoints);
             foreach (var input in inputPoints)
             {
                 var p = new Vector3(input.X, input.Y, mainLayer);
@@ -598,7 +598,7 @@ namespace Elements.Tests
 
             //7. Create grid.
             AdaptiveGrid grid = new AdaptiveGrid();
-            grid.AddFromPolygon(boundary, keyPoints);
+            grid.AddFromPolygonMk2(boundary, keyPoints);
             grid.SubtractObstacle(obstacle);
 
             //8. Get indices's for start and end vertices
@@ -696,7 +696,7 @@ namespace Elements.Tests
 
             //7. Create grid.
             AdaptiveGrid grid = new AdaptiveGrid();
-            grid.AddFromPolygon(boundary, keyPoints);
+            grid.AddFromPolygonMk2(boundary, keyPoints);
             grid.SubtractObstacle(obstacle);
 
             //8. Get indices's for start and end vertices
@@ -794,7 +794,7 @@ namespace Elements.Tests
 
             //7. Create grid.
             AdaptiveGrid grid = new AdaptiveGrid();
-            grid.AddFromPolygon(boundary, keyPoints);
+            grid.AddFromPolygonMk2(boundary, keyPoints);
             grid.SubtractObstacle(obstacle);
 
             //8. Get indices's for start, end vertices, local tail vertices.
@@ -1133,7 +1133,7 @@ namespace Elements.Tests
         public void AdaptiveGraphRouting3DHintLineCheck()
         {
             var grid = new AdaptiveGrid();
-            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 new List<Vector3> { new Vector3(2, 2), new Vector3(5, 5), new Vector3(8, 8) });
 
             var hintPath = new Vector3[] {
@@ -1538,7 +1538,7 @@ namespace Elements.Tests
         {
             var grid = new AdaptiveGrid();
             var keyPoints = Enumerable.Range(1, 9).Select(i => new Vector3(i, i));
-            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 keyPoints);
 
             Assert.True(grid.TryGetVertexIndex(new Vector3(2, 5), out var start, grid.Tolerance));
@@ -1592,7 +1592,7 @@ namespace Elements.Tests
         {
             var grid = new AdaptiveGrid();
             var keyPoints = new[] { 1, 3, 5, 7, 9 }.Select(i => new Vector3(i, i));
-            grid.AddFromPolygon(Polygon.Rectangle((0, 0), (10, 10)), keyPoints);
+            grid.AddFromPolygonMk2(Polygon.Rectangle((0, 0), (10, 10)), keyPoints);
 
             Assert.True(grid.TryGetVertexIndex((0, 5), out var end, grid.Tolerance));
 

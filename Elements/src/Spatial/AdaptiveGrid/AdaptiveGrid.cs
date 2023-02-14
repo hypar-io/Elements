@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Algorithms;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -209,16 +210,31 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             };
 
+            var polygonEdges = boundingPolygon.Edges();
+
             foreach (var cell in cells)
             {
-                foreach (var cellGeometry in boundingPolygon.Intersection((Polygon)cell.GetCellGeometry()) ?? new List<Polygon>())
+                Polygon boundary = (Polygon)cell.GetCellGeometry();
+                if (boundary == null) continue;
+
+                foreach (var gridEdge in boundary.Edges())
                 {
-                    var polygon = (Polygon)cellGeometry;
-                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
+                    var gridLine = new Line(gridEdge.from, gridEdge.to);
+                    var gridVector = gridEdge.from - gridEdge.to;
+                    var intersectionPoints = new List<Vector3>();
+                    intersectionPoints.Add(gridEdge.from);
+                    intersectionPoints.Add(gridEdge.to);
+                    foreach (var polygonEdge in polygonEdges)
                     {
-                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
+                        if (gridLine.Intersects(new Line(polygonEdge.from, polygonEdge.to), out var intersectionPoint)) intersectionPoints.Add(intersectionPoint);
                     }
-                    add(polygon.Vertices.Last(), polygon.Vertices.First());
+                    intersectionPoints.Sort((p, q) => Math.Sign(gridVector.Dot(p - q)));
+                    for (int i = 0, j = -1; i < intersectionPoints.Count; ++i)
+                    {
+                        if (i > 0 && (intersectionPoints[i - 1] - intersectionPoints[i]).IsZero()) continue;
+                        if (j == -1) j = i;
+                        else add(intersectionPoints[j], intersectionPoints[i]);
+                    }
                 }
             }
 
@@ -288,6 +304,20 @@ namespace Elements.Spatial.AdaptiveGrid
 
         public HashSet<Edge> AddFromPolygonFast(Polygon boundingPolygon, IEnumerable<Vector3> keyPoints)
         {
+            var addedEdges = new HashSet<Edge>();
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+
+            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+            {
+                var v0 = AddVertex(start);
+                var v1 = AddVertex(end);
+                if (v0 != v1)
+                {
+                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
+                    edgeCandidates.Add(pair);
+                }
+            };
+
             var edgesBefore = GetEdges();
             var boundingPolygonPlane = boundingPolygon.Plane();
 
@@ -313,10 +343,21 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var polygonSegments = boundingPolygon.Edges().Select(e => new Segment(e.from, e.to, Tolerance)).ToList();
             int n = polygonSegments.Count;
+
             int m = intersectionPoints.Count;
-            var curEdges = new SortedSet<int>(Comparer <int>.Create((s1, s2) => polygonSegments[s1].CompareToY(polygonSegments[s2])));
+
             var points = new List<(double, int)>();
-            var newIntersectionPoints = new Vector3[2 * n + m];
+
+            var curEdges = new Treap<int>(Comparer<int>.Create((s1, s2) => polygonSegments[s1].CompareToY(polygonSegments[s2])));
+
+            var pointsOnSegments = new List<Vector3>[n];
+            for (int i = 0; i < n; ++i)
+            {
+                pointsOnSegments[i] = new List<Vector3>();
+                pointsOnSegments[i].Add(polygonSegments[i].a);
+                pointsOnSegments[i].Add(polygonSegments[i].b);
+            }
+
             for (int i = 0; i < n; ++i)
             {
                 points[i * 2] = ((polygonSegments[i].minX.X, i));
@@ -330,13 +371,79 @@ namespace Elements.Spatial.AdaptiveGrid
             for (int i = 0; i < points.Count; ++i)
             {
                 int j = points[i].Item2;
-                if (j < n) curEdges.Add(j);
+                if (j < n) curEdges.Insert(j);
                 else if (j < n + m)
                 {
+                    Vector3 point = intersectionPoints[j - n];
+                    double x = point.X, y = point.Y;
+                    var it = curEdges.LowerBound<double>(y, id => polygonSegments[id].MinYAtX(x));
+                    if (it.IsEnd) continue;
+                    int i_up = it.Get;
+                    Vector3 up = new Vector3(x, polygonSegments[i_up].MinYAtX(x));
+                    if (!it.MovePrevious()) continue;
+                    int i_down = it.Get;
+                    Vector3 down = new Vector3(x, polygonSegments[i_down].MaxYAtX(x));
+                    add(point, up);
+                    pointsOnSegments[i_up].Add(up);
+                    add(point, down);
+                    pointsOnSegments[i_down].Add(down);
                 }
+                else curEdges.Erase(j - n - m);
             }
 
-            return new HashSet<Edge>();
+            points.Clear();
+
+            curEdges = new Treap<int>(Comparer<int>.Create((s1, s2) => polygonSegments[s1].CompareToX(polygonSegments[s2])));
+
+            for (int i = 0; i < n; ++i)
+            {
+                points[i * 2] = ((polygonSegments[i].minY.Y, i));
+                points[i * 2 + 1] = (polygonSegments[i].maxY.Y, i + n + m);
+            }
+            for (int j = 0; j < m; ++j)
+            {
+                points[j + 2 * n] = (intersectionPoints[j].Y, j + n);
+            }
+            points.Sort();
+            for (int i = 0; i < points.Count; ++i)
+            {
+                int j = points[i].Item2;
+                if (j < n) curEdges.Insert(j);
+                else if (j < n + m)
+                {
+                    Vector3 point = intersectionPoints[j - n];
+                    double x = point.X, y = point.Y;
+                    var it = curEdges.LowerBound<double>(x, id => polygonSegments[id].MinXAtY(y));
+                    if (it.IsEnd) continue;
+                    int i_up = it.Get;
+                    Vector3 up = new Vector3(polygonSegments[i_up].MinXAtY(y), y);
+                    if (!it.MovePrevious()) continue;
+                    int i_down = it.Get;
+                    Vector3 down = new Vector3(polygonSegments[i_down].MaxXAtY(y), y);
+                    add(point, up);
+                    pointsOnSegments[i_up].Add(up);
+                    add(point, down);
+                    pointsOnSegments[i_down].Add(down);
+                }
+                else curEdges.Erase(j - n - m);
+            }
+
+            for (int i = 0; i < n; ++i)
+            {
+                if (polygonSegments[i].vert)
+                    pointsOnSegments[i].Sort((p, q) => p.Y.CompareTo(q.Y));
+                else
+                    pointsOnSegments[i].Sort((p, q) => p.X.CompareTo(q.X));
+                for (int j = 1; j < pointsOnSegments[i].Count; ++j)
+                    add(pointsOnSegments[i][j - 1], pointsOnSegments[i][j]);
+            }
+
+            foreach (var edge in edgeCandidates)
+            {
+                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
+            }
+
+            return addedEdges;
         }
 
         /// <summary>
