@@ -78,12 +78,17 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// Construct an extrusion.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="height"></param>
-        /// <param name="direction"></param>
-        /// <param name="isVoid"></param>
+        /// <param name="profile">The profile to extrude.</param>
+        /// <param name="height">The height/length of the extrusion.</param>
+        /// <param name="direction">The direction of the extrusion.</param>
+        /// <param name="isVoid">If true, the extrusion is a "void" in a group
+        /// of solid operations, subtracted from other solids.</param>
+        /// <param name="flipped">True if the extrusion should be flipped inside
+        /// out, with normals facing in instead of out. Use with caution if
+        /// using with other solid operations in a representation — boolean
+        /// results may be unexpected.</param>
         [JsonConstructor]
-        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid = false, bool flipped = false)
+        public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool flipped = false)
             : base(isVoid)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -94,9 +99,9 @@ namespace Elements.Geometry.Solids
                 }
             }
 
-            this._profile = @profile;
-            this._height = @height;
-            this._direction = @direction;
+            this._profile = profile;
+            this._height = height;
+            this._direction = direction;
             this._flipped = flipped;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
