@@ -210,8 +210,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             };
 
-            var polygonEdges = boundingPolygon.Edges();
-
             foreach (var cell in cells)
             {
                 Polygon boundary = (Polygon)cell.GetCellGeometry();
@@ -219,22 +217,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 foreach (var gridEdge in boundary.Edges())
                 {
-                    var gridLine = new Line(gridEdge.from, gridEdge.to);
-                    var gridVector = gridEdge.from - gridEdge.to;
-                    var intersectionPoints = new List<Vector3>();
-                    intersectionPoints.Add(gridEdge.from);
-                    intersectionPoints.Add(gridEdge.to);
-                    foreach (var polygonEdge in polygonEdges)
-                    {
-                        if (gridLine.Intersects(new Line(polygonEdge.from, polygonEdge.to), out var intersectionPoint)) intersectionPoints.Add(intersectionPoint);
-                    }
-                    intersectionPoints.Sort((p, q) => Math.Sign(gridVector.Dot(p - q)));
-                    for (int i = 0, j = -1; i < intersectionPoints.Count; ++i)
-                    {
-                        if (i > 0 && (intersectionPoints[i - 1] - intersectionPoints[i]).IsZero()) continue;
-                        if (j == -1) j = i;
-                        else add(intersectionPoints[j], intersectionPoints[i]);
-                    }
+                    var trimmedSegments = new Line(gridEdge.from, gridEdge.to).Trim(boundingPolygon, out var tmp, true);
+                    foreach (var trimmedSegment in trimmedSegments) add(trimmedSegment.Start, trimmedSegment.End);
                 }
             }
 
