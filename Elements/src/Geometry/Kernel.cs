@@ -38,9 +38,9 @@ namespace Elements.Geometry
         /// Create an extrude.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction)
+        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction, bool flipped = false)
         {
-            if (profile.Perimeter.Normal().Dot(direction) < 0)
+            if (profile.Perimeter.Normal().Dot(direction) < 0 != flipped)
             {
                 profile = profile.Reversed();
             }
