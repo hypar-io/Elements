@@ -1580,12 +1580,35 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon, IEnumerable<Edge> edgesToIntersect)
         {
-            var cells = grid.GetCells();
+            if (grid.Cells.Count == 0) return new HashSet<Edge>();
+
             var addedEdges = new HashSet<Edge>();
             var edgeCandidates = new HashSet<(ulong, ulong)>();
 
+            Func<Grid1d, List<double>> cellToPoints = null;
+            cellToPoints = c =>
+            {
+                if (c == null) return new List<double>();
+                if (c.IsSingleCell) return new List<double> { c.Domain.Min, c.Domain.Max };
+                var ans = c.Cells.Select(cellToPoints).Select(l => l.First()).ToList();
+                ans.Add(c.Cells.Last().Domain.Max);
+                return ans;
+            };
+
+            var u_list = cellToPoints(grid.U);
+            var v_list = cellToPoints(grid.V);
+
+            Vector3 xAxis = (grid.U.Evaluate(u_list.Last()) - grid.U.Evaluate(u_list.First())) / (u_list.Last() - u_list.First());
+            Vector3 yAxis = (grid.V.Evaluate(v_list.Last()) - grid.V.Evaluate(v_list.First())) / (v_list.Last() - v_list.First());
+            Vector3 zAxis = xAxis.Cross(yAxis);
+            var fromGrid = new Transform(grid.U.Evaluate(u_list.First()) + grid.V.Evaluate(v_list.First()), xAxis, zAxis).Concatenated(grid.fromGrid);
+            var toGrid = fromGrid.Inverted();
+
             Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
             {
+                start = fromGrid.OfPoint(start);
+                end = fromGrid.OfPoint(end);
+
                 var v0 = AddVertex(start);
                 var v1 = AddVertex(end);
                 if (v0 != v1)
@@ -1595,16 +1618,91 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             };
 
-            foreach (var cell in cells)
+            int n = boundingPolygon.Vertices.Count;
+            var polygonEdges = ((Polygon)boundingPolygon.Transformed(toGrid)).Edges().ToArray();
+            var polygonEdgesSplits = new List<Vector3>[n];
+            for (int i = 0; i < n; ++i)
             {
-                Polygon boundary = (Polygon)cell.GetCellGeometry();
-                if (boundary == null) continue;
+                polygonEdgesSplits[i] = new List<Vector3>();
+                polygonEdgesSplits[i].Add(polygonEdges[i].from);
+                polygonEdgesSplits[i].Add(polygonEdges[i].to);
+            }
 
-                foreach (var gridEdge in boundary.Edges())
+            foreach (var u in u_list)
+            {
+                var p = new Vector3(u, v_list.First());
+                var q = new Vector3(u, v_list.Last());
+
+                var gridLine = new Line(p, q);
+                var gridVector = p - q;
+                var intersectionPoints = new List<Vector3>();
+                for (int i = 0; i < n; ++i)
                 {
-                    var trimmedSegments = new Line(gridEdge.from, gridEdge.to).Trim(boundingPolygon, out var tmp, true);
-                    foreach (var trimmedSegment in trimmedSegments) add(trimmedSegment.Start, trimmedSegment.End);
+                    if (gridLine.Intersects(new Line(polygonEdges[i].from, polygonEdges[i].to), out var intersectionPoint, includeEnds: true))
+                    {
+                        intersectionPoints.Add(intersectionPoint);
+                        polygonEdgesSplits[i].Add(intersectionPoint);
+                    }
                 }
+                intersectionPoints.Sort((pp, qq) => pp.Y.CompareTo(qq.Y));
+                for (int i = 0, j = -1, l = 0; i < intersectionPoints.Count; ++i)
+                {
+                    if (j == -1) j = i;
+                    else
+                    {
+                        var prv = intersectionPoints[j];
+                        while (l < v_list.Count && v_list[l] < prv.Y) ++l;
+                        while (l < v_list.Count && v_list[l] < intersectionPoints[i].Y)
+                        {
+                            var nxt = new Vector3(u, v_list[l]);
+                            add(prv, nxt);
+                            prv = nxt;
+                            ++l;
+                        }
+                        add(prv, intersectionPoints[i]);
+                    }
+                }
+            }
+            foreach (var v in v_list)
+            {
+                var p = new Vector3(u_list.First(), v);
+                var q = new Vector3(u_list.Last(), v);
+
+                var gridLine = new Line(p, q);
+                var gridVector = p - q;
+                var intersectionPoints = new List<Vector3>();
+                for (int i = 0; i < n; ++i)
+                {
+                    if (gridLine.Intersects(new Line(polygonEdges[i].from, polygonEdges[i].to), out var intersectionPoint, includeEnds: true))
+                    {
+                        intersectionPoints.Add(intersectionPoint);
+                        polygonEdgesSplits[i].Add(intersectionPoint);
+                    }
+                }
+                intersectionPoints.Sort((pp, qq) => pp.X.CompareTo(qq.X));
+                for (int i = 0, j = -1, l = 0; i < intersectionPoints.Count; ++i)
+                {
+                    if (j == -1) j = i;
+                    else
+                    {
+                        var prv = intersectionPoints[j];
+                        while (l < u_list.Count && u_list[l] < prv.X) ++l;
+                        while (l < u_list.Count && u_list[l] < intersectionPoints[i].X)
+                        {
+                            var nxt = new Vector3(u_list[l], v);
+                            add(prv, nxt);
+                            prv = nxt;
+                            ++l;
+                        }
+                        add(prv, intersectionPoints[i]);
+                    }
+                }
+            }
+            
+            for (int i = 0; i < n; ++i)
+            {
+                polygonEdgesSplits[i].Sort((p, q) => Math.Sign((polygonEdges[i].from - polygonEdges[i].to).Dot(p - q)));
+                for (int j = 1; j < polygonEdgesSplits[i].Count; ++j) add(polygonEdgesSplits[i][j], polygonEdgesSplits[i][j - 1]);
             }
 
             foreach (var edge in edgeCandidates)
