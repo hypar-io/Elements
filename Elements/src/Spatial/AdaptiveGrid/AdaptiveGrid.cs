@@ -1635,31 +1635,44 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 var gridLine = new Line(p, q);
                 var gridVector = p - q;
-                var intersectionPoints = new List<Vector3>();
+                var intersectionPoints = new List<int>();
                 for (int i = 0; i < n; ++i)
                 {
                     if (gridLine.Intersects(new Line(polygonEdges[i].from, polygonEdges[i].to), out var intersectionPoint, includeEnds: true))
                     {
-                        intersectionPoints.Add(intersectionPoint);
+                        intersectionPoints.Add(i);
                         polygonEdgesSplits[i].Add(intersectionPoint);
                     }
                 }
-                intersectionPoints.Sort((pp, qq) => pp.Y.CompareTo(qq.Y));
+                intersectionPoints.Sort((pp, qq) => polygonEdgesSplits[pp].Last().Y.CompareTo(polygonEdgesSplits[qq].Last().Y));
+                Vector3 lst, prv;
                 for (int i = 0, j = -1, l = 0; i < intersectionPoints.Count; ++i)
                 {
+                    lst = polygonEdgesSplits[intersectionPoints[i]].Last();
+                    if (i > 0)
+                    {
+                        var tmp = polygonEdgesSplits[intersectionPoints[i - 1]].Last();
+                        var p1 = polygonEdges[intersectionPoints[i - 1]].from;
+                        if ((p1 - tmp).IsZero()) p1 = polygonEdges[intersectionPoints[i - 1]].to;
+                        var p2 = polygonEdges[intersectionPoints[i]].from;
+                        if ((p2 - lst).IsZero()) p2 = polygonEdges[intersectionPoints[i]].to;
+                        if (lst.Y < tmp.Y + Tolerance && Vector3.CCW(p, q, p1) * Vector3.CCW(p, q, p2) < 0) continue;
+                    }
+
                     if (j == -1) j = i;
                     else
                     {
-                        var prv = intersectionPoints[j];
+                        prv = polygonEdgesSplits[intersectionPoints[j]].Last();
+
                         while (l < v_list.Count && v_list[l] < prv.Y) ++l;
-                        while (l < v_list.Count && v_list[l] < intersectionPoints[i].Y)
+                        while (l < v_list.Count && v_list[l] < lst.Y)
                         {
                             var nxt = new Vector3(u, v_list[l]);
                             add(prv, nxt);
                             prv = nxt;
                             ++l;
                         }
-                        add(prv, intersectionPoints[i]);
+                        add(prv, lst);
                     }
                 }
             }
@@ -1670,31 +1683,44 @@ namespace Elements.Spatial.AdaptiveGrid
 
                 var gridLine = new Line(p, q);
                 var gridVector = p - q;
-                var intersectionPoints = new List<Vector3>();
+                var intersectionPoints = new List<int>();
                 for (int i = 0; i < n; ++i)
                 {
                     if (gridLine.Intersects(new Line(polygonEdges[i].from, polygonEdges[i].to), out var intersectionPoint, includeEnds: true))
                     {
-                        intersectionPoints.Add(intersectionPoint);
+                        intersectionPoints.Add(i);
                         polygonEdgesSplits[i].Add(intersectionPoint);
                     }
                 }
-                intersectionPoints.Sort((pp, qq) => pp.X.CompareTo(qq.X));
+                intersectionPoints.Sort((pp, qq) => polygonEdgesSplits[pp].Last().X.CompareTo(polygonEdgesSplits[qq].Last().X));
+                Vector3 lst, prv;
                 for (int i = 0, j = -1, l = 0; i < intersectionPoints.Count; ++i)
                 {
+                    lst = polygonEdgesSplits[intersectionPoints[i]].Last();
+                    if (i > 0)
+                    {
+                        var tmp = polygonEdgesSplits[intersectionPoints[i - 1]].Last();
+                        var p1 = polygonEdges[intersectionPoints[i - 1]].from;
+                        if ((p1 - tmp).IsZero()) p1 = polygonEdges[intersectionPoints[i - 1]].to;
+                        var p2 = polygonEdges[intersectionPoints[i]].from;
+                        if ((p2 - lst).IsZero()) p2 = polygonEdges[intersectionPoints[i]].to;
+                        if (lst.X < tmp.X + Tolerance && Vector3.CCW(p, q, p1) * Vector3.CCW(p, q, p2) < 0) continue;
+                    }
+
                     if (j == -1) j = i;
                     else
                     {
-                        var prv = intersectionPoints[j];
+                        prv = polygonEdgesSplits[intersectionPoints[j]].Last();
+
                         while (l < u_list.Count && u_list[l] < prv.X) ++l;
-                        while (l < u_list.Count && u_list[l] < intersectionPoints[i].X)
+                        while (l < u_list.Count && u_list[l] < lst.X)
                         {
                             var nxt = new Vector3(u_list[l], v);
                             add(prv, nxt);
                             prv = nxt;
                             ++l;
                         }
-                        add(prv, intersectionPoints[i]);
+                        add(prv, lst);
                     }
                 }
             }
