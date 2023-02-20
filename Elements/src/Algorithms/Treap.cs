@@ -228,7 +228,10 @@ namespace Elements.Algorithms
         /// <returns></returns>
         public static int operator - (TreapIterator<TKey> treapIterator1, TreapIterator<TKey> treapIterator2)
         {
-            if (treapIterator1._treap != treapIterator2._treap) throw new Exception("The supplied iterators correspond to different Treaps.");
+            if (treapIterator1._treap != treapIterator2._treap)
+            {
+                throw new Exception("The supplied iterators correspond to different Treaps.");
+            }
 
             return treapIterator1.Index - treapIterator2.Index;
         }
@@ -243,9 +246,15 @@ namespace Elements.Algorithms
         /// </summary>
         public void Erase()
         {
-            if (_treap == null) throw new Exception("The Treap is non-existent");
+            if (_treap == null)
+            {
+                throw new Exception("The Treap is non-existent.");
+            }
 
-            if (t != null) _treap.Erase(t);
+            if (t != null)
+            {
+                _treap.Erase(t);
+            }
         }
 
         /// <summary>
@@ -257,7 +266,10 @@ namespace Elements.Algorithms
         /// <returns></returns>
         public static TreapIterator<TKey> operator + (TreapIterator<TKey> treapIterator, int dt)
         {
-            if (treapIterator._treap == null) throw new Exception("The Treap is non-existent");
+            if (treapIterator._treap == null)
+            {
+                throw new Exception("The Treap is non-existent.");
+            }
 
             return treapIterator._treap.Get(treapIterator.Index + dt);
         }
