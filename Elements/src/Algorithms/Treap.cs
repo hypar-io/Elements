@@ -334,7 +334,10 @@ namespace Elements.Algorithms
             get 
             {
                 TreapNode<TKey> t = this;
-                while (t.left != null) t = t.left;
+                while (t.left != null)
+                {
+                    t = t.left;
+                }
                 return t;
             } 
         }
@@ -350,7 +353,10 @@ namespace Elements.Algorithms
             get
             {
                 TreapNode<TKey> t = this;
-                while (t.right != null) t = t.right;
+                while (t.right != null)
+                {
+                    t = t.right;
+                }
                 return t;
             }
         }
