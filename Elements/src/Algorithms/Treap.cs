@@ -24,9 +24,15 @@ namespace Elements.Algorithms
         public TreapIterator(Treap<TKey> treap)
         {
             _treap = treap;
-            if (treap == null) return;
+            if (treap == null)
+            {
+                return;
+            }
             t = treap.Root;
-            if (t == null) return;
+            if (t == null)
+            {
+                return;
+            }
             t = t.Min;
         }
 
@@ -39,7 +45,10 @@ namespace Elements.Algorithms
         public TreapIterator(Treap<TKey> treap, TreapNode<TKey> node)
         {
             _treap = treap;
-            if (treap == null) return;
+            if (treap == null)
+            {
+                return;
+            }
             t = node;
         }
 
@@ -52,7 +61,10 @@ namespace Elements.Algorithms
         {
             get
             {
-                if (_treap == null) throw new Exception("The Treap is non-existent");
+                if (_treap == null)
+                {
+                    throw new Exception("The Treap is non-existent.");
+                }
                 return t == null;
             }
         }
@@ -67,8 +79,14 @@ namespace Elements.Algorithms
         {
             get
             {
-                if (_treap == null) throw new Exception("The Treap is non-existent");
-                if (t == null) throw new Exception("The enumerator is at the end of the Treap");
+                if (_treap == null)
+                {
+                    throw new Exception("The Treap is non-existent.");
+                }
+                if (t == null)
+                {
+                    throw new Exception("The enumerator is at the end of the Treap.");
+                }
                 return t.val;
             }
         }
@@ -86,8 +104,14 @@ namespace Elements.Algorithms
         /// <returns>True if we are still not at the 'end' after moving.</returns>
         public bool MoveNext()
         {
-            if (_treap == null) throw new Exception("The Treap is non-existent");
-            if (t == null) return false;
+            if (_treap == null)
+            {
+                throw new Exception("The Treap is non-existent.");
+            }
+            if (t == null)
+            {
+                return false;
+            }
 
             if (t.right != null)
             {
@@ -98,7 +122,10 @@ namespace Elements.Algorithms
             {
                 TreapNode<TKey> q = t;
                 t = t.parent;
-                if (t != null && t.left == q) return true;
+                if (t != null && t.left == q)
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -117,11 +144,17 @@ namespace Elements.Algorithms
         /// <returns>True if we are not at the beginning before the move.</returns>
         public bool MovePrevious()
         {
-            if (_treap == null) throw new Exception("The Treap is non-existent");
+            if (_treap == null)
+            {
+                throw new Exception("The Treap is non-existent.");
+            }
             if (t == null)
             {
                 t = _treap.Root;
-                if (t == null) return false;
+                if (t == null)
+                {
+                    return false;
+                }
                 t = t.Max;
                 return true;
             }
@@ -135,7 +168,10 @@ namespace Elements.Algorithms
             {
                 TreapNode<TKey> q = t;
                 t = t.parent;
-                if (t != null && t.right == q) return true;
+                if (t != null && t.right == q)
+                {
+                    return true;
+                }
             }
 
             t = _treap.Root.Min;
@@ -154,9 +190,15 @@ namespace Elements.Algorithms
         public int Index { 
             get
             {
-                if (_treap == null) throw new Exception("The Treap is non-existent");
+                if (_treap == null)
+                {
+                    throw new Exception("The Treap is non-existent.");
+                }
 
-                if (t == null) return _treap.Size;
+                if (t == null)
+                {
+                    return _treap.Size;
+                }
 
                 int ans = t.left == null ? 0 : t.left.sz;
                 TreapNode<TKey> v = t;
@@ -164,7 +206,10 @@ namespace Elements.Algorithms
                 {
                     TreapNode<TKey> u = v;
                     v = v.parent;
-                    if (v != null && v.right == u) ans += 1 + (v.left == null ? 0 : v.left.sz);
+                    if (v != null && v.right == u)
+                    {
+                        ans += 1 + (v.left == null ? 0 : v.left.sz);
+                    }
                 }
                 return ans;
             } 
