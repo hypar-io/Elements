@@ -430,7 +430,10 @@ namespace Elements.Algorithms
         /// <param name="lst">The list in which to insert all values.</param>
         private void ToListDfs(TreapNode<TKey> t, List<TKey> lst)
         {
-            if (t == null) return;
+            if (t == null)
+            {
+                return;
+            }
             ToListDfs(t.left, lst);
             lst.Add(t.val);
             ToListDfs(t.right, lst);
@@ -456,8 +459,14 @@ namespace Elements.Algorithms
         {
             if (cmp == null)
             {
-                if (typeof(IComparable<TKey>).IsAssignableFrom(typeof(TKey))) cmp = Comparer<TKey>.Default;
-                else throw new Exception("No comparer was supplied and the underlying type is not implicitly comparable");
+                if (typeof(IComparable<TKey>).IsAssignableFrom(typeof(TKey)))
+                {
+                    cmp = Comparer<TKey>.Default;
+                }
+                else
+                {
+                    throw new Exception("No comparer was supplied and the underlying type is not implicitly comparable");
+                }
             }
             _cmp = cmp;
             root = null;
@@ -591,7 +600,10 @@ namespace Elements.Algorithms
         /// <returns></returns>
         public TreapIterator<TKey> Get(int index)
         {
-            if (index < 0 || Size < index) throw new Exception("The requested index is out of bounds.");
+            if (index < 0 || Size < index)
+            {
+                throw new Exception("The requested index is out of bounds.");
+            }
 
             TreapNode<TKey> l, r;
             splitBySize(root, out l, out r, index);
@@ -608,17 +620,29 @@ namespace Elements.Algorithms
         /// <param name="node">The node to delete.</param>
         public void Erase(TreapNode<TKey> node)
         {
-            if (node == null) return;
+            if (node == null)
+            {
+                return;
+            }
 
             var p = node.parent;
             bool left = p == null || p.right == node ? false : true;
             Merge(out node, node.left, node.right);
             if (p != null)
             {
-                if (left) p.left = node;
-                else p.right = node;
+                if (left)
+                {
+                    p.left = node;
+                }
+                else
+                {
+                    p.right = node;
+                }
             }
-            else root = node;
+            else
+            {
+                root = node;
+            }
         }
 
         /// <summary>
@@ -640,7 +664,10 @@ namespace Elements.Algorithms
         /// <param name="t">the node to update.</param>
         private void update(TreapNode<TKey> t)
         {
-            if (t == null) return;
+            if (t == null)
+            {
+                return;
+            }
 
             t.sz = 1;
             t.parent = null;
@@ -685,7 +712,10 @@ namespace Elements.Algorithms
             TreapNode<TKey> t1, t2;
             Split(root, out root, out t1, x);
             Split(t1, out t1, out t2, x, false);
-            if (t1 != null) Merge(out t1, t1.left, t1.right);
+            if (t1 != null)
+            {
+                Merge(out t1, t1.left, t1.right);
+            }
             Merge(out t1, t1, t2);
             Merge(out root, root, t1);
         }
@@ -704,10 +734,16 @@ namespace Elements.Algorithms
         /// <returns>The iterator pointing to the element. 'End' if there is no sucj element.</returns>
         private TreapIterator<TKey> LowerUpperBound<T> (T x, Func<TKey, T> f, Comparer<T> cmp, bool lower) 
         {
-            if (root == null) return new TreapIterator<TKey>(this, null);
+            if (root == null)
+            {
+                return new TreapIterator<TKey>(this, null);
+            }
             TreapNode<TKey> t1;
             Split(root, out root, out t1, x, f, cmp, lower);
-            if (t1 == null) return new TreapIterator<TKey>(this, null);
+            if (t1 == null)
+            {
+                return new TreapIterator<TKey>(this, null);
+            }
             var ans = new TreapIterator<TKey>(this, t1.Min);
             Merge(out root, root, t1);
             return ans;
@@ -736,8 +772,14 @@ namespace Elements.Algorithms
         {
             if (cmp == null)
             {
-                if (typeof(IComparable<T>).IsAssignableFrom(typeof(T))) cmp = Comparer<T>.Default;
-                else throw new Exception("No comparer was supplied and the supplied type is not implicitly comparable");
+                if (typeof(IComparable<T>).IsAssignableFrom(typeof(T)))
+                {
+                    cmp = Comparer<T>.Default;
+                }
+                else
+                {
+                    throw new Exception("No comparer was supplied and the supplied type is not implicitly comparable");
+                }
             }
             return LowerUpperBound(x, f, cmp, true);
         }
@@ -757,8 +799,14 @@ namespace Elements.Algorithms
         {
             if (cmp == null)
             {
-                if (typeof(IComparable<T>).IsAssignableFrom(typeof(T))) cmp = Comparer<T>.Default;
-                else throw new Exception("No comparer was supplied and the supplied type is not implicitly comparable");
+                if (typeof(IComparable<T>).IsAssignableFrom(typeof(T)))
+                {
+                    cmp = Comparer<T>.Default;
+                }
+                else
+                {
+                    throw new Exception("No comparer was supplied and the supplied type is not implicitly comparable");
+                }
             }
             return LowerUpperBound(x, f, cmp, false);
         }
