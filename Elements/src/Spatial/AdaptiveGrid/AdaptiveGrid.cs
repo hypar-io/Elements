@@ -1432,22 +1432,6 @@ namespace Elements.Spatial.AdaptiveGrid
             var fromGrid = GridFromUVTransform(grid);
             var toGrid = fromGrid.Inverted();
 
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
-            {
-                start = fromGrid.OfPoint(start);
-                end = fromGrid.OfPoint(end);
-
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
-                if (v0 != v1)
-                {
-                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
-                    edgeCandidates.Add(pair);
-                }
-            };
-
             var uvPolygon = (Polygon)boundingPolygon.Transformed(toGrid);
 
             var newSegments = new List<(Vector3 from, Vector3 to)>();
@@ -1468,8 +1452,22 @@ namespace Elements.Spatial.AdaptiveGrid
 
             newSegments.AddRange(uvPolygon.Edges().SelectMany(e => SplitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
 
-            newSegments.ForEach(s => add(s.from, s.to));
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+            foreach (var segment in newSegments)
+            {
+                var start = fromGrid.OfPoint(segment.from);
+                var end = fromGrid.OfPoint(segment.to);
 
+                var v0 = AddVertex(start);
+                var v1 = AddVertex(end);
+                if (v0 != v1)
+                {
+                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
+                    edgeCandidates.Add(pair);
+                }
+            }
+
+            var addedEdges = new HashSet<Edge>();
             edgeCandidates.ToList().ForEach(edge => addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2)));
 
             return addedEdges;
