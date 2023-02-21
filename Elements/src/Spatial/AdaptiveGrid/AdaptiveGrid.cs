@@ -1374,12 +1374,12 @@ namespace Elements.Spatial.AdaptiveGrid
             IEnumerable<Line> segmentsToSplit, 
             double u, 
             List<double> coords, 
-            bool coordsAreX, 
+            bool linesU, 
             List<Vector3> intersectionPoints)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
             var segments = segmentsToSplit.Select(x => x);
-            if (coordsAreX)
+            if (linesU)
             {
                 segments = segments.Select(l => l.TransformedLine(swapXYAxes)).ToList();
             }
@@ -1411,7 +1411,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 resultingSegments.Add((previousPoint, lastPoint));
             }
 
-            if (coordsAreX)
+            if (linesU)
             {
                 resultingSegments = resultingSegments.Select(s => (swapXYAxes.OfPoint(s.from), swapXYAxes.OfPoint(s.to))).ToList();
                 newIntersectionPoints = newIntersectionPoints.Select(p => swapXYAxes.OfPoint(p)).ToList();
