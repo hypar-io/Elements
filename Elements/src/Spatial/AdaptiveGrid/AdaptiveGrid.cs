@@ -1371,29 +1371,29 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         private List<(Vector3 from, Vector3 to)> SplitSegmentsWithPoints(
-            List<Line> segmentsToSplit, 
+            IEnumerable<Line> segmentsToSplit, 
             double u, 
             List<double> coords, 
             bool coordsAreX, 
             List<Vector3> intersectionPoints)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
-            var segments = segmentsToSplit.Select(x => x).ToList();
+            var segments = segmentsToSplit.Select(x => x);
             if (coordsAreX)
             {
                 segments = segments.Select(l => l.TransformedLine(swapXYAxes)).ToList();
             }
 
-            segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed()).ToList();
-            segments.Sort((l1, l2) => l1.Start.Y.CompareTo(l2.Start.Y));
+            segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed());
+            segments = segments.OrderBy(l => l.Start.Y);
             var resultingSegments = new List<(Vector3 from, Vector3 to)>();
             var newIntersectionPoints = new List<Vector3>();
 
             int yId = 0;
-            for (int segmentId = 0; segmentId < segments.Count; ++segmentId)
+            foreach (var segment in segments)
             {
-                var previousPoint = segments[segmentId].Start;
-                var lastPoint = segments[segmentId].End;
+                var previousPoint = segment.Start;
+                var lastPoint = segment.End;
                 newIntersectionPoints.Add(previousPoint);
                 newIntersectionPoints.Add(lastPoint);
                 while (yId < coords.Count && coords[yId] < previousPoint.Y)
