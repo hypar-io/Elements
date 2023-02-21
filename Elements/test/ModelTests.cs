@@ -152,6 +152,26 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void SaveMappingDictionaryWithoutRepeatingMappings()
+        {
+            var cube = new Mass(Polygon.Rectangle(1, 1), 1, BuiltInMaterials.Mass, isElementDefinition: true);
+            var mapping = new RevitFamilyPointInstanceMapping();
+            var inst1 = cube.CreateInstance(new Transform(0, 0, 0), "inst 1");
+            inst1.SetMapping(MappingContext.Revit, mapping);
+            var inst2 = cube.CreateInstance(new Transform(0, 0, 0), "inst 2");
+            inst2.SetMapping(MappingContext.Revit, mapping);
+
+            var model = new Model(new List<Element> { inst1, inst2 });
+            var json = model.ToJson(true);
+            var newModel = Model.FromJson(json);
+
+            //Check that only a single mapping was serialized.
+            var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.RevitFamilyPointInstanceMapping""");
+            Assert.Equal(1, m.Count);
+            Assert.Equal(1, newModel.AllElementsOfType<RevitFamilyPointInstanceMapping>().Count());
+        }
+
+        [Fact]
         public void CoreElementTransformsAreIdempotentDuringSerialization()
         {
             var model = new Model();

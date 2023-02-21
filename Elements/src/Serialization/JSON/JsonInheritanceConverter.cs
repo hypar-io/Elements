@@ -144,7 +144,7 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
+                if (value is Element element && !WritingTopLevelElement(writer.Path) && !ElementwiseSerialization)
                 {
                     var ident = element;
                     writer.WriteValue(ident.Id);
@@ -167,6 +167,20 @@ namespace Elements.Serialization.JSON
             {
                 _isWriting = false;
             }
+        }
+
+        private static bool WritingTopLevelElement(string path)
+        {
+            var parts = path.Split('.');
+            if (parts.Length == 1)
+            {
+                return false;
+            }
+            if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
+            {
+                return true;
+            }
+            return false;
         }
 
         private static string GetDiscriminatorName(object value)
@@ -217,7 +231,7 @@ namespace Elements.Serialization.JSON
         {
             // The serialized value is an identifier, so the expectation is
             // that the element with that id has already been deserialized.
-            if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
+            if (typeof(Element).IsAssignableFrom(objectType) && !WritingTopLevelElement(reader.Path) && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 return Elements[id];
@@ -256,7 +270,7 @@ namespace Elements.Serialization.JSON
 
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
-                if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
+                if (typeof(Element).IsAssignableFrom(objectType) && WritingTopLevelElement(reader.Path))
                 {
                     var ident = (Element)obj;
                     if (!Elements.ContainsKey(ident.Id))

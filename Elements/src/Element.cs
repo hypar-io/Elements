@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -18,7 +19,7 @@ namespace Elements
         /// <param name="id">The unique id of the element.</param>
         /// <param name="name">The name of the element.</param>
         [JsonConstructor]
-        public Element(System.Guid @id = default(Guid), string @name = null)
+        public Element(System.Guid @id = default(Guid), string @name = null, Dictionary<MappingContext, MappingBase> @mappings = null)
         {
             this._id = @id;
             this._name = @name;
@@ -27,6 +28,7 @@ namespace Elements
             {
                 this._id = System.Guid.NewGuid();
             }
+            _mappings = @mappings;
         }
 
         /// <summary>A unique id.</summary>
@@ -88,5 +90,53 @@ namespace Elements
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// An optional dictionary of mappings.
+        /// </summary>
+        [JsonProperty("Mappings", Required = Required.Default)]
+        internal Dictionary<MappingContext, MappingBase> _mappings { get; set; } = null;
+
+        /// <summary>
+        /// The method used to set a mapping for a given context.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="mapping"></param>
+        public void SetMapping(MappingContext context, MappingBase mapping)
+        {
+            if (this._mappings == null)
+            {
+                this._mappings = new Dictionary<MappingContext, MappingBase>();
+            }
+            this._mappings[context] = mapping;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns>The mapping if it exists, null if not.</returns>
+        public MappingBase GetMapping(MappingContext context)
+        {
+            if (this._mappings == null)
+            {
+                return null;
+            }
+            if (this._mappings.ContainsKey(context))
+            {
+                return this._mappings[context];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <typeparam name="T">The Type of mapping expected.</typeparam>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns></returns>
+        public T GetMapping<T>(MappingContext context) where T : MappingBase
+        {
+            return this.GetMapping(context) as T;
+        }
     }
 }
