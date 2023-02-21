@@ -1461,7 +1461,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 newSegments.AddRange(splitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints));
             }
 
-            newSegments.AddRange(uvPolygon.Edges().ToList().SelectMany(e => splitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
+            newSegments.AddRange(uvPolygon.Edges().SelectMany(e => splitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
 
             newSegments.ForEach(s => add(s.from, s.to));
 
