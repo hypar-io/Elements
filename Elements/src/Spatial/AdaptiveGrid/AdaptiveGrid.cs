@@ -1389,7 +1389,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var resultingSegments = new List<(Vector3 from, Vector3 to)>();
             var newIntersectionPoints = new List<Vector3>();
 
-            for (int segmentId = 0, yId = 0; segmentId < segments.Count; ++segmentId)
+            int yId = 0;
+            for (int segmentId = 0; segmentId < segments.Count; ++segmentId)
             {
                 var previousPoint = segments[segmentId].Start;
                 var lastPoint = segments[segmentId].End;
