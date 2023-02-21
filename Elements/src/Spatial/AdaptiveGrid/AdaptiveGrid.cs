@@ -184,23 +184,6 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgesBefore = GetEdges();
             SplitGrid(grid, keyPoints);
             SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-            return AddFromGrid(grid, edgesBefore);
-        }
-
-        /// <summary>
-        /// Add single planar region to the graph section using polygon.
-        /// Any vertices that already exist are not created but reused.
-        /// This way new region is connected with the rest of the graph.
-        /// </summary>
-        /// <param name="boundingPolygon">Base polygon</param>
-        /// <param name="keyPoints">Set of 3D points, region is split with.</param>
-        /// <returns></returns>
-        public HashSet<Edge> AddFromPolygonMk2(Polygon boundingPolygon, IEnumerable<Vector3> keyPoints)
-        {
-            var grid = CreateGridFromPolygon(boundingPolygon);
-            var edgesBefore = GetEdges();
-            SplitGrid(grid, keyPoints);
-            SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
             return AddFromGridWithBoundingPolygon(grid, boundingPolygon, edgesBefore);
         }
 

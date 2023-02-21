@@ -25,7 +25,7 @@ namespace Elements.Tests
                 new Vector3(1, 4.5),
                 new Vector3(6, 3),
             };
-            adaptiveGrid.AddFromPolygonMk2(Polygon.Rectangle(15, 10).TransformedPolygon(
+            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(
                 new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
 
             // </example>
@@ -57,7 +57,7 @@ namespace Elements.Tests
                 new Vector3(2, 6, 3)
             };
             var rectangle = Polygon.Rectangle(new Vector3(-10, -5), new Vector3(15, 10));
-            adaptiveGrid.AddFromPolygonMk2(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 3))), points);
+            adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 3))), points);
             points = new List<Vector3>()
             {
                 new Vector3(-6, -4, 2),
@@ -65,7 +65,7 @@ namespace Elements.Tests
                 new Vector3(0, 4, 2),
                 new Vector3(2, 6, 2)
             };
-            adaptiveGrid.AddFromPolygonMk2(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
+            adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
 
             // </example2>
 
@@ -84,7 +84,7 @@ namespace Elements.Tests
                 new Vector3(1, 4.5, 3),
                 new Vector3(6, 3, -2),
             };
-            adaptiveGrid.AddFromPolygonMk2(Polygon.Rectangle(15, 10), points);
+            adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10), points);
 
             ulong id;
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(-2, -4), out id));
@@ -236,7 +236,7 @@ namespace Elements.Tests
             };
 
             var adaptiveGrid = new AdaptiveGrid();
-            adaptiveGrid.AddFromPolygonMk2(boundary, points);
+            adaptiveGrid.AddFromPolygon(boundary, points);
 
             var edgesCount = adaptiveGrid.GetEdges().Count();
             var verticiesCount = adaptiveGrid.GetVertices().Count();
@@ -263,7 +263,7 @@ namespace Elements.Tests
             }
 
             var adaptiveGrid = new AdaptiveGrid(transfrom);
-            adaptiveGrid.AddFromPolygonMk2(polygon, points);
+            adaptiveGrid.AddFromPolygon(polygon, points);
 
             //Obstacle aligned with adaptive grid transformation.
             //Forms big (3;1) -> (5;3) -> (3;5) -> (1;3) rectangle.
@@ -387,7 +387,7 @@ namespace Elements.Tests
                 Boundaries = boundary
             };
 
-            grid.AddFromPolygonMk2(boundary, new[] { Vector3.Origin });
+            grid.AddFromPolygon(boundary, new[] { Vector3.Origin });
 
             var profile = Polygon.Rectangle(0.2, 0.2);
             var column = new Column(
@@ -412,7 +412,7 @@ namespace Elements.Tests
         {
             var boundary = Polygon.Rectangle(20, 40);
             var grid = new AdaptiveGrid { Boundaries = boundary };
-            grid.AddFromPolygonMk2(boundary, new List<Vector3> { Vector3.Origin });
+            grid.AddFromPolygon(boundary, new List<Vector3> { Vector3.Origin });
             grid.AddVertices(new List<Vector3> { new Vector3(0, 20), new Vector3(0, 50) }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
 
             var edgesCount = grid.GetEdges().Count;
@@ -490,7 +490,7 @@ namespace Elements.Tests
         {
             var adaptiveGrid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
-            adaptiveGrid.AddFromPolygonMk2(polygon, new List<Vector3>());
+            adaptiveGrid.AddFromPolygon(polygon, new List<Vector3>());
             Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(0, 10), out var id));
             var vertex = adaptiveGrid.GetVertex(id);
             var halfTol = adaptiveGrid.Tolerance / 2;
@@ -603,7 +603,7 @@ namespace Elements.Tests
 
             //Add cut and extend.
             grid = new AdaptiveGrid();
-            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 new List<Vector3> { new Vector3(5, 5) });
 
             var toExtend = new Vector3[] { new Vector3(1, 5), new Vector3(4, 2), new Vector3(8, 6) };
@@ -631,7 +631,7 @@ namespace Elements.Tests
         public void AddVerticesWithCustomExtension()
         {
             var grid = new AdaptiveGrid();
-            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 new List<Vector3> {});
 
             //Default HintExtendDistance is 3.
@@ -664,7 +664,7 @@ namespace Elements.Tests
         public void AddAngledVerticesWithCustomExtension()
         {
             var grid = new AdaptiveGrid();
-            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 new List<Vector3> { });
 
             var toExtend = new Vector3[] { new Vector3(1, 7), new Vector3(2, 8) };
@@ -680,7 +680,7 @@ namespace Elements.Tests
         public void Add3DVerticesWithCustomExtension()
         {
             var grid = new AdaptiveGrid();
-            grid.AddFromPolygonMk2(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
+            grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 new List<Vector3> { new Vector3(2, 2), new Vector3(5, 5), new Vector3(8, 8) });
 
             var toInsert = new Vector3[] {
@@ -1082,7 +1082,7 @@ namespace Elements.Tests
         {
             AdaptiveGrid grid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
-            grid.AddFromPolygonMk2(polygon, new List<Vector3>() { new Vector3(5, 5) });
+            grid.AddFromPolygon(polygon, new List<Vector3>() { new Vector3(5, 5) });
             grid.AddEdge(Vector3.Origin, new Vector3(0, 0, 5));
 
             grid.TryGetVertexIndex(Vector3.Origin, out var id0);
