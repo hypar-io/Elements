@@ -178,6 +178,18 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DistanceToL()
+        {
+            var L = Polygon.L(10, 15, 5);
+            var position = new Vector3(-1, 3);
+            var distance = position.DistanceTo(L.ToPolyline(), out var closestPoint);
+            var distancePolygon = position.DistanceTo(L);
+            Assert.Equal(1, distance);
+            Assert.Equal(1, distancePolygon);
+            Assert.Equal(new Vector3(0, 3), closestPoint);
+        }
+
+        [Fact]
         public void AreCoplanar()
         {
             var a = Vector3.Origin;
