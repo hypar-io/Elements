@@ -156,7 +156,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var grid = CreateGridFromPolygon(transformedPolygonBottom);
                 SplitGrid(grid, keyPoints);
                 SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                var addedEdges = AddFromGridWithBoundingPolygon(grid, transformedPolygonBottom, edgesBefore);
+                var addedEdges = AddFromGridWithBoundingPolygon(grid, transformedPolygonBottom);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
@@ -165,7 +165,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     grid = CreateGridFromPolygon(transformedPolygonTop);
                     SplitGrid(grid, keyPoints);
                     SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                    AddFromGridWithBoundingPolygon(grid, transformedPolygonTop, edgesBefore);
+                    AddFromGridWithBoundingPolygon(grid, transformedPolygonTop);
                 }
             }
         }
@@ -184,7 +184,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgesBefore = GetEdges();
             SplitGrid(grid, keyPoints);
             SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-            return AddFromGridWithBoundingPolygon(grid, boundingPolygon, edgesBefore);
+            return AddFromGridWithBoundingPolygon(grid, boundingPolygon);
         }
 
         /// <summary>
@@ -1330,44 +1330,6 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(keyPoints);
         }
 
-        private HashSet<Edge> AddFromGrid(Grid2d grid, IEnumerable<Edge> edgesToIntersect)
-        {
-            var cells = grid.GetCells();
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
-
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
-            {
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
-                if (v0 != v1)
-                {
-                    var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
-                    edgeCandidates.Add(pair);
-                }
-            };
-
-            foreach (var cell in cells)
-            {
-                foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
-                {
-                    var polygon = (Polygon)cellGeometry;
-                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
-                    {
-                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
-                    }
-                    add(polygon.Vertices.Last(), polygon.Vertices.First());
-                }
-            }
-
-            foreach (var edge in edgeCandidates)
-            {
-                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
-            }
-
-            return addedEdges;
-        }
-
         private List<double> gridUDividers(Grid1d grid)
         {
             if (grid == null)
@@ -1454,7 +1416,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return resultingSegments;
         }
 
-        private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon, IEnumerable<Edge> edgesToIntersect)
+        private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon)
         {
             if (grid.Cells.Count == 0) return new HashSet<Edge>();
 
