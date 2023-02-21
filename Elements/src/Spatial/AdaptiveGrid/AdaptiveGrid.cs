@@ -1418,7 +1418,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon)
         {
-            if (grid.Cells.Count == 0) return new HashSet<Edge>();
+            if (Math.Max(grid.U.Domain.Length, grid.V.Domain.Length) < Tolerance) return new HashSet<Edge>();
 
             var addedEdges = new HashSet<Edge>();
             var edgeCandidates = new HashSet<(ulong, ulong)>();
