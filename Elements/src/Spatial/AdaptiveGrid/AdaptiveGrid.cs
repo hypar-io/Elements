@@ -1370,7 +1370,12 @@ namespace Elements.Spatial.AdaptiveGrid
             return resultingSegments;
         }
 
-        private List<(Vector3 from, Vector3 to)> SplitSegmentsWithPoints(List<Line> segmentsToSplit, double u, List<double> coords, bool coordsAreX, List<Vector3> intersectionPoints)
+        private List<(Vector3 from, Vector3 to)> SplitSegmentsWithPoints(
+            List<Line> segmentsToSplit, 
+            double u, 
+            List<double> coords, 
+            bool coordsAreX, 
+            List<Vector3> intersectionPoints)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
             var segments = segmentsToSplit.Select(x => x).ToList();
