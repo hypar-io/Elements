@@ -1330,7 +1330,7 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(keyPoints);
         }
 
-        private List<double> gridUDividers(Grid1d grid)
+        private List<double> GridUDividers(Grid1d grid)
         {
             if (grid == null)
             {
@@ -1340,7 +1340,7 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 return new List<double> { grid.Domain.Min, grid.Domain.Max };
             }
-            var ans = grid.Cells.Select(gridUDividers).Select(l => l.First()).ToList();
+            var ans = grid.Cells.Select(GridUDividers).Select(l => l.First()).ToList();
             ans.Add(grid.Cells.Last().Domain.Max);
             return ans;
         }
@@ -1423,8 +1423,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var addedEdges = new HashSet<Edge>();
             var edgeCandidates = new HashSet<(ulong, ulong)>();
 
-            var uList = gridUDividers(grid.U);
-            var vList = gridUDividers(grid.V);
+            var uList = GridUDividers(grid.U);
+            var vList = GridUDividers(grid.V);
 
             var fromGrid = gridFromUVTransform(grid);
             var toGrid = fromGrid.Inverted();
