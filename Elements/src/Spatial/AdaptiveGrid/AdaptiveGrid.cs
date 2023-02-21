@@ -1345,7 +1345,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return ans;
         }
 
-        private Transform gridFromUVTransform(Grid2d grid)
+        private Transform GridFromUVTransform(Grid2d grid)
         {
             var uDomain = grid.U.curveDomain;
             var vDomain = grid.V.curveDomain;
@@ -1356,7 +1356,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return fromGrid;
         }
 
-        private List<(Vector3 from, Vector3 to)> splitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vector3> points)
+        private List<(Vector3 from, Vector3 to)> SplitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vector3> points)
         {
             var resultingSegments = new List<(Vector3 from, Vector3 to)>();
             var lineVector = line.to - line.from;
@@ -1370,7 +1370,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return resultingSegments;
         }
 
-        private List<(Vector3 from, Vector3 to)> splitSegmentsWithPoints(List<Line> segmentsToSplit, double u, List<double> coords, bool coordsAreX, List<Vector3> intersectionPoints)
+        private List<(Vector3 from, Vector3 to)> SplitSegmentsWithPoints(List<Line> segmentsToSplit, double u, List<double> coords, bool coordsAreX, List<Vector3> intersectionPoints)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
             var segments = segmentsToSplit.Select(x => x).ToList();
@@ -1426,7 +1426,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var uList = GridUDividers(grid.U);
             var vList = GridUDividers(grid.V);
 
-            var fromGrid = gridFromUVTransform(grid);
+            var fromGrid = GridFromUVTransform(grid);
             var toGrid = fromGrid.Inverted();
 
             Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
@@ -1452,16 +1452,16 @@ namespace Elements.Spatial.AdaptiveGrid
             {
                 var verticalLine = new Line(new Vector3(u, vList.First()), new Vector3(u, vList.Last()));
                 var currentInternalSegments = verticalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(splitSegmentsWithPoints(currentInternalSegments, u, vList, false, intersectionPoints));
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, u, vList, false, intersectionPoints));
             }
             foreach (var v in vList)
             {
                 var horizontalLine = new Line(new Vector3(uList.First(), v), new Vector3(uList.Last(), v));
                 var currentInternalSegments = horizontalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(splitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints));
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints));
             }
 
-            newSegments.AddRange(uvPolygon.Edges().SelectMany(e => splitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
+            newSegments.AddRange(uvPolygon.Edges().SelectMany(e => SplitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
 
             newSegments.ForEach(s => add(s.from, s.to));
 
