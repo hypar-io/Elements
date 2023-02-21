@@ -1356,46 +1356,51 @@ namespace Elements.Spatial.AdaptiveGrid
             return fromGrid;
         }
 
-        private List<(Vector3 from, Vector3 to)> SplitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vector3> points)
+        private List<(Vertex from, Vertex to)> SplitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vertex> points)
         {
-            var resultingSegments = new List<(Vector3 from, Vector3 to)>();
+            var resultingSegments = new List<(Vertex from, Vertex to)>();
             var lineVector = line.to - line.from;
-            points.Add(line.from);
-            points.Add(line.to);
-            points.Sort((p, q) => Math.Sign(lineVector.Dot(p - q)));
+            points.Add(AddVertex(line.from));
+            points.Add(AddVertex(line.to));
+            points.Sort((p, q) => Math.Sign(lineVector.Dot(p.Point - q.Point)));
             for (int i = 1; i < points.Count; ++i)
             {
-                resultingSegments.Add((points[i - 1], points[i]));
+                resultingSegments.Add((points[i-1], points[i]));
             }
             return resultingSegments;
         }
 
-        private List<(Vector3 from, Vector3 to)> SplitSegmentsWithPoints(
+        private List<(Vertex from, Vertex to)> SplitSegmentsWithPoints(
             IEnumerable<Line> segmentsToSplit, 
             double u, 
             List<double> coords, 
             bool linesU, 
-            List<Vector3> intersectionPoints)
+            List<Vertex> intersectionPoints,
+            Transform fromGrid)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
+            var identity = new Transform();
+            var currentTransform = (linesU ? swapXYAxes : identity).Concatenated(fromGrid);
             var segments = segmentsToSplit.Select(x => x);
             if (linesU)
             {
-                segments = segments.Select(l => l.TransformedLine(swapXYAxes)).ToList();
+                segments = segments.Select(l => l.TransformedLine(swapXYAxes));
             }
 
             segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed());
             segments = segments.OrderBy(l => l.Start.Y);
-            var resultingSegments = new List<(Vector3 from, Vector3 to)>();
-            var newIntersectionPoints = new List<Vector3>();
+            var resultingSegments = new List<(Vertex from, Vertex to)>();
+            var newIntersectionPoints = new List<Vertex>();
 
             int yId = 0;
             foreach (var segment in segments)
             {
                 var previousPoint = segment.Start;
+                var previousVertex = AddVertex(currentTransform.OfPoint(previousPoint));
                 var lastPoint = segment.End;
-                newIntersectionPoints.Add(previousPoint);
-                newIntersectionPoints.Add(lastPoint);
+                var lastVertex = AddVertex(currentTransform.OfPoint(lastPoint));
+                newIntersectionPoints.Add(previousVertex);
+                newIntersectionPoints.Add(lastVertex);
                 while (yId < coords.Count && coords[yId] < previousPoint.Y)
                 {
                     ++yId;
@@ -1403,18 +1408,13 @@ namespace Elements.Spatial.AdaptiveGrid
                 while (yId < coords.Count && coords[yId] < lastPoint.Y)
                 {
                     var nextPoint = new Vector3(u, coords[yId]);
-                    newIntersectionPoints.Add(nextPoint);
-                    resultingSegments.Add((previousPoint, nextPoint));
-                    previousPoint = nextPoint;
+                    var nextVertex = AddVertex(currentTransform.OfPoint(nextPoint));
+                    newIntersectionPoints.Add(nextVertex);
+                    resultingSegments.Add((previousVertex, nextVertex));
+                    previousVertex = nextVertex;
                     ++yId;
                 }
-                resultingSegments.Add((previousPoint, lastPoint));
-            }
-
-            if (linesU)
-            {
-                resultingSegments = resultingSegments.Select(s => (swapXYAxes.OfPoint(s.from), swapXYAxes.OfPoint(s.to))).ToList();
-                newIntersectionPoints = newIntersectionPoints.Select(p => swapXYAxes.OfPoint(p)).ToList();
+                resultingSegments.Add((previousVertex, lastVertex));
             }
 
             intersectionPoints.AddRange(newIntersectionPoints);
@@ -1434,32 +1434,29 @@ namespace Elements.Spatial.AdaptiveGrid
 
             var uvPolygon = (Polygon)boundingPolygon.Transformed(toGrid);
 
-            var newSegments = new List<(Vector3 from, Vector3 to)>();
-            var intersectionPoints = new List<Vector3>();
+            var newSegments = new List<(Vertex from, Vertex to)>();
+            var intersectionPoints = new List<Vertex>();
 
             foreach (var u in uList)
             {
                 var verticalLine = new Line(new Vector3(u, vList.First()), new Vector3(u, vList.Last()));
                 var currentInternalSegments = verticalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, u, vList, false, intersectionPoints));
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, u, vList, false, intersectionPoints, fromGrid));
             }
             foreach (var v in vList)
             {
                 var horizontalLine = new Line(new Vector3(uList.First(), v), new Vector3(uList.Last(), v));
                 var currentInternalSegments = horizontalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints));
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints, fromGrid));
             }
 
-            newSegments.AddRange(uvPolygon.Edges().SelectMany(e => SplitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p)).ToList())));
+            newSegments.AddRange(boundingPolygon.Edges().SelectMany(e => SplitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p.Point)).ToList())));
 
             var edgeCandidates = new HashSet<(ulong, ulong)>();
             foreach (var segment in newSegments)
             {
-                var start = fromGrid.OfPoint(segment.from);
-                var end = fromGrid.OfPoint(segment.to);
-
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
+                var v0 = segment.from;
+                var v1 = segment.to;
                 if (v0 != v1)
                 {
                     var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
