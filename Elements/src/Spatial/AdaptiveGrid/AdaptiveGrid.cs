@@ -1426,15 +1426,14 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             if (Math.Max(grid.U.Domain.Length, grid.V.Domain.Length) < Tolerance) return new HashSet<Edge>();
 
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
-
             var uList = GridUDividers(grid.U);
             var vList = GridUDividers(grid.V);
 
             var fromGrid = GridFromUVTransform(grid);
             var toGrid = fromGrid.Inverted();
 
+            var addedEdges = new HashSet<Edge>();
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
             Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
             {
                 start = fromGrid.OfPoint(start);
