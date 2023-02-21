@@ -1467,8 +1467,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 }
             }
 
-            var addedEdges = new HashSet<Edge>();
-            edgeCandidates.ToList().ForEach(edge => addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2)));
+            var addedEdges = new HashSet<Edge>(edgeCandidates.Select(edge => AddInsertEdge(edge.Item1, edge.Item2)));
 
             return addedEdges;
         }
