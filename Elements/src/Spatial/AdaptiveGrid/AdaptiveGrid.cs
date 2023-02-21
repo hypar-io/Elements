@@ -1370,9 +1370,10 @@ namespace Elements.Spatial.AdaptiveGrid
             return resultingSegments;
         }
 
-        private List<(Vector3 from, Vector3 to)> splitSegmentsWithPoints(List<Line> segments, double u, List<double> coords, bool coordsAreX, List<Vector3> intersectionPoints)
+        private List<(Vector3 from, Vector3 to)> splitSegmentsWithPoints(List<Line> segmentsToSplit, double u, List<double> coords, bool coordsAreX, List<Vector3> intersectionPoints)
         {
             var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
+            var segments = segmentsToSplit.Select(x => x).ToList();
             if (coordsAreX)
             {
                 segments = segments.Select(l => l.TransformedLine(swapXYAxes)).ToList();
@@ -1406,7 +1407,6 @@ namespace Elements.Spatial.AdaptiveGrid
 
             if (coordsAreX)
             {
-                segments = segments.Select(l => l.TransformedLine(swapXYAxes)).ToList();
                 resultingSegments = resultingSegments.Select(s => (swapXYAxes.OfPoint(s.from), swapXYAxes.OfPoint(s.to))).ToList();
                 newIntersectionPoints = newIntersectionPoints.Select(p => swapXYAxes.OfPoint(p)).ToList();
             }
