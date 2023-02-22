@@ -157,6 +157,9 @@ namespace Elements.Geometry.Tests
             centroid = polygon.Centroid();
             Assert.Equal(0, centroid.X);
             Assert.Equal(0, centroid.Y);
+
+            //The center and centroid methods return different results for polygons with colinear vertices.
+            Assert.NotEqual(polygon.Center(), centroid);
         }
 
         [Fact]
