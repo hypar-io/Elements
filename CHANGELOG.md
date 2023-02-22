@@ -50,6 +50,7 @@
 - Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
 - Handle quotes in string literals for content catalog code generation by doubling them up.
 - Fix `AdaptiveGrid.TryGetVertexIndex` returning `false` for existing vertex if other vertex has similar X or Y coordinate.
+- Fix he polygon centroid calculation to remove collinear vertices.
 
 ## 1.3.0
 
