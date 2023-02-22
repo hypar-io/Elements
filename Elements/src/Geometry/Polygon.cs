@@ -2103,17 +2103,34 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
-            var collinearRemoved = this.CollinearPointsRemoved();
+            var area = this.Area();
             var x = 0.0;
             var y = 0.0;
             var z = 0.0;
-            foreach (var pnt in collinearRemoved.Vertices)
+
+            for (var i = 0; i < this.Vertices.Count; i++)
             {
-                x += pnt.X;
-                y += pnt.Y;
-                z += pnt.Z;
+                var next = i == this.Vertices.Count - 1 ? 0 : i + 1;
+                var a = this.Vertices[i].X * this.Vertices[next].Y - this.Vertices[next].X * this.Vertices[i].Y;
+                x += (this.Vertices[i].X + this.Vertices[next].X) * a;
+                y += (this.Vertices[i].Y + this.Vertices[next].Y) * a;
+                z += (this.Vertices[i].Z + this.Vertices[next].Z) * a;
             }
-            return new Vector3(x / collinearRemoved.Vertices.Count, y / collinearRemoved.Vertices.Count, z / collinearRemoved.Vertices.Count);
+            return new Vector3(x / (6 * area), y / (6 * area), z / (6 * area));
+        }
+
+        /// <summary>
+        /// Calculate the center of the polygon as the average of vertices.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 Center()
+        {
+            var center = Vector3.Origin;
+            foreach (var v in this.Vertices)
+            {
+                center += v;
+            }
+            return center / this.Vertices.Count;
         }
 
         /// <summary>

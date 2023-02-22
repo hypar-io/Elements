@@ -42,8 +42,7 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(star));
         }
 
-        [Fact]
-        public void Centroid()
+        public static IEnumerable<object[]> GetCenterTestPolygons()
         {
             // Square in Quadrant I
             var polygon = new Polygon
@@ -56,9 +55,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(0.0, 6.0),
                 }
             );
-            var centroid = polygon.Centroid();
-            Assert.Equal(3.0, centroid.X);
-            Assert.Equal(3.0, centroid.Y);
+            yield return new object[] { polygon, 3.0, 3.0 };
 
             // Square in Quadrant II
             polygon = new Polygon
@@ -71,9 +68,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(0.0, 6.0),
                 }
             );
-            centroid = polygon.Centroid();
-            Assert.Equal(-3.0, centroid.X);
-            Assert.Equal(3.0, centroid.Y);
+            yield return new object[] { polygon, -3.0, 3.0 };
 
             // Square in Quadrant III
             polygon = new Polygon
@@ -86,9 +81,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(0.0, -6.0),
                 }
             );
-            centroid = polygon.Centroid();
-            Assert.Equal(-3.0, centroid.X);
-            Assert.Equal(-3.0, centroid.Y);
+            yield return new object[] { polygon, -3.0, -3.0 };
 
             // Square in Quadrant IV
             polygon = new Polygon
@@ -101,9 +94,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(0.0, -6.0),
                 }
             );
-            centroid = polygon.Centroid();
-            Assert.Equal(3.0, centroid.X);
-            Assert.Equal(-3.0, centroid.Y);
+            yield return new object[] { polygon, 3.0, -3.0 };
 
             // Bow Tie in Quadrant I
             polygon = new Polygon
@@ -118,9 +109,7 @@ namespace Elements.Geometry.Tests
                     new Vector3(1.0, 9.0)
                 }
             );
-            centroid = polygon.Centroid();
-            Assert.Equal(4.0, centroid.X);
-            Assert.Equal(5.0, centroid.Y);
+            yield return new object[] { polygon, 4.0, 5.0 };
 
             // Bow Tie in Quadrant III
             polygon = new Polygon
@@ -135,9 +124,25 @@ namespace Elements.Geometry.Tests
                     new Vector3(-1.0, -9.0)
                 }
             );
-            centroid = polygon.Centroid();
-            Assert.Equal(-4.0, centroid.X);
-            Assert.Equal(-5.0, centroid.Y);
+            yield return new object[] { polygon, -4.0, -5.0 };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetCenterTestPolygons))]
+        public void Centroid(Polygon polygon, double x, double y)
+        {
+            var centroid = polygon.Centroid();
+            Assert.Equal(x, centroid.X);
+            Assert.Equal(y, centroid.Y);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetCenterTestPolygons))]
+        public void Center(Polygon polygon, double x, double y)
+        {
+            var centroid = polygon.Center();
+            Assert.Equal(x, centroid.X);
+            Assert.Equal(y, centroid.Y);
         }
 
         [Fact]
