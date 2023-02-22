@@ -1046,7 +1046,7 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                // Add a results collection for each polygon. 
+                // Add a results collection for each polygon.
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
 
@@ -1215,7 +1215,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Intersect a polygon against a set of trim polygons and identify the
         /// resulting polygons as "inside" or "outside" of the set of trimming
-        /// polygons. Containment is done using edge direction comparison for 
+        /// polygons. Containment is done using edge direction comparison for
         /// polygons which intersect with their trims, or ray testing in the
         /// case of polygons which do not intersect with their trims.
         /// </summary>
@@ -1291,7 +1291,7 @@ namespace Elements.Geometry
 
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
 
-                        // During intersection of one to many, this polygon's 
+                        // During intersection of one to many, this polygon's
                         // edges are added and given the index -1.
                         var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
                         var bn = trimPoly._plane.Normal;
@@ -2103,16 +2103,17 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
+            var collinearRemoved = this.CollinearPointsRemoved();
             var x = 0.0;
             var y = 0.0;
             var z = 0.0;
-            foreach (var pnt in Vertices)
+            foreach (var pnt in collinearRemoved.Vertices)
             {
                 x += pnt.X;
                 y += pnt.Y;
                 z += pnt.Z;
             }
-            return new Vector3(x / Vertices.Count, y / Vertices.Count, z / Vertices.Count);
+            return new Vector3(x / collinearRemoved.Vertices.Count, y / collinearRemoved.Vertices.Count, z / collinearRemoved.Vertices.Count);
         }
 
         /// <summary>
@@ -2328,7 +2329,7 @@ namespace Elements.Geometry
             List<Vector3> loopVertices = new List<Vector3>();
             List<Line> openLoop = new List<Line>();
 
-            //Check if a point lay on active open loop lines. 
+            //Check if a point lay on active open loop lines.
             foreach (var v in Vertices)
             {
                 bool intersectionFound = false;

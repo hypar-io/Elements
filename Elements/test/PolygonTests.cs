@@ -141,6 +141,20 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void CentroidWithColinearVertices()
+        {
+            var polygon = Polygon.Rectangle(6, 4);
+            var centroid = polygon.Centroid();
+            Assert.Equal(0, centroid.X);
+            Assert.Equal(0, centroid.Y);
+            // colinear vertex should not affect centroid
+            polygon.Vertices.Insert(2, new Vector3(3.0, 1.0));
+            centroid = polygon.Centroid();
+            Assert.Equal(0, centroid.X);
+            Assert.Equal(0, centroid.Y);
+        }
+
+        [Fact]
         public void DoesNotContainPointNotInPlane()
         {
             var rect = Polygon.Rectangle(5, 5);
