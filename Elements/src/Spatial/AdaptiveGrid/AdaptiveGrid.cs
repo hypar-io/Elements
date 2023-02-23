@@ -156,7 +156,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var grid = CreateGridFromPolygon(transformedPolygonBottom);
                 SplitGrid(grid, keyPoints);
                 SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                var addedEdges = AddFromGrid(grid, edgesBefore);
+                var addedEdges = AddFromGridWithBoundingPolygon(grid, transformedPolygonBottom);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
@@ -165,7 +165,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     grid = CreateGridFromPolygon(transformedPolygonTop);
                     SplitGrid(grid, keyPoints);
                     SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                    AddFromGrid(grid, edgesBefore);
+                    AddFromGridWithBoundingPolygon(grid, transformedPolygonTop);
                 }
             }
         }
@@ -184,7 +184,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgesBefore = GetEdges();
             SplitGrid(grid, keyPoints);
             SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-            return AddFromGrid(grid, edgesBefore);
+            return AddFromGridWithBoundingPolygon(grid, boundingPolygon);
         }
 
         /// <summary>
@@ -1330,40 +1330,141 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(keyPoints);
         }
 
-        private HashSet<Edge> AddFromGrid(Grid2d grid, IEnumerable<Edge> edgesToIntersect)
+        private List<double> GetGridDividers(Grid1d grid)
         {
-            var cells = grid.GetCells();
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
-
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+            if (grid == null)
             {
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
+                return new List<double>();
+            }
+            if (grid.IsSingleCell)
+            {
+                return new List<double> { grid.Domain.Min, grid.Domain.Max };
+            }
+            var ans = grid.Cells.Select(GetGridDividers).Select(l => l.First()).ToList();
+            ans.Add(grid.Cells.Last().Domain.Max);
+            return ans;
+        }
+
+        private Transform GridFromUVTransform(Grid2d grid)
+        {
+            var uDomain = grid.U.curveDomain;
+            var vDomain = grid.V.curveDomain;
+            Vector3 xAxis = (grid.U.Evaluate(uDomain.Max) - grid.U.Evaluate(uDomain.Min)) / uDomain.Length;
+            Vector3 yAxis = (grid.V.Evaluate(vDomain.Max) - grid.V.Evaluate(vDomain.Min)) / vDomain.Length;
+            Vector3 zAxis = xAxis.Cross(yAxis);
+            var fromGrid = new Transform(grid.U.Evaluate(uDomain.Min) + grid.V.Evaluate(vDomain.Min), xAxis, yAxis, zAxis).Concatenated(grid.fromGrid);
+            return fromGrid;
+        }
+
+        private List<(Vertex from, Vertex to)> SplitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vertex> points)
+        {
+            var resultingSegments = new List<(Vertex from, Vertex to)>();
+            var lineVector = line.to - line.from;
+            points.Add(AddVertex(line.from));
+            points.Add(AddVertex(line.to));
+            points.Sort((p, q) => Math.Sign(lineVector.Dot(p.Point - q.Point)));
+            for (int i = 1; i < points.Count; ++i)
+            {
+                resultingSegments.Add((points[i-1], points[i]));
+            }
+            return resultingSegments;
+        }
+
+        private List<(Vertex from, Vertex to)> SplitSegmentsWithPoints(
+            IEnumerable<Line> segmentsToSplit, 
+            double u, 
+            List<double> coords, 
+            bool linesU, 
+            List<Vertex> intersectionPoints,
+            Transform fromGrid)
+        {
+            var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
+            var identity = new Transform();
+            var currentTransform = (linesU ? swapXYAxes : identity).Concatenated(fromGrid);
+            var segments = segmentsToSplit.Select(x => x);
+            if (linesU)
+            {
+                segments = segments.Select(l => l.TransformedLine(swapXYAxes));
+            }
+
+            segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed());
+            segments = segments.OrderBy(l => l.Start.Y);
+            var resultingSegments = new List<(Vertex from, Vertex to)>();
+            var newIntersectionPoints = new List<Vertex>();
+
+            int yId = 0;
+            foreach (var segment in segments)
+            {
+                var previousPoint = segment.Start;
+                var previousVertex = AddVertex(currentTransform.OfPoint(previousPoint));
+                var lastPoint = segment.End;
+                var lastVertex = AddVertex(currentTransform.OfPoint(lastPoint));
+                newIntersectionPoints.Add(previousVertex);
+                newIntersectionPoints.Add(lastVertex);
+                while (yId < coords.Count && coords[yId] < previousPoint.Y)
+                {
+                    ++yId;
+                }
+                while (yId < coords.Count && coords[yId] < lastPoint.Y)
+                {
+                    var nextPoint = new Vector3(u, coords[yId]);
+                    var nextVertex = AddVertex(currentTransform.OfPoint(nextPoint));
+                    newIntersectionPoints.Add(nextVertex);
+                    resultingSegments.Add((previousVertex, nextVertex));
+                    previousVertex = nextVertex;
+                    ++yId;
+                }
+                resultingSegments.Add((previousVertex, lastVertex));
+            }
+
+            intersectionPoints.AddRange(newIntersectionPoints);
+
+            return resultingSegments;
+        }
+
+        private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon)
+        {
+            if (Math.Max(grid.U.Domain.Length, grid.V.Domain.Length) < Tolerance) return new HashSet<Edge>();
+
+            var uList = GetGridDividers(grid.U);
+            var vList = GetGridDividers(grid.V);
+
+            var fromGrid = GridFromUVTransform(grid);
+            var toGrid = fromGrid.Inverted();
+
+            var uvPolygon = (Polygon)boundingPolygon.Transformed(toGrid);
+
+            var newSegments = new List<(Vertex from, Vertex to)>();
+            var intersectionPoints = new List<Vertex>();
+
+            foreach (var u in uList)
+            {
+                var verticalLine = new Line(new Vector3(u, vList.First()), new Vector3(u, vList.Last()));
+                var currentInternalSegments = verticalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, u, vList, false, intersectionPoints, fromGrid));
+            }
+            foreach (var v in vList)
+            {
+                var horizontalLine = new Line(new Vector3(uList.First(), v), new Vector3(uList.Last(), v));
+                var currentInternalSegments = horizontalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
+                newSegments.AddRange(SplitSegmentsWithPoints(currentInternalSegments, v, uList, true, intersectionPoints, fromGrid));
+            }
+
+            newSegments.AddRange(boundingPolygon.Edges().SelectMany(e => SplitSegmentWithPoints(e, intersectionPoints.Where(p => new Line(e.from, e.to).PointOnLine(p.Point)).ToList())));
+
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+            foreach (var segment in newSegments)
+            {
+                var v0 = segment.from;
+                var v1 = segment.to;
                 if (v0 != v1)
                 {
                     var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
                     edgeCandidates.Add(pair);
                 }
-            };
-
-            foreach (var cell in cells)
-            {
-                foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
-                {
-                    var polygon = (Polygon)cellGeometry;
-                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
-                    {
-                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
-                    }
-                    add(polygon.Vertices.Last(), polygon.Vertices.First());
-                }
             }
 
-            foreach (var edge in edgeCandidates)
-            {
-                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
-            }
+            var addedEdges = new HashSet<Edge>(edgeCandidates.Select(edge => AddInsertEdge(edge.Item1, edge.Item2)));
 
             return addedEdges;
         }
