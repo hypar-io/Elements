@@ -946,13 +946,21 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void LineDistanceParametric()
+        public void LineDistancePointsOnOneLine()
         {
             //Points on one line.
             Vector3 pt = new Vector3(-2.685818406894334, -2.476879934864206, -0.5565494179776103);
-            Vector3 v = new Vector3(-2.3537985903693657, 2.407193267710168, -2.771078003386066);
-            double q1 = -1.7567568535640823, q2 = -0.21721224020356145, q3 = 1.006813808941921, q4 = 2.112519713576212;
-            Vector3 pt1 = pt + q1 * v, pt2 = pt + q2 * v, pt3 = pt + q3 * v, pt4 = pt + q4 * v;
+            Vector3 direction = new Vector3(-2.3537985903693657, 2.407193267710168, -2.771078003386066);
+            //Sorted distance quantities from point by the vector.
+            double q1 = -1.7567568535640823;
+            double q2 = -0.21721224020356145;
+            double q3 = 1.006813808941921;
+            double q4 = 2.112519713576212;
+            //p1, p2, p3, p4 are on the same line defined by pt + direction * t equation.
+            Vector3 pt1 = pt + q1 * direction;
+            Vector3 pt2 = pt + q2 * direction;
+            Vector3 pt3 = pt + q3 * direction;
+            Vector3 pt4 = pt + q4 * direction;
             //Segments don't intersect.
             var expected = (pt3 - pt2).Length();
             Assert.Equal(expected, (new Line(pt1, pt2)).DistanceTo(new Line(pt3, pt4)), 12);
@@ -981,16 +989,30 @@ namespace Elements.Geometry.Tests
             Assert.Equal(0, (new Line(pt2, pt4)).DistanceTo(new Line(pt3, pt1)), 12);
             Assert.Equal(0, (new Line(pt4, pt2)).DistanceTo(new Line(pt1, pt3)), 12);
             Assert.Equal(0, (new Line(pt4, pt2)).DistanceTo(new Line(pt3, pt1)), 12);
+        }
 
+        [Fact]
+        public void LineDistancePointsOnTwoIndependentLines()
+        {
             //Two groups of points on two lines.
-            pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
+            Vector3 pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
             Vector3 v1 = new Vector3(2.465855774694745, 2.6356139841825836, 0.4933654383536945);
             Vector3 v2 = new Vector3(1.0293808889279106, -2.4963706389774964, 1.5988855967507778);
-            double q11 = -1.5791413478212935, q12 = 0.81511586964034, q13 = 1.732636303417701;
-            double q21 = -0.9234662064172614, q22 = 0.64387549346853, q23 = 2.083473245643838;
-            Vector3 pt11 = pt + q11 * v1, pt12 = pt + q12 * v1, pt13 = pt + q13 * v1;
-            Vector3 pt21 = pt + q21 * v2, pt22 = pt + q22 * v2;
-            //The segments intersect.
+            //Sorted distance quantities from point by the first vector.
+            double q11 = -1.5791413478212935;
+            double q12 = 0.81511586964034;
+            double q13 = 1.732636303417701;
+            //Sorted distance quantities from point by the first vector.
+            double q21 = -0.9234662064172614;
+            double q22 = 0.64387549346853;
+            //p11, p12, p13 are one the same line defined by pt + v1 * t equation.
+            Vector3 pt11 = pt + q11 * v1;
+            Vector3 pt12 = pt + q12 * v1;
+            Vector3 pt13 = pt + q13 * v1;
+            //p21, p22 are one the same line defined by pt + v2 * t equation.
+            Vector3 pt21 = pt + q21 * v2;
+            Vector3 pt22 = pt + q22 * v2;
+            //The segments (pt11, pt12) and (pt21, pt22) intersect.
             Assert.Equal(0, (new Line(pt11, pt12)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(0, (new Line(pt11, pt12)).DistanceTo(new Line(pt22, pt21)), 12);
             Assert.Equal(0, (new Line(pt12, pt11)).DistanceTo(new Line(pt21, pt22)), 12);
@@ -999,6 +1021,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(0, (new Line(pt21, pt22)).DistanceTo(new Line(pt12, pt11)), 12);
             Assert.Equal(0, (new Line(pt22, pt21)).DistanceTo(new Line(pt11, pt12)), 12);
             Assert.Equal(0, (new Line(pt22, pt21)).DistanceTo(new Line(pt12, pt11)), 12);
+            //The segments (pt12, pt13) and (pt21, pt22) does not intersect.
             //The shortest distance is between an endpoint and another segment.
             Assert.Equal(pt12.DistanceTo(new Line(pt21, pt22)), (new Line(pt12, pt13)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(pt12.DistanceTo(new Line(pt21, pt22)), (new Line(pt12, pt13)).DistanceTo(new Line(pt22, pt21)), 12);
@@ -1008,59 +1031,91 @@ namespace Elements.Geometry.Tests
             Assert.Equal(pt12.DistanceTo(new Line(pt21, pt22)), (new Line(pt21, pt22)).DistanceTo(new Line(pt13, pt12)), 12);
             Assert.Equal(pt12.DistanceTo(new Line(pt21, pt22)), (new Line(pt22, pt21)).DistanceTo(new Line(pt12, pt13)), 12);
             Assert.Equal(pt12.DistanceTo(new Line(pt21, pt22)), (new Line(pt22, pt21)).DistanceTo(new Line(pt13, pt12)), 12);
+        }
 
-            //Parallel lines - v2 is orthogonal to v1.
-            pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
-            v1 = new Vector3(2.465855774694745, 2.6356139841825836, 0.4933654383536945);
-            v2 = new Vector3(1.633720404719513, -1.8504262591965435, 1.7198011154858075); 
-            q1 = -1.5791413478212935; q2 = -0.81511586964034; q3 = 0.732636303417701; q4 = 1.9234662064172614;
-            //The segments do not overlap.
-            expected = (v2 + (q3 - q2) * v1).Length();
-            Assert.Equal(expected, (new Line(pt + q1 * v1, pt + q2 * v1)).DistanceTo(new Line(pt + v2 + q3 * v1, pt + v2 + q4 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + q1 * v1, pt + q2 * v1)).DistanceTo(new Line(pt + v2 + q4 * v1, pt + v2 + q3 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + q2 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q3 * v1, pt + v2 + q4 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + q2 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q4 * v1, pt + v2 + q3 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + v2 + q1 * v1, pt + v2 + q2 * v1)).DistanceTo(new Line(pt + q3 * v1, pt + q4 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + v2 + q1 * v1, pt + v2 + q2 * v1)).DistanceTo(new Line(pt + q4 * v1, pt + q3 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + v2 + q2 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q3 * v1, pt + q4 * v1)), 12);
-            Assert.Equal(expected, (new Line(pt + v2 + q2 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q4 * v1, pt + q3 * v1)), 12);
-            //One segment covers another one.
-            Assert.Equal(v2.Length(), (new Line(pt + q1 * v1, pt + q4 * v1)).DistanceTo(new Line(pt + v2 + q2 * v1, pt + v2 + q3 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q1 * v1, pt + q4 * v1)).DistanceTo(new Line(pt + v2 + q3 * v1, pt + v2 + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q4 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q2 * v1, pt + v2 + q3 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q4 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q3 * v1, pt + v2 + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q1 * v1, pt + v2 + q4 * v1)).DistanceTo(new Line(pt + q2 * v1, pt + q3 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q1 * v1, pt + v2 + q4 * v1)).DistanceTo(new Line(pt + q3 * v1, pt + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q4 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q2 * v1, pt + q3 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q4 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q3 * v1, pt + q2 * v1)), 12);
-            //One segment overlaps with another one.
-            Assert.Equal(v2.Length(), (new Line(pt + q1 * v1, pt + q3 * v1)).DistanceTo(new Line(pt + v2 + q2 * v1, pt + v2 + q4 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q1 * v1, pt + q3 * v1)).DistanceTo(new Line(pt + v2 + q4 * v1, pt + v2 + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q3 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q2 * v1, pt + v2 + q4 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + q3 * v1, pt + q1 * v1)).DistanceTo(new Line(pt + v2 + q4 * v1, pt + v2 + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q1 * v1, pt + v2 + q3 * v1)).DistanceTo(new Line(pt + q2 * v1, pt + q4 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q1 * v1, pt + v2 + q3 * v1)).DistanceTo(new Line(pt + q4 * v1, pt + q2 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q3 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q2 * v1, pt + q4 * v1)), 12);
-            Assert.Equal(v2.Length(), (new Line(pt + v2 + q3 * v1, pt + v2 + q1 * v1)).DistanceTo(new Line(pt + q4 * v1, pt + q2 * v1)), 12);
+        [Fact]
+        public void LineDistancePointsOnParallelLines()
+        {
+            //Parallel lines that are 'delta' away - delta is orthogonal to v1.
+            Vector3 pt = new Vector3(2.798721214152833, -0.3556044049478837, -2.9550511796484766);
+            Vector3 direction = new Vector3(2.465855774694745, 2.6356139841825836, 0.4933654383536945);
+            Vector3 delta = new Vector3(1.633720404719513, -1.8504262591965435, 1.7198011154858075);
+            //Sorted distance quantities from point by the first vector.
+            double q1 = -1.5791413478212935;
+            double q2 = -0.81511586964034;
+            double q3 = 0.732636303417701;
+            double q4 = 1.9234662064172614;
+            //p1, p2, p3, p4 are on the same line defined by pt + direction * t equation.
+            Vector3 pt1 = pt + q1 * direction;
+            Vector3 pt2 = pt + q2 * direction;
+            Vector3 pt3 = pt + q3 * direction;
+            Vector3 pt4 = pt + q4 * direction;
 
+            //The segments do not overlap. Expected distance is between parallel lines plus endpoints.
+            var expected = (delta + (q3 - q2) * direction).Length();
+            Assert.Equal(expected, (new Line(pt1, pt2)).DistanceTo(new Line(pt3 + delta, pt4 + delta)), 12);
+            Assert.Equal(expected, (new Line(pt1, pt2)).DistanceTo(new Line(pt4 + delta, pt3 + delta)), 12);
+            Assert.Equal(expected, (new Line(pt2, pt1)).DistanceTo(new Line(pt3 + delta, pt4 + delta)), 12);
+            Assert.Equal(expected, (new Line(pt2, pt1)).DistanceTo(new Line(pt4 + delta, pt3 + delta)), 12);
+            Assert.Equal(expected, (new Line(pt1 + delta, pt2 + delta)).DistanceTo(new Line(pt3, pt4)), 12);
+            Assert.Equal(expected, (new Line(pt1 + delta, pt2 + delta)).DistanceTo(new Line(pt4, pt3)), 12);
+            Assert.Equal(expected, (new Line(pt2 + delta, pt1 + delta)).DistanceTo(new Line(pt3, pt4)), 12);
+            Assert.Equal(expected, (new Line(pt2 + delta, pt1 + delta)).DistanceTo(new Line(pt4, pt3)), 12);
+            //One segment covers another one. There is only distance between parallel lines.
+            Assert.Equal(delta.Length(), (new Line(pt1, pt4)).DistanceTo(new Line(pt2 + delta, pt3 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1, pt4)).DistanceTo(new Line(pt3 + delta, pt2 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt4, pt1)).DistanceTo(new Line(pt2 + delta, pt3 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt4, pt1)).DistanceTo(new Line(pt3 + delta, pt2 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1 + delta, pt4 + delta)).DistanceTo(new Line(pt2, pt3)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1 + delta, pt4 + delta)).DistanceTo(new Line(pt3, pt2)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt4 + delta, pt1 + delta)).DistanceTo(new Line(pt2, pt3)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt4 + delta, pt1 + delta)).DistanceTo(new Line(pt3, pt2)), 12);
+            //One segment overlaps with another one. There is only distance between parallel lines.
+            Assert.Equal(delta.Length(), (new Line(pt1, pt3)).DistanceTo(new Line(pt2 + delta, pt4 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1, pt3)).DistanceTo(new Line(pt4 + delta, pt2 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt3, pt1)).DistanceTo(new Line(pt2 + delta, pt4 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt3, pt1)).DistanceTo(new Line(pt4 + delta, pt2 + delta)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1 + delta, pt3 + delta)).DistanceTo(new Line(pt2, pt4)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt1 + delta, pt3 + delta)).DistanceTo(new Line(pt4, pt2)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt3 + delta, pt1 + delta)).DistanceTo(new Line(pt2, pt4)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt3 + delta, pt1 + delta)).DistanceTo(new Line(pt4, pt2)), 12);
+        }
+
+        [Fact]
+        public void LineDistancePointsOnSkewLines()
+        {
             //One line is skew to other - v2 and v3 are orthogonal to v1.
-            pt = new Vector3(-0.500280764727953, -2.9389849832575896, 1.9512390555224588);
-            v1 = new Vector3(-1.2081608688024432, -0.7895298630691459, -1.8380319057295544);
-            v2 = new Vector3(1.561390631684935, -1.268325457190592, -0.48150972505691025);
-            Vector3 v3 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
-            q11 = -1.31932651341597884; q12 = 0.8705916819804074; q13 = 2.7483887105972915;
-            q21 = -2.45223540673958955; q22 = 0.2397865438759381;
-            //The segments intersect
-            Assert.Equal(v1.Length(), (new Line(pt + q11 * v2, pt + q12 * v2)).DistanceTo(new Line(pt + v1 + q21 * v3, pt + v1 + q22 * v3)), 12);
-            Assert.Equal(v1.Length(), (new Line(pt + q11 * v2, pt + q12 * v2)).DistanceTo(new Line(pt + v1 + q22 * v3, pt + v1 + q21 * v3)), 12);
-            Assert.Equal(v1.Length(), (new Line(pt + q12 * v2, pt + q11 * v2)).DistanceTo(new Line(pt + v1 + q21 * v3, pt + v1 + q22 * v3)), 12);
-            Assert.Equal(v1.Length(), (new Line(pt + q12 * v2, pt + q11 * v2)).DistanceTo(new Line(pt + v1 + q22 * v3, pt + v1 + q21 * v3)), 12);
-            //The shortest distance is from an endpoint to another segment
-            expected = (q12 * v2).DistanceTo(new Line(v1 + q21 * v3, v1 + q22 * v3));
-            Assert.Equal(expected, (new Line(pt + q12 * v2, pt + q13 * v2)).DistanceTo(new Line(pt + v1 + q21 * v3, pt + v1 + q22 * v3)), 12);
-            Assert.Equal(expected, (new Line(pt + q12 * v2, pt + q13 * v2)).DistanceTo(new Line(pt + v1 + q22 * v3, pt + v1 + q21 * v3)), 12);
-            Assert.Equal(expected, (new Line(pt + q13 * v2, pt + q12 * v2)).DistanceTo(new Line(pt + v1 + q21 * v3, pt + v1 + q22 * v3)), 12);
-            Assert.Equal(expected, (new Line(pt + q13 * v2, pt + q12 * v2)).DistanceTo(new Line(pt + v1 + q22 * v3, pt + v1 + q21 * v3)), 12);
+            Vector3 pt = new Vector3(-0.500280764727953, -2.9389849832575896, 1.9512390555224588);
+            Vector3 delta = new Vector3(-1.2081608688024432, -0.7895298630691459, -1.8380319057295544);
+            Vector3 v1 = new Vector3(1.561390631684935, -1.268325457190592, -0.48150972505691025);
+            Vector3 v2 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
+            //Sorted distance quantities from point by the second vector.
+            double q11 = -1.31932651341597884;
+            double q12 = 0.8705916819804074; 
+            double q13 = 2.7483887105972915;
+            //Sorted distance quantities from point by the second vector.
+            double q21 = -2.45223540673958955;
+            double q22 = 0.2397865438759381;
+            //p11, p12, p13 are one the same line defined by pt + v1 * t equation.
+            Vector3 pt11 = pt + q11 * v1;
+            Vector3 pt12 = pt + q12 * v1;
+            Vector3 pt13 = pt + q13 * v1;
+            //p11, p12, p13 are one the same line defined by (pt + delta) + v2 * t equation.
+            Vector3 pt21 = pt + delta + q21 * v2;
+            Vector3 pt22 = pt + delta + q22 * v2;
+            //The segments (pt11, pt12) and (pt21, pt22) would intersect on the shared plane.
+            //The distance is difference between lines.
+            Assert.Equal(delta.Length(), (new Line(pt11, pt12)).DistanceTo(new Line(pt21, pt22)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt11, pt12)).DistanceTo(new Line(pt22, pt21)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt21, pt22)), 12);
+            Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt22, pt21)), 12);
+            //The segments (pt12, pt13) and (pt21, pt22) does not intersect.
+            //The shortest distance is from an endpoint to another segment - difference between lines plus between endpoints. 
+            var expected = (q12 * v1).DistanceTo(new Line(delta + q21 * v2, delta + q22 * v2));
+            Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt21, pt22)), 12);
+            Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt22, pt21)), 12);
+            Assert.Equal(expected, (new Line(pt13, pt12)).DistanceTo(new Line(pt21, pt22)), 12);
+            Assert.Equal(expected, (new Line(pt13, pt12)).DistanceTo(new Line(pt22, pt21)), 12);
         }
     }
 }
