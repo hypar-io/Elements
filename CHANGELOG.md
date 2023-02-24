@@ -26,6 +26,7 @@
 - `RoutingHintLine.Affects`
 - `SvgFaceElevation`
 - `Units.FeetToFeetAndFractionalInches`, `Units.InchesToFractionalInches`
+- `Line.DistanceTo(Line other)`
 
 ### Changed
 
