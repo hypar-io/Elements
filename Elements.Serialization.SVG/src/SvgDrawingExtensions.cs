@@ -23,7 +23,7 @@ namespace Elements.Serialization.SVG
             string style = string.Empty;
             if (context.Fill != null)
             {
-                style += $"fill:{context.Fill.Colour.Name.ToLower()}";
+                style = $"fill:{SvgColourServerToString(context.Fill)}";
             }
 
             if (context.Stroke != null)
@@ -32,7 +32,7 @@ namespace Elements.Serialization.SVG
                 {
                     style += "; ";
                 }
-                style += $"stroke:{context.Stroke.Colour.Name.ToLower()}";
+                style += $"stroke:{SvgColourServerToString(context.Stroke)}";
             }
 
             if (!string.IsNullOrEmpty(style))
@@ -42,6 +42,11 @@ namespace Elements.Serialization.SVG
             return svgLine;
         }
 
+        private static string SvgColourServerToString(SvgColourServer colorServer)
+        {
+            return $"rgb({colorServer.Colour.R}, {colorServer.Colour.G}, {colorServer.Colour.B})";
+        }
+
         public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
         {
             return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
@@ -49,14 +54,34 @@ namespace Elements.Serialization.SVG
 
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
         {
-            return new SvgPolygon()
+            var svgPolygon = new SvgPolygon()
             {
-                Fill = context.Fill,
-                Stroke = context.Stroke,
                 StrokeWidth = context.StrokeWidth,
                 StrokeDashArray = context.StrokeDashArray,
                 Points = polygon.Vertices.ToSvgPointCollection(min, h)
             };
+
+            string style = string.Empty;
+            if (context.Fill != null)
+            {
+                style += $"fill:{SvgColourServerToString(context.Fill)}";
+            }
+
+            if (context.Stroke != null)
+            {
+                if (!string.IsNullOrEmpty(style))
+                {
+                    style += "; ";
+                }
+                style += $"stroke:{SvgColourServerToString(context.Stroke)}";
+            }
+
+            if (!string.IsNullOrEmpty(style))
+            {
+                svgPolygon.CustomAttributes.Add("style", style);
+            }
+
+            return svgPolygon;
         }
 
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
