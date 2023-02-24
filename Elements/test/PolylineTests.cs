@@ -753,5 +753,27 @@ namespace Elements.Geometry.Tests
             Assert.False(CheckPolylineAngles(angles, normalizedPathEnd));
             Assert.True(CheckPolylineAngles(angles, normalizedPathEndYAxisReferenceVector));
         }
+
+
+        [Fact]
+        public void PolylineForceAngleComplianceWithZeroAngle()
+        {
+            Name = nameof(PolylineForceAngleComplianceWithZeroAngle);
+            var angles = new List<double> { 0, 45, 90 };
+            var polyline = new Polyline(new List<Vector3> { new Vector3(), new Vector3(1, 3), new Vector3(5, 3.05), new Vector3(10, 3) });
+
+            var normalizedPathMiddle = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceMiddle, NormalizationType.Middle);
+            var normalizedPathEnd = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceEnd, NormalizationType.End);
+            var normalizedPathEndYAxisReferenceVector = polyline.ForceAngleCompliance(angles, new Vector3(0, 1), out var distanceStartYAxis, NormalizationType.End);
+
+            Model.AddElement(new ModelCurve(polyline, BuiltInMaterials.Black));
+            Model.AddElement(new ModelCurve(normalizedPathMiddle, BuiltInMaterials.XAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEnd, BuiltInMaterials.YAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEndYAxisReferenceVector, BuiltInMaterials.ZAxis));
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEnd));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEndYAxisReferenceVector));
+        }
     }
 }
