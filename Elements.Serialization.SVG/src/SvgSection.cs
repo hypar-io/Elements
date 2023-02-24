@@ -78,35 +78,17 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// The svg context which defines settings for elements cut by the cut plane.
         /// </summary>
-        public SvgContext FrontContext { get; set; } = new SvgContext()
-        {
-            Fill = new SvgColourServer(System.Drawing.Color.Black),
-            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f)
-        };
+        public SvgContext FrontContext { get; set; } = new SvgContext(Colors.Black, System.Drawing.Color.Black, 0.01);
 
         /// <summary>
         /// The svg context which defines settings for elements behind the cut plane.
         /// </summary>
-        public SvgContext BackContext { get; set; } = new SvgContext()
-        {
-            Stroke = new SvgColourServer(System.Drawing.Color.Black),
-            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f)
-        };
+        public SvgContext BackContext { get; set; } = new SvgContext(System.Drawing.Color.Black, 0.01);
 
         /// <summary>
         /// The svg context which defines settings for the grid elements.
         /// </summary>
-        public SvgContext GridContext { get; set; } = new SvgContext()
-        {
-            Stroke = new SvgColourServer(Colors.Black),
-            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f),
-            StrokeDashArray = new SvgUnitCollection(){
-                    new SvgUnit(SvgUnitType.User, 0.3f),
-                    new SvgUnit(SvgUnitType.User, 0.025f),
-                    new SvgUnit(SvgUnitType.User, 0.05f),
-                    new SvgUnit(SvgUnitType.User, 0.025f),
-                }
-        };
+        public SvgContext GridContext { get; set; } = new SvgContext(Colors.Black, 0.01, new double[] { 0.3, 0.025, 0.05, 0.025 });
 
         /// <summary>
         /// Should grid lines be shown in the section?
