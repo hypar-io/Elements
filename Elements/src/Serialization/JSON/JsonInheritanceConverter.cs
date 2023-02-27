@@ -172,10 +172,6 @@ namespace Elements.Serialization.JSON
         private static bool WritingTopLevelElement(string path)
         {
             var parts = path.Split('.');
-            if (parts.Length == 1)
-            {
-                return false;
-            }
             if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
             {
                 return true;

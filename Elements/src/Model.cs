@@ -450,7 +450,6 @@ namespace Elements
                 {
                     if (!Elements.ContainsKey(map.Value.Id))
                     { elements.Add(map.Value); }
-                    // RecursiveGatherSubElements(map.Value);
                 }
             }
 

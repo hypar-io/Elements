@@ -3,7 +3,7 @@ namespace Elements
     /// <summary>
     /// The mapping class for Revit
     /// </summary>
-    public class RevitFamilyPointInstanceMapping : MappingBase
+    public class RevitFamilyMapping : MappingBase
     {
         /// <summary>
         /// The Family name expected in Revit.
