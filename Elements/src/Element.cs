@@ -93,18 +93,18 @@ namespace Elements
         /// An optional dictionary of mappings.
         /// </summary>
         [JsonProperty("Mappings", Required = Required.Default)]
-        internal Dictionary<MappingContext, MappingBase> _mappings { get; set; } = null;
+        internal Dictionary<string, MappingBase> _mappings { get; set; } = null;
 
         /// <summary>
         /// The method used to set a mapping for a given context.
         /// </summary>
         /// <param name="context"></param>
         /// <param name="mapping"></param>
-        public void SetMapping(MappingContext context, MappingBase mapping)
+        public void SetMapping(string context, MappingBase mapping)
         {
             if (this._mappings == null)
             {
-                this._mappings = new Dictionary<MappingContext, MappingBase>();
+                this._mappings = new Dictionary<string, MappingBase>();
             }
             this._mappings[context] = mapping;
         }
@@ -114,7 +114,7 @@ namespace Elements
         /// </summary>
         /// <param name="context">The context of the mapping being requested.</param>
         /// <returns>The mapping if it exists, null if not.</returns>
-        public MappingBase GetMapping(MappingContext context)
+        public MappingBase GetMapping(string context)
         {
             if (this._mappings == null)
             {
@@ -133,7 +133,7 @@ namespace Elements
         /// <typeparam name="T">The Type of mapping expected.</typeparam>
         /// <param name="context">The context of the mapping being requested.</param>
         /// <returns></returns>
-        public T GetMapping<T>(MappingContext context) where T : MappingBase
+        public T GetMapping<T>(string context) where T : MappingBase
         {
             return this.GetMapping(context) as T;
         }

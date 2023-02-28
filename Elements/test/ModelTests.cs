@@ -14,6 +14,11 @@ using System.Threading.Tasks;
 
 namespace Elements.Tests
 {
+    public class TestMapping : MappingBase
+    {
+        public string MapProp = "test";
+    }
+
     public class ModelTests
     {
         private ITestOutputHelper _output;
@@ -155,20 +160,21 @@ namespace Elements.Tests
         public void SaveMappingDictionaryWithoutRepeatingMappings()
         {
             var cube = new Mass(Polygon.Rectangle(1, 1), 1, BuiltInMaterials.Mass, isElementDefinition: true);
-            var mapping = new RevitFamilyPointInstanceMapping();
+            var mapping = new TestMapping();
             var inst1 = cube.CreateInstance(new Transform(0, 0, 0), "inst 1");
-            inst1.SetMapping(MappingContext.Revit, mapping);
+            inst1.SetMapping("Revit", mapping);
             var inst2 = cube.CreateInstance(new Transform(0, 0, 0), "inst 2");
-            inst2.SetMapping(MappingContext.Revit, mapping);
+            inst2.SetMapping("Revit", mapping);
 
             var model = new Model(new List<Element> { inst1, inst2 });
             var json = model.ToJson(true);
-            var newModel = Model.FromJson(json);
+            var newModel = Model.FromJson(json, out var errors);
+            Assert.Empty(errors);
 
             //Check that only a single mapping was serialized.
-            var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.RevitFamilyPointInstanceMapping""");
+            var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.TestMapping""");
             Assert.Equal(1, m.Count);
-            Assert.Equal(1, newModel.AllElementsOfType<RevitFamilyPointInstanceMapping>().Count());
+            Assert.Equal(1, newModel.AllElementsOfType<TestMapping>().Count());
         }
 
         [Fact]
