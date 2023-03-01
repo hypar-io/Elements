@@ -5,6 +5,7 @@
 ### Added
 
 - `Extrude` Solid Operation supports an optional `Flipped` parameter to purposely turn its normals inside out.
+- `MappingBase` and first Revit mapping class to support mapping data for a Revit Converter.
 
 ## 1.4.0
 

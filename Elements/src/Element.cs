@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -88,5 +89,53 @@ namespace Elements
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// An optional dictionary of mappings.
+        /// </summary>
+        [JsonProperty("Mappings", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        internal Dictionary<string, MappingBase> Mappings { get; set; } = null;
+
+        /// <summary>
+        /// The method used to set a mapping for a given context.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="mapping"></param>
+        public void SetMapping(string context, MappingBase mapping)
+        {
+            if (this.Mappings == null)
+            {
+                this.Mappings = new Dictionary<string, MappingBase>();
+            }
+            this.Mappings[context] = mapping;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns>The mapping if it exists, null if not.</returns>
+        public MappingBase GetMapping(string context)
+        {
+            if (this.Mappings == null)
+            {
+                return null;
+            }
+            if (this.Mappings.ContainsKey(context))
+            {
+                return this.Mappings[context];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <typeparam name="T">The Type of mapping expected.</typeparam>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns></returns>
+        public T GetMapping<T>(string context) where T : MappingBase
+        {
+            return this.GetMapping(context) as T;
+        }
     }
 }
