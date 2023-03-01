@@ -446,7 +446,7 @@ namespace Elements
             // This explicit loop is because we have mappings marked as internal so it's elements won't be automatically serialized.
             if (e != null)
             {
-                foreach (var map in e._mappings ?? new Dictionary<string, MappingBase>())
+                foreach (var map in e.Mappings ?? new Dictionary<string, MappingBase>())
                 {
                     if (!Elements.ContainsKey(map.Value.Id))
                     { elements.Add(map.Value); }

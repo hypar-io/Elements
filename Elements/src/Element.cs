@@ -92,8 +92,8 @@ namespace Elements
         /// <summary>
         /// An optional dictionary of mappings.
         /// </summary>
-        [JsonProperty("Mappings", Required = Required.Default)]
-        internal Dictionary<string, MappingBase> _mappings { get; set; } = null;
+        [JsonProperty("Mappings", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        internal Dictionary<string, MappingBase> Mappings { get; set; } = null;
 
         /// <summary>
         /// The method used to set a mapping for a given context.
@@ -102,11 +102,11 @@ namespace Elements
         /// <param name="mapping"></param>
         public void SetMapping(string context, MappingBase mapping)
         {
-            if (this._mappings == null)
+            if (this.Mappings == null)
             {
-                this._mappings = new Dictionary<string, MappingBase>();
+                this.Mappings = new Dictionary<string, MappingBase>();
             }
-            this._mappings[context] = mapping;
+            this.Mappings[context] = mapping;
         }
 
         /// <summary>
@@ -116,13 +116,13 @@ namespace Elements
         /// <returns>The mapping if it exists, null if not.</returns>
         public MappingBase GetMapping(string context)
         {
-            if (this._mappings == null)
+            if (this.Mappings == null)
             {
                 return null;
             }
-            if (this._mappings.ContainsKey(context))
+            if (this.Mappings.ContainsKey(context))
             {
-                return this._mappings[context];
+                return this.Mappings[context];
             }
             return null;
         }

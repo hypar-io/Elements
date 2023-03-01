@@ -175,6 +175,10 @@ namespace Elements.Tests
             var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.TestMapping""");
             Assert.Equal(1, m.Count);
             Assert.Equal(1, newModel.AllElementsOfType<TestMapping>().Count());
+
+            // confirm that we only serialize the Mapping Property if it exists
+            m = System.Text.RegularExpressions.Regex.Matches(json, @"""Mappings"": null");
+            Assert.Equal(0, m.Count);
         }
 
         [Fact]
