@@ -541,7 +541,7 @@ namespace Elements.Geometry
         public Vector3 ProjectOnto(Vector3 a)
         {
             var b = this;
-            return (a.Dot(b) / Math.Pow(a.Length(), 2)) * a;
+            return (a.Dot(b) / a.LengthSquared()) * a;
         }
 
         /// <summary>
