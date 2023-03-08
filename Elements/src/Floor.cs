@@ -37,6 +37,43 @@ namespace Elements
         public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
+        /// The Level this floor belongs to.
+        /// </summary>
+        /// <value></value>
+        public Guid? Level { get; set; }
+
+        /// <summary>
+        /// Create a floor.
+        /// </summary>
+        /// <param name="profile">The perimeter of the floor.</param>
+        /// <param name="thickness">The thickness of the floor.</param>
+        /// <param name="level">The level this floor belongs to.</param>
+        /// <param name="transform">The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</param>
+        /// <param name="material">The floor's material.</param>
+        /// <param name="representation">The floor's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        /// <param name="id">The floor's id.</param>
+        /// <param name="name">The floor's name.</param>
+        public Floor(Profile profile,
+                     double thickness,
+                     Guid? level = null,
+                     Transform transform = null,
+                     Material material = null,
+                     Representation representation = null,
+                     bool isElementDefinition = false,
+                     Guid id = default,
+                     string name = null) : base(transform ?? new Transform(),
+                                                material ?? BuiltInMaterials.Concrete,
+                                                representation ?? new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
+                                                id != default ? id : Guid.NewGuid(),
+                                                name)
+        {
+            this.Level = level;
+            SetProperties(profile, thickness);
+        }
+
+        /// <summary>
         /// Create a floor.
         /// </summary>
         /// <param name="profile">The perimeter of the floor.</param>
