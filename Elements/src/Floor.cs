@@ -56,7 +56,7 @@ namespace Elements
         /// <param name="name">The floor's name.</param>
         public Floor(Profile profile,
                      double thickness,
-                     Guid? level = null,
+                     Guid? level,
                      Transform transform = null,
                      Material material = null,
                      Representation representation = null,
