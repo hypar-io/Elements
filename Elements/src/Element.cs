@@ -47,7 +47,7 @@ namespace Elements
         }
 
         /// <summary>A name.</summary>
-        [JsonProperty("Name", Required = Required.AllowNull)]
+        [JsonProperty("Name", Required = Required.Default)]
         public string Name
         {
             get { return _name; }
