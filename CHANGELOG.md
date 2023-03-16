@@ -7,6 +7,9 @@
 - `Extrude` Solid Operation supports an optional `Flipped` parameter to purposely turn its normals inside out.
 - `MappingBase` and first Revit mapping class to support mapping data for a Revit Converter.
 
+### Changed
+- Element deserialization no longer requires `Name` to be present — it can be omitted.
+
 ## 1.4.0
 
 ### Added
