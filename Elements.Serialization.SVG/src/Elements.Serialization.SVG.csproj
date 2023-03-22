@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Hypar.Elements.Serialization.SVG</AssemblyName>
     <PackageTitle>Hypar Elements Serialization SVG</PackageTitle>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,17 +16,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Svg.Skia" Version="0.6.0-preview2"/>
-    <PackageReference Include="SkiaSharp" Version="2.88.3"/>
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3"/>
+    <PackageReference Include="Svg.Skia" Version="0.6.0-preview2" />
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
   </ItemGroup>
 
-    <ItemGroup>
-    <None Include="libSkiaSharp.so" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  <ItemGroup>
+    <None Include="libSkiaSharp.so" Link="%(Filename)%(Extension)"
+      CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
