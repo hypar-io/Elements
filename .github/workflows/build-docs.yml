@@ -21,7 +21,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Setup docfx
         run: choco install docfx -y
       - name: Build docs
@@ -32,5 +32,5 @@ jobs:
       - name: Deploy Docs
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'docs'
-          message: 'Update documentation'
+          add: "docs"
+          message: "Update documentation"

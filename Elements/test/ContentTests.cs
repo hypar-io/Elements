@@ -130,7 +130,7 @@ namespace Elements.Tests
             model.ToGlTF($"./models/{nameof(InstanceContentElement)}.glb");
             var firstRun = sw.Elapsed.TotalSeconds;
             sw.Restart();
-            model.ToGlTF($"./models/{nameof(InstanceContentElement)}.gltf", false);
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}-2.glb");
             var secondRun = sw.Elapsed.TotalSeconds;
             Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }
