@@ -62,7 +62,7 @@ namespace Elements.Geometry.Solids
 
         /// <summary>Is the extrusion's profile reversed relative to its extrusion vector, resulting in inward-facing face normals?</summary>
         [JsonProperty("Reverse Winding")]
-        public bool FlipNormals
+        public bool ReverseWinding
         {
             get { return _reverseWinding; }
             set
