@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.0
+
+### Fixed
+- Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
+
 ## 1.5.0
 
 ### Added
