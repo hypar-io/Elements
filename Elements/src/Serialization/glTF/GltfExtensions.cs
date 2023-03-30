@@ -444,7 +444,7 @@ namespace Elements.Serialization.glTF
                 // to align with OpenGL convention.
                 // 0,1  1,1
                 // 0,0  1,0
-                using (var texImage = SixLabors.ImageSharp.Image.Load(path))
+                using (var texImage = SixLabors.ImageSharp.Image.Load(path, new PngDecoder()))
                 {
                     PngMetadata meta = texImage.Metadata.GetPngMetadata();
                     textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
