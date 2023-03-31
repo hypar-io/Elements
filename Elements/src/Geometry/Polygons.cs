@@ -29,13 +29,16 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
+        /// <param name="floor">Whether to floor the resultant rectangle vertices.</param>
         /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
-        public static Polygon Rectangle(Vector3 min, Vector3 max)
+        public static Polygon Rectangle(Vector3 min, Vector3 max, bool floor = true)
         {
+            var Z = floor == true ? min.Z : max.Z;
+
             var a = min;
-            var b = new Vector3(max.X, min.Y);
-            var c = max;
-            var d = new Vector3(min.X, max.Y);
+            var b = new Vector3(max.X, min.Y, Z);
+            var c = new Vector3(max.X, max.Y, Z);
+            var d = new Vector3(min.X, max.Y, min.Z);
 
             return new Polygon(true, a, b, c, d);
         }
