@@ -36,7 +36,7 @@ namespace Elements
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
-        public Curve Curve { get; set; }
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// Radius of the gridline head.
@@ -76,7 +76,7 @@ namespace Elements
             var start = GetPointAndDirectionAt(0);
             var end = GetPointAndDirectionAt(1);
 
-            var circle = new Circle(Radius);
+            var circle = new Arc(Radius);
             var circleVertexTransform = GetCircleTransform();
 
             renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));

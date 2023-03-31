@@ -34,7 +34,7 @@ namespace Elements.Serialization.IFC
                 {
                     var cl = new Line(Vector3.Origin,
                         solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(cl.Transformed(solidTransform),
+                    var result = new Beam((Line)cl.Transformed(solidTransform),
                                           new Profile(polygon),
                                           0,
                                           0,

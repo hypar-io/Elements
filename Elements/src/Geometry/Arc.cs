@@ -11,26 +11,51 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ArcTests.cs?name=example)]
     /// </example>
-    public partial class Arc : Curve, IEquatable<Arc>
+    public partial class Arc : TrimmedCurve<Circle>, IEquatable<Arc>
     {
-        /// <summary>The center of the arc.</summary>
-        [JsonProperty("Center", Required = Required.AllowNull)]
-        public Vector3 Center { get; set; }
-
-        /// <summary>The radius of the arc.</summary>
-        [JsonProperty("Radius", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
-        public double Radius { get; set; }
-
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [JsonProperty("StartAngle", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double StartAngle { get; set; }
+        public double StartAngle { get; protected set; }
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
         [JsonProperty("EndAngle", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double EndAngle { get; set; }
+        public double EndAngle { get; protected set; }
+
+        /// <summary>
+        /// The radius of the arc.
+        /// </summary>
+        public double Radius
+        {
+            get 
+            {
+                return this.BasisCurve.Radius;
+            }
+        }
+
+        /// <summary>
+        /// The center of the arc.
+        /// </summary>
+        public Vector3 Center
+        {
+            get
+            {
+                return this.BasisCurve.Transform.Origin;
+            }
+        }
+
+        /// <summary>
+        /// Create an circular arc.
+        /// </summary>
+        public Arc(double radius)
+        {
+            this.BasisCurve = new Circle();
+            this.StartAngle = 0;
+            this.EndAngle = 360;
+            this.StartParameter = Units.DegreesToRadians(this.StartAngle);
+            this.EndParameter = Units.DegreesToRadians(this.EndAngle);
+        }
 
         /// <summary>
         /// Create an arc.
@@ -59,11 +84,12 @@ namespace Elements.Geometry
                     throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
                 }
             }
-
-            this.Center = @center;
-            this.Radius = @radius;
+            
+            this.BasisCurve = new Circle(@center, @radius);
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
+            this.StartParameter = Units.DegreesToRadians(@startAngle);
+            this.EndParameter = Units.DegreesToRadians(@endAngle);
         }
 
         /// <summary>
@@ -75,10 +101,23 @@ namespace Elements.Geometry
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
-            this.Center = Vector3.Origin;
-            this.Radius = radius;
+            this.BasisCurve = new Circle(radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
+            this.StartParameter = Units.DegreesToRadians(@startAngle);
+            this.EndParameter = Units.DegreesToRadians(@endAngle);
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// </summary>
+        public Arc(Circle basisCurve, double startParameter, double endParameter)
+        {
+            this.BasisCurve = basisCurve;
+            this.StartParameter = startParameter;
+            this.EndParameter = endParameter;
+            this.StartAngle = Units.RadiansToDegrees(this.StartParameter);
+            this.EndAngle = Units.RadiansToDegrees(this.EndParameter);
         }
 
         /// <summary>
@@ -86,14 +125,14 @@ namespace Elements.Geometry
         /// </summary>
         public override double Length()
         {
-            return 2 * Math.PI * this.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
+            return 2 * Math.PI * this.BasisCurve.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
         }
 
         /// <summary>
         /// The start point of the arc.
         /// </summary>
         [JsonIgnore]
-        public Vector3 Start
+        public override Vector3 Start
         {
             get { return PointAt(0.0); }
         }
@@ -102,41 +141,9 @@ namespace Elements.Geometry
         /// The end point of the arc.
         /// </summary>
         [JsonIgnore]
-        public Vector3 End
+        public override Vector3 End
         {
             get { return PointAt(1.0); }
-        }
-
-        /// <summary>
-        /// Return the point at parameter u on the arc.
-        /// </summary>
-        /// <param name="u">A parameter between 0.0 and 1.0.</param>
-        /// <returns>A Vector3 representing the point along the arc.</returns>
-        public override Vector3 PointAt(double u)
-        {
-            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
-            {
-                throw new ArgumentOutOfRangeException($"The value provided for parameter u, {u}, must be between 0.0 and 1.0.");
-            }
-
-            var angle = this.StartAngle + (this.EndAngle - this.StartAngle) * u;
-            var theta = DegToRad(angle);
-            var x = this.Center.X + this.Radius * Math.Cos(theta);
-            var y = this.Center.Y + this.Radius * Math.Sin(theta);
-            return new Vector3(x, y);
-        }
-
-        /// <summary>
-        /// Return transform on the arc at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
-        /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u)
-        {
-            var p = PointAt(u);
-            var x = (p - this.Center).Unitized();
-            var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y));
         }
 
         /// <summary>
@@ -144,7 +151,7 @@ namespace Elements.Geometry
         /// </summary>
         public Arc Reversed()
         {
-            return new Arc(this.Center, this.Radius, this.EndAngle, this.StartAngle);
+            return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, this.EndAngle, this.StartAngle);
         }
 
         private double DegToRad(double degrees)
@@ -158,9 +165,9 @@ namespace Elements.Geometry
         /// <returns>A bounding box for this arc.</returns>
         public override BBox3 Bounds()
         {
-            var delta = new Vector3(this.Radius, this.Radius, this.Radius);
-            var min = new Vector3(this.Center - delta);
-            var max = new Vector3(this.Center + delta);
+            var delta = new Vector3(this.BasisCurve.Radius, this.BasisCurve.Radius, this.BasisCurve.Radius);
+            var min = new Vector3(this.BasisCurve.Transform.Origin - delta);
+            var max = new Vector3(this.BasisCurve.Transform.Origin + delta);
             return new BBox3(min, max);
         }
 
@@ -170,7 +177,7 @@ namespace Elements.Geometry
         /// <returns>The plane in which the arc lies.</returns>
         public Plane Plane()
         {
-            return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.Center);
+            return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.BasisCurve.Transform.Origin);
         }
 
         internal override double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
@@ -190,7 +197,7 @@ namespace Elements.Geometry
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
-            var r = this.Radius;
+            var r = this.BasisCurve.Radius;
             var two_r = 2 * r;
             var d = Math.Min(MinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
@@ -230,7 +237,7 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            return this.Center.Equals(other.Center) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
+            return this.BasisCurve.Transform.Origin.Equals(other.BasisCurve.Transform.Origin) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
         }
 
         /// <summary>
@@ -245,7 +252,7 @@ namespace Elements.Geometry
             {
                 newStart = newStart - 360.0;
             }
-            return new Arc(this.Center, this.Radius, newStart, newEnd);
+            return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, newStart, newEnd);
         }
 
         /// <summary>
@@ -263,7 +270,33 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Arc TransformedArc(Transform transform)
         {
-            return new Arc(transform.OfPoint(Center), Radius, StartAngle, EndAngle);
+            return new Arc(transform.OfPoint(this.BasisCurve.Transform.Origin), this.BasisCurve.Radius, StartAngle, EndAngle);
+        }
+        
+        /// <summary>
+        /// Get the point at parameter u.
+        /// </summary>
+        /// <returns>The point at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
+        public override Vector3 PointAt(double u)
+        {
+            if(!Units.IsParameterBetween(u, StartParameter, EndParameter))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
+            }
+            return this.BasisCurve.PointAt(u);
+        }
+
+        /// <summary>
+        /// Get the transform at parameter u.
+        /// </summary>
+        /// <returns>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
+        public override Transform TransformAt(double u)
+        {
+            if(!Units.IsParameterBetween(u, StartParameter, EndParameter))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
+            }
+            return this.BasisCurve.TransformAt(u);
         }
     }
 }

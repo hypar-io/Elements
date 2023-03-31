@@ -1,7 +1,6 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
-using Elements.Validators;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
@@ -2169,7 +2168,7 @@ namespace Elements.Geometry
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
         public Contour Fillet(double radius)
         {
-            var curves = new List<Curve>();
+            var curves = new List<BoundedCurve>();
             Vector3 contourStart = new Vector3();
             Vector3 contourEnd = new Vector3();
 

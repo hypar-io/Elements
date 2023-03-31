@@ -1,26 +1,66 @@
+using System;
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An arc with a start angle of 0 (+X) and 
-    /// an end angle of 360.0.
+    /// An circle with a start angle of 0 (+X) and 
+    /// an end angle of 360.0. 
+    /// Parameterization of the curve is 0 -> 2PI.
     /// </summary>
-    public class Circle : Arc
+    public class Circle : Curve, IConic
     {
+        /// <summary>The center of the circle.</summary>
+        [JsonProperty("Center", Required = Required.AllowNull)]
+        public Vector3 Center
+        {
+            get
+            {
+                return this.Transform.Origin;
+            }
+        }
+
+        /// <summary>The radius of the circle.</summary>
+        [JsonProperty("Radius", Required = Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Radius { get; protected set; }
+        
+        /// <summary>
+        /// The coordinate system of the plane containing the arc.
+        /// </summary>
+        public Transform Transform { get; protected set; }
+
         /// <summary>
         /// Construct a circle.
         /// </summary>
         /// <param name="center">The center of the circle.</param>
         /// <param name="radius">The radius of the circle.</param>
         [JsonConstructor]
-        public Circle(Vector3 center, double radius = 1.0) : base(center, radius, 0.0, 360.0) { }
+        public Circle(Vector3 center, double radius = 1.0)
+        {
+            this.Radius = radius;
+            this.Transform = new Transform(center);
+        }
 
         /// <summary>
         /// Construct a circle.
         /// </summary>
         /// <param name="radius">The radius of the circle.</param>
-        public Circle(double radius = 1.0) : base(Vector3.Origin, radius, 0.0, 360.0) { }
+        public Circle(double radius = 1.0)
+        {
+            this.Radius = 1.0;
+            this.Transform = new Transform();
+        }
+
+        /// <summary>
+        /// Construct a circle.
+        /// </summary>
+        public Circle(Transform transform, double radius = 1.0)
+        {
+            this.Transform = transform;
+            this.Radius = radius;
+        }
 
         /// <summary>
         /// Create a polygon through a set of points along the arc.
@@ -35,6 +75,50 @@ namespace Elements.Geometry
                 pts[i] = this.PointAt((double)i / (double)divisions);
             }
             return new Polygon(pts, true);
+        }
+
+        /// <summary>
+        /// Convert a circle to a circular arc.
+        /// </summary>
+        public static implicit operator Arc(Circle c) => new Arc(c, 0, 360);
+
+        /// <summary>
+        /// Convert a bounded curve to a model curve.
+        /// </summary>
+        /// <param name="c">The bounded curve to convert.</param>
+        public static implicit operator ModelCurve(Circle c) => new ModelCurve(c);
+
+        /// <summary>
+        /// Return the point at parameter u on the arc.
+        /// </summary>
+        /// <param name="u">A parameter on the arc.</param>
+        /// <returns>A Vector3 representing the point along the arc.</returns>
+        public override Vector3 PointAt(double u)
+        {
+            var x = this.Radius * Math.Cos(u);
+            var y = this.Radius * Math.Sin(u);
+            return Transform.OfPoint(new Vector3(x, y));
+        }
+
+        /// <summary>
+        /// Return transform on the arc at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the arc.</param>
+        /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
+        public override Transform TransformAt(double u)
+        {
+            var p = PointAt(u);
+            var x = (p - this.Transform.Origin).Unitized();
+            var y = Vector3.ZAxis;
+            return new Transform(p, x, x.Cross(y));
+        }
+
+        /// <summary>
+        /// Return a new circle transformed by the provided transform.
+        /// </summary>
+        public override Curve Transformed(Transform transform)
+        {
+            return new Circle(transform.Concatenated(this.Transform), this.Radius);
         }
     }
 }

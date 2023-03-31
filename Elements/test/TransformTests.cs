@@ -182,7 +182,7 @@ namespace Elements.Tests
         {
             this.Name = "AllTransformsRunInTheSameDirection";
 
-            var curves = new List<Curve>();
+            var curves = new List<BoundedCurve>();
 
             var line = new Line(Vector3.Origin, new Vector3(1, 2, 5));
             curves.Add(line);
@@ -232,7 +232,7 @@ namespace Elements.Tests
             var beam = new Beam(centerLine, Polygon.Rectangle(0.1, 0.1));
             this.Model.AddElement(beam);
 
-            var centerLineRev = centerLine.Reversed().Transformed(new Transform(new Vector3(2, 0, 0)));
+            var centerLineRev = centerLine.Reversed().TransformedLine(new Transform(new Vector3(2, 0, 0)));
             var downT = centerLineRev.TransformAt(0);
             this.Model.AddElements(downT.ToModelCurves());
 

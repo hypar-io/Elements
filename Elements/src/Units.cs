@@ -356,5 +356,11 @@ namespace Elements
             [EnumMember(Value = "volume")]
             Volume,
         }
+    
+        internal static bool IsParameterBetween(double a, double min, double max)
+        {
+            return min < max ? a >= min && a <= max:
+                               a <= min && a >= max;
+        }
     }
 }

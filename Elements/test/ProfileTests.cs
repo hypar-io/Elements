@@ -281,7 +281,7 @@ namespace Elements.Tests
             var frames = outerL.Frames(0, 0);
 
             Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
-            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
+            var star = Polygon.Star(5, 3, 5).TransformedPolygon(new Transform(new Vector3(10, 10)));
             var starBeam = new Beam(star, l);
             this.Model.AddElement(starBeam);
 

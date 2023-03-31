@@ -30,7 +30,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
     /// </example>
-    public class Bezier : Curve
+    public class Bezier : BoundedCurve
     {
         private int _samples = 50;
 

@@ -1829,7 +1829,7 @@ namespace Elements.Geometry.Tests
             Assert.True(rect.Contains(t.OfPoint(v1), out _));
             Model.AddElement(new ModelCurve(rect));
             var arc = new Circle(v1, 0.1);
-            Model.AddElement(new ModelCurve(arc.ToPolygon().Transformed(t)));
+            Model.AddElement(new ModelCurve(arc.ToPolygon().TransformedPolygon(t)));
 
             var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             Model.AddElement(new ModelCurve(star));

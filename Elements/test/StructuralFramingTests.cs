@@ -69,7 +69,7 @@ namespace Elements.Tests
         {
             this.Name = testName;
 
-            Curve cl = null;
+            BoundedCurve cl = null;
             switch (beamType)
             {
                 case BeamType.Line:
@@ -99,7 +99,7 @@ namespace Elements.Tests
         [Fact]
         public void NonLinearVolumeException()
         {
-            Curve cl = ModelTest.TestArc;
+            var cl = ModelTest.TestArc;
             var beam = new Beam(cl, this._testProfile, material: BuiltInMaterials.Steel);
             Assert.Throws<InvalidOperationException>(() => beam.Volume());
         }

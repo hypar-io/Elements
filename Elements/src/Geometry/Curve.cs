@@ -17,12 +17,6 @@ namespace Elements.Geometry
         public static double MinimumChordLength = 0.1;
 
         /// <summary>
-        /// Get the bounding box for this curve.
-        /// </summary>
-        /// <returns>A bounding box for this curve.</returns>
-        public abstract BBox3 Bounds();
-
-        /// <summary>
         /// Get a collection of transforms which represent frames along this curve.
         /// </summary>
         /// <param name="startSetback">The offset parameter from the start of the curve.</param>
@@ -47,11 +41,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the length of the curve.
-        /// </summary>
-        public abstract double Length();
-
-        /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
         /// <param name="u"></param>
@@ -65,7 +54,6 @@ namespace Elements.Geometry
         /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
         /// <returns>A transform.</returns>
         public abstract Transform TransformAt(double u);
-
 
         /// <summary>
         /// Create a polyline through a set of points along the curve.
@@ -88,25 +76,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices used to render the curve.
-        /// </summary>
-        internal abstract IList<Vector3> RenderVertices();
-
-        /// <summary>
         /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
-
-        /// <summary>
-        /// Implicitly convert a curve to a ModelCurve Element.
-        /// </summary>
-        /// <param name="c">The curve to convert.</param>
-        public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
-
-        internal GraphicsBuffers ToGraphicsBuffers()
-        {
-            return this.RenderVertices().ToGraphicsBuffers();
-        }
     }
 }

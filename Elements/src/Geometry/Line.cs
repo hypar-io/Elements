@@ -8,20 +8,26 @@ using Elements.Spatial;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A linear curve between two points.
+    /// A line segment.
+    /// Parameterization of the line is  0 (Start) -> length (End)
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
-    public class Line : Curve, IEquatable<Line>
+    /// TODO: Rename this class to LineSegment
+    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
     {
-        /// <summary>The start of the line.</summary>
-        [JsonProperty("Start", Required = Required.AllowNull)]
-        public Vector3 Start { get; set; }
-
-        /// <summary>The end of the line.</summary>
-        [JsonProperty("End", Required = Required.AllowNull)]
-        public Vector3 End { get; set; }
+        /// <summary>
+        /// Create a line of one unit length along the X axis.
+        /// </summary>
+        public Line()
+        {
+            this.Start = Vector3.Origin;
+            this.End = new Vector3(1, 0, 0);
+            this.StartParameter = 0;
+            this.EndParameter = 1;
+            this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
+        }
 
         /// <summary>
         /// Create a line.
@@ -41,23 +47,9 @@ namespace Elements.Geometry
 
             this.Start = @start;
             this.End = @end;
-        }
-
-        /// <summary>
-        /// Calculate the length of the line.
-        /// </summary>
-        public override double Length()
-        {
-            return this.Start.DistanceTo(this.End);
-        }
-
-        /// <summary>
-        /// Create a line of one unit length along the X axis.
-        /// </summary>
-        public Line()
-        {
-            this.Start = Vector3.Origin;
-            this.End = new Vector3(1, 0, 0);
+            this.StartParameter = 0;
+            this.EndParameter = this.Start.DistanceTo(this.End);
+            this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
         /// <summary>
@@ -70,6 +62,32 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
+            this.StartParameter = 0;
+            this.EndParameter = @start.DistanceTo(this.End);
+            this.BasisCurve = new InfiniteLine(this.Start, direction);
+        }
+
+        /// <summary>
+        /// Construct a line from a trimmed segment of an infinite line.
+        /// </summary>
+        /// <param name="basis">The infinite line from which this segment is trimmed.</param>
+        /// <param name="startParameter">The start parameter of the line segment.</param>
+        /// <param name="endParameter">The end parameter of the line segment.</param>
+        public Line(InfiniteLine basis, double startParameter, double endParameter)
+        {
+            this.BasisCurve = basis;
+            this.StartParameter = startParameter;
+            this.EndParameter = endParameter;
+            this.Start = this.BasisCurve.Origin + this.StartParameter * this.BasisCurve.Direction;
+            this.End = this.BasisCurve.Origin + this.EndParameter * this.BasisCurve.Direction;
+        }
+
+        /// <summary>
+        /// Calculate the length of the line.
+        /// </summary>
+        public override double Length()
+        {
+            return this.Start.DistanceTo(this.End);
         }
 
         /// <summary>
@@ -80,7 +98,11 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.Start - this.End).Unitized());
+            if(!Units.IsParameterBetween(u, this.StartParameter, this.EndParameter))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
+            }
+            return this.BasisCurve.TransformAt(u);
         }
 
         /// <summary>
@@ -90,16 +112,15 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
+            if(!Units.IsParameterBetween(u, this.StartParameter, this.EndParameter))
             {
-                throw new Exception("The parameter t must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
-            var offset = this.Length() * u;
-            return this.Start + offset * this.Direction();
+            return this.BasisCurve.PointAt(u);
         }
 
         /// <summary>
-        /// Construct a transformed copy of this Curve.
+        /// Create new line transformed by transform.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
@@ -109,7 +130,7 @@ namespace Elements.Geometry
                 return this;
             }
 
-            return TransformedLine(transform);
+            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
         /// <summary>

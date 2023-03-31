@@ -13,14 +13,14 @@ namespace Elements.Geometry
     /// </example>
     public class Contour : IEnumerable<Curve>
     {
-        private List<Curve> _curves = new List<Curve>();
+        private List<BoundedCurve> _curves = new List<BoundedCurve>();
 
         /// <summary>
         /// Construct a contour.
         /// </summary>
         /// <param name="curves">A list of curves to create the contour.</param>
         /// <exception>Throws an ArgumentException when the provided curves are not contiguous.</exception>
-        public Contour(List<Curve> curves)
+        public Contour(List<BoundedCurve> curves)
         {
             for (var i = 0; i <= curves.Count - 1; i++)
             {

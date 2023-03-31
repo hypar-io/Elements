@@ -14,7 +14,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : Curve, IEquatable<Polyline>
+    public class Polyline : BoundedCurve, IEquatable<Polyline>
     {
         /// <summary>
         /// A bounding box created once during the polyline's construction.
@@ -108,7 +108,7 @@ namespace Elements.Geometry
         /// The start of the polyline.
         /// </summary>
         [JsonIgnore]
-        public Vector3 Start
+        public override Vector3 Start
         {
             get { return this.Vertices[0]; }
         }
@@ -117,7 +117,7 @@ namespace Elements.Geometry
         /// The end of the polyline.
         /// </summary>
         [JsonIgnore]
-        public Vector3 End
+        public override Vector3 End
         {
             get { return this.Vertices[this.Vertices.Count - 1]; }
         }

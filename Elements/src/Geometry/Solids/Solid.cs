@@ -110,7 +110,7 @@ namespace Elements.Geometry.Solids
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
-                                                ICurve curve,
+                                                IBoundedCurve curve,
                                                 double startSetback = 0,
                                                 double endSetback = 0,
                                                 double profileRotation = 0)
