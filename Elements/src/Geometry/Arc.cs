@@ -147,6 +147,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The mid point of the line.
+        /// </summary>
+        public override Vector3 Mid()
+        {
+            return PointAt(StartParameter + (EndParameter - StartParameter)/2);
+        }
+
+        /// <summary>
         /// Get an arc which is the reverse of this Arc.
         /// </summary>
         public Arc Reversed()

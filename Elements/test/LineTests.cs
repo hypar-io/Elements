@@ -50,7 +50,7 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(1, 0);
             var l = new Line(a, b);
             Assert.Equal(1.0, l.Length());
-            Assert.Equal(new Vector3(0.5, 0), l.Midpoint());
+            Assert.Equal(new Vector3(0.5, 0), l.Mid());
             Assert.Equal(a, l.PointAt(-1e-10));
         }
 

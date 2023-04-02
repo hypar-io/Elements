@@ -15,6 +15,11 @@ namespace Elements.Geometry.Interfaces
         /// The end of the curve.
         /// </summary>
         Vector3 End { get; }
+
+        /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        Vector3 Mid();
         
         /// <summary>
         /// Calculate the length of the curve.

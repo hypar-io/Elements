@@ -577,7 +577,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The mid point of the line.
         /// </summary>
-        public Vector3 Midpoint()
+        public override Vector3 Mid()
         {
             return Start.Average(End);
         }
@@ -602,7 +602,7 @@ namespace Elements.Geometry
             var divs = (int)(localLength / l);
             var span = divs * l;
             var halfSpan = span / 2;
-            var mid = this.Midpoint();
+            var mid = this.Mid();
             var dir = this.Direction();
             var start = mid - dir * halfSpan;
             var end = mid + dir * halfSpan;
@@ -740,7 +740,7 @@ namespace Elements.Geometry
         {
             // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
-            var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
+            var testLine = new Line(this.Start + this.BasisCurve.Direction * 0.001, this.End - this.BasisCurve.Direction * 0.001);
             var segments = otherLines;
             var intersectionsForLine = new List<Vector3>();
             foreach (var segment in segments)
@@ -1083,8 +1083,8 @@ namespace Elements.Geometry
 
             // Construct new vectors that both
             // point away from the projected intersection
-            var newD1 = (this.Midpoint() - result).Unitized();
-            var newD2 = (target.Midpoint() - result).Unitized();
+            var newD1 = (this.Mid() - result).Unitized();
+            var newD2 = (target.Mid() - result).Unitized();
 
             var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
             var halfTheta = theta / 2.0;

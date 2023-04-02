@@ -29,6 +29,14 @@ namespace Elements.Geometry
         /// </summary>
         public abstract double Length();
 
+        /// </summary>
+        /// The mid point of the curve.
+        /// </summary>
+        public virtual Vector3 Mid()
+        {
+            return PointAt(0.5);
+        }
+
         /// <summary>
         /// A list of vertices used to render the curve.
         /// </summary>

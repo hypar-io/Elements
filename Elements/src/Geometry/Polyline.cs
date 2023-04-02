@@ -1141,7 +1141,7 @@ namespace Elements.Geometry
             for (var i = 0; i < intersections.Count - 1; i++)
             {
                 var subsegment = GetSubsegment(intersections[i], intersections[i + 1]);
-                if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
+                if (polygon.Contains(subsegment.Mid(), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
                 }

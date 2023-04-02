@@ -661,10 +661,10 @@ namespace Elements.Geometry.Tests
             var d = new Vector3(0, 1);
             var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
-            Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
+            Assert.Equal(new Vector3(1.0, 1.0), p.Mid());
 
             var r = Polygon.Rectangle(2, 2);
-            Assert.Equal(new Vector3(1, 1, 0), r.PointAt(0.5));
+            Assert.Equal(new Vector3(1, 1, 0), r.Mid());
         }
 
         [Fact]
