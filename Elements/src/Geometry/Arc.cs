@@ -177,7 +177,7 @@ namespace Elements.Geometry
         /// <returns>The plane in which the arc lies.</returns>
         public Plane Plane()
         {
-            return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.BasisCurve.Transform.Origin);
+            return BasisCurve.Transform.XY();
         }
 
         internal override double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
@@ -193,7 +193,7 @@ namespace Elements.Geometry
             // Parameter calculations.
             var angleSpan = this.EndAngle - this.StartAngle;
             var partialAngleSpan = Math.Abs(angleSpan - angleSpan * startSetback - angleSpan * endSetback);
-            var parameterSpan = 1.0 - 1.0 * startSetback - 1.0 * endSetback;
+            var parameterSpan = EndParameter - StartParameter - startSetback - endSetback;
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
@@ -206,7 +206,7 @@ namespace Elements.Geometry
             var parameters = new double[div + 1];
             for (var i = 0; i <= div; i++)
             {
-                var u = startSetback + i * (parameterSpan / div);
+                var u = StartParameter + startSetback + i * (parameterSpan / div);
                 parameters[i] = u;
             }
             return parameters;
