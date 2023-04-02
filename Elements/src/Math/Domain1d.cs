@@ -17,9 +17,17 @@ namespace Elements
         /// Returns true if pos is within the domain (exclusive of its ends)
         /// </summary>
         /// <param name="value">The value to test</param>
+        /// <param name="includeEnds"></param>
         /// <returns>True if the value is within the domain</returns>
-        internal bool Includes(double value)
+        internal bool Includes(double value, bool includeEnds = false)
         {
+            if(includeEnds)
+            {
+                if(Min.ApproximatelyEquals(value) || Max.ApproximatelyEquals(value))
+                {
+                    return true;
+                }
+            }
             if (IsIncreasing())
             {
                 return value < Max && value > Min;

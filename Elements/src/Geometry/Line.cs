@@ -24,8 +24,7 @@ namespace Elements.Geometry
         {
             this.Start = Vector3.Origin;
             this.End = new Vector3(1, 0, 0);
-            this.StartParameter = 0;
-            this.EndParameter = 1;
+            this.Domain = new Domain1d(0,1);
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -47,8 +46,7 @@ namespace Elements.Geometry
 
             this.Start = @start;
             this.End = @end;
-            this.StartParameter = 0;
-            this.EndParameter = this.Start.DistanceTo(this.End);
+            this.Domain = new Domain1d(0, this.Start.DistanceTo(this.End));
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -62,8 +60,7 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
-            this.StartParameter = 0;
-            this.EndParameter = @start.DistanceTo(this.End);
+            this.Domain = new Domain1d(0,@start.DistanceTo(this.End));
             this.BasisCurve = new InfiniteLine(this.Start, direction);
         }
 
@@ -76,10 +73,9 @@ namespace Elements.Geometry
         public Line(InfiniteLine basis, double startParameter, double endParameter)
         {
             this.BasisCurve = basis;
-            this.StartParameter = startParameter;
-            this.EndParameter = endParameter;
-            this.Start = this.BasisCurve.Origin + this.StartParameter * this.BasisCurve.Direction;
-            this.End = this.BasisCurve.Origin + this.EndParameter * this.BasisCurve.Direction;
+            this.Domain = new Domain1d(startParameter, endParameter);
+            this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
+            this.End = this.BasisCurve.Origin + this.Domain.Max * this.BasisCurve.Direction;
         }
 
         /// <summary>
@@ -98,7 +94,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, this.StartParameter, this.EndParameter))
+            if(!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -112,7 +108,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, this.StartParameter, this.EndParameter))
+            if(!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }

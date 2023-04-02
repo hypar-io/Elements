@@ -4,16 +4,11 @@ namespace Elements.Geometry.Interfaces
     /// A bounded curve which is a segment of basis curve between a start and end parameter.
     /// </summary>
     public interface ITrimmedCurve<TBasis> where TBasis: ICurve
-    {
+    {   
         /// <summary>
-        /// The end parameter of the trim.
+        /// The domain of the trim.
         /// </summary>
-        double EndParameter { get; }
-
-        /// <summary>
-        /// The start parameter of the trim.
-        /// </summary>
-        double StartParameter { get; }
+        Domain1d Domain { get; }
 
         /// <summary>
         /// The basis curve for this trimmed curve.

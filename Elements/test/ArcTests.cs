@@ -53,15 +53,15 @@ namespace Hypar.Tests
         {
             var arc = new Arc(Vector3.Origin, 5.0, 0.0, 90.0);
             Assert.Equal(new Vector3(0, 5, 0), arc.End);
-            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.EndParameter));
-            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt((arc.EndParameter - arc.StartParameter)/2));
-            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 2), 5 * Math.Sin(Math.PI / 2), 0), arc.PointAt(arc.EndParameter));
+            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.Domain.Max));
+            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt(arc.Domain.Length/2));
+            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 2), 5 * Math.Sin(Math.PI / 2), 0), arc.PointAt(arc.Domain.Max));
 
             arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
-            Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(arc.EndParameter));
-            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt((arc.EndParameter - arc.StartParameter)/2));
-            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.StartParameter));
-            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.StartParameter + -1e-15));
+            Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(arc.Domain.Max));
+            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.Domain.Length/2));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.Domain.Min));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.Domain.Min + -1e-15));
         }
 
         [Fact]

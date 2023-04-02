@@ -53,8 +53,7 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle();
             this.StartAngle = 0;
             this.EndAngle = 360;
-            this.StartParameter = Units.DegreesToRadians(this.StartAngle);
-            this.EndParameter = Units.DegreesToRadians(this.EndAngle);
+            this.Domain = new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
         }
 
         /// <summary>
@@ -88,8 +87,7 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle(@center, @radius);
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
-            this.StartParameter = Units.DegreesToRadians(@startAngle);
-            this.EndParameter = Units.DegreesToRadians(@endAngle);
+            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         /// <summary>
@@ -104,8 +102,7 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle(radius); 
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
-            this.StartParameter = Units.DegreesToRadians(@startAngle);
-            this.EndParameter = Units.DegreesToRadians(@endAngle);
+            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         /// <summary>
@@ -114,10 +111,9 @@ namespace Elements.Geometry
         public Arc(Circle basisCurve, double startParameter, double endParameter)
         {
             this.BasisCurve = basisCurve;
-            this.StartParameter = startParameter;
-            this.EndParameter = endParameter;
-            this.StartAngle = Units.RadiansToDegrees(this.StartParameter);
-            this.EndAngle = Units.RadiansToDegrees(this.EndParameter);
+            this.Domain = new Domain1d(startParameter, endParameter);
+            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
+            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
         }
 
         /// <summary>
@@ -134,7 +130,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public override Vector3 Start
         {
-            get { return PointAt(StartParameter); }
+            get { return PointAt(this.Domain.Min); }
         }
 
         /// <summary>
@@ -143,7 +139,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public override Vector3 End
         {
-            get { return PointAt(EndParameter); }
+            get { return PointAt(this.Domain.Max); }
         }
 
         /// <summary>
@@ -151,7 +147,7 @@ namespace Elements.Geometry
         /// </summary>
         public override Vector3 Mid()
         {
-            return PointAt(StartParameter + (EndParameter - StartParameter)/2);
+            return PointAt(this.Domain.Min + this.Domain.Length/2);
         }
 
         /// <summary>
@@ -196,7 +192,7 @@ namespace Elements.Geometry
             // Parameter calculations.
             var angleSpan = this.EndAngle - this.StartAngle;
             var partialAngleSpan = Math.Abs(angleSpan - angleSpan * startSetback - angleSpan * endSetback);
-            var parameterSpan = EndParameter - StartParameter - startSetback - endSetback;
+            var parameterSpan = this.Domain.Length - startSetback - endSetback;
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
@@ -209,7 +205,7 @@ namespace Elements.Geometry
             var parameters = new double[div + 1];
             for (var i = 0; i <= div; i++)
             {
-                var u = StartParameter + startSetback + i * (parameterSpan / div);
+                var u = this.Domain.Min + startSetback + i * (parameterSpan / div);
                 parameters[i] = u;
             }
             return parameters;
@@ -282,7 +278,7 @@ namespace Elements.Geometry
         /// <returns>The point at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, StartParameter, EndParameter))
+            if(!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -295,7 +291,7 @@ namespace Elements.Geometry
         /// <returns>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, StartParameter, EndParameter))
+            if(!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -310,8 +306,8 @@ namespace Elements.Geometry
         public override Polyline ToPolyline(int divisions = 10)
         {
             var pts = new List<Vector3>(divisions + 1);
-            var step = (EndParameter - StartParameter)/divisions;
-            for (var t = StartParameter; t < EndParameter; t += step)
+            var step = this.Domain.Length/divisions;
+            for (var t = this.Domain.Min; t < this.Domain.Max; t += step)
             {
                 pts.Add(PointAt(t));
             }
@@ -321,7 +317,7 @@ namespace Elements.Geometry
             // cause small imprecision which accumulates to make
             // the final parameter slightly more/less than the actual
             // end parameter.
-            pts.Add(PointAt(EndParameter));
+            pts.Add(PointAt(this.Domain.Max));
             return new Polyline(pts);
         }
     }

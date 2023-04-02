@@ -15,15 +15,9 @@ namespace Elements.Geometry
         public TBasis BasisCurve { get; protected set; }
         
         /// <summary>
-        /// The end parameter of the trim.
+        /// The domain of the trim.
         /// </summary>
         [JsonIgnore]
-        public double EndParameter { get; protected set; }
-
-        /// <summary>
-        /// The start parameter of the trim.
-        /// </summary>
-        [JsonIgnore]
-        public double StartParameter { get; protected set; }
+        public Domain1d Domain { get; protected set; }
     }
 }
