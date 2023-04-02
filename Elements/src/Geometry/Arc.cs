@@ -154,11 +154,6 @@ namespace Elements.Geometry
             return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, this.EndAngle, this.StartAngle);
         }
 
-        private double DegToRad(double degrees)
-        {
-            return degrees * Math.PI / 180.0;
-        }
-
         /// <summary>
         /// Get a bounding box for this arc.
         /// </summary>
@@ -201,7 +196,7 @@ namespace Elements.Geometry
             var two_r = 2 * r;
             var d = Math.Min(MinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
-            var div = (int)Math.Ceiling((DegToRad(partialAngleSpan)) / t);
+            var div = (int)Math.Ceiling((Units.DegreesToRadians(partialAngleSpan)) / t);
 
             var parameters = new double[div + 1];
             for (var i = 0; i <= div; i++)
