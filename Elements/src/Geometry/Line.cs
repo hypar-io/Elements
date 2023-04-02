@@ -574,6 +574,13 @@ namespace Elements.Geometry
             return lines;
         }
 
+        /// <summary>
+        /// The mid point of the line.
+        /// </summary>
+        public Vector3 Midpoint()
+        {
+            return Start.Average(End);
+        }
 
         /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
@@ -595,7 +602,7 @@ namespace Elements.Geometry
             var divs = (int)(localLength / l);
             var span = divs * l;
             var halfSpan = span / 2;
-            var mid = this.PointAt(0.5);
+            var mid = this.Midpoint();
             var dir = this.Direction();
             var start = mid - dir * halfSpan;
             var end = mid + dir * halfSpan;
@@ -628,7 +635,7 @@ namespace Elements.Geometry
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0 / n;
+            var div = Length() / n;
             var a = Start;
             var t = div;
             for (var i = 0; i < n - 1; i++)
@@ -1076,8 +1083,8 @@ namespace Elements.Geometry
 
             // Construct new vectors that both
             // point away from the projected intersection
-            var newD1 = (this.PointAt(0.5) - result).Unitized();
-            var newD2 = (target.PointAt(0.5) - result).Unitized();
+            var newD1 = (this.Midpoint() - result).Unitized();
+            var newD2 = (target.Midpoint() - result).Unitized();
 
             var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
             var halfTheta = theta / 2.0;
@@ -1221,10 +1228,10 @@ namespace Elements.Geometry
 
             if (point.IsAlmostEqualTo(end))
             {
-                return 1;
+                return end.DistanceTo(start);
             }
 
-            return (point - start).Length() / (end - start).Length();
+            return point.DistanceTo(start);
         }
 
         /// <summary>
