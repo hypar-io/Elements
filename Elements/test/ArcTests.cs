@@ -53,22 +53,22 @@ namespace Hypar.Tests
         {
             var arc = new Arc(Vector3.Origin, 5.0, 0.0, 90.0);
             Assert.Equal(new Vector3(0, 5, 0), arc.End);
-            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(1.0));
-            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt(0.5));
-            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 2), 5 * Math.Sin(Math.PI / 2), 0), arc.PointAt(1.0));
+            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.EndParameter));
+            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt((arc.EndParameter - arc.StartParameter)/2));
+            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 2), 5 * Math.Sin(Math.PI / 2), 0), arc.PointAt(arc.EndParameter));
 
             arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
-            Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(1.0));
-            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(0.5));
-            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(0.0));
-            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(-1e-15));
+            Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(arc.EndParameter));
+            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt((arc.EndParameter - arc.StartParameter)/2));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.StartParameter));
+            Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.StartParameter + -1e-15));
         }
 
         [Fact]
         public void TransformAt()
         {
             var arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
-            var t = arc.TransformAt(0.5);
+            var t = arc.TransformAt(Math.PI/2);
             Assert.Equal(new Vector3(0, 1, 0), t.XAxis);
             Assert.Equal(new Vector3(0, 0, 1), t.YAxis);
             Assert.Equal(new Vector3(1, 0, 0), t.ZAxis);
@@ -114,8 +114,8 @@ namespace Hypar.Tests
             var c = new Circle(Vector3.Origin, 1);
             var p = c.ToPolygon(10);
             Assert.Equal(10, p.Segments().Length);
-            Assert.Equal(c.Start, p.Vertices[0]);
-            Assert.Equal(c.End, p.Vertices[0]);
+            Assert.Equal(c.PointAt(0), p.Vertices[0]);
+            Assert.Equal(c.PointAt(Math.PI * 2), p.Vertices[0]);
         }
     }
 }

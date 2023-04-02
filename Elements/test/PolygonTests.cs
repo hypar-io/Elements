@@ -1139,7 +1139,7 @@ namespace Elements.Geometry.Tests
             for (var u = 0.0; u <= 1.0; u += 0.05)
             {
                 var pt = polyCircle.PointAt(u);
-                this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
+                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis));
             }
         }
 
@@ -2050,7 +2050,7 @@ namespace Elements.Geometry.Tests
             sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
             foreach (var r in results)
             {
-                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+                this.Model.AddElement(new ModelCurve(new Circle(new Transform(r), 0.05), BuiltInMaterials.YAxis));
             }
             Assert.Equal(2, results.Count);
             this.Model.AddElement(new Panel(sqPoly));

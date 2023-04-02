@@ -63,16 +63,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a polygon through a set of points along the arc.
+        /// Create a polygon through a set of points along the circle.
         /// </summary>
-        /// <param name="divisions">The number of divisions of the arc.</param>
+        /// <param name="divisions">The number of divisions of the circle.</param>
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         {
             var pts = new Vector3[divisions];
-            for (int i = 0; i < divisions; i++)
+            var twoPi = Math.PI * 2;
+            var step = twoPi/divisions;
+            var count = 0;
+            for (var t = 0.0; t < twoPi; t += step)
             {
-                pts[i] = this.PointAt((double)i / (double)divisions);
+                pts[count] = this.PointAt(t);
+                count++;
             }
             return new Polygon(pts, true);
         }

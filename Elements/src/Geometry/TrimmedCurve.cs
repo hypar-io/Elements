@@ -11,6 +11,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The basis curve for this bounded curve.
         /// </summary>
+        [JsonIgnore]
         public TBasis BasisCurve { get; protected set; }
         
         /// <summary>

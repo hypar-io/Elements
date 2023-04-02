@@ -101,7 +101,7 @@ namespace Elements.Geometry
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
-            this.BasisCurve = new Circle(radius);
+            this.BasisCurve = new Circle(radius); 
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
             this.StartParameter = Units.DegreesToRadians(@startAngle);
@@ -134,7 +134,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public override Vector3 Start
         {
-            get { return PointAt(0.0); }
+            get { return PointAt(StartParameter); }
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Elements.Geometry
         [JsonIgnore]
         public override Vector3 End
         {
-            get { return PointAt(1.0); }
+            get { return PointAt(EndParameter); }
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Elements.Geometry
         /// <returns>The point at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!Units.IsParameterBetween(u, StartParameter, EndParameter))
+            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, StartParameter, EndParameter))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -292,11 +292,34 @@ namespace Elements.Geometry
         /// <returns>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Units.IsParameterBetween(u, StartParameter, EndParameter))
+            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, StartParameter, EndParameter))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
             return this.BasisCurve.TransformAt(u);
+        }
+
+        /// <summary>
+        /// Create a polyline through a set of points along the curve.
+        /// </summary>
+        /// <param name="divisions">The number of divisions of the curve.</param>
+        /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline(int divisions = 10)
+        {
+            var pts = new List<Vector3>(divisions + 1);
+            var step = (EndParameter - StartParameter)/divisions;
+            for (var t = StartParameter; t < EndParameter; t += step)
+            {
+                pts.Add(PointAt(t));
+            }
+            
+            // We don't go all the way to the end parameter, and 
+            // add it here explicitly because rounding errors can
+            // cause small imprecision which accumulates to make
+            // the final parameter slightly more/less than the actual
+            // end parameter.
+            pts.Add(PointAt(EndParameter));
+            return new Polyline(pts);
         }
     }
 }

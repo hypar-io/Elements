@@ -357,8 +357,18 @@ namespace Elements
             Volume,
         }
     
-        internal static bool IsParameterBetween(double a, double min, double max)
+        internal static bool IsParameterBetweenOrAlmostEqualTo(double a, double min, double max)
         {
+            if(a.ApproximatelyEquals(min))
+            {
+                return true;
+            }
+
+            if(a.ApproximatelyEquals(max))
+            {
+                return true;
+            }
+            
             return min < max ? a >= min && a <= max:
                                a <= min && a >= max;
         }

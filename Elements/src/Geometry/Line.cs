@@ -98,7 +98,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Units.IsParameterBetween(u, this.StartParameter, this.EndParameter))
+            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, this.StartParameter, this.EndParameter))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -112,7 +112,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!Units.IsParameterBetween(u, this.StartParameter, this.EndParameter))
+            if(!Units.IsParameterBetweenOrAlmostEqualTo(u, this.StartParameter, this.EndParameter))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
