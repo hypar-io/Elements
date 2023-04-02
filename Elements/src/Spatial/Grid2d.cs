@@ -596,7 +596,7 @@ namespace Elements.Spatial
         {
             var curves = new List<ICurve>();
             var points = new List<Vector3>();
-            Curve otherDirection = null;
+            BoundedCurve otherDirection = null;
             Vector3 toOrigin = new Vector3();
             switch (direction)
             {
@@ -611,7 +611,7 @@ namespace Elements.Spatial
                     toOrigin = GetTransformedOrigin() - U.StartPoint();
                     break;
             }
-            var originVec = otherDirection.PointAt(0) - toOrigin;
+            var originVec = otherDirection.Start - toOrigin;
             foreach (var point in points)
             {
                 var displacement = new Transform(point - originVec);

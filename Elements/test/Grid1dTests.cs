@@ -97,13 +97,13 @@ namespace Elements.Tests
             var lineGrid = new Grid1d(simpleLine);
             var splitLocation = new Vector3(3, 0, 0);
             lineGrid.SplitAtPoint(splitLocation);
-            Assert.True(lineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(splitLocation) < 0.01);
+            Assert.True(lineGrid[0].GetCellGeometry().End.DistanceTo(splitLocation) < 0.01);
 
             var polyline = new Polyline(new[] { Vector3.Origin, new Vector3(3, 5), new Vector3(6, 2), new Vector3(10, -3) });
             var polylineGrid = new Grid1d(polyline);
             var polylineSplitLocation = new Vector3(3, 5);
             polylineGrid.SplitAtPoint(polylineSplitLocation);
-            Assert.True(polylineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(polylineSplitLocation) < 0.01);
+            Assert.True(polylineGrid[0].GetCellGeometry().End.DistanceTo(polylineSplitLocation) < 0.01);
 
         }
 

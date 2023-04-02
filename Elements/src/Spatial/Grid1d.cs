@@ -424,8 +424,8 @@ namespace Elements.Spatial
                 curvePosition += segments[closestSegment].Start.DistanceTo(point);
                 return curvePosition;
             }
-            var A = Curve.PointAt(0);
-            var B = Curve.PointAt(1);
+            var A = Curve.Start;
+            var B = Curve.End;
             var C = point;
             var AB = B - A;
             AB = AB.Unitized();
@@ -791,7 +791,7 @@ namespace Elements.Spatial
         {
             if (Curve != null)
             {
-                return (Curve.PointAt(1) - Curve.PointAt(0)).Unitized();
+                return (Curve.End - Curve.Start).Unitized();
             }
             else
             {
