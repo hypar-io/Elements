@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.6.0
+
+### Changed
+
+- `Grid2D.GetCellGeometry` return type changed from `Curve` to `Polygon`.
+- `Grid2D.GetTrimmedCellGeometry` return type changed from `Curve[]` to `Polygon[]`.
+- `Polyline.ForceAngleCompliance` improved the case when two segments that need to be aligned are perpendicular to previous segment.
+
 ## 1.5.0
 
 ### Added
@@ -8,6 +16,7 @@
 - `MappingBase` and first Revit mapping class to support mapping data for a Revit Converter.
 
 ### Changed
+
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
 
 ## 1.4.0

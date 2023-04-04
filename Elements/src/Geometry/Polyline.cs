@@ -1257,9 +1257,9 @@ namespace Elements.Geometry
                     {
                         var before = (normalized[i - 1] - normalized[i - 2]).Unitized();
                         referenceVector = before.Cross(incomingDirection);
-                        // If previous segment was in different plane than two next segments, it's better to use
-                        // triangle that include those two segment instead, since segment on the other plane will
-                        // have correct angle with any configuration of that triangle.
+                        // If there are two segments that need to be aligned but previous segment is perpendicular
+                        // to both of them, it's better to use triangle that include those two segment instead,
+                        // since perpendicular segment will have correct angle with any configuration of that triangle.
                         if (direction.Cross(incomingDirection).IsParallelTo(before))
                         {
                             useEndCorner = true;
