@@ -693,7 +693,7 @@ namespace Elements.Spatial
         /// Get a rectangular polygon representing this untrimmed cell boundary.
         /// </summary>
         /// <returns>A rectangle representing this cell in world coordinates.</returns>
-        public Curve GetCellGeometry()
+        public Polygon GetCellGeometry()
         {
             var baseRect = GetBaseRectangleTransformed();
             return baseRect.TransformedPolygon(fromGrid);
@@ -704,7 +704,7 @@ namespace Elements.Spatial
         /// If the cell falls completely outside of the boundary, an empty array will be returned.
         /// </summary>
         /// <returns>Curves representing this cell in world coordinates.</returns>
-        public Curve[] GetTrimmedCellGeometry()
+        public Polygon[] GetTrimmedCellGeometry()
         {
             if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
             {
@@ -718,7 +718,7 @@ namespace Elements.Spatial
                 return fromGrid.OfPolygons(trimmedRect);
 
             }
-            return new Curve[0];
+            return new Polygon[0];
         }
 
         /// <summary>
