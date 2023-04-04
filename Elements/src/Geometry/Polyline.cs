@@ -1237,6 +1237,7 @@ namespace Elements.Geometry
             for (int i = 0; i < normalized.Count - 1; i++)
             {
                 NormalizationType localType = pathType;
+                bool useEndCorner = false;
                 if (i == 0)
                 {
                     localType = NormalizationType.End;
@@ -1246,6 +1247,8 @@ namespace Elements.Geometry
                     localType = NormalizationType.Start;
                 }
 
+
+                var direction = (normalized[i + 1] - normalized[i]).Unitized();
                 Vector3 incomingDirection = referenceVector;
                 if (i > 0)
                 {
@@ -1254,10 +1257,17 @@ namespace Elements.Geometry
                     {
                         var before = (normalized[i - 1] - normalized[i - 2]).Unitized();
                         referenceVector = before.Cross(incomingDirection);
+                        // If previous segment was in different plane than two next segments, it's better to use
+                        // triangle that include those two segment instead, since segment on the other plane will
+                        // have correct angle with any configuration of that triangle.
+                        if (direction.Cross(incomingDirection).IsParallelTo(before))
+                        {
+                            useEndCorner = true;
+                            localType = NormalizationType.Start;
+                        }
                     }
                 }
 
-                var direction = (normalized[i + 1] - normalized[i]).Unitized();
                 if (direction.Dot(incomingDirection).Equals(0) ||
                     direction.ProjectOnto(incomingDirection).Length().ApproximatelyEquals(0))
                 {
@@ -1296,8 +1306,10 @@ namespace Elements.Geometry
                     }
                 }
 
+                var end = useEndCorner ? normalized[i - 1] : normalized[i + 1];
+                var incoming = useEndCorner ? direction.Negate() : incomingDirection;
                 double directionalDistance = AngleAlignedDistance(
-                    normalized[i], normalized[i + 1], incomingDirection, bestFitAngle, out var cornerPoint);
+                    normalized[i], end, incoming, bestFitAngle, out var cornerPoint);
                 var directionalVector = normalized[i] - cornerPoint;
 
                 if (bestFitAngle.ApproximatelyEquals(0))

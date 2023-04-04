@@ -733,6 +733,27 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolylineForceAngleCompliancePathChangesPlane()
+        {
+            var path = new List<Vector3>
+            {
+                (0, 5, 5),
+                (0, 5, 0),
+                (5, 5.1, 0),
+                (5, 0, 0)
+            };
+
+            var angles = new List<double> { 90, 45, 0 };
+            var polyline = new Polyline(path);
+            var normalizedPath = polyline.ForceAngleCompliance(angles, Vector3.ZAxis);
+            Model.AddElement(new ModelCurve(polyline, BuiltInMaterials.Black));
+            Model.AddElement(new ModelCurve(normalizedPath, BuiltInMaterials.XAxis));
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPath));
+            Assert.Equal(new Vector3(5, 5, 0), normalizedPath.Vertices[2]);
+        }
+
+        [Fact]
         public void PolylineForceAngleComplianceWithCollinearPoints()
         {
             Name = nameof(PolylineForceAngleComplianceWithCollinearPoints);
