@@ -10,6 +10,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
+    /// Parameterization of the curve is 0->length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
@@ -36,7 +37,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices) : base()
         {
             this.Vertices = @vertices;
-            this.Domain = new Domain1d(0,1);
+            this.Domain = new Domain1d(0,this.Length());
             
             if (!Validator.DisableValidationOnConstruction)
             {
@@ -54,7 +55,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
         {
             this.Vertices = @vertices;
-            this.Domain = new Domain1d(0,1);
+            this.Domain = new Domain1d(0,this.Length());
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
@@ -171,9 +172,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         public override Vector3 PointAt(double u)
         {
-            var segmentIndex = 0;
-            var p = PointAtInternal(u, out segmentIndex);
-            return p;
+            return PointAtInternal(u, out _);
         }
 
         /// <summary>
@@ -566,23 +565,22 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
+            if(!Domain.Includes(u, true))
             {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var d = this.Length() * u;
             var totalLength = 0.0;
             for (var i = 0; i < this.Vertices.Count - 1; i++)
             {
                 var a = this.Vertices[i];
                 var b = this.Vertices[i + 1];
                 var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
+                var currVec = (b - a).Unitized();
+                if (totalLength <= u && totalLength + currLength >= u)
                 {
                     segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
+                    return a + currVec * (u - totalLength);
                 }
                 totalLength += currLength;
             }
@@ -1072,7 +1070,7 @@ namespace Elements.Geometry
             var segmentsLength = Segments().Where((x, i) => i < segmentIndex).Sum(x => x.Length());
             var pointLength = segmentsLength + point.DistanceTo(segment.Start);
 
-            return pointLength / Length();
+            return pointLength;
         }
 
         /// <summary>
