@@ -39,5 +39,10 @@ namespace Elements.Geometry.Interfaces
         /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
         /// <returns>A collection of Transforms.</returns>
         Transform[] Frames(double startSetback = 0.0, double endSetback = 0.0, double additionalRotation = 0.0);
+
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        Domain1d Domain { get; }
     }
 }

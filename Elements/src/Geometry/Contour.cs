@@ -27,9 +27,9 @@ namespace Elements.Geometry
                 var a = curves[i];
                 var next = i == curves.Count - 1 ? 0 : i + 1;
                 var b = curves[next];
-                if (a.PointAt(1).IsAlmostEqualTo(b.PointAt(0)) ||
-                    a.PointAt(1).IsAlmostEqualTo(b.PointAt(1)) ||
-                    a.PointAt(0).IsAlmostEqualTo(b.PointAt(0)))
+                if (a.End.IsAlmostEqualTo(b.Start) ||
+                    a.End.IsAlmostEqualTo(b.End) ||
+                    a.Start.IsAlmostEqualTo(b.Start))
                 {
                     continue;
                 }

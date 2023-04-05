@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -19,6 +21,12 @@ namespace Elements.Geometry
         public virtual Vector3 End { get; protected set;}
 
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public Domain1d Domain { get; protected set; }
+
+        /// <summary>
         /// Get the bounding box for this curve.
         /// </summary>
         /// <returns>A bounding box for this curve.</returns>
@@ -29,18 +37,37 @@ namespace Elements.Geometry
         /// </summary>
         public abstract double Length();
 
-        /// </summary>
+        /// <summary>
         /// The mid point of the curve.
         /// </summary>
         public virtual Vector3 Mid()
         {
-            return PointAt(0.5);
+            return PointAt(this.Domain.Mid());
         }
 
         /// <summary>
-        /// A list of vertices used to render the curve.
+        /// Get a collection of transforms which represent frames along this curve.
         /// </summary>
-        internal abstract IList<Vector3> RenderVertices();
+        /// <param name="startSetbackDistance">The offset parameter from the start of the curve.</param>
+        /// <param name="endSetbackDistance">The offset parameter from the end of the curve.</param>
+        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
+        /// <returns>A collection of transforms.</returns>
+        public virtual Transform[] Frames(double startSetbackDistance = 0.0,
+                                          double endSetbackDistance = 0.0,
+                                          double additionalRotation = 0.0)
+        {
+            var parameters = GetSampleParameters(startSetbackDistance, endSetbackDistance);
+            var transforms = new Transform[parameters.Length];
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                transforms[i] = TransformAt(parameters[i]);
+                if (additionalRotation != 0.0)
+                {
+                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
+                }
+            }
+            return transforms;
+        }
 
         internal GraphicsBuffers ToGraphicsBuffers()
         {
@@ -52,5 +79,24 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(BoundedCurve c) => new ModelCurve(c);
+
+        internal virtual double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        {
+            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true)};
+        }
+
+        /// <summary>
+        /// A list of vertices used to render the curve.
+        /// </summary>
+        internal virtual IList<Vector3> RenderVertices()
+        {
+            var parameters = GetSampleParameters();
+            var vertices = new List<Vector3>();
+            foreach (var p in parameters)
+            {
+                vertices.Add(PointAt(p));
+            }
+            return vertices;
+        }
     }
 }

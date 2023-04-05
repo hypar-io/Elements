@@ -59,6 +59,7 @@ namespace Elements.Geometry
 
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
+            this.Domain = new Domain1d(0,1);
         }
 
         /// <summary>
@@ -72,13 +73,14 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a collection of transforms along the curve.
         /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
+        /// <param name="startSetbackDistance"></param>
+        /// <param name="endSetbackDistance"></param>
         /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetback = 0,
-                                           double endSetback = 0,
+        public override Transform[] Frames(double startSetbackDistance = 0,
+                                           double endSetbackDistance = 0,
                                            double additionalRotation = 0.0)
         {
+            GetSampleParameters(startSetbackDistance, endSetbackDistance);
             var transforms = new Transform[_samples + 1];
             for (var i = 0; i <= _samples; i++)
             {
@@ -253,16 +255,6 @@ namespace Elements.Geometry
             return T.Cross(N);
         }
 
-        internal override IList<Vector3> RenderVertices()
-        {
-            var vertices = new List<Vector3>();
-            for (var i = 0; i <= _samples; i++)
-            {
-                vertices.Add(PointAt(i * 1.0 / _samples));
-            }
-            return vertices;
-        }
-
         /// <summary>
         /// Construct a transformed copy of this Bezier.
         /// </summary>
@@ -284,6 +276,20 @@ namespace Elements.Geometry
         public override Curve Transformed(Transform transform)
         {
             return TransformedBezier(transform);
+        }
+
+        internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
+                                                       double endSetbackDistance = 0.0)
+        {
+            var parameters = new double[_samples + 1];
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+            var step = Math.Abs(endParam - startParam) / _samples;
+            for (var i = 0; i <= _samples; i++)
+            {
+                parameters[i] = startParam + i * step;
+            }
+            return parameters;
         }
     }
 }

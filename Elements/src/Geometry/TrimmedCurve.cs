@@ -13,11 +13,5 @@ namespace Elements.Geometry
         /// </summary>
         [JsonIgnore]
         public TBasis BasisCurve { get; protected set; }
-        
-        /// <summary>
-        /// The domain of the trim.
-        /// </summary>
-        [JsonIgnore]
-        public Domain1d Domain { get; protected set; }
     }
 }

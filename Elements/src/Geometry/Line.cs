@@ -1269,14 +1269,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return new[] { this.Start, this.End };
-        }
-
-        /// <summary>
         /// Return an approximate fit line through a set of points using the least squares method.
         /// </summary>
         /// <param name="points">The points to fit. Should have at least 2 distinct points.</param>
@@ -1384,6 +1376,22 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $"start: {Start}, end: {End}";
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            var pt = this.PointAt(start);
+            if(reversed)
+            {
+                return (pt - (this.BasisCurve.Direction * distance)).DistanceTo(this.Start);
+            }
+            return (pt + (this.BasisCurve.Direction * distance)).DistanceTo(this.Start);
         }
     }
 

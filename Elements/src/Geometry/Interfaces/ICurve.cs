@@ -18,5 +18,13 @@ namespace Elements.Geometry.Interfaces
         /// <param name="u">A parameter on the curve.</param>
         /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
         Transform TransformAt(double u);
+
+        /// <summary>
+        /// Get a point at a distance from the specified distance along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="parameter">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        double ParameterAtDistanceFromParameter(double distance, double parameter, bool reversed = false);
     }
 }

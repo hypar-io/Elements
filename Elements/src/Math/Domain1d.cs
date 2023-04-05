@@ -14,11 +14,11 @@ namespace Elements
         }
 
         /// <summary>
-        /// Returns true if pos is within the domain (exclusive of its ends)
+        /// Returns true if the value is within the domain.
         /// </summary>
-        /// <param name="value">The value to test</param>
-        /// <param name="includeEnds"></param>
-        /// <returns>True if the value is within the domain</returns>
+        /// <param name="value">The value to test.</param>
+        /// <param name="includeEnds">Should the check be inclusive of the min and max?</param>
+        /// <returns>True if the value is within the domain.</returns>
         internal bool Includes(double value, bool includeEnds = false)
         {
             if(includeEnds)
@@ -132,6 +132,16 @@ namespace Elements
             return results;
         }
 
-
+        /// <summary>
+        /// Calculate the middle of the domain.
+        /// </summary>
+        public double Mid()
+        {
+            if(!IsIncreasing())
+            {
+                return this.Min + (this.Min - this.Max)/2;
+            }
+            return this.Min + (this.Max - this.Min)/2;
+        }
     }
 }

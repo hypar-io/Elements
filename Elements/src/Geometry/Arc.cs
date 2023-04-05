@@ -179,20 +179,14 @@ namespace Elements.Geometry
             return BasisCurve.Transform.XY();
         }
 
-        internal override double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
+        internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
+                                                       double endSetbackDistance = 0.0)
         {
-            // Arc length calculations.
-            // var l = this.Length();
-            // var arcLength = l - startSetback - endSetback;
-            // al = (alpha * PI * r) / 180
-            // alpha = (al * 180)/(PI * r)
-            // var arcAngle = (arcLength * 360) / (2 * Math.PI * this.Radius);
-            // var parameterSpan = 1.0 - startSetback/l - endSetback/l;
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
 
             // Parameter calculations.
-            var angleSpan = this.EndAngle - this.StartAngle;
-            var partialAngleSpan = Math.Abs(angleSpan - angleSpan * startSetback - angleSpan * endSetback);
-            var parameterSpan = this.Domain.Length - startSetback - endSetback;
+            var angleSpan = endParam - startParam;
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
@@ -200,29 +194,15 @@ namespace Elements.Geometry
             var two_r = 2 * r;
             var d = Math.Min(MinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
-            var div = (int)Math.Ceiling((Units.DegreesToRadians(partialAngleSpan)) / t);
+            var div = (int)Math.Ceiling(angleSpan / t);
 
             var parameters = new double[div + 1];
             for (var i = 0; i <= div; i++)
             {
-                var u = this.Domain.Min + startSetback + i * (parameterSpan / div);
+                var u = this.Domain.Min + i * (angleSpan / div);
                 parameters[i] = u;
             }
             return parameters;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var parameters = GetSampleParameters();
-            var vertices = new List<Vector3>();
-            foreach (var p in parameters)
-            {
-                vertices.Add(PointAt(p));
-            }
-            return vertices;
         }
 
         /// <summary>
@@ -319,6 +299,30 @@ namespace Elements.Geometry
             // end parameter.
             pts.Add(PointAt(this.Domain.Max));
             return new Polyline(pts);
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if(distance == 0.0)
+            {
+                return start;
+            }
+
+            // s = r * theta
+            // theta = s/r
+            var theta = distance / this.BasisCurve.Radius;
+
+            if(reversed)
+            {
+                return start - theta;
+            }
+            return start + theta;
         }
     }
 }

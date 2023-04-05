@@ -71,7 +71,7 @@ namespace Elements.Tests
             var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, true);
             beam.Representation.SolidOperations.Add(s2);
 
-            for (var i = 0.0; i < 1.0; i += 0.05)
+            for (var i = path.Domain.Min; i < path.Domain.Max; i += 0.05)
             {
                 var pt = path.PointAt(i);
                 var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, true)

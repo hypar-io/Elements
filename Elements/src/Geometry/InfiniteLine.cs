@@ -58,5 +58,20 @@ namespace Elements.Geometry
         {
             return new Transform(PointAt(u), Direction);
         }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if(reversed)
+            {
+                return start - distance;
+            }
+            return start + distance;
+        }
     }
 }

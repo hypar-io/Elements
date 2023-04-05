@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
@@ -15,30 +16,6 @@ namespace Elements.Geometry
         /// A lower MinimumChordLength results in smoother curves.
         /// </summary>
         public static double MinimumChordLength = 0.1;
-
-        /// <summary>
-        /// Get a collection of transforms which represent frames along this curve.
-        /// </summary>
-        /// <param name="startSetback">The offset parameter from the start of the curve.</param>
-        /// <param name="endSetback">The offset parameter from the end of the curve.</param>
-        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
-        /// <returns>A collection of transforms.</returns>
-        public virtual Transform[] Frames(double startSetback = 0.0,
-                                          double endSetback = 0.0,
-                                          double additionalRotation = 0.0)
-        {
-            var parameters = GetSampleParameters(startSetback, endSetback);
-            var transforms = new Transform[parameters.Length];
-            for (var i = 0; i < parameters.Length; i++)
-            {
-                transforms[i] = TransformAt(parameters[i]);
-                if (additionalRotation != 0.0)
-                {
-                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
-                }
-            }
-            return transforms;
-        }
 
         /// <summary>
         /// Get a point along the curve at parameter u.
@@ -70,15 +47,21 @@ namespace Elements.Geometry
             return new Polyline(pts);
         }
 
-        internal virtual double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
-        {
-            return new[] { startSetback, 1.0 - endSetback };
-        }
-
         /// <summary>
         /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public virtual double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
+        }
     }
 }

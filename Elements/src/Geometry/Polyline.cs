@@ -36,7 +36,8 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices) : base()
         {
             this.Vertices = @vertices;
-
+            this.Domain = new Domain1d(0,1);
+            
             if (!Validator.DisableValidationOnConstruction)
             {
                 ValidateVertices();
@@ -53,6 +54,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
         {
             this.Vertices = @vertices;
+            this.Domain = new Domain1d(0,1);
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
@@ -421,7 +423,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the arc for rendering.
+        /// A list of vertices describing the polyline for rendering.
         /// </summary>
         internal override IList<Vector3> RenderVertices()
         {
@@ -1409,6 +1411,11 @@ namespace Elements.Geometry
             {
                 return null;
             }
+        }
+
+        internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        {
+            throw new NotImplementedException();
         }
     }
 
