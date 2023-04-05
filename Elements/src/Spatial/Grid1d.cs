@@ -716,7 +716,7 @@ namespace Elements.Spatial
                 {
                     throw new Exception("t must be in the curve domain.");
                 }
-                return Curve.PointAt(tNormalized);
+                return Curve.PointAt(Curve.Domain.Min + Curve.Domain.Length * tNormalized);
             }
             else
             {
@@ -895,7 +895,7 @@ namespace Elements.Spatial
         {
             var values = DomainsToSequence(recursive);
             var t = values.Select(v => v.MapFromDomain(curveDomain));
-            var pts = t.Select(t0 => Curve.TransformAt(t0).Origin).ToList();
+            var pts = t.Select(t0 => Curve.TransformAt(Curve.Domain.Min + t0 * Curve.Domain.Length).Origin).ToList();
             return pts;
         }
 
@@ -943,8 +943,8 @@ namespace Elements.Spatial
             var t1 = Domain.Min.MapFromDomain(curveDomain);
             var t2 = Domain.Max.MapFromDomain(curveDomain);
 
-            var x1 = Curve.TransformAt(t1);
-            var x2 = Curve.TransformAt(t2);
+            var x1 = Curve.TransformAt(Curve.Domain.Min + curve.Domain.Length * t1);
+            var x2 = Curve.TransformAt(Curve.Domain.Min + curve.Domain.Length * t2);
 
             return new Line(x1.Origin, x2.Origin);
 
