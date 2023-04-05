@@ -48,7 +48,7 @@ namespace Elements.Tests
             // Create a curved beam.
             var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
             var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
-            var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
+            var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
             // </example>
 
             this.Model.AddElement(linearBeam);
