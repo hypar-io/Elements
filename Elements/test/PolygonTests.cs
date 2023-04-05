@@ -1127,8 +1127,8 @@ namespace Elements.Geometry.Tests
 
             // Ensure that the PointAt function for u=1.0 is at the
             // end of the polygon AND at the end of the polyline.
-            Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
-            Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            Assert.True(polyCircle.PointAt(polyCircle.Domain.Max).IsAlmostEqualTo(polyCircle.Start));
+            Assert.True(polyline.PointAt(polyline.Domain.Max).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
             // Test value close to u=0.0 within tolerance
             Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
             Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
