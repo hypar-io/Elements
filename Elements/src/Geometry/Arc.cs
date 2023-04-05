@@ -309,6 +309,11 @@ namespace Elements.Geometry
         /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
         {
+            if(!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
             if(distance == 0.0)
             {
                 return start;
