@@ -26,6 +26,7 @@ namespace Elements.Geometry
 
     /// <summary>
     /// A Bezier curve.
+    /// Parameterization of the curve is 0->1.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
@@ -59,7 +60,7 @@ namespace Elements.Geometry
 
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
-            this.Domain = new Domain1d(0,1);
+            this.Domain = new Domain1d(0, 1);
         }
 
         /// <summary>
