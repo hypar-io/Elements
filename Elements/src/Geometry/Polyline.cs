@@ -182,9 +182,9 @@ namespace Elements.Geometry
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
         public override Transform TransformAt(double u)
         {
-            if (u < 0.0 || u > 1.0)
+            if(!Domain.Includes(u, true))
             {
-                throw new ArgumentOutOfRangeException($"The provided value for u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
             var segmentIndex = 0;

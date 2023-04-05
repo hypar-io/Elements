@@ -273,7 +273,7 @@ namespace Elements.Geometry
         {
             if(!this.Domain.Includes(u, true))
             {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.TransformAt(u);
         }
