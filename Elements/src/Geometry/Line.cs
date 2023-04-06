@@ -51,7 +51,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Construct a line of length from a start along direction.
+        /// Create a line of length from a start along direction.
         /// </summary>
         /// <param name="start"></param>
         /// <param name="direction"></param>
@@ -60,19 +60,19 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
-            this.Domain = new Domain1d(0,@start.DistanceTo(this.End));
+            this.Domain = new Domain1d(0,length);
             this.BasisCurve = new InfiniteLine(this.Start, direction);
         }
 
         /// <summary>
-        /// Construct a line from a trimmed segment of an infinite line.
+        /// Create a line from a trimmed segment of an infinite line.
         /// </summary>
-        /// <param name="basis">The infinite line from which this segment is trimmed.</param>
+        /// <param name="line">The infinite line from which this segment is trimmed.</param>
         /// <param name="startParameter">The start parameter of the line segment.</param>
         /// <param name="endParameter">The end parameter of the line segment.</param>
-        public Line(InfiniteLine basis, double startParameter, double endParameter)
+        public Line(InfiniteLine line, double startParameter, double endParameter)
         {
-            this.BasisCurve = basis;
+            this.BasisCurve = line;
             this.Domain = new Domain1d(startParameter, endParameter);
             this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
             this.End = this.BasisCurve.Origin + this.Domain.Max * this.BasisCurve.Direction;
