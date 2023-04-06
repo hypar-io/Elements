@@ -4,7 +4,6 @@ using Xunit;
 using System.Linq;
 using System.Collections.Generic;
 using Elements.Spatial;
-using Elements.Serialization.JSON;
 using System.IO;
 using Newtonsoft.Json;
 
