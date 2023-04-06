@@ -283,8 +283,13 @@ namespace Elements.Geometry
                                                        double endSetbackDistance = 0.0)
         {
             var parameters = new double[_samples + 1];
-            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
-            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+
+            // TODO: Use setbacks when distance along bezier is supported.
+            // var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            // var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+            var startParam = this.Domain.Min;
+            var endParam = this.Domain.Max;
+            
             var step = Math.Abs(endParam - startParam) / _samples;
             for (var i = 0; i <= _samples; i++)
             {
