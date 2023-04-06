@@ -220,10 +220,12 @@ namespace Elements.Geometry
             var div = (int)Math.Ceiling(angleSpan / t);
 
             var parameters = new double[div + 1];
-            for (var i = 0; i <= div; i++)
+            var step = angleSpan / div;
+            var count = 0;
+            for (var u = startParam; u <= endParam; u+=step)
             {
-                var u = this.Domain.Min + i * (angleSpan / div);
-                parameters[i] = u;
+                parameters[count] = u;
+                count++;
             }
             return parameters;
         }
