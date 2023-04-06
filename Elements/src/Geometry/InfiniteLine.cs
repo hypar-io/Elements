@@ -56,7 +56,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), Direction);
+            return new Transform(PointAt(u), Direction.Negate());
         }
 
         /// <summary>

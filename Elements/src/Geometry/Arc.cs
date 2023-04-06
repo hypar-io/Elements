@@ -92,6 +92,7 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Create an arc.
+        /// Constructs a circular basis curve internally with a default transform.
         /// </summary>
         /// <param name="radius">The radius of the arc.</param>
         /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
@@ -108,9 +109,31 @@ namespace Elements.Geometry
         /// <summary>
         /// Create an arc.
         /// </summary>
-        public Arc(Circle basisCurve, double startParameter, double endParameter)
+        /// <param name="circle">The circle on which this arc is based.</param>
+        /// <param name="startParameter">The parameter, from 0.0->2PI, of the start of the arc.</param>
+        /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
+        public Arc(Circle circle, double startParameter, double endParameter)
         {
-            this.BasisCurve = basisCurve;
+            this.BasisCurve = circle;
+            this.Domain = new Domain1d(startParameter, endParameter);
+            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
+            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// Constructs a circular basis curve internally with the provided transform.
+        /// </summary>
+        /// <param name="transform">The transform for the basis curve of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startParameter">The parameter, from 0.0->2PI, of the start of the arc.</param>
+        /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
+        public Arc(Transform transform,
+                   double radius = 1.0,
+                   double startParameter = 0.0,
+                   double endParameter = Math.PI * 2)
+        {
+            this.BasisCurve = new Circle(transform, radius);
             this.Domain = new Domain1d(startParameter, endParameter);
             this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
             this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
