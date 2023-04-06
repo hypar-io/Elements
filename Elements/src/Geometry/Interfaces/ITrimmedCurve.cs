@@ -1,7 +1,7 @@
 namespace Elements.Geometry.Interfaces
 {
     /// <summary>
-    /// A bounded curve which is a segment of basis curve between a start and end parameter.
+    /// A trimmed curve.
     /// </summary>
     public interface ITrimmedCurve<TBasis> where TBasis: ICurve
     {
