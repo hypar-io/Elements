@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Serialization.glTF;
 using Xunit;
 
 namespace Elements.Tests
