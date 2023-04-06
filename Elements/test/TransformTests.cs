@@ -147,7 +147,7 @@ namespace Elements.Tests
         {
             this.Name = "TransformsOrientedAlongCurve";
             var arc = new Arc(Vector3.Origin, 10.0, 45.0, 135.0);
-            for (var i = 0.0; i <= 1.0; i += 0.1)
+            for (var i = arc.Domain.Min; i <= arc.Domain.Max; i += arc.Domain.Length / 10)
             {
                 var t = Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(arc, i);
                 var m = new Mass(Polygon.Rectangle(1.0, 1.0), 0.5, transform: t);
