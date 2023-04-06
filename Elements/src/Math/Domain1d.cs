@@ -34,7 +34,7 @@ namespace Elements
             }
             else
             {
-                return value < Min && value < Max;
+                return value < Min && value > Max;
             }
         }
 
