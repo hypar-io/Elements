@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An circle with a start angle of 0 (+X) and 
-    /// an end angle of 360.0. 
+    /// A circle with a start angle of 0 (+X) and an end angle of 360.0. 
     /// Parameterization of the curve is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
@@ -27,7 +26,7 @@ namespace Elements.Geometry
         public double Radius { get; protected set; }
         
         /// <summary>
-        /// The coordinate system of the plane containing the arc.
+        /// The coordinate system of the plane containing the circle.
         /// </summary>
         public Transform Transform { get; protected set; }
 
