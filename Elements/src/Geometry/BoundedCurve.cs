@@ -69,6 +69,22 @@ namespace Elements.Geometry
             return transforms;
         }
 
+        /// <summary>
+        /// Create a polyline through a set of points along the curve.
+        /// </summary>
+        /// <param name="divisions">The number of divisions of the curve.</param>
+        /// <returns>A polyline.</returns>
+        public virtual Polyline ToPolyline(int divisions = 10)
+        {
+            var pts = new List<Vector3>(divisions + 1);
+            var step = this.Domain.Length / divisions;
+            for (var t = 0; t <= divisions; t++)
+            {
+                pts.Add(PointAt(t * step));
+            }
+            return new Polyline(pts);
+        }
+
         internal GraphicsBuffers ToGraphicsBuffers()
         {
             return this.RenderVertices().ToGraphicsBuffers();

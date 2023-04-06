@@ -33,21 +33,6 @@ namespace Elements.Geometry
         public abstract Transform TransformAt(double u);
 
         /// <summary>
-        /// Create a polyline through a set of points along the curve.
-        /// </summary>
-        /// <param name="divisions">The number of divisions of the curve.</param>
-        /// <returns>A polyline.</returns>
-        public virtual Polyline ToPolyline(int divisions = 10)
-        {
-            var pts = new List<Vector3>(divisions + 1);
-            for (var t = 0; t <= divisions; t++)
-            {
-                pts.Add(PointAt(t * 1.0 / divisions));
-            }
-            return new Polyline(pts);
-        }
-
-        /// <summary>
         /// Construct a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
