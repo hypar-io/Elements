@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.6.0
+
+### Added
+
+- `ITrimmedCurve<TBasis>`
+- `IBoundedCurve`
+- `TrimmedCurve`
+- `BoundedCurve`
+- `InfiniteLine`
+
+### Changed
+
+- `Polyline` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Arc` now inherits from `TrimmedCurve<Circle>`.
+- `Arc` is now parameterized 0->2Pi
+- `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
+- `Line` is now parameterized 0->length.
+- `Bezier` now inherits from `BoundedCurve`.
+
 ## 1.5.0
 
 ### Added
