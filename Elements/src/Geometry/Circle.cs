@@ -69,7 +69,7 @@ namespace Elements.Geometry
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         {
-            var pts = new Vector3[divisions];
+            var pts = new Vector3[divisions + 1];
             var twoPi = Math.PI * 2;
             var step = twoPi/divisions;
             var count = 0;
