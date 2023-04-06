@@ -71,29 +71,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a collection of transforms along the curve.
-        /// </summary>
-        /// <param name="startSetbackDistance"></param>
-        /// <param name="endSetbackDistance"></param>
-        /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetbackDistance = 0,
-                                           double endSetbackDistance = 0,
-                                           double additionalRotation = 0.0)
-        {
-            GetSampleParameters(startSetbackDistance, endSetbackDistance);
-            var transforms = new Transform[_samples + 1];
-            for (var i = 0; i <= _samples; i++)
-            {
-                transforms[i] = TransformAt(i * 1.0 / _samples);
-                if (additionalRotation != 0.0)
-                {
-                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
-                }
-            }
-            return transforms;
-        }
-
-        /// <summary>
         /// Get a piecewise linear approximation of the length of the curve.
         /// https://en.wikipedia.org/wiki/Arc_length
         /// </summary>
