@@ -46,9 +46,14 @@ namespace Elements.Tests
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
-            var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
+            var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * .25, Math.PI * 0.75);
             var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
+
+            // Create an ellipse beam.
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 5, 3, 0, 210);
+            var ellipticBeam = new Beam(ellipticalArc, profile, 0,0,0, new Transform(18,0,0), BuiltInMaterials.Steel);
+            var ellipseT = ellipticalArc.TransformAt(arc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
             // </example>
 
             this.Model.AddElement(linearBeam);
@@ -57,6 +62,8 @@ namespace Elements.Tests
             this.Model.AddElements(polyT);
             this.Model.AddElement(arcBeam);
             this.Model.AddElements(arcT);
+            this.Model.AddElement(ellipticBeam);
+            this.Model.AddElements(ellipseT);
         }
 
         [Theory]
