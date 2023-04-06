@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -33,7 +32,7 @@ namespace Elements.Geometry
         public abstract Transform TransformAt(double u);
 
         /// <summary>
-        /// Construct a transformed copy of this Curve.
+        /// Create a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);

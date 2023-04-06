@@ -20,7 +20,7 @@ namespace Elements.Geometry.Interfaces
         Transform TransformAt(double u);
 
         /// <summary>
-        /// Get a point at a distance from the specified distance along the curve.
+        /// Get the parameter at a distance from the specified parameter along the curve.
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="parameter">The parameter from which to measure the distance.</param>

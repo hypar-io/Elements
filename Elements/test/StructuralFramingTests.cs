@@ -46,8 +46,8 @@ namespace Elements.Tests
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
-            var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * .25, Math.PI * 0.75);
-            var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
+            var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * 0.25, Math.PI * 0.75);
+            var arcBeam = new Beam(arc, profile, 0, 0, 0, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
 
             // Create an ellipse beam.

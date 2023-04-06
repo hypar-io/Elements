@@ -205,8 +205,20 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
-            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+            
+            var min = this.Domain.Min;
+            var max = this.Domain.Max;
+
+            var flip = max < min;
+
+            if(flip)
+            {
+                max = this.Domain.Min;
+                min = this.Domain.Max;
+            }
+
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, min, flip);
+            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, max, !flip);
 
             // Parameter calculations.
             var angleSpan = endParam - startParam;
@@ -221,11 +233,9 @@ namespace Elements.Geometry
 
             var parameters = new double[div + 1];
             var step = angleSpan / div;
-            var count = 0;
-            for (var u = startParam; u <= endParam; u+=step)
+            for (var i = 0; i <= div; i++)
             {
-                parameters[count] = u;
-                count++;
+                parameters[i] = startParam + i * step;
             }
             return parameters;
         }

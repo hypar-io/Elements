@@ -5,8 +5,7 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An circle with a start angle of 0 (+X) and 
-    /// an end angle of 360.0. 
+    /// A circle with a start angle of 0 (+X) and an end angle of 360.0. 
     /// Parameterization of the curve is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
@@ -27,7 +26,7 @@ namespace Elements.Geometry
         public double Radius { get; protected set; }
         
         /// <summary>
-        /// The coordinate system of the plane containing the arc.
+        /// The coordinate system of the plane containing the circle.
         /// </summary>
         public Transform Transform { get; protected set; }
 
@@ -99,9 +98,14 @@ namespace Elements.Geometry
         /// <returns>A Vector3 representing the point along the arc.</returns>
         public override Vector3 PointAt(double u)
         {
+            return Transform.OfPoint(PointAtUntransformed(u));
+        }
+
+        private Vector3 PointAtUntransformed(double u)
+        {
             var x = this.Radius * Math.Cos(u);
             var y = this.Radius * Math.Sin(u);
-            return Transform.OfPoint(new Vector3(x, y));
+            return new Vector3(x, y);
         }
 
         /// <summary>
@@ -111,10 +115,10 @@ namespace Elements.Geometry
         /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
         public override Transform TransformAt(double u)
         {
-            var p = PointAt(u);
-            var x = (p - this.Transform.Origin).Unitized();
+            var p = PointAtUntransformed(u);
+            var x = (p - Vector3.Origin).Unitized();
             var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y));
+            return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
         /// <summary>
