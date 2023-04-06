@@ -221,11 +221,9 @@ namespace Elements.Geometry
 
             var parameters = new double[div + 1];
             var step = angleSpan / div;
-            var count = 0;
-            for (var u = startParam; u <= endParam; u+=step)
+            for (var i = 0; i <= div; i++)
             {
-                parameters[count] = u;
-                count++;
+                parameters[i] = startParam + i * step;
             }
             return parameters;
         }
