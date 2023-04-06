@@ -60,6 +60,8 @@ namespace Elements.Geometry
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
             this.Domain = new Domain1d(0, 1);
+            this.Start = PointAt(0);
+            this.End = PointAt(1);
         }
 
         /// <summary>
