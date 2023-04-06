@@ -30,10 +30,39 @@ namespace Hypar.Tests
             var arc1 = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
             Assert.True(new Vector3(2, 0, 0).IsAlmostEqualTo(arc1.Start));
             Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
+
+            // A transformed arc.
+            var arc2 = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 2.0, 0, Math.PI);
             // </example>
 
             this.Model.AddElement(new ModelCurve(arc, BuiltInMaterials.XAxis));
             this.Model.AddElement(new ModelCurve(arc1, BuiltInMaterials.YAxis));
+            this.Model.AddElement(new ModelCurve(arc2, BuiltInMaterials.ZAxis));
+        }
+
+        [Fact]
+        public void GetTransformsTransformedCurveSucceeds()
+        {
+            this.Name = nameof(GetTransformsTransformedCurveSucceeds);
+            var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5, 0, Math.PI);
+            var parameters = arc.GetSampleParameters();
+            foreach(var p in parameters)
+            {
+                var t = arc.TransformAt(p);
+                this.Model.AddElements(t.ToModelCurves());
+            }
+            this.Model.AddElement(new ModelCurve(arc, BuiltInMaterials.ZAxis));
+        }
+
+        [Fact]
+        public void GetSampleParametersReversedCurveSucceeds()
+        {
+            var arc = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
+            var parameters = arc.GetSampleParameters();
+            foreach(var p in parameters)
+            {
+                arc.PointAt(p);
+            }
         }
 
         [Fact]
