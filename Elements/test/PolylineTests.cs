@@ -593,6 +593,7 @@ namespace Elements.Geometry.Tests
         public void PolylineFrameNormalsAreConsistent()
         {
             Name = nameof(PolylineFrameNormalsAreConsistent);
+
             Polyline curve = new Polyline(
                 (0, 0, 0),
                 (1, 0, 0),
@@ -600,9 +601,6 @@ namespace Elements.Geometry.Tests
                 (5, 3, 1),
                 (10, 0, 0)
             );
-
-            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
-
             var frames = curve.Frames();
 
             for (int i = 0; i < frames.Length - 1; i++)
@@ -614,6 +612,7 @@ namespace Elements.Geometry.Tests
                 Assert.True(currNormal.Dot(nextNormal) > 0.0);
             }
 
+            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
             var bFrames = bezier.Frames();
 
             var parameters = new List<double>();

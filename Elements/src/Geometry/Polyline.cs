@@ -230,7 +230,7 @@ namespace Elements.Geometry
                 var currLength = s.Length();
                 if (totalLength <= d && totalLength + currLength >= d)
                 {
-                    var parameterOnSegment = (d - totalLength) / currLength;
+                    var parameterOnSegment = d - totalLength;
                     o = s.PointAt(parameterOnSegment);
                     var previousNormal = normals[i];
                     var nextNormal = normals[(i + 1) % this.Vertices.Count];
