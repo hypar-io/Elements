@@ -21,9 +21,9 @@ namespace Elements
         /// <returns>True if the value is within the domain.</returns>
         internal bool Includes(double value, bool includeEnds = false)
         {
-            if(includeEnds)
+            if (includeEnds)
             {
-                if(Min.ApproximatelyEquals(value) || Max.ApproximatelyEquals(value))
+                if (Min.ApproximatelyEquals(value) || Max.ApproximatelyEquals(value))
                 {
                     return true;
                 }
@@ -137,11 +137,7 @@ namespace Elements
         /// </summary>
         public double Mid()
         {
-            if(!IsIncreasing())
-            {
-                return this.Min + (this.Min - this.Max)/2;
-            }
-            return this.Min + (this.Max - this.Min)/2;
+            return (this.Min + this.Max) / 2;
         }
     }
 }
