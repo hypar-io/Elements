@@ -25,7 +25,7 @@ namespace Elements.Geometry
         [JsonProperty("Radius", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Radius { get; protected set; }
-        
+
         /// <summary>
         /// The coordinate system of the plane containing the circle.
         /// </summary>
@@ -68,11 +68,11 @@ namespace Elements.Geometry
         /// <param name="divisions">The number of divisions of the circle.</param>
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
-        { 
+        {
             var pts = new List<Vector3>();
             var twoPi = Math.PI * 2;
-            var step = twoPi/divisions;
-            for (var t = 0.0; t < twoPi; t+=step)
+            var step = twoPi / divisions;
+            for (var t = 0.0; t < twoPi; t += step)
             {
                 pts.Add(this.PointAt(t));
             }
@@ -117,7 +117,7 @@ namespace Elements.Geometry
             var p = PointAtUntransformed(u);
             var x = (p - Vector3.Origin).Unitized();
             var y = Vector3.ZAxis;
-            return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
+            return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
         /// <summary>
