@@ -9,7 +9,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A line segment.
-    /// Parameterization of the line is  0 (Start) -> length (End)
+    /// Parameterization of the line is  0 (start) -> length (end)
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
