@@ -5,8 +5,8 @@ using Newtonsoft.Json;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A circle with a start angle of 0 (+X) and an end angle of 360.0. 
-    /// Parameterization of the curve is 0 -> 2PI.
+    /// A circle. 
+    /// Parameterization of the circle is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
     {
@@ -68,14 +68,12 @@ namespace Elements.Geometry
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         { 
-            var pts = new Vector3[divisions];
+            var pts = new Vector3[divisions + 1];
             var twoPi = Math.PI * 2;
             var step = twoPi/divisions;
-            var count = 0;
-            for (var t = 0.0; t < twoPi; t += step)
+            for (var i = 0; i <= divisions; i++)
             {
-                pts[count] = this.PointAt(t);
-                count++;
+                pts[i] = this.PointAt(i * step);
             }
             return new Polygon(pts, true);
         }
@@ -86,7 +84,7 @@ namespace Elements.Geometry
         public static implicit operator Arc(Circle c) => new Arc(c, 0, 360);
 
         /// <summary>
-        /// Convert a bounded curve to a model curve.
+        /// Convert a circle to a model circular model curve.
         /// </summary>
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(Circle c) => new ModelCurve(c);
