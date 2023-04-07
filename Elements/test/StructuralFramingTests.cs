@@ -51,9 +51,9 @@ namespace Elements.Tests
             var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
 
             // Create an ellipse beam.
-            var ellipticalArc = new EllipticalArc(Vector3.Origin, 5, 3, 0, 210);
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5,1.5, 0, 210);
             var ellipticBeam = new Beam(ellipticalArc, profile, 0,0,0, new Transform(18,0,0), BuiltInMaterials.Steel);
-            var ellipseT = ellipticalArc.TransformAt(arc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
+            var ellipseT = ellipticalArc.TransformAt(ellipticalArc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
             // </example>
 
             this.Model.AddElement(linearBeam);
