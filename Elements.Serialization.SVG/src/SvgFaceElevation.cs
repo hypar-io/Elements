@@ -50,7 +50,7 @@ namespace Elements.Serialization.SVG
         /// Initializes a new instance of SvgFaceElevation class.
         /// </summary>
         /// <param name="face">The face to draw.</param>
-        /// <param name="up">The normal to the face.
+        /// <param name="up">The normal to the face.</param>
         public SvgFaceElevation(Face face, Vector3 up)
         {
             _face = face;
