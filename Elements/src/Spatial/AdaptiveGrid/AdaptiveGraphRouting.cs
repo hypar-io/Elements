@@ -61,7 +61,6 @@ namespace Elements.Spatial.AdaptiveGrid
                                Math.Abs(b.Point.Z - _configuration.MainLayer) > _grid.Tolerance;
                     }),
                     _configuration.LayerPenalty);
-
             }
         }
 
@@ -981,7 +980,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 hints.Any(h => h.IsNearby(v.Point, _grid.Tolerance))).ToList();
         }
 
-
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
                 ref double bestCost, ref ulong bestIndex)
         {
@@ -1254,4 +1252,3 @@ namespace Elements.Spatial.AdaptiveGrid
         }
     }
 }
-

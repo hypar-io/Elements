@@ -24,12 +24,10 @@ namespace Elements.Spatial.AdaptiveGrid
             Length = vector.Length();
             Factor = factor;
             Flags = EdgeFlags.None;
-            HasVerticalChange = false;
 
             if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
             {
                 Flags |= EdgeFlags.HasVerticalChange;
-                HasVerticalChange = true;
             }
         }
 
@@ -52,7 +50,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Are edge end points on different elevations.
         /// </summary>
         [Obsolete("Use HasAnyFlag(EdgeFlags.HasVerticalChange) instead")]
-        public readonly bool HasVerticalChange;
+        public bool HasVerticalChange { get => HasAnyFlag(EdgeFlags.HasVerticalChange); }
 
         /// <summary>
         /// Additional information about the edge.
