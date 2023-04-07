@@ -11,6 +11,7 @@
         <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
         <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
         <Version>$(Version)</Version>
+        <NoWarn>NU5104</NoWarn>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
     <ItemGroup>
