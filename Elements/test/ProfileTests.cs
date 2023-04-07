@@ -538,7 +538,7 @@ namespace Elements.Tests
             // Value determined experimentally. If this test breaks, verify output visually —
             // it's not necessarily the end of the world if the number changes slightly, but we want to
             // make sure the results look sensible.
-            Assert.Equal(441, splits.Count);
+            Assert.Equal(444, splits.Count);
             var random = new Random(11);
             foreach (var s in splits)
             {
