@@ -33,16 +33,6 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Get a default initialized RoutingConfiguration.
-        /// </summary>
-        /// <returns></returns>
-        public static RoutingConfiguration Default()
-        {
-            return new RoutingConfiguration(turnCost: 0);
-
-        }
-
-        /// <summary>
         /// Travel cost penalty if route changes it's direction.
         /// </summary>
         public readonly double TurnCost;

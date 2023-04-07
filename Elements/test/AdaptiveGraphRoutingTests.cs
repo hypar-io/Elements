@@ -701,7 +701,7 @@ namespace Elements.Tests
             CheckTree(grid, start.Id, route, expectedPath);
 
             // When angles are not specified - any is allowed. In this case routing uses the best 30 degree shortcut.
-            c = RoutingConfiguration.Default();
+            c = new RoutingConfiguration();
             routing = new AdaptiveGraphRouting(grid, c);
             route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip[4].Id }, new List<RoutingHintLine> { });
             expectedPath = new List<Vector3>()
@@ -739,7 +739,7 @@ namespace Elements.Tests
             }, AdaptiveGrid.VerticesInsertionMethod.Connect);
 
             // Without any filters shortest path is taken.
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             var start = new RoutingVertex(strip[0].Id, 0);
             var route = routing.BuildSimpleNetwork(new List<RoutingVertex> { start }, new List<ulong> { strip.Last().Id }, new List<RoutingHintLine> { });
@@ -793,7 +793,7 @@ namespace Elements.Tests
             }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
 
             // Without isolation distance shortest path is taken.
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             var first = new RoutingVertex(strip[0].Id, 0);
             var second = new RoutingVertex(strip[1].Id, 0);
@@ -848,7 +848,7 @@ namespace Elements.Tests
             var hint = new RoutingHintLine(new Polyline(hintPath),
                 factor: 0.1, influence: 0, userDefined: true, is2D: false);
 
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5), out var inputId));
             Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5), out var outputId));
@@ -902,7 +902,7 @@ namespace Elements.Tests
             }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
 
 
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             Assert.True(grid.TryGetVertexIndex(new Vector3(2, 2), out var inputId0));
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 10), out var inputId1));
@@ -963,7 +963,7 @@ namespace Elements.Tests
                 new Vector3(12, 0, 0),
             }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
 
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             Assert.True(grid.TryGetVertexIndex(new Vector3(0, 20), out var inputId0));
             Assert.True(grid.TryGetVertexIndex(new Vector3(10, 20), out var inputId1));
@@ -1005,7 +1005,7 @@ namespace Elements.Tests
                 new Vector3(5, 5, 0),
             }, AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut);
 
-            var c = RoutingConfiguration.Default();
+            var c = new RoutingConfiguration();
             var routing = new AdaptiveGraphRouting(grid, c);
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5), out var inputId0));
             Assert.True(grid.TryGetVertexIndex(new Vector3(-5, 10), out var inputId1));
@@ -1188,7 +1188,7 @@ namespace Elements.Tests
             };
             grid.TryGetVertexIndex(new Vector3(20, 0, 0), out var trunk);
 
-            RoutingConfiguration config = RoutingConfiguration.Default();
+            var config = new RoutingConfiguration();
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
             alg.BuildSpanningTree(leafs, trunk, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
             Assert.Equal(2, alg.ErrorMessages.Count);
