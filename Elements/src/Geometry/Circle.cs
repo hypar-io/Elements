@@ -67,8 +67,8 @@ namespace Elements.Geometry
         /// <param name="divisions">The number of divisions of the circle.</param>
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
-        {
-            var pts = new Vector3[divisions + 1];
+        { 
+            var pts = new Vector3[divisions];
             var twoPi = Math.PI * 2;
             var step = twoPi/divisions;
             var count = 0;

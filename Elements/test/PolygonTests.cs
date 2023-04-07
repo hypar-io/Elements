@@ -1836,7 +1836,7 @@ namespace Elements.Geometry.Tests
             var centroid = star.Centroid();
             Assert.True(star.Contains(centroid));
             var arc2 = new Circle(centroid, 0.1);
-            Model.AddElement(new ModelCurve(arc2.ToPolygon().TransformedPolygon(t)));
+            Model.AddElement(new ModelCurve(arc2.ToPolygon()));
         }
 
         [Fact]
