@@ -105,20 +105,29 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
+            var min = this.Domain.Min;
+            var max = this.Domain.Max;
+
+            var flip = max < min;
+
+            if(flip)
+            {
+                max = this.Domain.Min;
+                min = this.Domain.Max;
+            }
+
             // TODO: Getting points at equal lengths along the curve
             // requires the use of an elliptic integral and solving with
             // newton's method to find exactly the right values. For now,
             // we'll do a very simple subdivision of the arc.
-             var samples = 50;
-             var step = this.Domain.Length / 20;
-             var parameters = new double[samples + 1];
-             var count = 0;
-             for(var t=this.Domain.Min; t<=this.Domain.Max; t+=step)
-             {
-                parameters[count] = t;
-                count++;
-             }
-             return parameters;
+            var div = 50;
+            var parameters = new double[div + 1];
+            var step = (max - min) / div;
+            for (var i = 0; i <= div; i++)
+            {
+                parameters[i] = min + i * step;
+            }
+            return parameters;
         }
     }
 }

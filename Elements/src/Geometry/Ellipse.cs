@@ -72,6 +72,19 @@ namespace Elements.Geometry
             this.MajorAxis = majorAxis;
             this.MinorAxis = minorAxis;
         }
+
+        private void CheckAndThrow(double minorAxis, double majorAxis)
+        {
+            if(minorAxis <= 0)
+            {
+                throw new System.ArgumentOutOfRangeException("minorAxis", "The minor axis value must be greater than 0.");
+            }
+
+            if(majorAxis <= 0)
+            {
+                throw new System.ArgumentOutOfRangeException("majorAxis", "The major axis value must be greater than 0.");
+            }
+        }
         
         /// <summary>
         /// Get a point along the ellipse at parameter u.
@@ -80,9 +93,14 @@ namespace Elements.Geometry
         /// <returns>A point on the ellipse at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
+            return Transform.OfPoint(PointAtUntransformed(u));
+        }
+
+        private Vector3 PointAtUntransformed(double u)
+        {
             var x = this.MajorAxis * Math.Cos(u);
             var y = this.MinorAxis * Math.Sin(u);
-            return Transform.OfPoint(new Vector3(x, y));
+            return new Vector3(x,y);
         }
 
         /// <summary>
@@ -92,10 +110,27 @@ namespace Elements.Geometry
         /// <returns>A transform on the ellipse at parameter u.</returns>
         public override Transform TransformAt(double u)
         {
-            var p = PointAt(u);
-            var x = (p - this.Transform.Origin).Unitized();
+            // Code generated from chatgpt with the following prompt:
+            // Can i see some c# code to calculate the normal to an ellipse at parameter t where the major axis is 5 and the minor axis is 3?
+            
+            var p = PointAtUntransformed(u);
+            
+            var a = this.MajorAxis;
+            var b = this.MinorAxis;
+            
+            // Calculate slope of tangent line at point (x, y)
+            double slopeTangent = -b * b * p.X / (a * a * p.Y);
+
+            // Calculate slope of normal line at point (x, y)
+            double slopeNormal = -1 / slopeTangent;
+
+            // Calculate x and y components of the normal vector
+            double nx = 1 / Math.Sqrt(1 + slopeNormal * slopeNormal);
+            double ny = slopeNormal / Math.Sqrt(1 + slopeNormal * slopeNormal);
+            var x = new Vector3(nx, ny);
             var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y));
+
+            return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
         /// <summary>
