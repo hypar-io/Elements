@@ -13,7 +13,7 @@ namespace Elements.Generate
     // Copied from https://github.com/RicoSuter/NJsonSchema/blob/687efeabdc30ddacd235e85213f3594458ed48b4/src/NJsonSchema.CodeGeneration/DefaultTemplateFactory.cs#L183
     /// <summary>
     /// This class contains text filtering methods.  They are used during rendering in liquid templates.
-    /// We shouldn't actually need to implement these ourselves. See the TODO in the source code for more information.  
+    /// We shouldn't actually need to implement these ourselves. See the TODO in the source code for more information.
     /// </summary>
     public static class HyparFilters
     {
@@ -31,10 +31,8 @@ namespace Elements.Generate
         /// <summary>
         /// Return the string turned into a save C# identifier lowercased.
         /// </summary>
-        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
         /// <param name="input">The string to be formatted.</param>
-        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
-        public static string Safeidentifierlower(Context context, string input, bool firstCharacterMustBeAlpha = true)
+        public static string Safeidentifierlower(string input)
         {
             return input.ToSafeIdentifier(true);
         }
@@ -42,12 +40,19 @@ namespace Elements.Generate
         /// <summary>
         /// Return the string turned into a save C# identifier uppercased.
         /// </summary>
-        /// <param name="context">The DotLiquid.Context this filter is running in.</param>
         /// <param name="input">The string to be formatted.</param>
-        /// <param name="firstCharacterMustBeAlpha">Should the @ character be prepended to the string.</param>
-        public static string Safeidentifierupper(Context context, string input, bool firstCharacterMustBeAlpha = true)
+        public static string Safeidentifierupper(string input)
         {
             return input.ToSafeIdentifier();
+        }
+
+        /// <summary>
+        /// Return a string that is literalized with double double quotes.
+        /// </summary>
+        /// <param name="input">The string to be formatted.</param>
+        public static string Literalquotes(string input)
+        {
+            return input.LiteralQuotes();
         }
 
         /// <summary>

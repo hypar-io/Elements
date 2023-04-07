@@ -851,6 +851,73 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Measure the distance between two lines.
+        /// </summary>
+        /// <param name="other">The line to measure the distance to.</param>
+        public double DistanceTo(Line other)
+        {
+            Vector3 dStartStart = this.Start - other.Start;
+            Vector3 vThis = this.End - this.Start;
+            Vector3 vOther = other.End - other.Start;
+            Vector3 cross = vThis.Cross(vOther);
+            // line vectors are collinear - two segments share the same infinite line on the infinite line.
+            if (cross.IsZero())
+            {
+                // if start of this line is "before" start of the other line.
+                if (vOther.Dot(dStartStart) < 0)
+                {
+                    Vector3 dEndStart = this.End - other.Start;
+                    // and end of this line is "before" start of the other line - line are not overlapping,
+                    // otherwise the projection of this contains other.Start
+                    if (vOther.Dot(dEndStart) < 0)
+                    {
+                        // the projection of this line is outside of the other, closer to other.Start
+                        return Math.Sqrt(Math.Min(dStartStart.LengthSquared(), dEndStart.LengthSquared()));
+                    }
+                }
+                else
+                {
+                    Vector3 dStartEnd = this.Start - other.End;
+                    // if end of this line is "after" end of the other line,
+                    // otherwise the projection of this.Start is inside other.
+                    if (vOther.Dot(dStartEnd) > 0)
+                    {
+                        Vector3 dEndEnd = this.End - other.End;
+                        // and start of this line is "after" end of the other line.
+                        if (vOther.Dot(dEndEnd) > 0)
+                        {
+                            // the projection of this line is outside of the other, closer to other.End
+                            return Math.Sqrt(Math.Min(dStartEnd.LengthSquared(), dEndEnd.LengthSquared()));
+                        }
+                    }
+                }
+                dStartStart -= dStartStart.ProjectOnto(vThis);
+            }
+            // line vectors are not collinear, their directions share the common plane.
+            else
+            {
+                // dStartStart length is distance to the common plane. 
+                dStartStart = dStartStart.ProjectOnto(cross);
+                Vector3 vStartStart = other.Start + dStartStart - this.Start;
+                Vector3 vStartEnd = other.Start + dStartStart - this.End;
+                Vector3 vEndStart = other.End + dStartStart - this.Start;
+                Vector3 vEndEnd = other.End + dStartStart - this.End;
+                // other + dStartStart and this are now in the same plane
+                // check if other is fully on one side of this or vice versa,
+                // in other words, if  this and `other + dStartStart` intersect on a shred plane
+                if (vStartStart.Cross(vStartEnd).Dot(vEndStart.Cross(vEndEnd)) > 0 ||
+                    vStartStart.Cross(vEndStart).Dot(vStartEnd.Cross(vEndEnd)) > 0)
+                {
+                    // if not intersect - shortest distance is minimum distance from a point to other line.
+                    return Math.Min(Math.Min(this.Start.DistanceTo(other), this.End.DistanceTo(other)),
+                                    Math.Min(other.Start.DistanceTo(this), other.End.DistanceTo(this)));
+                }
+            }
+
+            return dStartStart.Length();
+        }
+
+        /// <summary>
         /// Trim a line with a polygon.
         /// </summary>
         /// <param name="polygon">The polygon to trim with.</param>

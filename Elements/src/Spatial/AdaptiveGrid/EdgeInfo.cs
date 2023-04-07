@@ -27,7 +27,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
             if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
             {
-                Flags &= EdgeFlags.HasVerticalChange;
+                Flags |= EdgeFlags.HasVerticalChange;
+                HasVerticalChange = true;
             }
         }
 
@@ -49,13 +50,13 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Are edge end points on different elevations.
         /// </summary>
-        [Obsolete("Use HasFlag(EdgeFlags.HasVerticalChange) instead")]
-        public bool HasVerticalChange { get => false; }
+        [Obsolete("Use HasAnyFlag(EdgeFlags.HasVerticalChange) instead")]
+        public readonly bool HasVerticalChange;
 
         /// <summary>
         /// Additional information about the edge.
         /// </summary>
-        internal EdgeFlags Flags;
+        private EdgeFlags Flags;
 
         /// <summary>
         /// Check if edge info has a certain flag or combination of flags set.

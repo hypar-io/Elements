@@ -11,6 +11,6 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - run: dotnet build -c release
       - run: dotnet test -c release

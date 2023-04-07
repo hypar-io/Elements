@@ -41,7 +41,7 @@ namespace Elements.Tests
             //Each turn cost 1 additional "meter"
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
-            grid.TryGetVertexIndex(new Vector3(0, 4, 0), out var inV, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(0, 4, 0), out var inV);
 
             //Set travel cost for each edge equal to it's length
             var edgeCosts = new Dictionary<ulong, EdgeInfo>();
@@ -54,7 +54,7 @@ namespace Elements.Tests
             var paths = alg.ShortestPathDijkstra(inV, edgeCosts, out var travelCosts);
 
             //Find most efficient path from (0, 4) to (10, 4)
-            grid.TryGetVertexIndex(new Vector3(10, 4, 0), out var outV, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(10, 4, 0), out var outV);
             List<Vector3> expectedPath = new List<Vector3>()
             {
                 new Vector3(0, 4, 0),
@@ -77,7 +77,7 @@ namespace Elements.Tests
             Assert.Equal(20, travelCosts[outV]);
 
             //Find most efficient path from (0, 4) to (5, 10)
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 10, 0), out outV, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 10, 0), out outV));
             expectedPath = new List<Vector3>()
             {
                 new Vector3(0, 4, 0),
@@ -120,9 +120,9 @@ namespace Elements.Tests
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 2, 0), out var inV, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 2, 0), out var ev0, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2, 0), out var ev1, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 2, 0), out var inV));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 2, 0), out var ev0));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2, 0), out var ev1));
 
             var edgeCosts = new Dictionary<ulong, EdgeInfo>();
 
@@ -136,11 +136,11 @@ namespace Elements.Tests
                 edgeCosts[e.Id] = new EdgeInfo(grid, e, factor);
             }
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 3, 0), out var preV, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 3, 0), out var preV));
             var paths = alg.ShortestBranchesDijkstra(inV, edgeCosts, out var travelCosts, preV);
 
             //Two paths calculated for (2, 3)->(8, 1) to approach end point from different edges.
-            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 1, 0), out var outV, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 1, 0), out var outV));
             List<Vector3> expectedLeft = new List<Vector3>()
             {
                 new Vector3(2, 2, 0),
@@ -253,7 +253,7 @@ namespace Elements.Tests
             foreach (var input in inputPoints)
             {
                 var p = new Vector3(input.X, input.Y, mainLayer);
-                Assert.True(grid.TryGetVertexIndex(p, out ulong down, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(p, out ulong down));
                 grid.AddVertex(input, new ConnectVertexStrategy(grid.GetVertex(down)));
             }
             grid.SubtractObstacle(obstacle);
@@ -261,13 +261,13 @@ namespace Elements.Tests
             var inputVertices = new List<RoutingVertex>();
             foreach (var input in inputPoints)
             {
-                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id));
                 {
                     inputVertices.Add(new RoutingVertex(id, 0.5));
                 }
             }
 
-            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex));
 
             var configuration = new RoutingConfiguration(turnCost: 1);
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, configuration);
@@ -402,13 +402,13 @@ namespace Elements.Tests
             var inputVertices = new List<RoutingVertex>();
             foreach (var input in inputPoints)
             {
-                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id));
                 {
                     inputVertices.Add(new RoutingVertex(id, 0.5));
                 }
             }
 
-            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex));
 
             //9. Set configurations for hint and offset lines.
             var hint = new RoutingHintLine(hintPolyline,
@@ -502,7 +502,7 @@ namespace Elements.Tests
             inputVertices.Add(new List<RoutingVertex>());
             foreach (var input in inputPoints.Take(3))
             {
-                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id));
                 {
                     inputVertices[0].Add(new RoutingVertex(id, 0.5));
                 }
@@ -510,13 +510,13 @@ namespace Elements.Tests
             inputVertices.Add(new List<RoutingVertex>());
             foreach (var input in inputPoints.Skip(3))
             {
-                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id));
                 {
                     inputVertices[1].Add(new RoutingVertex(id, 0.5));
                 }
             }
 
-            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(tailPoint, out ulong tailVertex));
 
             //9. Set configurations for hint and offset lines. Split them into groups.
             var hint = new RoutingHintLine(hintPolyline,
@@ -594,7 +594,7 @@ namespace Elements.Tests
             var inputVertices = new List<RoutingVertex>();
             foreach (var input in inputPoints)
             {
-                Assert.True(grid.TryGetVertexIndex(input, out ulong id, grid.Tolerance));
+                Assert.True(grid.TryGetVertexIndex(input, out ulong id));
                 {
                     inputVertices.Add(new RoutingVertex(id, 0));
                 }
@@ -850,8 +850,8 @@ namespace Elements.Tests
 
             var c = RoutingConfiguration.Default();
             var routing = new AdaptiveGraphRouting(grid, c);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5), out var inputId, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5), out var outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5), out var inputId));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5), out var outputId));
             var input = new RoutingVertex(inputId, 0);
             var route = routing.BuildSpanningTree(
                 new List<RoutingVertex> { input }, outputId, new List<RoutingHintLine> { hint }, TreeOrder.ClosestToFurthest);
@@ -904,10 +904,10 @@ namespace Elements.Tests
 
             var c = RoutingConfiguration.Default();
             var routing = new AdaptiveGraphRouting(grid, c);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 2), out var inputId0, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 10), out var inputId1, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2), out var inputId2, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0), out var outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 2), out var inputId0));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 10), out var inputId1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 2), out var inputId2));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0), out var outputId));
             var inputs = new List<RoutingVertex> {
                 new RoutingVertex(inputId0, 0),
                 new RoutingVertex(inputId1, 0),
@@ -925,7 +925,7 @@ namespace Elements.Tests
             };
             CheckTree(grid, inputId1, tree, expectedPath);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0), out outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0), out outputId));
             tree = routing.BuildSpanningTree(inputs, outputId, new List<RoutingHintLine>(), TreeOrder.ClosestToFurthest);
 
             expectedPath = new List<Vector3>()
@@ -965,9 +965,9 @@ namespace Elements.Tests
 
             var c = RoutingConfiguration.Default();
             var routing = new AdaptiveGraphRouting(grid, c);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 20), out var inputId0, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 20), out var inputId1, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0), out var outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 20), out var inputId0));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 20), out var inputId1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0), out var outputId));
             var inputs = new List<RoutingVertex> {
                 new RoutingVertex(inputId0, 1),
                 new RoutingVertex(inputId1, 1),
@@ -1007,10 +1007,10 @@ namespace Elements.Tests
 
             var c = RoutingConfiguration.Default();
             var routing = new AdaptiveGraphRouting(grid, c);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5), out var inputId0, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(-5, 10), out var inputId1, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 15), out var inputId2, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0), out var outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5), out var inputId0));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(-5, 10), out var inputId1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 15), out var inputId2));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0), out var outputId));
             var inputs = new List<RoutingVertex> {
                 new RoutingVertex(inputId0, 1),
                 new RoutingVertex(inputId1, 1),
@@ -1090,11 +1090,11 @@ namespace Elements.Tests
                 new Plane(new Vector3(0, 0, -1), Vector3.ZAxis),
                 2);
             routing.AddRoutingFilter((Vertex start, Vertex end) => start.Point.Z > end.Point.Z - Vector3.EPSILON);
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var inputId0, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 5), out var inputId1, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0, 5), out var inputId2, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(15, 0, 5), out var inputId3, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0, -5), out var outputId, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var inputId0));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 5), out var inputId1));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 0, 5), out var inputId2));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(15, 0, 5), out var inputId3));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(20, 0, -5), out var outputId));
             var inputs = new List<RoutingVertex> {
                 new RoutingVertex(inputId0, 0),
                 new RoutingVertex(inputId1, 0),
@@ -1174,11 +1174,11 @@ namespace Elements.Tests
                 new Vector3(15, 0, 0) },
                 AdaptiveGrid.VerticesInsertionMethod.ConnectAndCut); //goes underground.
 
-            grid.TryGetVertexIndex(new Vector3(0, 5, 0), out var id0, grid.Tolerance);
-            grid.TryGetVertexIndex(new Vector3(0.1, 3, 0), out var id1, grid.Tolerance);
-            grid.TryGetVertexIndex(new Vector3(5, -5, 0), out var id2, grid.Tolerance);
-            grid.TryGetVertexIndex(new Vector3(5, 5, 0), out var id3, grid.Tolerance);
-            grid.TryGetVertexIndex(new Vector3(15, -5, 0), out var id4, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(0, 5, 0), out var id0);
+            grid.TryGetVertexIndex(new Vector3(0.1, 3, 0), out var id1);
+            grid.TryGetVertexIndex(new Vector3(5, -5, 0), out var id2);
+            grid.TryGetVertexIndex(new Vector3(5, 5, 0), out var id3);
+            grid.TryGetVertexIndex(new Vector3(15, -5, 0), out var id4);
             List<RoutingVertex> leafs = new List<RoutingVertex>(){
                 new RoutingVertex(id0, 0.5),
                 new RoutingVertex(id1, 0.5),
@@ -1186,7 +1186,7 @@ namespace Elements.Tests
                 new RoutingVertex(id3, 0.5),
                 new RoutingVertex(id4, 0.5),
             };
-            grid.TryGetVertexIndex(new Vector3(20, 0, 0), out var trunk, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(20, 0, 0), out var trunk);
 
             RoutingConfiguration config = RoutingConfiguration.Default();
             AdaptiveGraphRouting alg = new AdaptiveGraphRouting(grid, config);
@@ -1240,11 +1240,11 @@ namespace Elements.Tests
             grid.AddFromPolygon(Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)),
                                 keyPoints);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 5), out var start, grid.Tolerance));
-            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 5), out var end, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(2, 5), out var start));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(8, 5), out var end));
 
             //Remove alternative route with the same best cost.
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 7), out var v, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 7), out var v));
             foreach (var e in grid.GetVertex(v).Edges.ToList())
             {
                 grid.RemoveEdge(e);
@@ -1284,6 +1284,46 @@ namespace Elements.Tests
                 new Vector3(8, 5)
             };
             CheckTree(grid, start, tree, expectedPath);
+        }
+
+        [Fact]
+        public void AdaptiveGraphRoutingEqualTransitions()
+        {
+            var grid = new AdaptiveGrid();
+            var keyPoints = new[] { 1, 3, 5, 7, 9 }.Select(i => new Vector3(i, i));
+            grid.AddFromPolygon(Polygon.Rectangle((0, 0), (10, 10)), keyPoints);
+
+            Assert.True(grid.TryGetVertexIndex((0, 5), out var end));
+
+            var inputs = new List<Vector3>()
+            {
+                (3, 1), (3, 3), (3, 5),
+                (5, 1), (5, 3), (5, 5), (5, 7), (5, 9),
+                (7, 5), (7, 7), (7, 9)
+            };
+
+            var inputVertices = inputs.Select(i =>
+            {
+                Assert.True(grid.TryGetVertexIndex(i, out var id));
+                return new RoutingVertex(id, 0);
+            }).ToList();
+
+            var hints = new List<RoutingHintLine>()
+            {
+                new RoutingHintLine(new Polyline(new Vector3[] { (3, 1), (3, 5) }), 0.5, 0, false, true),
+                new RoutingHintLine(new Polyline(new Vector3[] { (5, 1), (5, 9) }), 0.5, 0, false, true),
+                new RoutingHintLine(new Polyline(new Vector3[] { (7, 5), (7, 9) }), 0.5, 0, false, true)
+            };
+
+            var alg = new AdaptiveGraphRouting(grid, new RoutingConfiguration(turnCost: 1));
+            var tree = alg.BuildSpanningTree(inputVertices, end, hints, TreeOrder.ClosestToFurthest);
+
+            CheckTree(grid, inputVertices[0].Id, tree,
+                      new List<Vector3> { (3, 1), (3, 3), (3, 5), (1, 5), (0, 5) });
+            CheckTree(grid, inputVertices[3].Id, tree,
+                      new List<Vector3> { (5, 1), (5, 3), (5, 5), (3, 5), (1, 5), (0, 5) });
+            CheckTree(grid, inputVertices[10].Id, tree,
+                      new List<Vector3> { (7, 9), (7, 7), (7, 5), (5, 5), (3, 5), (1, 5), (0, 5) });
         }
 
         private void VisualizeRoutingTree(

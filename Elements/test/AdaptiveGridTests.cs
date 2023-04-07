@@ -271,13 +271,13 @@ namespace Elements.Tests
             var withoutTransfrom = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
             adaptiveGrid.SubtractObstacle(withoutTransfrom);
 
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _, adaptiveGrid.Tolerance));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 2), out _, adaptiveGrid.Tolerance));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 4), out _, adaptiveGrid.Tolerance));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 3), out _, adaptiveGrid.Tolerance));
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 3), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 2), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 4), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 3), out _));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 3), out _));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 2), out var id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 2), out var id));
             var v = adaptiveGrid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -285,7 +285,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(2.5, 1.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 2), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 2), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -293,7 +293,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(4.5, 2.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 4), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(4, 4), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -301,7 +301,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(4.5, 3.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 4), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(2, 4), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -316,9 +316,9 @@ namespace Elements.Tests
             withTransform.Orientation = new Transform();
             adaptiveGrid.SubtractObstacle(withTransform);
 
-            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(7, 7), out _, adaptiveGrid.Tolerance));
+            Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(7, 7), out _));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 6), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 6), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -330,7 +330,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(6.5, 5.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 6), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 6), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -342,7 +342,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(8.5, 6.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 8), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(8, 8), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -354,7 +354,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
                 e.OtherVertexId(v.Id)).Point.IsAlmostEqualTo(new Vector3(7.5, 8.5), adaptiveGrid.Tolerance));
 
-            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 8), out id, adaptiveGrid.Tolerance));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(new Vector3(6, 8), out id));
             v = adaptiveGrid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
             Assert.Contains(v.Edges, e => adaptiveGrid.GetVertex(
@@ -500,7 +500,7 @@ namespace Elements.Tests
                 new ConnectVertexStrategy(adaptiveGrid.GetVertex(otherId)));
             Assert.Equal(id, newVertex.Id);
             modified = vertex.Point + new Vector3(-halfTol, -halfTol, -halfTol);
-            adaptiveGrid.TryGetVertexIndex(modified, out otherId, adaptiveGrid.Tolerance);
+            adaptiveGrid.TryGetVertexIndex(modified, out otherId);
             Assert.Equal(id, otherId);
         }
 
@@ -697,26 +697,26 @@ namespace Elements.Tests
             //Start point already exist and the last one is snapped.
             Assert.Equal(verticesBefore + 4, grid.GetVertices().Count);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(3, 5, 0), out var id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(3, 5, 0), out var id));
             var vertex = grid.GetVertex(id);
             Assert.Equal(3, vertex.Edges.Count);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(2, 5, 0)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 0)));
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(4, 5, 1), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(4, 5, 1), out id));
             vertex = grid.GetVertex(id);
             Assert.Equal(2, vertex.Edges.Count);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(3, 5, 0)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5, 1), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 5, 1), out id));
             vertex = grid.GetVertex(id);
             Assert.Equal(2, vertex.Edges.Count);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(4, 5, 1)));
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(6, 5, 0)));
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(6, 5, 0), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(6, 5, 0), out id));
             vertex = grid.GetVertex(id);
             Assert.Equal(3, vertex.Edges.Count);
             Assert.Contains(vertex.Edges, e => grid.GetVertex(e.OtherVertexId(id)).Point.IsAlmostEqualTo(new Vector3(5, 5, 1)));
@@ -1039,7 +1039,7 @@ namespace Elements.Tests
             var snapshot = grid.SnapshotEdgesOnPlane(plane);
             Assert.Equal(12, snapshot.Count);
 
-            grid.TryGetVertexIndex(new Vector3(5, 0, 1), out var id, grid.Tolerance);
+            grid.TryGetVertexIndex(new Vector3(5, 0, 1), out var id);
             grid.RemoveVertex(grid.GetVertex(id));
             var edgesBefore = grid.GetEdges().Count;
 
@@ -1047,7 +1047,7 @@ namespace Elements.Tests
             grid.InsertSnapshot(snapshot, transform);
             Assert.Equal(edgesBefore + 20, grid.GetEdges().Count);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5, 3), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5, 3), out id));
             var v = grid.GetVertex(id);
             Assert.Equal(4, v.Edges.Count);
             var neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
@@ -1057,7 +1057,7 @@ namespace Elements.Tests
             Assert.Contains(new Vector3(0, 5, 2), neighbourPoints);
             Assert.DoesNotContain(new Vector3(0, 5, 1), neighbourPoints);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 3), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 3), out id));
             v = grid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
             neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
@@ -1066,7 +1066,7 @@ namespace Elements.Tests
             Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
             Assert.DoesNotContain(new Vector3(5, 0, 1), neighbourPoints);
 
-            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5, 3), out id, grid.Tolerance));
+            Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5, 3), out id));
             v = grid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
             neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
@@ -1078,17 +1078,45 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridFindsCorrectVertex()
+        {
+            AdaptiveGrid grid = new AdaptiveGrid();
+            var v0 = grid.AddVertex(new Vector3(0.999992, 1.000005, 9));
+            var v1 = grid.AddVertex(new Vector3(1.000008, 1.000005, 1));
+            var v2 = grid.AddVertex(new Vector3(1, 0.999995, 4));
+
+            Assert.True(grid.TryGetVertexIndex((1, 1, 9), out var id0));
+            Assert.True(grid.TryGetVertexIndex((1, 1, 1), out var id1));
+            Assert.True(grid.TryGetVertexIndex((1, 1, 4), out var id2));
+            Assert.Equal(v0.Id, id0);
+            Assert.Equal(v1.Id, id1);
+            Assert.Equal(v2.Id, id2);
+        }
+
+        [Fact]
         public void EdgeInfoFlagsTest()
         {
             AdaptiveGrid grid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(10, 10));
             grid.AddFromPolygon(polygon, new List<Vector3>() { new Vector3(5, 5) });
-            EdgeInfo info = new EdgeInfo(grid, grid.GetEdges().First());
-            info.AddFlags(EdgeFlags.UserDefinedHint2D | EdgeFlags.HasVerticalChange);
-            Assert.True(info.HasAnyFlag(EdgeFlags.HasVerticalChange));
-            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
-            Assert.False(info.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
-            Assert.True(info.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
+            grid.AddEdge(Vector3.Origin, new Vector3(0, 0, 5));
+
+            grid.TryGetVertexIndex(Vector3.Origin, out var id0);
+            grid.TryGetVertexIndex(new Vector3(0, 0, 5), out var id1);
+            grid.TryGetVertexIndex(new Vector3(0, 5), out var id2);
+
+            var verticalEdge = grid.GetVertex(id0).Edges.First(e => e.StartId == id1 || e.EndId == id1);
+            var horizontalEdge = grid.GetVertex(id0).Edges.First(e => e.StartId == id2 || e.EndId == id2);
+            EdgeInfo verticalEdgeInfo = new EdgeInfo(grid, verticalEdge);
+            EdgeInfo horizontalEdgeInfo = new EdgeInfo(grid, horizontalEdge);
+            Assert.True(verticalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+            Assert.False(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+
+            horizontalEdgeInfo.AddFlags(EdgeFlags.UserDefinedHint2D | EdgeFlags.HasVerticalChange);
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.HasVerticalChange));
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
+            Assert.False(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
+            Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
         }
 
         //          (4)

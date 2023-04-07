@@ -740,6 +740,36 @@ namespace Elements.Tests
             Assert.Equal(8, buffer.FacetCount); // Two faces of 4 facets each.
         }
 
+        [Fact]
+        public void FlippedExtrude()
+        {
+            Name = nameof(FlippedExtrude);
+            var normalExtrude = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis);
+            var flippedExtrude = new Extrude(Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(2, 0, 0)), 1, Vector3.ZAxis, false, true);
+            var geo = new GeometricElement
+            {
+                Representation = new Representation(normalExtrude, flippedExtrude)
+            };
+            Model.AddElement(geo);
+            var centroid1 = new Vector3(0, 0, 0.5);
+            var centroid2 = new Vector3(2, 0, 0.5);
+            Assert.All(normalExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid1;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == 1.0);
+            });
+            Assert.All(flippedExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid2;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == -1.0);
+            });
+            // Visually verify that flipped geometry is flipped.
+        }
+
         private class DebugInfo
         {
             public List<Solid> Solid { get; set; }

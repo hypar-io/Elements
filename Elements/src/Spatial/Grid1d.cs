@@ -32,11 +32,8 @@ namespace Elements.Spatial
             get => cells;
             private set
             {
-                if (this.parent != null)
-                {
-                    //invalidate previously generated 2d grid
-                    parent.TryInvalidateGrid();
-                }
+                //invalidate the 2d grid this belongs to
+                parent?.TryInvalidateGrid();
                 cells = value;
             }
         }
@@ -203,6 +200,7 @@ namespace Elements.Spatial
             this.topLevelParentGrid = topLevelParent;
             this.curve = topLevelParent.curve;
             this.curveDomain = curveDomain;
+            this.parent = topLevelParent.parent;
             Domain = domain;
         }
 
@@ -302,8 +300,13 @@ namespace Elements.Spatial
                         }
                     }
                 }
-            }
 
+                // Direct `set` to the `Cells` property will trigger this
+                // automatically, but in this pathway we also use `Insert`,
+                // `RemoveAt`, `AddRange`, etc, which won't cause the parent to
+                // update, so we call it explicitly here.
+                parent?.TryInvalidateGrid();
+            }
         }
 
         /// <summary>
@@ -397,7 +400,6 @@ namespace Elements.Spatial
             if (Curve is Polyline pl && pl.Segments().Count() > 1)
             {
                 var minDist = Double.MaxValue;
-                Vector3 closestPoint = Vector3.Origin;
                 Line[] segments = pl.Segments();
                 int closestSegment = -1;
                 for (int i = 0; i < segments.Length; i++)
@@ -407,7 +409,6 @@ namespace Elements.Spatial
                     var dist = cp.DistanceTo(point);
                     if (dist < minDist)
                     {
-                        closestPoint = cp;
                         minDist = dist;
                         closestSegment = i;
                     }

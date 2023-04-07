@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyName>Hypar.Elements.Serialization.DXF</AssemblyName>
         <PackageTitle>Hypar Elements Serialization DXF</PackageTitle>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -12,13 +12,12 @@
         <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <Version>$(Version)</Version>
-
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Elements\src\Elements.csproj"/>
+        <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common" Version="5.0.2"/>
-        <PackageReference Include="IxMilia.Dxf" Version="0.8.1"/>
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="IxMilia.Dxf" Version="0.8.3" />
     </ItemGroup>
 </Project>

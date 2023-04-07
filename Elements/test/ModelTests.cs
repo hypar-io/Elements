@@ -14,6 +14,11 @@ using System.Threading.Tasks;
 
 namespace Elements.Tests
 {
+    public class TestMapping : MappingBase
+    {
+        public string MapProp = "test";
+    }
+
     public class ModelTests
     {
         private ITestOutputHelper _output;
@@ -149,6 +154,31 @@ namespace Elements.Tests
             Assert.True(newModel.AllElementsOfType<Profile>().Count() == 2);
             Assert.True(newModel.AllElementsOfType<Mass>().Count() == 2);
             Assert.Single<Material>(newModel.AllElementsOfType<Material>());
+        }
+
+        [Fact]
+        public void SaveMappingDictionaryWithoutRepeatingMappings()
+        {
+            var cube = new Mass(Polygon.Rectangle(1, 1), 1, BuiltInMaterials.Mass, isElementDefinition: true);
+            var mapping = new TestMapping();
+            var inst1 = cube.CreateInstance(new Transform(0, 0, 0), "inst 1");
+            inst1.SetMapping("Revit", mapping);
+            var inst2 = cube.CreateInstance(new Transform(0, 0, 0), "inst 2");
+            inst2.SetMapping("Revit", mapping);
+
+            var model = new Model(new List<Element> { inst1, inst2 });
+            var json = model.ToJson(true);
+            var newModel = Model.FromJson(json, out var errors);
+            Assert.Empty(errors);
+
+            //Check that only a single mapping was serialized.
+            var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.TestMapping""");
+            Assert.Equal(1, m.Count);
+            Assert.Equal(1, newModel.AllElementsOfType<TestMapping>().Count());
+
+            // confirm that we only serialize the Mapping Property if it exists
+            m = System.Text.RegularExpressions.Regex.Matches(json, @"""Mappings"": null");
+            Assert.Equal(0, m.Count);
         }
 
         [Fact]

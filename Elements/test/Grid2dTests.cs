@@ -561,5 +561,26 @@ namespace Elements.Tests
                 Assert.False(c.IsTrimmed());
             }
         }
+
+        [Fact]
+        public void GetCellsDoesntChangeCells()
+        {
+            var grid1 = new Grid2d(Polygon.Rectangle(4, 20));
+            for (int i = 0; i < 10; i++)
+            {
+                grid1.V.SplitAtOffset(i);
+            }
+
+            var grid2 = new Grid2d(Polygon.Rectangle(4, 20));
+            for (int i = 0; i < 10; i++)
+            {
+                grid2.V.SplitAtOffset(i);
+                // it used to be that calling `GetCells` would cause the `Cells`
+                // to be cached, and then it would fail to update after that.
+                // This test ensures that doesn't happen.
+                var cells = grid2.GetCells();
+            }
+            Assert.True(grid1.GetCells().Count() == grid2.GetCells().Count());
+        }
     }
 }

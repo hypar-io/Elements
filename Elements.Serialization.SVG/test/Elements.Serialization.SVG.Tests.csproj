@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Hypar.Elements.Serialization.SVG.Tests</AssemblyName>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
