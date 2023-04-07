@@ -1,4 +1,3 @@
-using MathNet.Numerics.Integration;
 using System;
 using System.Linq;
 
@@ -54,13 +53,24 @@ namespace Elements.Geometry
         /// <returns>The length of the elliptical arc.</returns>
         public override double Length()
         {
-            // sqrt(dx^2 + dy^2) <- tiny unit of arc length
-            // y = sqrt[b^2(1 - x^2/a^2)] <- from formula for an ellipse
-            // dy/dx = +/- (b/a^2) * sqrt[a^2 - x^2]
+            double a = this.BasisCurve.MajorAxis;  // semi-major axis
+            double b = this.BasisCurve.MinorAxis;  // semi-minor axis
+            double n = 1000;  // number of intervals for numerical integration
+            double length = 0;
 
-            var a = this.BasisCurve.MajorAxis;
-            var b = this.BasisCurve.MinorAxis;
-            var length = NewtonCotesTrapeziumRule.IntegrateAdaptive(x => (b/Math.Pow(a,2)) * Math.Sqrt(Math.Pow(a,2) - Math.Pow(x,2)), this.Domain.Min, this.Domain.Max, 1e-5);
+            // Define the function to be integrated (arc length formula)
+            Func<double, double> f = t => Math.Sqrt(Math.Pow(a * Math.Sin(t), 2) + Math.Pow(b * Math.Cos(t), 2));
+
+            // Use numerical integration (Trapezoidal Rule) to approximate the integral of f from 0 to Pi
+            double h = (this.Domain.Max - this.Domain.Min) / n;  // width of each interval
+            for (int i = 0; i < n; i++)
+            {
+                double x0 = i * h;
+                double x1 = (i + 1) * h;
+                double y0 = f(x0);
+                double y1 = f(x1);
+                length += h * (y0 + y1) / 2;  // Trapezoidal Rule
+            }
             return length;
         }
 

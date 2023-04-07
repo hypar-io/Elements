@@ -112,9 +112,10 @@ namespace Elements.Geometry
         {
             // Code generated from chatgpt with the following prompt:
             // Can i see some c# code to calculate the normal to an ellipse at parameter t where the major axis is 5 and the minor axis is 3?
-            
+
             var p = PointAtUntransformed(u);
-            
+            var refVector = (p-Vector3.Origin).Unitized();
+
             var a = this.MajorAxis;
             var b = this.MinorAxis;
             
@@ -128,6 +129,14 @@ namespace Elements.Geometry
             double nx = 1 / Math.Sqrt(1 + slopeNormal * slopeNormal);
             double ny = slopeNormal / Math.Sqrt(1 + slopeNormal * slopeNormal);
             var x = new Vector3(nx, ny);
+
+            // Normals will naturally flip when u > pi.
+            // To ensure consistent direction, flip the
+            // normal if it's reversed with regards to 
+            if(refVector.Dot(x) < 0)
+            {
+                x = x.Negate();
+            }
             var y = Vector3.ZAxis;
 
             return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
