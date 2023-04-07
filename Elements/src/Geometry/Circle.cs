@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -68,12 +69,12 @@ namespace Elements.Geometry
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         { 
-            var pts = new Vector3[divisions + 1];
+            var pts = new List<Vector3>();
             var twoPi = Math.PI * 2;
             var step = twoPi/divisions;
-            for (var i = 0; i <= divisions; i++)
+            for (var t = 0.0; t < twoPi; t+=step)
             {
-                pts[i] = this.PointAt(i * step);
+                pts.Add(this.PointAt(t));
             }
             return new Polygon(pts, true);
         }
