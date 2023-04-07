@@ -205,7 +205,6 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-            
             var min = this.Domain.Min;
             var max = this.Domain.Max;
 
