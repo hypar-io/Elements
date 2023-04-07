@@ -5,7 +5,7 @@ namespace Elements.Geometry
     /// An infinite line.
     /// Parameterization of the line is -infinity -> 0 (Origin) -> +infinity
     /// </summary>
-    public class InfiniteLine: Curve
+    public class InfiniteLine : Curve
     {
         /// <summary>
         /// The origin of the line.
@@ -67,7 +67,7 @@ namespace Elements.Geometry
         /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
         {
-            if(reversed)
+            if (reversed)
             {
                 return start - distance;
             }

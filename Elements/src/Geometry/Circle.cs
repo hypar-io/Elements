@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A circle with a start angle of 0 (+X) and an end angle of 360.0. 
-    /// Parameterization of the curve is 0 -> 2PI.
+    /// A circle. 
+    /// Parameterization of the circle is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
     {
@@ -24,7 +25,7 @@ namespace Elements.Geometry
         [JsonProperty("Radius", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Radius { get; protected set; }
-        
+
         /// <summary>
         /// The coordinate system of the plane containing the circle.
         /// </summary>
@@ -68,14 +69,12 @@ namespace Elements.Geometry
         /// <returns>A polygon.</returns>
         public Polygon ToPolygon(int divisions = 10)
         {
-            var pts = new Vector3[divisions + 1];
+            var pts = new List<Vector3>();
             var twoPi = Math.PI * 2;
-            var step = twoPi/divisions;
-            var count = 0;
+            var step = twoPi / divisions;
             for (var t = 0.0; t < twoPi; t += step)
             {
-                pts[count] = this.PointAt(t);
-                count++;
+                pts.Add(this.PointAt(t));
             }
             return new Polygon(pts, true);
         }
@@ -86,7 +85,7 @@ namespace Elements.Geometry
         public static implicit operator Arc(Circle c) => new Arc(c, 0, 360);
 
         /// <summary>
-        /// Convert a bounded curve to a model curve.
+        /// Convert a circle to a model circular model curve.
         /// </summary>
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(Circle c) => new ModelCurve(c);
@@ -118,7 +117,7 @@ namespace Elements.Geometry
             var p = PointAtUntransformed(u);
             var x = (p - Vector3.Origin).Unitized();
             var y = Vector3.ZAxis;
-            return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
+            return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
         /// <summary>

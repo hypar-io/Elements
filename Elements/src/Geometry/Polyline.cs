@@ -10,7 +10,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
-    /// Parameterization of the curve is 0->length.
+    /// Parameterization of the curve is 0 -> length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
@@ -37,8 +37,8 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices) : base()
         {
             this.Vertices = @vertices;
-            this.Domain = new Domain1d(0,this.Length());
-            
+            this.Domain = new Domain1d(0, this.Length());
+
             if (!Validator.DisableValidationOnConstruction)
             {
                 ValidateVertices();
@@ -55,7 +55,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
         {
             this.Vertices = @vertices;
-            this.Domain = new Domain1d(0,this.Length());
+            this.Domain = new Domain1d(0, this.Length());
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
@@ -182,7 +182,7 @@ namespace Elements.Geometry
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Domain.Includes(u, true))
+            if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -565,7 +565,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if(!Domain.Includes(u, true))
+            if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
