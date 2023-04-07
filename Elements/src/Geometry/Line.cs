@@ -24,7 +24,7 @@ namespace Elements.Geometry
         {
             this.Start = Vector3.Origin;
             this.End = new Vector3(1, 0, 0);
-            this.Domain = new Domain1d(0,1);
+            this.Domain = new Domain1d(0, 1);
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -60,7 +60,7 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
-            this.Domain = new Domain1d(0,length);
+            this.Domain = new Domain1d(0, length);
             this.BasisCurve = new InfiniteLine(this.Start, direction);
         }
 
@@ -94,7 +94,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!Domain.Includes(u, true))
+            if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
@@ -108,7 +108,7 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!Domain.Includes(u, true))
+            if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -1386,18 +1386,18 @@ namespace Elements.Geometry
         /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
         {
-            if(!Domain.Includes(start, true))
+            if (!Domain.Includes(start, true))
             {
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            if(distance == 0.0)
+            if (distance == 0.0)
             {
                 return start;
             }
 
             var pt = this.PointAt(start);
-            if(reversed)
+            if (reversed)
             {
                 return (pt - (this.BasisCurve.Direction * distance)).DistanceTo(this.Start);
             }

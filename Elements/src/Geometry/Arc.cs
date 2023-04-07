@@ -28,7 +28,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Radius
         {
-            get 
+            get
             {
                 return this.BasisCurve.Radius;
             }
@@ -83,7 +83,7 @@ namespace Elements.Geometry
                     throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
                 }
             }
-            
+
             this.BasisCurve = new Circle(@center, @radius);
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
@@ -100,7 +100,7 @@ namespace Elements.Geometry
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
-            this.BasisCurve = new Circle(radius); 
+            this.BasisCurve = new Circle(radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
             this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
@@ -170,7 +170,7 @@ namespace Elements.Geometry
         /// </summary>
         public override Vector3 Mid()
         {
-            return PointAt(this.Domain.Min + this.Domain.Length/2);
+            return PointAt(this.Domain.Min + this.Domain.Length / 2);
         }
 
         /// <summary>
@@ -205,13 +205,13 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-            
+
             var min = this.Domain.Min;
             var max = this.Domain.Max;
 
             var flip = max < min;
 
-            if(flip)
+            if (flip)
             {
                 max = this.Domain.Min;
                 min = this.Domain.Max;
@@ -286,14 +286,14 @@ namespace Elements.Geometry
         {
             return new Arc(transform.OfPoint(this.BasisCurve.Transform.Origin), this.BasisCurve.Radius, StartAngle, EndAngle);
         }
-        
+
         /// <summary>
         /// Get the point at parameter u.
         /// </summary>
         /// <returns>The point at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!this.Domain.Includes(u, true))
+            if (!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -306,7 +306,7 @@ namespace Elements.Geometry
         /// <returns>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!this.Domain.Includes(u, true))
+            if (!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -321,12 +321,12 @@ namespace Elements.Geometry
         public override Polyline ToPolyline(int divisions = 10)
         {
             var pts = new List<Vector3>(divisions + 1);
-            var step = this.Domain.Length/divisions;
+            var step = this.Domain.Length / divisions;
             for (var t = this.Domain.Min; t < this.Domain.Max; t += step)
             {
                 pts.Add(PointAt(t));
             }
-            
+
             // We don't go all the way to the end parameter, and 
             // add it here explicitly because rounding errors can
             // cause small imprecision which accumulates to make
@@ -344,12 +344,12 @@ namespace Elements.Geometry
         /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
         {
-            if(!Domain.Includes(start, true))
+            if (!Domain.Includes(start, true))
             {
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            if(distance == 0.0)
+            if (distance == 0.0)
             {
                 return start;
             }
@@ -358,7 +358,7 @@ namespace Elements.Geometry
             // theta = s/r
             var theta = distance / this.BasisCurve.Radius;
 
-            if(reversed)
+            if (reversed)
             {
                 return start - theta;
             }

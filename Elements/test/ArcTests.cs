@@ -46,7 +46,7 @@ namespace Hypar.Tests
             this.Name = nameof(GetTransformsTransformedCurveSucceeds);
             var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5, 0, Math.PI);
             var parameters = arc.GetSampleParameters();
-            foreach(var p in parameters)
+            foreach (var p in parameters)
             {
                 var t = arc.TransformAt(p);
                 this.Model.AddElements(t.ToModelCurves());
@@ -59,7 +59,7 @@ namespace Hypar.Tests
         {
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
             var parameters = arc.GetSampleParameters();
-            foreach(var p in parameters)
+            foreach (var p in parameters)
             {
                 arc.PointAt(p);
             }
@@ -83,12 +83,12 @@ namespace Hypar.Tests
             var arc = new Arc(Vector3.Origin, 5.0, 0.0, 90.0);
             Assert.Equal(new Vector3(0, 5, 0), arc.End);
             Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.Domain.Max));
-            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt(arc.Domain.Length/2));
+            Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 4), 5 * Math.Sin(Math.PI / 4), 0), arc.PointAt(arc.Domain.Length / 2));
             Assert.Equal(new Vector3(5 * Math.Cos(Math.PI / 2), 5 * Math.Sin(Math.PI / 2), 0), arc.PointAt(arc.Domain.Max));
 
             arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
             Assert.Equal(new Vector3(-5, 0, 0), arc.PointAt(arc.Domain.Max));
-            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.Domain.Length/2));
+            Assert.Equal(new Vector3(0, 5, 0), arc.PointAt(arc.Domain.Length / 2));
             Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.Domain.Min));
             Assert.Equal(new Vector3(5, 0, 0), arc.PointAt(arc.Domain.Min + -1e-15));
         }
@@ -97,7 +97,7 @@ namespace Hypar.Tests
         public void TransformAt()
         {
             var arc = new Arc(Vector3.Origin, 5.0, 0.0, 180.0);
-            var t = arc.TransformAt(Math.PI/2);
+            var t = arc.TransformAt(Math.PI / 2);
             Assert.Equal(new Vector3(0, 1, 0), t.XAxis);
             Assert.Equal(new Vector3(0, 0, 1), t.YAxis);
             Assert.Equal(new Vector3(1, 0, 0), t.ZAxis);

@@ -252,7 +252,7 @@ namespace Elements.Tests
             this.Model.AddElement(beam1);
 
             // Curve setbacks
-            var arc = new Arc(new Vector3(5,0), 1.5, 0, 180);
+            var arc = new Arc(new Vector3(5, 0), 1.5, 0, 180);
             var mc2 = new ModelCurve(arc, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc2);
             var curvedBeam = new Beam(arc, this._testProfile, 2, 2, 0, material: BuiltInMaterials.Steel);
