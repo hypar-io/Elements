@@ -846,6 +846,7 @@ namespace Elements.Search
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
         /// <param name="visitedEdges">A collection of all visited edges.</param>
         /// <param name="visited">A collection of visited node indices.</param>
+        /// <param name="prevIndex">The previous index found during the traversal</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
                                   Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
