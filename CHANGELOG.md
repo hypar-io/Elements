@@ -9,6 +9,7 @@
 - `TrimmedCurve`
 - `BoundedCurve`
 - `InfiniteLine`
+- `IConic`
 
 ### Changed
 
