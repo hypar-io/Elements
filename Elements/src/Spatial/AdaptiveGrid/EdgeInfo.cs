@@ -24,6 +24,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Length = vector.Length();
             Factor = factor;
             Flags = EdgeFlags.None;
+            HasVerticalChange = false;
 
             if (Math.Abs(v0.Point.Z - v1.Point.Z) > grid.Tolerance)
             {

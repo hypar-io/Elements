@@ -50,9 +50,18 @@ namespace Elements.Spatial.AdaptiveGrid
             _grid = grid;
             _configuration = configuration;
 
-            foreach (var modifier in _configuration.WeightModifiers)
+            if (!_configuration.LayerPenalty.ApproximatelyEquals(1))
             {
-                _weightModifiers.Add(modifier.Name, modifier);
+                var plane = new Plane(new Vector3(0, 0, _configuration.MainLayer), Vector3.ZAxis);
+                var modifier = new WeightModifier(
+                    "Not Main Layer",
+                    new Func<Vertex, Vertex, bool>((a, b) =>
+                    {
+                        return Math.Abs(a.Point.Z - _configuration.MainLayer) > _grid.Tolerance ||
+                               Math.Abs(b.Point.Z - _configuration.MainLayer) > _grid.Tolerance;
+                    }),
+                    _configuration.LayerPenalty);
+
             }
         }
 
@@ -972,8 +981,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 hints.Any(h => h.IsNearby(v.Point, _grid.Tolerance))).ToList();
         }
 
+
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
-            ref double bestCost, ref ulong bestIndex)
+                ref double bestCost, ref ulong bestIndex)
         {
             if (travelCost.TryGetValue(index, out var cost))
             {
@@ -1244,3 +1254,4 @@ namespace Elements.Spatial.AdaptiveGrid
         }
     }
 }
+

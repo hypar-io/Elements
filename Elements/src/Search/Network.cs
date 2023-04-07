@@ -451,7 +451,14 @@ namespace Elements.Search
         {
             var regions = new List<List<int>>();
 
-            var traversalStartIndices = new List<int>();
+            // TODO: This code is a mess. We use several methods for tracking
+            // traversal data: LocalEdge instances, nodeVisits, and structures
+            // internal to the traversal methods. These can be combined so that
+            // we are only using LocalEdges.
+
+            var leafNodes = new List<int>();
+            var allEdges = new List<LocalEdge>();
+
             for (var i = 0; i < this.NodeCount(); i++)
             {
                 var localEdges = EdgesAt(i);
