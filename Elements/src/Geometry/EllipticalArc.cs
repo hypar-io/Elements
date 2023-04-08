@@ -101,7 +101,7 @@ namespace Elements.Geometry
                                                        double endSetbackDistance = 0.0)
         {
             var min = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
-            var max = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+            var max = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
 
             var flip = max < min;
 
@@ -130,8 +130,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             if (!Domain.Includes(start, true))
             {
@@ -143,16 +142,8 @@ namespace Elements.Geometry
                 return start;
             }
 
-            if (reversed)
-            {
-                this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, this.Length() - distance, out var end);
-                return end;
-            }
-            else
-            {
-                this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);
-                return end;
-            }
+            this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);
+            return end;
         }
     }
 }
