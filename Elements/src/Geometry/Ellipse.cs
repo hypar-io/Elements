@@ -210,7 +210,9 @@ namespace Elements.Geometry
                 if (arcLength + sampleLength > distance)
                 {
                     // TODO: This is an approximation.
-                    // This will return the parameter
+                    // This will return the parameter before the 
+                    // actual value that we want. Implement a more
+                    // precise strategy.
                     end = t;
                     return arcLength;
                 }
