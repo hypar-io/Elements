@@ -400,7 +400,7 @@ namespace Elements.Geometry
                 }
                 else if (i == Vertices.Count - 1)
                 {
-                    a = PointAt(ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true));
+                    a = PointAt(ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min));
                 }
                 else
                 {
@@ -1382,8 +1382,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             if (!Domain.Includes(start, true))
             {
@@ -1395,7 +1394,7 @@ namespace Elements.Geometry
                 return start;
             }
 
-            return reversed ? start - distance : start + distance;
+            return start + distance;
         }
 
         /// <summary>
@@ -1448,7 +1447,7 @@ namespace Elements.Geometry
                 }
                 else if (i == Vertices.Count - 1)
                 {
-                    parameters[i] = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+                    parameters[i] = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
                 }
                 else
                 {

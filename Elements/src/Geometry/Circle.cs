@@ -133,17 +133,17 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
             // s = r * theta
             // theta = s/r
             var theta = distance / this.Radius;
 
-            if (reversed)
-            {
-                return start - theta;
-            }
             return start + theta;
         }
     }

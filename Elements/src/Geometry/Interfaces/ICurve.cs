@@ -24,7 +24,6 @@ namespace Elements.Geometry.Interfaces
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="parameter">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        double ParameterAtDistanceFromParameter(double distance, double parameter, bool reversed = false);
+        double ParameterAtDistanceFromParameter(double distance, double parameter);
     }
 }

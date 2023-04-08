@@ -224,8 +224,8 @@ namespace Elements.Geometry
                 min = this.Domain.Max;
             }
 
-            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, min, flip);
-            var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, max, !flip);
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, min);
+            var endParam = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, min);
 
             // Parameter calculations.
             var angleSpan = endParam - startParam;
@@ -348,8 +348,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             if (!Domain.Includes(start, true))
             {
@@ -361,7 +360,7 @@ namespace Elements.Geometry
                 return start;
             }
 
-            return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start, reversed);
+            return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start);
         }
     }
 }
