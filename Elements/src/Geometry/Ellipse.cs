@@ -29,7 +29,7 @@ namespace Elements.Geometry
         /// The dimension of the minor axis (Y) of the ellipse.
         /// </summary>
         public double MinorAxis { get; set; }
-    
+
         /// <summary>
         /// The coordinate system of the plane containing the ellipse.
         /// </summary>
@@ -66,7 +66,7 @@ namespace Elements.Geometry
         /// <param name="transform">The coordinate system of the plane containing the ellipse.</param>
         /// <param name="majorAxis">The dimension of the major axis (X) of the ellipse.</param>
         /// <param name="minorAxis">The dimension of the minor axis (Y) of the ellipse.</param>
-        public Ellipse(Transform transform, double majorAxis = 1.0, double minorAxis=2.0)
+        public Ellipse(Transform transform, double majorAxis = 1.0, double minorAxis = 2.0)
         {
             this.Transform = transform;
             this.MajorAxis = majorAxis;
@@ -75,17 +75,17 @@ namespace Elements.Geometry
 
         private void CheckAndThrow(double minorAxis, double majorAxis)
         {
-            if(minorAxis <= 0)
+            if (minorAxis <= 0)
             {
                 throw new System.ArgumentOutOfRangeException("minorAxis", "The minor axis value must be greater than 0.");
             }
 
-            if(majorAxis <= 0)
+            if (majorAxis <= 0)
             {
                 throw new System.ArgumentOutOfRangeException("majorAxis", "The major axis value must be greater than 0.");
             }
         }
-        
+
         /// <summary>
         /// Get a point along the ellipse at parameter u.
         /// </summary>
@@ -100,7 +100,7 @@ namespace Elements.Geometry
         {
             var x = this.MajorAxis * Math.Cos(u);
             var y = this.MinorAxis * Math.Sin(u);
-            return new Vector3(x,y);
+            return new Vector3(x, y);
         }
 
         /// <summary>
@@ -114,11 +114,11 @@ namespace Elements.Geometry
             // Can i see some c# code to calculate the normal to an ellipse at parameter t where the major axis is 5 and the minor axis is 3?
 
             var p = PointAtUntransformed(u);
-            var refVector = (p-Vector3.Origin).Unitized();
+            var refVector = (p - Vector3.Origin).Unitized();
 
             var a = this.MajorAxis;
             var b = this.MinorAxis;
-            
+
             // Calculate slope of tangent line at point (x, y)
             double slopeTangent = -b * b * p.X / (a * a * p.Y);
 
@@ -133,13 +133,13 @@ namespace Elements.Geometry
             // Normals will naturally flip when u > pi.
             // To ensure consistent direction, flip the
             // normal if it's reversed with regards to 
-            if(refVector.Dot(x) < 0)
+            if (refVector.Dot(x) < 0)
             {
                 x = x.Negate();
             }
             var y = Vector3.ZAxis;
 
-            return  new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
+            return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
         /// <summary>
@@ -149,6 +149,91 @@ namespace Elements.Geometry
         public override Curve Transformed(Transform transform)
         {
             return new Ellipse(transform.Concatenated(this.Transform), this.MajorAxis, this.MinorAxis);
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            // Start at the specified parameter and measure
+            // until you reach the desired distance.
+            ArcLengthUntil(start, Math.PI * 2, distance, out var end);
+            return end;
+        }
+
+        internal double ArcLength(double t0,
+                                  double t1,
+                                  int n = 1000)
+        {
+            var a = this.MajorAxis;
+            var b = this.MinorAxis;
+
+            double h = ((a - b) * (a - b)) / ((a + b) * (a + b));
+            double arcLength = 0.0;
+            double dt = (t1 - t0) / n;
+            for (double t = t0; t < t1; t += dt)
+            {
+                var sampleLength = Step(a, b, t, dt, h);
+                arcLength += sampleLength;
+            }
+
+            return arcLength;
+        }
+
+        internal double ArcLengthUntil(double t0,
+                                       double tmax,
+                                       double distance,
+                                       out double end,
+                                       int n = 1000)
+        {
+            var a = this.MajorAxis;
+            var b = this.MinorAxis;
+
+            // Calculate arc length
+            double h = ((a - b) * (a - b)) / ((a + b) * (a + b));
+            double arcLength = 0.0;
+            double dt = (tmax - t0) / n;
+
+            end = tmax;
+
+            for (double t = t0; t < tmax; t += dt)
+            {
+                var sampleLength = Step(a, b, t, dt, h);
+                if (arcLength + sampleLength > distance)
+                {
+                    end = t;
+                    return arcLength;
+                }
+                arcLength += sampleLength;
+            }
+
+            return arcLength;
+        }
+
+        private double Step(double a, double b, double t, double dt, double h)
+        {
+            double x = a * Math.Cos(t);
+            double y = b * Math.Sin(t);
+            double dxdt = -a * Math.Sin(t);
+            double dydt = b * Math.Cos(t);
+            double dsdt = Math.Sqrt(dxdt * dxdt + dydt * dydt);
+            double ds = dsdt * dt / Math.Sqrt(1 - h * Math.Sin(t) * Math.Sin(t));
+            double next_x = a * Math.Cos(t + dt);
+            double next_y = b * Math.Sin(t + dt);
+            double next_dxdt = -a * Math.Sin(t + dt);
+            double next_dydt = b * Math.Cos(t + dt);
+            double next_dsdt = Math.Sqrt(next_dxdt * next_dxdt + next_dydt * next_dydt);
+            double next_ds = next_dsdt * dt / Math.Sqrt(1 - h * Math.Sin(t + dt) * Math.Sin(t + dt));
+            return (ds + next_ds) / 2;
         }
     }
 }

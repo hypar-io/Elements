@@ -50,9 +50,9 @@ namespace Elements.Tests
             var arcBeam = new Beam(arc, profile, 0, 0, 0, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
 
-            // Create an ellipse beam.
-            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5,1.5, 0, 210);
-            var ellipticBeam = new Beam(ellipticalArc, profile, 0,0,0, new Transform(18,0,0), BuiltInMaterials.Steel);
+            // Create an elliptical beam.
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5, 1.5, 0, 210);
+            var ellipticBeam = new Beam(ellipticalArc, profile, 0, 0, 0, new Transform(18, 0, 0), BuiltInMaterials.Steel);
             var ellipseT = ellipticalArc.TransformAt(ellipticalArc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
             // </example>
 
@@ -271,6 +271,12 @@ namespace Elements.Tests
             this.Model.AddElement(mc3);
             var plBeam = new Beam(pl, this._testProfile, 1, 1, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(plBeam);
+
+            // Ellipse setbacks
+            var ellipticalArc = new EllipticalArc(new Vector3(10, 0), 2.5, 1.5, 0, 210);
+            this.Model.AddElement(new ModelCurve(ellipticalArc));
+            var ellipticBeam = new Beam(ellipticalArc, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(ellipticBeam);
         }
 
         [Fact]

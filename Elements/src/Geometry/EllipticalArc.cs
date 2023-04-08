@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -16,6 +17,7 @@ namespace Elements.Geometry
         /// <param name="center">The center of the ellipse.</param>
         /// <param name="startAngle">The start parameter of the trim.</param>
         /// <param name="endAngle">The end parameter of the trim.</param>
+        [JsonConstructor]
         public EllipticalArc(Vector3 center, double majorAxis, double minorAxis, double startAngle, double endAngle)
         {
             this.BasisCurve = new Ellipse(new Transform(center), majorAxis, minorAxis);
@@ -44,7 +46,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override BBox3 Bounds()
         {
-            return new BBox3(GetSampleParameters().Select(p=>PointAt(p)).ToList());
+            return new BBox3(GetSampleParameters().Select(p => PointAt(p)).ToList());
         }
 
         /// <summary>
@@ -53,25 +55,8 @@ namespace Elements.Geometry
         /// <returns>The length of the elliptical arc.</returns>
         public override double Length()
         {
-            double a = this.BasisCurve.MajorAxis;  // semi-major axis
-            double b = this.BasisCurve.MinorAxis;  // semi-minor axis
-            double n = 1000;  // number of intervals for numerical integration
-            double length = 0;
-
             // Define the function to be integrated (arc length formula)
-            Func<double, double> f = t => Math.Sqrt(Math.Pow(a * Math.Sin(t), 2) + Math.Pow(b * Math.Cos(t), 2));
-
-            // Use numerical integration (Trapezoidal Rule) to approximate the integral of f from 0 to Pi
-            double h = (this.Domain.Max - this.Domain.Min) / n;  // width of each interval
-            for (int i = 0; i < n; i++)
-            {
-                double x0 = i * h;
-                double x1 = (i + 1) * h;
-                double y0 = f(x0);
-                double y1 = f(x1);
-                length += h * (y0 + y1) / 2;  // Trapezoidal Rule
-            }
-            return length;
+            return this.BasisCurve.ArcLength(this.Domain.Min, this.Domain.Max);
         }
 
         /// <summary>
@@ -81,7 +66,7 @@ namespace Elements.Geometry
         /// <returns>A point.</returns>
         public override Vector3 PointAt(double u)
         {
-            if(!this.Domain.Includes(u, true))
+            if (!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -95,7 +80,7 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            if(!this.Domain.Includes(u, true))
+            if (!this.Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
@@ -115,12 +100,12 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-            var min = this.Domain.Min;
-            var max = this.Domain.Max;
+            var min = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            var max = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
 
             var flip = max < min;
 
-            if(flip)
+            if (flip)
             {
                 max = this.Domain.Min;
                 min = this.Domain.Max;
@@ -138,6 +123,36 @@ namespace Elements.Geometry
                 parameters[i] = min + i * step;
             }
             return parameters;
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            if (reversed)
+            {
+                this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, this.Length() - distance, out var end);
+                return end;
+            }
+            else
+            {
+                this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);
+                return end;
+            }
         }
     }
 }
