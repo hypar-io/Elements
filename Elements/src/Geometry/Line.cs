@@ -1383,8 +1383,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             if (!Domain.Includes(start, true))
             {
@@ -1396,12 +1395,12 @@ namespace Elements.Geometry
                 return start;
             }
 
-            return reversed ? start - distance : start + distance;
+            return start + distance;
         }
 
         internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
-            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true) };
+            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min) };
         }
     }
 

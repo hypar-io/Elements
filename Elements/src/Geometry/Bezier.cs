@@ -281,8 +281,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
-        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
         }
