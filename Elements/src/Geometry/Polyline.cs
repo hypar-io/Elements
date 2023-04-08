@@ -380,11 +380,11 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
+        /// <param name="startSetbackDistance"></param>
+        /// <param name="endSetbackDistance"></param>
         /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetback = 0.0,
-                                           double endSetback = 0.0,
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
@@ -393,7 +393,19 @@ namespace Elements.Geometry
             var result = new Transform[this.Vertices.Count];
             for (var i = 0; i < result.Length; i++)
             {
-                var a = this.Vertices[i];
+                Vector3 a;
+                if (i == 0)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true));
+                }
+                else
+                {
+                    a = this.Vertices[i];
+                }
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
                 if (additionalRotation != 0.0)
                 {
@@ -1413,7 +1425,30 @@ namespace Elements.Geometry
 
         internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
-            throw new NotImplementedException();
+            var parameters = new double[this.Vertices.Count];
+            var length = 0.0;
+            for (var i = 0; i < Vertices.Count; i++)
+            {
+                if (i == 0)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+                }
+                else
+                {
+                    parameters[i] = length;
+                }
+
+                if (i < Vertices.Count - 1)
+                {
+                    length += Vertices[i].DistanceTo(Vertices[i + 1]);
+                }
+            }
+
+            return parameters;
         }
     }
 
