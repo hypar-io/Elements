@@ -9,6 +9,7 @@
 - `TrimmedCurve`
 - `BoundedCurve`
 - `InfiniteLine`
+- `IConic`
 
 ### Changed
 
@@ -19,6 +20,9 @@
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Circle` is now parameteried 0->2Pi.
+- `Line` is now parameterized 0->length.
 
 ## 1.5.0
 
