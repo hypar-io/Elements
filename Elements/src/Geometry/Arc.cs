@@ -46,6 +46,24 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The start point of the arc.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 Start
+        {
+            get { return PointAt(this.Domain.Min); }
+        }
+
+        /// <summary>
+        /// The end point of the arc.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 End
+        {
+            get { return PointAt(this.Domain.Max); }
+        }
+
+        /// <summary>
         /// Create a circular arc.
         /// </summary>
         public Arc(double radius)
@@ -153,24 +171,6 @@ namespace Elements.Geometry
         public override double Length()
         {
             return 2 * Math.PI * this.BasisCurve.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
-        }
-
-        /// <summary>
-        /// The start point of the arc.
-        /// </summary>
-        [JsonIgnore]
-        public override Vector3 Start
-        {
-            get { return PointAt(this.Domain.Min); }
-        }
-
-        /// <summary>
-        /// The end point of the arc.
-        /// </summary>
-        [JsonIgnore]
-        public override Vector3 End
-        {
-            get { return PointAt(this.Domain.Max); }
         }
 
         /// <summary>
