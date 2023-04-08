@@ -267,13 +267,24 @@ namespace Elements.Geometry
             // var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
             var startParam = this.Domain.Min;
             var endParam = this.Domain.Max;
-            
+
             var step = Math.Abs(endParam - startParam) / _samples;
             for (var i = 0; i <= _samples; i++)
             {
                 parameters[i] = startParam + i * step;
             }
             return parameters;
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
         }
     }
 }

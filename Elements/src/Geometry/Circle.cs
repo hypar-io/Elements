@@ -127,5 +127,16 @@ namespace Elements.Geometry
         {
             return new Circle(transform.Concatenated(this.Transform), this.Radius);
         }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
+        }
     }
 }

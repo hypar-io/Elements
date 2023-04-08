@@ -434,14 +434,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the polyline for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return this.Vertices;
-        }
-
-        /// <summary>
         /// Check for coincident vertices in the supplied vertex collection.
         /// </summary>
         /// <param name="vertices"></param>
@@ -1383,6 +1375,27 @@ namespace Elements.Geometry
             Vector3 referenceVector, NormalizationType pathType = NormalizationType.Start)
         {
             return ForceAngleCompliance(supportedAngles, referenceVector, out _, pathType);
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            return reversed ? start - distance : start + distance;
         }
 
         /// <summary>
