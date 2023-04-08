@@ -82,7 +82,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Convert a circle to a circular arc.
         /// </summary>
-        public static implicit operator Arc(Circle c) => new Arc(c, 0, 360);
+        public static implicit operator Arc(Circle c) => new Arc(c, 0, Math.PI * 2);
 
         /// <summary>
         /// Convert a circle to a model circular model curve.
