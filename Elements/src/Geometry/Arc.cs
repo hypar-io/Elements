@@ -46,7 +46,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create an circular arc.
+        /// Create a circular arc.
         /// </summary>
         public Arc(double radius)
         {
