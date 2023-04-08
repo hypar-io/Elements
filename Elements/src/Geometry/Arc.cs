@@ -66,11 +66,21 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle) : base()
         {
+            Validate(startAngle, endAngle, radius);
+            this.BasisCurve = new Circle(@center, @radius);
+            this.StartAngle = @startAngle;
+            this.EndAngle = @endAngle;
+            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
+        }
+
+        private void Validate(double startAngle, double endAngle, double radius)
+        {
             if (!Validator.DisableValidationOnConstruction)
             {
-                if (endAngle > 360.0 || startAngle > 360.00)
+                var span = Math.Abs(endAngle - startAngle);
+                if (span > 360)
                 {
-                    throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
+                    throw new ArgumentOutOfRangeException($"The total span of the arc, {span} degrees, is greater than 360.0. The arc cannot be created.");
                 }
 
                 if (endAngle == startAngle)
@@ -83,11 +93,6 @@ namespace Elements.Geometry
                     throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
                 }
             }
-
-            this.BasisCurve = new Circle(@center, @radius);
-            this.StartAngle = @startAngle;
-            this.EndAngle = @endAngle;
-            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         /// <summary>
@@ -100,6 +105,7 @@ namespace Elements.Geometry
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
+            Validate(startAngle, endAngle, radius);
             this.BasisCurve = new Circle(radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
@@ -114,6 +120,7 @@ namespace Elements.Geometry
         /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
         public Arc(Circle circle, double startParameter, double endParameter)
         {
+            Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), circle.Radius);
             this.BasisCurve = circle;
             this.Domain = new Domain1d(startParameter, endParameter);
             this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
@@ -133,6 +140,7 @@ namespace Elements.Geometry
                    double startParameter = 0.0,
                    double endParameter = Math.PI * 2)
         {
+            Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
             this.BasisCurve = new Circle(transform, radius);
             this.Domain = new Domain1d(startParameter, endParameter);
             this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);

@@ -146,5 +146,15 @@ namespace Hypar.Tests
             Assert.Equal(c.PointAt(0), p.Vertices[0]);
             Assert.Equal(c.PointAt(Math.PI * 2), p.Vertices[0]);
         }
+
+        [Fact]
+        public void Span()
+        {
+            var a = new Arc(1.0, 0, -360);
+            var b = new Arc(1.0, 0, 360);
+            var c = new Arc(1.0, -45.0, 45.0);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Arc(1.0, 0, 361));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Arc(1.0, 0, -361));
+        }
     }
 }
