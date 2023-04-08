@@ -1396,12 +1396,12 @@ namespace Elements.Geometry
                 return start;
             }
 
-            var pt = this.PointAt(start);
-            if (reversed)
-            {
-                return (pt - (this.BasisCurve.Direction * distance)).DistanceTo(this.Start);
-            }
-            return (pt + (this.BasisCurve.Direction * distance)).DistanceTo(this.Start);
+            return reversed ? start - distance : start + distance;
+        }
+
+        internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        {
+            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true) };
         }
     }
 

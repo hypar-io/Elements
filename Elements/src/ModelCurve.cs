@@ -69,7 +69,7 @@ namespace Elements
         public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = this._isSelectable ? $"{this.Id}_curve" : $"unselectable_{this.Id}_curve";
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
+            mode = this.Curve.IsClosedForRendering ? glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_LOOP : glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
             graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers() };
             return true;
         }

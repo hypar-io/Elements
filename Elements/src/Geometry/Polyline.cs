@@ -380,11 +380,11 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
+        /// <param name="startSetbackDistance"></param>
+        /// <param name="endSetbackDistance"></param>
         /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetback = 0.0,
-                                           double endSetback = 0.0,
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
@@ -393,7 +393,19 @@ namespace Elements.Geometry
             var result = new Transform[this.Vertices.Count];
             for (var i = 0; i < result.Length; i++)
             {
-                var a = this.Vertices[i];
+                Vector3 a;
+                if (i == 0)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true));
+                }
+                else
+                {
+                    a = this.Vertices[i];
+                }
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
                 if (additionalRotation != 0.0)
                 {
@@ -419,14 +431,6 @@ namespace Elements.Geometry
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
-        }
-
-        /// <summary>
-        /// A list of vertices describing the polyline for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return this.Vertices;
         }
 
         /// <summary>
@@ -1374,6 +1378,27 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            return reversed ? start - distance : start + distance;
+        }
+
+        /// <summary>
         /// Calculate distance from corner point, so point X = cornerPoint + incoming * D has needed angle (cornerPoint -> X -> end)
         /// </summary>
         private double AngleAlignedDistance(Vector3 start, Vector3 end, Vector3 incoming, double angle, out Vector3 cornerPoint)
@@ -1413,7 +1438,30 @@ namespace Elements.Geometry
 
         internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
-            throw new NotImplementedException();
+            var parameters = new double[this.Vertices.Count];
+            var length = 0.0;
+            for (var i = 0; i < Vertices.Count; i++)
+            {
+                if (i == 0)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
+                }
+                else
+                {
+                    parameters[i] = length;
+                }
+
+                if (i < Vertices.Count - 1)
+                {
+                    length += Vertices[i].DistanceTo(Vertices[i + 1]);
+                }
+            }
+
+            return parameters;
         }
     }
 

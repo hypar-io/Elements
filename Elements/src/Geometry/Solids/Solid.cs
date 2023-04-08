@@ -127,13 +127,7 @@ namespace Elements.Geometry.Solids
                 endSetback = 0;
             }
 
-            // Calculate the setback parameter as a percentage
-            // of the curve length. This will not work for curves
-            // without non-uniform parameterization.
-            var ssb = startSetback / l;
-            var esb = endSetback / l;
-
-            var transforms = curve.Frames(ssb, esb, profileRotation);
+            var transforms = curve.Frames(startSetback, endSetback, profileRotation);
 
             if (curve is Polygon)
             {

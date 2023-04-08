@@ -643,7 +643,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(-1, line.GetParameterAt(vectorOutsideLine));
 
             var middle = new Vector3(2.5, 2.5, 2.5);
-            Assert.Equal(line.Length()/2, line.GetParameterAt(middle));
+            Assert.Equal(line.Length() / 2, line.GetParameterAt(middle));
 
             var vector = new Vector3(3.2, 3.2, 3.2);
             var uValue = line.GetParameterAt(vector);
@@ -1091,7 +1091,7 @@ namespace Elements.Geometry.Tests
             Vector3 v2 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
             //Sorted distance quantities from point by the second vector.
             double q11 = -1.31932651341597884;
-            double q12 = 0.8705916819804074; 
+            double q12 = 0.8705916819804074;
             double q13 = 2.7483887105972915;
             //Sorted distance quantities from point by the second vector.
             double q21 = -2.45223540673958955;

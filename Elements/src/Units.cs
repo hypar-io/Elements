@@ -356,21 +356,5 @@ namespace Elements
             [EnumMember(Value = "volume")]
             Volume,
         }
-    
-        internal static bool IsParameterBetweenOrAlmostEqualTo(double a, double min, double max)
-        {
-            if(a.ApproximatelyEquals(min))
-            {
-                return true;
-            }
-
-            if(a.ApproximatelyEquals(max))
-            {
-                return true;
-            }
-            
-            return min < max ? a >= min && a <= max:
-                               a <= min && a >= max;
-        }
     }
 }

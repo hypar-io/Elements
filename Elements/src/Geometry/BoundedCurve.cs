@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
@@ -18,7 +17,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The end of the curve.
         /// </summary>
-        public virtual Vector3 End { get; protected set;}
+        public virtual Vector3 End { get; protected set; }
 
         /// <summary>
         /// The domain of the curve.
@@ -44,6 +43,13 @@ namespace Elements.Geometry
         {
             return PointAt(this.Domain.Mid());
         }
+
+        /// <summary>
+        /// Should the curve be considered closed for rendering?
+        /// Curves marked true will use LINE_LOOP mode for rendering.
+        /// Curves marked false will use LINE_STRIP for rendering.
+        /// </summary>
+        internal virtual bool IsClosedForRendering => false;
 
         /// <summary>
         /// Get a collection of transforms which represent frames along this curve.
@@ -96,15 +102,18 @@ namespace Elements.Geometry
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(BoundedCurve c) => new ModelCurve(c);
 
-        internal virtual double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
-        {
-            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true)};
-        }
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <returns>A collection of parameter values.</returns>
+        internal abstract double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
-        /// A list of vertices used to render the curve.
+        /// Get a collection of vertices used to render the curve.
         /// </summary>
-        internal virtual IList<Vector3> RenderVertices()
+        internal IList<Vector3> RenderVertices()
         {
             var parameters = GetSampleParameters();
             var vertices = new List<Vector3>();

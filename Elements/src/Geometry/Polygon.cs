@@ -25,6 +25,8 @@ namespace Elements.Geometry
         /// </summary>
         internal Plane _plane;
 
+        internal override bool IsClosedForRendering => false;
+
         /// <summary>
         /// Construct a polygon.
         /// </summary>
@@ -2267,16 +2269,6 @@ namespace Elements.Geometry
                 result[i] = normal;
             }
             return result;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var verts = new List<Vector3>(this.Vertices);
-            verts.Add(this.Start);
-            return verts;
         }
 
         /// <summary>

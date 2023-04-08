@@ -264,6 +264,13 @@ namespace Elements.Tests
             this.Model.AddElement(mc2);
             var curvedBeam = new Beam(arc, this._testProfile, 2, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(curvedBeam);
+
+            // Polyline setbacks
+            var pl = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1) });
+            var mc3 = new ModelCurve(pl, BuiltInMaterials.Black);
+            this.Model.AddElement(mc3);
+            var plBeam = new Beam(pl, this._testProfile, 1, 1, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(plBeam);
         }
 
         [Fact]
