@@ -18,7 +18,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The end of the curve.
         /// </summary>
-        public virtual Vector3 End { get; protected set;}
+        public virtual Vector3 End { get; protected set; }
 
         /// <summary>
         /// The domain of the curve.
@@ -96,10 +96,7 @@ namespace Elements.Geometry
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(BoundedCurve c) => new ModelCurve(c);
 
-        internal virtual double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
-        {
-            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true)};
-        }
+        internal abstract double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
         /// A list of vertices used to render the curve.
