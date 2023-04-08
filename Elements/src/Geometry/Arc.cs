@@ -361,15 +361,7 @@ namespace Elements.Geometry
                 return start;
             }
 
-            // s = r * theta
-            // theta = s/r
-            var theta = distance / this.BasisCurve.Radius;
-
-            if (reversed)
-            {
-                return start - theta;
-            }
-            return start + theta;
+            return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start, reversed);
         }
     }
 }

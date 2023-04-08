@@ -136,7 +136,15 @@ namespace Elements.Geometry
         /// <param name="reversed">Should the distance be calculated in the opposite direction of the curve?</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start, bool reversed = false)
         {
-            throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
+            // s = r * theta
+            // theta = s/r
+            var theta = distance / this.Radius;
+
+            if (reversed)
+            {
+                return start - theta;
+            }
+            return start + theta;
         }
     }
 }
