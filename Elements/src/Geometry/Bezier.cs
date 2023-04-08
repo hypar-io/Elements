@@ -33,6 +33,7 @@ namespace Elements.Geometry
     public class Bezier : BoundedCurve
     {
         private int _samples = 50;
+        private int _lengthSamples = 1000;
 
         /// <summary>
         /// A collection of points describing the bezier's frame.
@@ -80,15 +81,44 @@ namespace Elements.Geometry
         {
             Vector3 last = new Vector3();
             double length = 0.0;
-            for (var t = 0; t <= _samples; t++)
+            var step = 1.0 / _lengthSamples;
+            for (var i = 0; i <= _lengthSamples; i++)
             {
-                var pt = PointAt(t * 1.0 / _samples);
-                if (t == 0.0)
+                var t = i * step;
+                var pt = PointAt(t);
+                if (i == 0)
                 {
                     last = pt;
                     continue;
                 }
                 length += pt.DistanceTo(last);
+                last = pt;
+            }
+            return length;
+        }
+
+        private double ArcLengthUntil(double start, double distance, out double end)
+        {
+            Vector3 last = new Vector3();
+            double length = 0.0;
+            var step = (this.Domain.Max - start) / _lengthSamples;
+            end = start;
+            for (var i = 0; i <= _lengthSamples; i++)
+            {
+                var t = start + i * step;
+                var pt = PointAt(t);
+                if (i == 0)
+                {
+                    last = pt;
+                    continue;
+                }
+                var d = pt.DistanceTo(last);
+                if (length + d > distance)
+                {
+                    end = t;
+                    return length;
+                }
+                length += d;
                 last = pt;
             }
             return length;
@@ -283,7 +313,8 @@ namespace Elements.Geometry
         /// <param name="start">The parameter from which to measure the distance.</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
-            throw new NotImplementedException($"This method is not supported for curves of type {GetType().Name}.");
+            ArcLengthUntil(start, distance, out var end);
+            return end;
         }
     }
 }

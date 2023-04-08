@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Elements.Tests
 {
@@ -264,6 +265,13 @@ namespace Elements.Tests
             this.Model.AddElement(mc3);
             var plBeam = new Beam(pl, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(plBeam);
+
+            // Bezier setbacks
+            var t = new Transform(16, 0, 0);
+            var bez = TestBezier();
+            this.Model.AddElement(new ModelCurve(bez, transform: t));
+            var bezBeam = new Beam(bez, this._testProfile, 1, 2, 0, t, BuiltInMaterials.Steel);
+            this.Model.AddElement(bezBeam);
         }
 
         [Fact]
@@ -344,6 +352,19 @@ namespace Elements.Tests
                 }
             }
             // </joist-example>
+        }
+
+        private Bezier TestBezier()
+        {
+            var a = Vector3.Origin;
+            var b = new Vector3(5, 0, 1);
+            var c = new Vector3(5, 5, 2);
+            var d = new Vector3(0, 5, 3);
+            var e = new Vector3(0, 0, 4);
+            var f = new Vector3(5, 0, 5);
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
+            var bezier = new Bezier(ctrlPts);
+            return bezier;
         }
     }
 }
