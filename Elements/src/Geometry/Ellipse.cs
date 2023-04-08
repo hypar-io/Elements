@@ -209,6 +209,8 @@ namespace Elements.Geometry
                 var sampleLength = Step(a, b, t, dt, h);
                 if (arcLength + sampleLength > distance)
                 {
+                    // TODO: This is an approximation.
+                    // This will return the parameter
                     end = t;
                     return arcLength;
                 }
@@ -220,8 +222,8 @@ namespace Elements.Geometry
 
         private double Step(double a, double b, double t, double dt, double h)
         {
-            double x = a * Math.Cos(t);
-            double y = b * Math.Sin(t);
+            // double x = a * Math.Cos(t);
+            // double y = b * Math.Sin(t);
             double dxdt = -a * Math.Sin(t);
             double dydt = b * Math.Cos(t);
             double dsdt = Math.Sqrt(dxdt * dxdt + dydt * dydt);
