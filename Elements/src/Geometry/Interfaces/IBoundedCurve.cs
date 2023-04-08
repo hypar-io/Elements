@@ -2,7 +2,7 @@ namespace Elements.Geometry.Interfaces
 {
     /// <summary>
     /// A curve with a start and an end.
-    /// Examples of bounded curces include polylines and bezier curves.
+    /// Examples of bounded curves include polylines and bezier curves.
     /// </summary>
     public interface IBoundedCurve
     {
