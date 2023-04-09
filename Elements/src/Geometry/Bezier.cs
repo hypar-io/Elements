@@ -32,8 +32,7 @@ namespace Elements.Geometry
     /// </example>
     public class Bezier : BoundedCurve
     {
-        private int _samples = 50;
-        private int _lengthSamples = 1000;
+        private int _lengthSamples = 500;
 
         /// <summary>
         /// A collection of points describing the bezier's frame.
@@ -290,16 +289,15 @@ namespace Elements.Geometry
         internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-            var parameters = new double[_samples + 1];
+            var parameters = new double[_lengthSamples + 1];
 
-            // TODO: Use setbacks when distance along bezier is supported.
-            // var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
-            // var endParam = ParameterAtDistanceFromParameter(endSetbackDistance, this.Domain.Max, true);
-            var startParam = this.Domain.Min;
-            var endParam = this.Domain.Max;
+            var l = this.Length();
 
-            var step = Math.Abs(endParam - startParam) / _samples;
-            for (var i = 0; i <= _samples; i++)
+            var startParam = startSetbackDistance == 0.0 ? this.Domain.Min : ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            var endParam = startSetbackDistance == 0.0 ? this.Domain.Max : ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min);
+
+            var step = Math.Abs(endParam - startParam) / _lengthSamples;
+            for (var i = 0; i <= _lengthSamples; i++)
             {
                 parameters[i] = startParam + i * step;
             }

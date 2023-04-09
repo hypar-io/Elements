@@ -267,11 +267,12 @@ namespace Elements.Tests
             this.Model.AddElement(plBeam);
 
             // Bezier setbacks
-            var t = new Transform(16, 0, 0);
-            var bez = TestBezier();
-            this.Model.AddElement(new ModelCurve(bez, transform: t));
-            var bezBeam = new Beam(bez, this._testProfile, 1, 2, 0, t, BuiltInMaterials.Steel);
-            this.Model.AddElement(bezBeam);
+            // TODO: Enable when we have good curved surface visualization.
+            // var t = new Transform(7, 0, 0);
+            // var bez = TestBezier();
+            // this.Model.AddElement(new ModelCurve(bez, BuiltInMaterials.Black, transform: t));
+            // var bezBeam = new Beam(bez, this._testProfile, 1, 2, 0, t, BuiltInMaterials.Steel);
+            // this.Model.AddElement(bezBeam);
         }
 
         [Fact]
