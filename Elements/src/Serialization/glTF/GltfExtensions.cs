@@ -1576,9 +1576,14 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
-                                        false,
-                                        geometricElement.ModifyVertexAttributes);
+                var offset = 0;
+                var providers = new List<SolidTesselationTargetProvider>();
+                foreach (var so in geometricElement.Representation.SolidOperations)
+                {
+                    providers.Add(new SolidTesselationTargetProvider(so.Solid, offset, so.LocalTransform));
+                    offset += so.Solid.Faces.Count;
+                }
+                buffers = Tessellation.Tessellate<GraphicsBuffers>(providers, false, geometricElement.ModifyVertexAttributes);
             }
             else
             {

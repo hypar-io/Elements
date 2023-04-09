@@ -429,7 +429,7 @@ namespace Elements.Geometry.Solids
         /// <param name="color">An optional color to apply to the vertex.</param>
         public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default)
         {
-            var tessProvider = new SolidTesselationTargetProvider(this);
+            var tessProvider = new SolidTesselationTargetProvider(this, 0);
             foreach (var target in tessProvider.GetTessellationTargets())
             {
                 var tess = target.GetTess();
