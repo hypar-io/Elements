@@ -10,6 +10,7 @@
 - `BoundedCurve`
 - `InfiniteLine`
 - `IConic`
+- `Arc.ByThreePoints`
 
 ### Changed
 
@@ -23,6 +24,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameteried 0->2Pi.
 - `Line` is now parameterized 0->length.
+- `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 
 ## 1.5.0
 
