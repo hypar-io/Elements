@@ -166,6 +166,46 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create an arc by three points.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        public static Arc ByThreePoints(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var p = new Plane(a, b, c);
+
+            // Create two lines, the perpendiculars of
+            // which will intersect at the center of the circle.
+            var mab = a.Average(b);
+            var mac = a.Average(c);
+            var vab = (b - a).Unitized().Cross(p.Normal);
+            var vac = (c - a).Unitized().Cross(p.Normal);
+            var r1 = new Ray(mab, vab);
+            var r2 = new Ray(mac, vac);
+            if (r1.Intersects(r2, out var result, out var xsectResult, true))
+            {
+                var r = result.DistanceTo(a);
+                var circle = new Circle(new Transform(result, p.Normal), r);
+                var a1 = (a - circle.Center).Unitized();
+                var b1 = (b - circle.Center).Unitized();
+                var c1 = (c - circle.Center).Unitized();
+                var angle1 = circle.Transform.XAxis.PlaneAngleTo(a1);
+                var angle2 = circle.Transform.XAxis.PlaneAngleTo(b1);
+                var angle3 = circle.Transform.XAxis.PlaneAngleTo(c1);
+                var angles = new List<double> { angle1, angle2, angle3 };
+                angles.Sort();
+                var arc = new Arc(circle, Units.DegreesToRadians(angles[0]), Units.DegreesToRadians(angles[2]));
+                return arc;
+            }
+            if (xsectResult == RayIntersectionResult.Parallel)
+            {
+                throw new ArgumentException("The arc can't be created. The provided points are coincident or colinear.");
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Calculate the length of the arc.
         /// </summary>
         public override double Length()

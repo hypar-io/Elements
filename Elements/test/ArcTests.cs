@@ -156,5 +156,44 @@ namespace Hypar.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => new Arc(1.0, 0, 361));
             Assert.Throws<ArgumentOutOfRangeException>(() => new Arc(1.0, 0, -361));
         }
+
+        [Fact]
+        public void ArcByThreePoints()
+        {
+            Name = nameof(ArcByThreePoints);
+            var a = new Vector3();
+            var b = new Vector3(1.5, 2.0);
+            var c = new Vector3(3, 5);
+            var arc = Elements.Geometry.Arc.ByThreePoints(a, b, c);
+            var mc = new ModelCurve(arc);
+            this.Model.AddElement(mc);
+            this.Model.AddElement(new ModelCurve(arc.BasisCurve, BuiltInMaterials.YAxis));
+            var pt1 = new Arc(a, 0.05, 0, 360);
+            var pt2 = new Arc(b, 0.05, 0, 360);
+            var pt3 = new Arc(c, 0.05, 0, 360);
+            this.Model.AddElement(new ModelCurve(pt2, BuiltInMaterials.XAxis));
+            this.Model.AddElement(new ModelCurve(pt1, BuiltInMaterials.XAxis));
+            this.Model.AddElement(new ModelCurve(pt3, BuiltInMaterials.XAxis));
+        }
+
+        [Fact]
+        public void ArcByThreePointsCoincidentThrows()
+        {
+            var a = new Vector3();
+            var b = new Vector3();
+            var c = new Vector3(3, 5);
+            Elements.Geometry.Arc.ByThreePoints(a, b, c);
+            Assert.Throws<ArgumentException>(() => Elements.Geometry.Arc.ByThreePoints(a, b, c));
+        }
+
+        [Fact]
+        public void ArcByThreePointsColinearThrows()
+        {
+            var a = new Vector3();
+            var b = new Vector3(1, 0);
+            var c = new Vector3(2, 0);
+            Elements.Geometry.Arc.ByThreePoints(a, b, c);
+            Assert.Throws<ArgumentException>(() => Elements.Geometry.Arc.ByThreePoints(a, b, c));
+        }
     }
 }
