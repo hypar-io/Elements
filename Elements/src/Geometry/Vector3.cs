@@ -380,6 +380,10 @@ namespace Elements.Geometry
         public double DistanceTo(Ray ray)
         {
             var t = ProjectedParameterOn(ray);
+            if (Double.IsNaN(t))
+            {
+                return double.PositiveInfinity;
+            }
             var closestPointOnRay = ray.Origin + t * ray.Direction;
             return closestPointOnRay.DistanceTo(this);
         }
