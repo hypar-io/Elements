@@ -190,9 +190,9 @@ namespace Elements.Geometry
                 var a1 = (a - circle.Center).Unitized();
                 var b1 = (b - circle.Center).Unitized();
                 var c1 = (c - circle.Center).Unitized();
-                var angle1 = circle.Transform.XAxis.PlaneAngleTo(a1);
-                var angle2 = circle.Transform.XAxis.PlaneAngleTo(b1);
-                var angle3 = circle.Transform.XAxis.PlaneAngleTo(c1);
+                var angle1 = circle.Transform.XAxis.PlaneAngleTo(a1, circle.Transform.ZAxis);
+                var angle2 = circle.Transform.XAxis.PlaneAngleTo(b1, circle.Transform.ZAxis);
+                var angle3 = circle.Transform.XAxis.PlaneAngleTo(c1, circle.Transform.ZAxis);
                 var angles = new List<double> { angle1, angle2, angle3 };
                 angles.Sort();
                 var arc = new Arc(circle, Units.DegreesToRadians(angles[0]), Units.DegreesToRadians(angles[2]));

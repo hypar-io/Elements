@@ -161,9 +161,25 @@ namespace Hypar.Tests
         public void ArcByThreePoints()
         {
             Name = nameof(ArcByThreePoints);
+
             var a = new Vector3();
             var b = new Vector3(1.5, 2.0);
             var c = new Vector3(3, 5);
+            VisualizeArcByThreePoints(a, b, c);
+
+            var d = new Vector3(1, 2, 0);
+            var e = new Vector3(2, 3, 1);
+            var f = new Vector3(3, 5, 2);
+            VisualizeArcByThreePoints(d, e, f);
+
+            var g = new Vector3(1, 2, 0);
+            var h = new Vector3(1, 3, 1);
+            var i = new Vector3(1, 5, 2);
+            VisualizeArcByThreePoints(g, h, i);
+        }
+
+        private void VisualizeArcByThreePoints(Vector3 a, Vector3 b, Vector3 c)
+        {
             var arc = Elements.Geometry.Arc.ByThreePoints(a, b, c);
             var mc = new ModelCurve(arc);
             this.Model.AddElement(mc);
