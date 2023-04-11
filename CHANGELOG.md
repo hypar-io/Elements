@@ -11,6 +11,7 @@
 - `InfiniteLine`
 - `IConic`
 - `Arc.ByThreePoints`
+- `Arc.Fillet`
 
 ### Changed
 
