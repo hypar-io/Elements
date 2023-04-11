@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.0
+## 2.0
 
 ### Added
 
