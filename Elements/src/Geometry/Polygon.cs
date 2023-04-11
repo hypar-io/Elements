@@ -25,7 +25,7 @@ namespace Elements.Geometry
         /// </summary>
         internal Plane _plane;
 
-        internal override bool IsClosedForRendering => false;
+        internal override bool IsClosedForRendering => true;
 
         /// <summary>
         /// Construct a polygon.
