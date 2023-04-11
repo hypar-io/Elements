@@ -168,9 +168,10 @@ namespace Elements.Geometry
         /// <summary>
         /// Create an arc by three points.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="c"></param>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>An arc through the three points.</returns>
         public static Arc ByThreePoints(Vector3 a, Vector3 b, Vector3 c)
         {
             var p = new Plane(a, b, c);
@@ -203,6 +204,112 @@ namespace Elements.Geometry
                 throw new ArgumentException("The arc can't be created. The provided points are coincident or colinear.");
             }
             return null;
+        }
+
+        /// <summary>
+        /// Create a fillet arc between two lines.
+        /// </summary>
+        /// <param name="a">The first line.</param>
+        /// <param name="b">The second line.</param>
+        /// <param name="radius">The radiuse of the fillet arc.</param>
+        /// <returns>A fillet arc between the two lines.</returns>
+        public static Arc Fillet(Line a, Line b, double radius)
+        {
+            // The direction of the two lines
+            var d1 = a.Direction();
+            var d2 = b.Direction();
+            if (d1.IsParallelTo(d2))
+            {
+                throw new Exception("The fillet could not be created. The lines are parallel");
+            }
+
+            // Find the intersection of the two lines.
+            // this will be the "corner" reference.
+            var r1 = new Ray(a.Start, d1);
+            var r2 = new Ray(b.Start, d2);
+            if (!r1.Intersects(r2, out Vector3 intersection, true))
+            {
+                return null;
+            }
+
+            // Construct new vectors that both
+            // point away from the projected intersection.
+            // Use an arbitrary point on the line that 
+            // isn't the start or the end. This ensures
+            // that the vectors will point in the correct direction,
+            // regardless of the original lines' original orientation
+            var dd1 = (a.Mid() - intersection).Unitized();
+            var dd2 = (b.Mid() - intersection).Unitized();
+
+            // Find the bisector vector.
+            var bisectVector = dd1.Average(dd2).Unitized();
+
+            // Find the normal of the plane in which the
+            // fillet arc will be created.
+            var up = dd1.Cross(dd2).Unitized();
+            // up = up.Dot(Vector3.ZAxis) < 0 ? up.Negate() : up;
+            var left = up.Cross(bisectVector).Unitized();
+
+            // Find the "height" of the triangle whose
+            // base is perpendicular to one of the sides.
+            // var theta = dd1.AngleToInternal(dd2);
+            var theta = dd1.AngleToInternal(dd2);
+            var halfTheta = theta / 2.0;
+            var h = radius / Math.Sin(halfTheta);
+
+            // The point along the bisection vector of
+            // distance "h" will be the center of the new arc.
+            var arcCenter = intersection + bisectVector * h;
+
+            // Find the closest points from the arc
+            // center to the adjacent curves, treated as infinite.
+            // This will be the start and end of the arc.
+            var p1 = arcCenter.ClosestPointOn(a, true);
+            var p2 = arcCenter.ClosestPointOn(b, true);
+
+            // Find the angle, in the plane, from the "left" vector
+            // to the a curve and the b curve. These will be the
+            // start and end parameters of the arc.
+            var angle1 = left.PlaneAngleToInternal((p1 - arcCenter).Unitized(), up);
+            var angle2 = left.PlaneAngleToInternal((p2 - arcCenter).Unitized(), up);
+
+            // Find the angle of both segments relative to the fillet arc.
+            // ATan2 assumes the origin, so correct the coordinates
+            // by the offset of the center of the arc.
+            // var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0 / Math.PI;
+            // var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0 / Math.PI;
+
+            // ATan2 will provide negative angles in the "lower" quadrants
+            // Ensure that these values are 180d -> 360d
+            // angle1 = (angle1 + 360) % 360;
+            // angle2 = (angle2 + 360) % 360;
+            // angle2 = angle2 == 0.0 ? 360.0 : angle2;
+
+            // We only support CCW wound arcs.
+            // For arcs that with start angles <1d, convert
+            // the arc back to a negative value.
+            // var arc = new Arc(arcCenter,
+            //                radius,
+            //                angle1 > angle2 ? angle1 - 360.0 : angle1,
+            //                angle2);
+
+            var arc = new Arc(new Transform(arcCenter, left, up),
+                           radius,
+                           Math.Min(angle1, angle2),
+                           Math.Max(angle1, angle2));
+
+            // Get the complimentary arc and choose
+            // the shorter of the two arcs.
+            // var complement = arc.Complement();
+            // if (arc.Length() < complement.Length())
+            // {
+            //     return arc;
+            // }
+            // else
+            // {
+            //     return complement;
+            // }
+            return arc;
         }
 
         /// <summary>

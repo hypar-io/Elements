@@ -287,6 +287,11 @@ namespace Elements.Geometry
         /// <returns>The angle in degrees between 0 and 180. </returns>
         public double AngleTo(Vector3 v)
         {
+            return Units.RadiansToDegrees(AngleToInternal(v));
+        }
+
+        internal double AngleToInternal(Vector3 v)
+        {
             var n = Dot(v);
             var d = Length() * v.Length();
             if (d == 0.0)
@@ -304,8 +309,7 @@ namespace Elements.Geometry
                 return 180;
             }
             var rad = Math.Acos(r);
-
-            return rad * 180 / Math.PI;
+            return rad;
         }
 
         /// <summary>
@@ -325,6 +329,11 @@ namespace Elements.Geometry
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
         /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
         public double PlaneAngleTo(Vector3 v, Vector3 normal)
+        {
+            return Units.RadiansToDegrees(PlaneAngleToInternal(v, normal));
+        }
+
+        internal double PlaneAngleToInternal(Vector3 v, Vector3 normal)
         {
             var transformFromPlane = new Transform(Vector3.Origin, normal);
             transformFromPlane.Invert();
@@ -353,11 +362,11 @@ namespace Elements.Geometry
             Vector3 aCrossB = aUnitized.Cross(bUnitized).Unitized();
             if (Vector3.ZAxis.Dot(aCrossB) > 0)
             {
-                return angle * 180 / Math.PI;
+                return angle;
             }
             else
             {
-                return (Math.PI * 2 - angle) * 180 / Math.PI;
+                return Math.PI * 2 - angle;
             }
         }
 

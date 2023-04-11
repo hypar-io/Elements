@@ -211,5 +211,31 @@ namespace Hypar.Tests
             Elements.Geometry.Arc.ByThreePoints(a, b, c);
             Assert.Throws<ArgumentException>(() => Elements.Geometry.Arc.ByThreePoints(a, b, c));
         }
+
+        [Fact]
+        public void Fillet()
+        {
+            Name = (nameof(Fillet));
+
+            var a = new Line(new Vector3(-3, 0), new Vector3(-1, 3, 1));
+            var b = new Line(new Vector3(3, 0), new Vector3(1, 3, 1));
+            var c = new Line(new Vector3(-3, 0), new Vector3(-1, -3, 1));
+            var d = new Line(new Vector3(3, 0), new Vector3(1, -3, 1));
+
+            this.Model.AddElements(new[] { new ModelCurve(a, BuiltInMaterials.XAxis), new ModelCurve(b, BuiltInMaterials.XAxis), new ModelCurve(c, BuiltInMaterials.ZAxis), new ModelCurve(d, BuiltInMaterials.ZAxis) });
+
+            var arc1 = Elements.Geometry.Arc.Fillet(a, b, 2);
+            this.Model.AddElement(new ModelCurve(arc1, BuiltInMaterials.XAxis));
+
+            var arc2 = Elements.Geometry.Arc.Fillet(c, d, 2);
+            this.Model.AddElements(new[] { new ModelCurve(arc2, BuiltInMaterials.ZAxis), });
+
+            var arc3 = Elements.Geometry.Arc.Fillet(a, c, 2);
+            this.Model.AddElements(new ModelCurve(arc3, BuiltInMaterials.YAxis));
+
+            var arc4 = Elements.Geometry.Arc.Fillet(b, d, 2);
+            this.Model.AddElements(new ModelCurve(arc4, BuiltInMaterials.YAxis));
+
+        }
     }
 }
