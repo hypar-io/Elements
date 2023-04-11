@@ -10,19 +10,19 @@ namespace Elements.Geometry.Tessellation
     {
         private readonly Face face;
         private readonly Transform transform;
-        private readonly long faceId;
-        private int offset;
+        private readonly uint solidId;
 
         /// <summary>
         /// Construct a SolidFaceTessAdaptor.
         /// </summary>
         /// <param name="face"></param>
         /// <param name="transform"></param>
-        public SolidFaceTessAdapter(Face face, int offset, Transform transform = null)
+        /// <param name="solidId"></param>
+        public SolidFaceTessAdapter(Face face, uint solidId, Transform transform = null)
         {
             this.face = face;
             this.transform = transform;
-            this.offset = offset;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -36,13 +36,13 @@ namespace Elements.Geometry.Tessellation
                 NoEmptyPolygons = true
             };
 
-            tess.AddContour(face.Outer.ToContourVertexArray((int)face.Id + offset, transform));
+            tess.AddContour(face.Outer.ToContourVertexArray(face.Id, solidId, transform));
 
             if (face.Inner != null)
             {
                 foreach (var loop in face.Inner)
                 {
-                    tess.AddContour(loop.ToContourVertexArray((int)face.Id + offset, transform));
+                    tess.AddContour(loop.ToContourVertexArray(face.Id, solidId, transform));
                 }
             }
 
