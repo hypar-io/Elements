@@ -118,8 +118,8 @@ namespace Elements.Geometry
         /// Constructs a circular basis curve internally with a default transform.
         /// </summary>
         /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
-        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        /// <param name="startAngle">The CCW angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The CCW angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
