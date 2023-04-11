@@ -54,9 +54,9 @@ namespace Elements.Spatial.AdaptiveGrid
                 wall.CenterLine.Start - ortho * wall.Thickness / 2
             );
 
-            var transfrom = new Transform(Vector3.Origin, wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
+            var transform = new Transform(Vector3.Origin, wall.CenterLine.Direction(), ortho, Vector3.ZAxis);
 
-            return new Obstacle(polygon, wall.Height, offset, addPerimeterEdges, allowOutsideBoundary, transfrom);
+            return new Obstacle(polygon, wall.Height, offset, addPerimeterEdges, allowOutsideBoundary, transform);
         }
 
         /// <summary>
@@ -135,20 +135,20 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Create an obstacle from a list of points.
         /// </summary>
-        /// <param name="boudary">Boundary of an obstacle</param>
+        /// <param name="boundary">Boundary of an obstacle</param>
         /// <param name="height">Height of an obstacle</param>
         /// <param name="offset">Extra space around obstacle bounding box.</param>
         /// <param name="addPerimeterEdges">Should edges be created around obstacle.</param>
         /// <param name="allowOutsideBoundary">Should edges be created when obstacle is outside of <see cref="AdaptiveGrid.Boundaries"/></param>
-        /// <param name="orienatation">Orientation of the obstacle in space. Helpful for better bounding box creation.</param>
-        public Obstacle(Polygon boudary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform orienatation)
+        /// <param name="orientation">Orientation of the obstacle in space. Helpful for better bounding box creation.</param>
+        public Obstacle(Polygon boundary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform orientation)
         {
-            Boundary = boudary;
+            Boundary = boundary;
             Height = height;
             Offset = offset;
             AddPerimeterEdges = addPerimeterEdges;
             AllowOutsideBoudary = allowOutsideBoundary;
-            Orientation = orienatation;
+            Orientation = orientation;
 
             Material = BuiltInMaterials.Mass;
 
