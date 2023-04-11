@@ -49,7 +49,7 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the circle.</param>
         public Circle(double radius = 1.0)
         {
-            this.Radius = 1.0;
+            this.Radius = radius;
             this.Transform = new Transform();
         }
 
