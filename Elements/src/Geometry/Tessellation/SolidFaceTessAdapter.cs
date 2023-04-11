@@ -10,7 +10,6 @@ namespace Elements.Geometry.Tessellation
     {
         private readonly Face face;
         private readonly Transform transform;
-        private readonly long faceId;
 
         /// <summary>
         /// Construct a SolidFaceTessAdaptor.

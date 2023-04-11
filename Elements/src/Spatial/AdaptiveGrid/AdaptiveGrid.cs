@@ -371,7 +371,7 @@ namespace Elements.Spatial.AdaptiveGrid
         public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
         {
             id = GetFromXYZLookup(point, out _, out _, tolerance: tolerance);
-            return id != 0; 
+            return id != 0;
         }
 
         /// <summary>
@@ -429,8 +429,7 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <summary>
             /// Insert vertices and connect them to each other.
             /// Find any intersections between new edges.
-            /// Inserted vertices are returned in order including self intersection vertices twice. 
-            /// 
+            /// Inserted vertices are returned in order including self intersection vertices twice.
             /// </summary>
             ConnectAndSelfIntersect,
 
@@ -452,7 +451,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Create a chain of vertices. Exact behavior depends on the method used. 
+        /// Create a chain of vertices. Exact behavior depends on the method used.
         /// </summary>
         /// <param name="points">List of points to insert. Must have at least two points.</param>
         /// <param name="method">Insertion method.</param>
@@ -763,7 +762,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     // The same vertex can be part of multiple edges.
                     // Cache to avoid expensive cut operations.
-                    if (!alreadyConnected.Contains(newSV.Id) && 
+                    if (!alreadyConnected.Contains(newSV.Id) &&
                         TryGetVertexIndex(Start, out var id))
                     {
                         AddEdge(newSV.Id, id);
@@ -834,7 +833,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Add an edge between two vertices and intersect it with other edges on the grid. 
+        /// Add an edge between two vertices and intersect it with other edges on the grid.
         /// </summary>
         /// <param name="startId">Index of start vertex.</param>
         /// <param name="endId">Index of end vertex.</param>
@@ -1034,9 +1033,9 @@ namespace Elements.Spatial.AdaptiveGrid
             return addedEdges;
         }
 
-        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowEdgesOutsideBoudnary)
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowEdgesOutsideBoundary)
         {
-            if (Boundaries != null && !allowEdgesOutsideBoudnary)
+            if (Boundaries != null && !allowEdgesOutsideBoundary)
             {
                 var boundary2d = new Polygon(Boundaries.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
                 var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(boundary2d, out var _);
@@ -1084,9 +1083,9 @@ namespace Elements.Spatial.AdaptiveGrid
             for (int i = 0; i < points.Count - 1; i++)
             {
                 var segmentLength = (points[i + 1] - points[i]).Length();
-                // Find any intersections between infinite segment and grid eges.
+                // Find any intersections between infinite segment and grid edges.
                 var hits = IntersectGraph(points[i], points[i + 1]);
-                // If none - just insert segment into grid. 
+                // If none - just insert segment into grid.
                 if (!hits.Any())
                 {
                     var start = AddVertex(points[i]);
@@ -1408,7 +1407,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private bool IsLineInDomain(
             (Vector3 Start, Vector3 End) line,
             (Vector3 Min, Vector3 Max) domain,
-            double xyTolerance, double zTolerance, 
+            double xyTolerance, double zTolerance,
             out bool startInside, out bool endInside)
         {
             startInside = false;

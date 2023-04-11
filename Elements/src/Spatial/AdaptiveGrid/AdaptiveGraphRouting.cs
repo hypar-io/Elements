@@ -51,7 +51,7 @@ namespace Elements.Spatial.AdaptiveGrid
             _configuration = configuration;
 
             if (!_configuration.LayerPenalty.ApproximatelyEquals(1))
-            { 
+            {
                 var plane = new Plane(new Vector3(0, 0, _configuration.MainLayer), Vector3.ZAxis);
                 var modifier = new WeightModifier(
                     "Not Main Layer",
@@ -266,7 +266,7 @@ namespace Elements.Spatial.AdaptiveGrid
             IList<ulong> exits,
             IEnumerable<RoutingHintLine> hintLines = null)
         {
-            ErrorMessages.Clear(); 
+            ErrorMessages.Clear();
             //Excluded vertices includes inlets and vertices in certain distance around these inlets.
             //Sometimes it's not desirable for routing to go through them.
             var excludedVertices = ExcludedVertices(leafVertices);
@@ -320,7 +320,7 @@ namespace Elements.Spatial.AdaptiveGrid
             Dictionary<ulong, TreeNode> leafsToTrunkTree)
         {
             //Join all individual pieces together. We start from a single connection
-            //path from droppipe and a set of connection points from the previous step.
+            //path from drop pipe and a set of connection points from the previous step.
             //One at a time we choose the connection point that is cheapest to travel to existing
             //network and its path is added to the network until all are added.
             //Magnet terminals are all of the vertices that are currently part of the tree.
@@ -369,7 +369,7 @@ namespace Elements.Spatial.AdaptiveGrid
                         localBestCost > bestCost : localBestCost < bestCost;
                     if (sameCost || betterCost)
                     {
-                        //If there are several connection points with the same cost - 
+                        //If there are several connection points with the same cost -
                         //choose one that is closer to the trunk.
                         var localCostToTrunk = CostToTrunk(leafsToTrunkTree[localClosest], weights);
                         if (sameCost && localCostToTrunk >= bestCostToTrunk)
@@ -403,7 +403,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 //If other route goes though this leaf - in case if isolation radius is 0,
                 //do not try to optimize it, since it can lead to the whole subtree.
                 //TODO: make it possible to optimize subtrees and only leaf branches.
-                if(leafNode.Leafs.Any())
+                if (leafNode.Leafs.Any())
                 {
                     continue;
                 }
@@ -417,7 +417,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 if (localClosest != lastSnap)
                 {
                     //If better connection if found - remove old path from tree.
-                    foreach (var node  in leafPath)
+                    foreach (var node in leafPath)
                     {
                         magnetTerminals.Remove(node.Id);
                         node.Disconnect();
@@ -486,7 +486,7 @@ namespace Elements.Spatial.AdaptiveGrid
                                 if (l.UserDefined)
                                 {
                                     hintFactor = Math.Min(l.Factor, hintFactor);
-                                    //Store the information if the edge was affected by 2D and (or) 3D hint line. 
+                                    //Store the information if the edge was affected by 2D and (or) 3D hint line.
                                     flags |= l.Is2D ? EdgeFlags.UserDefinedHint2D : EdgeFlags.UserDefinedHint3D;
                                 }
                                 else
@@ -707,7 +707,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
                     var edgeInfo = edgeInfos[e.Id];
                     var bestCost = travelCost[id];
- 
+
                     //Edge or start vertex is not traversable.
                     if (edgeInfo.Factor == CONDITIONS_NOT_MET || cost.Item1 == CONDITIONS_NOT_MET)
                     {
@@ -821,7 +821,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Otherwise hint paths with several turns would be ignored because of extra cost.
         /// The turn factor is multiplied by minimum of two edges factor.
         /// </summary>
-        /// <param name="edgeInfo">Edge informations for the first edge</param>
+        /// <param name="edgeInfo">Edge information for the first edge</param>
         /// <param name="sharedVertex">Id of the vertex, common for two edges</param>
         /// <param name="thirdVertexId">Third vertex Id</param>
         /// <param name="edgeInfos">Precalculated information for each edge</param>
@@ -976,12 +976,12 @@ namespace Elements.Spatial.AdaptiveGrid
             }
 
             return _grid.GetVertices().Where(v =>
-                !excluded.Any(e => e.Id == v.Id) && 
+                !excluded.Any(e => e.Id == v.Id) &&
                 hints.Any(h => h.IsNearby(v.Point, _grid.Tolerance))).ToList();
         }
 
         private void Compare(ulong index, IDictionary<ulong, double> travelCost,
-            ref double bestCost, ref ulong bestIndex)
+                ref double bestCost, ref ulong bestIndex)
         {
             if (travelCost.TryGetValue(index, out var cost))
             {
@@ -1018,14 +1018,14 @@ namespace Elements.Spatial.AdaptiveGrid
                         candidateBranch = BranchSide.Right;
                     }
 
-                    //Connection point with the lower cost is better. 
+                    //Connection point with the lower cost is better.
                     if (candidateCost > bestCost + Vector3.EPSILON)
                     {
                         continue;
                     }
 
                     //If two ways to travel from point A to point B has the same cost,
-                    //the one is used that joins the tree without a turn. 
+                    //the one is used that joins the tree without a turn.
                     //We both need/don't need a turn - first path is chosen.
                     if (costs.Item1.ApproximatelyEquals(costs.Item2) &&
                         tree.TryGetValue(index, out var node) && node.Trunk != null)
