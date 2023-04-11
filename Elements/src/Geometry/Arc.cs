@@ -273,42 +273,11 @@ namespace Elements.Geometry
             var angle1 = left.PlaneAngleToInternal((p1 - arcCenter).Unitized(), up);
             var angle2 = left.PlaneAngleToInternal((p2 - arcCenter).Unitized(), up);
 
-            // Find the angle of both segments relative to the fillet arc.
-            // ATan2 assumes the origin, so correct the coordinates
-            // by the offset of the center of the arc.
-            // var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0 / Math.PI;
-            // var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0 / Math.PI;
-
-            // ATan2 will provide negative angles in the "lower" quadrants
-            // Ensure that these values are 180d -> 360d
-            // angle1 = (angle1 + 360) % 360;
-            // angle2 = (angle2 + 360) % 360;
-            // angle2 = angle2 == 0.0 ? 360.0 : angle2;
-
-            // We only support CCW wound arcs.
-            // For arcs that with start angles <1d, convert
-            // the arc back to a negative value.
-            // var arc = new Arc(arcCenter,
-            //                radius,
-            //                angle1 > angle2 ? angle1 - 360.0 : angle1,
-            //                angle2);
-
             var arc = new Arc(new Transform(arcCenter, left, up),
                            radius,
                            Math.Min(angle1, angle2),
                            Math.Max(angle1, angle2));
 
-            // Get the complimentary arc and choose
-            // the shorter of the two arcs.
-            // var complement = arc.Complement();
-            // if (arc.Length() < complement.Length())
-            // {
-            //     return arc;
-            // }
-            // else
-            // {
-            //     return complement;
-            // }
             return arc;
         }
 

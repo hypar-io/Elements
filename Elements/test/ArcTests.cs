@@ -2,6 +2,7 @@ using Elements;
 using Elements.Geometry;
 using Elements.Tests;
 using System;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -222,20 +223,63 @@ namespace Hypar.Tests
             var c = new Line(new Vector3(-3, 0), new Vector3(-1, -3, 1));
             var d = new Line(new Vector3(3, 0), new Vector3(1, -3, 1));
 
-            this.Model.AddElements(new[] { new ModelCurve(a, BuiltInMaterials.XAxis), new ModelCurve(b, BuiltInMaterials.XAxis), new ModelCurve(c, BuiltInMaterials.ZAxis), new ModelCurve(d, BuiltInMaterials.ZAxis) });
+            // this.Model.AddElements(new[] { new ModelCurve(a, BuiltInMaterials.XAxis), new ModelCurve(b, BuiltInMaterials.XAxis), new ModelCurve(c, BuiltInMaterials.ZAxis), new ModelCurve(d, BuiltInMaterials.ZAxis) });
 
+            var profile = new Circle(0.05).ToPolygon(20);
             var arc1 = Elements.Geometry.Arc.Fillet(a, b, 2);
             this.Model.AddElement(new ModelCurve(arc1, BuiltInMaterials.XAxis));
+            this.Model.AddElement(new Beam(arc1, profile));
 
             var arc2 = Elements.Geometry.Arc.Fillet(c, d, 2);
             this.Model.AddElements(new[] { new ModelCurve(arc2, BuiltInMaterials.ZAxis), });
+            this.Model.AddElement(new Beam(arc2, profile));
 
             var arc3 = Elements.Geometry.Arc.Fillet(a, c, 2);
             this.Model.AddElements(new ModelCurve(arc3, BuiltInMaterials.YAxis));
+            this.Model.AddElement(new Beam(arc3, profile));
 
             var arc4 = Elements.Geometry.Arc.Fillet(b, d, 2);
             this.Model.AddElements(new ModelCurve(arc4, BuiltInMaterials.YAxis));
+            this.Model.AddElement(new Beam(arc4, profile));
 
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            var allPoints = arcs.SelectMany(a => new[] { a.Start, a.End }).ToList();
+
+            // A brute forces search for end to end arcs.
+            foreach (var arc in arcs)
+            {
+                var start = arc.End;
+                var minDistance = double.MaxValue;
+                Vector3 found = Vector3.Origin;
+                foreach (var testArc in arcs)
+                {
+                    if (testArc.Equals(arc))
+                    {
+                        continue;
+                    }
+
+                    var distanceToEnd = testArc.End.DistanceTo(start);
+                    if (distanceToEnd < minDistance)
+                    {
+                        minDistance = distanceToEnd;
+                        found = testArc.End;
+                    }
+
+                    var distanceToStart = testArc.Start.DistanceTo(start);
+                    if (distanceToStart < minDistance)
+                    {
+                        minDistance = distanceToStart;
+                        found = testArc.Start;
+                    }
+                }
+                allPoints.Remove(found);
+                allPoints.Remove(arc.End);
+
+                var beam = new Beam(new Line(start, found), profile);
+                this.Model.AddElement(beam);
+            }
+            var lastBeam = new Beam(new Line(allPoints[0], allPoints[1]), profile);
+            this.Model.AddElement(lastBeam);
         }
     }
 }
