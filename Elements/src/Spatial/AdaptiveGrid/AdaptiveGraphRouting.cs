@@ -89,6 +89,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var normalEdgesCheap = new List<(Line, double)>();
             var normalEdgesExpensive = new List<(Line, double)>();
             var hintEdges = new List<(Line, double)>();
+            var hintEdgesExpensive = new List<(Line, double)>();
             var offsetEdges = new List<(Line, double)>();
 
             var infos = CalculateEdgeInfos(hintLines);
@@ -108,7 +109,14 @@ namespace Elements.Spatial.AdaptiveGrid
                 var info = infos[edge.Id];
                 if (info.HasAnyFlag(EdgeFlags.UserDefinedHint))
                 {
-                    hintEdges.Add((l, info.Factor));
+                    if (info.Factor > 1 + _grid.Tolerance)
+                    {
+                        hintEdgesExpensive.Add((l, info.Factor));
+                    }
+                    else
+                    {
+                        hintEdges.Add((l, info.Factor));
+                    }
                 }
                 else if (info.HasAnyFlag(EdgeFlags.HiddenHint))
                 {
@@ -152,6 +160,7 @@ namespace Elements.Spatial.AdaptiveGrid
             add(normalEdgesExpensive, "Normal Edges Expensive", Colors.Purple);
             add(offsetEdges, "Offset Edges Main", Colors.Orange);
             add(hintEdges, "Hint Edges Main", Colors.Green);
+            add(hintEdgesExpensive, "Hint Edges Expensive", Colors.Yellow);
 
             return visualizations;
         }
