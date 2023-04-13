@@ -63,7 +63,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         /// <param name="groupName">Group name.</param>
         /// <param name="groupFactorAggregator">Factor aggregator function.</param>
-        public void SetWeightModifiersGroupFactorAggregator(string groupName, Func<double, double, double> groupFactorAggregator)
+        public void SetWeightModifiersGroupAggregator(string groupName, Func<double, double, double> groupFactorAggregator)
         {
             _groupFactorAggregators[groupName] = groupFactorAggregator;
         }
@@ -74,7 +74,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="groupName">Group name. Must be not null.</param>
         /// <returns>List of WeightModifier with the specified group name.</returns>
         /// <exception cref="ArgumentNullException">Throws if <paramref name="groupName"/> is null.</exception>
-        public List<WeightModifier> GetGroupWeightModifiers(string groupName)
+        public List<WeightModifier> GetWeightModifiersGroup(string groupName)
         {
             if (groupName == null)
             {
@@ -119,27 +119,45 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Created WeightModifier.</returns>
         public WeightModifier AddPolylineWeightModifier(string name, Polyline polyline, double factor, double influenceDistance, bool is2D, string group = null)
         {
+            RoutingHintLine hintLine;
+            try
+            {
+                hintLine = new RoutingHintLine(polyline, factor, influenceDistance, true, is2D);
+            }
+            catch
+            {
+                hintLine = null;
+            }
+
             var modifier = new WeightModifier(
                 name,
                 new Func<Vertex, Vertex, bool>((a, b) =>
                 {
+                    if (hintLine == null)
+                    {
+                        return false;
+                    }
                     var line = new Line(a.Point, b.Point);
                     if (is2D)
                     {
-                        try
+                        var start = new Vector3(a.Point.X, a.Point.Y);
+                        var end = new Vector3(b.Point.X, b.Point.Y);
+                        if (!start.IsAlmostEqualTo(end))
                         {
-                            polyline = new Polyline(polyline.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
-                            line = new Line(new Vector3(a.Point.X, a.Point.Y), new Vector3(b.Point.X, b.Point.Y));
+                            line = new Line(start, end);
                         }
-                        catch
+                        else
                         {
                             return false;
                         }
                     }
-                    var hintLine = new RoutingHintLine(polyline, factor, influenceDistance, true, is2D);
-                    var isAffectedParallely = hintLine.Affects(a.Point, b.Point);
-                    var isIntersected = polyline.Intersects(line, out _, includeEnds: true);
-                    return isAffectedParallely || isIntersected;
+                    if (hintLine.Affects(a.Point, b.Point))
+                    {
+                        return true;
+                    }
+                    var lineDir = line.Direction();
+                    return hintLine.Polyline.Segments().Any(s => !s.Direction().IsParallelTo(lineDir)
+                                                        && line.DistanceTo(s) < influenceDistance);
                 }),
                 factor,
                 group);
@@ -148,37 +166,60 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
+        /// Group weight modifiers.
+        /// </summary>
+        /// <returns>Weight modifiers grouped by group name.</returns>
+        private IEnumerable<IGrouping<string, WeightModifier>> GroupWeightModifiers()
+        {
+            return _weightModifiers.Values.GroupBy(m => m.Group);
+        }
+
+        /// <summary>
         /// Check if edge passes any modifier check and returns the aggregated value among them.
         /// If an edge meets the condition of several WeightModifier objects
-        /// they will be grouped by group name and factor aggregator function will be applied to WeightModifiers factors. <see cref="SetWeightModifiersGroupFactorAggregator"/>.
+        /// factor aggregator function will be applied to factors of each WeightModifiers group. <see cref="SetWeightModifiersGroupAggregator"/>.
         /// By default - the lowest factor of group is chosen.
         /// Finally, factors of all groups will be multiplied.
         /// Returns 1 if no modifiers applied.
         /// </summary>
         /// <param name="a">Start Vertex</param>
         /// <param name="b">End Vertex</param>
-        private double ModifierFactor(Vertex a, Vertex b)
+        /// <param name="modifiersGroups">Weight modifiers grouped by group name.</param>
+        private double ModifierFactor(Vertex a, Vertex b, IEnumerable<IGrouping<string, WeightModifier>> modifiersGroups)
         {
-            var modifiersGroups = _weightModifiers.Values.GroupBy(m => m.Group);
             var modifierFactors = new List<double>();
             foreach (var modifiersGroup in modifiersGroups)
             {
-                var appliedModifiers = modifiersGroup.Where(modifier => modifier.Condition(a, b));
-                if (!appliedModifiers.Any())
-                {
-                    modifierFactors.Add(1);
-                    continue;
-                }
-
-                if (!_groupFactorAggregators.TryGetValue(modifiersGroup.Key, out var aggregateFactorFunc))
-                {
-                    aggregateFactorFunc = AggregateFactorMin;
-                }
-                var modifierFactor = appliedModifiers.Select(m => m.Factor).Aggregate(aggregateFactorFunc);
-                modifierFactors.Add(modifierFactor);
+                modifierFactors.Add(ModifierFactor(a, b, modifiersGroup));
             }
 
             return modifierFactors.Any() ? modifierFactors.Aggregate(AggregateFactorMultiply) : 1;
+        }
+
+        /// <summary>
+        /// Check if edge passes any modifier check and returns the aggregated value among them.
+        /// If an edge meets the condition of several WeightModifier objects
+        /// factor aggregator function will be applied to WeightModifiers factors. <see cref="SetWeightModifiersGroupAggregator"/>.
+        /// By default - the lowest factor of group is chosen.
+        /// Returns 1 if no modifiers applied.
+        /// </summary>
+        /// <param name="a">Start Vertex</param>
+        /// <param name="b">End Vertex</param>
+        /// <param name="modifiersGroup">Group of modifiers.</param>
+        private double ModifierFactor(Vertex a, Vertex b, IGrouping<string, WeightModifier> modifiersGroup)
+        {
+            var appliedModifiers = modifiersGroup.Where(modifier => modifier.Condition(a, b));
+            if (!appliedModifiers.Any())
+            {
+                return 1;
+            }
+
+            if (!_groupFactorAggregators.TryGetValue(modifiersGroup.Key, out var aggregateFactorFunc))
+            {
+                aggregateFactorFunc = AggregateFactorMin;
+            }
+            var modifierFactor = appliedModifiers.Select(m => m.Factor).Aggregate(aggregateFactorFunc);
+            return modifierFactor;
         }
 
         /// <summary>

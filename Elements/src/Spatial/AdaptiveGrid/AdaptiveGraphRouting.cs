@@ -455,6 +455,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var weights = new Dictionary<ulong, EdgeInfo>();
             var mainAxis = _grid.Transform.XAxis;
+            var modifiersGroups = GroupWeightModifiers();
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
@@ -477,7 +478,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     double hintFactor = 1;
                     double offsetFactor = 1;
-                    double modifierFactor = ModifierFactor(v0, v1);
+                    double modifierFactor = ModifierFactor(v0, v1, modifiersGroups);
 
                     //TODO: consider unifying hint line, offset line and modifiers as single concept.
                     //There will still be functions for adding hint/offset lines but everything will be processed inside

@@ -7,7 +7,7 @@ namespace Elements.Spatial.AdaptiveGrid
     /// <summary>
     /// Object that lets you apply an edge weight factor to edges that meet a Condition filter function.
     /// If an edge meets the condition of several WeightModifier objects
-    /// they will be grouped by group name and factor aggregator function will be applied to WeightModifiers <see cref="AdaptiveGraphRouting.SetWeightModifiersGroupFactorAggregator"/>.
+    /// they will be grouped by group name and factor aggregator function will be applied to WeightModifiers <see cref="AdaptiveGraphRouting.SetWeightModifiersGroupAggregator"/>.
     /// By default - the lowest factor of group is chosen.
     /// Factors of all groups will be multiplied.
     /// </summary>
