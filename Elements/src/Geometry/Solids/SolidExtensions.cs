@@ -12,7 +12,7 @@ namespace Elements.Geometry.Solids
         /// <param name="faceId"></param>
         /// <param name="solidId"></param>
         /// <param name="transform">An optional transform to apply to the contour.</param>
-        internal static ContourVertex[] ToContourVertexArray(this Loop loop, long faceId, uint solidId, Transform transform = null)
+        internal static ContourVertex[] ToContourVertexArray(this Loop loop, uint faceId, uint solidId, Transform transform = null)
         {
             var contour = new ContourVertex[loop.Edges.Count];
             for (var i = 0; i < loop.Edges.Count; i++)

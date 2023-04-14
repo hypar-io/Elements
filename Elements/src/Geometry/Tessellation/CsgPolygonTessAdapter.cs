@@ -8,17 +8,20 @@ namespace Elements.Geometry.Tessellation
     internal class CsgPolygonTessAdapter : ITessAdapter
     {
         private readonly Csg.Polygon polygon;
-        private readonly int faceId;
+        private readonly uint faceId;
+        private readonly uint solidId;
 
         /// <summary>
         /// Construct a CsgPolygonTessAdaptor.
         /// </summary>
         /// <param name="polygon"></param>
         /// <param name="faceId"></param>
-        public CsgPolygonTessAdapter(Csg.Polygon polygon, int faceId)
+        /// <param name="solidId"></param>
+        public CsgPolygonTessAdapter(Csg.Polygon polygon, uint faceId, uint solidId)
         {
             this.polygon = polygon;
             this.faceId = faceId;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace Elements.Geometry.Tessellation
             {
                 NoEmptyPolygons = true
             };
-            tess.AddContour(polygon.Vertices.ToContourVertexArray(faceId));
+            tess.AddContour(polygon.Vertices.ToContourVertexArray(faceId, solidId));
 
             tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
             return tess;

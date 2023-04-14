@@ -52,7 +52,7 @@ namespace Elements.Geometry.Tessellation
             // The vertex map enables us to re-use vertices. Csgs and solid faces
             // create vertices which store the face id, the vertex id, and for csgs, the uv.
             // We can use the tag as the key to lookup the index of the vertex to avoid re-creating it.
-            var vertexMap = new Dictionary<(long tag, long faceId, uint solidId), ushort>();
+            var vertexMap = new Dictionary<(uint tag, uint faceId, uint solidId), ushort>();
             var vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             var indices = new List<ushort>();
 
@@ -91,7 +91,7 @@ namespace Elements.Geometry.Tessellation
                     // This is an optimization to use pre-existing csg vertex
                     // data to match vertices.
 
-                    var (uv, tag, faceId, solidId) = ((UV uv, long tag, long faceId, uint solidId))v.Data;
+                    var (uv, tag, faceId, solidId) = ((UV uv, uint tag, uint faceId, uint solidId))v.Data;
 
                     if (vertexMap.ContainsKey((tag, faceId, solidId)))
                     {

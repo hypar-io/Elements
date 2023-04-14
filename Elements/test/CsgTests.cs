@@ -192,7 +192,7 @@ namespace Elements.Tests
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
             var arrows = new ModelArrows();
-            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid, 0)));
             for (int i = 0; i < mgb.Indices.Count; i += 3)
             {
                 var a = mgb.Indices[i];
