@@ -210,10 +210,14 @@ namespace Elements.Geometry
             return BasisCurve.Transform.XY();
         }
 
-        internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
-
             var min = this.Domain.Min;
             var max = this.Domain.Max;
 

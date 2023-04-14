@@ -49,7 +49,7 @@ namespace Elements.Geometry
         /// Curves marked true will use LINE_LOOP mode for rendering.
         /// Curves marked false will use LINE_STRIP for rendering.
         /// </summary>
-        internal virtual bool IsClosedForRendering => false;
+        public virtual bool IsClosedForRendering => false;
 
         /// <summary>
         /// Get a collection of transforms which represent frames along this curve.
@@ -62,7 +62,7 @@ namespace Elements.Geometry
                                           double endSetbackDistance = 0.0,
                                           double additionalRotation = 0.0)
         {
-            var parameters = GetSampleParameters(startSetbackDistance, endSetbackDistance);
+            var parameters = GetSubdivisionParameters(startSetbackDistance, endSetbackDistance);
             var transforms = new Transform[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
@@ -108,14 +108,14 @@ namespace Elements.Geometry
         /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
         /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
         /// <returns>A collection of parameter values.</returns>
-        internal abstract double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+        public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
         /// Get a collection of vertices used to render the curve.
         /// </summary>
         internal IList<Vector3> RenderVertices()
         {
-            var parameters = GetSampleParameters();
+            var parameters = GetSubdivisionParameters();
             var vertices = new List<Vector3>();
             foreach (var p in parameters)
             {
