@@ -45,7 +45,7 @@ def add_relevant_commits(response):
         message = commit.get('commit').get('message')
         if(message.startswith('Merge pull request')):
             split_message = message.split('\n\n')
-            if len(split_message) > 0:
+            if len(split_message) > 1:
                 merge_commits.append(split_message[0].replace('Merge pull request ', '') + ': ' + split_message[1])
 
 
