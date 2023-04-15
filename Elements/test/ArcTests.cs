@@ -46,7 +46,7 @@ namespace Hypar.Tests
         {
             this.Name = nameof(GetTransformsTransformedCurveSucceeds);
             var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5, 0, Math.PI);
-            var parameters = arc.GetSampleParameters();
+            var parameters = arc.GetSubdivisionParameters();
             foreach (var p in parameters)
             {
                 var t = arc.TransformAt(p);
@@ -59,7 +59,7 @@ namespace Hypar.Tests
         public void GetSampleParametersReversedCurveSucceeds()
         {
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
-            var parameters = arc.GetSampleParameters();
+            var parameters = arc.GetSubdivisionParameters();
             foreach (var p in parameters)
             {
                 arc.PointAt(p);

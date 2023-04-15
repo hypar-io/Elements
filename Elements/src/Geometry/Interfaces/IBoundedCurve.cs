@@ -44,5 +44,13 @@ namespace Elements.Geometry.Interfaces
         /// The domain of the curve.
         /// </summary>
         Domain1d Domain { get; }
+
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <returns>A collection of parameter values.</returns>
+        double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
     }
 }

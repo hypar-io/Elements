@@ -27,6 +27,10 @@
 - `Line` is now parameterized 0->length.
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 
+### Fixed
+
+- #865
+
 ## 1.5.0
 
 ### Added

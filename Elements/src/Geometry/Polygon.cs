@@ -25,7 +25,10 @@ namespace Elements.Geometry
         /// </summary>
         internal Plane _plane;
 
-        internal override bool IsClosedForRendering => true;
+        /// <summary>
+        /// Should the curve be considered closed for rendering?
+        /// </summary>
+        public override bool IsClosedForRendering => true;
 
         /// <summary>
         /// Construct a polygon.
