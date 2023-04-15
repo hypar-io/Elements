@@ -15,20 +15,8 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : BoundedCurve, IEquatable<Polyline>
+    public class Polyline : IndexedPolycurve, IEquatable<Polyline>
     {
-        /// <summary>
-        /// A bounding box created once during the polyline's construction.
-        /// This will not be updated when a polyline's vertices are changed.
-        /// </summary>
-        internal BBox3 _bounds;
-
-        /// <summary>The vertices of the polygon.</summary>
-        [JsonProperty("Vertices", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
-
         /// <summary>
         /// Construct a polyline.
         /// </summary>
@@ -1468,73 +1456,5 @@ namespace Elements.Geometry
 
             return parameters;
         }
-    }
-
-    /// <summary>
-    /// Polyline extension methods.
-    /// </summary>
-    internal static class PolylineExtensions
-    {
-        /// <summary>
-        /// Construct a clipper path from a Polygon.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">An optional tolerance. If converting back to a Polyline, be sure to use the same tolerance.</param>
-        /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polyline p, double tolerance = Vector3.EPSILON)
-        {
-            var clipperScale = Math.Round(1.0 / tolerance);
-            var path = new List<IntPoint>();
-            foreach (var v in p.Vertices)
-            {
-                path.Add(new IntPoint(Math.Round(v.X * clipperScale), Math.Round(v.Y * clipperScale)));
-            }
-            return path;
-        }
-
-        /// <summary>
-        /// Convert a line to a polyline
-        /// </summary>
-        /// <param name="l">The line to convert.</param>
-        public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
-
-    }
-
-    /// <summary>
-    /// Offset end types
-    /// </summary>
-    public enum EndType
-    {
-        /// <summary>
-        /// Open ends are extended by the offset distance and squared off
-        /// </summary>
-        Square,
-        /// <summary>
-        /// Ends are squared off with no extension
-        /// </summary>
-        Butt,
-        /// <summary>
-        /// If open, ends are joined and treated as a closed polygon
-        /// </summary>
-        ClosedPolygon,
-    }
-
-    /// <summary>
-    /// Normalization type.
-    /// </summary>
-    public enum NormalizationType
-    {
-        /// <summary>
-        /// During normalization move start points of segments.
-        /// </summary>
-        Start,
-        /// <summary>
-        /// During normalization move end points of segments.
-        /// </summary>
-        End,
-        /// <summary>
-        /// During normalization move both start and end vertices in approximately equivalent proportions.
-        /// </summary>
-        Middle
     }
 }
