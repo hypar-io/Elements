@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0
+
+### Fixed
+
+- #965
+
 ## 1.5.0
 
 ### Added
@@ -9,9 +15,6 @@
 
 ### Changed
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
-
-### Fixed
-- #965
 
 ## 1.4.0
 
