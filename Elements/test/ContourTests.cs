@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Elements.Geometry;
-using Elements.Serialization.glTF;
 using Xunit;
 
 namespace Elements.Tests
@@ -36,7 +35,7 @@ namespace Elements.Tests
             l2.ControlPoints.Reverse();
             var a2 = new Arc(new Vector3(0, 0), r, 90.0, 270.0);
 
-            var contour = new Contour(new List<Curve> { l1, a1, l2, a2 });
+            var contour = new Contour(new List<BoundedCurve> { l1, a1, l2, a2 });
             // </example>
 
             this.Model.AddElement(new ModelCurve(contour.ToPolygon()));

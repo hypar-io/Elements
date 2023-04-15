@@ -22,7 +22,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the transform.</param>
         /// <param name="name">The name of the transform.</param>
-        public Beam(Curve curve,
+        public Beam(BoundedCurve curve,
                     Profile profile,
                     Transform transform = null,
                     Material material = null,
@@ -46,7 +46,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the transform.</param>
         /// <param name="name">The name of the transform.</param>
-        public Beam(Curve curve,
+        public Beam(BoundedCurve curve,
                     Profile profile,
                     double startSetback,
                     double endSetback,

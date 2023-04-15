@@ -489,8 +489,8 @@ namespace Elements.Tests
                 new Vector3(-11.8491, 23.6511, 0.0000)
             });
             var grid = new Grid2d(boundary, origin, uDirection, vDirection);
-            Assert.True(uDirection.Unitized().Equals((grid.U.Curve.PointAt(1) - grid.U.Curve.PointAt(0)).Unitized()));
-            Assert.True(vDirection.Unitized().Equals((grid.V.Curve.PointAt(1) - grid.V.Curve.PointAt(0)).Unitized()));
+            Assert.True(uDirection.Unitized().Equals((grid.U.Curve.End - grid.U.Curve.Start).Unitized()));
+            Assert.True(vDirection.Unitized().Equals((grid.V.Curve.End - grid.V.Curve.Start).Unitized()));
         }
 
         [Fact]

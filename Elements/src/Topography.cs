@@ -570,7 +570,7 @@ namespace Elements
         /// </summary>
         /// <param name="path">The path of the tunnel.</param>
         /// <param name="diameter">The diameter of the tunnel.</param>
-        public void Tunnel(Curve path, double diameter)
+        public void Tunnel(BoundedCurve path, double diameter)
         {
             if (diameter < 0.0)
             {
