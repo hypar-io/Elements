@@ -1398,7 +1398,12 @@ namespace Elements.Geometry
             return start + distance;
         }
 
-        internal override double[] GetSampleParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
             return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min) };
         }

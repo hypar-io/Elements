@@ -26,6 +26,10 @@
 - `Circle` is now parameteried 0->2Pi.
 - `Line` is now parameterized 0->length.
 
+### Fixed
+
+- #865
+
 ## 1.5.0
 
 ### Added
