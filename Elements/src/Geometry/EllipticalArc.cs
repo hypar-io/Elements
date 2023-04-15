@@ -46,7 +46,7 @@ namespace Elements.Geometry
         /// <returns></returns>
         public override BBox3 Bounds()
         {
-            return new BBox3(GetSampleParameters().Select(p => PointAt(p)).ToList());
+            return new BBox3(GetSubdivisionParameters().Select(p => PointAt(p)).ToList());
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Elements.Geometry
         {
             if (!this.Domain.Includes(u, true))
             {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new ArgumentException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.PointAt(u);
         }
@@ -82,22 +82,28 @@ namespace Elements.Geometry
         {
             if (!this.Domain.Includes(u, true))
             {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new ArgumentException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.TransformAt(u);
         }
 
         /// <summary>
-        /// 
+        /// Get a curve that is the result of applying the provided transform to this curve.
         /// </summary>
-        /// <param name="transform"></param>
-        /// <returns></returns>
+        /// <param name="transform">The transform to apply.</param>
+        /// <returns>A transformed curve.</returns>
         public override Curve Transformed(Transform transform)
         {
             return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.Domain.Min, this.Domain.Max);
         }
 
-        internal override double[] GetSampleParameters(double startSetbackDistance = 0.0,
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <returns>A collection of parameter values.</returns>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
                                                        double endSetbackDistance = 0.0)
         {
             var min = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
@@ -134,12 +140,18 @@ namespace Elements.Geometry
         {
             if (!Domain.Includes(start, true))
             {
-                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new ArgumentException($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
             if (distance == 0.0)
             {
                 return start;
+            }
+
+            var l = this.Length();
+            if (distance < 0 || distance > l)
+            {
+                throw new ArgumentOutOfRangeException(nameof(distance), $"Distance must be between 0 and the curve length, {l}.");
             }
 
             this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);

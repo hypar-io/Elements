@@ -42,6 +42,8 @@ namespace Elements.Geometry
         /// <param name="minorAxis">The dimension of the minor axis (Y) o the ellipse.</param>
         public Ellipse(double majorAxis = 1.0, double minorAxis = 2.0)
         {
+            CheckAndThrow(minorAxis, majorAxis);
+
             this.Transform = new Transform();
             this.MajorAxis = majorAxis;
             this.MinorAxis = minorAxis;
@@ -55,6 +57,8 @@ namespace Elements.Geometry
         /// <param name="minorAxis">The dimension of the minor axis (Y) of the ellipse.</param>
         public Ellipse(Vector3 center, double majorAxis = 1.0, double minorAxis = 2.0)
         {
+            CheckAndThrow(minorAxis, majorAxis);
+
             this.Transform = new Transform(center);
             this.MajorAxis = majorAxis;
             this.MinorAxis = minorAxis;
@@ -68,6 +72,8 @@ namespace Elements.Geometry
         /// <param name="minorAxis">The dimension of the minor axis (Y) of the ellipse.</param>
         public Ellipse(Transform transform, double majorAxis = 1.0, double minorAxis = 2.0)
         {
+            CheckAndThrow(minorAxis, majorAxis);
+
             this.Transform = transform;
             this.MajorAxis = majorAxis;
             this.MinorAxis = minorAxis;
@@ -163,6 +169,13 @@ namespace Elements.Geometry
                 return start;
             }
 
+            var availableArcDistance = ArcLength(start, Math.PI * 2);
+
+            if (distance >= availableArcDistance)
+            {
+                throw new ArgumentOutOfRangeException($"The provided distance, {distance}, is greater than the available arc length, {availableArcDistance}, from parameter {start}.");
+            }
+
             // Start at the specified parameter and measure
             // until you reach the desired distance.
             ArcLengthUntil(start, Math.PI * 2, distance, out var end);
@@ -224,14 +237,15 @@ namespace Elements.Geometry
 
         private double Step(double a, double b, double t, double dt, double h)
         {
+            // Full derivation shown in comments for reference.
             // double x = a * Math.Cos(t);
             // double y = b * Math.Sin(t);
             double dxdt = -a * Math.Sin(t);
             double dydt = b * Math.Cos(t);
             double dsdt = Math.Sqrt(dxdt * dxdt + dydt * dydt);
             double ds = dsdt * dt / Math.Sqrt(1 - h * Math.Sin(t) * Math.Sin(t));
-            double next_x = a * Math.Cos(t + dt);
-            double next_y = b * Math.Sin(t + dt);
+            // double next_x = a * Math.Cos(t + dt);
+            // double next_y = b * Math.Sin(t + dt);
             double next_dxdt = -a * Math.Sin(t + dt);
             double next_dydt = b * Math.Cos(t + dt);
             double next_dsdt = Math.Sqrt(next_dxdt * next_dxdt + next_dydt * next_dydt);

@@ -20,9 +20,9 @@ namespace Hypar.Tests
         public void EllipticalArcTransforms()
         {
             this.Name = nameof(EllipticalArcTransforms);
-            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5,1.5, 0, 210);
-            var parameters = ellipticalArc.GetSampleParameters();
-            foreach(var p in parameters)
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5, 1.5, 0, 210);
+            var parameters = ellipticalArc.GetSubdivisionParameters();
+            foreach (var p in parameters)
             {
                 var t = ellipticalArc.TransformAt(p);
                 this.Model.AddElements(t.ToModelCurves());
