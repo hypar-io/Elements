@@ -45,7 +45,8 @@ def add_relevant_commits(response):
         message = commit.get('commit').get('message')
         if(message.startswith('Merge pull request')):
             split_message = message.split('\n\n')
-            merge_commits.append(split_message[0].replace('Merge pull request ', '') + ': ' + split_message[1])
+            if len(split_message) > 0:
+                merge_commits.append(split_message[0].replace('Merge pull request ', '') + ': ' + split_message[1])
 
 
 latest_release_tag = get_latest_commit()
