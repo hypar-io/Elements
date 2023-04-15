@@ -39,7 +39,14 @@ namespace Elements.Geometry
                                                    bool mergeVertices = false,
                                                    Func<(Vector3, Vector3, UV, Color?), (Vector3, Vector3, UV, Color?)> modifyVertexAttributes = null)
         {
-            var buffers = Tessellation.Tessellation.Tessellate<GraphicsBuffers>(csgs.Select(csg => new CsgTessellationTargetProvider(csg)),
+            var providers = new List<CsgTessellationTargetProvider>();
+            uint solidId = 0;
+            foreach (var csg in csgs)
+            {
+                providers.Add(new CsgTessellationTargetProvider(csg, solidId));
+                solidId++;
+            }
+            var buffers = Tessellation.Tessellation.Tessellate<GraphicsBuffers>(providers,
                                                                                 mergeVertices,
                                                                                 modifyVertexAttributes);
             return buffers;
@@ -226,7 +233,8 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices"></param>
         /// <param name="faceId"></param>
-        internal static ContourVertex[] ToContourVertexArray(this IList<Csg.Vertex> vertices, int faceId)
+        /// <param name="solidId"></param>
+        internal static ContourVertex[] ToContourVertexArray(this IList<Csg.Vertex> vertices, uint faceId, uint solidId = 0)
         {
             var contour = new ContourVertex[vertices.Count];
             for (var i = 0; i < vertices.Count; i++)
@@ -236,7 +244,7 @@ namespace Elements.Geometry
                 var cv = new ContourVertex
                 {
                     Position = new Vec3 { X = v.Pos.X, Y = v.Pos.Y, Z = v.Pos.Z },
-                    Data = (v.Tex.ToUV(), v.Tag, faceId)
+                    Data = (v.Tex.ToUV(), (uint)v.Tag, faceId, solidId)
                 };
                 contour[i] = cv;
             }
