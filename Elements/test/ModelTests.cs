@@ -173,12 +173,12 @@ namespace Elements.Tests
 
             //Check that only a single mapping was serialized.
             var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.TestMapping""");
-            Assert.Equal(1, m.Count);
-            Assert.Equal(1, newModel.AllElementsOfType<TestMapping>().Count());
+            Assert.Single(m);
+            Assert.Single(newModel.AllElementsOfType<TestMapping>());
 
             // confirm that we only serialize the Mapping Property if it exists
             m = System.Text.RegularExpressions.Regex.Matches(json, @"""Mappings"": null");
-            Assert.Equal(0, m.Count);
+            Assert.Empty(m);
         }
 
         [Fact]

@@ -20,9 +20,9 @@ namespace Elements.Geometry.Solids
     /// </summary>
     public partial class Solid : ITessellate
     {
-        private long _faceId;
-        private long _edgeId = 10000;
-        private long _vertexId = 100000;
+        private uint _faceId;
+        private uint _edgeId = 10000;
+        private uint _vertexId = 100000;
 
         /// <summary>
         /// The Faces of the Solid.
@@ -429,7 +429,7 @@ namespace Elements.Geometry.Solids
         /// <param name="color">An optional color to apply to the vertex.</param>
         public void Tessellate(ref Mesh mesh, Transform transform = null, Color color = default)
         {
-            var tessProvider = new SolidTesselationTargetProvider(this);
+            var tessProvider = new SolidTesselationTargetProvider(this, 0);
             foreach (var target in tessProvider.GetTessellationTargets())
             {
                 var tess = target.GetTess();
@@ -688,21 +688,21 @@ namespace Elements.Geometry.Solids
             }
         }
 
-        internal Face AddFace(long id, Loop outer, Loop[] inner = null)
+        internal Face AddFace(uint id, Loop outer, Loop[] inner = null)
         {
             var f = new Face(id, outer, inner);
             this.Faces.Add(id, f);
             return f;
         }
 
-        internal Vertex AddVertex(long id, Vector3 position)
+        internal Vertex AddVertex(uint id, Vector3 position)
         {
             var v = new Vertex(id, position);
             this.Vertices.Add(id, v);
             return v;
         }
 
-        internal Edge AddEdge(long id)
+        internal Edge AddEdge(uint id)
         {
             var e = new Edge(id);
             this.Edges.Add(id, e);
@@ -851,11 +851,12 @@ namespace Elements.Geometry.Solids
                 e.Right.Loop.InsertEdgeBefore(e.Right, e1.Right);
             }
         }
+
         internal Csg.Solid ToCsg()
         {
             var polygons = new List<Csg.Polygon>(Faces.Values.Count);
 
-            ushort faceId = 0;
+            uint faceId = 0;
             foreach (var f in Faces.Values)
             {
                 var tess = new Tess
@@ -922,8 +923,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData1 = ((UV uv, int tag, int faceId))v1.Data;
-                        av = csgVertices[vData1.tag];
+                        var vData1 = ((UV uv, uint tag, uint faceId, uint solidId))v1.Data;
+                        av = csgVertices[(int)vData1.tag];
                     }
 
                     if (v2.Data == null)
@@ -933,8 +934,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData2 = ((UV uv, int tag, int faceId))v2.Data;
-                        bv = csgVertices[vData2.tag];
+                        var vData2 = ((UV uv, uint tag, uint faceId, uint solidId))v2.Data;
+                        bv = csgVertices[(int)vData2.tag];
                     }
 
                     if (v3.Data == null)
@@ -944,8 +945,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData3 = ((UV uv, int tag, int faceId))v3.Data;
-                        cv = csgVertices[vData3.tag];
+                        var vData3 = ((UV uv, uint tag, uint faceId, uint solidId))v3.Data;
+                        cv = csgVertices[(int)vData3.tag];
                     }
 
                     // Don't allow us to create a csg that has zero

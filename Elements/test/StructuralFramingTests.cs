@@ -272,6 +272,30 @@ namespace Elements.Tests
             }
         }
 
+        [Fact]
+        public async void Joist()
+        {
+            Name = nameof(Joist);
+            var yLength = 30;
+
+            var profileFactory = new LProfileFactory();
+            var profile8 = await profileFactory.GetProfileByTypeAsync(LProfileType.L8X8X5_8);
+            var profile2 = await profileFactory.GetProfileByTypeAsync(LProfileType.L2X2X1_8);
+            var profile5 = await profileFactory.GetProfileByTypeAsync(LProfileType.L5X5X1_2);
+
+            var line = new Line(new Vector3(0, 0, 0), new Vector3(0, yLength, 0));
+            var joist = new Joist(line,
+                                  profile8,
+                                  profile8,
+                                  profile2,
+                                  Units.InchesToMeters(48),
+                                  20,
+                                  Units.InchesToMeters(2.5),
+                                  Units.FeetToMeters(2.0),
+                                  BuiltInMaterials.Steel);
+            this.Model.AddElement(joist);
+        }
+
         [Fact, Trait("Category", "Examples")]
         public async void Joists()
         {
