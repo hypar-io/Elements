@@ -199,7 +199,6 @@ namespace Hypar.Tests
             var a = new Vector3();
             var b = new Vector3();
             var c = new Vector3(3, 5);
-            Elements.Geometry.Arc.ByThreePoints(a, b, c);
             Assert.Throws<ArgumentException>(() => Elements.Geometry.Arc.ByThreePoints(a, b, c));
         }
 
@@ -209,7 +208,6 @@ namespace Hypar.Tests
             var a = new Vector3();
             var b = new Vector3(1, 0);
             var c = new Vector3(2, 0);
-            Elements.Geometry.Arc.ByThreePoints(a, b, c);
             Assert.Throws<ArgumentException>(() => Elements.Geometry.Arc.ByThreePoints(a, b, c));
         }
 
