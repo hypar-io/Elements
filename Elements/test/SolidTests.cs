@@ -735,7 +735,7 @@ namespace Elements.Tests
         {
             var panel = new Panel(Polygon.L(5, 5, 2));
             panel.UpdateRepresentations();
-            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)));
+            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, 0, so.LocalTransform)));
             Assert.Equal(12, buffer.VertexCount); // Two faces of 6 vertices each
             Assert.Equal(8, buffer.FacetCount); // Two faces of 4 facets each.
         }

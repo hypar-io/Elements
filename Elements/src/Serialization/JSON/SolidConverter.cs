@@ -66,7 +66,7 @@ namespace Elements.Serialization.JSON
 
             foreach (JObject vobj in (JArray)obj.GetValue("vertices"))
             {
-                var id = (long)vobj.GetValue("id");
+                var id = (uint)vobj.GetValue("id");
                 var x = (double)vobj.GetValue("x");
                 var y = (double)vobj.GetValue("y");
                 var z = (double)vobj.GetValue("z");
@@ -75,7 +75,7 @@ namespace Elements.Serialization.JSON
 
             foreach (JObject face in (JArray)obj.GetValue("faces"))
             {
-                var id = (long)face.GetValue("id");
+                var id = (uint)face.GetValue("id");
 
                 var outer = new Loop();
 
@@ -113,7 +113,7 @@ namespace Elements.Serialization.JSON
             var he = new HalfEdge(v, loop);
             loop.AddEdgeToEnd(he);
 
-            var eid = (long)heobj.GetValue("edge_id");
+            var eid = (uint)heobj.GetValue("edge_id");
             Edge edge;
             if (!solid.Edges.TryGetValue(eid, out edge))
             {

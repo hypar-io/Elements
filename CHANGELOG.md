@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0
+## 2.0.0
 
 ### Added
 
@@ -28,8 +28,14 @@
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 
 ### Fixed
-
+- Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
 - #865
+
+## 1.6.0
+
+### Fixed
+
+- #965
 
 ## 1.5.0
 
