@@ -25,7 +25,7 @@
 - `Line` is now parameterized 0->length.
 
 ### Fixed
-
+- Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
 - #865
 
 ## 1.6.0

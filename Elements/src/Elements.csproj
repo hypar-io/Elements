@@ -1,63 +1,62 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>Hypar.Elements</AssemblyName>
-        <PackageTitle>Hypar Elements</PackageTitle>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Title>Hypar Elements</Title>
-        <PackageId>Hypar.Elements</PackageId>
-        <PackageDescription>A building elements library for AEC.</PackageDescription>
-        <Summary>The Elements library provides object types for generating the built environment.</Summary>
-        <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
-        <Version>$(Version)</Version>
-        <NoWarn>NU5104</NoWarn>
-        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="glTF2Loader" Version="1.1.3-alpha" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.11.0" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-        <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta15" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="1.0.3" />
-        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
-        <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="Textures\**\*.*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <PackageCopyToOutput>true</PackageCopyToOutput>
-        </Content>
-        <Content Include="Fonts\**\*.*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <PackageCopyToOutput>true</PackageCopyToOutput>
-        </Content>
-        <Content Include="ProfileData\**\*.*">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <PackageCopyToOutput>true</PackageCopyToOutput>
-        </Content>
-        <Content Include="../lib/Csg.dll">
-            <PackageCopyToOutput>true</PackageCopyToOutput>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-        <Content Include="../lib/Octree.dll">
-            <PackageCopyToOutput>true</PackageCopyToOutput>
-            <PackagePath>lib\$(TargetFramework)</PackagePath>
-        </Content>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Csg">
-            <HintPath>../lib/Csg.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="NetOctree">
-            <HintPath>../lib/Octree.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="extension.dib" Pack="true" PackagePath="interactive-extensions/dotnet" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Hypar.Elements</AssemblyName>
+    <PackageTitle>Hypar Elements</PackageTitle>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>Hypar Elements</Title>
+    <PackageId>Hypar.Elements</PackageId>
+    <PackageDescription>A building elements library for AEC.</PackageDescription>
+    <Summary>The Elements library provides object types for generating the built environment.</Summary>
+    <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+    <Version>$(Version)</Version>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="glTF2Loader" Version="1.1.3-alpha" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.11.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta19" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+    <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Textures\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="Fonts\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="ProfileData\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+    <Content Include="../lib/Csg.dll">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+    <Content Include="../lib/Octree.dll">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackagePath>lib\$(TargetFramework)</PackagePath>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Csg">
+      <HintPath>../lib/Csg.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NetOctree">
+      <HintPath>../lib/Octree.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="extension.dib" Pack="true" PackagePath="interactive-extensions/dotnet" />
+  </ItemGroup>
 </Project>
