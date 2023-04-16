@@ -17,6 +17,8 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -444,7 +446,7 @@ namespace Elements.Serialization.glTF
                 // to align with OpenGL convention.
                 // 0,1  1,1
                 // 0,0  1,0
-                using (var texImage = SixLabors.ImageSharp.Image.Load(path, new PngDecoder()))
+                using (var texImage = SixLabors.ImageSharp.Image.Load(path))
                 {
                     PngMetadata meta = texImage.Metadata.GetPngMetadata();
                     textureHasTransparency = meta.ColorType == PngColorType.RgbWithAlpha || meta.ColorType == PngColorType.GrayscaleWithAlpha;
