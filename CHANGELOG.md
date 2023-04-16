@@ -1,9 +1,38 @@
 # Changelog
 
-## 1.6.0
+## 2.0.0
+
+### Added
+
+- `ITrimmedCurve<TBasis>`
+- `IBoundedCurve`
+- `TrimmedCurve`
+- `BoundedCurve`
+- `InfiniteLine`
+- `IConic`
+
+### Changed
+
+- `Polyline` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Arc` now inherits from `TrimmedCurve<Circle>`.
+- `Arc` is now parameterized 0->2Pi
+- `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
+- `Line` is now parameterized 0->length.
+- `Bezier` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Circle` is now parameteried 0->2Pi.
+- `Line` is now parameterized 0->length.
 
 ### Fixed
 - Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
+- #865
+
+## 1.6.0
+
+### Fixed
+
+- #965
 
 ## 1.5.0
 
@@ -14,9 +43,6 @@
 
 ### Changed
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
-
-### Fixed
-- #965
 
 ## 1.4.0
 

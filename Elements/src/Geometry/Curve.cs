@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -17,41 +17,6 @@ namespace Elements.Geometry
         public static double MinimumChordLength = 0.1;
 
         /// <summary>
-        /// Get the bounding box for this curve.
-        /// </summary>
-        /// <returns>A bounding box for this curve.</returns>
-        public abstract BBox3 Bounds();
-
-        /// <summary>
-        /// Get a collection of transforms which represent frames along this curve.
-        /// </summary>
-        /// <param name="startSetback">The offset parameter from the start of the curve.</param>
-        /// <param name="endSetback">The offset parameter from the end of the curve.</param>
-        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
-        /// <returns>A collection of transforms.</returns>
-        public virtual Transform[] Frames(double startSetback = 0.0,
-                                          double endSetback = 0.0,
-                                          double additionalRotation = 0.0)
-        {
-            var parameters = GetSampleParameters(startSetback, endSetback);
-            var transforms = new Transform[parameters.Length];
-            for (var i = 0; i < parameters.Length; i++)
-            {
-                transforms[i] = TransformAt(parameters[i]);
-                if (additionalRotation != 0.0)
-                {
-                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
-                }
-            }
-            return transforms;
-        }
-
-        /// <summary>
-        /// Calculate the length of the curve.
-        /// </summary>
-        public abstract double Length();
-
-        /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
         /// <param name="u"></param>
@@ -66,47 +31,17 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public abstract Transform TransformAt(double u);
 
-
         /// <summary>
-        /// Create a polyline through a set of points along the curve.
-        /// </summary>
-        /// <param name="divisions">The number of divisions of the curve.</param>
-        /// <returns>A polyline.</returns>
-        public virtual Polyline ToPolyline(int divisions = 10)
-        {
-            var pts = new List<Vector3>(divisions + 1);
-            for (var t = 0; t <= divisions; t++)
-            {
-                pts.Add(PointAt(t * 1.0 / divisions));
-            }
-            return new Polyline(pts);
-        }
-
-        internal virtual double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
-        {
-            return new[] { startSetback, 1.0 - endSetback };
-        }
-
-        /// <summary>
-        /// A list of vertices used to render the curve.
-        /// </summary>
-        internal abstract IList<Vector3> RenderVertices();
-
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
+        /// Create a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
 
         /// <summary>
-        /// Implicitly convert a curve to a ModelCurve Element.
+        /// Get the parameter at a distance from the start parameter along the curve.
         /// </summary>
-        /// <param name="c">The curve to convert.</param>
-        public static implicit operator ModelCurve(Curve c) => new ModelCurve(c);
-
-        internal GraphicsBuffers ToGraphicsBuffers()
-        {
-            return this.RenderVertices().ToGraphicsBuffers();
-        }
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        public abstract double ParameterAtDistanceFromParameter(double distance, double start);
     }
 }

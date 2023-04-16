@@ -380,7 +380,7 @@ namespace Elements.Tests
             {
                 var from = e.Value.Right.Vertex.Point;
                 var to = e.Value.Left.Vertex.Point;
-                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+                modelCurves.Add(new ModelCurve(new Line(from, to).TransformedLine(t)));
             }
             return modelCurves;
         }
@@ -390,7 +390,7 @@ namespace Elements.Tests
             var r = new Transform();
             r.Move(2.5, 2.5, 2.5);
             a = new Mass(Polygon.Rectangle(5, 5), 5);
-            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+            b = new Mass(new Circle(r, 2.5).ToPolygon(19), 5);
 
             a.UpdateRepresentations();
             b.UpdateRepresentations();

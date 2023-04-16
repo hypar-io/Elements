@@ -249,14 +249,15 @@ namespace Elements.Geometry.Tests
             var polyline = new Polyline(new[] { start, new Vector3(1, 4), end });
 
             Assert.Equal(0, polyline.GetParameterAt(start));
-            Assert.Equal(1, polyline.GetParameterAt(end));
+            Assert.Equal(polyline.Length(), polyline.GetParameterAt(end));
             Assert.Equal(-1, polyline.GetParameterAt(Vector3.Origin));
 
             var point = new Vector3(2, 4);
-            var result = polyline.GetParameterAt(point);
-            var expectedResult = 0.75d;
-            Assert.True(result.ApproximatelyEquals(expectedResult));
-            Assert.True(point.IsAlmostEqualTo(polyline.PointAt(result)));
+            var resultParameter = polyline.GetParameterAt(point);
+            var expectedResult = 0.75 * polyline.Length();
+            Assert.True(resultParameter.ApproximatelyEquals(expectedResult));
+            var testPoint = polyline.PointAt(resultParameter);
+            Assert.True(point.IsAlmostEqualTo(testPoint));
         }
 
         [Fact]
@@ -592,6 +593,7 @@ namespace Elements.Geometry.Tests
         public void PolylineFrameNormalsAreConsistent()
         {
             Name = nameof(PolylineFrameNormalsAreConsistent);
+
             Polyline curve = new Polyline(
                 (0, 0, 0),
                 (1, 0, 0),
@@ -599,9 +601,6 @@ namespace Elements.Geometry.Tests
                 (5, 3, 1),
                 (10, 0, 0)
             );
-
-            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
-
             var frames = curve.Frames();
 
             for (int i = 0; i < frames.Length - 1; i++)
@@ -613,6 +612,7 @@ namespace Elements.Geometry.Tests
                 Assert.True(currNormal.Dot(nextNormal) > 0.0);
             }
 
+            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
             var bFrames = bezier.Frames();
 
             var parameters = new List<double>();

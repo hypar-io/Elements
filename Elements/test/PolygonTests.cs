@@ -661,10 +661,10 @@ namespace Elements.Geometry.Tests
             var d = new Vector3(0, 1);
             var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
-            Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
+            Assert.Equal(new Vector3(1.0, 1.0), p.Mid());
 
             var r = Polygon.Rectangle(2, 2);
-            Assert.Equal(new Vector3(1, 1, 0), r.PointAt(0.5));
+            Assert.Equal(new Vector3(1, 1, 0), r.Mid());
         }
 
         [Fact]
@@ -1127,8 +1127,8 @@ namespace Elements.Geometry.Tests
 
             // Ensure that the PointAt function for u=1.0 is at the
             // end of the polygon AND at the end of the polyline.
-            Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
-            Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            Assert.True(polyCircle.PointAt(polyCircle.Domain.Max).IsAlmostEqualTo(polyCircle.Start));
+            Assert.True(polyline.PointAt(polyline.Domain.Max).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
             // Test value close to u=0.0 within tolerance
             Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
             Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
@@ -1139,7 +1139,7 @@ namespace Elements.Geometry.Tests
             for (var u = 0.0; u <= 1.0; u += 0.05)
             {
                 var pt = polyCircle.PointAt(u);
-                this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
+                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis));
             }
         }
 
@@ -1829,14 +1829,14 @@ namespace Elements.Geometry.Tests
             Assert.True(rect.Contains(t.OfPoint(v1), out _));
             Model.AddElement(new ModelCurve(rect));
             var arc = new Circle(v1, 0.1);
-            Model.AddElement(new ModelCurve(arc.ToPolygon().Transformed(t)));
+            Model.AddElement(new ModelCurve(arc.ToPolygon().TransformedPolygon(t)));
 
             var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             Model.AddElement(new ModelCurve(star));
             var centroid = star.Centroid();
             Assert.True(star.Contains(centroid));
             var arc2 = new Circle(centroid, 0.1);
-            Model.AddElement(new ModelCurve(arc2.ToPolygon().TransformedPolygon(t)));
+            Model.AddElement(new ModelCurve(arc2.ToPolygon()));
         }
 
         [Fact]
@@ -2050,7 +2050,7 @@ namespace Elements.Geometry.Tests
             sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
             foreach (var r in results)
             {
-                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+                this.Model.AddElement(new ModelCurve(new Circle(new Transform(r), 0.05), BuiltInMaterials.YAxis));
             }
             Assert.Equal(2, results.Count);
             this.Model.AddElement(new Panel(sqPoly));
