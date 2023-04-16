@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
-using Elements.Validators;
 using Elements.Search;
 
 namespace Elements.Geometry
@@ -15,61 +14,28 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : IndexedPolycurve, IEquatable<Polyline>
+    public class Polyline : IndexedPolycurve
     {
         /// <summary>
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
         [JsonConstructor]
-        public Polyline(IList<Vector3> @vertices) : base()
-        {
-            this.Vertices = @vertices;
-            this.Domain = new Domain1d(0, this.Length());
-
-            if (!Validator.DisableValidationOnConstruction)
-            {
-                ValidateVertices();
-            }
-            _bounds = new BBox3(Vertices);
-        }
-
+        public Polyline(IList<Vector3> @vertices) : base(vertices) { }
 
         /// <summary>
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
         /// <param name="disableValidation">Should self intersection testing be disabled?</param>
-        public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
-        {
-            this.Vertices = @vertices;
-            this.Domain = new Domain1d(0, this.Length());
-
-            if (!Validator.DisableValidationOnConstruction && !disableValidation)
-            {
-                ValidateVertices();
-            }
-            _bounds = new BBox3(Vertices);
-        }
-
-        /// <summary>
-        /// Clean up any duplicate vertices, and warn about any vertices that are too close to each other.
-        /// </summary>
-        protected virtual void ValidateVertices()
-        {
-            Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
-            CheckSegmentLengthAndThrow(Edges());
-        }
+        public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base(vertices, disableValidation: disableValidation) { }
 
         /// <summary>
         /// Construct a polyline from points. This is a convenience constructor
         /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
         /// </summary>
         /// <param name="vertices">The vertices of the polyline.</param>
-        public Polyline(params Vector3[] vertices) : this(new List<Vector3>(vertices))
-        {
-
-        }
+        public Polyline(params Vector3[] vertices) : base(vertices) { }
 
         /// <summary>
         /// Construct a polyline from points. This is a convenience constructor
@@ -77,10 +43,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="disableValidation">Should self intersection testing be disabled?</param>
         /// <param name="vertices">The vertices of the polyline.</param>
-        public Polyline(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation)
-        {
-
-        }
+        public Polyline(bool disableValidation, params Vector3[] vertices) : base(vertices, disableValidation: disableValidation) { }
 
         /// <summary>
         /// Calculate the length of the polygon.
@@ -96,24 +59,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The start of the polyline.
-        /// </summary>
-        [JsonIgnore]
-        public override Vector3 Start
-        {
-            get { return this.Vertices[0]; }
-        }
-
-        /// <summary>
-        /// The end of the polyline.
-        /// </summary>
-        [JsonIgnore]
-        public override Vector3 End
-        {
-            get { return this.Vertices[this.Vertices.Count - 1]; }
-        }
-
-        /// <summary>
         /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new polyline with opposite winding.</returns>
@@ -125,42 +70,13 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a string representation of this polyline.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Join<Vector3>(",", this.Vertices);
-        }
-
-        /// <summary>
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
+        [Obsolete("Use the enumerator to get curves instead.")]
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
-        }
-
-        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges(Transform transform = null)
-        {
-            for (var i = 0; i < Vertices.Count - 1; i++)
-            {
-                var from = Vertices[i];
-                var to = Vertices[i + 1];
-                yield return transform != null ? (transform.OfPoint(from), transform.OfPoint(to)) : (from, to);
-            }
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        public override Vector3 PointAt(double u)
-        {
-            return PointAtInternal(u, out _);
         }
 
         /// <summary>
@@ -404,14 +320,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the bounding box for this curve.
-        /// </summary>
-        public override BBox3 Bounds()
-        {
-            return new BBox3(this.Vertices);
-        }
-
-        /// <summary>
         /// Compute the Plane defined by the first three non-collinear vertices of the Polygon.
         /// </summary>
         /// <returns>A Plane.</returns>
@@ -421,76 +329,7 @@ namespace Elements.Geometry
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
         }
 
-        /// <summary>
-        /// Check for coincident vertices in the supplied vertex collection.
-        /// </summary>
-        /// <param name="vertices"></param>
-        protected void CheckCoincidenceAndThrow(IList<Vector3> vertices)
-        {
-            for (var i = 0; i < vertices.Count; i++)
-            {
-                for (var j = 0; j < vertices.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        continue;
-                    }
-                    if (vertices[i].IsAlmostEqualTo(vertices[j]))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check if any of the polygon segments have zero length.
-        /// </summary>
-        internal static void CheckSegmentLengthAndThrow(IEnumerable<(Vector3 from, Vector3 to)> segments)
-        {
-            foreach (var (from, to) in segments)
-            {
-                if (from.DistanceTo(to) == 0)
-                {
-                    throw new ArgumentException("A segment of the polyline has zero length.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check for self-intersection in the supplied line segment collection.
-        /// </summary>
-        /// <param name="t">The transform representing the plane of the polygon.</param>
-        /// <param name="segments"></param>
-        internal static void CheckSelfIntersectionAndThrow(Transform t, IEnumerable<(Vector3 from, Vector3 to)> segments)
-        {
-            var segmentsT = new List<(Vector3 from, Vector3 to)>();
-            foreach (var (from, to) in segments)
-            {
-                segmentsT.Add((t.OfPoint(from), t.OfPoint(to)));
-            }
-
-            for (var i = 0; i < segmentsT.Count; i++)
-            {
-                for (var j = 0; j < segmentsT.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        // Don't check against itself.
-                        continue;
-                    }
-                    var s1 = segmentsT[i];
-                    var s2 = segmentsT[j];
-
-                    if (Line.Intersects2d(s1.from, s1.to, s2.from, s2.to))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
-                    }
-                }
-            }
-        }
-
-        internal static Line[] SegmentsInternal(IList<Vector3> vertices)
+        internal Line[] SegmentsInternal(IList<Vector3> vertices)
         {
             var result = new Line[vertices.Count - 1];
             for (var i = 0; i < vertices.Count - 1; i++)
@@ -550,12 +389,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a point on the polygon at parameter u.
+        /// Get a point on the polyline at parameter u.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
+        /// <param name="u">A value between 0.0 and length.</param>
+        /// <param name="curveIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
+        protected override Vector3 PointAtInternal(double u, out int curveIndex)
         {
             if (!Domain.Includes(u, true))
             {
@@ -571,12 +410,12 @@ namespace Elements.Geometry
                 var currVec = (b - a).Unitized();
                 if (totalLength <= u && totalLength + currLength >= u)
                 {
-                    segmentIndex = i;
+                    curveIndex = i;
                     return a + currVec * (u - totalLength);
                 }
                 totalLength += currLength;
             }
-            segmentIndex = this.Vertices.Count - 1;
+            curveIndex = this.Vertices.Count - 1;
             return this.End;
         }
 
@@ -895,27 +734,6 @@ namespace Elements.Geometry
             }
 
             return joinInfo;
-        }
-
-        /// <summary>
-        /// Does this polyline equal the provided polyline?
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Polyline other)
-        {
-            if (this.Vertices.Count != other.Vertices.Count)
-            {
-                return false;
-            }
-            for (var i = 0; i < Vertices.Count; i++)
-            {
-                if (!this.Vertices[i].Equals(other.Vertices[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         /// <summary>
