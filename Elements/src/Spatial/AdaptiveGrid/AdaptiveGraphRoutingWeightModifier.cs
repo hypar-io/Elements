@@ -57,6 +57,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
         /// <summary>
         /// Set factor aggregator function for weight modifiers group.
+        /// The aggregator function will be applied to any list of weight modifications that share a group name.
+        /// This ensures that if a type of modifier is applied to a single edge more than once we have options for how to apply duplicate modifiers.
         /// <see cref="AggregateFactorMin"/>
         /// <see cref="AggregateFactorMax"/>
         /// <see cref="AggregateFactorMultiply"/>
@@ -119,45 +121,16 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns>Created WeightModifier.</returns>
         public WeightModifier AddPolylineWeightModifier(string name, Polyline polyline, double factor, double influenceDistance, bool is2D, string group = null)
         {
-            RoutingHintLine hintLine;
-            try
+            if (is2D && polyline.Segments().All(s => s.Direction().IsParallelTo(Vector3.ZAxis)))
             {
-                hintLine = new RoutingHintLine(polyline, factor, influenceDistance, true, is2D);
+                throw new Exception("A polyline consisting of all vertical segments cannot be used in 2D comparison.");
             }
-            catch
-            {
-                hintLine = null;
-            }
-
+            var hintLine = new RoutingHintLine(polyline, factor, influenceDistance, true, is2D);
             var modifier = new WeightModifier(
                 name,
                 new Func<Vertex, Vertex, bool>((a, b) =>
                 {
-                    if (hintLine == null)
-                    {
-                        return false;
-                    }
-                    var line = new Line(a.Point, b.Point);
-                    if (is2D)
-                    {
-                        var start = new Vector3(a.Point.X, a.Point.Y);
-                        var end = new Vector3(b.Point.X, b.Point.Y);
-                        if (!start.IsAlmostEqualTo(end))
-                        {
-                            line = new Line(start, end);
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
-                    if (hintLine.Affects(a.Point, b.Point))
-                    {
-                        return true;
-                    }
-                    var lineDir = line.Direction();
-                    return hintLine.Polyline.Segments().Any(s => !s.Direction().IsParallelTo(lineDir)
-                                                        && line.DistanceTo(s) < influenceDistance);
+                    return hintLine.Affects(a.Point, b.Point) || hintLine.Intersects(a.Point, b.Point);
                 }),
                 factor,
                 group);
@@ -169,7 +142,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// Group weight modifiers.
         /// </summary>
         /// <returns>Weight modifiers grouped by group name.</returns>
-        private IEnumerable<IGrouping<string, WeightModifier>> GroupWeightModifiers()
+        private IEnumerable<IGrouping<string, WeightModifier>> GroupedWeightModifiers()
         {
             return _weightModifiers.Values.GroupBy(m => m.Group);
         }
@@ -190,7 +163,11 @@ namespace Elements.Spatial.AdaptiveGrid
             var modifierFactors = new List<double>();
             foreach (var modifiersGroup in modifiersGroups)
             {
-                modifierFactors.Add(ModifierFactor(a, b, modifiersGroup));
+                if (!_groupFactorAggregators.TryGetValue(modifiersGroup.Key, out var aggregateFactorFunc))
+                {
+                    aggregateFactorFunc = AggregateFactorMin;
+                }
+                modifierFactors.Add(ModifierFactor(a, b, modifiersGroup, aggregateFactorFunc));
             }
 
             return modifierFactors.Any() ? modifierFactors.Aggregate(AggregateFactorMultiply) : 1;
@@ -206,7 +183,8 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <param name="a">Start Vertex</param>
         /// <param name="b">End Vertex</param>
         /// <param name="modifiersGroup">Group of modifiers.</param>
-        private double ModifierFactor(Vertex a, Vertex b, IGrouping<string, WeightModifier> modifiersGroup)
+        /// <param name="aggregateFactorFunc">Factor aggregator function.</param>
+        private double ModifierFactor(Vertex a, Vertex b, IEnumerable<WeightModifier> modifiersGroup, Func<double, double, double> aggregateFactorFunc)
         {
             var appliedModifiers = modifiersGroup.Where(modifier => modifier.Condition(a, b));
             if (!appliedModifiers.Any())
@@ -214,10 +192,6 @@ namespace Elements.Spatial.AdaptiveGrid
                 return 1;
             }
 
-            if (!_groupFactorAggregators.TryGetValue(modifiersGroup.Key, out var aggregateFactorFunc))
-            {
-                aggregateFactorFunc = AggregateFactorMin;
-            }
             var modifierFactor = appliedModifiers.Select(m => m.Factor).Aggregate(aggregateFactorFunc);
             return modifierFactor;
         }

@@ -455,7 +455,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var weights = new Dictionary<ulong, EdgeInfo>();
             var mainAxis = _grid.Transform.XAxis;
-            var modifiersGroups = GroupWeightModifiers();
+            var modifiersGroups = GroupedWeightModifiers();
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
