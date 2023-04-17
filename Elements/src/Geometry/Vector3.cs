@@ -139,13 +139,14 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static IList<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
         {
-            var div = 1.0 / (double)(n + 1);
+            var l = line.Length();
+            var div = l / (double)(n + 1);
             var pts = new List<Vector3>();
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0.0; t <= l; t += div)
             {
                 var pt = line.PointAt(t);
 
-                if ((t == 0.0 && !includeEnds) || (t == 1.0 && !includeEnds))
+                if ((t == 0.0 && !includeEnds) || (t == l && !includeEnds))
                 {
                     continue;
                 }
