@@ -10,6 +10,8 @@
 - `BoundedCurve`
 - `InfiniteLine`
 - `IConic`
+- `Ellipse`
+- `EllipticalArc`
 
 ### Changed
 

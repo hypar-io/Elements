@@ -50,6 +50,11 @@ namespace Elements.Tests
             var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * 0.25, Math.PI * 0.75);
             var arcBeam = new Beam(arc, profile, 0, 0, 0, new Transform(12, 0, 0), BuiltInMaterials.Steel);
             var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
+
+            // Create an elliptical beam.
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5, 1.5, 0, 210);
+            var ellipticBeam = new Beam(ellipticalArc, profile, 0, 0, 0, new Transform(18, 0, 0), BuiltInMaterials.Steel);
+            var ellipseT = ellipticalArc.TransformAt(ellipticalArc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
             // </example>
 
             this.Model.AddElement(linearBeam);
@@ -58,6 +63,8 @@ namespace Elements.Tests
             this.Model.AddElements(polyT);
             this.Model.AddElement(arcBeam);
             this.Model.AddElements(arcT);
+            this.Model.AddElement(ellipticBeam);
+            this.Model.AddElements(ellipseT);
         }
 
         [Theory]
@@ -265,6 +272,12 @@ namespace Elements.Tests
             this.Model.AddElement(mc3);
             var plBeam = new Beam(pl, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(plBeam);
+
+            // Ellipse setbacks
+            var ellipticalArc = new EllipticalArc(new Vector3(10, 0), 2.5, 1.5, 0, 210);
+            this.Model.AddElement(new ModelCurve(ellipticalArc));
+            var ellipticBeam = new Beam(ellipticalArc, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(ellipticBeam);
 
             // Bezier setbacks
             // TODO: Enable when we have good curved surface visualization.
