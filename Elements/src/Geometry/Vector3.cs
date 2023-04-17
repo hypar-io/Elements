@@ -307,7 +307,7 @@ namespace Elements.Geometry
             }
             if (r.ApproximatelyEquals(-1.0))
             {
-                return 180;
+                return Math.PI;
             }
             var rad = Math.Acos(r);
             return rad;
