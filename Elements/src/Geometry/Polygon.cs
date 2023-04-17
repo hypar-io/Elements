@@ -2175,32 +2175,25 @@ namespace Elements.Geometry
         public Contour Fillet(double radius)
         {
             var curves = new List<BoundedCurve>();
-            Vector3 contourStart = new Vector3();
-            Vector3 contourEnd = new Vector3();
+            var segments = this.Segments();
+            var arcs = new List<Arc>();
 
-            var segs = this.Segments();
-            for (var i = 0; i < segs.Length; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
-                var a = segs[i];
-                var b = i == segs.Length - 1 ? segs[0] : segs[i + 1];
-                var fillet = a.Fillet(b, radius);
-
-                var right = a.Direction().Cross(Vector3.ZAxis);
-                var dot = b.Direction().Dot(right);
-                var convex = dot <= 0.0;
-                if (i > 0)
-                {
-                    var l = new Line(contourEnd, convex ? fillet.Start : fillet.End);
-                    curves.Add(l);
-                }
-                else
-                {
-                    contourStart = convex ? fillet.Start : fillet.End;
-                }
-                contourEnd = convex ? fillet.End : fillet.Start;
-                curves.Add(fillet);
+                var a = segments[i];
+                var b = segments[i == segments.Length - 1 ? 0 : i + 1];
+                var arc = a.Fillet(b, 0.5);
+                arcs.Add(arc);
             }
-            curves.Add(new Line(contourEnd, contourStart));
+
+            for (var i = 0; i < arcs.Count; i++)
+            {
+                var a = arcs[i];
+                var b = arcs[i == arcs.Count - 1 ? 0 : i + 1];
+                curves.Add(new Line(a.Start, b.End));
+                curves.Add(b);
+            }
+
             return new Contour(curves);
         }
 
