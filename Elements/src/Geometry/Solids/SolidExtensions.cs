@@ -10,8 +10,9 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="loop"></param>
         /// <param name="faceId"></param>
+        /// <param name="solidId"></param>
         /// <param name="transform">An optional transform to apply to the contour.</param>
-        internal static ContourVertex[] ToContourVertexArray(this Loop loop, int faceId, Transform transform = null)
+        internal static ContourVertex[] ToContourVertexArray(this Loop loop, uint faceId, uint solidId, Transform transform = null)
         {
             var contour = new ContourVertex[loop.Edges.Count];
             for (var i = 0; i < loop.Edges.Count; i++)
@@ -21,7 +22,7 @@ namespace Elements.Geometry.Solids
                 var cv = new ContourVertex
                 {
                     Position = new Vec3 { X = p.X, Y = p.Y, Z = p.Z },
-                    Data = (default(UV), (int)edge.Vertex.Id, faceId)
+                    Data = (default(UV), edge.Vertex.Id, faceId, solidId)
                 };
                 contour[i] = cv;
             }

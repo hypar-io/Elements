@@ -94,6 +94,7 @@ namespace Elements.Tests
         [Fact, Trait("Category", "Example")]
         public void InstanceContentElement()
         {
+            this.Name = nameof(InstanceContentElement);
             var model = this.Model;
             // <example>
             var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
@@ -130,7 +131,7 @@ namespace Elements.Tests
             model.ToGlTF($"./models/{nameof(InstanceContentElement)}.glb");
             var firstRun = sw.Elapsed.TotalSeconds;
             sw.Restart();
-            model.ToGlTF($"./models/{nameof(InstanceContentElement)}.gltf", false);
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}-2.glb");
             var secondRun = sw.Elapsed.TotalSeconds;
             Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }

@@ -5,7 +5,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A container for graphics data.
-    /// The buffers used in this class align with webgl requirements.
+    /// The buffers used in this class align with webGL requirements.
     /// </summary>
     public class GraphicsBuffers : IGraphicsBuffers
     {
@@ -20,7 +20,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The number of facets represeted by the buffer.
+        /// The number of facets represented by the buffer.
         /// </summary>
         public int FacetCount
         {
@@ -285,12 +285,17 @@ namespace Elements.Geometry
         internal static int PreallocationSize()
         {
             // Assume a fully vertex-colored mesh of the size required to contain 30k vertices.
-            // Postion, Normal, Color, Index, UV
+            // Position, Normal, Color, Index, UV
             var floatSize = sizeof(float);
             var intSize = sizeof(int);
             return (floatSize * 3 + floatSize * 3 + floatSize * 4 + intSize + floatSize * 2) * _preallocationVertexCount;
         }
 
+        /// <summary>
+        /// Pre allocates the buffers according to the preallocation size.
+        /// </summary>
+        /// <param name="vertexCount">How many vertices are expected.</param>
+        /// <param name="indexCount">How many indices are likely to be used.</param>
         public void Initialize(int vertexCount = _preallocationVertexCount, int indexCount = _preallocationVertexCount)
         {
             // Initialize everything

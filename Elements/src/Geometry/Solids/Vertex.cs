@@ -8,7 +8,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// The Id of the Vertex.
         /// </summary>
-        public long Id { get; }
+        public uint Id { get; }
 
         /// <summary>
         /// The HalfEdge which has this Vertex as its start.
@@ -25,7 +25,7 @@ namespace Elements.Geometry.Solids
         /// </summary>
         /// <param name="id"></param>
         /// <param name="point">The location of the Vertex.</param>
-        public Vertex(long id, Vector3 point)
+        public Vertex(uint id, Vector3 point)
         {
             this.Id = id;
             this.Point = point;

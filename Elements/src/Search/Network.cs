@@ -219,7 +219,7 @@ namespace Elements.Search
             // Use a line sweep algorithm to identify intersection events.
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
 
-            // Order the linesweep events from top to bottom then left to right.
+            // Order the line sweep events from top to bottom then left to right.
             // The practical result of this is that the sweep line is not exactly
             // horizontal but moves as if at a slight incline. This solves for
             // all perpendicular cases.
@@ -243,7 +243,7 @@ namespace Elements.Search
             {
                 // TODO: Is there a way to make this faster?
                 // We're grouping by coordinate which is SLOW and is
-                // only neccessary in the case where we have coincident points.
+                // only necessary in the case where we have coincident points.
 
                 // Group by the event coordinate as lines may share start
                 // or end points.
@@ -452,13 +452,14 @@ namespace Elements.Search
             var regions = new List<List<int>>();
 
             // TODO: This code is a mess. We use several methods for tracking
-            // traversal data: LocalEdge instances, nodeVisits, and structures 
-            // internal to the traversal methods. These can be combined so that 
-            // we are only using LocalEdges. 
+            // traversal data: LocalEdge instances, nodeVisits, and structures
+            // internal to the traversal methods. These can be combined so that
+            // we are only using LocalEdges.
 
             var leafNodes = new List<int>();
             var allEdges = new List<LocalEdge>();
-            for (var i = 0; i < NodeCount(); i++)
+
+            for (var i = 0; i < this.NodeCount(); i++)
             {
                 var localEdges = EdgesAt(i);
                 var edgeCount = localEdges.Count();
@@ -845,8 +846,7 @@ namespace Elements.Search
         /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
         /// <param name="visitedEdges">A collection of all visited edges.</param>
         /// <param name="visited">A collection of visited node indices.</param>
-        /// <param name="prevIndex">An optional previous index. Supply a previous index when 
-        /// you want to begin traversing from a specific edge.</param>
+        /// <param name="prevIndex">The previous index found during the traversal</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
                                   Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
@@ -861,7 +861,7 @@ namespace Elements.Search
 
             // Track the trailing edge from a specific index.
             // This will be used to compare traversal to avoid passing
-            // over where the path has previously travelled.
+            // over where the path has previously traveled.
             var lastIndexMap = new Dictionary<int, (int start, int end)>();
 
             if (prevIndex != -1)
