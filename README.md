@@ -3,7 +3,6 @@
 ![Tag and Publish Alpha](https://github.com/hypar-io/Elements/workflows/Tag%20and%20Publish%20Alpha/badge.svg)
 ![Build and Test on PR](https://github.com/hypar-io/Elements/workflows/Build%20and%20Test%20on%20PR/badge.svg)
 ![NuGet](https://img.shields.io/nuget/v/Hypar.Elements.svg)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3HBW7BYRSBZYE)
 
 # Projects
 |Name|Description|
