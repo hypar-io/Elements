@@ -104,7 +104,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point along the line at parameter u.
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="u">A parameter on the curve between 0.0 and length.</param>
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
@@ -113,6 +113,20 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.PointAt(u);
+        }
+
+        /// <summary>
+        /// Get a point along the line at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>A point on the curve at parameter u.</returns>
+        public override Vector3 PointAtNormalized(double u)
+        {
+            if (u < 0 || u > 1)
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between 0.0 and 1.0.");
+            }
+            return this.BasisCurve.PointAt(this.Domain.Min + u * Length());
         }
 
         /// <summary>

@@ -73,17 +73,16 @@ namespace Elements.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        [Obsolete("Use the enumerator to get curves instead.")]
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
         }
 
         /// <summary>
-        /// Get the Transform at the specified parameter along the Polygon.
+        /// Get the transform at the specified parameter along the polyline.
         /// </summary>
-        /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
-        /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
+        /// <param name="u">The parameter on the polygon between 0.0 and length.</param>
+        /// <returns>A transform with its Z axis aligned trangent to the polyline.</returns>
         public override Transform TransformAt(double u)
         {
             if (!Domain.Includes(u, true))

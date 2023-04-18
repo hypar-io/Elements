@@ -8,10 +8,18 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A curves made up of a collection of line and arc segments.
-    /// Parameterization of the curve is 0->length.
+    /// Parameterization of the curve is 0->1.
     /// </summary>
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
+        /// <summary>
+        /// A collection of curves created from the vertices
+        /// and the curve indices. If this collection is
+        /// null, the curve is to be considered a collection
+        /// of linear edges between vertices.
+        /// </summary>
+        private List<BoundedCurve> _curves;
+
         /// <summary>
         /// A bounding box created once during the polyline's construction.
         /// This will not be updated when a polyline's vertices are changed.
@@ -80,8 +88,25 @@ namespace Elements.Geometry
 
             this.Vertices = vertices;
             this.CurveIndices = curveIndices;
-            this.Domain = new Domain1d(0, this.Length());
-            _bounds = new BBox3(Vertices);
+            this.Domain = new Domain1d(0, 1);
+            UpdateCurves();
+            _bounds = Bounds();
+        }
+
+        private void UpdateCurves()
+        {
+            foreach (var curveIndexSet in this.CurveIndices)
+            {
+                // Construct a curve
+                if (curveIndexSet.Count == 2)
+                {
+                    _curves.Add(new Line(Vertices[curveIndexSet[0]], Vertices[curveIndexSet[1]]));
+                }
+                else if (curveIndexSet.Count == 3)
+                {
+                    _curves.Add(Arc.ByThreePoints(this.Vertices[curveIndexSet[0]], this.Vertices[curveIndexSet[1]], this.Vertices[curveIndexSet[2]]));
+                }
+            }
         }
 
         /// <summary>
@@ -110,9 +135,33 @@ namespace Elements.Geometry
             return length;
         }
 
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance between 0.0 and 1.0.</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
-            throw new System.NotImplementedException();
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            PointAtInternal(start, out var curveIndex);
+
+            var totalLength = 0.0;
+            for (var i = curveIndex; i < _curves.Count; i++)
+            {
+                var curve = _curves[i];
+                var currLength = curve.Length();
+                if (totalLength <= start && totalLength + currLength >= u)
+                {
+                    return curve.PointAt(u - totalLength);
+                }
+                curveIndex++;
+                totalLength += currLength;
+            }
+            return this.End;
         }
 
         /// <summary>
@@ -128,17 +177,64 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point on the polycurve at parameter u.
         /// </summary>
+        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
+        public override Vector3 PointAtNormalized(double u)
+        {
+            return PointAtInternal(u * Length(), out _);
+        }
+
+        /// <summary>
+        /// Get a point on the polycurve at parameter u.
+        /// </summary>
         /// <param name="u">A value between 0.0 and length.</param>
         /// <param name="curveIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int curveIndex)
         {
-            throw new NotImplementedException();
+            if (!Domain.Includes(u, true))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            var totalLength = 0.0;
+            curveIndex = 0;
+            foreach (var curve in this)
+            {
+                var currLength = curve.Length();
+                if (totalLength <= u && totalLength + currLength >= u)
+                {
+                    return curve.PointAt(u - totalLength);
+                }
+                curveIndex++;
+                totalLength += currLength;
+            }
+            return this.End;
         }
 
+        /// <summary>
+        /// Get the transform at the specified parameter along the polyline.
+        /// </summary>
+        /// <param name="u">The parameter on the Polygon between 0.0 and length.</param>
+        /// <returns>A transform with its Z axis aligned trangent to the polycurve.</returns>
         public override Transform TransformAt(double u)
         {
-            throw new System.NotImplementedException();
+            if (!Domain.Includes(u, true))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            var totalLength = 0.0;
+            foreach (var curve in this)
+            {
+                var currLength = curve.Length();
+                if (totalLength <= u && totalLength + currLength >= u)
+                {
+                    return curve.TransformAt(u - totalLength);
+                }
+                totalLength += currLength;
+            }
+            return
         }
 
         public override Curve Transformed(Transform transform)
@@ -286,24 +382,12 @@ namespace Elements.Geometry
         /// <returns>An enumerator of bounded curves.</returns>
         public IEnumerator<BoundedCurve> GetEnumerator()
         {
-            foreach (var curveIndexSet in this.CurveIndices)
-            {
-                // Construct a curve
-                if (curveIndexSet.Count == 2)
-                {
-                    yield return new Line(Vertices[curveIndexSet[0]], Vertices[curveIndexSet[1]]);
-                }
-                else if (curveIndexSet.Count == 3)
-                {
-                    yield return Arc.ByThreePoints(this.Vertices[curveIndexSet[0]], this.Vertices[curveIndexSet[1]], this.Vertices[curveIndexSet[2]]);
-                }
-            }
+            return _curves.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
-
     }
 }
