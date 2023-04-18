@@ -49,7 +49,7 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the circle.</param>
         public Circle(double radius = 1.0)
         {
-            this.Radius = 1.0;
+            this.Radius = radius;
             this.Transform = new Transform();
         }
 
@@ -85,7 +85,7 @@ namespace Elements.Geometry
         public static implicit operator Arc(Circle c) => new Arc(c, 0, Math.PI * 2);
 
         /// <summary>
-        /// Convert a circle to a model circular model curve.
+        /// Convert a circle to a circular model curve.
         /// </summary>
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(Circle c) => new ModelCurve(c);

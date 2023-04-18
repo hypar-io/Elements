@@ -1063,67 +1063,7 @@ namespace Elements.Geometry
         /// <returns>An arc, or null if no fillet can be calculated.</returns>
         public Arc Fillet(Line target, double radius)
         {
-            var d1 = this.Direction();
-            var d2 = target.Direction();
-            if (d1.IsParallelTo(d2))
-            {
-                throw new Exception("The fillet could not be created. The lines are parallel");
-            }
-
-            var r1 = new Ray(this.Start, d1);
-            var r2 = new Ray(target.Start, d2);
-            if (!r1.Intersects(r2, out Vector3 result, true))
-            {
-                return null;
-            }
-
-            // Construct new vectors that both
-            // point away from the projected intersection
-            var newD1 = (this.Mid() - result).Unitized();
-            var newD2 = (target.Mid() - result).Unitized();
-
-            var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
-            var halfTheta = theta / 2.0;
-            var h = radius / Math.Sin(halfTheta);
-            var centerVec = newD1.Average(newD2).Unitized();
-            var arcCenter = result + centerVec * h;
-
-            // Find the closest points from the arc
-            // center to the adjacent curves.
-            var p1 = arcCenter.ClosestPointOn(this);
-            var p2 = arcCenter.ClosestPointOn(target);
-
-            // Find the angle of both segments relative to the fillet arc.
-            // ATan2 assumes the origin, so correct the coordinates
-            // by the offset of the center of the arc.
-            var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0 / Math.PI;
-            var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0 / Math.PI;
-
-            // ATan2 will provide negative angles in the "lower" quadrants
-            // Ensure that these values are 180d -> 360d
-            angle1 = (angle1 + 360) % 360;
-            angle2 = (angle2 + 360) % 360;
-            angle2 = angle2 == 0.0 ? 360.0 : angle2;
-
-            // We only support CCW wound arcs.
-            // For arcs that with start angles <1d, convert
-            // the arc back to a negative value.
-            var arc = new Arc(arcCenter,
-                           radius,
-                           angle1 > angle2 ? angle1 - 360.0 : angle1,
-                           angle2);
-
-            // Get the complimentary arc and choose
-            // the shorter of the two arcs.
-            var complement = arc.Complement();
-            if (arc.Length() < complement.Length())
-            {
-                return arc;
-            }
-            else
-            {
-                return complement;
-            }
+            return Arc.Fillet(this, target, radius);
         }
 
         /// <summary>

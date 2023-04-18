@@ -166,6 +166,122 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create an arc by three points.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>An arc through the three points.</returns>
+        public static Arc ByThreePoints(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var p = new Plane(a, b, c);
+
+            // Create two lines, the perpendiculars of
+            // which will intersect at the center of the circle.
+            var mab = a.Average(b);
+            var mac = a.Average(c);
+            var vab = (b - a).Unitized().Cross(p.Normal);
+            var vac = (c - a).Unitized().Cross(p.Normal);
+            var r1 = new Ray(mab, vab);
+            var r2 = new Ray(mac, vac);
+            if (r1.Intersects(r2, out var result, out var xsectResult, true))
+            {
+                var r = result.DistanceTo(a);
+                var circle = new Circle(new Transform(result, p.Normal), r);
+                var a1 = (a - circle.Center).Unitized();
+                var b1 = (b - circle.Center).Unitized();
+                var c1 = (c - circle.Center).Unitized();
+                var angle1 = circle.Transform.XAxis.PlaneAngleTo(a1, circle.Transform.ZAxis);
+                var angle2 = circle.Transform.XAxis.PlaneAngleTo(b1, circle.Transform.ZAxis);
+                var angle3 = circle.Transform.XAxis.PlaneAngleTo(c1, circle.Transform.ZAxis);
+                var angles = new List<double> { angle1, angle2, angle3 };
+                angles.Sort();
+                var arc = new Arc(circle, Units.DegreesToRadians(angles[0]), Units.DegreesToRadians(angles[2]));
+                return arc;
+            }
+            if (xsectResult == RayIntersectionResult.Parallel)
+            {
+                throw new ArgumentException("The arc can't be created. The provided points are coincident or colinear.");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Create a fillet arc between two lines.
+        /// </summary>
+        /// <param name="a">The first line.</param>
+        /// <param name="b">The second line.</param>
+        /// <param name="radius">The radiuse of the fillet arc.</param>
+        /// <returns>A fillet arc between the two lines.</returns>
+        public static Arc Fillet(Line a, Line b, double radius)
+        {
+            // The direction of the two lines
+            var d1 = a.Direction();
+            var d2 = b.Direction();
+            if (d1.IsParallelTo(d2))
+            {
+                throw new Exception("The fillet could not be created. The lines are parallel");
+            }
+
+            // Find the intersection of the two lines.
+            // this will be the "corner" reference.
+            var r1 = new Ray(a.Start, d1);
+            var r2 = new Ray(b.Start, d2);
+            if (!r1.Intersects(r2, out Vector3 intersection, true))
+            {
+                return null;
+            }
+
+            // Construct new vectors that both
+            // point away from the projected intersection.
+            // Use an arbitrary point on the line that 
+            // isn't the start or the end. This ensures
+            // that the vectors will point in the correct direction,
+            // regardless of the original lines' original orientation
+            var dd1 = (a.Mid() - intersection).Unitized();
+            var dd2 = (b.Mid() - intersection).Unitized();
+
+            // Find the bisector vector.
+            var bisectVector = dd1.Average(dd2).Unitized();
+
+            // Find the normal of the plane in which the
+            // fillet arc will be created.
+            var up = dd1.Cross(dd2).Unitized();
+            // up = up.Dot(Vector3.ZAxis) < 0 ? up.Negate() : up;
+            var left = up.Cross(bisectVector).Unitized();
+
+            // Find the "height" of the triangle whose
+            // base is perpendicular to one of the sides.
+            // var theta = dd1.AngleToInternal(dd2);
+            var theta = dd1.AngleToInternal(dd2);
+            var halfTheta = theta / 2.0;
+            var h = radius / Math.Sin(halfTheta);
+
+            // The point along the bisection vector of
+            // distance "h" will be the center of the new arc.
+            var arcCenter = intersection + bisectVector * h;
+
+            // Find the closest points from the arc
+            // center to the adjacent curves, treated as infinite.
+            // This will be the start and end of the arc.
+            var p1 = arcCenter.ClosestPointOn(a, true);
+            var p2 = arcCenter.ClosestPointOn(b, true);
+
+            // Find the angle, in the plane, from the "left" vector
+            // to the a curve and the b curve. These will be the
+            // start and end parameters of the arc.
+            var angle1 = left.PlaneAngleToInternal((p1 - arcCenter).Unitized(), up);
+            var angle2 = left.PlaneAngleToInternal((p2 - arcCenter).Unitized(), up);
+
+            var arc = new Arc(new Transform(arcCenter, left, up),
+                           radius,
+                           Math.Min(angle1, angle2),
+                           Math.Max(angle1, angle2));
+
+            return arc;
+        }
+
+        /// <summary>
         /// Calculate the length of the arc.
         /// </summary>
         public override double Length()

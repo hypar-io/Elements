@@ -10,6 +10,8 @@
 - `BoundedCurve`
 - `InfiniteLine`
 - `IConic`
+- `Arc.ByThreePoints`
+- `Arc.Fillet`
 - `Ellipse`
 - `EllipticalArc`
 
@@ -25,6 +27,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameteried 0->2Pi.
 - `Line` is now parameterized 0->length.
+- `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 
 ### Fixed
 - Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
