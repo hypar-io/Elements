@@ -55,8 +55,25 @@ namespace Elements.Geometry
         /// <returns>The length of the elliptical arc.</returns>
         public override double Length()
         {
-            // Define the function to be integrated (arc length formula)
             return this.BasisCurve.ArcLength(this.Domain.Min, this.Domain.Max);
+        }
+
+        /// <summary>
+        /// Calculate the length of the elliptical arc between start and end parameters.
+        /// </summary>
+        /// <returns>The length of the elliptical arc between start and end.</returns>
+        public override double Length(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            return this.BasisCurve.ArcLength(start, end);
         }
 
         /// <summary>
@@ -68,7 +85,7 @@ namespace Elements.Geometry
         {
             if (!this.Domain.Includes(u, true))
             {
-                throw new ArgumentException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new ArgumentOutOfRangeException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.PointAt(u);
         }

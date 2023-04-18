@@ -147,21 +147,19 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            PointAtInternal(start, out var curveIndex);
-
-            var totalLength = 0.0;
-            for (var i = curveIndex; i < _curves.Count; i++)
+            var t = 0.0;
+            var totalLength = this.Length();
+            foreach (var curve in this)
             {
-                var curve = _curves[i];
-                var currLength = curve.Length();
-                if (totalLength <= start && totalLength + currLength >= u)
+                var end = t + curve.Length() / totalLength;
+                if (t <= start && end >= start)
                 {
-                    return curve.PointAt(u - totalLength);
+                    var subT = u - t;
+                    return curve.PointAtNormalized(subT);
                 }
-                curveIndex++;
-                totalLength += currLength;
+                t += end - t;
             }
-            return this.End;
+            return 1.0;
         }
 
         /// <summary>
@@ -181,7 +179,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         public override Vector3 PointAtNormalized(double u)
         {
-            return PointAtInternal(u * Length(), out _);
+            return PointAtInternal(u, out _);
         }
 
         /// <summary>
@@ -197,17 +195,23 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var totalLength = 0.0;
+            // Because a polycurve is a combination of line and arc
+            // segments, the parameterization has to be 0->1. This requires
+            // that finding the point at a specific parameter operate 
+            // in the domain of each sub curve.
+            var t = 0.0;
             curveIndex = 0;
+            var totalLength = this.Length();
             foreach (var curve in this)
             {
-                var currLength = curve.Length();
-                if (totalLength <= u && totalLength + currLength >= u)
+                var end = t + curve.Length() / totalLength;
+                if (t <= u && end >= u)
                 {
-                    return curve.PointAt(u - totalLength);
+                    var subT = u - t;
+                    return curve.PointAtNormalized(subT);
                 }
                 curveIndex++;
-                totalLength += currLength;
+                t += end - t;
             }
             return this.End;
         }
@@ -224,17 +228,29 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var totalLength = 0.0;
+            var t = 0.0;
+            var totalLength = this.Length();
             foreach (var curve in this)
             {
-                var currLength = curve.Length();
-                if (totalLength <= u && totalLength + currLength >= u)
+                var end = t + curve.Length() / totalLength;
+                if (t <= u && end >= u)
                 {
-                    return curve.TransformAt(u - totalLength);
+                    var subT = u - t;
+                    return curve.TransformAtNormalized(subT);
                 }
-                totalLength += currLength;
+                t += end - t;
             }
-            return
+            return TransformAt(1);
+        }
+
+        /// <summary>
+        /// Get the frame from the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
+        public override Transform TransformAtNormalized(double u)
+        {
+            return this.TransformAt(u);
         }
 
         public override Curve Transformed(Transform transform)

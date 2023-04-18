@@ -39,6 +39,13 @@ namespace Elements.Geometry
         public abstract Transform TransformAt(double u);
 
         /// <summary>
+        /// Get the frame from the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
+        public abstract Transform TransformAtNormalized(double u);
+
+        /// <summary>
         /// Create a transformed copy of this Curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>

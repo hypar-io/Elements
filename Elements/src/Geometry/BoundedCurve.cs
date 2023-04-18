@@ -37,6 +37,11 @@ namespace Elements.Geometry
         public abstract double Length();
 
         /// <summary>
+        /// Calculate the length of the curve between two parameters.
+        /// </summary>
+        public abstract double Length(double start, double end);
+
+        /// <summary>
         /// The mid point of the curve.
         /// </summary>
         public virtual Vector3 Mid()

@@ -9,7 +9,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
-    /// Parameterization of the curve is 0 -> length.
+    /// Parameterization of the curve is 0->length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
@@ -144,6 +144,16 @@ namespace Elements.Geometry
                 totalLength += currLength;
             }
             return new Transform(o, x, normal, x.Cross(normal));
+        }
+
+        /// <summary>
+        /// Get the frame from the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
+        public override Transform TransformAtNormalized(double u)
+        {
+            return TransformAt(u * this.Length());
         }
 
         /// <summary>

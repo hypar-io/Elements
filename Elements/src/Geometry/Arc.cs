@@ -286,7 +286,28 @@ namespace Elements.Geometry
         /// </summary>
         public override double Length()
         {
-            return 2 * Math.PI * this.BasisCurve.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
+            // Arc length = theta * radius
+            var theta = Units.DegreesToRadians(Math.Abs(this.EndAngle - this.StartAngle));
+            return this.BasisCurve.Radius * theta;
+        }
+
+        /// <summary>
+        /// Calculate the length of the arc between start and end parameters.
+        /// </summary>
+        public override double Length(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            // Arc length = theta * radius
+            var theta = Math.Abs(end - start);
+            return this.BasisCurve.Radius * theta;
         }
 
         /// <summary>
@@ -453,6 +474,16 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.TransformAt(u);
+        }
+
+        /// <summary>
+        /// Get the frame from the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
+        public override Transform TransformAtNormalized(double u)
+        {
+            return TransformAt(this.Domain.Min + u * Domain.Length);
         }
 
         /// <summary>

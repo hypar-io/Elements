@@ -27,6 +27,11 @@ namespace Elements.Geometry.Interfaces
         double Length();
 
         /// <summary>
+        /// Calculate the length of the curve between two parameters.
+        /// </summary>
+        double Length(double start, double end);
+
+        /// <summary>
         /// Get the bounding box of this curve.
         /// </summary>
         BBox3 Bounds();
