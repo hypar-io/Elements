@@ -1,3 +1,7 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
 #!markdown
 
 This script is packaged with the NuGet package, and only
@@ -141,7 +145,7 @@ string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     .Replace("DIV_ID", Guid.NewGuid().ToString());
 }
 
-Formatter.Register<Curve>((crv, writer) => {
+Formatter.Register<BoundedCurve>((crv, writer) => {
     var model = new Model();
     model.AddElement(new ModelCurve(crv, DEFAULT_CURVE_MATERIAL));
     var src = GetModelViewerSrc(model);
@@ -170,7 +174,7 @@ Formatter.Register<IEnumerable<Element>>((elements, writer) => {
     writer.Write(src);
 }, "text/html");
 
-Formatter.Register<IEnumerable<Curve>>((crvs, writer) => {
+Formatter.Register<IEnumerable<BoundedCurve>>((crvs, writer) => {
     var model = new Model();
     model.AddElements(crvs.Select(crv => new ModelCurve(crv, DEFAULT_CURVE_MATERIAL)));
     var src = GetModelViewerSrc(model);
