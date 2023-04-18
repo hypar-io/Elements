@@ -124,20 +124,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a point along the line at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>A point on the curve at parameter u.</returns>
-        public override Vector3 PointAtNormalized(double u)
-        {
-            if (u < 0 || u > 1)
-            {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between 0.0 and 1.0.");
-            }
-            return this.BasisCurve.PointAt(this.Domain.Min + u * Length());
-        }
-
-        /// <summary>
         /// Create new line transformed by transform.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>

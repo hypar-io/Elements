@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
@@ -122,7 +123,26 @@ namespace Elements.Geometry
         /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
         public Transform TransformAtNormalized(double u)
         {
+            if (u < 0 || u > 1)
+            {
+                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
+            }
+
             return TransformAt(this.Domain.Min + u * Domain.Length);
+        }
+
+        /// <summary>
+        /// Get a point at parameter u on the arc.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>A point on the curve at parameter u.</returns>
+        public override Vector3 PointAtNormalized(double u)
+        {
+            if (u < 0 || u > 1)
+            {
+                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
+            }
+            return this.PointAt(this.Domain.Min + u * this.Domain.Length);
         }
 
         /// <summary>

@@ -243,16 +243,6 @@ namespace Elements.Geometry
             return TransformAt(1);
         }
 
-        /// <summary>
-        /// Get the frame from the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        public override Transform TransformAtNormalized(double u)
-        {
-            return this.TransformAt(u);
-        }
-
         public override Curve Transformed(Transform transform)
         {
             throw new System.NotImplementedException();

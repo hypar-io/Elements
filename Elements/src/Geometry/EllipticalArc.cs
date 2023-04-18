@@ -91,20 +91,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a point at parameter u on the arc.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>A point on the curve at parameter u.</returns>
-        public override Vector3 PointAtNormalized(double u)
-        {
-            if (u < 0 || u > 1)
-            {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between 0.0 and 1.0.");
-            }
-            return this.BasisCurve.PointAt(this.Domain.Min + u * this.Domain.Length);
-        }
-
-        /// <summary>
         /// Get a transform at a parameter on the elliptical arc.
         /// </summary>
         /// <param name="u">The parameter at which to find a transform.</param>
