@@ -57,5 +57,12 @@ namespace Elements.Geometry.Interfaces
         /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
         /// <returns>A collection of parameter values.</returns>
         double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+
+        /// <summary>
+        /// Get the frame from the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
+        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
+        Transform TransformAtNormalized(double u);
     }
 }

@@ -477,16 +477,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the frame from the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        public override Transform TransformAtNormalized(double u)
-        {
-            return TransformAt(this.Domain.Min + u * Domain.Length);
-        }
-
-        /// <summary>
         /// Create a polyline through a set of points along the curve.
         /// </summary>
         /// <param name="divisions">The number of divisions of the curve.</param>

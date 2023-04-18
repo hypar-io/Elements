@@ -25,7 +25,7 @@ namespace Elements.Geometry
 
     /// <summary>
     /// A Bezier curve.
-    /// Parameterization of the curve is 0->1.
+    /// Parameterization of the curve is 0 -> 1.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
@@ -94,6 +94,26 @@ namespace Elements.Geometry
                 last = pt;
             }
             return length;
+        }
+
+        /// <summary>
+        /// Calculate the length of the bezier between start and end parameters.
+        /// </summary>
+        /// <returns>The length of the bezier between start and end.</returns>
+        public override double Length(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            // TODO: We use max value here so that the calculation will continue
+            // until at least the end of the curve. This is not a nice solution.
+            return ArcLengthUntil(start, double.MaxValue, out end);
         }
 
         private double ArcLengthUntil(double start, double distance, out double end)

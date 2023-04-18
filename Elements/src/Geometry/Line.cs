@@ -9,7 +9,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A line segment.
-    /// Parameterization of the line is  0(start)->length(end)
+    /// Parameterization of the line is  0 (start) -> length (end)
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
@@ -107,16 +107,6 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
             }
             return this.BasisCurve.TransformAt(u);
-        }
-
-        /// <summary>
-        /// Get the frame from the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        public override Transform TransformAtNormalized(double u)
-        {
-            return TransformAt(u * Length());
         }
 
         /// <summary>
