@@ -308,7 +308,9 @@ namespace Elements.Geometry
                 // If the distances are equal and non-zero, the rays are parallel.
                 var d = p2.DistanceTo(this);
                 var dd = p1.DistanceTo(ray);
-                if (d.ApproximatelyEquals(dd) && !d.ApproximatelyEquals(0))
+                if ((Double.IsInfinity(d) && Double.IsInfinity(dd))
+                    || d.ApproximatelyEquals(dd)
+                    && !d.ApproximatelyEquals(0))
                 {
                     // Parallel
                     result = default;
