@@ -130,6 +130,9 @@ namespace Elements.Tests
             var sw = System.Diagnostics.Stopwatch.StartNew();
             model.ToGlTF($"./models/{nameof(InstanceContentElement)}.glb");
             var firstRun = sw.Elapsed.TotalSeconds;
+            // TODO we want to test the glTF that are created for this and many other tests.
+            // After we migrate to .NET 6 we can use this library, and probably add it to the Model testing wrapper.
+            // Library URL: https://www.nuget.org/packages/GltfValidator/
             sw.Restart();
             model.ToGlTF($"./models/{nameof(InstanceContentElement)}-2.glb");
             var secondRun = sw.Elapsed.TotalSeconds;
