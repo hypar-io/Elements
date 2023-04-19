@@ -13,13 +13,6 @@ namespace Elements.Geometry.Interfaces
         Vector3 PointAt(double u);
 
         /// <summary>
-        /// Get a point along the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The point on the curve.</returns>
-        Vector3 PointAtNormalized(double u);
-
-        /// <summary>
         /// Get the frame from the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the curve.</param>

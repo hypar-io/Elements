@@ -128,7 +128,7 @@ namespace Elements.Geometry
                 throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
             }
 
-            return TransformAt(this.Domain.Min + u * Domain.Length);
+            return TransformAt(u.MapToDomain(this.Domain));
         }
 
         /// <summary>
@@ -136,13 +136,13 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
         /// <returns>A point on the curve at parameter u.</returns>
-        public override Vector3 PointAtNormalized(double u)
+        public Vector3 PointAtNormalized(double u)
         {
             if (u < 0 || u > 1)
             {
                 throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
             }
-            return this.PointAt(this.Domain.Min + u * this.Domain.Length);
+            return this.PointAt(u.MapToDomain(this.Domain));
         }
 
         /// <summary>

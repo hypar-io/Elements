@@ -1,4 +1,3 @@
-using System;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -22,13 +21,6 @@ namespace Elements.Geometry
         /// <param name="u">A parameter on the curve between domain.min and domain.max</param>
         /// <returns>A point on the curve at parameter u.</returns>
         public abstract Vector3 PointAt(double u);
-
-        /// <summary>
-        /// Get a point along the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>A point on the curve at parameter u.</returns>
-        public abstract Vector3 PointAtNormalized(double u);
 
         /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose

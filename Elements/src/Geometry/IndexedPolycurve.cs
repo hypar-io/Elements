@@ -86,10 +86,40 @@ namespace Elements.Geometry
                 }
             }
 
+            this.Domain = new Domain1d(0, 1);
             this.Vertices = vertices;
             this.CurveIndices = curveIndices;
-            this.Domain = new Domain1d(0, 1);
             UpdateCurves();
+            _bounds = Bounds();
+        }
+
+        private IndexedPolycurve(List<BoundedCurve> curves, Transform transform)
+        {
+            this.Domain = new Domain1d(0, 1);
+            var index = 0;
+            foreach (var curve in curves)
+            {
+                if (curve is Line)
+                {
+                    Vertices.Add(transform.OfPoint(curve.Start));
+                    // Vertices.Add(transform.OfPoint(curve.End));
+                    CurveIndices.Add(new[] { index, index + 1 });
+                    index += 2;
+                }
+                else if (curve is Arc)
+                {
+                    Vertices.Add(transform.OfPoint(curve.Start));
+                    Vertices.Add(transform.OfPoint(curve.Mid()));
+                    // Vertices.Add(transform.OfPoint(curve.End));
+                    CurveIndices.Add(new[] { index, index + 1, index + 2 });
+                    index += 3;
+                }
+                else
+                {
+                    throw new ArgumentException("curves", $"A curve of type {curve.GetType()} cannot be used to create a polycurve.");
+                }
+            }
+            _curves = curves;
             _bounds = Bounds();
         }
 
@@ -117,9 +147,33 @@ namespace Elements.Geometry
             return new BBox3(this.Vertices);
         }
 
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <returns>A collection of parameter values.</returns>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
-            throw new System.NotImplementedException();
+            var totalLength = Length();
+            var currentLength = 0.0;
+            var parameters = new List<double>();
+            foreach (var curve in _curves)
+            {
+                var startParam = currentLength / totalLength;
+                var localLength = curve.Length();
+                var endParam = (currentLength + localLength) / totalLength;
+                var localParameters = curve.GetSubdivisionParameters();
+                var localDomain = new Domain1d(startParam, endParam);
+                foreach (var localParameter in localParameters)
+                {
+                    // The curve domain may be 0->2Pi. We need to map that 
+                    // into a domain that is a subsection of the larger domain.
+                    parameters.Add(localParameter.MapBetweenDomains(curve.Domain, localDomain));
+                }
+                currentLength += localLength;
+            }
+            return parameters.ToArray();
         }
 
         /// <summary>
@@ -136,6 +190,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculate the length of the polycurve between two parameters.
+        /// </summary>
+        public override double Length(double start, double end)
+        {
+            PointAtInternal(start, out var startCurveIndex);
+            return end - start;
+        }
+
+        /// <summary>
         /// Get the parameter at a distance from the start parameter along the curve.
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
@@ -147,17 +210,38 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var t = 0.0;
+            var traversedLength = 0.0;
             var totalLength = this.Length();
+            var trackingLength = 0.0;
             foreach (var curve in this)
             {
-                var end = t + curve.Length() / totalLength;
-                if (t <= start && end >= start)
+                var currentLength = curve.Length();
+
+                // Create normalized start and end parameters
+                // for the start and end of this curve, relative
+                // to the larger curve.
+                var currentCurveStartParameter = traversedLength / totalLength;
+                var currentCurveEndParameter = (traversedLength + currentLength) / totalLength;
+
+                // Check if the start parameter is within the 
+                // current curve.
+                if (currentCurveStartParameter <= start && start <= currentCurveEndParameter)
                 {
-                    var subT = u - t;
-                    return curve.PointAtNormalized(subT);
+                    var startInLocalDomain = currentCurveStartParameter.MapToDomain(Domain);
+                    var distanceToEnd = Length(startInLocalDomain, curve.Domain.Max);
+
+                    if (trackingLength + distanceToEnd > distance)
+                    {
+                        // Find the parameter at exactly the distance.
+                        return curve.ParameterAtDistanceFromParameter(startInLocalDomain, distance - trackingLength);
+                    }
+
+                    // Add the distance to the end to the tracking length.
+                    // Continue iterating through curves.
+                    trackingLength += distanceToEnd;
                 }
-                t += end - t;
+
+                traversedLength += currentLength;
             }
             return 1.0;
         }
@@ -175,16 +259,6 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point on the polycurve at parameter u.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        public override Vector3 PointAtNormalized(double u)
-        {
-            return PointAtInternal(u, out _);
-        }
-
-        /// <summary>
-        /// Get a point on the polycurve at parameter u.
-        /// </summary>
         /// <param name="u">A value between 0.0 and length.</param>
         /// <param name="curveIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
@@ -192,7 +266,7 @@ namespace Elements.Geometry
         {
             if (!Domain.Includes(u, true))
             {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new Exception($"The parameter {u} must be between {Domain.Min} and {Domain.Max}.");
             }
 
             // Because a polycurve is a combination of line and arc
@@ -243,9 +317,13 @@ namespace Elements.Geometry
             return TransformAt(1);
         }
 
+        /// <summary>
+        /// Create new polycurve transformed by transform.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
         {
-            throw new System.NotImplementedException();
+            return new IndexedPolycurve(_curves, transform);
         }
 
         /// <summary>
