@@ -26,6 +26,9 @@ namespace Elements.Tests
             };
             var pc = new IndexedPolycurve(vertices, indices);
             Model.AddElement(new ModelCurve(pc));
+
+            var t = pc.TransformAt(1.5);
+            Model.AddElements(t.ToModelCurves());
         }
     }
 }

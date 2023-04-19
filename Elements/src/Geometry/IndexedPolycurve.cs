@@ -170,7 +170,13 @@ namespace Elements.Geometry
                 {
                     // The curve domain may be 0->2Pi. We need to map that 
                     // into a domain that is a subsection of the larger domain.
-                    parameters.Add(localParameter.MapBetweenDomains(curve.Domain, localDomain));
+                    var remapped = localParameter.MapBetweenDomains(curve.Domain, localDomain);
+
+                    // De-duplicate the end vertices.
+                    if (!parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
+                    {
+                        parameters.Add(remapped);
+                    }
                 }
             }
             return parameters.ToArray();
