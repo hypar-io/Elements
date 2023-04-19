@@ -45,6 +45,12 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The curves of the polycurve.
+        /// </summary>
+        [JsonIgnore]
+        public List<BoundedCurve> Curves => _curves;
+
+        /// <summary>
         /// An optional collection of collections of indices of polycurve segments.
         /// Line segments are represented with two indices.
         /// Arc segments are represented with three indices.
@@ -71,6 +77,7 @@ namespace Elements.Geometry
             this.Vertices = vertices;
             this.Domain = new Domain1d(0, this.Vertices.Count - 1);
             this.CurveIndices = curveIndices;
+            _bounds = Bounds();
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
@@ -90,13 +97,22 @@ namespace Elements.Geometry
                 }
             }
 
-            UpdateCurves();
-            _bounds = Bounds();
+            // This can be null if we're creating a poyline.
+            if (curveIndices != null)
+            {
+                UpdateCurves();
+            }
         }
 
-        public IndexedPolycurve(List<BoundedCurve> curves, Transform transform)
+        public IndexedPolycurve(List<BoundedCurve> curves, Transform transform = null)
         {
             var index = 0;
+            if (transform == null)
+            {
+                transform = new Transform();
+            }
+
+            CurveIndices = new List<IList<int>>();
             foreach (var curve in curves)
             {
                 if (curve is Line)
@@ -166,17 +182,19 @@ namespace Elements.Geometry
                 var curve = _curves[i];
                 var localParameters = curve.GetSubdivisionParameters();
                 var localDomain = new Domain1d(startParam, endParam);
-                foreach (var localParameter in localParameters)
+                for (var j = 0; j < localParameters.Length; j++)
                 {
+                    var localParameter = localParameters[j];
                     // The curve domain may be 0->2Pi. We need to map that 
                     // into a domain that is a subsection of the larger domain.
                     var remapped = localParameter.MapBetweenDomains(curve.Domain, localDomain);
 
                     // De-duplicate the end vertices.
-                    if (!parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
+                    if (parameters.Count > 0 && parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
                     {
-                        parameters.Add(remapped);
+                        continue;
                     }
+                    parameters.Add(remapped);
                 }
             }
             return parameters.ToArray();
@@ -341,6 +359,14 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return string.Join<Vector3>(",", this.Vertices);
+        }
+
+        /// <summary>
+        /// Create a polygon from this polycurve.
+        /// </summary>
+        public Polygon ToPolygon()
+        {
+            return new Polygon(RenderVertices());
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
