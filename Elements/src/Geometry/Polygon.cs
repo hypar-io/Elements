@@ -2171,29 +2171,25 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="radius">The fillet radius.</param>
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
-        public Contour Fillet(double radius)
+        public IndexedPolycurve Fillet(double radius)
         {
             var curves = new List<BoundedCurve>();
             var segments = this.Segments();
-            var arcs = new List<Arc>();
 
             for (var i = 0; i < segments.Length; i++)
             {
                 var a = segments[i];
                 var b = segments[i == segments.Length - 1 ? 0 : i + 1];
-                var arc = a.Fillet(b, 0.5);
-                arcs.Add(arc);
+                var arc = b.Fillet(a, 0.5);
+                if (i > 0)
+                {
+                    curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
+                }
+                curves.Add(arc);
             }
+            curves.Add(new Line(curves[curves.Count - 1].End, curves[0].Start));
 
-            for (var i = 0; i < arcs.Count; i++)
-            {
-                var a = arcs[i];
-                var b = arcs[i == arcs.Count - 1 ? 0 : i + 1];
-                curves.Add(new Line(a.Start, b.End));
-                curves.Add(b);
-            }
-
-            return new Contour(curves);
+            return new IndexedPolycurve(curves);
         }
 
         /// <summary>

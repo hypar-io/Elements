@@ -10,9 +10,8 @@ namespace Elements.Tests
         {
             Name = nameof(IndexedPolycurve);
 
-            var line = new Line(Vector3.Origin, new Vector3(0, 5, 0));
-            var line1 = new Line(new Vector3(5, 5, 0), new Vector3(5, 0, 0));
             var arc = new Arc(new Vector3(2.5, 5), 2.5, 0, 180);
+
             var a = new Vector3(5, 0, 0);
             var b = new Vector3(5, 5, 0);
             var c = arc.Mid();
@@ -24,11 +23,31 @@ namespace Elements.Tests
                 new[]{1,2,3},
                 new[]{3,4}
             };
+
             var pc = new IndexedPolycurve(vertices, indices);
             Model.AddElement(new ModelCurve(pc));
 
             var t = pc.TransformAt(1.5);
             Model.AddElements(t.ToModelCurves());
+        }
+
+        [Fact]
+        public void PolyCurveFromFillet()
+        {
+            Name = nameof(PolyCurveFromFillet);
+
+            var shape3 = Polygon.Star(5, 3, 5);
+            var contour3 = shape3.Fillet(0.5);
+            Model.AddElement(new ModelCurve(contour3));
+
+            foreach (var curve in contour3.Curves)
+            {
+                if (curve is Arc)
+                {
+                    var arc = (Arc)curve;
+                    Model.AddElements(arc.BasisCurve.Transform.ToModelCurves());
+                }
+            }
         }
     }
 }
