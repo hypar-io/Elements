@@ -8,7 +8,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A curves made up of a collection of line and arc segments.
-    /// Parameterization of the curve is 0->1.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
@@ -68,6 +68,10 @@ namespace Elements.Geometry
                                 IList<IList<int>> curveIndices = null,
                                 bool disableValidation = false)
         {
+            this.Vertices = vertices;
+            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
+            this.CurveIndices = curveIndices;
+
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
                 ValidateVertices();
@@ -86,16 +90,12 @@ namespace Elements.Geometry
                 }
             }
 
-            this.Domain = new Domain1d(0, 1);
-            this.Vertices = vertices;
-            this.CurveIndices = curveIndices;
             UpdateCurves();
             _bounds = Bounds();
         }
 
-        private IndexedPolycurve(List<BoundedCurve> curves, Transform transform)
+        public IndexedPolycurve(List<BoundedCurve> curves, Transform transform)
         {
-            this.Domain = new Domain1d(0, 1);
             var index = 0;
             foreach (var curve in curves)
             {
@@ -121,10 +121,13 @@ namespace Elements.Geometry
             }
             _curves = curves;
             _bounds = Bounds();
+            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
         }
 
         private void UpdateCurves()
         {
+            _curves = new List<BoundedCurve>();
+
             foreach (var curveIndexSet in this.CurveIndices)
             {
                 // Construct a curve
@@ -155,14 +158,12 @@ namespace Elements.Geometry
         /// <returns>A collection of parameter values.</returns>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
         {
-            var totalLength = Length();
-            var currentLength = 0.0;
             var parameters = new List<double>();
-            foreach (var curve in _curves)
+            for (var i = 0; i < _curves.Count; i++)
             {
-                var startParam = currentLength / totalLength;
-                var localLength = curve.Length();
-                var endParam = (currentLength + localLength) / totalLength;
+                var startParam = i;
+                var endParam = i + 1;
+                var curve = _curves[i];
                 var localParameters = curve.GetSubdivisionParameters();
                 var localDomain = new Domain1d(startParam, endParam);
                 foreach (var localParameter in localParameters)
@@ -171,7 +172,6 @@ namespace Elements.Geometry
                     // into a domain that is a subsection of the larger domain.
                     parameters.Add(localParameter.MapBetweenDomains(curve.Domain, localDomain));
                 }
-                currentLength += localLength;
             }
             return parameters.ToArray();
         }
@@ -210,38 +210,26 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var traversedLength = 0.0;
-            var totalLength = this.Length();
+            var startCurveIndex = (int)Math.Floor(start);
             var trackingLength = 0.0;
-            foreach (var curve in this)
+
+            for (var i = startCurveIndex; i < _curves.Count; i++)
             {
-                var currentLength = curve.Length();
+                var curve = _curves[i];
 
-                // Create normalized start and end parameters
-                // for the start and end of this curve, relative
-                // to the larger curve.
-                var currentCurveStartParameter = traversedLength / totalLength;
-                var currentCurveEndParameter = (traversedLength + currentLength) / totalLength;
-
-                // Check if the start parameter is within the 
-                // current curve.
-                if (currentCurveStartParameter <= start && start <= currentCurveEndParameter)
+                // The start parameter will either be the partial
+                // parameter, because this is the curve on which 
+                // the start parameter is located, or it will be 0.0.
+                var normalizedStartParameter = i == startCurveIndex ? start - i : 0.0;
+                var localStartParameter = normalizedStartParameter.MapToDomain(curve.Domain);
+                var distanceToEndOfCurve = Length(localStartParameter, curve.Domain.Max);
+                if (trackingLength + distanceToEndOfCurve > distance)
                 {
-                    var startInLocalDomain = currentCurveStartParameter.MapToDomain(Domain);
-                    var distanceToEnd = Length(startInLocalDomain, curve.Domain.Max);
-
-                    if (trackingLength + distanceToEnd > distance)
-                    {
-                        // Find the parameter at exactly the distance.
-                        return curve.ParameterAtDistanceFromParameter(startInLocalDomain, distance - trackingLength);
-                    }
-
-                    // Add the distance to the end to the tracking length.
-                    // Continue iterating through curves.
-                    trackingLength += distanceToEnd;
+                    // Find the parameter at exactly the distance.
+                    return curve.ParameterAtDistanceFromParameter(localStartParameter, distance - trackingLength);
                 }
 
-                traversedLength += currentLength;
+                trackingLength += distanceToEndOfCurve;
             }
             return 1.0;
         }
@@ -269,25 +257,13 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            // Because a polycurve is a combination of line and arc
-            // segments, the parameterization has to be 0->1. This requires
-            // that finding the point at a specific parameter operate 
-            // in the domain of each sub curve.
-            var t = 0.0;
-            curveIndex = 0;
-            var totalLength = this.Length();
-            foreach (var curve in this)
+            curveIndex = (int)Math.Floor(u);
+            if (curveIndex == _curves.Count)
             {
-                var end = t + curve.Length() / totalLength;
-                if (t <= u && end >= u)
-                {
-                    var subT = u - t;
-                    return curve.PointAtNormalized(subT);
-                }
-                curveIndex++;
-                t += end - t;
+                return this.End;
             }
-            return this.End;
+            var t = u - curveIndex;
+            return _curves[curveIndex].PointAtNormalized(t);
         }
 
         /// <summary>
@@ -299,22 +275,12 @@ namespace Elements.Geometry
         {
             if (!Domain.Includes(u, true))
             {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new Exception($"The parameter {u} must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var t = 0.0;
-            var totalLength = this.Length();
-            foreach (var curve in this)
-            {
-                var end = t + curve.Length() / totalLength;
-                if (t <= u && end >= u)
-                {
-                    var subT = u - t;
-                    return curve.TransformAtNormalized(subT);
-                }
-                t += end - t;
-            }
-            return TransformAt(1);
+            var curveIndex = (int)Math.Floor(u);
+            var t = u - curveIndex;
+            return _curves[curveIndex].TransformAtNormalized(t);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Elements.Geometry
         /// The minimum chord length allowed for subdivision of the curve.
         /// A lower MinimumChordLength results in smoother curves.
         /// </summary>
-        public static double MinimumChordLength = 0.01;
+        public static double MinimumChordLength = 0.1;
 
         /// <summary>
         /// Get a point along the curve at parameter u.
