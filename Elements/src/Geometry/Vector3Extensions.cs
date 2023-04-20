@@ -19,7 +19,8 @@ namespace Elements.Geometry
 
             // Choose the first three non-collinear points
             var p0 = points[0];
-            int p1Index = -1, p2Index = -1;
+            int p1Index = -1;
+            int p2Index = -1;
             for (int i = 1; i < points.Count; i++)
             {
                 if (p1Index == -1 && (points[i] - p0).Length() > Vector3.EPSILON)
