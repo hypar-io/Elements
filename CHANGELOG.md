@@ -33,6 +33,7 @@
 - Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
 - #865
 - `Network`: intersections are not created for some E-shape cases
+- Fix the polygon centroid calculation to remove collinear vertices.
 
 ## 1.6.0
 
@@ -105,7 +106,6 @@
 - Adding the first vertex to a mesh with `merge: true` would throw an exception, this is fixed.
 - Handle quotes in string literals for content catalog code generation by doubling them up.
 - Fix `AdaptiveGrid.TryGetVertexIndex` returning `false` for existing vertex if other vertex has similar X or Y coordinate.
-- Fix he polygon centroid calculation to remove collinear vertices.
 
 ## 1.3.0
 
