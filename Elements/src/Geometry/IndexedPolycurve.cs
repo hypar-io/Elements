@@ -10,6 +10,7 @@ namespace Elements.Geometry
     /// A curves made up of a collection of line and arc segments.
     /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
+    [JsonObject]
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
         /// <summary>
@@ -66,15 +67,35 @@ namespace Elements.Geometry
         /// <summary>
         /// Create an indexed polycurve.
         /// </summary>
+        public IndexedPolycurve()
+        {
+
+        }
+
+        /// <summary>
+        /// Create an indexed polycurve.
+        /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <param name="curveIndices">A collection of collections of indices.</param>
+        /// <param name="transform">An optional transform to apply to each vertex.</param>
         /// <param name="disableValidation"></param>
-        [JsonConstructor]
         public IndexedPolycurve(IList<Vector3> vertices,
                                 IList<IList<int>> curveIndices = null,
+                                Transform transform = null,
                                 bool disableValidation = false)
         {
-            this.Vertices = vertices;
+            if (transform != null)
+            {
+                foreach (var v in vertices)
+                {
+                    Vertices.Add(transform.OfPoint(v));
+                }
+            }
+            else
+            {
+                this.Vertices = vertices;
+            }
+
             this.Domain = new Domain1d(0, this.Vertices.Count - 1);
             this.CurveIndices = curveIndices;
             _bounds = Bounds();
@@ -100,34 +121,63 @@ namespace Elements.Geometry
             // This can be null if we're creating a poyline.
             if (curveIndices != null)
             {
-                UpdateCurves();
+                _curves = CreateCurves(CurveIndices, Vertices);
             }
         }
 
+        /// <summary>
+        /// Create an indexed polycurve.
+        /// </summary>
+        /// <param name="curves">A collection of bounded curves.</param>
+        /// <param name="transform">An optional transform to apply to the vertices.</param>
         public IndexedPolycurve(List<BoundedCurve> curves, Transform transform = null)
         {
-            var index = 0;
-            if (transform == null)
+            if (transform != null)
             {
-                transform = new Transform();
+                var transformedCurves = new List<BoundedCurve>();
+                {
+                    foreach (var curve in curves)
+                    {
+                        transformedCurves.Add((BoundedCurve)curve.Transformed(transform));
+                    }
+                }
+                _curves = transformedCurves;
+            }
+            else
+            {
+                _curves = curves;
             }
 
-            CurveIndices = new List<IList<int>>();
+            var result = CreateVerticesAndCurveIndices(curves, transform);
+            CurveIndices = result.Item1;
+            Vertices = result.Item2;
+
+            _bounds = Bounds();
+            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
+        }
+
+        private static (List<IList<int>>, List<Vector3>) CreateVerticesAndCurveIndices(IEnumerable<BoundedCurve> curves, Transform transform = null)
+        {
+            var index = 0;
+            var curveIndices = new List<IList<int>>();
+            var vertices = new List<Vector3>();
+
+            Vector3 last = default;
             foreach (var curve in curves)
             {
                 if (curve is Line)
                 {
-                    Vertices.Add(transform.OfPoint(curve.Start));
-                    // Vertices.Add(transform.OfPoint(curve.End));
-                    CurveIndices.Add(new[] { index, index + 1 });
+                    vertices.Add(curve.Start);
+                    last = curve.End;
+                    curveIndices.Add(new[] { index, index + 1 });
                     index += 2;
                 }
                 else if (curve is Arc)
                 {
-                    Vertices.Add(transform.OfPoint(curve.Start));
-                    Vertices.Add(transform.OfPoint(curve.Mid()));
-                    // Vertices.Add(transform.OfPoint(curve.End));
-                    CurveIndices.Add(new[] { index, index + 1, index + 2 });
+                    vertices.Add(curve.Start);
+                    vertices.Add(curve.Mid());
+                    last = curve.End;
+                    curveIndices.Add(new[] { index, index + 1, index + 2 });
                     index += 3;
                 }
                 else
@@ -135,27 +185,39 @@ namespace Elements.Geometry
                     throw new ArgumentException("curves", $"A curve of type {curve.GetType()} cannot be used to create a polycurve.");
                 }
             }
-            _curves = curves;
-            _bounds = Bounds();
-            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
+            vertices.Add(last);
+
+
+            if (transform != null)
+            {
+                var transformedVertices = new List<Vector3>();
+                foreach (var v in vertices)
+                {
+                    transformedVertices.Add(transform.OfPoint(v));
+                }
+                vertices = transformedVertices;
+            }
+            return (curveIndices, vertices);
         }
 
-        private void UpdateCurves()
+        private static List<BoundedCurve> CreateCurves(IList<IList<int>> curveIndices, IList<Vector3> vertices)
         {
-            _curves = new List<BoundedCurve>();
+            var curves = new List<BoundedCurve>();
 
-            foreach (var curveIndexSet in this.CurveIndices)
+            foreach (var curveIndexSet in curveIndices)
             {
                 // Construct a curve
                 if (curveIndexSet.Count == 2)
                 {
-                    _curves.Add(new Line(Vertices[curveIndexSet[0]], Vertices[curveIndexSet[1]]));
+                    curves.Add(new Line(vertices[curveIndexSet[0]], vertices[curveIndexSet[1]]));
                 }
                 else if (curveIndexSet.Count == 3)
                 {
-                    _curves.Add(Arc.ByThreePoints(this.Vertices[curveIndexSet[0]], this.Vertices[curveIndexSet[1]], this.Vertices[curveIndexSet[2]]));
+                    curves.Add(Arc.ByThreePoints(vertices[curveIndexSet[0]], vertices[curveIndexSet[1]], vertices[curveIndexSet[2]]));
                 }
             }
+
+            return curves;
         }
 
         /// <summary>
@@ -312,6 +374,15 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
+        {
+            return new IndexedPolycurve(_curves, transform);
+        }
+
+        /// <summary>
+        /// Create new polycurve transformed by transform.
+        /// </summary>
+        /// <param name="transform">The transform to apply.</param>
+        public IndexedPolycurve TransformedPolycurve(Transform transform)
         {
             return new IndexedPolycurve(_curves, transform);
         }

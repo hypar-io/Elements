@@ -29,6 +29,9 @@ namespace Elements.Tests
 
             var t = pc.TransformAt(1.5);
             Model.AddElements(t.ToModelCurves());
+
+            var t1 = new Transform(Vector3.Origin, Vector3.XAxis);
+            Model.AddElement(new ModelCurve(pc.TransformedPolycurve(t1)));
         }
 
         [Fact]
