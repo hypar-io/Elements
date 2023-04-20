@@ -15,26 +15,27 @@ namespace Elements.Geometry
         /// <param name="points"></param>
         public static bool AreCoplanar(this IList<Vector3> points)
         {
-            if (points.Count < 3) return true;
+            if (points.Count < 4) return true; // all sets of less than four points are coplanar
 
-            //TODO: https://github.com/hypar-io/sdk/issues/54
-            // Ensure that all triple products are equal to 0.
-            // a.Dot(b.Cross(c));
-            var a = points[0];
-            var b = points[1];
-            var c = points[2];
-            var ab = b - a;
-            var ac = c - a;
-            for (var i = 3; i < points.Count; i++)
+            // Choose the first three non-collinear points
+            var p0 = points[0];
+            var p1 = points.FirstOrDefault(p => (p - p0).Length() > Vector3.EPSILON);
+            if (p1 == default) return true; // All points are coincident
+            var p2 = points.FirstOrDefault(p => (p1 - p0).Cross(p - p0).Length() > Vector3.EPSILON);
+            if (p2 == default) return true; // All points are collinear
+
+            var normal = (p1 - p0).Cross(p2 - p0).Unitized();
+
+            for (int i = 3; i < points.Count; i++)
             {
-                var d = points[i];
-                var cd = d - a;
-                var tp = ab.Dot(ac.Cross(cd).Unitized());
-                if (Math.Abs(tp) > Vector3.EPSILON)
+                var pi = points[i];
+                var dot = normal.Dot(pi - p0);
+                if (Math.Abs(dot) > Vector3.EPSILON)
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -80,8 +81,8 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Return an approximate fit line through a set of points. 
-        /// Not intended for statistical regression purposes. 
+        /// Return an approximate fit line through a set of points.
+        /// Not intended for statistical regression purposes.
         /// Note that the line is unit length: it shouldn't be expected
         /// to span the length of the points.
         /// </summary>
@@ -251,7 +252,7 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
-        
+
         /// <summary>
         /// De-duplicate a collection of Vectors, such that no two vectors in the result are within tolerance of each other.
         /// </summary>
@@ -265,7 +266,7 @@ namespace Elements.Geometry
             {
                 if (output.Any(x => x.IsAlmostEqualTo(vector, tolerance)))
                 {
-                    continue;;
+                    continue; ;
                 }
                 output.Add(vector);
             }
