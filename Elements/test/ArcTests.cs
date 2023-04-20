@@ -279,5 +279,43 @@ namespace Hypar.Tests
             var lastBeam = new Beam(new Line(allPoints[0], allPoints[1]), profile);
             this.Model.AddElement(lastBeam);
         }
+
+        [Fact]
+        public void PointAtNormalizedReturnsSameValue()
+        {
+            var line = ModelTest.TestLine;
+            Assert.Equal(line.PointAt(line.Domain.Mid()), line.PointAtNormalized(0.5));
+
+            var arc = ModelTest.TestArc;
+            Assert.Equal(arc.PointAt(arc.Domain.Mid()), arc.PointAtNormalized(0.5));
+
+            var ellipticalArc = ModelTest.TestEllipticalArc;
+            Assert.Equal(ellipticalArc.PointAt(ellipticalArc.Domain.Mid()), ellipticalArc.PointAtNormalized(0.5));
+
+            var polyline = ModelTest.TestPolyline;
+            Assert.Equal(polyline.PointAt(polyline.Domain.Mid()), polyline.PointAtNormalized(0.5));
+
+            var polygon = ModelTest.TestPolygon;
+            Assert.Equal(polygon.PointAt(polygon.Domain.Mid()), polygon.PointAtNormalized(0.5));
+        }
+
+        [Fact]
+        public void TransformAtNormalizedReturnsSameValue()
+        {
+            var line = ModelTest.TestLine;
+            Assert.Equal(line.TransformAt(line.Domain.Mid()), line.TransformAtNormalized(0.5));
+
+            var arc = ModelTest.TestArc;
+            Assert.Equal(arc.TransformAt(arc.Domain.Mid()), arc.TransformAtNormalized(0.5));
+
+            var ellipticalArc = ModelTest.TestEllipticalArc;
+            Assert.Equal(ellipticalArc.TransformAt(ellipticalArc.Domain.Mid()), ellipticalArc.TransformAtNormalized(0.5));
+
+            var polyline = ModelTest.TestPolyline;
+            Assert.Equal(polyline.TransformAt(polyline.Domain.Mid()), polyline.TransformAtNormalized(0.5));
+
+            var polygon = ModelTest.TestPolygon;
+            Assert.Equal(polygon.TransformAt(polygon.Domain.Mid()), polygon.TransformAtNormalized(0.5));
+        }
     }
 }
