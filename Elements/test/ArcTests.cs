@@ -301,9 +301,26 @@ namespace Hypar.Tests
 
         private void TestPointAtNormalized(BoundedCurve curve)
         {
+            var testParam = 0.24;
+            var equivalentTestParam = 0.0;
+
+            if (curve is Line || curve is Polyline)
+            {
+                equivalentTestParam = curve.Length() * testParam;
+            }
+            else if (curve is Arc || curve is EllipticalArc)
+            {
+                equivalentTestParam = curve.Domain.Min + curve.Domain.Length * testParam;
+            }
+
             Assert.Equal(curve.PointAt(curve.Domain.Mid()), curve.PointAtNormalized(0.5));
             Assert.Equal(curve.PointAt(curve.Domain.Min), curve.PointAtNormalized(0.0));
             Assert.Equal(curve.PointAt(curve.Domain.Max), curve.PointAtNormalized(1.0));
+
+            // The start, end, and mid points are the same, but we also want to ensure
+            // that the curve didn't flip directions as well. We do this by testing
+            // another random parameter. 
+            Assert.Equal(curve.PointAt(equivalentTestParam), curve.PointAtNormalized(testParam));
         }
 
         [Fact]
