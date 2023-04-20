@@ -19,14 +19,30 @@ namespace Elements.Geometry
 
             // Choose the first three non-collinear points
             var p0 = points[0];
-            var p1 = points.FirstOrDefault(p => (p - p0).Length() > Vector3.EPSILON);
-            if (p1 == default) return true; // All points are coincident
-            var p2 = points.FirstOrDefault(p => (p1 - p0).Cross(p - p0).Length() > Vector3.EPSILON);
-            if (p2 == default) return true; // All points are collinear
+            int p1Index = -1, p2Index = -1;
+            for (int i = 1; i < points.Count; i++)
+            {
+                if (p1Index == -1 && (points[i] - p0).Length() > Vector3.EPSILON)
+                {
+                    p1Index = i;
+                }
+                else if (p1Index != -1 && (points[p1Index] - p0).Cross(points[i] - p0).Length() > Vector3.EPSILON)
+                {
+                    p2Index = i;
+                    break;
+                }
+            }
 
-            var normal = (p1 - p0).Cross(p2 - p0).Unitized();
+            if (p1Index == -1) return true; // All points are coincident
+            if (p2Index == -1) return true; // All points are collinear
 
-            for (int i = 3; i < points.Count; i++)
+            if (p2Index == points.Count - 1) // p2 is the last point
+            {
+                return true;
+            }
+            var normal = (points[p1Index] - p0).Cross(points[p2Index] - p0).Unitized();
+
+            for (int i = p2Index + 1; i < points.Count; i++)
             {
                 var pi = points[i];
                 var dot = normal.Dot(pi - p0);
