@@ -124,7 +124,7 @@ namespace Elements.Geometry
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>
-        /// <param name="u">The transform at a parameter along the curve between 0.0 and 1.0.</param>
+        /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
         /// <returns>A transform.</returns>
         public Transform TransformAtNormalized(double u)
         {
