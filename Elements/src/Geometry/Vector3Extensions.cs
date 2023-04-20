@@ -283,7 +283,7 @@ namespace Elements.Geometry
             {
                 if (output.Any(x => x.IsAlmostEqualTo(vector, tolerance)))
                 {
-                    continue; ;
+                    continue;
                 }
                 output.Add(vector);
             }
