@@ -284,38 +284,52 @@ namespace Hypar.Tests
         public void PointAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
-            Assert.Equal(line.PointAt(line.Domain.Mid()), line.PointAtNormalized(0.5));
+            TestPointAtNormalized(line);
 
             var arc = ModelTest.TestArc;
-            Assert.Equal(arc.PointAt(arc.Domain.Mid()), arc.PointAtNormalized(0.5));
+            TestPointAtNormalized(arc);
 
             var ellipticalArc = ModelTest.TestEllipticalArc;
-            Assert.Equal(ellipticalArc.PointAt(ellipticalArc.Domain.Mid()), ellipticalArc.PointAtNormalized(0.5));
+            TestPointAtNormalized(ellipticalArc);
 
             var polyline = ModelTest.TestPolyline;
-            Assert.Equal(polyline.PointAt(polyline.Domain.Mid()), polyline.PointAtNormalized(0.5));
+            TestPointAtNormalized(polyline);
 
             var polygon = ModelTest.TestPolygon;
-            Assert.Equal(polygon.PointAt(polygon.Domain.Mid()), polygon.PointAtNormalized(0.5));
+            TestPointAtNormalized(polygon);
+        }
+
+        private void TestPointAtNormalized(BoundedCurve curve)
+        {
+            Assert.Equal(curve.PointAt(curve.Domain.Mid()), curve.PointAtNormalized(0.5));
+            Assert.Equal(curve.PointAt(curve.Domain.Min), curve.PointAtNormalized(0.0));
+            Assert.Equal(curve.PointAt(curve.Domain.Max), curve.PointAtNormalized(1.0));
         }
 
         [Fact]
         public void TransformAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
-            Assert.Equal(line.TransformAt(line.Domain.Mid()), line.TransformAtNormalized(0.5));
+            TestTransformAtNormalized(line);
 
             var arc = ModelTest.TestArc;
-            Assert.Equal(arc.TransformAt(arc.Domain.Mid()), arc.TransformAtNormalized(0.5));
+            TestTransformAtNormalized(arc);
 
             var ellipticalArc = ModelTest.TestEllipticalArc;
-            Assert.Equal(ellipticalArc.TransformAt(ellipticalArc.Domain.Mid()), ellipticalArc.TransformAtNormalized(0.5));
+            TestTransformAtNormalized(ellipticalArc);
 
             var polyline = ModelTest.TestPolyline;
-            Assert.Equal(polyline.TransformAt(polyline.Domain.Mid()), polyline.TransformAtNormalized(0.5));
+            TestTransformAtNormalized(polyline);
 
             var polygon = ModelTest.TestPolygon;
-            Assert.Equal(polygon.TransformAt(polygon.Domain.Mid()), polygon.TransformAtNormalized(0.5));
+            TestTransformAtNormalized(polygon);
+        }
+
+        private void TestTransformAtNormalized(BoundedCurve curve)
+        {
+            Assert.Equal(curve.TransformAt(curve.Domain.Mid()), curve.TransformAtNormalized(0.5));
+            Assert.Equal(curve.TransformAt(curve.Domain.Min), curve.TransformAtNormalized(0.0));
+            Assert.Equal(curve.TransformAt(curve.Domain.Max), curve.TransformAtNormalized(1.0));
         }
     }
 }
