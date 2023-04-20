@@ -44,96 +44,62 @@ namespace Elements.Geometry.Tests
 
         public static IEnumerable<object[]> GetCenterTestPolygons()
         {
-            // Square in Quadrant I
-            var polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
-            );
-            yield return new object[] { polygon, 3.0, 3.0 };
-
             // Square in Quadrant II
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
-            );
-            yield return new object[] { polygon, -3.0, 3.0 };
-
-            // Square in Quadrant III
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
-            );
-            yield return new object[] { polygon, -3.0, -3.0 };
+            var polygon = new Polygon(Vector3.Origin,
+                                      (-6.0, 0.0),
+                                      (-6.0, 6.0),
+                                      (0.0, 6.0));
+            yield return new object[] { polygon, new Vector3(-3.0, 3.0), new Vector3(-3.0, 3.0) };
 
             // Square in Quadrant IV
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
-            );
-            yield return new object[] { polygon, 3.0, -3.0 };
+            polygon = new Polygon(Vector3.Origin,
+                                  (6.0, 0.0),
+                                  (6.0, -6.0),
+                                  (0.0, -6.0));
+            yield return new object[] { polygon, new Vector3(3.0, -3.0), new Vector3(3.0, -3.0) };
 
             // Bow Tie in Quadrant I
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    new Vector3(1.0, 1.0),
-                    new Vector3(4.0, 4.0),
-                    new Vector3(7.0, 1.0),
-                    new Vector3(7.0, 9.0),
-                    new Vector3(4.0, 6.0),
-                    new Vector3(1.0, 9.0)
-                }
-            );
-            yield return new object[] { polygon, 4.0, 5.0 };
+            polygon = new Polygon((1.0, 1.0),
+                                  (4.0, 4.0),
+                                  (7.0, 1.0),
+                                  (7.0, 9.0),
+                                  (4.0, 6.0),
+                                  (1.0, 9.0));
+            yield return new object[] { polygon, new Vector3(4.0, 5.0), new Vector3(4.0, 5.0) };
 
             // Bow Tie in Quadrant III
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    new Vector3(-1.0, -1.0),
-                    new Vector3(-4.0, -4.0),
-                    new Vector3(-7.0, -1.0),
-                    new Vector3(-7.0, -9.0),
-                    new Vector3(-4.0, -6.0),
-                    new Vector3(-1.0, -9.0)
-                }
-            );
-            yield return new object[] { polygon, -4.0, -5.0 };
+            polygon = new Polygon((-1.0, -1.0),
+                                  (-4.0, -4.0),
+                                  (-7.0, -1.0),
+                                  (-7.0, -9.0),
+                                  (-4.0, -6.0),
+                                  (-1.0, -9.0));
+            yield return new object[] { polygon, new Vector3(-4.0, -5.0), new Vector3(-4.0, -5.0) };
+
+            polygon = new Polygon((20.710443, 4.926839, 0),
+                                  (16.247129, 18.703601, 0),
+                                  (20.769954, 26.440012, 0),
+                                  (28.179055, 23.52398, 0),
+                                  (25.571221, 16.897954, 0),
+                                  (30.202424, 13.37738, 0),
+                                  (28.565876, 9.003332, 0),
+                                  (20.710443, 4.926839, 0));
+            yield return new object[] { polygon, new Vector3(24.320872, 16.124728, 0), new Vector3(22.862188, 15.809823, 0) };
+
+            polygon = Polygon.Rectangle(6, 4);
+            polygon.Vertices.Insert(2, new Vector3(3.0, 1.0));
+
+            yield return new object[] { polygon, new Vector3(0.6, 0.2), new Vector3(0, 0) };
         }
 
         [Theory]
         [MemberData(nameof(GetCenterTestPolygons))]
-        public void Centroid(Polygon polygon, double x, double y)
+        public void CentersAndCentroids(Polygon polygon, Vector3 center, Vector3 centroid)
         {
-            var centroid = polygon.Centroid();
-            Assert.Equal(x, centroid.X);
-            Assert.Equal(y, centroid.Y);
+            var foundCentroid = polygon.Centroid();
+            var foundCenter = polygon.Center();
+            Assert.True(center.IsAlmostEqualTo(foundCenter));
+            Assert.True(centroid.IsAlmostEqualTo(foundCentroid));
         }
 
         [Fact]
@@ -174,31 +140,6 @@ namespace Elements.Geometry.Tests
             Assert.Equal((2, 2, 2), pgon3.Centroid());
         }
 
-        [Theory]
-        [MemberData(nameof(GetCenterTestPolygons))]
-        public void Center(Polygon polygon, double x, double y)
-        {
-            var centroid = polygon.Center();
-            Assert.Equal(x, centroid.X);
-            Assert.Equal(y, centroid.Y);
-        }
-
-        [Fact]
-        public void CentroidWithColinearVertices()
-        {
-            var polygon = Polygon.Rectangle(6, 4);
-            var centroid = polygon.Centroid();
-            Assert.Equal(0, centroid.X);
-            Assert.Equal(0, centroid.Y);
-            // colinear vertex should not affect centroid
-            polygon.Vertices.Insert(2, new Vector3(3.0, 1.0));
-            centroid = polygon.Centroid();
-            Assert.Equal(0, centroid.X);
-            Assert.Equal(0, centroid.Y);
-
-            //The center and centroid methods return different results for polygons with colinear vertices.
-            Assert.NotEqual(polygon.Center(), centroid);
-        }
 
         [Fact]
         public void DoesNotContainPointNotInPlane()
@@ -215,33 +156,24 @@ namespace Elements.Geometry.Tests
             var v2 = new Vector3(7.5, 7.5);
             var p1 = new Polygon
             (
-                new[]
-                {
                     new Vector3(0.0, 0.0),
                     new Vector3(20.0, 0.0),
                     new Vector3(20.0, 20.0),
                     new Vector3(0.0, 20.0)
-                }
             );
             var p2 = new Polygon
             (
-                new[]
-                {
                     new Vector3(0.0, 0.0),
                     new Vector3(10.0, 5.0),
                     new Vector3(10.0, 10.0),
                     new Vector3(5.0, 10.0)
-                }
             );
             var p3 = new Polygon
             (
-                new[]
-                {
                     new Vector3(5.0, 5.0),
                     new Vector3(10.0, 5.0),
                     new Vector3(10.0, 10.0),
                     new Vector3(5.0, 10.0)
-                }
             );
 
             Assert.False(p1.Contains(v1));
