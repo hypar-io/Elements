@@ -1,7 +1,6 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
-using Elements.Validators;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +12,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.
+    /// Parameterization of the curve is 0->length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
@@ -24,6 +24,11 @@ namespace Elements.Geometry
         /// This will not be updated when a polygon's vertices are changed.
         /// </summary>
         internal Plane _plane;
+
+        /// <summary>
+        /// Should the curve be considered closed for rendering?
+        /// </summary>
+        public override bool IsClosedForRendering => true;
 
         /// <summary>
         /// Construct a polygon.
@@ -2187,61 +2192,53 @@ namespace Elements.Geometry
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
         public Contour Fillet(double radius)
         {
-            var curves = new List<Curve>();
-            Vector3 contourStart = new Vector3();
-            Vector3 contourEnd = new Vector3();
+            var curves = new List<BoundedCurve>();
+            var segments = this.Segments();
+            var arcs = new List<Arc>();
 
-            var segs = this.Segments();
-            for (var i = 0; i < segs.Length; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
-                var a = segs[i];
-                var b = i == segs.Length - 1 ? segs[0] : segs[i + 1];
-                var fillet = a.Fillet(b, radius);
-
-                var right = a.Direction().Cross(Vector3.ZAxis);
-                var dot = b.Direction().Dot(right);
-                var convex = dot <= 0.0;
-                if (i > 0)
-                {
-                    var l = new Line(contourEnd, convex ? fillet.Start : fillet.End);
-                    curves.Add(l);
-                }
-                else
-                {
-                    contourStart = convex ? fillet.Start : fillet.End;
-                }
-                contourEnd = convex ? fillet.End : fillet.Start;
-                curves.Add(fillet);
+                var a = segments[i];
+                var b = segments[i == segments.Length - 1 ? 0 : i + 1];
+                var arc = a.Fillet(b, 0.5);
+                arcs.Add(arc);
             }
-            curves.Add(new Line(contourEnd, contourStart));
+
+            for (var i = 0; i < arcs.Count; i++)
+            {
+                var a = arcs[i];
+                var b = arcs[i == arcs.Count - 1 ? 0 : i + 1];
+                curves.Add(new Line(a.Start, b.End));
+                curves.Add(b);
+            }
+
             return new Contour(curves);
         }
 
         /// <summary>
         /// Get a point on the polygon at parameter u.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <param name="u">A value between 0.0 and length.</param>
         /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected override Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
+            if (!Domain.Includes(u, true))
             {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var d = this.Length() * u;
             var totalLength = 0.0;
             for (var i = 0; i < this.Vertices.Count; i++)
             {
                 var a = this.Vertices[i];
                 var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
+                var currVec = (b - a).Unitized();
+                if (totalLength <= u && totalLength + currLength >= u)
                 {
                     segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
+                    return a + currVec * (u - totalLength);
                 }
                 totalLength += currLength;
             }
@@ -2286,16 +2283,6 @@ namespace Elements.Geometry
                 result[i] = normal;
             }
             return result;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var verts = new List<Vector3>(this.Vertices);
-            verts.Add(this.Start);
-            return verts;
         }
 
         /// <summary>

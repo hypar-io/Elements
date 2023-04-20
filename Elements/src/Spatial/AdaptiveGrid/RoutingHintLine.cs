@@ -161,5 +161,26 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             return false;
         }
+
+        /// <summary>
+        /// Check if hint line intersects the line represented by two points withing influence radius of the polyline.
+        /// </summary>
+        /// <param name="start">Start of the line point.</param>
+        /// <param name="end">End of the line point.</param>
+        public bool Intersects(Vector3 start, Vector3 end)
+        {
+            Vector3 vs = Is2D ? new Vector3(start.X, start.Y) : start;
+            Vector3 ve = Is2D ? new Vector3(end.X, end.Y) : end;
+
+            if (vs.IsAlmostEqualTo(ve))
+            {
+                return false;
+            }
+
+            var line = new Line(vs, ve);
+            var lineDir = line.Direction();
+            return Polyline.Segments().Any(s => !s.Direction().IsParallelTo(lineDir)
+                                                && line.DistanceTo(s) < InfluenceDistance);
+        }
     }
 }

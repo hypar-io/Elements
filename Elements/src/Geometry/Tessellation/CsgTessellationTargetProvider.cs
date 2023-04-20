@@ -8,14 +8,17 @@ namespace Elements.Geometry.Tessellation
     internal class CsgTessellationTargetProvider : ITessellationTargetProvider
     {
         private readonly Csg.Solid csg;
+        private readonly uint solidId;
 
         /// <summary>
         /// Construct a CsgTessellationTargetProvider.
         /// </summary>
         /// <param name="csg"></param>
-        public CsgTessellationTargetProvider(Csg.Solid csg)
+        /// <param name="solidId"></param>
+        public CsgTessellationTargetProvider(Csg.Solid csg, uint solidId)
         {
             this.csg = csg;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -28,7 +31,7 @@ namespace Elements.Geometry.Tessellation
                 // We used the polygon's shared tag, which seems to 
                 // work for planar solids turned into csgs as a discriminator,
                 // but this may break in the future.
-                yield return new CsgPolygonTessAdapter(p, p.Shared.Tag);
+                yield return new CsgPolygonTessAdapter(p, (uint)p.Shared.Tag, solidId);
             }
         }
     }

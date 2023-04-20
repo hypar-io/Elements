@@ -12,7 +12,7 @@ namespace Elements.Geometry.Solids
         private Profile _profile;
         private double _height;
         private Vector3 _direction;
-        private bool _flipped;
+        private bool _reverseWinding;
 
         /// <summary>The id of the profile to extrude.</summary>
         [JsonProperty("Profile", Required = Required.AllowNull)]
@@ -60,16 +60,16 @@ namespace Elements.Geometry.Solids
             }
         }
 
-        /// <summary>Is the extrusion flipped inside out?</summary>
-        [JsonProperty("Flipped")]
-        public bool Flipped
+        /// <summary>Is the extrusion's profile reversed relative to its extrusion vector, resulting in inward-facing face normals?</summary>
+        [JsonProperty("Reverse Winding")]
+        public bool ReverseWinding
         {
-            get { return _flipped; }
+            get { return _reverseWinding; }
             set
             {
-                if (_flipped != value)
+                if (_reverseWinding != value)
                 {
-                    _flipped = value;
+                    _reverseWinding = value;
                     RaisePropertyChanged();
                 }
             }
@@ -83,12 +83,12 @@ namespace Elements.Geometry.Solids
         /// <param name="direction">The direction of the extrusion.</param>
         /// <param name="isVoid">If true, the extrusion is a "void" in a group
         /// of solid operations, subtracted from other solids.</param>
-        /// <param name="flipped">True if the extrusion should be flipped inside
-        /// out, with normals facing in instead of out. Use with caution if
+        /// <param name="reverseWinding">True if the extrusion should be flipped inside
+        /// out, with face normals facing in instead of out. Use with caution if
         /// using with other solid operations in a representation — boolean
         /// results may be unexpected.</param>
         [JsonConstructor]
-        public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool flipped = false)
+        public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool reverseWinding = false)
             : base(isVoid)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -102,7 +102,7 @@ namespace Elements.Geometry.Solids
             this._profile = profile;
             this._height = height;
             this._direction = direction;
-            this._flipped = flipped;
+            this._reverseWinding = reverseWinding;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();
@@ -110,7 +110,7 @@ namespace Elements.Geometry.Solids
 
         private void UpdateGeometry()
         {
-            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction, this._flipped);
+            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction, this._reverseWinding);
         }
     }
 }

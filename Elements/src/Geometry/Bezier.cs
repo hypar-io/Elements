@@ -1,4 +1,3 @@
-using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -26,13 +25,14 @@ namespace Elements.Geometry
 
     /// <summary>
     /// A Bezier curve.
+    /// Parameterization of the curve is 0->1.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
     /// </example>
-    public class Bezier : Curve
+    public class Bezier : BoundedCurve
     {
-        private int _samples = 50;
+        private int _lengthSamples = 500;
 
         /// <summary>
         /// A collection of points describing the bezier's frame.
@@ -59,6 +59,9 @@ namespace Elements.Geometry
 
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
+            this.Domain = new Domain1d(0, 1);
+            this.Start = PointAt(0);
+            this.End = PointAt(1);
         }
 
         /// <summary>
@@ -70,28 +73,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a collection of transforms along the curve.
-        /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
-        /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetback = 0,
-                                           double endSetback = 0,
-                                           double additionalRotation = 0.0)
-        {
-            var transforms = new Transform[_samples + 1];
-            for (var i = 0; i <= _samples; i++)
-            {
-                transforms[i] = TransformAt(i * 1.0 / _samples);
-                if (additionalRotation != 0.0)
-                {
-                    transforms[i].RotateAboutPoint(transforms[i].Origin, transforms[i].ZAxis, additionalRotation);
-                }
-            }
-            return transforms;
-        }
-
-        /// <summary>
         /// Get a piecewise linear approximation of the length of the curve.
         /// https://en.wikipedia.org/wiki/Arc_length
         /// </summary>
@@ -99,15 +80,44 @@ namespace Elements.Geometry
         {
             Vector3 last = new Vector3();
             double length = 0.0;
-            for (var t = 0; t <= _samples; t++)
+            var step = 1.0 / _lengthSamples;
+            for (var i = 0; i <= _lengthSamples; i++)
             {
-                var pt = PointAt(t * 1.0 / _samples);
-                if (t == 0.0)
+                var t = i * step;
+                var pt = PointAt(t);
+                if (i == 0)
                 {
                     last = pt;
                     continue;
                 }
                 length += pt.DistanceTo(last);
+                last = pt;
+            }
+            return length;
+        }
+
+        private double ArcLengthUntil(double start, double distance, out double end)
+        {
+            Vector3 last = new Vector3();
+            double length = 0.0;
+            var step = (this.Domain.Max - start) / _lengthSamples;
+            end = start;
+            for (var i = 0; i <= _lengthSamples; i++)
+            {
+                var t = start + i * step;
+                var pt = PointAt(t);
+                if (i == 0)
+                {
+                    last = pt;
+                    continue;
+                }
+                var d = pt.DistanceTo(last);
+                if (length + d > distance)
+                {
+                    end = t;
+                    return length;
+                }
+                length += d;
                 last = pt;
             }
             return length;
@@ -253,16 +263,6 @@ namespace Elements.Geometry
             return T.Cross(N);
         }
 
-        internal override IList<Vector3> RenderVertices()
-        {
-            var vertices = new List<Vector3>();
-            for (var i = 0; i <= _samples; i++)
-            {
-                vertices.Add(PointAt(i * 1.0 / _samples));
-            }
-            return vertices;
-        }
-
         /// <summary>
         /// Construct a transformed copy of this Bezier.
         /// </summary>
@@ -284,6 +284,40 @@ namespace Elements.Geometry
         public override Curve Transformed(Transform transform)
         {
             return TransformedBezier(transform);
+        }
+
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
+                                                       double endSetbackDistance = 0.0)
+        {
+            var parameters = new double[_lengthSamples + 1];
+
+            var l = this.Length();
+
+            var startParam = startSetbackDistance == 0.0 ? this.Domain.Min : ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+            var endParam = startSetbackDistance == 0.0 ? this.Domain.Max : ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min);
+
+            var step = Math.Abs(endParam - startParam) / _lengthSamples;
+            for (var i = 0; i <= _lengthSamples; i++)
+            {
+                parameters[i] = startParam + i * step;
+            }
+            return parameters;
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
+        {
+            ArcLengthUntil(start, distance, out var end);
+            return end;
         }
     }
 }

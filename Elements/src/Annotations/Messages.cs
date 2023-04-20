@@ -146,7 +146,7 @@ namespace Elements.Annotations
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
         /// <returns></returns>
         public static Message FromCurve(string messageText,
-                                           Curve curve,
+                                           BoundedCurve curve,
                                            MessageSeverity severity = MessageSeverity.Warning,
                                            double sideLength = DefaultSideLength,
                                            string name = null,

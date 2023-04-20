@@ -21,7 +21,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The brace's id.</param>
         /// <param name="name">The brace's name.</param>
-        public Brace(Curve curve,
+        public Brace(BoundedCurve curve,
                      Profile profile,
                      Material material = null,
                      double startSetback = 0.0,

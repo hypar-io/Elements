@@ -10,11 +10,12 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
+    /// Parameterization of the curve is 0 -> length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : Curve, IEquatable<Polyline>
+    public class Polyline : BoundedCurve, IEquatable<Polyline>
     {
         /// <summary>
         /// A bounding box created once during the polyline's construction.
@@ -36,6 +37,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices) : base()
         {
             this.Vertices = @vertices;
+            this.Domain = new Domain1d(0, this.Length());
 
             if (!Validator.DisableValidationOnConstruction)
             {
@@ -53,6 +55,7 @@ namespace Elements.Geometry
         public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base()
         {
             this.Vertices = @vertices;
+            this.Domain = new Domain1d(0, this.Length());
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
@@ -108,7 +111,7 @@ namespace Elements.Geometry
         /// The start of the polyline.
         /// </summary>
         [JsonIgnore]
-        public Vector3 Start
+        public override Vector3 Start
         {
             get { return this.Vertices[0]; }
         }
@@ -117,7 +120,7 @@ namespace Elements.Geometry
         /// The end of the polyline.
         /// </summary>
         [JsonIgnore]
-        public Vector3 End
+        public override Vector3 End
         {
             get { return this.Vertices[this.Vertices.Count - 1]; }
         }
@@ -169,9 +172,7 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         public override Vector3 PointAt(double u)
         {
-            var segmentIndex = 0;
-            var p = PointAtInternal(u, out segmentIndex);
-            return p;
+            return PointAtInternal(u, out _);
         }
 
         /// <summary>
@@ -181,9 +182,9 @@ namespace Elements.Geometry
         /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
         public override Transform TransformAt(double u)
         {
-            if (u < 0.0 || u > 1.0)
+            if (!Domain.Includes(u, true))
             {
-                throw new ArgumentOutOfRangeException($"The provided value for u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
             var segmentIndex = 0;
@@ -229,7 +230,7 @@ namespace Elements.Geometry
                 var currLength = s.Length();
                 if (totalLength <= d && totalLength + currLength >= d)
                 {
-                    var parameterOnSegment = (d - totalLength) / currLength;
+                    var parameterOnSegment = d - totalLength;
                     o = s.PointAt(parameterOnSegment);
                     var previousNormal = normals[i];
                     var nextNormal = normals[(i + 1) % this.Vertices.Count];
@@ -379,11 +380,11 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the transforms used to transform a Profile extruded along this Polyline.
         /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
+        /// <param name="startSetbackDistance"></param>
+        /// <param name="endSetbackDistance"></param>
         /// <param name="additionalRotation"></param>
-        public override Transform[] Frames(double startSetback = 0.0,
-                                           double endSetback = 0.0,
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
@@ -392,7 +393,19 @@ namespace Elements.Geometry
             var result = new Transform[this.Vertices.Count];
             for (var i = 0; i < result.Length; i++)
             {
-                var a = this.Vertices[i];
+                Vector3 a;
+                if (i == 0)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    a = PointAt(ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min));
+                }
+                else
+                {
+                    a = this.Vertices[i];
+                }
                 result[i] = CreateOrthogonalTransform(i, a, normals[i]);
                 if (additionalRotation != 0.0)
                 {
@@ -418,14 +431,6 @@ namespace Elements.Geometry
         {
             var xform = Vertices.ToTransform();
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return this.Vertices;
         }
 
         /// <summary>
@@ -564,23 +569,22 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
+            if (!Domain.Includes(u, true))
             {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var d = this.Length() * u;
             var totalLength = 0.0;
             for (var i = 0; i < this.Vertices.Count - 1; i++)
             {
                 var a = this.Vertices[i];
                 var b = this.Vertices[i + 1];
                 var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
+                var currVec = (b - a).Unitized();
+                if (totalLength <= u && totalLength + currLength >= u)
                 {
                     segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
+                    return a + currVec * (u - totalLength);
                 }
                 totalLength += currLength;
             }
@@ -1070,7 +1074,7 @@ namespace Elements.Geometry
             var segmentsLength = Segments().Where((x, i) => i < segmentIndex).Sum(x => x.Length());
             var pointLength = segmentsLength + point.DistanceTo(segment.Start);
 
-            return pointLength / Length();
+            return pointLength;
         }
 
         /// <summary>
@@ -1141,7 +1145,7 @@ namespace Elements.Geometry
             for (var i = 0; i < intersections.Count - 1; i++)
             {
                 var subsegment = GetSubsegment(intersections[i], intersections[i + 1]);
-                if (polygon.Contains(subsegment.PointAt(0.5), out var containment) && containment == Containment.Inside)
+                if (polygon.Contains(subsegment.Mid(), out var containment) && containment == Containment.Inside)
                 {
                     sharedSegments.Add(subsegment);
                 }
@@ -1374,6 +1378,26 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            return start + distance;
+        }
+
+        /// <summary>
         /// Calculate distance from corner point, so point X = cornerPoint + incoming * D has needed angle (cornerPoint -> X -> end)
         /// </summary>
         private double AngleAlignedDistance(Vector3 start, Vector3 end, Vector3 incoming, double angle, out Vector3 cornerPoint)
@@ -1409,6 +1433,40 @@ namespace Elements.Geometry
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <returns>A collection of parameter values.</returns>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        {
+            var parameters = new double[this.Vertices.Count];
+            var length = 0.0;
+            for (var i = 0; i < Vertices.Count; i++)
+            {
+                if (i == 0)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
+                }
+                else if (i == Vertices.Count - 1)
+                {
+                    parameters[i] = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
+                }
+                else
+                {
+                    parameters[i] = length;
+                }
+
+                if (i < Vertices.Count - 1)
+                {
+                    length += Vertices[i].DistanceTo(Vertices[i + 1]);
+                }
+            }
+
+            return parameters;
         }
     }
 
