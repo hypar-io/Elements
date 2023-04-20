@@ -37,7 +37,7 @@ namespace Elements.Geometry
             if (p1Index == -1) return true; // All points are coincident
             if (p2Index == -1) return true; // All points are collinear
 
-            if (p2Index == points.Count - 1) // p2 is the last point
+            if (p2Index == points.Count - 1) // p2 is the last point, which means all the other points are collinear.
             {
                 return true;
             }
