@@ -52,5 +52,20 @@ namespace Elements.Geometry.Interfaces
         /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
         /// <returns>A collection of parameter values.</returns>
         double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+
+        /// <summary>
+        /// Get a point along the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A point along the curve at parameter u.</returns>
+        Vector3 PointAtNormalized(double u);
+
+        /// <summary>
+        /// Get a transform whose XY plane is perpendicular to the curve, and whose
+        /// positive Z axis points along the curve.
+        /// </summary>
+        /// <param name="u">The transform at a parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A transform.</returns>
+        Transform TransformAtNormalized(double u);
     }
 }
