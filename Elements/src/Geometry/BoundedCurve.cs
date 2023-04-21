@@ -111,6 +111,27 @@ namespace Elements.Geometry
         public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
+        /// Get a point along the curve at parameter u.
+        /// </summary>
+        /// <param name="u">A parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A point along the curve at parameter u.</returns>
+        public Vector3 PointAtNormalized(double u)
+        {
+            return PointAt(u.MapToDomain(this.Domain));
+        }
+
+        /// <summary>
+        /// Get a transform whose XY plane is perpendicular to the curve, and whose
+        /// positive Z axis points along the curve.
+        /// </summary>
+        /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A transform.</returns>
+        public Transform TransformAtNormalized(double u)
+        {
+            return TransformAt(u.MapToDomain(this.Domain));
+        }
+
+        /// <summary>
         /// Get a collection of vertices used to render the curve.
         /// </summary>
         internal IList<Vector3> RenderVertices()
