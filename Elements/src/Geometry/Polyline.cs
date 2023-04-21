@@ -395,11 +395,6 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected override Vector3 PointAtInternal(double u, out int curveIndex)
         {
-            if (!Domain.Includes(u, true))
-            {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
-            }
-
             var totalLength = 0.0;
             for (var i = 0; i < this.Vertices.Count - 1; i++)
             {

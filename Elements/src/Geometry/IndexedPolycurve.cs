@@ -288,7 +288,7 @@ namespace Elements.Geometry
         /// Get the parameter at a distance from the start parameter along the curve.
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>
-        /// <param name="start">The parameter from which to measure the distance between 0.0 and 1.0.</param>
+        /// <param name="start">The parameter from which to measure the distance between domain.min and domain.max.</param>
         public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             if (!Domain.Includes(start, true))
@@ -323,26 +323,26 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point on the polycurve at parameter u.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <param name="u">A value between domain.min and domain.max.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         public override Vector3 PointAt(double u)
-        {
-            return PointAtInternal(u, out _);
-        }
-
-        /// <summary>
-        /// Get a point on the polycurve at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and length.</param>
-        /// <param name="curveIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected virtual Vector3 PointAtInternal(double u, out int curveIndex)
         {
             if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} must be between {Domain.Min} and {Domain.Max}.");
             }
 
+            return PointAtInternal(u, out _);
+        }
+
+        /// <summary>
+        /// Get a point on the polycurve at parameter u.
+        /// </summary>
+        /// <param name="u">A value between domain.min and domain.max.</param>
+        /// <param name="curveIndex">The index of the segment containing parameter u.</param>
+        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
+        protected virtual Vector3 PointAtInternal(double u, out int curveIndex)
+        {
             curveIndex = (int)Math.Floor(u);
             if (curveIndex == _curves.Count)
             {
@@ -355,7 +355,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get the transform at the specified parameter along the polyline.
         /// </summary>
-        /// <param name="u">The parameter on the Polygon between 0.0 and length.</param>
+        /// <param name="u">The parameter on the Polygon between domain.min and domain.max.</param>
         /// <returns>A transform with its Z axis aligned trangent to the polycurve.</returns>
         public override Transform TransformAt(double u)
         {
