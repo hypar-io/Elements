@@ -33,6 +33,7 @@
 - Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
 - #865
 - `Network`: intersections are not created for some E-shape cases
+- `AdaptiveGrid`: adding a vertex to a grid that has no transformation no longer cause point precision loss.
 
 ## 1.6.0
 
