@@ -10,11 +10,16 @@ namespace Elements.Geometry
     public static class Vector3Extensions
     {
         /// <summary>
-        /// Check if a collection of points has at least three non-collinear points. Returns true if it does, false otherwise.
+        /// Check if a collection of points has at least three non-collinear
+        /// points. Returns true if it does, false otherwise. The first two
+        /// points which form a valid triangle with the first point are
+        /// returned via out parameters.
         /// </summary>
         /// <param name="points">The list of points to search.</param>
-        /// <param name="p1Index">The index of the first non-collinear point after index 0.</param>
-        /// <param name="p2Index">The index of the second non-collinear point after index 0.</param>
+        /// <param name="p1Index">The index of the first non-collinear point
+        /// after index 0.</param>
+        /// <param name="p2Index">The index of the second non-collinear point
+        /// after index 0.</param>
         /// <returns>True if there are three non-collinear points.</returns>
         public static bool TryGetThreeNonCollinearPoints(this IList<Vector3> points, out int p1Index, out int p2Index)
         {
@@ -34,7 +39,7 @@ namespace Elements.Geometry
                     break;
                 }
             }
-            return p2Index == -1;
+            return p2Index != -1;
         }
 
         /// <summary>
