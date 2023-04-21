@@ -10,13 +10,13 @@ namespace Elements.Geometry
     public static class Vector3Extensions
     {
         /// <summary>
-        /// Are the provided points on the same plane?
+        /// Returns the indices of the first three non-collinear points in a list.
         /// </summary>
-        /// <param name="points"></param>
-        public static bool AreCoplanar(this IList<Vector3> points)
+        /// <param name="points">The list of points to search.</param>
+        /// <returns>A tuple of three integers representing the indices of the first three non-collinear points in the list.
+        /// If there are fewer than three non-collinear points in the list, the corresponding index will be -1. The first index is always 0.</returns>
+        public static (int p0Index, int p1Index, int p2Index) GetFirstThreeNonCollinearPointIndices(this IList<Vector3> points)
         {
-            if (points.Count < 4) return true; // all sets of less than four points are coplanar
-
             // Choose the first three non-collinear points
             var p0 = points[0];
             int p1Index = -1;
@@ -33,12 +33,35 @@ namespace Elements.Geometry
                     break;
                 }
             }
+            return (0, p1Index, p2Index);
+        }
 
-            if (p1Index == -1) return true; // All points are coincident
-            if (p2Index == -1) return true; // All points are collinear
+        /// <summary>
+        /// Are the provided points on the same plane, within tolerance?
+        /// </summary>
+        /// <remarks>
+        /// This method uses the first three non-collinear points to define the
+        /// plane, rather than a best-fit plane. We may return a false negative
+        /// in the case that there is a different best-fit plane that is within
+        /// tolerance of all points.
+        /// </remarks>
+        /// <param name="points">The points to test.</param>
+        /// <param name="tolerance">Acceptable deviation from the plane while still being considered coplanar.</param>
+        public static bool AreCoplanar(this IList<Vector3> points, double tolerance = Vector3.EPSILON)
+        {
+            if (points.Count < 4) return true; // all sets of less than four points are coplanar
 
-            if (p2Index == points.Count - 1) // p2 is the last point, which means all the other points are collinear.
+            // Choose the first three non-collinear points
+            (int p0Index, int p1Index, int p2Index) = points.GetFirstThreeNonCollinearPointIndices();
+            var p0 = points[p0Index];
+
+            if (p2Index == -1) return true; // All points are collinear or coincident
+
+            if (p2Index == points.Count - 1)
             {
+                // p2 is the last point, which means all the other points are
+                // collinear. Any set of collinear points + another point make a
+                // triangle, so must be coplanar.
                 return true;
             }
             var normal = (points[p1Index] - p0).Cross(points[p2Index] - p0).Unitized();
@@ -47,7 +70,7 @@ namespace Elements.Geometry
             {
                 var pi = points[i];
                 var dot = normal.Dot(pi - p0);
-                if (Math.Abs(dot) > Vector3.EPSILON)
+                if (Math.Abs(dot) > tolerance)
                 {
                     return false;
                 }
