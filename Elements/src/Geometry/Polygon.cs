@@ -2108,20 +2108,32 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
-            var area = this.Area();
-            var x = 0.0;
-            var y = 0.0;
-            var z = 0.0;
-
-            for (var i = 0; i < this.Vertices.Count; i++)
+            var normal = Normal();
+            var pgon = this;
+            Transform transform = null;
+            if (Math.Abs(normal.Dot(Vector3.ZAxis)) < 1 - Vector3.EPSILON)
             {
-                var next = i == this.Vertices.Count - 1 ? 0 : i + 1;
-                var a = this.Vertices[i].X * this.Vertices[next].Y - this.Vertices[next].X * this.Vertices[i].Y;
-                x += (this.Vertices[i].X + this.Vertices[next].X) * a;
-                y += (this.Vertices[i].Y + this.Vertices[next].Y) * a;
-                z += (this.Vertices[i].Z + this.Vertices[next].Z) * a;
+                transform = new Transform(Vertices[0], normal);
+                var inverse = transform.Inverted();
+                pgon = TransformedPolygon(inverse);
             }
-            return new Vector3(x / (6 * area), y / (6 * area), z / (6 * area));
+            double area = 0;
+            var (x, y) = (0.0, 0.0);
+            var vertices = pgon.Vertices;
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                int j = (i + 1) % vertices.Count;
+                double crossProduct = vertices[i].X * vertices[j].Y - vertices[j].X * vertices[i].Y;
+
+                area += crossProduct;
+                x += (vertices[i].X + vertices[j].X) * crossProduct;
+                y += (vertices[i].Y + vertices[j].Y) * crossProduct;
+            }
+
+            area *= 0.5;
+            x /= (6 * area);
+            y /= (6 * area);
+            return transform == null ? new Vector3(x, y, vertices[0].Z) : transform.OfPoint(new Vector3(x, y, 0));
         }
 
         /// <summary>
