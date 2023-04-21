@@ -10,17 +10,18 @@ namespace Elements.Geometry
     public static class Vector3Extensions
     {
         /// <summary>
-        /// Returns the indices of the first three non-collinear points in a list.
+        /// Check if a collection of points has at least three non-collinear points. Returns true if it does, false otherwise.
         /// </summary>
         /// <param name="points">The list of points to search.</param>
-        /// <returns>A tuple of three integers representing the indices of the first three non-collinear points in the list.
-        /// If there are fewer than three non-collinear points in the list, the corresponding index will be -1. The first index is always 0.</returns>
-        public static (int p0Index, int p1Index, int p2Index) GetFirstThreeNonCollinearPointIndices(this IList<Vector3> points)
+        /// <param name="p1Index">The index of the first non-collinear point after index 0.</param>
+        /// <param name="p2Index">The index of the second non-collinear point after index 0.</param>
+        /// <returns>True if there are three non-collinear points.</returns>
+        public static bool TryGetThreeNonCollinearPoints(this IList<Vector3> points, out int p1Index, out int p2Index)
         {
             // Choose the first three non-collinear points
             var p0 = points[0];
-            int p1Index = -1;
-            int p2Index = -1;
+            p1Index = -1;
+            p2Index = -1;
             for (int i = 1; i < points.Count; i++)
             {
                 if (p1Index == -1 && (points[i] - p0).Length() > Vector3.EPSILON)
@@ -33,7 +34,7 @@ namespace Elements.Geometry
                     break;
                 }
             }
-            return (0, p1Index, p2Index);
+            return p2Index == -1;
         }
 
         /// <summary>
@@ -52,10 +53,13 @@ namespace Elements.Geometry
             if (points.Count < 4) return true; // all sets of less than four points are coplanar
 
             // Choose the first three non-collinear points
-            (int p0Index, int p1Index, int p2Index) = points.GetFirstThreeNonCollinearPointIndices();
-            var p0 = points[p0Index];
+            if (!points.TryGetThreeNonCollinearPoints(out var p1Index, out var p2Index))
+            {
+                // all points are collinear or coincident, so must be coplanar.
+                return true;
+            }
 
-            if (p2Index == -1) return true; // All points are collinear or coincident
+            var p0 = points[0];
 
             if (p2Index == points.Count - 1)
             {
