@@ -14,6 +14,7 @@
 - `Arc.Fillet`
 - `Ellipse`
 - `EllipticalArc`
+- `IndexedPolycurve`
 
 ### Changed
 
