@@ -433,7 +433,7 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Arc TransformedArc(Transform transform)
         {
-            return new Arc(transform.OfPoint(this.BasisCurve.Transform.Origin), this.BasisCurve.Radius, StartAngle, EndAngle);
+            return new Arc(BasisCurve.Transform.Concatenated(transform), this.BasisCurve.Radius, Units.DegreesToRadians(StartAngle), Units.DegreesToRadians(EndAngle));
         }
 
         /// <summary>
