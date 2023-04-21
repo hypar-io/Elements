@@ -31,7 +31,11 @@ namespace Elements.Tests
             Model.AddElements(t.ToModelCurves());
 
             var t1 = new Transform(Vector3.Origin, Vector3.XAxis);
-            Model.AddElement(new ModelCurve(pc.TransformedPolycurve(t1)));
+            var pc1 = pc.TransformedPolycurve(t1);
+            Model.AddElement(new ModelCurve(pc1));
+
+            var t2 = pc1.TransformAt(1.5);
+            Model.AddElements(t2.ToModelCurves());
         }
 
         [Fact]
