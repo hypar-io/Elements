@@ -133,6 +133,29 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridRotatedHasExactPoints()
+        {
+            var adaptiveGrid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 26.5650512)); //tan (26.5650512) = 0.5
+            var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)).TransformedPolygon(new Transform(0, 0, 1));
+
+            var points = new List<Vector3>() { new Vector3(5, 5) };
+            adaptiveGrid.AddFromPolygon(polygon, points);
+            Assert.Equal(9, adaptiveGrid.GetVertices().Count);
+            var p0 = new Vector3(7.5, 0, 1);
+            var p1 = new Vector3(10, 7.5, 1);
+            var p2 = new Vector3(2.5, 10, 1);
+            var p3 = new Vector3(0, 2.5, 1);
+            Assert.True(adaptiveGrid.TryGetVertexIndex(p0, out var id0));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(p1, out var id1));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(p2, out var id2));
+            Assert.True(adaptiveGrid.TryGetVertexIndex(p3, out var id3));
+
+            Assert.Equal(p1, adaptiveGrid.GetVertex(id1).Point);
+            Assert.Equal(p2, adaptiveGrid.GetVertex(id2).Point);
+            Assert.Equal(p3, adaptiveGrid.GetVertex(id3).Point);
+        }
+
+        [Fact]
         public void AdaptiveGridSubtractBoxAddPerimeter()
         {
             var adaptiveGrid = new AdaptiveGrid();
