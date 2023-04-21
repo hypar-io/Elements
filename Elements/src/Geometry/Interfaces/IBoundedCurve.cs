@@ -59,17 +59,18 @@ namespace Elements.Geometry.Interfaces
         double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
-        /// Get the frame from the curve at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        Transform TransformAtNormalized(double u);
-
-        /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The point on the curve.</returns>
+        /// <param name="u">A parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A point along the curve at parameter u.</returns>
         Vector3 PointAtNormalized(double u);
+
+        /// <summary>
+        /// Get a transform whose XY plane is perpendicular to the curve, and whose
+        /// positive Z axis points along the curve.
+        /// </summary>
+        /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A transform.</returns>
+        Transform TransformAtNormalized(double u);
     }
 }

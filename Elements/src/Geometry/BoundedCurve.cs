@@ -117,33 +117,34 @@ namespace Elements.Geometry
         public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
 
         /// <summary>
-        /// Get the frame from the curve at parameter u.
+        /// Get a point along the curve at parameter u.
         /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>The transform of the curve at parameter u, with the transform's Z axis tangent to the curve.</returns>
-        public Transform TransformAtNormalized(double u)
-        {
-            if (u < 0 || u > 1)
-            {
-                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
-            }
-
-            return TransformAt(u.MapToDomain(this.Domain));
-        }
-
-        /// <summary>
-        /// Get a point at parameter u on the arc.
-        /// </summary>
-        /// <param name="u">A parameter on the curve between 0.0 and 1.0.</param>
-        /// <returns>A point on the curve at parameter u.</returns>
+        /// <param name="u">A parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A point along the curve at parameter u.</returns>
         public Vector3 PointAtNormalized(double u)
         {
             if (u < 0 || u > 1)
             {
                 throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
             }
-            return this.PointAt(u.MapToDomain(this.Domain));
+            return PointAt(u.MapToDomain(this.Domain));
         }
+
+        /// <summary>
+        /// Get a transform whose XY plane is perpendicular to the curve, and whose
+        /// positive Z axis points along the curve.
+        /// </summary>
+        /// <param name="u">The parameter along the curve between 0.0 and 1.0.</param>
+        /// <returns>A transform.</returns>
+        public Transform TransformAtNormalized(double u)
+        {
+            if (u < 0 || u > 1)
+            {
+                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
+            }
+            return TransformAt(u.MapToDomain(this.Domain));
+        }
+
 
         /// <summary>
         /// Get a collection of vertices used to render the curve.
