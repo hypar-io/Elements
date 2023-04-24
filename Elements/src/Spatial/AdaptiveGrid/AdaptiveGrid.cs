@@ -361,20 +361,6 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Whether a vertex location already exists in the AdaptiveGrid.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="id">The ID of the Vertex, if a match is found.</param>
-        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns>True if any Vertex is close enough.</returns>
-        [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
-        public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
-        {
-            id = GetFromXYZLookup(point, out _, out _, tolerance: tolerance);
-            return id != 0;
-        }
-
-        /// <summary>
         /// Add a Vertex or return existing one if it's withing grid tolerance.
         /// Doesn't connect new Vertex to the grid with edges.
         /// </summary>
