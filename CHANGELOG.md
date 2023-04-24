@@ -34,6 +34,7 @@
 - #865
 - `Network`: intersections are not created for some E-shape cases
 - `Vector3.AreCoplanar` would sometimes return false negatives.
+- Fix the polygon centroid calculation to remove collinear vertices.
 
 ## 1.6.0
 

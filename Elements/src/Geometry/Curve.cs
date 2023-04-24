@@ -1,4 +1,3 @@
-using System;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -19,20 +18,20 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
-        /// <param name="u"></param>
-        /// <returns>A point on the curve at parameter u.</returns>
+        /// <param name="u">A parameter along the curve between domain.min and domain.max.</param>
+        /// <returns>A point along the curve at parameter u.</returns>
         public abstract Vector3 PointAt(double u);
 
         /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>
-        /// <param name="u">The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</param>
-        /// <returns>A transform.</returns>
+        /// <param name="u">The transform at a parameter along the curve between domain.min and domain.max.</param>
+        /// <returns>A transform on the curve at parameter u.</returns>
         public abstract Transform TransformAt(double u);
 
         /// <summary>
-        /// Create a transformed copy of this Curve.
+        /// Create a transformed copy of this curve.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
