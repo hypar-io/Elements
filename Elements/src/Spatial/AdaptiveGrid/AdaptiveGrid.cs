@@ -1325,23 +1325,6 @@ namespace Elements.Spatial.AdaptiveGrid
 
         #region AddFromGridWithBoundingPolygon and its subfunctions.
 
-        private List<double> GetGridDividers(Grid1d grid)
-        {
-            if (grid == null)
-            {
-                return new List<double>();
-            }
-
-            if (grid.IsSingleCell)
-            {
-                return new List<double> { grid.Domain.Min, grid.Domain.Max };
-            }
-
-            var ans = grid.Cells.Select(GetGridDividers).Select(l => l.First()).ToList();
-            ans.Add(grid.Cells.Last().Domain.Max);
-            return ans;
-        }
-
         private Transform FromGridUVTransform(Grid2d grid)
         {
             var uDomain = grid.U.curveDomain;
@@ -1353,12 +1336,14 @@ namespace Elements.Spatial.AdaptiveGrid
             return fromGrid;
         }
 
-        private List<(Vertex from, Vertex to)> SplitSegmentWithPoints((Vector3 from, Vector3 to) line, List<Vertex> points)
+        private List<(Vertex Start, Vertex End)> SplitSegmentWithPoints(
+            (Vector3 Start, Vector3 End) line,
+            List<Vertex> points)
         {
-            var resultingSegments = new List<(Vertex from, Vertex to)>();
-            var lineVector = line.to - line.from;
-            points.Add(AddVertex(line.from));
-            points.Add(AddVertex(line.to));
+            var resultingSegments = new List<(Vertex, Vertex)>();
+            var lineVector = line.End - line.Start;
+            points.Add(AddVertex(line.Start));
+            points.Add(AddVertex(line.End));
             points.Sort((p, q) => Math.Sign(lineVector.Dot(p.Point - q.Point)));
             for (int i = 1; i < points.Count; ++i)
             {
@@ -1367,7 +1352,7 @@ namespace Elements.Spatial.AdaptiveGrid
             return resultingSegments;
         }
 
-        private List<(Vertex from, Vertex to)> SplitSegmentsWithPoints(
+        private List<(Vertex Start, Vertex End)> SplitLineSegmentsWithParameters(
             IEnumerable<Line> segmentsToSplit, 
             double lineParameter, 
             List<double> parametersOnLine, 
@@ -1386,7 +1371,7 @@ namespace Elements.Spatial.AdaptiveGrid
 
             segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed());
             segments = segments.OrderBy(l => l.Start.Y);
-            var resultingSegments = new List<(Vertex from, Vertex to)>();
+            var resultingSegments = new List<(Vertex, Vertex)>();
             var newIntersectionPoints = new List<Vertex>();
 
             int yId = 0;
@@ -1426,29 +1411,29 @@ namespace Elements.Spatial.AdaptiveGrid
                 return new HashSet<Edge>();
             }
 
-            var uList = GetGridDividers(grid.U);
-            var vList = GetGridDividers(grid.V);
+            var uList = grid.U.GetCellDomains(true);
+            var vList = grid.V.GetCellDomains(true);
 
             var fromGrid = FromGridUVTransform(grid);
             var toGrid = fromGrid.Inverted();
 
             var uvPolygon = boundingPolygon.TransformedPolygon(toGrid);
 
-            var newSegments = new List<(Vertex from, Vertex to)>();
+            var newSegments = new List<(Vertex Start, Vertex End)>();
             var collectedPoints = new List<Vertex>();
 
             foreach (var u in uList)
             {
                 var verticalLine = new Line(new Vector3(u, vList.First()), new Vector3(u, vList.Last()));
                 var internalSegments = verticalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(SplitSegmentsWithPoints(internalSegments, u, vList, false, collectedPoints, fromGrid));
+                newSegments.AddRange(SplitLineSegmentsWithParameters(internalSegments, u, vList, false, collectedPoints, fromGrid));
             }
 
             foreach (var v in vList)
             {
                 var horizontalLine = new Line(new Vector3(uList.First(), v), new Vector3(uList.Last(), v));
                 var internalSegments = horizontalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
-                newSegments.AddRange(SplitSegmentsWithPoints(internalSegments, v, uList, true, collectedPoints, fromGrid));
+                newSegments.AddRange(SplitLineSegmentsWithParameters(internalSegments, v, uList, true, collectedPoints, fromGrid));
             }
 
             newSegments.AddRange(boundingPolygon.Edges().SelectMany(
@@ -1457,8 +1442,8 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgeCandidates = new HashSet<(ulong, ulong)>();
             foreach (var segment in newSegments)
             {
-                var v0 = segment.from;
-                var v1 = segment.to;
+                var v0 = segment.Start;
+                var v1 = segment.End;
                 if (v0 != v1)
                 {
                     var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);

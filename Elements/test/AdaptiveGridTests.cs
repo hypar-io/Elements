@@ -135,7 +135,11 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridRotatedHasExactPoints()
         {
-            var adaptiveGrid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 26.5650512)); //tan (26.5650512) = 0.5
+            //tan (26.5650512) = 0.5. This is convinient for testing edges that are connected to the middle of the squre
+            //will be projected to the perimeter differenty for X and Y coordinates but still in a way that is easy to
+            //understand: one coordinate is twice as displaced as other by definition of tan.
+            //The resulting edges will be (5, 5) -> (7.5, 0), (5, 5) -> (0, 2.5), etc.
+            var adaptiveGrid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 26.5650512));
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)).TransformedPolygon(new Transform(0, 0, 1));
 
             var points = new List<Vector3>() { new Vector3(5, 5) };
