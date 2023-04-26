@@ -1051,7 +1051,7 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                // Add a results collection for each polygon. 
+                // Add a results collection for each polygon.
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
 
@@ -1220,7 +1220,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Intersect a polygon against a set of trim polygons and identify the
         /// resulting polygons as "inside" or "outside" of the set of trimming
-        /// polygons. Containment is done using edge direction comparison for 
+        /// polygons. Containment is done using edge direction comparison for
         /// polygons which intersect with their trims, or ray testing in the
         /// case of polygons which do not intersect with their trims.
         /// </summary>
@@ -1296,7 +1296,7 @@ namespace Elements.Geometry
 
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
 
-                        // During intersection of one to many, this polygon's 
+                        // During intersection of one to many, this polygon's
                         // edges are added and given the index -1.
                         var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
                         var bn = trimPoly._plane.Normal;
@@ -2108,16 +2108,46 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
-            var x = 0.0;
-            var y = 0.0;
-            var z = 0.0;
-            foreach (var pnt in Vertices)
+            var normal = Normal();
+            var pgon = this;
+            Transform transform = null;
+            if (Math.Abs(normal.Dot(Vector3.ZAxis)) < 1 - Vector3.EPSILON)
             {
-                x += pnt.X;
-                y += pnt.Y;
-                z += pnt.Z;
+                transform = new Transform(Vertices[0], normal);
+                var inverse = transform.Inverted();
+                pgon = TransformedPolygon(inverse);
             }
-            return new Vector3(x / Vertices.Count, y / Vertices.Count, z / Vertices.Count);
+            double area = 0;
+            var (x, y) = (0.0, 0.0);
+            var vertices = pgon.Vertices;
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                int j = (i + 1) % vertices.Count;
+                double crossProduct = vertices[i].X * vertices[j].Y - vertices[j].X * vertices[i].Y;
+
+                area += crossProduct;
+                x += (vertices[i].X + vertices[j].X) * crossProduct;
+                y += (vertices[i].Y + vertices[j].Y) * crossProduct;
+            }
+
+            area *= 0.5;
+            x /= (6 * area);
+            y /= (6 * area);
+            return transform == null ? new Vector3(x, y, vertices[0].Z) : transform.OfPoint(new Vector3(x, y, 0));
+        }
+
+        /// <summary>
+        /// Calculate the center of the polygon as the average of vertices.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 Center()
+        {
+            var center = Vector3.Origin;
+            foreach (var v in this.Vertices)
+            {
+                center += v;
+            }
+            return center / this.Vertices.Count;
         }
 
         /// <summary>
@@ -2315,7 +2345,7 @@ namespace Elements.Geometry
             List<Vector3> loopVertices = new List<Vector3>();
             List<Line> openLoop = new List<Line>();
 
-            //Check if a point lay on active open loop lines. 
+            //Check if a point lay on active open loop lines.
             foreach (var v in Vertices)
             {
                 bool intersectionFound = false;
