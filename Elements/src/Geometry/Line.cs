@@ -18,13 +18,18 @@ namespace Elements.Geometry
     public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
     {
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(this.Start.DistanceTo(BasisCurve.Origin), this.End.DistanceTo(BasisCurve.Origin));
+
+        /// <summary>
         /// Create a line of one unit length along the X axis.
         /// </summary>
         public Line()
         {
             this.Start = Vector3.Origin;
             this.End = new Vector3(1, 0, 0);
-            this.Domain = new Domain1d(0, 1);
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -46,7 +51,6 @@ namespace Elements.Geometry
 
             this.Start = @start;
             this.End = @end;
-            this.Domain = new Domain1d(0, this.Start.DistanceTo(this.End));
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -60,7 +64,6 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
-            this.Domain = new Domain1d(0, length);
             this.BasisCurve = new InfiniteLine(this.Start, direction);
         }
 
@@ -73,7 +76,6 @@ namespace Elements.Geometry
         public Line(InfiniteLine line, double startParameter, double endParameter)
         {
             this.BasisCurve = line;
-            this.Domain = new Domain1d(startParameter, endParameter);
             this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
             this.End = this.BasisCurve.Origin + this.Domain.Max * this.BasisCurve.Direction;
         }

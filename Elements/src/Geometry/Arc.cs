@@ -13,6 +13,12 @@ namespace Elements.Geometry
     /// </example>
     public partial class Arc : TrimmedCurve<Circle>, IEquatable<Arc>
     {
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
+
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [JsonProperty("StartAngle", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
@@ -71,7 +77,6 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle();
             this.StartAngle = 0;
             this.EndAngle = 360;
-            this.Domain = new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
         }
 
         /// <summary>
@@ -88,7 +93,6 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle(@center, @radius);
             this.StartAngle = @startAngle;
             this.EndAngle = @endAngle;
-            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         private void Validate(double startAngle, double endAngle, double radius)
@@ -127,7 +131,6 @@ namespace Elements.Geometry
             this.BasisCurve = new Circle(radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
-            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         /// <summary>
@@ -140,7 +143,6 @@ namespace Elements.Geometry
         {
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), circle.Radius);
             this.BasisCurve = circle;
-            this.Domain = new Domain1d(startParameter, endParameter);
             this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
             this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
         }
@@ -160,7 +162,6 @@ namespace Elements.Geometry
         {
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
             this.BasisCurve = new Circle(transform, radius);
-            this.Domain = new Domain1d(startParameter, endParameter);
             this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
             this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
         }

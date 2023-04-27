@@ -24,7 +24,7 @@ namespace Elements.Geometry
         /// The domain of the curve.
         /// </summary>
         [JsonIgnore]
-        public Domain1d Domain { get; protected set; }
+        public virtual Domain1d Domain => new Domain1d(0, Length());
 
         /// <summary>
         /// Get the bounding box for this curve.

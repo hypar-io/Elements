@@ -10,6 +10,22 @@ namespace Elements.Geometry
     public class EllipticalArc : TrimmedCurve<Ellipse>
     {
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
+        [JsonProperty("StartAngle", Required = Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double StartAngle { get; protected set; }
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
+        [JsonProperty("EndAngle", Required = Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double EndAngle { get; protected set; }
+
+        /// <summary>
         /// Create an elliptical arc.
         /// </summary>
         /// <param name="majorAxis">The major axis (X) of the ellipse.</param>
@@ -21,7 +37,8 @@ namespace Elements.Geometry
         public EllipticalArc(Vector3 center, double majorAxis, double minorAxis, double startAngle, double endAngle)
         {
             this.BasisCurve = new Ellipse(new Transform(center), majorAxis, minorAxis);
-            this.Domain = new Domain1d(Units.DegreesToRadians(startAngle), Units.DegreesToRadians(endAngle));
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
             this.Start = this.PointAt(this.Domain.Min);
             this.End = this.PointAt(this.Domain.Max);
         }
@@ -35,7 +52,8 @@ namespace Elements.Geometry
         public EllipticalArc(Ellipse ellipse, double @startAngle, double @endAngle)
         {
             this.BasisCurve = ellipse;
-            this.Domain = new Domain1d(Units.DegreesToRadians(startAngle), Units.DegreesToRadians(endAngle));
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
             this.Start = this.PointAt(this.Domain.Min);
             this.End = this.PointAt(this.Domain.Max);
         }

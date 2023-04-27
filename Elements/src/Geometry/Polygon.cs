@@ -11,7 +11,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.
-    /// Parameterization of the curve is 0->length.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices..
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
@@ -23,6 +23,21 @@ namespace Elements.Geometry
         /// This will not be updated when a polygon's vertices are changed.
         /// </summary>
         internal Plane _plane;
+
+        /// <summary>
+        /// The end of the polyline.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 End
+        {
+            get { return Vertices[0]; }
+        }
+
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count);
 
         /// <summary>
         /// Should the curve be considered closed for rendering?
@@ -100,6 +115,16 @@ namespace Elements.Geometry
         /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
         /// <param name="vertices">The vertices of the polygon.</param>
         public Polygon(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation) { }
+
+        internal override List<IList<int>> CreateCurveIndices(IList<Vector3> vertices)
+        {
+            var curveIndices = new List<IList<int>>();
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                curveIndices.Add(new[] { i, i == vertices.Count - 1 ? 0 : i + 1 });
+            }
+            return curveIndices;
+        }
 
         /// <summary>
         /// Construct a transformed copy of this Polygon.
@@ -2190,37 +2215,6 @@ namespace Elements.Geometry
             curves.Add(new Line(curves[curves.Count - 1].End, curves[0].Start));
 
             return new IndexedPolycurve(curves);
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and length.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected override Vector3 PointAtInternal(double u, out int segmentIndex)
-        {
-            if (!Domain.Includes(u, true))
-            {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
-            }
-
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count; i++)
-            {
-                var a = this.Vertices[i];
-                var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a).Unitized();
-                if (totalLength <= u && totalLength + currLength >= u)
-                {
-                    segmentIndex = i;
-                    return a + currVec * (u - totalLength);
-                }
-                totalLength += currLength;
-            }
-            segmentIndex = this.Vertices.Count - 1;
-            return this.End;
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>

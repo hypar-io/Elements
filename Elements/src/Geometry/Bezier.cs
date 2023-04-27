@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -35,6 +36,12 @@ namespace Elements.Geometry
         private int _lengthSamples = 500;
 
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, 1);
+
+        /// <summary>
         /// A collection of points describing the bezier's frame.
         /// https://en.wikipedia.org/wiki/B%C3%A9zier_curve
         /// </summary>
@@ -59,7 +66,6 @@ namespace Elements.Geometry
 
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
-            this.Domain = new Domain1d(0, 1);
             this.Start = PointAt(0);
             this.End = PointAt(1);
         }
