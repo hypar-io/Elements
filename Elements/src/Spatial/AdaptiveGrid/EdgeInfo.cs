@@ -49,7 +49,6 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Are edge end points on different elevations.
         /// </summary>
-        [Obsolete("Use HasAnyFlag(EdgeFlags.HasVerticalChange) instead")]
         public bool HasVerticalChange { get => HasAnyFlag(EdgeFlags.HasVerticalChange); }
 
         /// <summary>

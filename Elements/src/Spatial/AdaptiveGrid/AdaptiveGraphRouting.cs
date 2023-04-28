@@ -49,19 +49,6 @@ namespace Elements.Spatial.AdaptiveGrid
             //global information line boundaries, points, lines and obstacles.
             _grid = grid;
             _configuration = configuration;
-
-            if (!_configuration.LayerPenalty.ApproximatelyEquals(1))
-            {
-                var plane = new Plane(new Vector3(0, 0, _configuration.MainLayer), Vector3.ZAxis);
-                var modifier = new WeightModifier(
-                    "Not Main Layer",
-                    new Func<Vertex, Vertex, bool>((a, b) =>
-                    {
-                        return Math.Abs(a.Point.Z - _configuration.MainLayer) > _grid.Tolerance ||
-                               Math.Abs(b.Point.Z - _configuration.MainLayer) > _grid.Tolerance;
-                    }),
-                    _configuration.LayerPenalty);
-            }
         }
 
         /// <summary>
