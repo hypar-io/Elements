@@ -303,7 +303,7 @@ namespace Elements.Geometry
                 {
                     a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
                 }
-                else if (i == Vertices.Count)
+                else if (i == Vertices.Count - 1)
                 {
                     a = PointAt(ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min));
                 }

@@ -326,7 +326,7 @@ namespace Elements.Geometry
                 if (trackingLength + distanceToEndOfCurve > distance)
                 {
                     // Find the parameter at exactly the distance.
-                    return curve.ParameterAtDistanceFromParameter(localStartParameter, distance - trackingLength);
+                    return i + curve.ParameterAtDistanceFromParameter(distance - trackingLength, localStartParameter).MapFromDomain(curve.Domain);
                 }
 
                 trackingLength += distanceToEndOfCurve;

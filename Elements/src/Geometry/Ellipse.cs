@@ -1,5 +1,6 @@
 using System;
 using Elements.Geometry.Interfaces;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -12,6 +13,7 @@ namespace Elements.Geometry
         /// <summary>
         /// The center of the ellipse.
         /// </summary>
+        [JsonIgnore]
         public Vector3 Center
         {
             get
@@ -55,7 +57,7 @@ namespace Elements.Geometry
         /// <param name="center">The center of the ellipse.</param>
         /// <param name="majorAxis">The dimension of the major axis (X) of the ellipse.</param>
         /// <param name="minorAxis">The dimension of the minor axis (Y) of the ellipse.</param>
-        public Ellipse(Vector3 center, double majorAxis = 1.0, double minorAxis = 2.0)
+        public Ellipse(Vector3 center, double majorAxis = 2.0, double minorAxis = 1.0)
         {
             CheckAndThrow(minorAxis, majorAxis);
 
@@ -70,7 +72,8 @@ namespace Elements.Geometry
         /// <param name="transform">The coordinate system of the plane containing the ellipse.</param>
         /// <param name="majorAxis">The dimension of the major axis (X) of the ellipse.</param>
         /// <param name="minorAxis">The dimension of the minor axis (Y) of the ellipse.</param>
-        public Ellipse(Transform transform, double majorAxis = 1.0, double minorAxis = 2.0)
+        [JsonConstructor]
+        public Ellipse(Transform transform, double majorAxis = 2.0, double minorAxis = 1.0)
         {
             CheckAndThrow(minorAxis, majorAxis);
 
