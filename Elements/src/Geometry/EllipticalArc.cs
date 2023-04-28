@@ -34,7 +34,11 @@ namespace Elements.Geometry
         /// <param name="startAngle">The start parameter of the trim.</param>
         /// <param name="endAngle">The end parameter of the trim.</param>
         [JsonConstructor]
-        public EllipticalArc(Vector3 center, double majorAxis, double minorAxis, double startAngle, double endAngle)
+        public EllipticalArc(Vector3 center,
+                             double majorAxis,
+                             double minorAxis,
+                             double startAngle,
+                             double endAngle)
         {
             this.BasisCurve = new Ellipse(new Transform(center), majorAxis, minorAxis);
             this.StartAngle = startAngle;
@@ -49,7 +53,9 @@ namespace Elements.Geometry
         /// <param name="ellipse">The ellipse on which this trim is based.</param>
         /// <param name="startAngle">The start angle of the trim in degrees.</param>
         /// <param name="endAngle">The end parameter of the trim in degrees.</param>
-        public EllipticalArc(Ellipse ellipse, double @startAngle, double @endAngle)
+        public EllipticalArc(Ellipse ellipse,
+                             double @startAngle,
+                             double @endAngle)
         {
             this.BasisCurve = ellipse;
             this.StartAngle = startAngle;
