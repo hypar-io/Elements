@@ -26,7 +26,7 @@
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.
 - `Polyline` is now parameterized 0->length.
-- `Circle` is now parameteried 0->2Pi.
+- `Circle` is now parameterized 0->2Pi.
 - `Line` is now parameterized 0->length.
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 - `Message`: removed obsolete `FromLine` method.
