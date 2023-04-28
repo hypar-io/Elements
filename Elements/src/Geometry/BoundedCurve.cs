@@ -40,7 +40,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the length of the curve between two parameters.
         /// </summary>
-        public abstract double Length(double start, double end);
+        public abstract double ArcLength(double start, double end);
 
         /// <summary>
         /// The mid point of the curve.

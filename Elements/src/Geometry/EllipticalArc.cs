@@ -86,7 +86,7 @@ namespace Elements.Geometry
         /// Calculate the length of the elliptical arc between start and end parameters.
         /// </summary>
         /// <returns>The length of the elliptical arc between start and end.</returns>
-        public override double Length(double start, double end)
+        public override double ArcLength(double start, double end)
         {
             if (!Domain.Includes(start, true))
             {

@@ -295,7 +295,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the length of the arc between start and end parameters.
         /// </summary>
-        public override double Length(double start, double end)
+        public override double ArcLength(double start, double end)
         {
             if (!Domain.Includes(start, true))
             {

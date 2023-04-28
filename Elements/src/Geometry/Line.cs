@@ -91,7 +91,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the length of the line between two parameters.
         /// </summary>
-        public override double Length(double start, double end)
+        public override double ArcLength(double start, double end)
         {
             return end - start;
         }

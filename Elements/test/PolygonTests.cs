@@ -1055,6 +1055,11 @@ namespace Elements.Geometry.Tests
             var poly3 = contour3.ToPolygon();
             var mass3 = new Mass(poly3, transform: t);
             Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
+
+            for (var u = contour3.Domain.Min; u <= contour3.Domain.Max; u += contour3.Domain.Length / 10)
+            {
+                var pt = contour3.TransformAt(u);
+            }
         }
 
         [Fact]
@@ -1136,10 +1141,10 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(polyCircle));
 
             var circle = new Circle(Vector3.Origin, 0.1).ToPolygon();
-            for (var u = 0.0; u <= 1.0; u += 0.05)
+            for (var u = 0.0; u <= polyCircle.Domain.Max; u += 0.05)
             {
                 var pt = polyCircle.PointAt(u);
-                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis));
+                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis, new Transform(pt)));
             }
         }
 

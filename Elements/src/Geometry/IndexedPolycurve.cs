@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A curves made up of a collection of line and arc segments.
+    /// A curve composed of a collection of line and arc segments.
     /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
     [JsonObject]
@@ -287,7 +287,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the length of the polycurve between two parameters.
         /// </summary>
-        public override double Length(double start, double end)
+        public override double ArcLength(double start, double end)
         {
             PointAtInternal(start, out var startCurveIndex);
             return end - start;
@@ -322,7 +322,7 @@ namespace Elements.Geometry
                 // the start parameter is located, or it will be 0.0.
                 var normalizedStartParameter = i == startCurveIndex ? start - i : 0.0;
                 var localStartParameter = normalizedStartParameter.MapToDomain(curve.Domain);
-                var distanceToEndOfCurve = Length(localStartParameter, curve.Domain.Max);
+                var distanceToEndOfCurve = ArcLength(localStartParameter, curve.Domain.Max);
                 if (trackingLength + distanceToEndOfCurve > distance)
                 {
                     // Find the parameter at exactly the distance.

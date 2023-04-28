@@ -482,7 +482,7 @@ namespace Elements.Spatial
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
 
-            var arcLength = Curve.Length(Domain.Min, Domain.Max);
+            var arcLength = Curve.ArcLength(Domain.Min, Domain.Max);
             var numDivisions = Math.Max(1, arcLength / targetLength);
             int roundedDivisions;
             switch (divisionMode)
