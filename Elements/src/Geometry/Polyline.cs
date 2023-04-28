@@ -9,7 +9,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
-    /// Parameterization of the curve is 0->length.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
@@ -73,6 +73,7 @@ namespace Elements.Geometry
         /// Get a collection a lines representing each segment of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
+        [Obsolete("Please use for each to get sub curves.")]
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
@@ -294,6 +295,7 @@ namespace Elements.Geometry
 
             // Create an array of transforms with the same number of items as the vertices.
             var result = new Transform[this.Vertices.Count];
+            var l = Length();
             for (var i = 0; i < result.Length; i++)
             {
                 Vector3 a;
@@ -301,9 +303,9 @@ namespace Elements.Geometry
                 {
                     a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
                 }
-                else if (i == Vertices.Count - 1)
+                else if (i == Vertices.Count)
                 {
-                    a = PointAt(ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min));
+                    a = PointAt(ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min));
                 }
                 else
                 {
@@ -385,32 +387,6 @@ namespace Elements.Geometry
             }
             tangent = tangent.Negate();
             return new Transform(origin, up.Cross(tangent), tangent);
-        }
-
-        /// <summary>
-        /// Get a point on the polyline at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and length.</param>
-        /// <param name="curveIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected override Vector3 PointAtInternal(double u, out int curveIndex)
-        {
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
-            {
-                var a = this.Vertices[i];
-                var b = this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a).Unitized();
-                if (totalLength <= u && totalLength + currLength >= u)
-                {
-                    curveIndex = i;
-                    return a + currVec * (u - totalLength);
-                }
-                totalLength += currLength;
-            }
-            curveIndex = this.Vertices.Count - 1;
-            return this.End;
         }
 
         /// <summary>
@@ -856,25 +832,35 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate U parameter for point on polyline
+        /// Find the parameter corresponding to a point along a polyline.
         /// </summary>
-        /// <param name="point">Point on polyline</param>
-        /// <returns>Returns U parameter for point on polyline</returns>
+        /// <param name="point">A point.</param>
+        /// <returns>A parameter for the point along a polyline if the point is on the polyline. Otherwise, -1.</returns>
         public double GetParameterAt(Vector3 point)
         {
-            var segment = Segments().FirstOrDefault(x => x.PointOnLine(point, true));
-
-            if (segment == null)
+            if (point.IsAlmostEqualTo(Start))
             {
-                return -1;
+                return Domain.Min;
             }
 
-            var segmentIndex = Segments().ToList().IndexOf(segment);
+            if (point.IsAlmostEqualTo(End))
+            {
+                return Domain.Max;
+            }
 
-            var segmentsLength = Segments().Where((x, i) => i < segmentIndex).Sum(x => x.Length());
-            var pointLength = segmentsLength + point.DistanceTo(segment.Start);
+            var i = 0;
+            foreach (var e in Edges())
+            {
+                if (Line.PointOnLine(point, e.from, e.to, true))
+                {
+                    var l = e.from.DistanceTo(e.to);
+                    var t = point.DistanceTo(e.from) / l; // normalized length along this segment
+                    return i + t;
+                }
+                i++;
+            }
 
-            return pointLength;
+            return -1;
         }
 
         /// <summary>
@@ -1178,26 +1164,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the parameter at a distance from the start parameter along the curve.
-        /// </summary>
-        /// <param name="distance">The distance from the start parameter.</param>
-        /// <param name="start">The parameter from which to measure the distance.</param>
-        public override double ParameterAtDistanceFromParameter(double distance, double start)
-        {
-            if (!Domain.Includes(start, true))
-            {
-                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
-            }
-
-            if (distance == 0.0)
-            {
-                return start;
-            }
-
-            return start + distance;
-        }
-
-        /// <summary>
         /// Calculate distance from corner point, so point X = cornerPoint + incoming * D has needed angle (cornerPoint -> X -> end)
         /// </summary>
         private double AngleAlignedDistance(Vector3 start, Vector3 end, Vector3 incoming, double angle, out Vector3 cornerPoint)
@@ -1233,40 +1199,6 @@ namespace Elements.Geometry
             {
                 return null;
             }
-        }
-
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
-        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
-        {
-            var parameters = new double[this.Vertices.Count];
-            var length = 0.0;
-            for (var i = 0; i < Vertices.Count; i++)
-            {
-                if (i == 0)
-                {
-                    parameters[i] = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
-                }
-                else if (i == Vertices.Count - 1)
-                {
-                    parameters[i] = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
-                }
-                else
-                {
-                    parameters[i] = length;
-                }
-
-                if (i < Vertices.Count - 1)
-                {
-                    length += Vertices[i].DistanceTo(Vertices[i + 1]);
-                }
-            }
-
-            return parameters;
         }
     }
 }

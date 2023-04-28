@@ -28,12 +28,18 @@ namespace Elements.Geometry
         internal BBox3 _bounds;
 
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count - 1);
+
+        /// <summary>
         /// The start of the polyline.
         /// </summary>
         [JsonIgnore]
         public override Vector3 Start
         {
-            get { return this.Vertices[0]; }
+            get { return Vertices[0]; }
         }
 
         /// <summary>
@@ -42,14 +48,8 @@ namespace Elements.Geometry
         [JsonIgnore]
         public override Vector3 End
         {
-            get { return this.Vertices[this.Vertices.Count - 1]; }
+            get { return Vertices[Vertices.Count - 1]; }
         }
-
-        /// <summary>
-        /// The curves of the polycurve.
-        /// </summary>
-        [JsonIgnore]
-        public List<BoundedCurve> Curves => _curves;
 
         /// <summary>
         /// An optional collection of collections of indices of polycurve segments.
@@ -93,36 +93,36 @@ namespace Elements.Geometry
             }
             else
             {
-                this.Vertices = vertices;
+                Vertices = vertices;
             }
-
-            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
-            this.CurveIndices = curveIndices;
-            _bounds = Bounds();
 
             if (!Validator.DisableValidationOnConstruction && !disableValidation)
             {
                 ValidateVertices();
             }
 
-            if (curveIndices != null)
+            if (curveIndices == null)
             {
-                var count = 0;
-                foreach (var curveIndexSet in curveIndices)
-                {
-                    if (curveIndexSet.Count < 2 || curveIndexSet.Count > 3)
-                    {
-                        throw new ArgumentException("curveIndices", $"Curve indices must reference 2 or 3 vertices. The curve index at {count} references {curveIndexSet.Count} vertices.");
-                    }
-                    count++;
-                }
+                CurveIndices = CreateCurveIndices(Vertices);
+            }
+            else
+            {
+                CurveIndices = curveIndices;
             }
 
-            // This can be null if we're creating a poyline.
-            if (curveIndices != null)
+            _bounds = Bounds();
+
+            var count = 0;
+            foreach (var curveIndexSet in CurveIndices)
             {
-                _curves = CreateCurves(CurveIndices, Vertices);
+                if (curveIndexSet.Count < 2 || curveIndexSet.Count > 3)
+                {
+                    throw new ArgumentException("curveIndices", $"Curve indices must reference 2 or 3 vertices. The curve index at {count} references {curveIndexSet.Count} vertices.");
+                }
+                count++;
             }
+
+            _curves = CreateCurves(CurveIndices, Vertices);
         }
 
         /// <summary>
@@ -153,7 +153,6 @@ namespace Elements.Geometry
             Vertices = result.Item2;
 
             _bounds = Bounds();
-            this.Domain = new Domain1d(0, this.Vertices.Count - 1);
         }
 
         private static (List<IList<int>>, List<Vector3>) CreateVerticesAndCurveIndices(IEnumerable<BoundedCurve> curves, Transform transform = null)
@@ -200,6 +199,16 @@ namespace Elements.Geometry
             return (curveIndices, vertices);
         }
 
+        internal virtual List<IList<int>> CreateCurveIndices(IList<Vector3> vertices)
+        {
+            var curveIndices = new List<IList<int>>();
+            for (var i = 0; i < vertices.Count - 1; i++)
+            {
+                curveIndices.Add(new[] { i, i + 1 });
+            }
+            return curveIndices;
+        }
+
         private static List<BoundedCurve> CreateCurves(IList<IList<int>> curveIndices, IList<Vector3> vertices)
         {
             var curves = new List<BoundedCurve>();
@@ -225,7 +234,7 @@ namespace Elements.Geometry
         /// </summary>
         public override BBox3 Bounds()
         {
-            return new BBox3(this.Vertices);
+            return new BBox3(Vertices);
         }
 
         /// <summary>
@@ -296,6 +305,11 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
+            if (distance.ApproximatelyEquals(0))
+            {
+                return start;
+            }
+
             var startCurveIndex = (int)Math.Floor(start);
             var trackingLength = 0.0;
 
@@ -343,10 +357,33 @@ namespace Elements.Geometry
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected virtual Vector3 PointAtInternal(double u, out int curveIndex)
         {
-            curveIndex = (int)Math.Floor(u);
+            // If we receive a value like -1e-15,
+            // we'll try to find the -1 segment. Avoid
+            // this by simply returning the start.
+            if (u.ApproximatelyEquals(0.0))
+            {
+                curveIndex = 0;
+                return _curves[0].PointAtNormalized(0);
+            }
+            else
+            {
+                curveIndex = (int)Math.Floor(u);
+            }
+
             if (curveIndex == _curves.Count)
             {
-                return this.End;
+                curveIndex = _curves.Count - 1;
+                return _curves[_curves.Count - 1].PointAtNormalized(1);
+            }
+
+            if (curveIndex == Vertices.Count)
+            {
+                // The polygon case.
+                return Start;
+            }
+            else if (curveIndex == Vertices.Count - 1)
+            {
+                return End;
             }
             var t = u - curveIndex;
             return _curves[curveIndex].PointAtNormalized(t);
@@ -388,7 +425,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this polyline equal the provided polyline?
+        /// Does this indexed polycurve equal the provided indexed polycurve?
         /// </summary>
         /// <param name="other"></param>
         /// <returns>True if the two curves are equal, otherwise false.</returns>
@@ -398,6 +435,7 @@ namespace Elements.Geometry
             {
                 return false;
             }
+
             for (var i = 0; i < Vertices.Count; i++)
             {
                 if (!this.Vertices[i].Equals(other.Vertices[i]))
@@ -414,9 +452,12 @@ namespace Elements.Geometry
                 }
                 for (var i = 0; i < this.CurveIndices.Count; i++)
                 {
-                    if (!this.CurveIndices[i].Equals(other.CurveIndices[i]))
+                    for (var j = 0; j < this.CurveIndices[i].Count; j++)
                     {
-                        return false;
+                        if (this.CurveIndices[i][j] != other.CurveIndices[i][j])
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -540,7 +581,7 @@ namespace Elements.Geometry
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }
