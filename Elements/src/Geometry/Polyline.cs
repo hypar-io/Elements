@@ -1206,5 +1206,35 @@ namespace Elements.Geometry
                 return null;
             }
         }
+
+        /// <summary>
+        /// Fillet all corners on this polygon.
+        /// </summary>
+        /// <param name="radius">The fillet radius.</param>
+        /// <returns>A contour containing trimmed edge segments and fillets.</returns>
+        public IndexedPolycurve Fillet(double radius)
+        {
+            var curves = new List<BoundedCurve>();
+            var segments = this.Segments();
+
+            for (var i = 0; i < segments.Length - 1; i++)
+            {
+                var a = segments[i];
+                var b = segments[i + 1];
+                var arc = b.Fillet(a, radius);
+                if (i == 0)
+                {
+                    curves.Add(new Line(Start, arc.Start));
+                }
+                else
+                {
+                    curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
+                }
+                curves.Add(arc);
+            }
+            curves.Add(new Line(curves[curves.Count - 1].End, End));
+
+            return new IndexedPolycurve(curves);
+        }
     }
 }
