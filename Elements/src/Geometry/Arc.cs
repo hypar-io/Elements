@@ -143,8 +143,8 @@ namespace Elements.Geometry
         {
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), circle.Radius);
             this.BasisCurve = circle;
-            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
-            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
+            this.StartAngle = Units.RadiansToDegrees(startParameter);
+            this.EndAngle = Units.RadiansToDegrees(endParameter);
         }
 
         /// <summary>
@@ -162,8 +162,8 @@ namespace Elements.Geometry
         {
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
             this.BasisCurve = new Circle(transform, radius);
-            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
-            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
+            this.StartAngle = Units.RadiansToDegrees(startParameter);
+            this.EndAngle = Units.RadiansToDegrees(endParameter);
         }
 
         /// <summary>
