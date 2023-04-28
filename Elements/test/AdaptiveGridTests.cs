@@ -135,10 +135,10 @@ namespace Elements.Tests
         [Fact]
         public void AdaptiveGridRotatedHasExactPoints()
         {
-            //tan (26.5650512) = 0.5. This is convinient for testing edges that are connected to the middle of the squre
-            //will be projected to the perimeter differenty for X and Y coordinates but still in a way that is easy to
-            //understand: one coordinate is twice as displaced as other by definition of tan.
-            //The resulting edges will be (5, 5) -> (7.5, 0), (5, 5) -> (0, 2.5), etc.
+            // tan (26.5650512) = 0.5. This is convenient for testing edges that are connected to the middle of the square
+            // will be projected to the perimeter differently for X and Y coordinates but still in a way that is easy to
+            // understand. One coordinate is twice as displaced as other by definition of tan.
+            // The resulting edges will be (5, 5) -> (7.5, 0), (5, 5) -> (0, 2.5), etc.
             var adaptiveGrid = new AdaptiveGrid(new Transform().Rotated(Vector3.ZAxis, 26.5650512));
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10)).TransformedPolygon(new Transform(0, 0, 1));
 
@@ -266,19 +266,19 @@ namespace Elements.Tests
             adaptiveGrid.AddFromPolygon(boundary, points);
 
             var edgesCount = adaptiveGrid.GetEdges().Count();
-            var verticiesCount = adaptiveGrid.GetVertices().Count();
+            var verticesCount = adaptiveGrid.GetVertices().Count();
 
             adaptiveGrid.SubtractObstacles(obstacles);
 
             Assert.Equal(edgesCount - 9, adaptiveGrid.GetEdges().Count);
-            Assert.Equal(verticiesCount - 2, adaptiveGrid.GetVertices().Count);
+            Assert.Equal(verticesCount - 2, adaptiveGrid.GetVertices().Count);
         }
 
         [Fact]
-        public void AdaptiveGridSubstructRotatedBox()
+        public void AdaptiveGridSubtractRotatedBox()
         {
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
-            var transfrom = new Transform().Rotated(Vector3.ZAxis, 45);
+            var transform = new Transform().Rotated(Vector3.ZAxis, 45);
 
             var points = new List<Vector3>();
             for (int i = 1; i < 10; i++)
@@ -289,14 +289,14 @@ namespace Elements.Tests
                 }
             }
 
-            var adaptiveGrid = new AdaptiveGrid(transfrom);
+            var adaptiveGrid = new AdaptiveGrid(transform);
             adaptiveGrid.AddFromPolygon(polygon, points);
 
             //Obstacle aligned with adaptive grid transformation.
             //Forms big (3;1) -> (5;3) -> (3;5) -> (1;3) rectangle.
             var bbox = new BBox3(new Vector3(2, 2), new Vector3(4, 4));
-            var withoutTransfrom = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
-            adaptiveGrid.SubtractObstacle(withoutTransfrom);
+            var withoutTransform = Obstacle.FromBBox(bbox, addPerimeterEdges: true);
+            adaptiveGrid.SubtractObstacle(withoutTransform);
 
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 3), out _));
             Assert.False(adaptiveGrid.TryGetVertexIndex(new Vector3(3, 2), out _));
@@ -399,7 +399,7 @@ namespace Elements.Tests
         [Fact]
         public void BrokenSubtractionForMisalignedPolygon()
         {
-            var boundaryVerticies = new List<Vector3>
+            var boundaryVertices = new List<Vector3>
             {
                 new Vector3(0.241, -40, 7),
                 new Vector3(0.241, -60, 7),
@@ -407,7 +407,7 @@ namespace Elements.Tests
                 new Vector3(80, -40.000000000000014, 7)
             };
 
-            var boundary = new Polygon(boundaryVerticies);
+            var boundary = new Polygon(boundaryVertices);
 
             var grid = new AdaptiveGrid()
             {
@@ -435,7 +435,7 @@ namespace Elements.Tests
 
         [Theory]
         [MemberData(nameof(GetObstaclesForAllowOutsideBoundaryTest))]
-        public void AadaptiveGridSubtractObstacleAllowOutsideBoundaryTest(Obstacle obstacle, bool expectedResult, int additionalVertices, int additionalEdges)
+        public void AdaptiveGridSubtractObstacleAllowOutsideBoundaryTest(Obstacle obstacle, bool expectedResult, int additionalVertices, int additionalEdges)
         {
             var boundary = Polygon.Rectangle(20, 40);
             var grid = new AdaptiveGrid { Boundaries = boundary };
@@ -513,7 +513,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void AdaptiveGridDoesntAddTheSameVertex()
+        public void AdaptiveGridDoesNotAddTheSameVertex()
         {
             var adaptiveGrid = new AdaptiveGrid();
             var polygon = Polygon.Rectangle(new Vector3(0, 0), new Vector3(10, 10));
@@ -587,7 +587,7 @@ namespace Elements.Tests
             Assert.Contains(v.Edges, e => e.StartId == id2 || e.EndId == id2);
             Assert.Contains(v.Edges, e => e.StartId == id3 || e.EndId == id3);
 
-            var douleIntersection = new Vector3[] {
+            var doubleIntersection = new Vector3[] {
                 new Vector3(10, 0),
                 new Vector3(20, 0),
                 new Vector3(20, 5),
@@ -596,7 +596,7 @@ namespace Elements.Tests
                 new Vector3(12, -5),
                 new Vector3(12, 5),
             };
-            added = grid.AddVertices(douleIntersection, AdaptiveGrid.VerticesInsertionMethod.ConnectAndSelfIntersect);
+            added = grid.AddVertices(doubleIntersection, AdaptiveGrid.VerticesInsertionMethod.ConnectAndSelfIntersect);
             Assert.Equal(11, added.Count); //Two intersection points represented twice.
             Assert.True(grid.TryGetVertexIndex(new Vector3(15, 0), out id0));
             Assert.True(grid.TryGetVertexIndex(new Vector3(12, 0), out id1));
@@ -1077,31 +1077,31 @@ namespace Elements.Tests
             Assert.True(grid.TryGetVertexIndex(new Vector3(0, 5, 3), out id));
             var v = grid.GetVertex(id);
             Assert.Equal(4, v.Edges.Count);
-            var neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
-            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
-            Assert.Contains(new Vector3(0, 10, 3), neighbourPoints);
-            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
-            Assert.Contains(new Vector3(0, 5, 2), neighbourPoints);
-            Assert.DoesNotContain(new Vector3(0, 5, 1), neighbourPoints);
+            var neighborPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighborPoints);
+            Assert.Contains(new Vector3(0, 10, 3), neighborPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighborPoints);
+            Assert.Contains(new Vector3(0, 5, 2), neighborPoints);
+            Assert.DoesNotContain(new Vector3(0, 5, 1), neighborPoints);
 
             Assert.True(grid.TryGetVertexIndex(new Vector3(5, 0, 3), out id));
             v = grid.GetVertex(id);
             Assert.Equal(3, v.Edges.Count);
-            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
-            Assert.Contains(new Vector3(0, 0, 3), neighbourPoints);
-            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
-            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
-            Assert.DoesNotContain(new Vector3(5, 0, 1), neighbourPoints);
+            neighborPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(0, 0, 3), neighborPoints);
+            Assert.Contains(new Vector3(10, 0, 3), neighborPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighborPoints);
+            Assert.DoesNotContain(new Vector3(5, 0, 1), neighborPoints);
 
             Assert.True(grid.TryGetVertexIndex(new Vector3(10, 5, 3), out id));
             v = grid.GetVertex(id);
             Assert.Equal(5, v.Edges.Count);
-            neighbourPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
-            Assert.Contains(new Vector3(10, 0, 3), neighbourPoints);
-            Assert.Contains(new Vector3(10, 10, 3), neighbourPoints);
-            Assert.Contains(new Vector3(5, 5, 3), neighbourPoints);
-            Assert.Contains(new Vector3(10, 5, 1), neighbourPoints);
-            Assert.Contains(new Vector3(10, 5, 4), neighbourPoints);
+            neighborPoints = v.Edges.Select(e => grid.GetVertex(e.OtherVertexId(v.Id)).Point);
+            Assert.Contains(new Vector3(10, 0, 3), neighborPoints);
+            Assert.Contains(new Vector3(10, 10, 3), neighborPoints);
+            Assert.Contains(new Vector3(5, 5, 3), neighborPoints);
+            Assert.Contains(new Vector3(10, 5, 1), neighborPoints);
+            Assert.Contains(new Vector3(10, 5, 4), neighborPoints);
         }
 
         [Fact]
