@@ -47,7 +47,7 @@ namespace Elements.Tests
             var contour3 = shape3.Fillet(0.5);
             Model.AddElement(new ModelCurve(contour3));
 
-            foreach (var curve in contour3.Curves)
+            foreach (var curve in contour3)
             {
                 if (curve is Arc)
                 {
