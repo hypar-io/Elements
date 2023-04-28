@@ -121,12 +121,28 @@ namespace Elements
         {
             if (this.Representation.SolidOperations.Count == 0)
             {
-                this.Representation.SolidOperations.Add(new Sweep(this.Profile,
-                                                            this.Curve,
-                                                            this.StartSetback,
-                                                            this.EndSetback,
-                                                            this.Rotation,
-                                                            false));
+                if (this.Curve.GetType() == typeof(IndexedPolycurve))
+                {
+                    var pc = this.Curve as IndexedPolycurve;
+                    foreach (var curve in pc)
+                    {
+                        this.Representation.SolidOperations.Add(new Sweep(this.Profile,
+                                                                curve,
+                                                                this.StartSetback,
+                                                                this.EndSetback,
+                                                                this.Rotation,
+                                                                false));
+                    }
+                }
+                else
+                {
+                    this.Representation.SolidOperations.Add(new Sweep(this.Profile,
+                                                                this.Curve,
+                                                                this.StartSetback,
+                                                                this.EndSetback,
+                                                                this.Rotation,
+                                                                false));
+                }
             }
         }
     }
