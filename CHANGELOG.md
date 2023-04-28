@@ -42,6 +42,7 @@
 - `AdaptiveGrid`: adding a vertex to a grid that has no transformation no longer cause point precision loss.
 - `Vector3.AreCoplanar` would sometimes return false negatives.
 - Fix the polygon centroid calculation to remove collinear vertices.
+- Fix the tests for 3dCentroid testing.
 
 ## 1.6.0
 
