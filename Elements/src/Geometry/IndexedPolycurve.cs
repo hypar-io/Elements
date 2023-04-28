@@ -406,8 +406,7 @@ namespace Elements.Geometry
 
             if (curveIndex == _curves.Count)
             {
-                curveIndex = _curves.Count - 1;
-                return _curves[_curves.Count - 1].PointAtNormalized(1);
+                return End;
             }
 
             if (curveIndex == Vertices.Count)
@@ -415,10 +414,7 @@ namespace Elements.Geometry
                 // The polygon case.
                 return Start;
             }
-            else if (curveIndex == Vertices.Count - 1)
-            {
-                return End;
-            }
+
             var t = u - curveIndex;
             return _curves[curveIndex].PointAtNormalized(t);
         }

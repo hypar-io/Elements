@@ -1,3 +1,4 @@
+using System.Linq;
 using Elements.Geometry;
 using Xunit;
 
@@ -89,6 +90,46 @@ namespace Elements.Tests
             // other leg.
             var pc = CreateTestPolycurve();
             Assert.Equal(5 + middleArc.Length(), pc.ArcLength(0.5, 2.5));
+        }
+
+        [Fact]
+        public void CurveCounts()
+        {
+            var pc = CreateTestPolycurve();
+            Assert.Equal(3, pc.Count());
+
+            var pline = new Polyline(pc.Vertices);
+            Assert.Equal(pline.Vertices.Count - 1, pline.Count());
+
+            var pgon = new Polygon(pc.Vertices);
+            Assert.Equal(pgon.Vertices.Count, pgon.Count());
+        }
+
+        [Fact]
+        public void EndPoints()
+        {
+            // Polycurve is not closed
+            var pc = CreateTestPolycurve();
+            Assert.NotEqual(pc.End, pc.Start);
+
+            // Polyline is not closed
+            var pline = new Polyline(pc.Vertices);
+            Assert.NotEqual(pline.Last().End, pline.First().Start);
+
+            // Polygon is closed
+            var pgon = new Polygon(pc.Vertices);
+            Assert.Equal(pgon.Last().End, pgon.First().Start);
+        }
+
+        [Fact]
+        public void RenderVertices()
+        {
+            var pgon = Polygon.Ngon(5);
+            var pline = new Polyline(pgon.Vertices);
+            var pgonRVerts = pgon.RenderVertices();
+            var plineRVerts = pline.RenderVertices();
+            Assert.Equal(6, pgonRVerts.Count);
+            Assert.Equal(5, plineRVerts.Count);
         }
     }
 }
