@@ -2235,7 +2235,7 @@ namespace Elements.Geometry
             {
                 var a = segments[i];
                 var b = segments[i == segments.Length - 1 ? 0 : i + 1];
-                var arc = b.Fillet(a, 0.5);
+                var arc = b.Fillet(a, radius);
                 if (i > 0)
                 {
                     curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
