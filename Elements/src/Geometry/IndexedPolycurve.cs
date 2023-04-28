@@ -356,8 +356,8 @@ namespace Elements.Geometry
                 // the start parameter is located, or it will be 0.0.
                 var normalizedStartParameter = i == startCurveIndex ? start - i : 0.0;
                 var localStartParameter = normalizedStartParameter.MapToDomain(curve.Domain);
-                var distanceToEndOfCurve = ArcLength(localStartParameter, curve.Domain.Max);
-                if (trackingLength + distanceToEndOfCurve > distance)
+                var distanceToEndOfCurve = curve.ArcLength(localStartParameter, curve.Domain.Max);
+                if (trackingLength + distanceToEndOfCurve >= distance)
                 {
                     // Find the parameter at exactly the distance.
                     return i + curve.ParameterAtDistanceFromParameter(distance - trackingLength, localStartParameter).MapFromDomain(curve.Domain);
