@@ -8,7 +8,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A curve composed of a collection of line and arc segments.
-    /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
+    /// Parameterization of the curve is 0->n where n is the number of curves.
     /// </summary>
     /// [!code-csharp[Main](../../Elements/test/IndexedPolycurveTests.cs?name=example)]
     [JsonObject]

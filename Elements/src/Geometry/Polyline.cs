@@ -17,6 +17,12 @@ namespace Elements.Geometry
     public class Polyline : IndexedPolycurve
     {
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count - 1);
+
+        /// <summary>
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
