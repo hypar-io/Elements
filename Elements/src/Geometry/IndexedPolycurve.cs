@@ -10,6 +10,7 @@ namespace Elements.Geometry
     /// A curve composed of a collection of line and arc segments.
     /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
+    /// [!code-csharp[Main](../../Elements/test/IndexedPolycurveTests.cs?name=example)]
     [JsonObject]
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
@@ -31,7 +32,7 @@ namespace Elements.Geometry
         /// The domain of the curve.
         /// </summary>
         [JsonIgnore]
-        public override Domain1d Domain => new Domain1d(0, Vertices.Count - 1);
+        public override Domain1d Domain => new Domain1d(0, CurveIndices.Count);
 
         /// <summary>
         /// The start of the polyline.
@@ -289,8 +290,41 @@ namespace Elements.Geometry
         /// </summary>
         public override double ArcLength(double start, double end)
         {
-            PointAtInternal(start, out var startCurveIndex);
-            return end - start;
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (!Domain.Includes(end, true))
+            {
+                throw new Exception($"The parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (start.ApproximatelyEquals(end))
+            {
+                throw new ArgumentOutOfRangeException($"The start parameter {start} and end parameter {end} are almost equal.");
+            }
+
+            var curveIndex = (int)Math.Floor(start);
+            var length = 0.0;
+            for (var i = curveIndex; i < Domain.Max; i++)
+            {
+                var curve = _curves[i];
+                var curveStartParameter = curve.Domain.Min;
+                if (i == curveIndex)
+                {
+                    curveStartParameter = (start - curveIndex).MapToDomain(curve.Domain);
+                }
+
+                if (end <= i + 1)
+                {
+                    var curveEndParameter = (end - i).MapToDomain(curve.Domain);
+                    return length + curve.ArcLength(curveStartParameter, curveEndParameter);
+                }
+                length += curve.ArcLength(curveStartParameter, curve.Domain.Max);
+            }
+
+            return 0.0;
         }
 
         /// <summary>
@@ -396,6 +430,12 @@ namespace Elements.Geometry
         /// <returns>A transform with its Z axis aligned trangent to the polycurve.</returns>
         public override Transform TransformAt(double u)
         {
+            if (u == Domain.Max)
+            {
+                // You're at the end!
+                return _curves[_curves.Count - 1].TransformAtNormalized(1);
+            }
+
             if (!Domain.Includes(u, true))
             {
                 throw new Exception($"The parameter {u} must be between {Domain.Min} and {Domain.Max}.");
