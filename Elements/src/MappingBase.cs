@@ -1,7 +1,7 @@
 namespace Elements
 {
     /// <summary>
-    /// The base class for all mapping classes.  A mapping specifies additional
+    /// The base class for all mapping classes. A mapping specifies additional
     /// data utilized to translate an element to a different application context or platform.
     /// </summary>
     public abstract class MappingBase : Element

@@ -4,7 +4,6 @@ using Xunit;
 using System.Linq;
 using System.Collections.Generic;
 using Elements.Spatial;
-using Elements.Serialization.JSON;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -281,7 +280,7 @@ namespace Elements.Tests
             var frames = outerL.Frames(0, 0);
 
             Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
-            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
+            var star = Polygon.Star(5, 3, 5).TransformedPolygon(new Transform(new Vector3(10, 10)));
             var starBeam = new Beam(star, l);
             this.Model.AddElement(starBeam);
 
@@ -539,7 +538,7 @@ namespace Elements.Tests
             // Value determined experimentally. If this test breaks, verify output visually —
             // it's not necessarily the end of the world if the number changes slightly, but we want to
             // make sure the results look sensible.
-            Assert.Equal(441, splits.Count);
+            Assert.Equal(444, splits.Count);
             var random = new Random(11);
             foreach (var s in splits)
             {

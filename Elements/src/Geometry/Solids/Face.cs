@@ -10,7 +10,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// The Id of the Face.
         /// </summary>
-        public long Id { get; }
+        public uint Id { get; }
 
         /// <summary>
         /// A CCW wound list of Edges.
@@ -28,7 +28,7 @@ namespace Elements.Geometry.Solids
         /// <param name="id"></param>
         /// <param name="outer">The outer loop of the Face.</param>
         /// <param name="inner">The inner loops of the Face.</param>
-        internal Face(long id, Loop outer, Loop[] inner)
+        internal Face(uint id, Loop outer, Loop[] inner)
         {
             this.Id = id;
             this.Outer = outer;

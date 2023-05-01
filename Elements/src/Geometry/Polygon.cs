@@ -1,7 +1,6 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
-using Elements.Validators;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +12,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.
+    /// Parameterization of the curve is 0->length.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
@@ -24,6 +24,11 @@ namespace Elements.Geometry
         /// This will not be updated when a polygon's vertices are changed.
         /// </summary>
         internal Plane _plane;
+
+        /// <summary>
+        /// Should the curve be considered closed for rendering?
+        /// </summary>
+        public override bool IsClosedForRendering => true;
 
         /// <summary>
         /// Construct a polygon.
@@ -1046,7 +1051,7 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                // Add a results collection for each polygon. 
+                // Add a results collection for each polygon.
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
 
@@ -1215,7 +1220,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Intersect a polygon against a set of trim polygons and identify the
         /// resulting polygons as "inside" or "outside" of the set of trimming
-        /// polygons. Containment is done using edge direction comparison for 
+        /// polygons. Containment is done using edge direction comparison for
         /// polygons which intersect with their trims, or ray testing in the
         /// case of polygons which do not intersect with their trims.
         /// </summary>
@@ -1291,7 +1296,7 @@ namespace Elements.Geometry
 
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
 
-                        // During intersection of one to many, this polygon's 
+                        // During intersection of one to many, this polygon's
                         // edges are added and given the index -1.
                         var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
                         var bn = trimPoly._plane.Normal;
@@ -2103,16 +2108,46 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
-            var x = 0.0;
-            var y = 0.0;
-            var z = 0.0;
-            foreach (var pnt in Vertices)
+            var normal = Normal();
+            var pgon = this;
+            Transform transform = null;
+            if (Math.Abs(normal.Dot(Vector3.ZAxis)) < 1 - Vector3.EPSILON)
             {
-                x += pnt.X;
-                y += pnt.Y;
-                z += pnt.Z;
+                transform = new Transform(Vertices[0], normal);
+                var inverse = transform.Inverted();
+                pgon = TransformedPolygon(inverse);
             }
-            return new Vector3(x / Vertices.Count, y / Vertices.Count, z / Vertices.Count);
+            double area = 0;
+            var (x, y) = (0.0, 0.0);
+            var vertices = pgon.Vertices;
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                int j = (i + 1) % vertices.Count;
+                double crossProduct = vertices[i].X * vertices[j].Y - vertices[j].X * vertices[i].Y;
+
+                area += crossProduct;
+                x += (vertices[i].X + vertices[j].X) * crossProduct;
+                y += (vertices[i].Y + vertices[j].Y) * crossProduct;
+            }
+
+            area *= 0.5;
+            x /= (6 * area);
+            y /= (6 * area);
+            return transform == null ? new Vector3(x, y, vertices[0].Z) : transform.OfPoint(new Vector3(x, y, 0));
+        }
+
+        /// <summary>
+        /// Calculate the center of the polygon as the average of vertices.
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 Center()
+        {
+            var center = Vector3.Origin;
+            foreach (var v in this.Vertices)
+            {
+                center += v;
+            }
+            return center / this.Vertices.Count;
         }
 
         /// <summary>
@@ -2169,61 +2204,53 @@ namespace Elements.Geometry
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
         public Contour Fillet(double radius)
         {
-            var curves = new List<Curve>();
-            Vector3 contourStart = new Vector3();
-            Vector3 contourEnd = new Vector3();
+            var curves = new List<BoundedCurve>();
+            var segments = this.Segments();
+            var arcs = new List<Arc>();
 
-            var segs = this.Segments();
-            for (var i = 0; i < segs.Length; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
-                var a = segs[i];
-                var b = i == segs.Length - 1 ? segs[0] : segs[i + 1];
-                var fillet = a.Fillet(b, radius);
-
-                var right = a.Direction().Cross(Vector3.ZAxis);
-                var dot = b.Direction().Dot(right);
-                var convex = dot <= 0.0;
-                if (i > 0)
-                {
-                    var l = new Line(contourEnd, convex ? fillet.Start : fillet.End);
-                    curves.Add(l);
-                }
-                else
-                {
-                    contourStart = convex ? fillet.Start : fillet.End;
-                }
-                contourEnd = convex ? fillet.End : fillet.Start;
-                curves.Add(fillet);
+                var a = segments[i];
+                var b = segments[i == segments.Length - 1 ? 0 : i + 1];
+                var arc = a.Fillet(b, 0.5);
+                arcs.Add(arc);
             }
-            curves.Add(new Line(contourEnd, contourStart));
+
+            for (var i = 0; i < arcs.Count; i++)
+            {
+                var a = arcs[i];
+                var b = arcs[i == arcs.Count - 1 ? 0 : i + 1];
+                curves.Add(new Line(a.Start, b.End));
+                curves.Add(b);
+            }
+
             return new Contour(curves);
         }
 
         /// <summary>
         /// Get a point on the polygon at parameter u.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
+        /// <param name="u">A value between 0.0 and length.</param>
         /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
         /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
         protected override Vector3 PointAtInternal(double u, out int segmentIndex)
         {
-            if (u < 0.0 - Vector3.EPSILON || u > 1.0 + Vector3.EPSILON)
+            if (!Domain.Includes(u, true))
             {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var d = this.Length() * u;
             var totalLength = 0.0;
             for (var i = 0; i < this.Vertices.Count; i++)
             {
                 var a = this.Vertices[i];
                 var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
+                var currVec = (b - a).Unitized();
+                if (totalLength <= u && totalLength + currLength >= u)
                 {
                     segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
+                    return a + currVec * (u - totalLength);
                 }
                 totalLength += currLength;
             }
@@ -2268,16 +2295,6 @@ namespace Elements.Geometry
                 result[i] = normal;
             }
             return result;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var verts = new List<Vector3>(this.Vertices);
-            verts.Add(this.Start);
-            return verts;
         }
 
         /// <summary>
@@ -2328,7 +2345,7 @@ namespace Elements.Geometry
             List<Vector3> loopVertices = new List<Vector3>();
             List<Line> openLoop = new List<Line>();
 
-            //Check if a point lay on active open loop lines. 
+            //Check if a point lay on active open loop lines.
             foreach (var v in Vertices)
             {
                 bool intersectionFound = false;

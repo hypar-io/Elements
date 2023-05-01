@@ -88,54 +88,6 @@ namespace Elements.Annotations
         }
 
         /// <summary>
-        /// Create a simple message along a line.
-        /// </summary>
-        /// <param name="messageText">The message to the user.</param>
-        /// <param name="line"></param>
-        /// <param name="severity">The severity of the message.</param>
-        /// <param name="sideLength"></param>
-        /// <param name="name">The name given to the message.</param>
-        /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
-        [Obsolete("Use FromCurve instead.")]
-        public static Message FromLine(string messageText,
-                                       Line line,
-                                       MessageSeverity severity = MessageSeverity.Warning,
-                                       double sideLength = DefaultSideLength,
-                                       string name = null,
-                                       string stackTrace = null)
-        {
-            var xAxis = line.Direction();
-            Vector3 yAxis;
-            if (xAxis.IsParallelTo(Vector3.ZAxis))
-            {
-                yAxis = xAxis.Cross(Vector3.YAxis);
-            }
-            else
-            {
-                yAxis = xAxis.Cross(Vector3.ZAxis);
-            }
-            var zAxis = yAxis.Cross(xAxis);
-            var toPipeLineTransform = new Transform(line.Start, xAxis, yAxis, zAxis);
-
-            var localLine = new Line(new Vector3(0, 0, 0), new Vector3(line.Length(), 0, 0));
-
-            var extrude = new Extrude(localLine.Thicken(sideLength),
-                                      sideLength,
-                                      Vector3.ZAxis,
-                                      false);
-            var message = new Message(messageText,
-                                      stackTrace,
-                                      severity,
-                                      toPipeLineTransform.Moved(new Vector3(0, 0, -sideLength / 2)),
-                                      MaterialForSeverity(severity),
-                                      new Representation(new[] { extrude }),
-                                      id: Guid.NewGuid(),
-                                      name: name ?? DefaultName);
-            return message;
-        }
-
-        /// <summary>
         /// Create a simple message along a curve.
         /// </summary>
         /// <param name="messageText">The message to the user.</param>
@@ -146,7 +98,7 @@ namespace Elements.Annotations
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
         /// <returns></returns>
         public static Message FromCurve(string messageText,
-                                           Curve curve,
+                                           BoundedCurve curve,
                                            MessageSeverity severity = MessageSeverity.Warning,
                                            double sideLength = DefaultSideLength,
                                            string name = null,

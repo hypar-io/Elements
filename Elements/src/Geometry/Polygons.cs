@@ -300,7 +300,7 @@ namespace Elements.Geometry
             var count = points * 2;
             for (var i = 0; i < count; i++)
             {
-                var t = i * 1.0 / count;
+                var t = i * (Math.PI * 2) / count;
                 if (i % 2 == 0)
                 {
                     verts.Add(c2.PointAt(t));

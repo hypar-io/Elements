@@ -16,7 +16,7 @@ namespace Elements
         /// <summary>
         /// The curve.
         /// </summary>
-        public Curve Curve { get; set; }
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// Create a model curve.
@@ -28,7 +28,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the model curve.</param>
         /// <param name="name">The name of the model curve.</param>
-        public ModelCurve(Curve curve,
+        public ModelCurve(BoundedCurve curve,
                           Material material = null,
                           Transform transform = null,
                           Representation representation = null,
@@ -69,7 +69,7 @@ namespace Elements
         public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = this._isSelectable ? $"{this.Id}_curve" : $"unselectable_{this.Id}_curve";
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
+            mode = this.Curve.IsClosedForRendering ? glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_LOOP : glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
             graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers() };
             return true;
         }

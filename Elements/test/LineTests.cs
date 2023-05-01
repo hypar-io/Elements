@@ -50,7 +50,7 @@ namespace Elements.Geometry.Tests
             var b = new Vector3(1, 0);
             var l = new Line(a, b);
             Assert.Equal(1.0, l.Length());
-            Assert.Equal(new Vector3(0.5, 0), l.PointAt(0.5));
+            Assert.Equal(new Vector3(0.5, 0), l.Mid());
             Assert.Equal(a, l.PointAt(-1e-10));
         }
 
@@ -632,23 +632,23 @@ namespace Elements.Geometry.Tests
             Assert.True(start.IsAlmostEqualTo(almostEqualStart));
             Assert.Equal(0, line.GetParameterAt(almostEqualStart));
 
-            Assert.Equal(1, line.GetParameterAt(end));
+            Assert.Equal(line.Length(), line.GetParameterAt(end));
 
             var almostEqualEnd = new Vector3(5.0000005, 5.000001, 5);
             Assert.True(end.IsAlmostEqualTo(almostEqualEnd));
-            Assert.Equal(1, line.GetParameterAt(almostEqualEnd));
+            Assert.Equal(line.Length(), line.GetParameterAt(almostEqualEnd));
 
             var vectorOutsideLine = new Vector3(1, 2, 3);
             Assert.False(line.PointOnLine(vectorOutsideLine, true));
             Assert.Equal(-1, line.GetParameterAt(vectorOutsideLine));
 
             var middle = new Vector3(2.5, 2.5, 2.5);
-            Assert.Equal(0.5, line.GetParameterAt(middle));
+            Assert.Equal(line.Length() / 2, line.GetParameterAt(middle));
 
             var vector = new Vector3(3.2, 3.2, 3.2);
             var uValue = line.GetParameterAt(vector);
             var expectedVector = line.PointAt(uValue);
-            Assert.InRange(uValue, 0, 1);
+            Assert.InRange(uValue, 0, line.Length());
             Assert.True(vector.IsAlmostEqualTo(expectedVector));
         }
 
@@ -1091,7 +1091,7 @@ namespace Elements.Geometry.Tests
             Vector3 v2 = new Vector3(0.4345936745767045, 0.9194325262466677, -0.6806076130136314);
             //Sorted distance quantities from point by the second vector.
             double q11 = -1.31932651341597884;
-            double q12 = 0.8705916819804074; 
+            double q12 = 0.8705916819804074;
             double q13 = 2.7483887105972915;
             //Sorted distance quantities from point by the second vector.
             double q21 = -2.45223540673958955;

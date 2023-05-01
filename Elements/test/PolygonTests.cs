@@ -42,103 +42,162 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(star));
         }
 
-        [Fact]
-        public void Centroid()
+        public static IEnumerable<object[]> GetCenterTestPolygons()
         {
-            // Square in Quadrant I
-            var polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
-            );
-            var centroid = polygon.Centroid();
-            Assert.Equal(3.0, centroid.X);
-            Assert.Equal(3.0, centroid.Y);
-
             // Square in Quadrant II
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
-            );
-            centroid = polygon.Centroid();
-            Assert.Equal(-3.0, centroid.X);
-            Assert.Equal(3.0, centroid.Y);
-
-            // Square in Quadrant III
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
-            );
-            centroid = polygon.Centroid();
-            Assert.Equal(-3.0, centroid.X);
-            Assert.Equal(-3.0, centroid.Y);
+            var polygon = new Polygon(Vector3.Origin,
+                                      (-6.0, 0.0),
+                                      (-6.0, 6.0),
+                                      (0.0, 6.0));
+            yield return new object[] { polygon, new Vector3(-3.0, 3.0), new Vector3(-3.0, 3.0) };
 
             // Square in Quadrant IV
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
-            );
-            centroid = polygon.Centroid();
-            Assert.Equal(3.0, centroid.X);
-            Assert.Equal(-3.0, centroid.Y);
+            polygon = new Polygon(Vector3.Origin,
+                                  (6.0, 0.0),
+                                  (6.0, -6.0),
+                                  (0.0, -6.0));
+            yield return new object[] { polygon, new Vector3(3.0, -3.0), new Vector3(3.0, -3.0) };
 
             // Bow Tie in Quadrant I
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    new Vector3(1.0, 1.0),
-                    new Vector3(4.0, 4.0),
-                    new Vector3(7.0, 1.0),
-                    new Vector3(7.0, 9.0),
-                    new Vector3(4.0, 6.0),
-                    new Vector3(1.0, 9.0)
-                }
-            );
-            centroid = polygon.Centroid();
-            Assert.Equal(4.0, centroid.X);
-            Assert.Equal(5.0, centroid.Y);
+            polygon = new Polygon((1.0, 1.0),
+                                  (4.0, 4.0),
+                                  (7.0, 1.0),
+                                  (7.0, 9.0),
+                                  (4.0, 6.0),
+                                  (1.0, 9.0));
+            yield return new object[] { polygon, new Vector3(4.0, 5.0), new Vector3(4.0, 5.0) };
 
             // Bow Tie in Quadrant III
-            polygon = new Polygon
-            (
-                new[]
-                {
-                    new Vector3(-1.0, -1.0),
-                    new Vector3(-4.0, -4.0),
-                    new Vector3(-7.0, -1.0),
-                    new Vector3(-7.0, -9.0),
-                    new Vector3(-4.0, -6.0),
-                    new Vector3(-1.0, -9.0)
-                }
-            );
-            centroid = polygon.Centroid();
-            Assert.Equal(-4.0, centroid.X);
-            Assert.Equal(-5.0, centroid.Y);
+            polygon = new Polygon((-1.0, -1.0),
+                                  (-4.0, -4.0),
+                                  (-7.0, -1.0),
+                                  (-7.0, -9.0),
+                                  (-4.0, -6.0),
+                                  (-1.0, -9.0));
+            yield return new object[] { polygon, new Vector3(-4.0, -5.0), new Vector3(-4.0, -5.0) };
+
+            polygon = new Polygon((20.710443, 4.926839, 0),
+                                  (16.247129, 18.703601, 0),
+                                  (20.769954, 26.440012, 0),
+                                  (28.179055, 23.52398, 0),
+                                  (25.571221, 16.897954, 0),
+                                  (30.202424, 13.37738, 0),
+                                  (28.565876, 9.003332, 0),
+                                  (20.710443, 4.926839, 0));
+            yield return new object[] { polygon, new Vector3(24.320872, 16.124728, 0), new Vector3(22.862188, 15.809823, 0) };
+
+            polygon = Polygon.Rectangle(6, 4);
+            polygon.Vertices.Insert(2, new Vector3(3.0, 1.0));
+
+            yield return new object[] { polygon, new Vector3(0.6, 0.2), new Vector3(0, 0) };
         }
+
+        [Theory]
+        [MemberData(nameof(GetCenterTestPolygons))]
+        public void CentersAndCentroids(Polygon polygon, Vector3 center, Vector3 centroid)
+        {
+            var foundCentroid = polygon.Centroid();
+            var foundCenter = polygon.Center();
+            Assert.True(center.IsAlmostEqualTo(foundCenter));
+            Assert.True(centroid.IsAlmostEqualTo(foundCentroid));
+        }
+
+        [Fact]
+        public void ThreeDCentroids()
+        {
+            var pgon = new Polygon((-4.800147, -9.701137, 0),
+                                   (-4.800147, 6.574991, 0),
+                                   (9.600293, 3.126146, 0),
+                                   (-4.800147, -9.701137, 0));
+            Assert.Equal((0, 0), pgon.Centroid());
+            var pgon2 = new Polygon((-14.525461, -9.276887, 1),
+                                    (-15.433052, -2.863245, 1),
+                                    (-7.022711, 1.19066, 1),
+                                    (-2.121721, 8.269868, 1),
+                                    (4.654957, 22.428284, 1),
+                                    (15.48554, 14.804521, 1),
+                                    (3.807872, 0.948636, 1),
+                                    (-3.694878, 0.948636, 1),
+                                    (15.122504, -3.226282, 1),
+                                    (9.011393, -13.088768, 1),
+                                    (-0.894814, -6.950567, 1),
+                                    (-0.894814, -13.572816, 1),
+                                    (-8.958905, -13.572816, 1),
+                                    (-14.525461, -9.276887, 1));
+            Assert.Equal((1, 1, 1), pgon2.Centroid());
+            var pgon3 = new Polygon((7.110806, -11.726081, -2.15209),
+                                    (-11.130781, 9.469516, -2.833149),
+                                    (-4.657744, 18.325267, 6.541436),
+                                    (0.998623, 7.638583, 4.458195),
+                                    (-4.011031, 5.850639, 0.027956),
+                                    (13.805502, 3.394647, 10.868168),
+                                    (6.806682, -2.3006, 2.895764),
+                                    (17.41365, -4.20029, 9.105426),
+                                    (12.630537, -8.092519, 3.656948),
+                                    (7.110806, -11.726081, -2.15209));
+            Assert.Equal((2, 2, 2), pgon3.Centroid());
+
+            var pgon4 = new Polygon((38.337892, 0.04147, 27.352492),
+                                    (55.553043, 1.557339, 17.913199),
+                                    (70.414095, 0.745786, 15.341362),
+                                    (60.364178, 10.513956, -7.169442),
+                                    (47.355624, 13.559341, -11.060032),
+                                    (18.808653, 18.030108, -13.77884),
+                                    (17.047729, 13.175249, -0.451222),
+                                    (13.719433, 9.651443, 9.871657),
+                                    (23.803571, 1.111343, 29.141383),
+                                    (38.337892, 0.04147, 27.352492));
+            Assert.True(pgon4.Centroid().IsAlmostEqualTo(new Vector3(38.944684, 7.812381, 6.720177)));
+
+            var pgon5 = new Polygon((13.367577, 37.637427, 19.913696),
+                                    (-14.19544, 24.029118, 25.91016),
+                                    (7.030176, -2.096658, 26.66828),
+                                    (28.726802, -10.894791, 24.813338),
+                                    (27.499415, 9.222174, 22.036983),
+                                    (13.367577, 37.637427, 19.913696));
+            Assert.True(pgon5.Centroid().IsAlmostEqualTo(new Vector3(10.523549, 14.044947, 23.791014)));
+
+            var pgon6 = new Polygon((15.164654, 33.292556, 13.183789),
+                                    (7.462208, 35.568885, 20.632929),
+                                    (8.147323, 22.539536, 33.843797),
+                                    (23.718464, 18.112903, 18.595288),
+                                    (26.914692, 20.349983, 12.062899),
+                                    (24.18474, 34.732703, 0.01945),
+                                    (7.483351, 40.774657, 14.975199),
+                                    (15.164654, 33.292556, 13.183789));
+            Assert.True(pgon6.Centroid().IsAlmostEqualTo(new Vector3(16.95831, 28.253992, 16.325457)));
+
+            var pgon7 = new Polygon((54.53824, 29.174668, -13.957174),
+                                    (49.089342, 38.630962, -15.007422),
+                                    (41.692673, 43.190619, -12.301108),
+                                    (34.52574, 41.779419, -6.768785),
+                                    (22.997622, 56.878945, -6.541126),
+                                    (9.979076, 54.67304, 3.329722),
+                                    (12.144266, 41.168415, 8.612961),
+                                    (14.906397, 25.693682, 14.477601),
+                                    (12.021633, 15.32467, 21.597258),
+                                    (8.605531, 7.350425, 27.879325),
+                                    (15.977353, 7.52054, 22.828556),
+                                    (30.190687, -3.299195, 18.655516),
+                                    (38.126281, 1.246412, 11.040648),
+                                    (40.766884, -4.078799, 11.920318),
+                                    (50.549067, -2.199374, 4.39255),
+                                    (57.429011, 2.955815, -2.815521),
+                                    (54.53824, 29.174668, -13.957174));
+            Assert.True(pgon7.Centroid().IsAlmostEqualTo(new Vector3(32.623945, 23.645959, 3.564879)));
+
+            var pgon8 = new Polygon((10.072801, 0.604668, 31.063089),
+                                    (36.455088, 10.00387, 9.599957),
+                                    (31.815341, 12.467897, 6.809542),
+                                    (33.728473, 12.916257, 5.625037),
+                                    (9.678915, 22.398682, -3.593184),
+                                    (0.954908, 18.588346, 4.623971),
+                                    (-12.930914, 18.147159, 8.735526),
+                                    (5.138936, 2.18134, 29.759844),
+                                    (10.072801, 0.604668, 31.063089));
+            Assert.True(pgon8.Centroid().IsAlmostEqualTo(new Vector3(11.681926, 11.801531, 12.813532)));
+        }
+
 
         [Fact]
         public void DoesNotContainPointNotInPlane()
@@ -155,33 +214,24 @@ namespace Elements.Geometry.Tests
             var v2 = new Vector3(7.5, 7.5);
             var p1 = new Polygon
             (
-                new[]
-                {
                     new Vector3(0.0, 0.0),
                     new Vector3(20.0, 0.0),
                     new Vector3(20.0, 20.0),
                     new Vector3(0.0, 20.0)
-                }
             );
             var p2 = new Polygon
             (
-                new[]
-                {
                     new Vector3(0.0, 0.0),
                     new Vector3(10.0, 5.0),
                     new Vector3(10.0, 10.0),
                     new Vector3(5.0, 10.0)
-                }
             );
             var p3 = new Polygon
             (
-                new[]
-                {
                     new Vector3(5.0, 5.0),
                     new Vector3(10.0, 5.0),
                     new Vector3(10.0, 10.0),
                     new Vector3(5.0, 10.0)
-                }
             );
 
             Assert.False(p1.Contains(v1));
@@ -661,10 +711,10 @@ namespace Elements.Geometry.Tests
             var d = new Vector3(0, 1);
             var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
-            Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
+            Assert.Equal(new Vector3(1.0, 1.0), p.Mid());
 
             var r = Polygon.Rectangle(2, 2);
-            Assert.Equal(new Vector3(1, 1, 0), r.PointAt(0.5));
+            Assert.Equal(new Vector3(1, 1, 0), r.Mid());
         }
 
         [Fact]
@@ -1127,8 +1177,8 @@ namespace Elements.Geometry.Tests
 
             // Ensure that the PointAt function for u=1.0 is at the
             // end of the polygon AND at the end of the polyline.
-            Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
-            Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            Assert.True(polyCircle.PointAt(polyCircle.Domain.Max).IsAlmostEqualTo(polyCircle.Start));
+            Assert.True(polyline.PointAt(polyline.Domain.Max).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
             // Test value close to u=0.0 within tolerance
             Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
             Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
@@ -1139,7 +1189,7 @@ namespace Elements.Geometry.Tests
             for (var u = 0.0; u <= 1.0; u += 0.05)
             {
                 var pt = polyCircle.PointAt(u);
-                this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
+                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis));
             }
         }
 
@@ -1829,14 +1879,14 @@ namespace Elements.Geometry.Tests
             Assert.True(rect.Contains(t.OfPoint(v1), out _));
             Model.AddElement(new ModelCurve(rect));
             var arc = new Circle(v1, 0.1);
-            Model.AddElement(new ModelCurve(arc.ToPolygon().Transformed(t)));
+            Model.AddElement(new ModelCurve(arc.ToPolygon().TransformedPolygon(t)));
 
             var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             Model.AddElement(new ModelCurve(star));
             var centroid = star.Centroid();
             Assert.True(star.Contains(centroid));
             var arc2 = new Circle(centroid, 0.1);
-            Model.AddElement(new ModelCurve(arc2.ToPolygon().TransformedPolygon(t)));
+            Model.AddElement(new ModelCurve(arc2.ToPolygon()));
         }
 
         [Fact]
@@ -2050,7 +2100,7 @@ namespace Elements.Geometry.Tests
             sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
             foreach (var r in results)
             {
-                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+                this.Model.AddElement(new ModelCurve(new Circle(new Transform(r), 0.05), BuiltInMaterials.YAxis));
             }
             Assert.Equal(2, results.Count);
             this.Model.AddElement(new Panel(sqPoly));

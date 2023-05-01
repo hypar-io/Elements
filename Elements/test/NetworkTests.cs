@@ -484,6 +484,179 @@ namespace Elements.Tests
             DrawNetwork(network, allNodeLocations, this.Model, regions);
         }
 
+        [Fact]
+        public void EShapeNetwork1()
+        {
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+
+            this.Name = nameof(EShapeNetwork1);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork2()
+        {
+            //       |
+            //       |
+            //  -----|
+            //       |
+            //       |
+            // ------|
+            //       |
+            //       |
+
+            this.Name = nameof(EShapeNetwork2);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((-2, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork3()
+        {
+            // |
+            // |
+            // |-----
+            // |
+            // |
+            // |-----
+            // |
+            // |
+
+            this.Name = nameof(EShapeNetwork3);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (0, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork4()
+        {
+            // |
+            // |
+            // |-----
+            // |
+            // |
+            // |--------
+            // |
+            // |
+
+            this.Name = nameof(EShapeNetwork4);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (0, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (12, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+
+        [Fact]
+        public void EShapeNetwork5()
+        {
+            // ----------------
+            //    |     |
+            //    |     |
+            //    |     |
+
+
+            this.Name = nameof(EShapeNetwork5);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (10, 0)),
+                new Line((5, 0), (5, 10)),
+                new Line((7, 0), (7, 10)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
         private static void DrawNetwork<T>(Network<T> network, List<Vector3> allNodeLocations, Model model, List<List<int>> regions = null)
         {
             var random = new Random(11);

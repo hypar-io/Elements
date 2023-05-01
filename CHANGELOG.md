@@ -1,14 +1,72 @@
 # Changelog
 
+## 2.0.0
+
+### Added
+
+- `ITrimmedCurve<TBasis>`
+- `IBoundedCurve`
+- `TrimmedCurve`
+- `BoundedCurve`
+- `InfiniteLine`
+- `IConic`
+- `Arc.ByThreePoints`
+- `Arc.Fillet`
+- `Ellipse`
+- `EllipticalArc`
+
+### Changed
+
+- `Polyline` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Arc` now inherits from `TrimmedCurve<Circle>`.
+- `Arc` is now parameterized 0->2Pi
+- `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
+- `Line` is now parameterized 0->length.
+- `Bezier` now inherits from `BoundedCurve`.
+- `Polyline` is now parameterized 0->length.
+- `Circle` is now parameteried 0->2Pi.
+- `Line` is now parameterized 0->length.
+- `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
+- `Message`: removed obsolete `FromLine` method.
+- `AdaptiveGrid`: removed obsolete `TryGetVertexIndex` with `tolerance` parameter.
+- `EdgeInfo`: obsolete attribute is removed from `HasVerticalChange` property.
+- `RoutingConfiguration`: removed obsolete `MainLayer` and `LayerPenalty` properties.
+
+### Fixed
+
+- Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
+- #865
+- `Network`: intersections are not created for some E-shape cases
+- `Vector3.AreCoplanar` would sometimes return false negatives.
+- Fix the polygon centroid calculation to remove collinear vertices.
+- Fix the tests for 3dCentroid testing.
+
+## 1.6.0
+
+### Fixed
+
+- #965
+
 ## 1.5.0
 
 ### Added
 
 - `Extrude` Solid Operation supports an optional `ReverseWinding` parameter to purposely turn its normals inside out.
 - `MappingBase` and first Revit mapping class to support mapping data for a Revit Converter.
+- `WeightModifier.Group`
+- `AdaptiveGrid.SetWeightModifiersGroupAggregator(string groupName, Func<double, double, double> groupFactorAggregator)`
+- `AdaptiveGrid.GetWeightModifiersGroup(string groupName)`
+- `AdaptiveGrid.AddPolylineWeightModifier(string name, Polyline polyline, double factor, double influenceDistance, bool is2D, string group = null)`
+- `AdaptiveGrid.AggregateFactorMin(double a, double b)`
+- `AdaptiveGrid.AggregateFactorMax(double a, double b)`
+- `AdaptiveGrid.AggregateFactorMultiply(double a, double b)`
 
 ### Changed
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
+- `AdaptiveGrid.AddPlanarWeightModifier` - added `group` parameter.
+- `WeightModifier` - added `group` parameter to constructor.
+- Changed the logic for calculating the edge modifier factor. If an edge meets the condition of several WeightModifier objects, factor aggregator function will be applied to factors of each WeightModifiers group. By default - the lowest factor of group is chosen. Finally, factors of all groups will be multiplied.
 
 ## 1.4.0
 
