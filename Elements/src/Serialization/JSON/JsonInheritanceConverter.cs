@@ -97,7 +97,7 @@ namespace Elements.Serialization.JSON
                 {
                     types = assembly.GetTypes();
                 }
-                catch (Exception)
+                catch (ReflectionTypeLoadException)
                 {
                     failedAssemblyErrors.Add($"Failed to load assembly: {assembly.FullName}");
                     continue;
