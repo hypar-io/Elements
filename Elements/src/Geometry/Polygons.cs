@@ -49,137 +49,34 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
-        /// <param name="plane">The plane to draw the rectangle on.</param>
+        /// <param name="transform">The transform reference to construct the rectangle from.</param>
         /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
-        public static Polygon Rectangle(Vector3 min, Vector3 max, Plane plane = null)
+        Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)
         {
-            Vector3 a, b, c, d;
+            transform ??= new Transform();
+            var inverse = transform.Inverted();
+            var a = inverse.OfPoint(min);
+            a.Z = 0;
+            var c = inverse.OfPoint(max);
+            c.Z = 0;
+            var b = ((c.X, a.Y));
+            var d = ((a.X, c.Y));
+            return new Polygon(new[] { a, b, c, d }).TransformedPolygon(transform);
+        }
 
-            List<bool> dup = new List<bool>() { Math.Abs(max.X - min.X) < Vector3.EPSILON, Math.Abs(max.Y - min.Y) < Vector3.EPSILON, Math.Abs(max.Z - min.Z) < Vector3.EPSILON };
-            var dupCount = 0;
-            foreach (bool tf in dup)
-            {
-                if (tf)
-                {
-                    dupCount++;
-                }
-            }
-            if (dupCount == 1)
-            {
-                if (dup[0])
-                {
-                    max.X = min.X;
-                }
-                else if (dup[0])
-                {
-                    max.Y = min.Y;
-                }
-                else if (dup[0])
-                {
-                    max.Z = min.Z;
-                }
-            }
-
-            if (dupCount >= 2)
-            {
-                // multiple vector values are the same, if 3 are the same no valid rect
-                if (dupCount == 3)
-                {
-                    throw new ArgumentException("Vectors can not be the identical within tolerence.", nameof(min) + ", " + nameof(max));
-                }
-                else
-                {
-                    // Get valid plane based on dup values
-                    Vector3 perpendicularVector = Vector3.Origin;
-                    if (dup[0])
-                    {
-                        perpendicularVector = Vector3.XAxis;
-                    }
-                    else if (dup[1])
-                    {
-                        perpendicularVector = Vector3.YAxis;
-                    }
-                    else
-                    {
-                        perpendicularVector = Vector3.ZAxis;
-                    }
-                    plane = new Plane(Vector3.Origin, perpendicularVector);
-                }
-            }
-            else
-            {
-                if (plane == null)
-                {
-                    // Use default plane
-                    plane = new Plane(Vector3.Origin, Vector3.YAxis);
-                }
-                else
-                {
-                    // Calculate a rectangle from points to be projected on a plane
-                    min = min.ProjectAlong(plane.Normal, plane);
-                    max = max.ProjectAlong(plane.Normal, plane);
-                }
-            }
-
-            // Compute the vector of minmax
-            var minmax = max - min;
-
-            // Get vector normal to minmax vector and plane normal as starting point.
-            var n = minmax.Cross(plane.Normal).Unitized();
-
-            // Get vector normal to both minmax and n vectors.
-            // This vector is the scaffold to produce a plane Rect.
-            var ac = n.Cross(minmax).Unitized();
-
-            // Get a new vector that is parallel to the ac vector and has the length of minmax.
-            var minb = n * minmax.Length();
-
-            a = min;
-            // Add the resulting vector to max + min and divide by 2 to arrive at the midpoint normal to the vector.
-            b = (max + min + minb) / 2;
-            c = max;
-            // Add the resulting negative vector to max + min and divide by 2 to arrive at the midpoint normal
-            // to the vector on the opposite side.
-            d = (max + min - minb) / 2;
-
-            return new Polygon(true, a, b, c, d);
-
-            // Without reference to the originating points or axis that define the
-            // plane we are left without guidance on how best to construct the rectangle.
-            // Inevitably with this constraint all resultant rectangles become squares.
-            // If a plane axes were provided we could more closely calculate
-            // the desired Rectangle Geometry
-
-            ///
-            // // If a prevailing axis is provided for reference we can orient the rectangle appropriately
-            // // prevailing axis = hypotenuse of 3-pt plane construction
-            // // Find vector perpendicular to the prevailingAxis
-            // Vector3 side1 = plane.Normal.Cross(prevailingAxis).Unitized();
-            // // Use Unitized prevailingAxis as side2
-            // Vector3 side2 = prevailingAxis.Unitized();
-
-            // double length1, length2;
-            // // Find lengths of perpendicular sides
-            // length1 = (minP - maxP).ProjectOnto(side1).Length();
-            // length2 = (minP - maxP).ProjectOnto(side2).Length();
-
-            // b = max - (side1 * length1);
-            // // Provided prevailing axis could be pointed in 1 of 2 directions
-            // // verify angle created with this point is 90 degrees
-            // // if it isn't, 'flip' the side by adding instead of subtracting
-            // if (!Math.Abs((b - min).Dot((max - b))).ApproximatelyEquals(0))
-            // {
-            //     b = max + (side1 * length1);
-            // }
-            // d = max - (side2 * length2);
-            // if (!Math.Abs((d - min).Dot((max - d))).ApproximatelyEquals(0))
-            // {
-            //     d = max + (side2 * length1);
-            // }
-
-            // return new Polygon(true, min, b, max, d);
-
-            ///
+        /// <summary>
+        /// Create a rectangle.
+        /// </summary>
+        /// <param name="min">The minimum coordinate.</param>
+        /// <param name="max">The maximum coordinate.</param>
+        /// <param name="plane">The plane to draw the rectangle on.</param>
+        /// <param name="alignment">The alignment reference to construct the rectangle from.</param>
+        /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
+        Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)
+        {
+            alignment ??= plane.Normal.IsParallelTo(Vector3.ZAxis) ? Vector3.XAxis : Vector3.ZAxis;
+            var transform = new Transform(plane.Origin, alignment.Value, plane.Normal);
+            return Rectangle(min, max, transform);
         }
 
         /// <summary>
