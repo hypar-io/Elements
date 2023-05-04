@@ -167,7 +167,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void GetSeparators()
+        public void GetCellSeparators()
         {
             var grid = new Grid1d(100);
             grid.DivideByCount(5);
@@ -180,6 +180,23 @@ namespace Elements.Tests
             grid[1].DivideByCount(3);
             var pts2 = grid.GetCellSeparators(true);
             Assert.Equal(8, pts2.Count);
+        }
+
+        [Fact]
+        public void GetCellDomains()
+        {
+            var grid = new Grid1d(new Domain1d(20, 120));
+            grid.DivideByCount(5);
+            var domains = grid.GetCellDomains();
+            Assert.Equal(6, domains.Count);
+            Assert.Equal(20d, domains[0]);
+            Assert.Equal(40d, domains[1]);
+            Assert.Equal(120d, domains[5]);
+
+            grid[1].DivideByCount(2);
+            domains = grid.GetCellDomains(true);
+            Assert.Equal(7, domains.Count);
+            Assert.Equal(50d, domains[2]);
         }
 
         [Fact]

@@ -861,7 +861,7 @@ namespace Elements.Spatial
 
             else
             {
-                var domainsSequence = DomainsToSequence();
+                var domainsSequence = GetCellDomains();
                 for (int i = 0; i < domainsSequence.Count - 1; i++)
                 {
                     if (position <= domainsSequence[i + 1])
@@ -875,7 +875,12 @@ namespace Elements.Spatial
         }
 
 
-        private List<double> DomainsToSequence(bool recursive = false)
+        /// <summary>
+        /// Get domain parameters at the ends and in-between all cells.
+        /// </summary>
+        /// <param name="recursive">If true, domains will be retrieved from child cells as well.</param>
+        /// <returns>A list of double representing the domain across cells.</returns>
+        public List<double> GetCellDomains(bool recursive = false)
         {
             if (IsSingleCell)
             {
@@ -893,7 +898,7 @@ namespace Elements.Spatial
         /// <returns>A list of Vector3d points representing the boundaries between cells.</returns>
         public List<Vector3> GetCellSeparators(bool recursive = false)
         {
-            var values = DomainsToSequence(recursive);
+            var values = GetCellDomains(recursive);
             var t = values.Select(v => v.MapFromDomain(curveDomain));
             var pts = t.Select(t0 => Curve.TransformAt(Curve.Domain.Min + t0 * Curve.Domain.Length).Origin).ToList();
             return pts;
