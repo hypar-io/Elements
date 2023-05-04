@@ -63,7 +63,7 @@ namespace Hypar.Tests
 
             var expectedLength = 11.85;  // approximation as the linear interpolation used for calculating length is not hugely accurate
             Assert.Equal(expectedLength, bezier.Length(), 2);
-            var divisions = 50; // brittle as it relies on number of samples within Bezier being unchanged
+            var divisions = 500; // brittle as it relies on number of samples within Bezier being unchanged
             var polylineLength = bezier.ToPolyline(divisions).Length();
             Assert.Equal(polylineLength, bezier.Length());
         }

@@ -147,7 +147,7 @@ namespace Elements.Tests
         {
             this.Name = "TransformsOrientedAlongCurve";
             var arc = new Arc(Vector3.Origin, 10.0, 45.0, 135.0);
-            for (var i = 0.0; i <= 1.0; i += 0.1)
+            for (var i = arc.Domain.Min; i <= arc.Domain.Max; i += arc.Domain.Length / 10)
             {
                 var t = Elements.Geometry.Transform.CreateHorizontalFrameAlongCurve(arc, i);
                 var m = new Mass(Polygon.Rectangle(1.0, 1.0), 0.5, transform: t);
@@ -182,7 +182,7 @@ namespace Elements.Tests
         {
             this.Name = "AllTransformsRunInTheSameDirection";
 
-            var curves = new List<Curve>();
+            var curves = new List<BoundedCurve>();
 
             var line = new Line(Vector3.Origin, new Vector3(1, 2, 5));
             curves.Add(line);
@@ -232,7 +232,7 @@ namespace Elements.Tests
             var beam = new Beam(centerLine, Polygon.Rectangle(0.1, 0.1));
             this.Model.AddElement(beam);
 
-            var centerLineRev = centerLine.Reversed().Transformed(new Transform(new Vector3(2, 0, 0)));
+            var centerLineRev = centerLine.Reversed().TransformedLine(new Transform(new Vector3(2, 0, 0)));
             var downT = centerLineRev.TransformAt(0);
             this.Model.AddElements(downT.ToModelCurves());
 

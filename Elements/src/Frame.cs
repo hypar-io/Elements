@@ -18,7 +18,7 @@ namespace Elements
         /// <summary>
         /// The perimeter of the frame.
         /// </summary>
-        public Curve Curve { get; set; }
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// Create a frame.

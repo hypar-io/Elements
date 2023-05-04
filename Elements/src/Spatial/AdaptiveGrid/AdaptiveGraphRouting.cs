@@ -49,19 +49,6 @@ namespace Elements.Spatial.AdaptiveGrid
             //global information line boundaries, points, lines and obstacles.
             _grid = grid;
             _configuration = configuration;
-
-            if (!_configuration.LayerPenalty.ApproximatelyEquals(1))
-            {
-                var plane = new Plane(new Vector3(0, 0, _configuration.MainLayer), Vector3.ZAxis);
-                var modifier = new WeightModifier(
-                    "Not Main Layer",
-                    new Func<Vertex, Vertex, bool>((a, b) =>
-                    {
-                        return Math.Abs(a.Point.Z - _configuration.MainLayer) > _grid.Tolerance ||
-                               Math.Abs(b.Point.Z - _configuration.MainLayer) > _grid.Tolerance;
-                    }),
-                    _configuration.LayerPenalty);
-            }
         }
 
         /// <summary>
@@ -89,6 +76,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var normalEdgesCheap = new List<(Line, double)>();
             var normalEdgesExpensive = new List<(Line, double)>();
             var hintEdges = new List<(Line, double)>();
+            var hintEdgesExpensive = new List<(Line, double)>();
             var offsetEdges = new List<(Line, double)>();
 
             var infos = CalculateEdgeInfos(hintLines);
@@ -108,7 +96,14 @@ namespace Elements.Spatial.AdaptiveGrid
                 var info = infos[edge.Id];
                 if (info.HasAnyFlag(EdgeFlags.UserDefinedHint))
                 {
-                    hintEdges.Add((l, info.Factor));
+                    if (info.Factor > 1 + _grid.Tolerance)
+                    {
+                        hintEdgesExpensive.Add((l, info.Factor));
+                    }
+                    else
+                    {
+                        hintEdges.Add((l, info.Factor));
+                    }
                 }
                 else if (info.HasAnyFlag(EdgeFlags.HiddenHint))
                 {
@@ -152,6 +147,7 @@ namespace Elements.Spatial.AdaptiveGrid
             add(normalEdgesExpensive, "Normal Edges Expensive", Colors.Purple);
             add(offsetEdges, "Offset Edges Main", Colors.Orange);
             add(hintEdges, "Hint Edges Main", Colors.Green);
+            add(hintEdgesExpensive, "Hint Edges Expensive", Colors.Yellow);
 
             return visualizations;
         }
@@ -446,6 +442,7 @@ namespace Elements.Spatial.AdaptiveGrid
         {
             var weights = new Dictionary<ulong, EdgeInfo>();
             var mainAxis = _grid.Transform.XAxis;
+            var modifiersGroups = GroupedWeightModifiers();
             foreach (var e in _grid.GetEdges())
             {
                 var v0 = _grid.GetVertex(e.StartId);
@@ -468,7 +465,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     double hintFactor = 1;
                     double offsetFactor = 1;
-                    double modifierFactor = ModifierFactor(v0, v1);
+                    double modifierFactor = ModifierFactor(v0, v1, modifiersGroups);
 
                     //TODO: consider unifying hint line, offset line and modifiers as single concept.
                     //There will still be functions for adding hint/offset lines but everything will be processed inside

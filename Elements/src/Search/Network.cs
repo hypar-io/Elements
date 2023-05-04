@@ -192,7 +192,7 @@ namespace Elements.Search
             {
                 if (x.X.ApproximatelyEquals(y.X))
                 {
-                    return y.Y.CompareTo(x.Y);
+                    return x.Y.CompareTo(y.Y);
                 }
 
                 return x.X.CompareTo(y.X);
@@ -233,7 +233,7 @@ namespace Elements.Search
                 }
                 else if (segment.Start.X.ApproximatelyEquals(segment.End.X))
                 {
-                    leftMost = segment.Start.Y < segment.End.Y ? segment.End : segment.Start;
+                    leftMost = segment.Start.Y > segment.End.Y ? segment.End : segment.Start;
                 }
                 return new (Vector3 location, int index, bool isLeftMost, T item)[]{
                     (segment.Start, i, segment.Start == leftMost, item),

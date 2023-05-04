@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry;
 
 namespace Elements
@@ -36,7 +35,7 @@ namespace Elements
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
-        public Curve Curve { get; set; }
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// Radius of the gridline head.
@@ -73,13 +72,13 @@ namespace Elements
 
             var renderVertices = new List<Vector3>();
 
-            var start = GetPointAndDirectionAt(0);
-            var end = GetPointAndDirectionAt(1);
+            var start = GetPointAndDirectionAt(this.Curve.Domain.Min);
+            var end = GetPointAndDirectionAt(this.Curve.Domain.Max);
 
-            var circle = new Circle(Radius);
             var circleVertexTransform = GetCircleTransform();
-
-            renderVertices.AddRange(circle.RenderVertices().Select(v => circleVertexTransform.OfPoint(v)));
+            var circle = new Arc(circleVertexTransform, Radius);
+            
+            renderVertices.AddRange(circle.RenderVertices());
 
             if (ExtensionBeginning > 0)
             {
@@ -114,7 +113,7 @@ namespace Elements
         /// <returns></returns>
         public Transform GetCircleTransform()
         {
-            var start = GetPointAndDirectionAt(0);
+            var start = GetPointAndDirectionAt(this.Curve.Domain.Min);
             var normal = Vector3.ZAxis;
             if (normal.Dot(start.dir) > 1 - Vector3.EPSILON)
             {

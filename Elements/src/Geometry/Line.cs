@@ -8,20 +8,25 @@ using Elements.Spatial;
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A linear curve between two points.
+    /// A line segment.
+    /// Parameterization of the line is  0 (start) -> length (end)
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
-    public class Line : Curve, IEquatable<Line>
+    /// TODO: Rename this class to LineSegment
+    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
     {
-        /// <summary>The start of the line.</summary>
-        [JsonProperty("Start", Required = Required.AllowNull)]
-        public Vector3 Start { get; set; }
-
-        /// <summary>The end of the line.</summary>
-        [JsonProperty("End", Required = Required.AllowNull)]
-        public Vector3 End { get; set; }
+        /// <summary>
+        /// Create a line of one unit length along the X axis.
+        /// </summary>
+        public Line()
+        {
+            this.Start = Vector3.Origin;
+            this.End = new Vector3(1, 0, 0);
+            this.Domain = new Domain1d(0, 1);
+            this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
+        }
 
         /// <summary>
         /// Create a line.
@@ -41,6 +46,36 @@ namespace Elements.Geometry
 
             this.Start = @start;
             this.End = @end;
+            this.Domain = new Domain1d(0, this.Start.DistanceTo(this.End));
+            this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
+        }
+
+        /// <summary>
+        /// Create a line of length from a start along direction.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="direction"></param>
+        /// <param name="length"></param>
+        public Line(Vector3 start, Vector3 direction, double length)
+        {
+            this.Start = start;
+            this.End = start + direction.Unitized() * length;
+            this.Domain = new Domain1d(0, length);
+            this.BasisCurve = new InfiniteLine(this.Start, direction);
+        }
+
+        /// <summary>
+        /// Create a line from a trimmed segment of an infinite line.
+        /// </summary>
+        /// <param name="line">The infinite line from which this segment is trimmed.</param>
+        /// <param name="startParameter">The start parameter of the line segment.</param>
+        /// <param name="endParameter">The end parameter of the line segment.</param>
+        public Line(InfiniteLine line, double startParameter, double endParameter)
+        {
+            this.BasisCurve = line;
+            this.Domain = new Domain1d(startParameter, endParameter);
+            this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
+            this.End = this.BasisCurve.Origin + this.Domain.Max * this.BasisCurve.Direction;
         }
 
         /// <summary>
@@ -52,27 +87,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a line of one unit length along the X axis.
-        /// </summary>
-        public Line()
-        {
-            this.Start = Vector3.Origin;
-            this.End = new Vector3(1, 0, 0);
-        }
-
-        /// <summary>
-        /// Construct a line of length from a start along direction.
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="direction"></param>
-        /// <param name="length"></param>
-        public Line(Vector3 start, Vector3 direction, double length)
-        {
-            this.Start = start;
-            this.End = start + direction.Unitized() * length;
-        }
-
-        /// <summary>
         /// Get a transform whose XY plane is perpendicular to the curve, and whose
         /// positive Z axis points along the curve.
         /// </summary>
@@ -80,7 +94,11 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public override Transform TransformAt(double u)
         {
-            return new Transform(PointAt(u), (this.Start - this.End).Unitized());
+            if (!Domain.Includes(u, true))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve.");
+            }
+            return this.BasisCurve.TransformAt(u);
         }
 
         /// <summary>
@@ -90,16 +108,15 @@ namespace Elements.Geometry
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
-            if (u > 1.0 + Vector3.EPSILON || u < 0.0 - Vector3.EPSILON)
+            if (!Domain.Includes(u, true))
             {
-                throw new Exception("The parameter t must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
-            var offset = this.Length() * u;
-            return this.Start + offset * this.Direction();
+            return this.BasisCurve.PointAt(u);
         }
 
         /// <summary>
-        /// Construct a transformed copy of this Curve.
+        /// Create new line transformed by transform.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public override Curve Transformed(Transform transform)
@@ -109,7 +126,7 @@ namespace Elements.Geometry
                 return this;
             }
 
-            return TransformedLine(transform);
+            return new Line(transform.OfPoint(this.Start), transform.OfPoint(this.End));
         }
 
         /// <summary>
@@ -553,6 +570,13 @@ namespace Elements.Geometry
             return lines;
         }
 
+        /// <summary>
+        /// The mid point of the line.
+        /// </summary>
+        public override Vector3 Mid()
+        {
+            return Start.Average(End);
+        }
 
         /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
@@ -574,7 +598,7 @@ namespace Elements.Geometry
             var divs = (int)(localLength / l);
             var span = divs * l;
             var halfSpan = span / 2;
-            var mid = this.PointAt(0.5);
+            var mid = this.Mid();
             var dir = this.Direction();
             var start = mid - dir * halfSpan;
             var end = mid + dir * halfSpan;
@@ -607,7 +631,7 @@ namespace Elements.Geometry
                 throw new ArgumentException($"The number of divisions must be greater than 0.");
             }
             var lines = new List<Line>();
-            var div = 1.0 / n;
+            var div = Length() / n;
             var a = Start;
             var t = div;
             for (var i = 0; i < n - 1; i++)
@@ -712,7 +736,7 @@ namespace Elements.Geometry
         {
             // this test line — inset slightly from the line — helps treat the ends as valid intersection points, to prevent
             // extension beyond an immediate intersection.
-            var testLine = new Line(this.PointAt(0.001), this.PointAt(0.999));
+            var testLine = new Line(this.Start + this.BasisCurve.Direction * 0.001, this.End - this.BasisCurve.Direction * 0.001);
             var segments = otherLines;
             var intersectionsForLine = new List<Vector3>();
             foreach (var segment in segments)
@@ -1039,67 +1063,7 @@ namespace Elements.Geometry
         /// <returns>An arc, or null if no fillet can be calculated.</returns>
         public Arc Fillet(Line target, double radius)
         {
-            var d1 = this.Direction();
-            var d2 = target.Direction();
-            if (d1.IsParallelTo(d2))
-            {
-                throw new Exception("The fillet could not be created. The lines are parallel");
-            }
-
-            var r1 = new Ray(this.Start, d1);
-            var r2 = new Ray(target.Start, d2);
-            if (!r1.Intersects(r2, out Vector3 result, true))
-            {
-                return null;
-            }
-
-            // Construct new vectors that both
-            // point away from the projected intersection
-            var newD1 = (this.PointAt(0.5) - result).Unitized();
-            var newD2 = (target.PointAt(0.5) - result).Unitized();
-
-            var theta = newD1.AngleTo(newD2) * Math.PI / 180.0;
-            var halfTheta = theta / 2.0;
-            var h = radius / Math.Sin(halfTheta);
-            var centerVec = newD1.Average(newD2).Unitized();
-            var arcCenter = result + centerVec * h;
-
-            // Find the closest points from the arc
-            // center to the adjacent curves.
-            var p1 = arcCenter.ClosestPointOn(this);
-            var p2 = arcCenter.ClosestPointOn(target);
-
-            // Find the angle of both segments relative to the fillet arc.
-            // ATan2 assumes the origin, so correct the coordinates
-            // by the offset of the center of the arc.
-            var angle1 = Math.Atan2(p1.Y - arcCenter.Y, p1.X - arcCenter.X) * 180.0 / Math.PI;
-            var angle2 = Math.Atan2(p2.Y - arcCenter.Y, p2.X - arcCenter.X) * 180.0 / Math.PI;
-
-            // ATan2 will provide negative angles in the "lower" quadrants
-            // Ensure that these values are 180d -> 360d
-            angle1 = (angle1 + 360) % 360;
-            angle2 = (angle2 + 360) % 360;
-            angle2 = angle2 == 0.0 ? 360.0 : angle2;
-
-            // We only support CCW wound arcs.
-            // For arcs that with start angles <1d, convert
-            // the arc back to a negative value.
-            var arc = new Arc(arcCenter,
-                           radius,
-                           angle1 > angle2 ? angle1 - 360.0 : angle1,
-                           angle2);
-
-            // Get the complimentary arc and choose
-            // the shorter of the two arcs.
-            var complement = arc.Complement();
-            if (arc.Length() < complement.Length())
-            {
-                return arc;
-            }
-            else
-            {
-                return complement;
-            }
+            return Arc.Fillet(this, target, radius);
         }
 
         /// <summary>
@@ -1200,10 +1164,10 @@ namespace Elements.Geometry
 
             if (point.IsAlmostEqualTo(end))
             {
-                return 1;
+                return end.DistanceTo(start);
             }
 
-            return (point - start).Length() / (end - start).Length();
+            return point.DistanceTo(start);
         }
 
         /// <summary>
@@ -1242,14 +1206,6 @@ namespace Elements.Geometry
             var start = Start.Project(plane);
             var end = End.Project(plane);
             return new Line(start, end);
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return new[] { this.Start, this.End };
         }
 
         /// <summary>
@@ -1360,6 +1316,36 @@ namespace Elements.Geometry
         public override string ToString()
         {
             return $"start: {Start}, end: {End}";
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            return start + distance;
+        }
+
+        /// <summary>
+        /// Get parameters to be used to find points along the curve for visualization.
+        /// </summary>
+        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
+        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        {
+            return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min) };
         }
     }
 

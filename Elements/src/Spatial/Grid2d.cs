@@ -596,7 +596,7 @@ namespace Elements.Spatial
         {
             var curves = new List<ICurve>();
             var points = new List<Vector3>();
-            Curve otherDirection = null;
+            BoundedCurve otherDirection = null;
             Vector3 toOrigin = new Vector3();
             switch (direction)
             {
@@ -611,7 +611,7 @@ namespace Elements.Spatial
                     toOrigin = GetTransformedOrigin() - U.StartPoint();
                     break;
             }
-            var originVec = otherDirection.PointAt(0) - toOrigin;
+            var originVec = otherDirection.Start - toOrigin;
             foreach (var point in points)
             {
                 var displacement = new Transform(point - originVec);
@@ -693,7 +693,7 @@ namespace Elements.Spatial
         /// Get a rectangular polygon representing this untrimmed cell boundary.
         /// </summary>
         /// <returns>A rectangle representing this cell in world coordinates.</returns>
-        public Curve GetCellGeometry()
+        public BoundedCurve GetCellGeometry()
         {
             var baseRect = GetBaseRectangleTransformed();
             return baseRect.TransformedPolygon(fromGrid);
@@ -704,7 +704,7 @@ namespace Elements.Spatial
         /// If the cell falls completely outside of the boundary, an empty array will be returned.
         /// </summary>
         /// <returns>Curves representing this cell in world coordinates.</returns>
-        public Curve[] GetTrimmedCellGeometry()
+        public BoundedCurve[] GetTrimmedCellGeometry()
         {
             if (boundariesInGridSpace == null || boundariesInGridSpace.Count == 0)
             {
@@ -718,7 +718,7 @@ namespace Elements.Spatial
                 return fromGrid.OfPolygons(trimmedRect);
 
             }
-            return new Curve[0];
+            return new BoundedCurve[0];
         }
 
         /// <summary>
