@@ -15,6 +15,7 @@
 - `Ellipse`
 - `EllipticalArc`
 - `IndexedPolycurve`
+- `Grid1d.GetCellDomains`
 
 ### Changed
 
@@ -26,7 +27,7 @@
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.
 - `Polyline` is now parameterized 0->length.
-- `Circle` is now parameteried 0->2Pi.
+- `Circle` is now parameterized 0->2Pi.
 - `Line` is now parameterized 0->length.
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 - `Message`: removed obsolete `FromLine` method.
@@ -39,6 +40,7 @@
 - Using Multiple `ModelText`s would sometimes result in a corrupted texture atlas, with cutoff text. This is fixed.
 - #865
 - `Network`: intersections are not created for some E-shape cases
+- `AdaptiveGrid`: adding a vertex to a grid that has no transformation no longer cause point precision loss.
 - `Vector3.AreCoplanar` would sometimes return false negatives.
 - Fix the polygon centroid calculation to remove collinear vertices.
 - Fix the tests for 3dCentroid testing.
