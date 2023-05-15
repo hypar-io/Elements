@@ -236,6 +236,8 @@ namespace Elements
             {
                 var t = this.Texts[i];
 
+                if(t.text == "\u0085") continue;
+
                 var td = t.facingDirection.IsZero() ? Vector3.ZAxis : t.facingDirection;
                 var ta = this._textureAtlas[i];
 
