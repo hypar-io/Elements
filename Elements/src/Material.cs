@@ -203,7 +203,7 @@ namespace Elements
                         string normalTexture = null,
                         bool interpolateTexture = true,
                         string emissiveTexture = null,
-                        double emissiveFactor = 1.0,
+                        double emissiveFactor = 0.0,
                         bool drawInFront = false,
                         Guid id = default) :
             this(color,

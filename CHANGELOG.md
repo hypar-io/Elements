@@ -34,6 +34,7 @@
 - `AdaptiveGrid`: removed obsolete `TryGetVertexIndex` with `tolerance` parameter.
 - `EdgeInfo`: obsolete attribute is removed from `HasVerticalChange` property.
 - `RoutingConfiguration`: removed obsolete `MainLayer` and `LayerPenalty` properties.
+- `Material.EmissiveFactor` is now 0.0 by default.
 
 ### Fixed
 
