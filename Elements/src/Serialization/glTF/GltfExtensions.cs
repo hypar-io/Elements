@@ -360,8 +360,9 @@ namespace Elements.Serialization.glTF
                         samplerId++;
                     }
 
-                    gltfMaterial.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
                 }
+
+                gltfMaterial.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
 
                 if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {

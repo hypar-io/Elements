@@ -60,6 +60,18 @@ namespace Elements.Serialization.JSON
             _discriminator = discriminator;
         }
 
+        private static readonly List<string> TypePrefixesExcludedFromTypeCache = new List<string> { "System", "SixLabors", "Newtonsoft" };
+
+        /// <summary>
+        /// When we build up the element type cache, we iterate over all types in the app domain.
+        /// Excluding other types can speed up the process and reduce deserialization issues.
+        /// </summary>
+        /// <param name="prefixes"></param>
+        public static void ExcludeTypePrefixesFromTypeCache(params string[] prefixes)
+        {
+            TypePrefixesExcludedFromTypeCache.AddRange(prefixes);
+        }
+
         /// <summary>
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
@@ -74,11 +86,10 @@ namespace Elements.Serialization.JSON
 
             failedAssemblyErrors = new List<string>();
 
-            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
             {
                 var name = a.GetName().Name;
-                return !skipAssembliesPrefices.Any(p => name.StartsWith(p));
+                return !TypePrefixesExcludedFromTypeCache.Any(p => name.StartsWith(p));
             }))
             {
                 var types = Array.Empty<Type>();
