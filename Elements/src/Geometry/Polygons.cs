@@ -18,19 +18,20 @@ namespace Elements.Geometry
         public static Polygon Rectangle(double width, double height, Plane plane = null)
         {
             Vector3 a, b, c, d;
-            if (plane != null && plane.Normal.Dot(Vector3.ZAxis) != 1)
+            // Confirm the provided plane is valid and is not either Z-Normal or would produce a valid rect from U or V
+            // any abs less than 1-Epsilon would be a valid normal
+            if (plane != null && Math.Abs(plane.Normal.Dot(Vector3.ZAxis)) > (1 - Vector3.EPSILON))
             {
-                Vector3 origin = plane.ClosestPoint(Vector3.Origin);
                 // calculate Vector3 for each component based on plane normal
-                Vector3 XZ = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
-                Vector3 YZ = plane.Normal.Cross(XZ).Unitized() * height / 2;
+                Vector3 U = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
+                Vector3 V = plane.Normal.Cross(U).Unitized() * height / 2;
 
                 // Vector addition to determine 4 vertices starting from origin and adding
-                // x and y components
-                a = origin - XZ - YZ;
-                b = origin + XZ - YZ;
-                c = origin + XZ + YZ;
-                d = origin - XZ + YZ;
+                // rect U,V components
+                a = plane.Origin - U - V;
+                b = plane.Origin + U - V;
+                c = plane.Origin + U + V;
+                d = plane.Origin - U + V;
             }
             else
             {
@@ -50,7 +51,7 @@ namespace Elements.Geometry
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
         /// <param name="transform">The transform reference to construct the rectangle from.</param>
-        /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
+        /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a transform.</returns>
         Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)
         {
             transform ??= new Transform();
@@ -59,8 +60,8 @@ namespace Elements.Geometry
             a.Z = 0;
             var c = inverse.OfPoint(max);
             c.Z = 0;
-            var b = ((c.X, a.Y));
-            var d = ((a.X, c.Y));
+            var b = (c.X, a.Y);
+            var d = (a.X, c.Y);
             return new Polygon(new[] { a, b, c, d }).TransformedPolygon(transform);
         }
 
@@ -69,9 +70,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
-        /// <param name="plane">The plane to draw the rectangle on.</param>
+        /// <param name="plane">The plane to project the rectangle on.</param>
         /// <param name="alignment">The alignment reference to construct the rectangle from.</param>
-        /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
+        /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a plane with a sided alignment.</returns>
         Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)
         {
             alignment ??= plane.Normal.IsParallelTo(Vector3.ZAxis) ? Vector3.XAxis : Vector3.ZAxis;
