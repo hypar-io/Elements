@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using SkiaSharp;
 
 namespace Elements.Serialization.SVG
 {
+    /// <summary>
+    /// Base class for SVG documents
+    /// </summary>
     public abstract class SvgBaseDrawing
     {
         public double Scale { get; protected set; }

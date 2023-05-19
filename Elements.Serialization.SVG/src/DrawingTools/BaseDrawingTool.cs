@@ -20,23 +20,14 @@ namespace Elements.Serialization.SVG
         public virtual void SetBounds(BBox3 sceneBounds, double rotation)
         {
             _sceneBounds = sceneBounds;
-            // var viewBoxWidth = (float)(sceneBounds.Max.X - sceneBounds.Min.X);
-            // var viewBoxHeight = (float)(sceneBounds.Max.Y - sceneBounds.Min.Y);
-            var t = new Transform(Vector3.Origin);
-            t.Rotate(rotation);
-            var bounds = new BBox3(sceneBounds.Corners().Select(v => t.OfPoint(v)));
-            // var wOld = viewBoxWidth;
-            // var hOld = viewBoxHeight;
+            var transform = new Transform(Vector3.Origin);
+            transform.Rotate(rotation);
+            var bounds = new BBox3(sceneBounds.Corners().Select(v => transform.OfPoint(v)));
             var viewBoxWidth = (float)(bounds.Max.X - bounds.Min.X);
             var viewBoxHeight = (float)(bounds.Max.Y - bounds.Min.Y);
 
             PageHeight = viewBoxHeight;
             PageWidth = viewBoxWidth;
-            // float max = Math.Max(viewBoxWidth, viewBoxHeight);
-            // _matrix = SKMatrix.CreateRotationDegrees((float)rotation, (float)(viewBoxWidth * _baseDrawing.Scale / 2.0),
-            //     (float)(viewBoxHeight * _baseDrawing.Scale / 2.0));
-            // _matrix.TransX += (float)((wOld - viewBoxWidth) * _baseDrawing.Scale / 2.0f);
-            // _matrix.TransY += (float)((viewBoxHeight - hOld) * _baseDrawing.Scale / 2.0f);
         }
 
         public abstract void DrawPolygon(Polygon polygon, SvgContext context);
