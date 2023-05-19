@@ -23,15 +23,15 @@ namespace Elements.Geometry
             if (plane != null && Math.Abs(plane.Normal.Dot(Vector3.ZAxis)) < (1 - Vector3.EPSILON))
             {
                 // calculate Vector3 for each component based on plane normal
-                Vector3 U = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
-                Vector3 V = plane.Normal.Cross(U).Unitized() * height / 2;
+                Vector3 u = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
+                Vector3 v = plane.Normal.Cross(u).Unitized() * height / 2;
 
                 // Vector addition to determine 4 vertices starting from origin and adding
                 // rect U,V components
-                a = plane.Origin - U - V;
-                b = plane.Origin + U - V;
-                c = plane.Origin + U + V;
-                d = plane.Origin - U + V;
+                a = plane.Origin - u - v;
+                b = plane.Origin + u - v;
+                c = plane.Origin + u + v;
+                d = plane.Origin - u + v;
             }
             else
             {
