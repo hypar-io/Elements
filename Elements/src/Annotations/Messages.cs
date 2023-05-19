@@ -64,9 +64,7 @@ namespace Elements.Annotations
                                              string name = null,
                                              string stackTrace = null)
         {
-            var transform = point.HasValue
-                ? new Transform(point.Value).Moved(z: -sideLength / 2)
-                : new Transform();
+            var transform = point.HasValue ? new Transform(point.Value) : new Transform();
             var message = new Message(messageText,
                                       stackTrace,
                                       severity,
@@ -78,8 +76,9 @@ namespace Elements.Annotations
                                       name ?? DefaultName);
             if (point.HasValue)
             {
-                var extrude = new Extrude(Polygon.Rectangle(
-                    sideLength, sideLength), sideLength, Vector3.ZAxis, false);
+                var rectangle = Polygon.Rectangle(sideLength, sideLength).TransformedPolygon(
+                    new Transform(0, 0, -sideLength / 2));
+                var extrude = new Extrude(rectangle, sideLength, Vector3.ZAxis, false);
 
                 message.Representation = new Representation(new[] { extrude });
             }

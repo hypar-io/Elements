@@ -44,6 +44,7 @@
 - `Vector3.AreCoplanar` would sometimes return false negatives.
 - Fix the polygon centroid calculation to remove collinear vertices.
 - Fix the tests for 3dCentroid testing.
+- `Message` created from `Message.FromPoint` now has `Transform.Origin` set exactly on original point.
 
 ## 1.6.0
 
