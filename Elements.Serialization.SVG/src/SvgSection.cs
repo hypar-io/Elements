@@ -1,8 +1,5 @@
 using Elements.Geometry;
-using SkiaSharp;
 using Svg;
-using Svg.Skia;
-using Svg.Transforms;
 using System;
 using System.Collections.Generic;
 using System.IO;
