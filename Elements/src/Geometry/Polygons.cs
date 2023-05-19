@@ -20,7 +20,7 @@ namespace Elements.Geometry
             Vector3 a, b, c, d;
             // Confirm the provided plane is valid and is not either Z-Normal or would produce a valid rect from U or V
             // any abs less than 1-Epsilon would be a valid normal
-            if (plane != null && Math.Abs(plane.Normal.Dot(Vector3.ZAxis)) > (1 - Vector3.EPSILON))
+            if (plane != null && Math.Abs(plane.Normal.Dot(Vector3.ZAxis)) < (1 - Vector3.EPSILON))
             {
                 // calculate Vector3 for each component based on plane normal
                 Vector3 U = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
