@@ -202,7 +202,7 @@ namespace Elements.Annotations
         /// </summary>
         public static Message Error(Vector3? point, string message = null)
         {
-            return Message.FromPoint(message, point, MessageSeverity.Warning, shortMessage: "🛑");
+            return Message.FromPoint(message, point, MessageSeverity.Error, shortMessage: "🛑");
         }
 
         /// <summary>
