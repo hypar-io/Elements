@@ -10,9 +10,9 @@ namespace Elements.Tests
         [Fact]
         public void MessageFromPointHasCorrectTransform()
         {
-            var line = new Line((2.1, 4.2, 2), (3.3, 5, 3));
-            var message = Message.FromPoint("Test", line.Start);
-            Assert.Equal(line.Start, message.Transform.Origin);
+            var point = new Vector3(2.1, 4.2, 2);
+            var message = Message.FromPoint("Test", point);
+            Assert.Equal(point, message.Transform.Origin);
         }
     }
 }
