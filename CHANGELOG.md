@@ -15,6 +15,9 @@
 - `Ellipse`
 - `EllipticalArc`
 - `Grid1d.GetCellDomains`
+- `Message.Info`
+- `Message.Error`
+- `Message.Warning`
 
 ### Changed
 
