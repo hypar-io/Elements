@@ -13,6 +13,7 @@ namespace Elements.Annotations
         /// Default json constructor for a message that may have geometry.
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="shortMessage"></param>
         /// <param name="stackTrace"></param>
         /// <param name="severity"></param>
         /// <param name="transform"></param>
@@ -22,9 +23,10 @@ namespace Elements.Annotations
         /// <param name="id"></param>
         /// <param name="name"></param>
         [JsonConstructor]
-        public Message(string @message, string @stackTrace, MessageSeverity @severity, Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+        public Message(string @message, string @shortMessage, string @stackTrace, MessageSeverity @severity, Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
             : base(transform, material, representation, isElementDefinition, id, name)
         {
+            this.ShortMessage = @shortMessage;
             this.MessageText = @message;
             this.StackTrace = @stackTrace;
             this.Severity = @severity;
@@ -37,6 +39,10 @@ namespace Elements.Annotations
             : base()
         {
         }
+
+        /// <summary>A short message for the user. For a more detailed message, use MessageText.</summary>
+        [JsonProperty("ShortMessage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ShortMessage { get; set; }
 
         /// <summary>A warning message for the user.</summary>
         [JsonProperty("Message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
