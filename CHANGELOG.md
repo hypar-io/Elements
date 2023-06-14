@@ -48,6 +48,7 @@
 - Fix the polygon centroid calculation to remove collinear vertices.
 - Fix the tests for 3dCentroid testing.
 - `Message` created from `Message.FromPoint` now has `Transform.Origin` set exactly on original point.
+- `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 
 ## 1.6.0
 
@@ -70,6 +71,7 @@
 - `AdaptiveGrid.AggregateFactorMultiply(double a, double b)`
 
 ### Changed
+
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
 - `AdaptiveGrid.AddPlanarWeightModifier` - added `group` parameter.
 - `WeightModifier` - added `group` parameter to constructor.
