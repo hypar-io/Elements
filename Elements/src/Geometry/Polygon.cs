@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -739,6 +739,7 @@ namespace Elements.Geometry
                 Contains3D(v, out var foundContainment);
                 if (foundContainment == Containment.Outside)
                 {
+                    containment = foundContainment;
                     return false;
                 }
                 if (foundContainment > containment)
