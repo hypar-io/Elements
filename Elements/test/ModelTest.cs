@@ -40,6 +40,8 @@ namespace Elements.Tests
         internal static Polyline TestPolyline = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1) });
         internal static Polygon TestPolygon = Polygon.Ngon(5, 2);
         internal static Circle TestCircle = new Circle(Vector3.Origin, 5);
+        internal static Ellipse TestEllipse = new Ellipse(Vector3.Origin, 5, 2);
+        internal static EllipticalArc TestEllipticalArc = new EllipticalArc(TestEllipse, Math.PI * 0.25, Math.PI * 0.75);
 
         public ModelTest()
         {
@@ -57,7 +59,7 @@ namespace Elements.Tests
 
         public virtual void Dispose()
         {
-            if (this._model.Elements.Any())
+            if (this._model.Elements.Any() && !String.IsNullOrEmpty(this._name))
             {
                 if (this.GenerateGlb)
                 {

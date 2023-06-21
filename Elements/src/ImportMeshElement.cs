@@ -31,8 +31,9 @@ namespace Elements
                          Material material = null,
                          Guid id = default(Guid),
                          string name = null) : base(null,
-                                                    material == null ? BuiltInMaterials.Default : material,
                                                     new Transform(),
+                                                    material == null ? BuiltInMaterials.Default : material,
+                                                    null,
                                                     true,
                                                     id == default(Guid) ? Guid.NewGuid() : id,
                                                     name)

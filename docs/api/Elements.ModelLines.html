@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class ModelLines
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -300,7 +300,8 @@ var modelLines = new ModelLines(lines, new Material(&quot;Yellow&quot;, Colors.Y
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModelLines(IList&lt;Line&gt; lines = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public ModelLines(IList&lt;Line&gt; lines = null, Material material = null, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -405,6 +406,61 @@ Lines are not selectable by default.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_ModelLines_TryToGraphicsBuffers_" data-uid="Elements.ModelLines.TryToGraphicsBuffers*"></a>
+  <h4 id="Elements_ModelLines_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___" data-uid="Elements.ModelLines.TryToGraphicsBuffers(System.Collections.Generic.List{Elements.Geometry.GraphicsBuffers}@,System.String@,System.Nullable{glTFLoader.Schema.MeshPrimitive.ModeEnum}@)">TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt;, out String, out Nullable&lt;MeshPrimitive.ModeEnum&gt;)</h4>
+  <div class="markdown level1 summary"><p>Get graphics buffers and other metadata required to modify a GLB.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt; graphicsBuffers, out string id, out MeshPrimitive.ModeEnum? mode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a>&gt;</td>
+        <td><span class="parametername">graphicsBuffers</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">glTFLoader.Schema.MeshPrimitive.ModeEnum</span>&gt;</td>
+        <td><span class="parametername">mode</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if there is graphicsbuffers data applicable to add, false otherwise.
+Out variables should be ignored if the return value is false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(out List&lt;GraphicsBuffers&gt;, out String, out Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>

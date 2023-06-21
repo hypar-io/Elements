@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Hypar.Elements.Tests</AssemblyName>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Elements</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -17,7 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\src\Elements.csproj" />
     <ProjectReference Include="..\..\Elements.CodeGeneration\src\Elements.CodeGeneration.csproj" />
-    <ProjectReference Include="..\..\Elements.Serialization.IFC\src\Elements.Serialization.IFC.csproj" />
+    <ProjectReference
+      Include="..\..\Elements.Serialization.IFC\src\Elements.Serialization.IFC.csproj" />
   </ItemGroup>
 
   <ItemGroup>

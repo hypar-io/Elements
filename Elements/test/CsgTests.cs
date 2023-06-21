@@ -5,16 +5,22 @@ using Elements.Geometry.Solids;
 using System;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Elements.Geometry.Tessellation;
+using Xunit.Abstractions;
 
 namespace Elements.Tests
 {
     public class CsgTests : ModelTest
     {
         private HSSPipeProfileFactory _profileFactory = new HSSPipeProfileFactory();
+
+        private readonly ITestOutputHelper output;
+
+        public CsgTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
 
         [Fact]
         public void Csg()
@@ -65,7 +71,7 @@ namespace Elements.Tests
             var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, true);
             beam.Representation.SolidOperations.Add(s2);
 
-            for (var i = 0.0; i < 1.0; i += 0.05)
+            for (var i = path.Domain.Min; i < path.Domain.Max; i += 0.05)
             {
                 var pt = path.PointAt(i);
                 var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, true)
@@ -92,7 +98,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void UnionWithProblematicPolygons()
+        public void UnionWithPolygonsWhichCreateZeroAreaTessElement()
         {
             var profile1 = JsonConvert.DeserializeObject<Polygon>(
                 @"{
@@ -164,14 +170,16 @@ namespace Elements.Tests
                     }
                     ]}"
                     );
-            var element = new GeometricElement();
-            element.Representation = new Representation(new List<SolidOperation>{
-                new Extrude(profile1, 1, Vector3.ZAxis, false),
-                new Extrude(profile2, 1, Vector3.ZAxis, false)
-            });
+            var element = new GeometricElement
+            {
+                Representation = new Representation(new List<SolidOperation>{
+                    new Extrude(profile1, 1, Vector3.ZAxis, false),
+                    new Extrude(profile2, 1, Vector3.ZAxis, false)
+                })
+            };
 
             element.UpdateRepresentations();
-            var solid = element.GetFinalCsgFromSolids();
+            element.GetFinalCsgFromSolids();
         }
 
         [Fact]
@@ -183,9 +191,8 @@ namespace Elements.Tests
             var geoElem = new GeometricElement(representation: new Extrude(shape, 1, Vector3.ZAxis, false));
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
-            var mgb = new MockGraphicsBuffer();
             var arrows = new ModelArrows();
-            Tessellation.Tessellate(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)), mgb);
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid, 0)));
             for (int i = 0; i < mgb.Indices.Count; i += 3)
             {
                 var a = mgb.Indices[i];
@@ -208,20 +215,37 @@ namespace Elements.Tests
         {
             public List<ushort> Indices { get; set; } = new List<ushort>();
 
-            public List<(Vector3 position, Vector3 normal)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal)>();
+            public List<(Vector3 position, Vector3 normal, UV uv, Color? color)> Vertices { get; set; } = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
+
             public void AddIndex(ushort index)
             {
                 Indices.Add(index);
             }
 
+            public void AddIndices(IList<ushort> indices)
+            {
+                Indices.AddRange(indices);
+            }
+
             public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)
             {
-                Vertices.Add((position, normal));
+                Vertices.Add((position, normal, uv, color));
             }
 
             public void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null)
             {
-                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz)));
+                Vertices.Add((new Vector3(x, y, z), new Vector3(nx, ny, nz), new UV(u, v), color));
+            }
+
+            public void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices)
+            {
+                Vertices.AddRange(vertices);
+            }
+
+            public void Initialize(int vertexCount, int indexCount)
+            {
+                Indices = new List<ushort>();
+                Vertices = new List<(Vector3 position, Vector3 normal, UV uv, Color? color)>();
             }
         }
     }

@@ -1,4 +1,5 @@
 using Elements.Geometry;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -61,6 +62,8 @@ namespace Elements.Tests
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, b)));
             Assert.True(Double.IsNaN(a.PlaneAngleTo(b, a)));
 
+            var angle = new Vector3(-1, -0.1, 0).PlaneAngleTo(Vector3.XAxis, Vector3.ZAxis);
+            Assert.True(angle < 180);
         }
 
         [Fact]
@@ -131,6 +134,13 @@ namespace Elements.Tests
 
             v = Vector3.Origin;
             Assert.Equal(0.0, v.DistanceTo(p));
+
+            p = new Plane(new Vector3(2, 3, 5), Vector3.XAxis);
+            v = new Vector3(2, 1.0, 0.5);
+            Assert.Equal(0.0, v.DistanceTo(p));
+
+            v = new Vector3(2.5, 1.0, 0.5);
+            Assert.Equal(0.5, v.DistanceTo(p));
         }
 
         [Fact]
@@ -507,14 +517,108 @@ namespace Elements.Tests
         public void ClosestPointOnInfiniteLine()
         {
             var line = new Line(Vector3.Origin, new Vector3(10, 10));
-            
+
             Assert.True(new Vector3(2, 8).ClosestPointOn(line, true).IsAlmostEqualTo(new Vector3(5, 5)));
-            
+
             var vector = new Vector3(-2, -8);
             var closestPointSegment = vector.ClosestPointOn(line);
             var closestPointInfinite = vector.ClosestPointOn(line, true);
             Assert.True(closestPointSegment.IsAlmostEqualTo(new Vector3(0, 0)));
             Assert.True(closestPointInfinite.IsAlmostEqualTo(new Vector3(-5, -5)));
+        }
+
+        [Fact]
+        public void UniqueWithinToleranceReturnsNewCollection()
+        {
+            var vectorsList = new List<Vector3>
+            {
+                Vector3.Origin,
+                new Vector3(0.000009, 0, 0),
+                new Vector3(0, -0.000009, 0),
+                new Vector3(5, 5),
+                new Vector3(5, 5, 0.000009),
+                Vector3.Origin,
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.UniqueWithinTolerance();
+
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(Vector3.Origin),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5)));
+        }
+
+        [Fact]
+        public void UniqueWithinToleranceReturnsNewCollectionWithTolerance()
+        {
+            var tolerance = 0.2;
+
+            var vectorsList = new List<Vector3>
+            {
+                new Vector3(0.1, 0, 0),
+                Vector3.Origin,
+                new Vector3(0, -0.1, 0),
+                new Vector3(5, 5, 0.1),
+                new Vector3(5, 5),
+                Vector3.Origin,
+                new Vector3(5,5)
+            };
+
+            var result = vectorsList.UniqueWithinTolerance(tolerance);
+
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(Vector3.Origin, tolerance),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5), tolerance));
+        }
+
+        [Fact]
+        public void PointsAreCoplanarWithinTolerance()
+        {
+            // Test with three points that are collinear.
+            var points = new List<Vector3> { (0, 0, 0), (1, 1, 1), (2, 2, 2) };
+            Assert.True(points.AreCoplanar());
+
+            // Test with three points that are not collinear.
+            points = new List<Vector3> { (0, 0, 0), (1, 1, 1), (0, 1, 0) };
+            Assert.True(points.AreCoplanar());
+
+            // Test with four points that are coplanar.
+            points = new List<Vector3> { (0, 0, 0), (1, 1, 1), (0, 1, 0), (1, 0, 1) };
+            Assert.True(points.AreCoplanar());
+
+            // Test with four points that are not coplanar.
+            points = new List<Vector3> { (0, 0, 0), (1, 1, 1), (0, 1, 0), (2, 0, 0) };
+            Assert.False(points.AreCoplanar());
+
+            // Test with five points that are coplanar.
+
+            points = new List<Vector3> {
+                    (-0.126164, -0.168248, 0.344318),
+                    (-0.463355, 0.438143, 0.122335),
+                    (-0.413036, 0.529648, -0.041386),
+                    (-0.148225, -0.11257, 0.312485),
+                    (-0.296069, 0.586723, -0.253626)
+                };
+            Assert.True(points.AreCoplanar());
+
+            // Test with five points that are not coplanar.
+            points = new List<Vector3> {
+                    (0, 0, 0),
+                    (1, 1, 1),
+                    (0, 1, 0),
+                    (2, 0, 0),
+                    (1, 1, 0)
+                };
+            Assert.False(points.AreCoplanar());
+
+            // Test with a real-world output from Hypar that was failing.
+            var ptsSerialized = "[{\"X\":0.0,\"Y\":0.0,\"Z\":0.0},{\"X\":20.0,\"Y\":0.0,\"Z\":-8.43769498715119E-15},{\"X\":19.999999999999996,\"Y\":20.0,\"Z\":-1.021405182655144E-14},{\"X\":9.999999999999995,\"Y\":20.0,\"Z\":-3.096967127191874E-13},{\"X\":10.0,\"Y\":10.0,\"Z\":-4.218847493575595E-15},{\"X\":1.7763568394002505E-15,\"Y\":9.999999999999998,\"Z\":0.0}]";
+            var pts = JsonConvert.DeserializeObject<List<Vector3>>(ptsSerialized);
+            Assert.True(pts.AreCoplanar());
+
+            // Test with a shape that has a lot of coincident and collinear points.
+            var triangleWithExtraPoints = new List<Vector3> { (0, 0), (0.000001, 0), (0.000002, 0), (1, 0), (2, 0), (3, 0), (4, 5) };
+            Assert.True(triangleWithExtraPoints.AreCoplanar());
         }
     }
 }

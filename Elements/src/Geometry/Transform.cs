@@ -102,27 +102,9 @@ namespace Elements.Geometry
         /// <param name="rotation">An optional rotation around the z axis.</param>
         public Transform(Vector3 origin, Vector3 z, double rotation = 0.0)
         {
-            Vector3 x = Vector3.XAxis;
-            Vector3 y = Vector3.YAxis;
+            var (X, Y) = Vector3.ConstructBasisVectorsFromZAxis(origin, z);
 
-            if (!z.IsParallelTo(Vector3.ZAxis))
-            {
-                // Project up onto the ortho plane
-                var p = new Plane(origin, z);
-                var test = Vector3.ZAxis.Project(p);
-                x = test.Cross(z).Unitized();
-                y = x.Cross(z.Negate()).Unitized();
-            }
-            else
-            {
-                // Ensure that we have a right-handed coordinate system.
-                if (z.Dot(Vector3.ZAxis).ApproximatelyEquals(-1))
-                {
-                    y = Vector3.YAxis.Negate();
-                }
-            }
-
-            this.Matrix = new Matrix(x, y, z, Vector3.Origin);
+            Matrix = new Matrix(X, Y, z, Vector3.Origin);
             ApplyRotationAndTranslation(rotation, z, origin);
         }
 
@@ -385,7 +367,7 @@ namespace Elements.Geometry
         {
             var m = new Matrix();
             m.SetupRotate(axis, angle * (Math.PI / 180.0));
-            this.Matrix = this.Matrix * m;
+            this.Matrix *= m;
         }
 
         /// <summary>
@@ -574,6 +556,23 @@ namespace Elements.Geometry
                 return false;
             }
             return this.Matrix.Equals(other.Matrix);
+        }
+
+        /// <summary>
+        /// Get the hash code for the transform.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return Matrix.GetHashCode();
+        }
+
+        /// <summary>
+        /// Get the scale of the transform.
+        /// </summary>
+        public Vector3 GetScale()
+        {
+            return new Vector3(this.XAxis.Length(), this.YAxis.Length(), this.ZAxis.Length());
         }
     }
 }

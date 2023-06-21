@@ -97,13 +97,13 @@ namespace Elements.Tests
             var lineGrid = new Grid1d(simpleLine);
             var splitLocation = new Vector3(3, 0, 0);
             lineGrid.SplitAtPoint(splitLocation);
-            Assert.True(lineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(splitLocation) < 0.01);
+            Assert.True(lineGrid[0].GetCellGeometry().End.DistanceTo(splitLocation) < 0.01);
 
             var polyline = new Polyline(new[] { Vector3.Origin, new Vector3(3, 5), new Vector3(6, 2), new Vector3(10, -3) });
             var polylineGrid = new Grid1d(polyline);
             var polylineSplitLocation = new Vector3(3, 5);
             polylineGrid.SplitAtPoint(polylineSplitLocation);
-            Assert.True(polylineGrid[0].GetCellGeometry().PointAt(1.0).DistanceTo(polylineSplitLocation) < 0.01);
+            Assert.True(polylineGrid[0].GetCellGeometry().End.DistanceTo(polylineSplitLocation) < 0.01);
 
         }
 
@@ -167,7 +167,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void GetSeparators()
+        public void GetCellSeparators()
         {
             var grid = new Grid1d(100);
             grid.DivideByCount(5);
@@ -180,6 +180,23 @@ namespace Elements.Tests
             grid[1].DivideByCount(3);
             var pts2 = grid.GetCellSeparators(true);
             Assert.Equal(8, pts2.Count);
+        }
+
+        [Fact]
+        public void GetCellDomains()
+        {
+            var grid = new Grid1d(new Domain1d(20, 120));
+            grid.DivideByCount(5);
+            var domains = grid.GetCellDomains();
+            Assert.Equal(6, domains.Count);
+            Assert.Equal(20d, domains[0]);
+            Assert.Equal(40d, domains[1]);
+            Assert.Equal(120d, domains[5]);
+
+            grid[1].DivideByCount(2);
+            domains = grid.GetCellDomains(true);
+            Assert.Equal(7, domains.Count);
+            Assert.Equal(50d, domains[2]);
         }
 
         [Fact]
@@ -313,12 +330,25 @@ namespace Elements.Tests
             var pattern = new List<(string, double)>
             {
                 ("Solid", 1),
-                ("Glazing", 3),
-                ("Fin", 0.2)
+                ("Glazing", 2),
+                ("Fin", 1.1)
             };
             Exception ex = Assert.Throws<ArgumentException>(() => grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds));
 
             Assert.Equal("The grid could not be constructed. Pattern length exceeds grid length.", ex.Message);
+        }
+
+        [Fact]
+        public void PatternWithinEpsilonOfLengthDoesNotThrowException()
+        {
+            var grid = new Grid1d(4);
+            var pattern = new List<(string, double)>
+            {
+                ("Solid", 1),
+                ("Glazing", 2),
+                ("Fin", 1.000001)
+            };
+            grid.DivideByPattern(pattern, PatternMode.None, FixedDivisionMode.RemainderAtBothEnds);
         }
 
         [Fact]

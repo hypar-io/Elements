@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Spatial.AdaptiveGrid
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -91,19 +91,70 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.html">AdaptiveGraphRouting</a></h4>
+      <section><p>Class for routing through an AdaptiveGrid.</p>
+</section>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html">AdaptiveGrid</a></h4>
       <section><p>A graph like edge-vertex structure with planar spaces connected by vertical edges.
 The grid doesn't do any intersections when new sections are added, they are stitched
 only by common vertices. Make sure that regions that are added into the graph are
 aligned with respect to boundaries and split points.</p>
 </section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.ConnectVertexStrategy.html">ConnectVertexStrategy</a></h4>
+      <section><p>Connect strategy creates edges between new vertex created from base position and any number of given vertices.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.ConnectVertexWithAngleStrategy.html">ConnectVertexWithAngleStrategy</a></h4>
+      <section><p>ConnectWithAngle strategy that connects two points in a way so incoming edge of other vertex has certain angle with given direction.
+Creates one middle vertex to achieve this but it can be skipped if two points are already aligned.</p>
+</section>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a></h4>
       <section><p>A unique edge in a adaptive grid, connecting two vertices. Don't have a particular direction.
 Class is forked from CellComplex.Edge.</p>
 </section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html">Obstacle</a></h4>
+      <section><p>AdaptiveGrid obstacle represented by a set of points with extra parameters.
+Points are used to created bounding box that is aligned with transformation parameter
+with extra offset. Since offset is applied on the box, distance on corners is even larger.
+Can be constructed from different objects.</p>
+</section>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></h4>
       <section><p>A unique vertex in a adaptive grid.
 Class is forked from CellComplex.Vertex.</p>
+</section>
+    <h3 id="structs">Structs
+  </h3>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingConfiguration.html">AdaptiveGraphRouting.RoutingConfiguration</a></h4>
+      <section><p>Object that holds common parameters that affect routing.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingHintLine.html">AdaptiveGraphRouting.RoutingHintLine</a></h4>
+      <section><p>Structure that holds information about polylines that are used to guide routing.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingVertex.html">AdaptiveGraphRouting.RoutingVertex</a></h4>
+      <section><p>Structure that holds additional information about inlet vertex</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.IAddVertexStrategy.html">IAddVertexStrategy</a></h4>
+      <section><p>Interface for adding new vertices based on chosen strategy.</p>
+</section>
+    <h3 id="enums">Enums
+  </h3>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.BranchSide.html">AdaptiveGraphRouting.BranchSide</a></h4>
+      <section><p>Enumeration that indicates one of two possible paths in routing.
+There are cases when we need to collect more than one path and
+only after some time we can decide which one is better.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.TreeOrder.html">AdaptiveGraphRouting.TreeOrder</a></h4>
+      <section><p>Order at which leaf terminal are connected into the tree.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.VerticesInsertionMethod.html">AdaptiveGrid.VerticesInsertionMethod</a></h4>
+      <section><p>Execution style for AddVertices function.
+Each option performs more operations than the previous one.</p>
+</section>
+    <h3 id="delegates">Delegates
+  </h3>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingFilter.html">AdaptiveGraphRouting.RoutingFilter</a></h4>
+      <section><p>Filter function definition.</p>
 </section>
 </article>
           </div>

@@ -13,7 +13,7 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        public Curve Curve { get; set; }
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// The setback of the framing's extrusion at the start.
@@ -49,7 +49,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The structural framing's id.</param>
         /// <param name="name">The structural framing's name.</param>
-        public StructuralFraming(Curve curve,
+        public StructuralFraming(BoundedCurve curve,
                                  Profile profile,
                                  Material material = null,
                                  double startSetback = 0.0,
@@ -70,9 +70,12 @@ namespace Elements
             this.UpdateRepresentations();
         }
 
+        /// <summary>
+        /// Construct a framing element.
+        /// </summary>
         public StructuralFraming() { }
 
-        private void SetProperties(Curve curve,
+        private void SetProperties(BoundedCurve curve,
                                    Profile profile,
                                    double startSetback,
                                    double endSetback,

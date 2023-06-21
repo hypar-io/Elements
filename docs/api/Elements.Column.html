@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Column
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -201,7 +201,7 @@
 var profile = _profileFactory.GetProfileByType(WideFlangeProfileType.W10x100);
 
 // Create a column.
-var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
+var column = new Column(Vector3.Origin, 3.0, null, profile, material: BuiltInMaterials.Steel);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -266,6 +266,9 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
     </div>
     <div>
@@ -311,13 +314,22 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Column__ctor_" data-uid="Elements.Column.#ctor*"></a>
-  <h4 id="Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Profile_Elements_Material_Elements_Geometry_Transform_System_Double_System_Double_System_Double_System_Boolean_System_Guid_System_String_" data-uid="Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Profile,Elements.Material,Elements.Geometry.Transform,System.Double,System.Double,System.Double,System.Boolean,System.Guid,System.String)">Column(Vector3, Double, Profile, Material, Transform, Double, Double, Double, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Column__ctor" data-uid="Elements.Column.#ctor">Column()</h4>
+  <div class="markdown level1 summary"><p>Construct a column.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Column()</code></pre>
+  </div>
+  <a id="Elements_Column__ctor_" data-uid="Elements.Column.#ctor*"></a>
+  <h4 id="Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Column(Vector3, Double, Curve, Profile, Transform, Material, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a Column.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Column(Vector3 location, double height, Profile profile, Material material = null, Transform transform = null, double startSetback = 0, double endSetback = 0, double rotation = 0, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Column(Vector3 location, double height, Curve curve, Profile profile, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -342,9 +354,21 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
 </td>
       </tr>
       <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The center line of the column. Will be ignored, so you can use 'null'. This parameter is required to support schema</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
         <td><span class="parametername">profile</span></td>
         <td><p>The column's profile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The column's transform.</p>
 </td>
       </tr>
       <tr>
@@ -354,9 +378,72 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The column's transform.</p>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The column's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The column's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The column's name.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Column__ctor_" data-uid="Elements.Column.#ctor*"></a>
+  <h4 id="Elements_Column__ctor_Elements_Geometry_Vector3_System_Double_Elements_Geometry_Curve_Elements_Geometry_Profile_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Column.#ctor(Elements.Geometry.Vector3,System.Double,Elements.Geometry.Curve,Elements.Geometry.Profile,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Column(Vector3, Double, Curve, Profile, Double, Double, Double, Transform, Material, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a Column.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Column(Vector3 location, double height, Curve curve, Profile profile, double startSetback, double endSetback, double rotation, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The location of the base of the column.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">height</span></td>
+        <td><p>The column's height.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The center line of the column. Will be ignored, so you can use 'null'. This parameter is required to support schema</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The column's profile.</p>
 </td>
       </tr>
       <tr>
@@ -375,6 +462,24 @@ var column = new Column(Vector3.Origin, 3.0, profile, BuiltInMaterials.Steel);
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">rotation</span></td>
         <td><p>An optional rotation of the column's profile around its axis.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The column's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The column's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The column's representation.</p>
 </td>
       </tr>
       <tr>

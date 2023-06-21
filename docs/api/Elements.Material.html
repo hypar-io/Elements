@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Material
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -278,13 +278,23 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Boolean_System_String_System_Boolean_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Boolean,System.String,System.Boolean,System.Guid,System.String)">Material(Color, Double, Double, Boolean, String, Boolean, Boolean, String, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Material__ctor" data-uid="Elements.Material.#ctor">Material()</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, bool repeatTexture, string normalTexture, bool interpolateTexture, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Material()</code></pre>
+  </div>
+  <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
+  <h4 id="Elements_Material__ctor_Elements_Geometry_Color_System_Double_System_Double_System_Boolean_System_String_System_Boolean_System_Boolean_System_String_System_Boolean_System_String_System_Double_System_Boolean_System_Guid_System_String_" data-uid="Elements.Material.#ctor(Elements.Geometry.Color,System.Double,System.Double,System.Boolean,System.String,System.Boolean,System.Boolean,System.String,System.Boolean,System.String,System.Double,System.Boolean,System.Guid,System.String)">Material(Color, Double, Double, Boolean, String, Boolean, Boolean, String, Boolean, String, Double, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a material.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Material(Color color, double specularFactor, double glossinessFactor, bool unlit, string texture, bool doubleSided, bool repeatTexture, string normalTexture, bool interpolateTexture, string emissiveTexture, double emissiveFactor, bool drawInFront, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -351,6 +361,24 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
 </td>
       </tr>
       <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">emissiveTexture</span></td>
+        <td><p>A path to an emissive image texture.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">emissiveFactor</span></td>
+        <td><p>The scale, between 0.0 and 1.0, of the emissive texture's components.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">drawInFront</span></td>
+        <td><p>Should objects with this material be drawn in front of all other objects?</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the material.</p>
@@ -365,13 +393,13 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
     </tbody>
   </table>
   <a id="Elements_Material__ctor_" data-uid="Elements.Material.#ctor*"></a>
-  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Boolean_System_String_System_Boolean_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean,System.Guid)">Material(String, Color, Double, Double, String, Boolean, Boolean, Boolean, String, Boolean, Guid)</h4>
+  <h4 id="Elements_Material__ctor_System_String_Elements_Geometry_Color_System_Double_System_Double_System_String_System_Boolean_System_Boolean_System_Boolean_System_String_System_Boolean_System_String_System_Double_System_Boolean_System_Guid_" data-uid="Elements.Material.#ctor(System.String,Elements.Geometry.Color,System.Double,System.Double,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean,System.String,System.Double,System.Boolean,System.Guid)">Material(String, Color, Double, Double, String, Boolean, Boolean, Boolean, String, Boolean, String, Double, Boolean, Guid)</h4>
   <div class="markdown level1 summary"><p>Construct a material.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, bool repeatTexture = true, string normalTexture = null, bool interpolateTexture = true, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, bool repeatTexture = true, string normalTexture = null, bool interpolateTexture = true, string emissiveTexture = null, double emissiveFactor = 1, bool drawInFront = false, Guid id = default(Guid))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -444,6 +472,24 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
 </td>
       </tr>
       <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">emissiveTexture</span></td>
+        <td><p>A relative path to a jpg or png image file to be used as en emissive texture.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">emissiveFactor</span></td>
+        <td><p>The scale, between 0.0 and 1.0, of the emissive texture's components.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">drawInFront</span></td>
+        <td><p>Should objects with this material be drawn in front of all other objects?</p>
+</td>
+      </tr>
+      <tr>
         <td><span class="xref">System.Guid</span></td>
         <td><span class="parametername">id</span></td>
         <td><p>The id of the material.</p>
@@ -493,7 +539,9 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Color Color { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Color&quot;, Required = Required.Always)]
+[Required]
+public Color Color { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -517,7 +565,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool DoubleSided { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;DoubleSided&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public bool DoubleSided { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -534,6 +583,105 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Material_DrawInFront_" data-uid="Elements.Material.DrawInFront*"></a>
+  <h4 id="Elements_Material_DrawInFront" data-uid="Elements.Material.DrawInFront">DrawInFront</h4>
+  <div class="markdown level1 summary"><p>Should objects with this material be drawn in front of all other objects?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Draw In Front&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public bool DrawInFront { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_EdgeDisplaySettings_" data-uid="Elements.Material.EdgeDisplaySettings*"></a>
+  <h4 id="Elements_Material_EdgeDisplaySettings" data-uid="Elements.Material.EdgeDisplaySettings">EdgeDisplaySettings</h4>
+  <div class="markdown level1 summary"><p>If provided, this controls how curves and lines will be drawn in the 3D view for supported viewers. This will not affect mesh / solid-based elements.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EdgeDisplaySettings EdgeDisplaySettings { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.EdgeDisplaySettings.html">EdgeDisplaySettings</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_EmissiveFactor_" data-uid="Elements.Material.EmissiveFactor*"></a>
+  <h4 id="Elements_Material_EmissiveFactor" data-uid="Elements.Material.EmissiveFactor">EmissiveFactor</h4>
+  <div class="markdown level1 summary"><p>The scale, between 0.0 and 1.0, of the emissive texture's components.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EmissiveFactor&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public double EmissiveFactor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Material_EmissiveTexture_" data-uid="Elements.Material.EmissiveTexture*"></a>
+  <h4 id="Elements_Material_EmissiveTexture" data-uid="Elements.Material.EmissiveTexture">EmissiveTexture</h4>
+  <div class="markdown level1 summary"><p>A relative path to a jpg or png image file to be used as an emissive texture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EmissiveTexture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public string EmissiveTexture { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Material_GlossinessFactor_" data-uid="Elements.Material.GlossinessFactor*"></a>
   <h4 id="Elements_Material_GlossinessFactor" data-uid="Elements.Material.GlossinessFactor">GlossinessFactor</h4>
   <div class="markdown level1 summary"><p>The glossiness factor between 0.0 and 1.0.</p>
@@ -541,7 +689,9 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double GlossinessFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;GlossinessFactor&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double GlossinessFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -565,7 +715,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool InterpolateTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;InterpolateTexture&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public bool InterpolateTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -589,7 +740,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string NormalTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;NormalTexture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public string NormalTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -613,7 +765,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RepeatTexture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;RepeatTexture&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public bool RepeatTexture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -637,7 +790,9 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double SpecularFactor { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;SpecularFactor&quot;, Required = Required.Always)]
+[Range(0, 1)]
+public double SpecularFactor { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -661,7 +816,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Texture { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Texture&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public string Texture { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -685,7 +841,8 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Unlit { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Unlit&quot;, Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+public bool Unlit { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

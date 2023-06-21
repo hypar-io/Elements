@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using LibTessDotNet.Double;
 
@@ -10,8 +9,10 @@ namespace Elements.Geometry.Solids
         /// Convert Loop to an array of ContourVertex.
         /// </summary>
         /// <param name="loop"></param>
+        /// <param name="faceId"></param>
+        /// <param name="solidId"></param>
         /// <param name="transform">An optional transform to apply to the contour.</param>
-        internal static ContourVertex[] ToContourVertexArray(this Loop loop, Transform transform = null)
+        internal static ContourVertex[] ToContourVertexArray(this Loop loop, uint faceId, uint solidId, Transform transform = null)
         {
             var contour = new ContourVertex[loop.Edges.Count];
             for (var i = 0; i < loop.Edges.Count; i++)
@@ -20,13 +21,26 @@ namespace Elements.Geometry.Solids
                 var p = transform == null ? edge.Vertex.Point : transform.OfPoint(edge.Vertex.Point);
                 var cv = new ContourVertex
                 {
-                    Position = new Vec3 { X = p.X, Y = p.Y, Z = p.Z }
+                    Position = new Vec3 { X = p.X, Y = p.Y, Z = p.Z },
+                    Data = (default(UV), edge.Vertex.Id, faceId, solidId)
                 };
                 contour[i] = cv;
             }
             return contour;
         }
-
+        internal static Csg.Vertex[] ToCsgVertexArray(this Loop loop, Vector3 e1, Vector3 e2)
+        {
+            var vertices = new Csg.Vertex[loop.Edges.Count];
+            for (var i = 0; i < loop.Edges.Count; i++)
+            {
+                var edge = loop.Edges[i];
+                var p = edge.Vertex.Point;
+                var avv = new Vector3(p.X, p.Y, p.Z);
+                var cv = new Csg.Vertex(p.ToCsgVector3(), new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
+                vertices[i] = cv;
+            }
+            return vertices;
+        }
         internal static Edge[] GetLinkedEdges(this Loop loop)
         {
             var edges = new Edge[loop.Edges.Count];
@@ -36,7 +50,6 @@ namespace Elements.Geometry.Solids
             }
             return edges;
         }
-
         internal static Plane Plane(this Face f)
         {
             var v = f.Outer.Edges.Select(e => e.Vertex.Point).ToList();
@@ -49,90 +62,6 @@ namespace Elements.Geometry.Solids
             {
                 throw new System.Exception("Could not get valid normal from points.");
             }
-        }
-
-        internal static Csg.Solid ToCsg(this Solid solid)
-        {
-            var polygons = new List<Csg.Polygon>();
-
-            foreach (var f in solid.Faces.Values)
-            {
-                if (f.Inner != null && f.Inner.Count() > 0)
-                {
-                    var tess = new Tess
-                    {
-                        NoEmptyPolygons = true
-                    };
-
-                    tess.AddContour(f.Outer.ToContourVertexArray());
-
-                    foreach (var loop in f.Inner)
-                    {
-                        tess.AddContour(loop.ToContourVertexArray());
-                    }
-
-                    tess.Tessellate(WindingRule.Positive, LibTessDotNet.Double.ElementType.Polygons, 3);
-
-                    Vector3 e1 = new Vector3();
-                    Vector3 e2 = new Vector3();
-
-                    var vertices = new List<Csg.Vertex>(tess.Elements.Count() * 3);
-                    for (var i = 0; i < tess.ElementCount; i++)
-                    {
-                        var a = tess.Vertices[tess.Elements[i * 3]].ToCsgVector3();
-                        var b = tess.Vertices[tess.Elements[i * 3 + 1]].ToCsgVector3();
-                        var c = tess.Vertices[tess.Elements[i * 3 + 2]].ToCsgVector3();
-
-                        Csg.Vertex av = null;
-                        Csg.Vertex bv = null;
-                        Csg.Vertex cv = null;
-
-                        if (i == 0)
-                        {
-                            var n = f.Plane().Normal;
-                            e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                            e2 = n.Cross(e1).Unitized();
-                        }
-                        if (av == null)
-                        {
-                            var avv = new Vector3(a.X, a.Y, a.Z);
-                            av = new Csg.Vertex(a, new Csg.Vector2D(e1.Dot(avv), e2.Dot(avv)));
-                            vertices.Add(av);
-                        }
-                        if (bv == null)
-                        {
-                            var bvv = new Vector3(b.X, b.Y, b.Z);
-                            bv = new Csg.Vertex(b, new Csg.Vector2D(e1.Dot(bvv), e2.Dot(bvv)));
-                            vertices.Add(bv);
-                        }
-                        if (cv == null)
-                        {
-                            var cvv = new Vector3(c.X, c.Y, c.Z);
-                            cv = new Csg.Vertex(c, new Csg.Vector2D(e1.Dot(cvv), e2.Dot(cvv)));
-                            vertices.Add(cv);
-                        }
-
-                        var p = new Csg.Polygon(new List<Csg.Vertex>() { av, bv, cv });
-                        polygons.Add(p);
-                    }
-                }
-                else
-                {
-                    var verts = new List<Csg.Vertex>(f.Outer.Edges.Count);
-                    var n = f.Plane().Normal;
-                    var e1 = n.Cross(n.IsParallelTo(Vector3.XAxis) ? Vector3.YAxis : Vector3.XAxis).Unitized();
-                    var e2 = n.Cross(e1).Unitized();
-                    foreach (var e in f.Outer.Edges)
-                    {
-                        var l = e.Vertex.Point;
-                        var v = new Csg.Vertex(l.ToCsgVector3(), new Csg.Vector2D(e1.Dot(l), e2.Dot(l)));
-                        verts.Add(v);
-                    }
-                    var p = new Csg.Polygon(verts);
-                    polygons.Add(p);
-                }
-            }
-            return Csg.Solid.FromPolygons(polygons);
         }
     }
 }

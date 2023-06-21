@@ -4,6 +4,8 @@ using Elements.Serialization.glTF;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using glTFLoader;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -42,7 +44,6 @@ namespace Elements.Tests
             var str = boxType2.ToString();
             boxType.AdditionalProperties["ImportantParameter"] = "The Value";
 
-
             var testCatalog = new ContentCatalog(new List<ContentElement> { boxType, boxType2 }, new List<Element>(), Guid.NewGuid(), "test");
 
             var savePath = "../../../models/ContentCatalog.json";
@@ -57,9 +58,43 @@ namespace Elements.Tests
             Assert.Equal("The Value", loadedCatalog.Content[0].AdditionalProperties["ImportantParameter"]);
         }
 
+        [Fact]
+        public void MergeExtensions()
+        {
+            Name = nameof(MergeExtensions);
+            // This piece of content uses the KHR_materials_pbrSpecularGlossiness extension which is no longer used in our models.
+            const string contentLocation = "../../../models/MergeGlTF/LittleShapes.glb";
+            var littleShapeContent = new TestContentElem(contentLocation,
+                                      new BBox3(new Vector3(-0.5, -0.5, 0), new Vector3(0.5, 0.5, 3)),
+                                      new Vector3(),
+                                      new Transform(new Vector3(), Vector3.XAxis),
+                                      20,
+                                      BuiltInMaterials.Default,
+                                      null,
+                                      true,
+                                      Guid.NewGuid(),
+                                      "LittleShapes");
+            var anInstance = littleShapeContent.CreateInstance(new Transform(new Vector3(15, 0, 0)), "LittleShapes1");
+
+            var modelPath = $"./models/{nameof(MergeExtensions)}.glb";
+            Model.AddElement(new Mass(Polygon.Rectangle(1, 1)));
+            Model.ToGlTF(modelPath);
+            var gltfModelEmpty = Interface.LoadModel(modelPath);
+            var initialExtensions = gltfModelEmpty.ExtensionsUsed;
+
+            var gltfContent = Interface.LoadModel(contentLocation);
+            Model.AddElement(anInstance);
+            Model.ToGlTF(modelPath);
+            var gltfModelMerged = Interface.LoadModel(modelPath);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed);
+            Assert.NotEmpty(gltfContent.ExtensionsUsed.Except(initialExtensions));
+            Assert.All(gltfContent.ExtensionsUsed, (ext) => Assert.Contains(ext, gltfModelMerged.ExtensionsUsed));
+        }
+
         [Fact, Trait("Category", "Example")]
         public void InstanceContentElement()
         {
+            this.Name = nameof(InstanceContentElement);
             var model = this.Model;
             // <example>
             var avocadoType = new TestContentElem("../../../models/MergeGlTF/Avocado.glb",
@@ -93,10 +128,13 @@ namespace Elements.Tests
             model.AddElement(twoDuck);
             // </example>
             var sw = System.Diagnostics.Stopwatch.StartNew();
-            model.ToGlTF("./models/ContentInstancing.glb");
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}.glb");
             var firstRun = sw.Elapsed.TotalSeconds;
+            // TODO we want to test the glTF that are created for this and many other tests.
+            // After we migrate to .NET 6 we can use this library, and probably add it to the Model testing wrapper.
+            // Library URL: https://www.nuget.org/packages/GltfValidator/
             sw.Restart();
-            model.ToGlTF("./models/ContentInstancing.gltf", false);
+            model.ToGlTF($"./models/{nameof(InstanceContentElement)}-2.glb");
             var secondRun = sw.Elapsed.TotalSeconds;
             Assert.True(firstRun > secondRun); // caching should result in faster model generation second time.
         }

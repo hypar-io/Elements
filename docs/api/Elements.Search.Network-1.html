@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Network&lt;T&gt;
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -289,7 +289,7 @@ index into another collection of entities which have a spatial context.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;(int, T)&gt; EdgesAt(int i)</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;(int, T)&gt; EdgesAt(int i)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -319,7 +319,7 @@ index into another collection of entities which have a spatial context.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, T&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, T&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -580,7 +580,7 @@ item of type T.</p>
     </tbody>
   </table>
   <a id="Elements_Search_Network_1_Traverse_" data-uid="Elements.Search.Network`1.Traverse*"></a>
-  <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_List_System_Int32___System_Int32__System_Collections_Generic_List_System_Int32___" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.List{System.Int32}},System.Int32},System.Collections.Generic.List{System.Int32}@)">Traverse(Int32, Func&lt;(Int32 currentNodeIndex, Int32 previousNodeIndex, List&lt;Int32&gt; connectedNodes), Int32&gt;, out List&lt;Int32&gt;)</h4>
+  <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_IEnumerable_System_Int32___System_Int32__System_Collections_Generic_List_System_Int32___" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Int32}},System.Int32},System.Collections.Generic.List{System.Int32}@)">Traverse(Int32, Func&lt;(Int32 currentNodeIndex, Int32 previousNodeIndex, IEnumerable&lt;Int32&gt; connectedNodes), Int32&gt;, out List&lt;Int32&gt;)</h4>
   <div class="markdown level1 summary"><p>Traverse the network from the specified node index.
 Traversal concludes when there are no more
 available nodes to traverse.</p>
@@ -588,7 +588,7 @@ available nodes to traverse.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;int&gt; Traverse(int start, Func&lt;(int currentNodeIndex, int previousNodeIndex, List&lt;int&gt; connectedNodes), int&gt; next, out List&lt;int&gt; visited)</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;int&gt; Traverse(int start, Func&lt;(int currentNodeIndex, int previousNodeIndex, IEnumerable&lt;int&gt; connectedNodes), int&gt; next, out List&lt;int&gt; visited)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -607,7 +607,7 @@ available nodes to traverse.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">next</span></td>
         <td><p>The traversal step delegate.</p>
 </td>

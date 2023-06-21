@@ -526,5 +526,19 @@ namespace Elements.Geometry
             }
             return true;
         }
+
+        /// <summary>
+        /// Get the hash code for the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            int hash = 19;
+            foreach (var component in Components)
+            {
+                hash = hash * 31 + component.GetHashCode();
+            }
+            return hash;
+        }
     }
 }

@@ -8,30 +8,46 @@ namespace Elements.Benchmarks
 {
     [EventPipeProfiler(EventPipeProfile.CpuSampling)]
     [SimpleJob]
+    [MemoryDiagnoser]
     public class TraceJsonSerialization
     {
+        private Model _model;
+
+        [GlobalSetup]
+        public void GlobalSetup()
+        {
+            var factory = new HSSPipeProfileFactory();
+            var hssProfiles = factory.AllProfiles().ToList();
+            _model = ElementCreation.DrawAllBeams(hssProfiles);
+        }
+
         [Benchmark(Description = "Create all HSS beams and serialize to JSON.")]
         public void TraceModelCreation()
         {
             Validators.Validator.DisableValidationOnConstruction = true;
-            var factory = new HSSPipeProfileFactory();
-            var hssProfiles = factory.AllProfiles().ToList();
-            var model = ElementCreation.DrawAllBeams(hssProfiles);
-            model.ToJson(gatherSubElements: false);
+            _model.ToJson(gatherSubElements: false);
         }
     }
 
     [EventPipeProfiler(EventPipeProfile.CpuSampling)]
+    [MemoryDiagnoser]
     [SimpleJob]
     public class TraceGltfSerialization
     {
-        [Benchmark(Description = "Create all HSS beams and serialize to glTF.")]
-        public void TraceModelCreation()
+        private Model _model;
+
+        [GlobalSetup]
+        public void GlobalSetup()
         {
             var factory = new HSSPipeProfileFactory();
             var hssProfiles = factory.AllProfiles().ToList();
-            var model = ElementCreation.DrawAllBeams(hssProfiles);
-            model.ToGlTF();
+            _model = ElementCreation.DrawAllBeams(hssProfiles);
+        }
+
+        [Benchmark(Description = "Create all HSS beams and serialize to glTF.")]
+        public void TraceModelCreation()
+        {
+            _model.ToGlTF();
         }
     }
 }

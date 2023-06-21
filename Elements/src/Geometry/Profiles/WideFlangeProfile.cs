@@ -227,7 +227,7 @@ namespace Elements.Geometry.Profiles
             var l = new Vector3(o.X + width / 2 + horizontalOffset, o.Y + height / 2 - thicknessFlange + verticalOffset);
             var m = new Vector3(o.X + width / 2 + horizontalOffset, o.Y + height / 2 + verticalOffset);
 
-            return new Polygon(new[] { a, b, c, e, f, g, h, i, j, k, l, m });
+            return new Polygon(false, a, b, c, e, f, g, h, i, j, k, l, m);
         }
     }
 }

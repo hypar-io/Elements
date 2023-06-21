@@ -4,7 +4,6 @@ using Xunit;
 using System.Linq;
 using System.Collections.Generic;
 using Elements.Spatial;
-using Elements.Serialization.JSON;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -281,7 +280,7 @@ namespace Elements.Tests
             var frames = outerL.Frames(0, 0);
 
             Model.AddElements(frames.SelectMany(f => f.ToModelCurves()));
-            var star = Polygon.Star(5, 3, 5).Transformed(new Transform(new Vector3(10, 10)));
+            var star = Polygon.Star(5, 3, 5).TransformedPolygon(new Transform(new Vector3(10, 10)));
             var starBeam = new Beam(star, l);
             this.Model.AddElement(starBeam);
 
@@ -550,6 +549,97 @@ namespace Elements.Tests
                 };
                 Model.AddElement(ge);
             }
+        }
+
+        [Fact]
+        public void ProfilesWoundClockwiseSplitCorrectly()
+        {
+            Name = nameof(ProfilesWoundClockwiseSplitCorrectly);
+            var polygon = new Polygon((0, 0, 0), (0, 10, 0), (10, 10, 0), (10, 0, 0));
+            var polylineOffsetInside = new Polygon((3, 3), (3, 7), (7, 7), (7, 3));
+            var extendedLines = polylineOffsetInside.Segments().Select(s => s.ExtendTo(polygon, true).ToPolyline(1)).ToList();
+            var splitResults = Elements.Geometry.Profile.Split(new[] { new Profile(polygon) }, extendedLines);
+            Assert.Equal(9, splitResults.Count);
+        }
+
+        [Fact]
+        public void CleanProfilesSplitsAdjacentEdges()
+        {
+            Name = nameof(CleanProfilesSplitsAdjacentEdges);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var c = (10, 5);
+            var d = (10, 10);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h,c,d,e)),
+                new Profile(new Polygon(b,f,g,d)) // does not include c
+            };
+            var cleaned = profiles.Cleaned();
+            // the "c" point should be present in all profiles
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 4) == 2);
+            Assert.True(cleaned.Count((p) => p.Perimeter.Vertices.Count == 5) == 1);
+            Assert.True(cleaned.All(p => p.Perimeter.Vertices.Any((v) => v.DistanceTo(c) < 0.00001)));
+        }
+
+        [Fact]
+        public void CleanProfilesMergesNearbyEdgesAndVertices()
+        {
+            Name = nameof(CleanProfilesMergesNearbyEdgesAndVertices);
+
+            //   e----d----g
+            //   |    |    |
+            //   h----c    |
+            //   |    |    |
+            //   a----b----f
+
+            var a = (0, 0);
+            var b = (10, 0);
+            var b2 = (10.0001, -0.0001);
+            var c = (10, 5);
+            var d = (10, 10);
+            var d2 = (10.0001, 10.0001);
+            var e = (0, 10);
+            var f = (20, 0);
+            var g = (20, 10);
+            var h = (0, 5);
+            var h2 = (-0.0001, 5);
+
+            var profiles = new Profile[] {
+                new Profile(new Polygon(a,b,c,h)),
+                new Profile(new Polygon(h2,c,d,e)),
+                new Profile(new Polygon(b2,f,g,d2))
+            };
+            var cleaned = profiles.Cleaned();
+            // for the purposes of this test we are doing something "illegal" —
+            // using `Distinct` on a set of points. Since for this test we only
+            // care about exact equality, not "equality within tolerance," this
+            // is OK.
+            var uniquePoints = cleaned.SelectMany(c => c.Perimeter.Vertices).Distinct().ToList();
+            Assert.True(uniquePoints.Count == 8);
+        }
+
+        [Fact]
+        public void CleanProfilesPreservesValidProfiles()
+        {
+            var profiles = new Profile[] {
+                new Profile(new Polygon((20.83686, 24.77025), (-6.27588, 24.77025), (-6.27588, -1.78971), (20.83686, -1.78971)), new List<Polygon> {
+                    new Polygon((2.28049, 6.49027), (2.28049, 16.49027), (12.28049, 16.49027), (12.28049, 6.49027))
+                }),
+            };
+            var cleaned = profiles.Cleaned();
+            Assert.Single(cleaned);
         }
     }
 }

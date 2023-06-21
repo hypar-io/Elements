@@ -10,16 +10,19 @@ namespace Elements.Geometry.Tessellation
     {
         private readonly Face face;
         private readonly Transform transform;
+        private readonly uint solidId;
 
         /// <summary>
         /// Construct a SolidFaceTessAdaptor.
         /// </summary>
         /// <param name="face"></param>
         /// <param name="transform"></param>
-        public SolidFaceTessAdapter(Face face, Transform transform = null)
+        /// <param name="solidId"></param>
+        public SolidFaceTessAdapter(Face face, uint solidId, Transform transform = null)
         {
             this.face = face;
             this.transform = transform;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -29,28 +32,22 @@ namespace Elements.Geometry.Tessellation
         {
             var tess = new Tess
             {
+                UsePooling = true,
                 NoEmptyPolygons = true
             };
-            tess.AddContour(face.Outer.ToContourVertexArray(transform));
+
+            tess.AddContour(face.Outer.ToContourVertexArray(face.Id, solidId, transform));
 
             if (face.Inner != null)
             {
                 foreach (var loop in face.Inner)
                 {
-                    tess.AddContour(loop.ToContourVertexArray(transform));
+                    tess.AddContour(loop.ToContourVertexArray(face.Id, solidId, transform));
                 }
             }
 
             tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
             return tess;
-        }
-
-        /// <summary>
-        /// Does this target require tessellation?
-        /// </summary>
-        public bool RequiresTessellation()
-        {
-            return true;
         }
     }
 }
