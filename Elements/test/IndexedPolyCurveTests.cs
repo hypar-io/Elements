@@ -1,5 +1,6 @@
 using System.Linq;
 using Elements.Geometry;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elements.Tests
@@ -130,6 +131,18 @@ namespace Elements.Tests
             var plineRVerts = pline.RenderVertices();
             Assert.Equal(6, pgonRVerts.Count);
             Assert.Equal(5, plineRVerts.Count);
+        }
+
+        [Fact]
+        public void Serialization()
+        {
+            var pc = CreateTestPolycurve();
+            var json = JsonConvert.SerializeObject(pc);
+            var pc2 = JsonConvert.DeserializeObject<IndexedPolycurve>(json);
+            var mc1 = new ModelCurve(pc, BuiltInMaterials.XAxis);
+            var mc2 = new ModelCurve(pc2, BuiltInMaterials.YAxis);
+            Assert.Equal(pc.Vertices, pc2.Vertices);
+            Assert.Equal(pc._bounds, pc2._bounds);
         }
     }
 }

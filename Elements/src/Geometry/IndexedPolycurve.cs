@@ -78,6 +78,39 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">A collection of vertices.</param>
         /// <param name="curveIndices">A collection of collections of indices.</param>
+        [JsonConstructor]
+        public IndexedPolycurve(IList<Vector3> vertices,
+                                IList<IList<int>> curveIndices)
+        {
+            Vertices = vertices;
+
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                ValidateVertices();
+            }
+
+            CurveIndices = curveIndices;
+
+            _bounds = Bounds();
+
+            var count = 0;
+            foreach (var curveIndexSet in CurveIndices)
+            {
+                if (curveIndexSet.Count < 2 || curveIndexSet.Count > 3)
+                {
+                    throw new ArgumentException("curveIndices", $"Curve indices must reference 2 or 3 vertices. The curve index at {count} references {curveIndexSet.Count} vertices.");
+                }
+                count++;
+            }
+
+            _curves = CreateCurves(CurveIndices, Vertices);
+        }
+
+        /// <summary>
+        /// Create an indexed polycurve.
+        /// </summary>
+        /// <param name="vertices">A collection of vertices.</param>
+        /// <param name="curveIndices">A collection of collections of indices.</param>
         /// <param name="transform">An optional transform to apply to each vertex.</param>
         /// <param name="disableValidation"></param>
         public IndexedPolycurve(IList<Vector3> vertices,
