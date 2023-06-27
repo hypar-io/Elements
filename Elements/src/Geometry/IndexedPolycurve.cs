@@ -23,8 +23,8 @@ namespace Elements.Geometry
         private List<BoundedCurve> _curves;
 
         /// <summary>
-        /// A bounding box created once during the polyline's construction.
-        /// This will not be updated when a polyline's vertices are changed.
+        /// A bounding box created once during the polycurve's construction.
+        /// This will not be updated when a polycurve's vertices are changed.
         /// </summary>
         internal BBox3 _bounds;
 
@@ -35,7 +35,7 @@ namespace Elements.Geometry
         public override Domain1d Domain => new Domain1d(0, CurveIndices.Count);
 
         /// <summary>
-        /// The start of the polyline.
+        /// The start of the polycurve.
         /// </summary>
         [JsonIgnore]
         public override Vector3 Start
@@ -44,7 +44,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The end of the polyline.
+        /// The end of the polycurve.
         /// </summary>
         [JsonIgnore]
         public override Vector3 End
@@ -420,7 +420,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get the transform at the specified parameter along the polyline.
+        /// Get the transform at the specified parameter along the polycurve.
         /// </summary>
         /// <param name="u">The parameter on the Polygon between domain.min and domain.max.</param>
         /// <returns>A transform with its Z axis aligned trangent to the polycurve.</returns>
@@ -501,7 +501,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a string representation of this polyline.
+        /// Get a string representation of this polycurve.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -517,7 +517,7 @@ namespace Elements.Geometry
             return new Polygon(RenderVertices());
         }
 
-        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
+        // TODO: Investigate converting polycurve to IEnumerable<(Vector3, Vector3)>
         virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges(Transform transform = null)
         {
             for (var i = 0; i < Vertices.Count - 1; i++)
@@ -553,7 +553,7 @@ namespace Elements.Geometry
                     }
                     if (vertices[i].IsAlmostEqualTo(vertices[j]))
                     {
-                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
+                        throw new ArgumentException($"The polycurve could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
                     }
                 }
             }
@@ -568,7 +568,7 @@ namespace Elements.Geometry
             {
                 if (from.DistanceTo(to) == 0)
                 {
-                    throw new ArgumentException("A segment of the polyline has zero length.");
+                    throw new ArgumentException("A segment of the polycurve has zero length.");
                 }
             }
         }
@@ -600,7 +600,7 @@ namespace Elements.Geometry
 
                     if (Line.Intersects2d(s1.from, s1.to, s2.from, s2.to))
                     {
-                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
+                        throw new ArgumentException($"The polycurve could not be created. Segments {i} and {j} intersect.");
                     }
                 }
             }
