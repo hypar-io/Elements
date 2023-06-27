@@ -8,7 +8,7 @@ namespace Elements.Geometry.Interfaces
         /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
-        /// <param name="u">A parameter on the curve between domain.min and domain.max.</param>
+        /// <param name="u">A parameter on the curve.</param>
         /// <returns>The point on the curve.</returns>
         Vector3 PointAt(double u);
 
