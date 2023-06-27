@@ -95,9 +95,9 @@ namespace Elements.Geometry.Tests
             (
                 new[]
                 {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, -6.0),
+                Vector3.Origin,
+                new Vector3(6.0, 0.0),
+                new Vector3(6.0, -6.0),
                     new Vector3(0.0, -6.0),
                 }
             );
@@ -110,12 +110,12 @@ namespace Elements.Geometry.Tests
             (
                 new[]
                 {
-                    new Vector3(1.0, 1.0),
-                    new Vector3(4.0, 4.0),
-                    new Vector3(7.0, 1.0),
-                    new Vector3(7.0, 9.0),
-                    new Vector3(4.0, 6.0),
-                    new Vector3(1.0, 9.0)
+                new Vector3(1.0, 1.0),
+                new Vector3(4.0, 4.0),
+                new Vector3(7.0, 1.0),
+                new Vector3(7.0, 9.0),
+                new Vector3(4.0, 6.0),
+                new Vector3(1.0, 9.0)
                 }
             );
             centroid = polygon.Centroid();
@@ -127,12 +127,12 @@ namespace Elements.Geometry.Tests
             (
                 new[]
                 {
-                    new Vector3(-1.0, -1.0),
-                    new Vector3(-4.0, -4.0),
-                    new Vector3(-7.0, -1.0),
-                    new Vector3(-7.0, -9.0),
-                    new Vector3(-4.0, -6.0),
-                    new Vector3(-1.0, -9.0)
+                new Vector3(-1.0, -1.0),
+                new Vector3(-4.0, -4.0),
+                new Vector3(-7.0, -1.0),
+                new Vector3(-7.0, -9.0),
+                new Vector3(-4.0, -6.0),
+                new Vector3(-1.0, -9.0)
                 }
             );
             centroid = polygon.Centroid();
@@ -1055,11 +1055,6 @@ namespace Elements.Geometry.Tests
             var poly3 = contour3.ToPolygon();
             var mass3 = new Mass(poly3, transform: t);
             Assert.Equal(shape3.Segments().Count() * 2, contour3.Count());
-
-            for (var u = contour3.Domain.Min; u <= contour3.Domain.Max; u += contour3.Domain.Length / 10)
-            {
-                var pt = contour3.TransformAt(u);
-            }
         }
 
         [Fact]
