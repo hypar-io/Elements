@@ -121,9 +121,8 @@ namespace Elements
         {
             if (this.Representation.SolidOperations.Count == 0)
             {
-                if (this.Curve.GetType() == typeof(IndexedPolycurve))
+                if (this.Curve is IndexedPolycurve pc)
                 {
-                    var pc = this.Curve as IndexedPolycurve;
                     foreach (var curve in pc)
                     {
                         this.Representation.SolidOperations.Add(new Sweep(this.Profile,
