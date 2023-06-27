@@ -91,7 +91,7 @@ namespace Elements.Geometry
         /// </summary>
         public override double ArcLength(double start, double end)
         {
-            return end - start;
+            return Math.Abs(end - start);
         }
 
         /// <summary>
