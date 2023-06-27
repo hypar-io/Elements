@@ -33,7 +33,7 @@ namespace Elements.Geometry
     /// </example>
     public class Bezier : BoundedCurve
     {
-        private int _lengthSamples = 500;
+        private readonly int _lengthSamples = 500;
 
         /// <summary>
         /// The domain of the curve.
