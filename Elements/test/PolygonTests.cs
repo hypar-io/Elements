@@ -48,13 +48,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant I
             var polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
+                Vector3.Origin,
+                new Vector3(6.0, 0.0),
+                new Vector3(6.0, 6.0),
+                new Vector3(0.0, 6.0)
             );
             var centroid = polygon.Centroid();
             Assert.Equal(3.0, centroid.X);
@@ -63,13 +60,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant II
             polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, 6.0),
+                new Vector3(0.0, 6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(-3.0, centroid.X);
@@ -78,13 +72,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant III
             polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, -6.0),
+                new Vector3(0.0, -6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(-3.0, centroid.X);
@@ -93,13 +84,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant IV
             polygon = new Polygon
             (
-                new[]
-                {
                 Vector3.Origin,
                 new Vector3(6.0, 0.0),
                 new Vector3(6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
+                new Vector3(0.0, -6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(3.0, centroid.X);
@@ -108,15 +96,12 @@ namespace Elements.Geometry.Tests
             // Bow Tie in Quadrant I
             polygon = new Polygon
             (
-                new[]
-                {
                 new Vector3(1.0, 1.0),
                 new Vector3(4.0, 4.0),
                 new Vector3(7.0, 1.0),
                 new Vector3(7.0, 9.0),
                 new Vector3(4.0, 6.0),
                 new Vector3(1.0, 9.0)
-                }
             );
             centroid = polygon.Centroid();
             Assert.Equal(4.0, centroid.X);
@@ -125,15 +110,12 @@ namespace Elements.Geometry.Tests
             // Bow Tie in Quadrant III
             polygon = new Polygon
             (
-                new[]
-                {
                 new Vector3(-1.0, -1.0),
                 new Vector3(-4.0, -4.0),
                 new Vector3(-7.0, -1.0),
                 new Vector3(-7.0, -9.0),
                 new Vector3(-4.0, -6.0),
                 new Vector3(-1.0, -9.0)
-                }
             );
             centroid = polygon.Centroid();
             Assert.Equal(-4.0, centroid.X);
@@ -155,33 +137,24 @@ namespace Elements.Geometry.Tests
             var v2 = new Vector3(7.5, 7.5);
             var p1 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(0.0, 0.0),
-                    new Vector3(20.0, 0.0),
-                    new Vector3(20.0, 20.0),
-                    new Vector3(0.0, 20.0)
-                }
+                new Vector3(0.0, 0.0),
+                new Vector3(20.0, 0.0),
+                new Vector3(20.0, 20.0),
+                new Vector3(0.0, 20.0)
             );
             var p2 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(0.0, 0.0),
-                    new Vector3(10.0, 5.0),
-                    new Vector3(10.0, 10.0),
-                    new Vector3(5.0, 10.0)
-                }
+                new Vector3(0.0, 0.0),
+                new Vector3(10.0, 5.0),
+                new Vector3(10.0, 10.0),
+                new Vector3(5.0, 10.0)
             );
             var p3 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(5.0, 5.0),
-                    new Vector3(10.0, 5.0),
-                    new Vector3(10.0, 10.0),
-                    new Vector3(5.0, 10.0)
-                }
+                new Vector3(5.0, 5.0),
+                new Vector3(10.0, 5.0),
+                new Vector3(10.0, 10.0),
+                new Vector3(5.0, 10.0)
             );
 
             Assert.False(p1.Contains(v1));
