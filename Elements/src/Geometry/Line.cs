@@ -71,9 +71,7 @@ namespace Elements.Geometry
         /// Create a line from a trimmed segment of an infinite line.
         /// </summary>
         /// <param name="line">The infinite line from which this segment is trimmed.</param>
-        /// <param name="startParameter">The start parameter of the line segment.</param>
-        /// <param name="endParameter">The end parameter of the line segment.</param>
-        public Line(InfiniteLine line, double startParameter, double endParameter)
+        public Line(InfiniteLine line)
         {
             this.BasisCurve = line;
             this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
