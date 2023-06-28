@@ -55,6 +55,7 @@ namespace Elements.Geometry
         /// Curves marked true will use LINE_LOOP mode for rendering.
         /// Curves marked false will use LINE_STRIP for rendering.
         /// </summary>
+        [JsonIgnore]
         public virtual bool IsClosedForRendering => false;
 
         /// <summary>
