@@ -123,10 +123,7 @@ namespace Elements.Geometry
             return this.BasisCurve.PointAt(u);
         }
 
-        /// <summary>
-        /// Create new line transformed by transform.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)

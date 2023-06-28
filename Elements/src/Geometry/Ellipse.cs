@@ -151,10 +151,7 @@ namespace Elements.Geometry
             return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
-        /// <summary>
-        /// Create a transformed copy of the ellipse.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return new Ellipse(transform.Concatenated(this.Transform), this.MajorAxis, this.MinorAxis);

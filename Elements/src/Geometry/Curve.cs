@@ -32,6 +32,8 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Create a transformed copy of this curve.
+        /// Use of non-euclidean transforms (i.e. scale) will
+        /// result in unpredictable results for curve methods such as Length().
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);

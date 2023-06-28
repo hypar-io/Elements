@@ -475,10 +475,7 @@ namespace Elements.Geometry
             return _curves[curveIndex].TransformAtNormalized(t);
         }
 
-        /// <summary>
-        /// Create new polycurve transformed by transform.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return new IndexedPolycurve(_curves, transform);

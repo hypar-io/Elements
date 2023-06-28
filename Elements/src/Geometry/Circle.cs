@@ -124,9 +124,7 @@ namespace Elements.Geometry
             return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
-        /// <summary>
-        /// Return a new circle transformed by the provided transform.
-        /// </summary>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return new Circle(transform.Concatenated(this.Transform), this.Radius);

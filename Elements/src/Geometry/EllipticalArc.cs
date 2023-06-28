@@ -128,11 +128,7 @@ namespace Elements.Geometry
             return this.BasisCurve.TransformAt(u);
         }
 
-        /// <summary>
-        /// Get a curve that is the result of applying the provided transform to this curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
-        /// <returns>A transformed curve.</returns>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.Domain.Min, this.Domain.Max);
