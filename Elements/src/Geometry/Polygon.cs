@@ -1735,10 +1735,7 @@ namespace Elements.Geometry
         }
 
 
-        /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
-        /// </summary>
-        /// <returns>A collection of Lines.</returns>
+        /// <inheritdoc/>
         public override Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
@@ -2218,7 +2215,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="radius">The fillet radius.</param>
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
-        public IndexedPolycurve Fillet(double radius)
+        public new IndexedPolycurve Fillet(double radius)
         {
             var curves = new List<BoundedCurve>();
             var segments = this.Segments();

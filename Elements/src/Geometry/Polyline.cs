@@ -76,10 +76,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
+        /// Get a collection a line segments which connect the vertices of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
-        [Obsolete("Please use for each to get sub curves.")]
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
