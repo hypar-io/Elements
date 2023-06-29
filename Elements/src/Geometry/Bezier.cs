@@ -312,23 +312,20 @@ namespace Elements.Geometry
             return TransformedBezier(transform);
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0,
+                                                          double minimumChordLength = 0.01)
         {
-            var parameters = new double[_lengthSamples + 1];
-
             var l = this.Length();
+            var div = (int)Math.Round(l / minimumChordLength);
 
+            var parameters = new double[div + 1];
             var startParam = startSetbackDistance == 0.0 ? this.Domain.Min : ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
             var endParam = startSetbackDistance == 0.0 ? this.Domain.Max : ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min);
 
-            var step = Math.Abs(endParam - startParam) / _lengthSamples;
-            for (var i = 0; i <= _lengthSamples; i++)
+            var step = Math.Abs(endParam - startParam) / div;
+            for (var i = 0; i <= div; i++)
             {
                 parameters[i] = startParam + i * step;
             }

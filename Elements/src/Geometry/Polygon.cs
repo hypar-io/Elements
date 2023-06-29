@@ -2072,15 +2072,11 @@ namespace Elements.Geometry
             return new Polygon(unique);
         }
 
-        /// <summary>
-        /// Get the transforms used to transform a Profile extruded along this Polyline.
-        /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
-        /// <param name="additionalRotation"></param>
+        /// <inheritdoc/>
         public override Transform[] Frames(double startSetback = 0.0,
                                            double endSetback = 0.0,
-                                           double additionalRotation = 0.0)
+                                           double additionalRotation = 0.0,
+                                           double minimumChordLength = 0.01)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.

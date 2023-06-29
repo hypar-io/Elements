@@ -348,13 +348,10 @@ namespace Elements.Geometry
             return BasisCurve.Transform.XY();
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0,
+                                                          double minimumChordLength = 0.01)
         {
             var min = this.Domain.Min;
             var max = this.Domain.Max;
@@ -377,7 +374,7 @@ namespace Elements.Geometry
             // d = 2 * r * sin(t/2)
             var r = this.BasisCurve.Radius;
             var two_r = 2 * r;
-            var d = Math.Min(MinimumChordLength, two_r);
+            var d = Math.Min(minimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
             var div = (int)Math.Ceiling(angleSpan / t);
 

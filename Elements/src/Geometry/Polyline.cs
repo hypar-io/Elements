@@ -284,15 +284,11 @@ namespace Elements.Geometry
             return result;
         }
 
-        /// <summary>
-        /// Get the transforms used to transform a Profile extruded along this Polyline.
-        /// </summary>
-        /// <param name="startSetbackDistance"></param>
-        /// <param name="endSetbackDistance"></param>
-        /// <param name="additionalRotation"></param>
+        /// <inheritdoc/>
         public override Transform[] Frames(double startSetbackDistance = 0.0,
                                            double endSetbackDistance = 0.0,
-                                           double additionalRotation = 0.0)
+                                           double additionalRotation = 0.0,
+                                           double minimumChordLength = 0.01)
         {
             var normals = this.NormalsAtVertices();
 

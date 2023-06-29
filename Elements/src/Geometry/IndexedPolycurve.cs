@@ -271,13 +271,10 @@ namespace Elements.Geometry
             return new BBox3(Vertices);
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
-        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        /// <inheritdoc/>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                                          double endSetbackDistance = 0,
+                                                          double minimumChordLength = 0.01)
         {
             var parameters = new List<double>();
             for (var i = 0; i < _curves.Count; i++)

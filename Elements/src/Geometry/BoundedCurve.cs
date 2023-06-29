@@ -58,18 +58,13 @@ namespace Elements.Geometry
         [JsonIgnore]
         public virtual bool IsClosedForRendering => false;
 
-        /// <summary>
-        /// Get a collection of transforms which represent frames along this curve.
-        /// </summary>
-        /// <param name="startSetbackDistance">The offset parameter from the start of the curve.</param>
-        /// <param name="endSetbackDistance">The offset parameter from the end of the curve.</param>
-        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
-        /// <returns>A collection of transforms.</returns>
+        /// <inheritdoc/>
         public virtual Transform[] Frames(double startSetbackDistance = 0.0,
                                           double endSetbackDistance = 0.0,
-                                          double additionalRotation = 0.0)
+                                          double additionalRotation = 0.0,
+                                          double minimumChordLength = 0.01)
         {
-            var parameters = GetSubdivisionParameters(startSetbackDistance, endSetbackDistance);
+            var parameters = GetSubdivisionParameters(startSetbackDistance, endSetbackDistance, minimumChordLength);
             var transforms = new Transform[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
@@ -109,13 +104,10 @@ namespace Elements.Geometry
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(BoundedCurve c) => new ModelCurve(c);
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
-        public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+        /// <inheritdoc/>
+        public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                                          double endSetbackDistance = 0,
+                                                          double minimumChordLength = 0.01);
 
         /// <summary>
         /// Get a point along the curve at parameter u.

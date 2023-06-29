@@ -107,13 +107,15 @@ namespace Elements.Geometry.Solids
         /// <param name="startSetback">The setback distance of the sweep from the start of the curve.</param>
         /// <param name="endSetback">The setback distance of the sweep from the end of the curve.</param>
         /// <param name="profileRotation">The rotation of the profile.</param>
+        /// <param name="minimumChordLength">The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves.</param>
         /// <returns>A solid.</returns>
         public static Solid SweepFaceAlongCurve(Polygon perimeter,
                                                 IList<Polygon> holes,
                                                 IBoundedCurve curve,
                                                 double startSetback = 0,
                                                 double endSetback = 0,
-                                                double profileRotation = 0)
+                                                double profileRotation = 0,
+                                                double minimumChordLength = 0.01)
         {
             var solid = new Solid();
 

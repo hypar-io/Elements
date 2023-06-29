@@ -134,14 +134,10 @@ namespace Elements.Geometry
             return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.Domain.Min, this.Domain.Max);
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0,
+                                                          double minimumChordLength = 0.01)
         {
             var min = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
             var max = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
@@ -158,7 +154,7 @@ namespace Elements.Geometry
             // requires the use of an elliptic integral and solving with
             // newton's method to find exactly the right values. For now,
             // we'll do a very simple subdivision of the arc.
-            var div = 50;
+            var div = (int)Math.Round(this.Length() / minimumChordLength);
             var parameters = new double[div + 1];
             var step = (max - min) / div;
             for (var i = 0; i <= div; i++)

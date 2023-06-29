@@ -1343,12 +1343,10 @@ namespace Elements.Geometry
             return start + distance;
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        /// <inheritdoc/>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                                          double endSetbackDistance = 0,
+                                                          double minimumChordLength = 0.01)
         {
             return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min) };
         }
