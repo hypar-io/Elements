@@ -287,8 +287,7 @@ namespace Elements.Geometry
         /// <inheritdoc/>
         public override Transform[] Frames(double startSetbackDistance = 0.0,
                                            double endSetbackDistance = 0.0,
-                                           double additionalRotation = 0.0,
-                                           double minimumChordLength = 0.01)
+                                           double additionalRotation = 0.0)
         {
             var normals = this.NormalsAtVertices();
 

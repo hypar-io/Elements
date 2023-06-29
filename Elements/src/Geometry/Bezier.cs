@@ -314,11 +314,10 @@ namespace Elements.Geometry
 
         /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                          double endSetbackDistance = 0.0,
-                                                          double minimumChordLength = 0.01)
+                                                          double endSetbackDistance = 0.0)
         {
             var l = this.Length();
-            var div = (int)Math.Round(l / minimumChordLength);
+            var div = (int)Math.Round(l / DefaultMinimumChordLength);
 
             var parameters = new double[div + 1];
             var startParam = startSetbackDistance == 0.0 ? this.Domain.Min : ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);

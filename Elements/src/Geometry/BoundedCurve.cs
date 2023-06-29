@@ -11,6 +11,11 @@ namespace Elements.Geometry
     public abstract class BoundedCurve : Curve, IBoundedCurve
     {
         /// <summary>
+        /// The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves. For polylines and polygons this parameter will have no effect.
+        /// </summary>
+        public const double DefaultMinimumChordLength = 0.01;
+
+        /// <summary>
         /// The start of the curve.
         /// </summary>
         public virtual Vector3 Start { get; protected set; }
@@ -61,10 +66,9 @@ namespace Elements.Geometry
         /// <inheritdoc/>
         public virtual Transform[] Frames(double startSetbackDistance = 0.0,
                                           double endSetbackDistance = 0.0,
-                                          double additionalRotation = 0.0,
-                                          double minimumChordLength = 0.01)
+                                          double additionalRotation = 0.0)
         {
-            var parameters = GetSubdivisionParameters(startSetbackDistance, endSetbackDistance, minimumChordLength);
+            var parameters = GetSubdivisionParameters(startSetbackDistance, endSetbackDistance);
             var transforms = new Transform[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {
@@ -106,8 +110,7 @@ namespace Elements.Geometry
 
         /// <inheritdoc/>
         public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0,
-                                                          double endSetbackDistance = 0,
-                                                          double minimumChordLength = 0.01);
+                                                          double endSetbackDistance = 0);
 
         /// <summary>
         /// Get a point along the curve at parameter u.

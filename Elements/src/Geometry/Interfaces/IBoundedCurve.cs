@@ -42,12 +42,10 @@ namespace Elements.Geometry.Interfaces
         /// <param name="startSetbackDistance">The offset from the start of the ICurve.</param>
         /// <param name="endSetbackDistance">The offset from the end of the ICurve.</param>
         /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
-        /// <param name="minimumChordLength">The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves. For polylines and polygons this parameter will have no effect.</param>
         /// <returns>A collection of Transforms.</returns>
         Transform[] Frames(double startSetbackDistance = 0.0,
                            double endSetbackDistance = 0.0,
-                           double additionalRotation = 0.0,
-                           double minimumChordLength = 0.01);
+                           double additionalRotation = 0.0);
 
         /// <summary>
         /// The domain of the curve.
@@ -59,11 +57,9 @@ namespace Elements.Geometry.Interfaces
         /// </summary>
         /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
         /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <param name="minimumChordLength">The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves.</param>
         /// <returns>A collection of parameter values.</returns>
         double[] GetSubdivisionParameters(double startSetbackDistance = 0,
-                                          double endSetbackDistance = 0,
-                                          double minimumChordLength = 0.01);
+                                          double endSetbackDistance = 0);
 
         /// <summary>
         /// Get a point along the curve at parameter u.

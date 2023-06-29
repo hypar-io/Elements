@@ -2075,8 +2075,7 @@ namespace Elements.Geometry
         /// <inheritdoc/>
         public override Transform[] Frames(double startSetback = 0.0,
                                            double endSetback = 0.0,
-                                           double additionalRotation = 0.0,
-                                           double minimumChordLength = 0.01)
+                                           double additionalRotation = 0.0)
         {
             // Create an array of transforms with the same
             // number of items as the vertices.

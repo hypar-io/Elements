@@ -273,8 +273,7 @@ namespace Elements.Geometry
 
         /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
-                                                          double endSetbackDistance = 0,
-                                                          double minimumChordLength = 0.01)
+                                                          double endSetbackDistance = 0)
         {
             var parameters = new List<double>();
             for (var i = 0; i < _curves.Count; i++)
