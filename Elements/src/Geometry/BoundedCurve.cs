@@ -13,7 +13,12 @@ namespace Elements.Geometry
         /// <summary>
         /// The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves. For polylines and polygons this parameter will have no effect.
         /// </summary>
-        public const double DefaultMinimumChordLength = 0.01;
+        /// TODO: This should not live here. Curve resolution for rendering should
+        /// live in the rendering code. Unfortunately, we current build BREPs using
+        /// this subdivision. When we have non-planar BREP surfaces, we will be able
+        /// to decouple BREPs and tessellation and this setting can be passed into
+        /// the glTF serializer.
+        public const double DefaultMinimumChordLength = 0.1;
 
         /// <summary>
         /// The start of the curve.
