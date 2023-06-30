@@ -131,7 +131,7 @@ namespace Elements.Geometry
         /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
-            return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.Domain.Min, this.Domain.Max);
+            return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.StartAngle, this.EndAngle);
         }
 
         /// <inheritdoc/>
