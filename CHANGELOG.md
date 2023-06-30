@@ -14,6 +14,7 @@
 - `Arc.Fillet`
 - `Ellipse`
 - `EllipticalArc`
+- `IndexedPolycurve`
 - `Grid1d.GetCellDomains`
 - `Message.Info`
 - `Message.Error`

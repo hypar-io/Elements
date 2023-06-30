@@ -10,12 +10,6 @@ namespace Elements.Geometry
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>
-        /// The minimum chord length allowed for subdivision of the curve.
-        /// A lower MinimumChordLength results in smoother curves.
-        /// </summary>
-        public static double MinimumChordLength = 0.01;
-
-        /// <summary>
         /// Get a point along the curve at parameter u.
         /// </summary>
         /// <param name="u">A parameter along the curve between domain.min and domain.max.</param>
@@ -32,6 +26,8 @@ namespace Elements.Geometry
 
         /// <summary>
         /// Create a transformed copy of this curve.
+        /// Use of non-affine transforms (i.e. scale) will
+        /// result in unpredictable results for curve methods such as Length().
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
         public abstract Curve Transformed(Transform transform);
