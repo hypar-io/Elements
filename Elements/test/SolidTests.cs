@@ -380,7 +380,7 @@ namespace Elements.Tests
             {
                 var from = e.Value.Right.Vertex.Point;
                 var to = e.Value.Left.Vertex.Point;
-                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+                modelCurves.Add(new ModelCurve(new Line(from, to).TransformedLine(t)));
             }
             return modelCurves;
         }
@@ -390,7 +390,7 @@ namespace Elements.Tests
             var r = new Transform();
             r.Move(2.5, 2.5, 2.5);
             a = new Mass(Polygon.Rectangle(5, 5), 5);
-            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+            b = new Mass(new Circle(r, 2.5).ToPolygon(19), 5);
 
             a.UpdateRepresentations();
             b.UpdateRepresentations();
@@ -735,9 +735,39 @@ namespace Elements.Tests
         {
             var panel = new Panel(Polygon.L(5, 5, 2));
             panel.UpdateRepresentations();
-            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)));
+            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, 0, so.LocalTransform)));
             Assert.Equal(12, buffer.VertexCount); // Two faces of 6 vertices each
             Assert.Equal(8, buffer.FacetCount); // Two faces of 4 facets each.
+        }
+
+        [Fact]
+        public void FlippedExtrude()
+        {
+            Name = nameof(FlippedExtrude);
+            var normalExtrude = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis);
+            var flippedExtrude = new Extrude(Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(2, 0, 0)), 1, Vector3.ZAxis, false, true);
+            var geo = new GeometricElement
+            {
+                Representation = new Representation(normalExtrude, flippedExtrude)
+            };
+            Model.AddElement(geo);
+            var centroid1 = new Vector3(0, 0, 0.5);
+            var centroid2 = new Vector3(2, 0, 0.5);
+            Assert.All(normalExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid1;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == 1.0);
+            });
+            Assert.All(flippedExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid2;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == -1.0);
+            });
+            // Visually verify that flipped geometry is flipped.
         }
 
         private class DebugInfo

@@ -73,6 +73,17 @@ namespace Elements
         }
 
         /// <summary>
+        /// Construct a model with the given elements.
+        /// </summary>
+        /// <param name="elements">The model's elements.</param>
+        /// <param name="transform">The models' transform.</param>
+        public Model(System.Collections.Generic.IEnumerable<Element> @elements, Transform transform = null)
+        {
+            this.Transform = transform ?? new Transform();
+            this.Elements = @elements.ToDictionary(e => e.Id, e => e);
+        }
+
+        /// <summary>
         /// Add an element to the model.
         /// This operation recursively searches the element's properties
         /// for element sub-properties and adds those elements to the elements
@@ -197,7 +208,7 @@ namespace Elements
 
         /// <summary>
         /// Get all elements assignable from type T. This will include
-        /// types which derive from T and types which implement T if T 
+        /// types which derive from T and types which implement T if T
         /// is an interface.
         /// </summary>
         /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
@@ -260,7 +271,7 @@ namespace Elements
         /// Intersect the model with the provided plane.
         /// </summary>
         /// <param name="plane">The intersection plane.</param>
-        /// <param name="intersectionPolygons">A collection of polygons resulting from the 
+        /// <param name="intersectionPolygons">A collection of polygons resulting from the
         /// intersection of the plane with all elements in the model.</param>
         /// <param name="beyondPolygons">A collection of polygons resulting from intersection
         /// of the beyond plane with all elements in the model.</param>
@@ -430,6 +441,16 @@ namespace Elements
                 // been added. This assumes that that the sub-elements
                 // have been added as well and we don't need to continue.
                 return elements;
+            }
+
+            // This explicit loop is because we have mappings marked as internal so it's elements won't be automatically serialized.
+            if (e != null)
+            {
+                foreach (var map in e.Mappings ?? new Dictionary<string, MappingBase>())
+                {
+                    if (!Elements.ContainsKey(map.Value.Id))
+                    { elements.Add(map.Value); }
+                }
             }
 
             var t = obj.GetType();

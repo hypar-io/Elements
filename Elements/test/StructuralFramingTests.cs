@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Xunit;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Elements.Tests
 {
@@ -46,9 +47,14 @@ namespace Elements.Tests
             var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
             // Create a curved beam.
-            var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-            var arcBeam = new Beam(arc, profile, 0, 0, 45, new Transform(12, 0, 0), BuiltInMaterials.Steel);
-            var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
+            var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * 0.25, Math.PI * 0.75);
+            var arcBeam = new Beam(arc, profile, 0, 0, 0, new Transform(12, 0, 0), BuiltInMaterials.Steel);
+            var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
+
+            // Create an elliptical beam.
+            var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5, 1.5, 0, 210);
+            var ellipticBeam = new Beam(ellipticalArc, profile, 0, 0, 0, new Transform(18, 0, 0), BuiltInMaterials.Steel);
+            var ellipseT = ellipticalArc.TransformAt(ellipticalArc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
             // </example>
 
             this.Model.AddElement(linearBeam);
@@ -57,6 +63,8 @@ namespace Elements.Tests
             this.Model.AddElements(polyT);
             this.Model.AddElement(arcBeam);
             this.Model.AddElements(arcT);
+            this.Model.AddElement(ellipticBeam);
+            this.Model.AddElements(ellipseT);
         }
 
         [Theory]
@@ -69,7 +77,7 @@ namespace Elements.Tests
         {
             this.Name = testName;
 
-            Curve cl = null;
+            BoundedCurve cl = null;
             switch (beamType)
             {
                 case BeamType.Line:
@@ -99,7 +107,7 @@ namespace Elements.Tests
         [Fact]
         public void NonLinearVolumeException()
         {
-            Curve cl = ModelTest.TestArc;
+            var cl = ModelTest.TestArc;
             var beam = new Beam(cl, this._testProfile, material: BuiltInMaterials.Steel);
             Assert.Throws<InvalidOperationException>(() => beam.Volume());
         }
@@ -233,11 +241,12 @@ namespace Elements.Tests
         public void Setbacks()
         {
             this.Name = "BeamSetbacks";
+
             var line = new Line(Vector3.Origin, new Vector3(3, 3, 0));
             var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc);
             // Normal setbacks
-            var beam = new Beam(line, this._testProfile, 2, 2, 0, material: BuiltInMaterials.Steel);
+            var beam = new Beam(line, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam);
 
             var line1 = new Line(new Vector3(2, 0, 0), new Vector3(5, 3, 0));
@@ -250,6 +259,34 @@ namespace Elements.Tests
             // without throwing. It will not have setbacks.
             var beam1 = new Beam(line1, this._testProfile, sb, sb, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(beam1);
+
+            // Curve setbacks
+            var arc = new Arc(new Vector3(5, 0), 1.5, 0, 180);
+            var mc2 = new ModelCurve(arc, BuiltInMaterials.XAxis);
+            this.Model.AddElement(mc2);
+            var curvedBeam = new Beam(arc, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(curvedBeam);
+
+            // Polyline setbacks
+            var pl = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1) });
+            var mc3 = new ModelCurve(pl, BuiltInMaterials.Black);
+            this.Model.AddElement(mc3);
+            var plBeam = new Beam(pl, this._testProfile, 1, 1, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(plBeam);
+
+            // Ellipse setbacks
+            var ellipticalArc = new EllipticalArc(new Vector3(10, 0), 2.5, 1.5, 0, 210);
+            this.Model.AddElement(new ModelCurve(ellipticalArc));
+            var ellipticBeam = new Beam(ellipticalArc, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
+            this.Model.AddElement(ellipticBeam);
+
+            // Bezier setbacks
+            // TODO: Enable when we have good curved surface visualization.
+            // var t = new Transform(7, 0, 0);
+            // var bez = TestBezier();
+            // this.Model.AddElement(new ModelCurve(bez, BuiltInMaterials.Black, transform: t));
+            // var bezBeam = new Beam(bez, this._testProfile, 1, 2, 0, t, BuiltInMaterials.Steel);
+            // this.Model.AddElement(bezBeam);
         }
 
         [Fact]
@@ -270,6 +307,30 @@ namespace Elements.Tests
                 var straightBeam = new Beam(line, profile, 0, 0, x * (360.0 / 5.0));
                 this.Model.AddElement(straightBeam);
             }
+        }
+
+        [Fact]
+        public async void Joist()
+        {
+            Name = nameof(Joist);
+            var yLength = 30;
+
+            var profileFactory = new LProfileFactory();
+            var profile8 = await profileFactory.GetProfileByTypeAsync(LProfileType.L8X8X5_8);
+            var profile2 = await profileFactory.GetProfileByTypeAsync(LProfileType.L2X2X1_8);
+            var profile5 = await profileFactory.GetProfileByTypeAsync(LProfileType.L5X5X1_2);
+
+            var line = new Line(new Vector3(0, 0, 0), new Vector3(0, yLength, 0));
+            var joist = new Joist(line,
+                                  profile8,
+                                  profile8,
+                                  profile2,
+                                  Units.InchesToMeters(48),
+                                  20,
+                                  Units.InchesToMeters(2.5),
+                                  Units.FeetToMeters(2.0),
+                                  BuiltInMaterials.Steel);
+            this.Model.AddElement(joist);
         }
 
         [Fact, Trait("Category", "Examples")]
@@ -330,6 +391,19 @@ namespace Elements.Tests
                 }
             }
             // </joist-example>
+        }
+
+        private Bezier TestBezier()
+        {
+            var a = Vector3.Origin;
+            var b = new Vector3(5, 0, 1);
+            var c = new Vector3(5, 5, 2);
+            var d = new Vector3(0, 5, 3);
+            var e = new Vector3(0, 0, 4);
+            var f = new Vector3(5, 0, 5);
+            var ctrlPts = new List<Vector3> { a, b, c, d, e, f };
+            var bezier = new Bezier(ctrlPts);
+            return bezier;
         }
     }
 }

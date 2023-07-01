@@ -249,14 +249,14 @@ namespace Elements.Geometry.Tests
             var polyline = new Polyline(new[] { start, new Vector3(1, 4), end });
 
             Assert.Equal(0, polyline.GetParameterAt(start));
-            Assert.Equal(1, polyline.GetParameterAt(end));
+            Assert.Equal(2, polyline.GetParameterAt(end));
             Assert.Equal(-1, polyline.GetParameterAt(Vector3.Origin));
 
             var point = new Vector3(2, 4);
-            var result = polyline.GetParameterAt(point);
-            var expectedResult = 0.75d;
-            Assert.True(result.ApproximatelyEquals(expectedResult));
-            Assert.True(point.IsAlmostEqualTo(polyline.PointAt(result)));
+            var resultParameter = polyline.GetParameterAt(point);
+            Assert.Equal(1.5, resultParameter);
+            var testPoint = polyline.PointAt(resultParameter);
+            Assert.True(point.IsAlmostEqualTo(testPoint));
         }
 
         [Fact]
@@ -592,6 +592,7 @@ namespace Elements.Geometry.Tests
         public void PolylineFrameNormalsAreConsistent()
         {
             Name = nameof(PolylineFrameNormalsAreConsistent);
+
             Polyline curve = new Polyline(
                 (0, 0, 0),
                 (1, 0, 0),
@@ -599,9 +600,6 @@ namespace Elements.Geometry.Tests
                 (5, 3, 1),
                 (10, 0, 0)
             );
-
-            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
-
             var frames = curve.Frames();
 
             for (int i = 0; i < frames.Length - 1; i++)
@@ -613,6 +611,7 @@ namespace Elements.Geometry.Tests
                 Assert.True(currNormal.Dot(nextNormal) > 0.0);
             }
 
+            Bezier bezier = new Bezier(curve.Vertices.ToList()).TransformedBezier(new Transform(30, 0, 0));
             var bFrames = bezier.Frames();
 
             var parameters = new List<double>();
@@ -751,6 +750,28 @@ namespace Elements.Geometry.Tests
             Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
             // TODO This case is currently not working. Fix ForceAngleCompliance to handle this.
             Assert.False(CheckPolylineAngles(angles, normalizedPathEnd));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEndYAxisReferenceVector));
+        }
+
+
+        [Fact]
+        public void PolylineForceAngleComplianceWithZeroAngle()
+        {
+            Name = nameof(PolylineForceAngleComplianceWithZeroAngle);
+            var angles = new List<double> { 0, 45, 90 };
+            var polyline = new Polyline(new List<Vector3> { new Vector3(), new Vector3(1, 3), new Vector3(5, 3.05), new Vector3(10, 3) });
+
+            var normalizedPathMiddle = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceMiddle, NormalizationType.Middle);
+            var normalizedPathEnd = polyline.ForceAngleCompliance(angles, Vector3.ZAxis, out var distanceEnd, NormalizationType.End);
+            var normalizedPathEndYAxisReferenceVector = polyline.ForceAngleCompliance(angles, new Vector3(0, 1), out var distanceStartYAxis, NormalizationType.End);
+
+            Model.AddElement(new ModelCurve(polyline, BuiltInMaterials.Black));
+            Model.AddElement(new ModelCurve(normalizedPathMiddle, BuiltInMaterials.XAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEnd, BuiltInMaterials.YAxis));
+            Model.AddElement(new ModelCurve(normalizedPathEndYAxisReferenceVector, BuiltInMaterials.ZAxis));
+
+            Assert.True(CheckPolylineAngles(angles, normalizedPathMiddle));
+            Assert.True(CheckPolylineAngles(angles, normalizedPathEnd));
             Assert.True(CheckPolylineAngles(angles, normalizedPathEndYAxisReferenceVector));
         }
     }

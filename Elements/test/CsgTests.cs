@@ -63,7 +63,7 @@ namespace Elements.Tests
         public void Difference()
         {
             this.Name = "CSG_Difference";
-            var profile = _profileFactory.GetProfileByType(HSSPipeProfileType.HSS10_000x0_188);
+            var profile = Polygon.Rectangle(0.5, 0.5);
 
             var path = new Arc(Vector3.Origin, 5, 0, 270);
             var beam = new Beam(path, profile);
@@ -71,7 +71,7 @@ namespace Elements.Tests
             var s2 = new Extrude(new Circle(Vector3.Origin, 6).ToPolygon(20), 1, Vector3.ZAxis, true);
             beam.Representation.SolidOperations.Add(s2);
 
-            for (var i = 0.0; i < 1.0; i += 0.05)
+            for (var i = path.Domain.Min; i < path.Domain.Max; i += 0.1)
             {
                 var pt = path.PointAt(i);
                 var hole = new Extrude(new Circle(Vector3.Origin, 0.05).ToPolygon(), 3, Vector3.ZAxis, true)
@@ -192,7 +192,7 @@ namespace Elements.Tests
             Model.AddElement(geoElem);
             var solid = geoElem.GetFinalCsgFromSolids();
             var arrows = new ModelArrows();
-            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid)));
+            var mgb = Tessellation.Tessellate<MockGraphicsBuffer>(new Csg.Solid[] { solid }.Select(s => new CsgTessellationTargetProvider(solid, 0)));
             for (int i = 0; i < mgb.Indices.Count; i += 3)
             {
                 var a = mgb.Indices[i];

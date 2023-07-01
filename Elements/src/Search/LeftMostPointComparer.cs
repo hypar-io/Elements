@@ -32,8 +32,11 @@ namespace Elements.Search
             var a = _getSegment(t1);
             var b = _getSegment(t2);
 
-            var aLeft = a.Start.X <= a.End.X ? a.PointAt(0.001) : a.PointAt(0.999);
-            var bLeft = b.Start.X <= b.End.X ? b.PointAt(0.001) : b.PointAt(0.999);
+            const double small = 0.001;
+            var al = a.Domain.Length;
+            var bl = b.Domain.Length;
+            var aLeft = a.Start.X <= a.End.X ? a.PointAt(al * small) : a.PointAt(al * (1 - small));
+            var bLeft = b.Start.X <= b.End.X ? b.PointAt(bl * small) : b.PointAt(bl * (1 - small));
 
             if (aLeft.Y.ApproximatelyEquals(bLeft.Y))
                 {

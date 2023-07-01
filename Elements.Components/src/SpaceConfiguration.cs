@@ -158,7 +158,7 @@ namespace Elements.Components
         {
             var anchors = new List<Vector3>();
             anchors.AddRange(polygon.Vertices);
-            anchors.AddRange(polygon.Segments().Select(s => s.PointAt(0.5)));
+            anchors.AddRange(polygon.Segments().Select(s => s.Mid()));
             anchors.Add(polygon.Centroid());
             return anchors;
         }

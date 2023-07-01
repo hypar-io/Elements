@@ -60,7 +60,6 @@ namespace Elements
         private int _dpi = 72;
         private int _maxTextureSize = 2048;
         private List<(UV min, UV max, FontRectangle fontRect)> _textureAtlas;
-        private DrawingOptions _options;
         private string _texturePath;
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace Elements
         public double Scale { get; set; }
 
         /// <summary>
-        /// Create a set of text 
+        /// Create a set of text
         /// </summary>
         /// <param name="texts">A collection of text data objects which specify the location,
         /// direction, and content of the text.</param>
@@ -116,7 +115,7 @@ namespace Elements
                 var asmDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 var fontPath = Path.Combine(asmDir, "Fonts/Roboto-Medium.ttf");
                 var collection = new FontCollection();
-                var family = collection.Install(fontPath);
+                var family = collection.Add(fontPath);
                 _font12 = family.CreateFont(12);
                 _font24 = family.CreateFont(24);
                 _font36 = family.CreateFont(36);
@@ -134,17 +133,6 @@ namespace Elements
                     Directory.CreateDirectory(_labelsDirectory);
                 }
             }
-
-            _options = new DrawingOptions()
-            {
-                TextOptions = new TextOptions()
-                {
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    DpiX = _dpi,
-                    DpiY = _dpi
-                }
-            };
         }
 
         private void GenerateTextureAtlas()
@@ -171,7 +159,12 @@ namespace Elements
                     font = _font72;
                     break;
             }
-            var renderOptions = new RendererOptions(font, _dpi);
+            var textOptions = new TextOptions(font)
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Dpi = _dpi,
+            };
 
             this._textureAtlas = new List<(UV min, UV max, FontRectangle fontRect)>();
 
@@ -198,7 +191,7 @@ namespace Elements
                     continue;
                 }
 
-                var fontRectangle = TextMeasurer.Measure(t.text, renderOptions);
+                var fontRectangle = TextMeasurer.Measure(t.text, textOptions);
                 if (x + fontRectangle.Width > this._maxTextureSize)
                 {
                     x = 0;
@@ -210,13 +203,13 @@ namespace Elements
                     throw new Exception("The model text could not be created. There is too much text. Try making multiple model texts.");
 
                     // TODO: Instead of throwing an exception, we could do the
-                    // user a favor and just start a new texture. This makes the 
+                    // user a favor and just start a new texture. This makes the
                     // element have multiple materials however and would need
                     // to be handled as a special case.
                 }
 
                 var color = t.color != null ? new SixLabors.ImageSharp.Color(new Rgba32((float)t.color.Value.Red, (float)t.color.Value.Green, (float)t.color.Value.Blue)) : SixLabors.ImageSharp.Color.Black;
-                image.Mutate(o => o.DrawText(_options, t.text, font, color, new PointF(x, y)));
+                image.Mutate(o => o.DrawText(t.text, font, color, new PointF(x, y)));
 
                 var minU = (x / this._maxTextureSize);
                 var minV = 1 - (y / this._maxTextureSize);

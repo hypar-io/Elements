@@ -17,6 +17,8 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -358,8 +360,9 @@ namespace Elements.Serialization.glTF
                         samplerId++;
                     }
 
-                    gltfMaterial.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
                 }
+
+                gltfMaterial.EmissiveFactor = new float[] { (float)material.EmissiveFactor, (float)material.EmissiveFactor, (float)material.EmissiveFactor };
 
                 if (material.Color.Alpha < 1.0 || textureHasTransparency)
                 {
@@ -1578,9 +1581,21 @@ namespace Elements.Serialization.glTF
                 // There's a special flag on Representation that allows you to
                 // skip CSG unions. In this case, we tessellate all solids
                 // individually, and do no booleaning. Voids are also ignored.
-                buffers = Tessellation.Tessellate<GraphicsBuffers>(geometricElement.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, so.LocalTransform)),
-                                        false,
-                                        geometricElement.ModifyVertexAttributes);
+
+                // We create a collection of SolidTesselationTargetProviders, one for each solid operation.
+                // Each SolidTesselationTargetProvider has a GetTessellationTargets method which returns a new SolidFaceTessAdapter.
+                // Each SolidFaceTessAdapter is responsible for the tesselation of a single face.
+                // The SolidFaceTessAdapter's GetTess method calls face.ToContourVertexArray.
+                // ToContourVertexArray attaches a faceId and a solidIdto the Data object we hang on the contour vertex.
+                // The faceId and solidId are used during packing to lookup existing shared vertices, to avoid recreating them.
+                uint solidId = 0;
+                var providers = new List<SolidTesselationTargetProvider>();
+                foreach (var so in geometricElement.Representation.SolidOperations)
+                {
+                    providers.Add(new SolidTesselationTargetProvider(so.Solid, solidId, so.LocalTransform));
+                    solidId++;
+                }
+                buffers = Tessellation.Tessellate<GraphicsBuffers>(providers, false, geometricElement.ModifyVertexAttributes);
             }
             else
             {

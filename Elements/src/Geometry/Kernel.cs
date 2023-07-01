@@ -29,18 +29,27 @@ namespace Elements.Geometry
         /// Create a sweep along a curve.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateSweepAlongCurve(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation)
+        public Solid CreateSweepAlongCurve(Profile profile,
+                                           BoundedCurve curve,
+                                           double startSetback,
+                                           double endSetback,
+                                           double profileRotation)
         {
-            return Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids != null && profile.Voids.Count > 0 ? profile.Voids : null, curve, startSetback, endSetback, profileRotation);
+            return Solid.SweepFaceAlongCurve(profile.Perimeter,
+                                             profile.Voids != null && profile.Voids.Count > 0 ? profile.Voids : null,
+                                             curve,
+                                             startSetback,
+                                             endSetback,
+                                             profileRotation);
         }
 
         /// <summary>
         /// Create an extrude.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction)
+        public Solid CreateExtrude(Profile profile, double depth, Vector3 direction, bool flipped = false)
         {
-            if (profile.Perimeter.Normal().Dot(direction) < 0)
+            if (profile.Perimeter.Normal().Dot(direction) < 0 != flipped)
             {
                 profile = profile.Reversed();
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -48,7 +47,7 @@ namespace Elements.Spatial
         /// </summary>
         /// <value></value>
         [JsonIgnore]
-        public Curve Curve
+        public BoundedCurve Curve
         {
             get
             {
@@ -68,7 +67,6 @@ namespace Elements.Spatial
             }
         }
 
-
         /// <summary>
         /// Returns true if this 1D Grid has no subdivisions / sub-grids.
         /// </summary>
@@ -81,7 +79,7 @@ namespace Elements.Spatial
         // The curve this was generated from, often a line.
         // subdivided cells maintain the complete original curve,
         // rather than a subcurve.
-        internal Curve curve;
+        internal BoundedCurve curve;
 
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
@@ -128,7 +126,11 @@ namespace Elements.Spatial
         /// <param name="curveDomain"></param>
         [JsonConstructor]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-        public Grid1d(List<Grid1d> cells, string type, Domain1d domain, Curve topLevelParentCurve, Domain1d curveDomain)
+        public Grid1d(List<Grid1d> cells,
+                      string type,
+                      Domain1d domain,
+                      BoundedCurve topLevelParentCurve,
+                      Domain1d curveDomain)
         {
             if (topLevelParentCurve != null)
             {
@@ -182,10 +184,10 @@ namespace Elements.Spatial
         /// Construct a 1D grid from a curve.
         /// </summary>
         /// <param name="curve">The curve from which to generate the grid.</param>
-        public Grid1d(Curve curve)
+        public Grid1d(BoundedCurve curve)
         {
             this.curve = curve;
-            Domain = new Domain1d(0, curve.Length());
+            Domain = curve.Domain;
             curveDomain = Domain;
         }
 
@@ -397,32 +399,31 @@ namespace Elements.Spatial
             {
                 point = parent.toGrid.OfPoint(point);
             }
-            if (Curve is Polyline pl && pl.Segments().Count() > 1)
+            if (Curve is Polyline pl)
             {
-                var minDist = Double.MaxValue;
-                Line[] segments = pl.Segments();
-                int closestSegment = -1;
-                for (int i = 0; i < segments.Length; i++)
+                var segments = pl.Segments();
+                if (segments.Count() > 1)
                 {
-                    Line seg = segments[i];
-                    var cp = point.ClosestPointOn(seg);
-                    var dist = cp.DistanceTo(point);
-                    if (dist < minDist)
+                    var minDist = Double.MaxValue;
+                    var localParam = 0.0;
+                    int closestSegment = -1;
+                    for (int i = 0; i < segments.Length; i++)
                     {
-                        minDist = dist;
-                        closestSegment = i;
+                        Line seg = segments[i];
+                        var cp = point.ClosestPointOn(seg);
+                        var dist = cp.DistanceTo(point);
+                        if (dist < minDist)
+                        {
+                            minDist = dist;
+                            closestSegment = i;
+                            localParam = cp.DistanceTo(seg.Start) / seg.Length();
+                        }
                     }
+                    return closestSegment + localParam;
                 }
-                double curvePosition = 0.0;
-                for (int i = 0; i < closestSegment; i++)
-                {
-                    curvePosition += segments[i].Length();
-                }
-                curvePosition += segments[closestSegment].Start.DistanceTo(point);
-                return curvePosition;
             }
-            var A = Curve.PointAt(0);
-            var B = Curve.PointAt(1);
+            var A = Curve.Start;
+            var B = Curve.End;
             var C = point;
             var AB = B - A;
             AB = AB.Unitized();
@@ -480,7 +481,9 @@ namespace Elements.Spatial
             {
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
-            var numDivisions = Math.Max(1, Domain.Length / targetLength);
+
+            var arcLength = Curve.ArcLength(Domain.Min, Domain.Max);
+            var numDivisions = Math.Max(1, arcLength / targetLength);
             int roundedDivisions;
             switch (divisionMode)
             {
@@ -713,7 +716,7 @@ namespace Elements.Spatial
                 {
                     throw new Exception("t must be in the curve domain.");
                 }
-                return Curve.PointAt(tNormalized);
+                return Curve.PointAt(Curve.Domain.Min + Curve.Domain.Length * tNormalized);
             }
             else
             {
@@ -788,7 +791,7 @@ namespace Elements.Spatial
         {
             if (Curve != null)
             {
-                return (Curve.PointAt(1) - Curve.PointAt(0)).Unitized();
+                return (Curve.End - Curve.Start).Unitized();
             }
             else
             {
@@ -858,7 +861,7 @@ namespace Elements.Spatial
 
             else
             {
-                var domainsSequence = DomainsToSequence();
+                var domainsSequence = GetCellDomains();
                 for (int i = 0; i < domainsSequence.Count - 1; i++)
                 {
                     if (position <= domainsSequence[i + 1])
@@ -872,7 +875,12 @@ namespace Elements.Spatial
         }
 
 
-        private List<double> DomainsToSequence(bool recursive = false)
+        /// <summary>
+        /// Get domain parameters at the ends and in-between all cells.
+        /// </summary>
+        /// <param name="recursive">If true, domains will be retrieved from child cells as well.</param>
+        /// <returns>A list of double representing the domain across cells.</returns>
+        public List<double> GetCellDomains(bool recursive = false)
         {
             if (IsSingleCell)
             {
@@ -890,9 +898,9 @@ namespace Elements.Spatial
         /// <returns>A list of Vector3d points representing the boundaries between cells.</returns>
         public List<Vector3> GetCellSeparators(bool recursive = false)
         {
-            var values = DomainsToSequence(recursive);
+            var values = GetCellDomains(recursive);
             var t = values.Select(v => v.MapFromDomain(curveDomain));
-            var pts = t.Select(t0 => Curve.TransformAt(t0).Origin).ToList();
+            var pts = t.Select(t0 => Curve.TransformAt(Curve.Domain.Min + t0 * Curve.Domain.Length).Origin).ToList();
             return pts;
         }
 
@@ -927,7 +935,7 @@ namespace Elements.Spatial
         /// Retrieve geometric representation of a cell (currently just a line)
         /// </summary>
         /// <returns>A curve representing the extents of this grid / cell.</returns>
-        public Curve GetCellGeometry()
+        public BoundedCurve GetCellGeometry()
         {
             if (Curve == null)
             {
@@ -940,8 +948,8 @@ namespace Elements.Spatial
             var t1 = Domain.Min.MapFromDomain(curveDomain);
             var t2 = Domain.Max.MapFromDomain(curveDomain);
 
-            var x1 = Curve.TransformAt(t1);
-            var x2 = Curve.TransformAt(t2);
+            var x1 = Curve.TransformAt(Curve.Domain.Min + curve.Domain.Length * t1);
+            var x2 = Curve.TransformAt(Curve.Domain.Min + curve.Domain.Length * t2);
 
             return new Line(x1.Origin, x2.Origin);
 

@@ -155,7 +155,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 var grid = CreateGridFromPolygon(transformedPolygonBottom);
                 SplitGrid(grid, keyPoints);
                 SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                var addedEdges = AddFromGrid(grid, edgesBefore);
+                var addedEdges = AddFromGridWithBoundingPolygon(grid, transformedPolygonBottom);
                 AddVerticalEdges(extrusionAxis, zCells[i].Domain.Length, addedEdges);
                 if (i == zCells.Count - 1)
                 {
@@ -164,7 +164,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     grid = CreateGridFromPolygon(transformedPolygonTop);
                     SplitGrid(grid, keyPoints);
                     SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-                    AddFromGrid(grid, edgesBefore);
+                    AddFromGridWithBoundingPolygon(grid, transformedPolygonTop);
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace Elements.Spatial.AdaptiveGrid
             var edgesBefore = GetEdges();
             SplitGrid(grid, keyPoints);
             SplitGridAtIntersectionPoints(boundingPolygon, grid, edgesBefore);
-            return AddFromGrid(grid, edgesBefore);
+            return AddFromGridWithBoundingPolygon(grid, boundingPolygon);
         }
 
         /// <summary>
@@ -361,20 +361,6 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Whether a vertex location already exists in the AdaptiveGrid.
-        /// </summary>
-        /// <param name="point"></param>
-        /// <param name="id">The ID of the Vertex, if a match is found.</param>
-        /// <param name="tolerance">Amount of tolerance in the search against each component of the coordinate.</param>
-        /// <returns>True if any Vertex is close enough.</returns>
-        [Obsolete("Tolerance parameter is obsolete. Grid automatically uses it's internal tolerance.")]
-        public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance)
-        {
-            id = GetFromXYZLookup(point, out _, out _, tolerance: tolerance);
-            return id != 0; 
-        }
-
-        /// <summary>
         /// Add a Vertex or return existing one if it's withing grid tolerance.
         /// Doesn't connect new Vertex to the grid with edges.
         /// </summary>
@@ -429,8 +415,7 @@ namespace Elements.Spatial.AdaptiveGrid
             /// <summary>
             /// Insert vertices and connect them to each other.
             /// Find any intersections between new edges.
-            /// Inserted vertices are returned in order including self intersection vertices twice. 
-            /// 
+            /// Inserted vertices are returned in order including self intersection vertices twice.
             /// </summary>
             ConnectAndSelfIntersect,
 
@@ -452,7 +437,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Create a chain of vertices. Exact behavior depends on the method used. 
+        /// Create a chain of vertices. Exact behavior depends on the method used.
         /// </summary>
         /// <param name="points">List of points to insert. Must have at least two points.</param>
         /// <param name="method">Insertion method.</param>
@@ -763,7 +748,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 {
                     // The same vertex can be part of multiple edges.
                     // Cache to avoid expensive cut operations.
-                    if (!alreadyConnected.Contains(newSV.Id) && 
+                    if (!alreadyConnected.Contains(newSV.Id) &&
                         TryGetVertexIndex(Start, out var id))
                     {
                         AddEdge(newSV.Id, id);
@@ -834,7 +819,7 @@ namespace Elements.Spatial.AdaptiveGrid
         }
 
         /// <summary>
-        /// Add an edge between two vertices and intersect it with other edges on the grid. 
+        /// Add an edge between two vertices and intersect it with other edges on the grid.
         /// </summary>
         /// <param name="startId">Index of start vertex.</param>
         /// <param name="endId">Index of end vertex.</param>
@@ -1034,9 +1019,9 @@ namespace Elements.Spatial.AdaptiveGrid
             return addedEdges;
         }
 
-        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowEdgesOutsideBoudnary)
+        private void AddEdgesOnLine(Vector3 start, Vector3 end, IEnumerable<Vector3> candidates, bool allowEdgesOutsideBoundary)
         {
-            if (Boundaries != null && !allowEdgesOutsideBoudnary)
+            if (Boundaries != null && !allowEdgesOutsideBoundary)
             {
                 var boundary2d = new Polygon(Boundaries.Vertices.Select(v => new Vector3(v.X, v.Y)).ToList());
                 var inside = new Line(new Vector3(start.X, start.Y), new Vector3(end.X, end.Y)).Trim(boundary2d, out var _);
@@ -1084,9 +1069,9 @@ namespace Elements.Spatial.AdaptiveGrid
             for (int i = 0; i < points.Count - 1; i++)
             {
                 var segmentLength = (points[i + 1] - points[i]).Length();
-                // Find any intersections between infinite segment and grid eges.
+                // Find any intersections between infinite segment and grid edges.
                 var hits = IntersectGraph(points[i], points[i + 1]);
-                // If none - just insert segment into grid. 
+                // If none - just insert segment into grid.
                 if (!hits.Any())
                 {
                     var start = AddVertex(points[i]);
@@ -1324,43 +1309,140 @@ namespace Elements.Spatial.AdaptiveGrid
             grid.V.SplitAtPoints(keyPoints);
         }
 
-        private HashSet<Edge> AddFromGrid(Grid2d grid, IEnumerable<Edge> edgesToIntersect)
-        {
-            var cells = grid.GetCells();
-            var addedEdges = new HashSet<Edge>();
-            var edgeCandidates = new HashSet<(ulong, ulong)>();
+        #region AddFromGridWithBoundingPolygon and its subfunctions.
 
-            Action<Vector3, Vector3> add = (Vector3 start, Vector3 end) =>
+        private Transform FromGridUVTransform(Grid2d grid)
+        {
+            var uDomain = grid.U.curveDomain;
+            var vDomain = grid.V.curveDomain;
+            Vector3 xAxis = (grid.U.Evaluate(uDomain.Max) - grid.U.Evaluate(uDomain.Min)) / uDomain.Length;
+            Vector3 yAxis = (grid.V.Evaluate(vDomain.Max) - grid.V.Evaluate(vDomain.Min)) / vDomain.Length;
+            Vector3 zAxis = xAxis.Cross(yAxis);
+            var fromGrid = new Transform(grid.U.Evaluate(uDomain.Min) + grid.V.Evaluate(vDomain.Min), xAxis, yAxis, zAxis).Concatenated(grid.fromGrid);
+            return fromGrid;
+        }
+
+        private List<(Vertex Start, Vertex End)> SplitSegmentWithPoints(
+            (Vector3 Start, Vector3 End) line,
+            List<Vertex> points)
+        {
+            var resultingSegments = new List<(Vertex, Vertex)>();
+            var lineVector = line.End - line.Start;
+            points.Add(AddVertex(line.Start));
+            points.Add(AddVertex(line.End));
+            points.Sort((p, q) => Math.Sign(lineVector.Dot(p.Point - q.Point)));
+            for (int i = 1; i < points.Count; ++i)
             {
-                var v0 = AddVertex(start);
-                var v1 = AddVertex(end);
+                resultingSegments.Add((points[i-1], points[i]));
+            }
+            return resultingSegments;
+        }
+
+        private List<(Vertex Start, Vertex End)> SplitLineSegmentsWithParameters(
+            IEnumerable<Line> segmentsToSplit, 
+            double lineParameter, 
+            List<double> parametersOnLine, 
+            bool isU,
+            List<Vertex> collectedPoints,
+            Transform fromGrid)
+        {
+            var swapXYAxes = new Transform(new Vector3(0, 0, 0), Vector3.YAxis, Vector3.XAxis, Vector3.ZAxis);
+            var identity = new Transform();
+            var currentTransform = (isU ? swapXYAxes : identity).Concatenated(fromGrid);
+            var segments = segmentsToSplit.Select(x => x);
+            if (isU)
+            {
+                segments = segments.Select(l => l.TransformedLine(swapXYAxes));
+            }
+
+            segments = segments.Select(l => l.Start.Y < l.End.Y ? l : l.Reversed());
+            segments = segments.OrderBy(l => l.Start.Y);
+            var resultingSegments = new List<(Vertex, Vertex)>();
+            var newIntersectionPoints = new List<Vertex>();
+
+            int yId = 0;
+            foreach (var segment in segments)
+            {
+                var previousPoint = segment.Start;
+                var previousVertex = AddVertex(currentTransform.OfPoint(previousPoint));
+                var lastPoint = segment.End;
+                var lastVertex = AddVertex(currentTransform.OfPoint(lastPoint));
+                newIntersectionPoints.Add(previousVertex);
+                newIntersectionPoints.Add(lastVertex);
+                while (yId < parametersOnLine.Count && parametersOnLine[yId] < previousPoint.Y)
+                {
+                    ++yId;
+                }
+                while (yId < parametersOnLine.Count && parametersOnLine[yId] < lastPoint.Y)
+                {
+                    var nextPoint = new Vector3(lineParameter, parametersOnLine[yId]);
+                    var nextVertex = AddVertex(currentTransform.OfPoint(nextPoint));
+                    newIntersectionPoints.Add(nextVertex);
+                    resultingSegments.Add((previousVertex, nextVertex));
+                    previousVertex = nextVertex;
+                    ++yId;
+                }
+                resultingSegments.Add((previousVertex, lastVertex));
+            }
+
+            collectedPoints.AddRange(newIntersectionPoints);
+
+            return resultingSegments;
+        }
+
+        private HashSet<Edge> AddFromGridWithBoundingPolygon(Grid2d grid, Polygon boundingPolygon)
+        {
+            if (Math.Max(grid.U.Domain.Length, grid.V.Domain.Length) < Tolerance)
+            {
+                return new HashSet<Edge>();
+            }
+
+            var uList = grid.U.GetCellDomains(true);
+            var vList = grid.V.GetCellDomains(true);
+
+            var fromGrid = FromGridUVTransform(grid);
+            var toGrid = fromGrid.Inverted();
+
+            var uvPolygon = boundingPolygon.TransformedPolygon(toGrid);
+
+            var newSegments = new List<(Vertex Start, Vertex End)>();
+            var collectedPoints = new List<Vertex>();
+
+            foreach (var u in uList)
+            {
+                var verticalLine = new Line(new Vector3(u, vList.First()), new Vector3(u, vList.Last()));
+                var internalSegments = verticalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
+                newSegments.AddRange(SplitLineSegmentsWithParameters(internalSegments, u, vList, false, collectedPoints, fromGrid));
+            }
+
+            foreach (var v in vList)
+            {
+                var horizontalLine = new Line(new Vector3(uList.First(), v), new Vector3(uList.Last(), v));
+                var internalSegments = horizontalLine.Trim(uvPolygon, out _, includeCoincidenceAtEdge: true);
+                newSegments.AddRange(SplitLineSegmentsWithParameters(internalSegments, v, uList, true, collectedPoints, fromGrid));
+            }
+
+            newSegments.AddRange(boundingPolygon.Edges().SelectMany(
+                e => SplitSegmentWithPoints(e, collectedPoints.Where(p => new Line(e.from, e.to).PointOnLine(p.Point)).ToList())));
+
+            var edgeCandidates = new HashSet<(ulong, ulong)>();
+            foreach (var segment in newSegments)
+            {
+                var v0 = segment.Start;
+                var v1 = segment.End;
                 if (v0 != v1)
                 {
                     var pair = v0.Id < v1.Id ? (v0.Id, v1.Id) : (v1.Id, v0.Id);
                     edgeCandidates.Add(pair);
                 }
-            };
-
-            foreach (var cell in cells)
-            {
-                foreach (var cellGeometry in cell.GetTrimmedCellGeometry())
-                {
-                    var polygon = (Polygon)cellGeometry;
-                    for (int i = 0; i < polygon.Vertices.Count - 1; i++)
-                    {
-                        add(polygon.Vertices[i], polygon.Vertices[i + 1]);
-                    }
-                    add(polygon.Vertices.Last(), polygon.Vertices.First());
-                }
             }
 
-            foreach (var edge in edgeCandidates)
-            {
-                addedEdges.Add(AddInsertEdge(edge.Item1, edge.Item2));
-            }
+            var addedEdges = new HashSet<Edge>(edgeCandidates.Select(edge => AddInsertEdge(edge.Item1, edge.Item2)));
 
             return addedEdges;
         }
+
+        #endregion
 
         private void AddVerticalEdges(Vector3 extrusionAxis, double height, HashSet<Edge> addedEdges)
         {
@@ -1408,7 +1490,7 @@ namespace Elements.Spatial.AdaptiveGrid
         private bool IsLineInDomain(
             (Vector3 Start, Vector3 End) line,
             (Vector3 Min, Vector3 Max) domain,
-            double xyTolerance, double zTolerance, 
+            double xyTolerance, double zTolerance,
             out bool startInside, out bool endInside)
         {
             startInside = false;
