@@ -70,7 +70,12 @@ namespace Elements
         /// <param name="id"></param>
         /// <param name="name"></param>
         [JsonConstructor]
-        public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+        public GeometricElement(Transform @transform = null,
+                                Material @material = null,
+                                Representation @representation = null,
+                                bool @isElementDefinition = false,
+                                System.Guid @id = default,
+                                string @name = null)
             : base(id, name)
         {
             this.Transform = @transform ?? new Geometry.Transform();

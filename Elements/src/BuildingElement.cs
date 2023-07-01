@@ -23,11 +23,11 @@ namespace Elements
         /// <param name="isElementDefinition"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        public BuildingElement(Transform transform,
-                               Material material,
-                               Representation representation,
-                               bool isElementDefinition,
-                               Guid id,
-                               string name) : base(transform, material, representation, isElementDefinition, id, name) { }
+        public BuildingElement(Transform transform = null,
+                               Material material = null,
+                               Representation representation = null,
+                               bool isElementDefinition = false,
+                               Guid id = default,
+                               string name = null) : base(transform, material, representation, isElementDefinition, id, name) { }
     }
 }

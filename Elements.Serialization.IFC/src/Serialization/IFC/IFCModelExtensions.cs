@@ -93,6 +93,9 @@ namespace Elements.Serialization.IFC
                                                                     true,
                                                                     null,
                                                                     true,
+                                                                    null,
+                                                                    0.0,
+                                                                    false,
                                                                     surfaceStyle.Id,
                                                                     surfaceStyle.Name);
                                             materials.Add(material.Name, material);
