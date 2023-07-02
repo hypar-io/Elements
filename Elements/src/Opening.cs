@@ -49,7 +49,16 @@ namespace Elements
                        Representation representation = null,
                        bool isElementDefinition = false,
                        Guid id = default,
-                       string name = null) : this(perimeter, Vector3.ZAxis, depthFront, depthBack, transform, representation, isElementDefinition, id, name) { }
+                       string name = null) : this(perimeter,
+                                                  Vector3.ZAxis,
+                                                  depthFront,
+                                                  depthBack,
+                                                  transform,
+                                                  representation,
+                                                  isElementDefinition,
+                                                  id,
+                                                  name)
+        { }
 
         /// <summary>
         /// Create an opening.
@@ -90,10 +99,7 @@ namespace Elements
         {
             this.Representation.SolidOperations.Clear();
             var depth = this.DepthFront + this.DepthBack;
-            var op = new Extrude(this.Perimeter, depth, Normal, true)
-            {
-                LocalTransform = new Transform(new Vector3(0, 0, -this.DepthBack))
-            };
+            var op = new Extrude(Perimeter, depth, Normal, true);
             this.Representation.SolidOperations.Add(op);
         }
     }

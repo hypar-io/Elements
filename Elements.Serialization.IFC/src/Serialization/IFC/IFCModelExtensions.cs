@@ -203,7 +203,7 @@ namespace Elements.Serialization.IFC
                                                         IfcGuid.FromIfcGUID(buildingElement.GlobalId),
                                                         buildingElement.Name);
 
-                        geom.Representation.SkipCSGUnion = true;
+                        // geom.Representation.SkipCSGUnion = true;
 
                         var voids = relVoids.Where(v => v.RelatingBuildingElement == buildingElement).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>();
                         foreach (var v in voids)
@@ -211,7 +211,6 @@ namespace Elements.Serialization.IFC
                             var opening = v.ToOpening();
                             geom.Openings.Add(opening);
                         }
-
                         model.AddElement(geom);
                     }
                 }

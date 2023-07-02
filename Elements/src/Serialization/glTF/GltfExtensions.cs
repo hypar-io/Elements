@@ -1526,6 +1526,7 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
             geometricElement.UpdateBoundsAndComputeSolid();
             nodeId = -1;
+
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
             // is to ensure that openings have some geometry that will be used

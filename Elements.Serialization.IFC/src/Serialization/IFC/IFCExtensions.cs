@@ -393,12 +393,19 @@ namespace Elements.Serialization.IFC
             var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             if (s != null)
             {
-                var solidTransform = s.Position.ToTransform();
-                solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToCurve();
+                var solidTransform = s.Position.ToTransform().Concatenated(openingTransform);
 
+                if (opening.PredefinedType == IfcOpeningElementTypeEnum.OPENING)
+                {
+                    // TODO: See if this works universally. We don't support extrusions
+                    // in both directions, so we double the extrusion depth and set
+                    // it back by half the depth. 
+                    var setback = new Vector3(0, 0, -(IfcLengthMeasure)s.Depth);
+                    solidTransform.Move(solidTransform.OfVector(setback));
+                }
                 var newOpening = new Opening(profile,
-                                             s.ExtrudedDirection.ToVector3(),
+                                             s.ExtrudedDirection.ToVector3().Negate(),
                                              (IfcLengthMeasure)s.Depth,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
