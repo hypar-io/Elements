@@ -404,8 +404,12 @@ namespace Elements.Serialization.IFC
                     var setback = new Vector3(0, 0, -(IfcLengthMeasure)s.Depth);
                     solidTransform.Move(solidTransform.OfVector(setback));
                 }
+
+                // Openings should be extruded according to their provided direction,
+                // but we've found that the direction can be wrong, depending on how
+                // the authoring application handles extrusions.
                 var newOpening = new Opening(profile,
-                                             s.ExtrudedDirection.ToVector3().Negate(),
+                                             profile.Normal(), //s.ExtrudedDirection.ToVector3(),
                                              (IfcLengthMeasure)s.Depth,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
