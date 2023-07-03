@@ -2164,8 +2164,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's signed area in 3D.
+        /// Calculate the polygon's area in 3D.
         /// </summary>
+        /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
         public double Area(bool signed = false)
         {
             var vertices = this.Vertices;
