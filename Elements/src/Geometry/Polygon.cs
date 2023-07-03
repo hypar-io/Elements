@@ -2166,7 +2166,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the polygon's signed area in 3D.
         /// </summary>
-        public double Area()
+        public double Area(bool signed = false)
         {
             var vertices = this.Vertices;
             var normal = Normal();
@@ -2185,7 +2185,7 @@ namespace Elements.Geometry
                 area += vertices[i].X * vertices[j].Y;
                 area -= vertices[i].Y * vertices[j].X;
             }
-            return area / 2.0;
+            return signed ? area / 2.0 : Math.Abs(area / 2.0);
         }
 
         /// <summary>
