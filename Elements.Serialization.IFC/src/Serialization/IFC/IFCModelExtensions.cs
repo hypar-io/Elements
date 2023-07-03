@@ -484,7 +484,7 @@ namespace Elements.Serialization.IFC
             {
                 File.Delete(path);
             }
-            File.WriteAllText(path, ifc.ToSTEP(path));
+            File.WriteAllText(path, ifc.ToSTEP());
         }
     }
 }
