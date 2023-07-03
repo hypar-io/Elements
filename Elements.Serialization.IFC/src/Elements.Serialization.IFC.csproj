@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hypar.IFC4" Version="0.1.4.1" />
+    <PackageReference Include="Hypar.IFC4" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

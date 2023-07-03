@@ -1,6 +1,5 @@
 ﻿using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Elements.Spatial;
 using Newtonsoft.Json;
 using System;

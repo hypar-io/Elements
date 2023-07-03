@@ -1046,6 +1046,7 @@ namespace Elements.Serialization.glTF
             var meshTransformMap = new Dictionary<Guid, Transform>();
             foreach (var e in elements)
             {
+
                 // Check if we'll overrun the index size
                 // for the current line array. If so,
                 // create a new line array.
@@ -1083,6 +1084,7 @@ namespace Elements.Serialization.glTF
                 {
                     errors.Add(new ElementError(e.Id, ex));
                 }
+
             }
             if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
             {
@@ -1524,6 +1526,7 @@ namespace Elements.Serialization.glTF
             geometricElement.UpdateRepresentations();
             geometricElement.UpdateBoundsAndComputeSolid();
             nodeId = -1;
+
             // TODO: Remove this when we get rid of UpdateRepresentation.
             // The only reason we don't fully exclude openings from processing
             // is to ensure that openings have some geometry that will be used

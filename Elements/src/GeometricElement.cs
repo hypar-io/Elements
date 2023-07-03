@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
 using Newtonsoft.Json;
@@ -72,7 +70,12 @@ namespace Elements
         /// <param name="id"></param>
         /// <param name="name"></param>
         [JsonConstructor]
-        public GeometricElement(Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+        public GeometricElement(Transform @transform = null,
+                                Material @material = null,
+                                Representation @representation = null,
+                                bool @isElementDefinition = false,
+                                System.Guid @id = default,
+                                string @name = null)
             : base(id, name)
         {
             this.Transform = @transform ?? new Geometry.Transform();
@@ -344,37 +347,37 @@ namespace Elements
                 }
             }
 
-            if (this is IHasOpenings openingContainer)
+            if (this is BuildingElement be && be.Openings != null && be.Openings.Count > 0)
             {
-                foreach (var opening in openingContainer.Openings)
+                foreach (var opening in be.Openings)
                 {
-                    foreach (var op in opening.Representation.SolidOperations)
-                    {
-                        if (op.IsVoid)
-                        {
-                            voids.Add(TransformedSolidOperation(op, opening.Transform));
-                        }
-                    }
+                    voids.Add(opening._csg.Transform(opening.Transform.ToMatrix4x4()));
                 }
             }
 
             var solidItems = solids.ToArray();
             var voidItems = voids.ToArray();
 
-            // Don't try CSG booleans if we only have one one solid.
-            if (solids.Count() == 1)
+            if (voids.Count == 1 && solids.Count == 0)
             {
-                csg = solids.First();
+                csg = voids.First();
             }
-            else if (solids.Count() > 0)
+            else
             {
-                csg = csg.Union(solidItems);
-            }
+                // Don't try CSG booleans if we only have one one solid.
+                if (solids.Count() == 1)
+                {
+                    csg = solids.First();
+                }
+                else if (solids.Count() > 0)
+                {
+                    csg = csg.Union(solidItems);
+                }
 
-
-            if (voids.Count() > 0)
-            {
-                csg = csg.Subtract(voidItems);
+                if (voids.Count() > 0)
+                {
+                    csg = csg.Subtract(voidItems);
+                }
             }
 
             if (Transform == null || transformed)
@@ -415,7 +418,7 @@ namespace Elements
                 return op._solid.ToCsg();
             }
 
-            // Transform the solid operatioon by the the local transform AND the
+            // Transform the solid operation by the the local transform AND the
             // element's transform, or just by the element's transform.
             var transformedOp = op.LocalTransform != null
                         ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
@@ -425,7 +428,7 @@ namespace Elements
                 return transformedOp;
             }
 
-            // If an addition transform was proovided, don't forget
+            // If an addition transform was provided, don't forget
             // to apply that as well.
             return transformedOp.Transform(addTransform.ToMatrix4x4());
         }

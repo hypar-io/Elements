@@ -1,9 +1,7 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Elements
@@ -11,17 +9,12 @@ namespace Elements
     /// <summary>
     /// A ceiling defined by a planar profile extruded to a thickness.
     /// </summary>
-    public class SolidCeiling : BaseCeiling, IHasOpenings
+    public class SolidCeiling : BaseCeiling
     {
         /// <summary>
         /// The thickness of the ceiling.
         /// </summary>
         public double Thickness { get; protected set; }
-
-        /// <summary>
-        /// A collection of openings in the ceiling.
-        /// </summary>
-        public List<Opening> Openings { get; } = new List<Opening>();
 
         /// <summary>
         /// Construct a ceiling by extruding a profile.

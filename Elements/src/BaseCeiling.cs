@@ -1,6 +1,5 @@
 ﻿using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace Elements
     /// <summary>
     /// The base class for all ceilings.
     /// </summary>
-    public abstract class BaseCeiling : GeometricElement
+    public abstract class BaseCeiling : BuildingElement
     {
         /// <summary>
         /// The elevation of the ceiling.

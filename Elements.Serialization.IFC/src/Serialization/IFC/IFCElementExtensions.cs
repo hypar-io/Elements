@@ -4,7 +4,6 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
-using Elements.Interfaces;
 using IFC;
 
 namespace Elements.Serialization.IFC
@@ -169,19 +168,17 @@ namespace Elements.Serialization.IFC
 
             // If the element has openings, make opening relationships in
             // the IfcElement.
-            if (e is IHasOpenings openings)
+            if (geoElement is BuildingElement)
             {
-                if (openings.Openings.Count > 0)
+                var be = geoElement as BuildingElement;
+                foreach (var o in be.Openings)
                 {
-                    foreach (var o in openings.Openings)
-                    {
-                        var element = (IfcElement)product;
-                        // TODO: Find the opening that we've already created that relates here
-                        var opening = ifcOpenings.First(ifcO => ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
-                        var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
-                        element.HasOpenings.Add(voidRel);
-                        doc.AddEntity(voidRel);
-                    }
+                    var element = (IfcElement)product;
+                    // TODO: Find the opening that we've already created that relates here
+                    var opening = ifcOpenings.First(ifcO => ifcO.GlobalId == IfcGuid.ToIfcGuid(o.Id));
+                    var voidRel = new IfcRelVoidsElement(IfcGuid.ToIfcGuid(Guid.NewGuid()), element, opening);
+                    element.HasOpenings.Add(voidRel);
+                    doc.AddEntity(voidRel);
                 }
             }
 

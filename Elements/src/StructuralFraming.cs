@@ -8,7 +8,7 @@ namespace Elements
     /// <summary>
     /// A structural element with a profile swept along a curve.
     /// </summary>
-    public abstract class StructuralFraming : GeometricElement
+    public abstract class StructuralFraming : BuildingElement
     {
         /// <summary>
         /// The center line of the framing element.
