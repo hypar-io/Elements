@@ -46,20 +46,9 @@ namespace Elements.Geometry
         {
             this.Vertices = new[] { a, b, c };
 
-            if (!a.Triangles.Contains(this))
-            {
-                a.Triangles.Add(this);
-            }
-
-            if (!b.Triangles.Contains(this))
-            {
-                b.Triangles.Add(this);
-            }
-
-            if (!c.Triangles.Contains(this))
-            {
-                c.Triangles.Add(this);
-            }
+            a.Triangles.Add(this);
+            b.Triangles.Add(this);
+            c.Triangles.Add(this);
 
             var ab = (b.Position - a.Position).Unitized();
             var bc = (c.Position - a.Position).Unitized();
