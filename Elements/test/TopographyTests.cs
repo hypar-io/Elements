@@ -380,6 +380,34 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TrimTopoWithRegion()
+        {
+            Name = nameof(TrimTopoWithRegion);
+            var count = 10;
+            var elevations = new List<double>();
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = 0; j < count; j++)
+                {
+                    elevations.Add(Math.Sin(i) + Math.Sin(j));
+                }
+            }
+            var topo = new Topography(Vector3.Origin, count, elevations.ToArray())
+            {
+                DepthBelowMinimumElevation = 3,
+            };
+            var polygonToProject = new Profile(new Circle((5, 5), 3).ToPolygon(50), new Circle((5, 5), 1).ToPolygon(6));
+            var trimmed = topo.Trimmed(polygonToProject);
+            trimmed.Material = BuiltInMaterials.XAxis;
+            trimmed.Transform.Move(0, 0, 0.001);
+            var topSurface = trimmed.TopMesh();
+            var me = new MeshElement(topSurface, new Transform(0, 0, 1), BuiltInMaterials.ZAxis);
+            Model.AddElement(topo);
+            Model.AddElement(trimmed);
+            Model.AddElement(me);
+        }
+
+        [Fact]
         public void CreateTopoFromMesh()
         {
             Name = nameof(CreateTopoFromMesh);
