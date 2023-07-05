@@ -21,6 +21,7 @@
 - `Message.Warning`
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
+- `Topography.TopMesh()`
 
 ### Changed
 
