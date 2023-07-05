@@ -361,8 +361,8 @@ namespace Elements
             var solidItems = solids.ToArray();
             var voidItems = voids.ToArray();
 
-            // Don't try CSG booleans if we only have one one solid and no voids.
-            if (solids.Count() == 1 && voids.Count() == 0)
+            // Don't try CSG booleans if we only have one one solid.
+            if (solids.Count() == 1)
             {
                 csg = solids.First();
             }
@@ -370,10 +370,7 @@ namespace Elements
             {
                 csg = csg.Union(solidItems);
             }
-            else
-            {
-                return csg;
-            }
+
 
             if (voids.Count() > 0)
             {

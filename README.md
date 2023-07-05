@@ -17,7 +17,7 @@
 
 ## Latest Updates
 For the latest updates see the [`CHANGELOG`](CHANGELOG.md).
- 
+
 ## Getting Started
 In a .net core project:
 ```
@@ -81,10 +81,7 @@ dotnet test
 ```
 
 ## Benchmark
-```
-cd Elements.Benchmarks
-dotnet run -c release --filter '<benchmark class name>'
-```
+See [Benchmark Documentation](./Elements.Benchmarks/README.md).
 
 ## Documentation
 When adding sample code you need to add a special block of text to the class or method where you want the code to appear. The value of `name` at the end of the URI will be matched with open and close tags in the test file. See Joist.cs and StructuralFramingTests.cs for an sample.
