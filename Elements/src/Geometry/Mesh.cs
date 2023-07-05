@@ -253,6 +253,18 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
+        /// Removes the specified triangle from the mesh and updates the vertex-triangle relationships.
+        /// </summary>
+        /// <param name="face">The triangle to remove.</param>
+        public void RemoveTriangle(Triangle face)
+        {
+            this.Triangles.Remove(face);
+            foreach(var vert in face.Vertices) {
+                vert.Triangles.Remove(face);
+            }
+        }
+
+        /// <summary>
         /// Add a vertex to the mesh.
         /// </summary>
         /// <param name="position">The position of the vertex.</param>

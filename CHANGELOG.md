@@ -19,6 +19,8 @@
 - `Message.Info`
 - `Message.Error`
 - `Message.Warning`
+- `Topography.Trimmed`
+- `new Topography(Topography other)`
 
 ### Changed
 
@@ -49,6 +51,7 @@
 - Fix the polygon centroid calculation to remove collinear vertices.
 - Fix the tests for 3dCentroid testing.
 - `Message` created from `Message.FromPoint` now has `Transform.Origin` set exactly on original point.
+- Certain `Triangle` constructors would not correctly update `Vertex.Triangles`, this is fixed.
 
 ## 1.6.0
 

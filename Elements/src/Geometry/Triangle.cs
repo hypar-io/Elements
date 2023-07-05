@@ -26,9 +26,16 @@ namespace Elements.Geometry
         /// <param name="vertices">The vertices of the triangle.</param>
         /// <param name="normal">The normal of the triangle.</param>
         [JsonConstructor]
-        public Triangle(IList<Vertex> @vertices, Vector3 @normal)
+        public Triangle(IList<Vertex> vertices, Vector3 @normal)
         {
-            this.Vertices = @vertices;
+            this.Vertices = vertices;
+            foreach (var vert in vertices)
+            {
+                if (!vert.Triangles.Contains(this))
+                {
+                    vert.Triangles.Add(this);
+                }
+            }
             this.Normal = @normal;
         }
 
