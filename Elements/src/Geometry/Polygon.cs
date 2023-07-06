@@ -2166,6 +2166,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the polygon's area in 3D.
         /// </summary>
+        /// <param name="signed">Should a signed area be returned?</param>
         /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
         public double Area(bool signed = false)
         {
