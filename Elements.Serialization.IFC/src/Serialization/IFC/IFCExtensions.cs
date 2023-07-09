@@ -591,26 +591,44 @@ namespace Elements.Serialization.IFC
             Polygon outer = null;
             List<Polygon> inner = new List<Polygon>();
 
-            if (profile is IfcRectangleProfileDef)
+            if (profile is IfcRectangleProfileDef rect)
             {
-                var rect = (IfcRectangleProfileDef)profile;
                 var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
                 var t = new Transform(rect.Position.Location.ToVector3());
                 outer = (Polygon)p.Transformed(t);
             }
-            else if (profile is IfcCircleProfileDef)
+            else if (profile is IfcCircleProfileDef circle)
             {
-                var circle = (IfcCircleProfileDef)profile;
                 outer = new Circle((IfcLengthMeasure)circle.Radius).ToPolygon();
             }
-            else if (profile is IfcArbitraryClosedProfileDef)
+            else if (profile is IfcArbitraryClosedProfileDef closedProfile)
             {
-                var closedProfile = (IfcArbitraryClosedProfileDef)profile;
-                outer = (Polygon)(closedProfile.OuterCurve.ToCurve(true));
+                var outerCurve = closedProfile.OuterCurve.ToCurve(true);
+                if (outerCurve is Polygon pc)
+                {
+                    outer = pc;
+                }
+                else if (outerCurve is IndexedPolycurve ipc)
+                {
+                    outer = ipc.ToPolygon();
+                }
+
                 if (profile is IfcArbitraryProfileDefWithVoids)
                 {
                     var voidProfile = (IfcArbitraryProfileDefWithVoids)profile;
-                    inner.AddRange(voidProfile.InnerCurves.Select(c => ((Polygon)c.ToCurve(true))));
+                    inner.AddRange(voidProfile.InnerCurves.Select(c =>
+                    {
+                        var elCurve = c.ToCurve(true);
+                        if (elCurve is Polygon voidP)
+                        {
+                            return voidP;
+                        }
+                        else if (elCurve is IndexedPolycurve voidPc)
+                        {
+                            return voidPc.ToPolygon();
+                        }
+                        return null;
+                    }));
                 }
             }
             else
@@ -618,7 +636,8 @@ namespace Elements.Serialization.IFC
                 throw new Exception($"The profile type, {profile.GetType().Name}, is not supported.");
             }
 
-            var newProfile = new Profile(outer, inner, profile.Id, profile.ProfileName);
+            // var name = profile.ProfileName == null ? null : profile.ProfileName;
+            var newProfile = new Profile(outer, inner, profile.Id, string.Empty);
             return newProfile;
         }
 
@@ -649,6 +668,10 @@ namespace Elements.Serialization.IFC
                 {
                     throw new Exception("IfcBSplineCurve is not supported yet.");
                 }
+                else if (curve is IfcIndexedPolyCurve ipc)
+                {
+                    return ipc.ToIndexedPolycurve();
+                }
             }
             else if (curve is IfcConic)
             {
@@ -663,6 +686,46 @@ namespace Elements.Serialization.IFC
                 throw new Exception("IfcOffsetCurve3D is not supported yet.");
             }
             return null;
+        }
+
+        internal static IndexedPolycurve ToIndexedPolycurve(this IfcIndexedPolyCurve polycurve)
+        {
+            var vertices = new List<Vector3>();
+            foreach (var point in ((IfcCartesianPointList2D)polycurve.Points).CoordList)
+            {
+                vertices.Add(point.ToVector3());
+            }
+
+            IndexedPolycurve pc;
+            var curveIndices = new List<IList<int>>();
+            if (polycurve.Segments != null)
+            {
+                foreach (var select in polycurve.Segments)
+                {
+                    var segmentIndices = new List<int>();
+                    if (select.Choice is IfcLineIndex li)
+                    {
+                        foreach (IfcInteger segmentIndex in (List<IfcPositiveInteger>)li)
+                        {
+                            segmentIndices.Add(segmentIndex - 1);
+                        }
+                    }
+                    else if (select.Choice is IfcArcIndex ai)
+                    {
+                        foreach (IfcInteger segmentIndex in (List<IfcPositiveInteger>)ai)
+                        {
+                            segmentIndices.Add(segmentIndex - 1);
+                        }
+                    }
+                    curveIndices.Add(segmentIndices);
+                }
+                pc = new IndexedPolycurve(vertices, curveIndices);
+            }
+            else
+            {
+                pc = new IndexedPolycurve(vertices);
+            }
+            return pc;
         }
 
         internal static Vector3 ToVector3(this IfcCartesianPoint cartesianPoint)
