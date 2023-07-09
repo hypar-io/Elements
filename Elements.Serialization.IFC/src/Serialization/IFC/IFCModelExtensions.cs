@@ -29,7 +29,7 @@ namespace Elements.Serialization.IFC
                 Console.WriteLine("***IFC ERROR***" + error.Message);
             }
 
-            var buildingElements = ifcModel.AllInstancesDerivedFromType<IfcBuildingElement>();
+            var buildingElements = ifcModel.AllInstancesDerivedFromType<IfcElement>();
 
             var relVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
 
@@ -156,6 +156,12 @@ namespace Elements.Serialization.IFC
                                                                            out Transform mapTransform,
                                                                            out Guid mapId,
                                                                            out Material materialHint);
+
+                    if (rep == null)
+                    {
+                        constructionErrors.Add($"There was no representation for an element of type {buildingElement.GetType()}.");
+                        continue;
+                    }
 
                     if (mapTransform != null)
                     {
