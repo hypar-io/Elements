@@ -22,7 +22,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
-    <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0" />
+    <PackageReference Include="LibTessDotNet" Version="1.1.15" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Textures\**\*.*">
