@@ -20,7 +20,7 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="path">The path to an IFC Express file.</param>
         /// <param name="constructionErrors">Error messages which ocurred during model construction.</param>
-        public static Model FromIFC2(string path, out List<string> constructionErrors)
+        public static Model FromIFC(string path, out List<string> constructionErrors)
         {
             List<STEPError> errors;
             var ifcModel = new Document(path, out errors);
@@ -63,21 +63,18 @@ namespace Elements.Serialization.IFC
                 {
                     continue;
                 }
-                foreach (var style in styledItem.Styles)
+                foreach (IfcStyleAssignmentSelect style in styledItem.Styles)
                 {
-                    if (style.Choice is IfcPresentationStyleAssignment)
+                    if (style.Choice is IfcPresentationStyleAssignment styleAssign)
                     {
-                        var styleAssign = (IfcPresentationStyleAssignment)style.Choice;
-                        foreach (var presentationStyle in styleAssign.Styles)
+                        foreach (IfcPresentationStyleSelect presentationStyle in styleAssign.Styles)
                         {
-                            if (presentationStyle.Choice is IfcSurfaceStyle)
+                            if (presentationStyle.Choice is IfcSurfaceStyle surfaceStyle)
                             {
-                                var surfaceStyle = (IfcSurfaceStyle)presentationStyle.Choice;
-                                foreach (var styleElement in surfaceStyle.Styles)
+                                foreach (IfcSurfaceStyleElementSelect styleElement in surfaceStyle.Styles)
                                 {
-                                    if (styleElement.Choice is IfcSurfaceStyleRendering)
+                                    if (styleElement.Choice is IfcSurfaceStyleRendering rendering)
                                     {
-                                        var rendering = (IfcSurfaceStyleRendering)styleElement.Choice;
                                         var transparency = (IfcRatioMeasure)rendering.Transparency;
                                         var color = rendering.SurfaceColour.ToColor(1.0 - transparency);
                                         var name = surfaceStyle.Name;
@@ -109,6 +106,10 @@ namespace Elements.Serialization.IFC
                                 }
                             }
                         }
+                    }
+                    else if (style.Choice is IfcPresentationStyle)
+                    {
+                        // See https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcpresentationappearanceresource/lexical/ifcpresentationstyle.htm
                     }
                 }
             }
@@ -219,134 +220,6 @@ namespace Elements.Serialization.IFC
                     constructionErrors.Add(ex.Message);
                 }
             }
-            return model;
-        }
-
-        /// <summary>
-        /// Load a model from IFC.
-        /// </summary>
-        /// <param name="path">The path to an IFC Express file.</param>
-        /// <param name="idsToConvert">An array of element ids to convert.</param>
-        /// <param name="constructionErrors">Error messages which ocurred during model construction.</param>
-        /// <returns>A model.</returns>
-        public static Model FromIFC(string path, out List<string> constructionErrors, IList<string> idsToConvert = null)
-        {
-            List<STEPError> errors;
-            var ifcModel = new Document(path, out errors);
-            foreach (var error in errors)
-            {
-                Console.WriteLine("***IFC ERROR***" + error.Message);
-            }
-
-            IEnumerable<IfcSlab> ifcSlabs = null;
-            IEnumerable<IfcSpace> ifcSpaces = null;
-            IEnumerable<IfcWallStandardCase> ifcWalls = null;
-            IEnumerable<IfcBeam> ifcBeams = null;
-            IEnumerable<IfcColumn> ifcColumns = null;
-            IEnumerable<IfcRelVoidsElement> ifcVoids = null;
-            IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
-
-            if (idsToConvert != null && idsToConvert.Count > 0)
-            {
-                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i => idsToConvert.Contains(i.GlobalId));
-            }
-            else
-            {
-                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
-                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
-                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
-                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
-            }
-
-            constructionErrors = new List<string>();
-
-            var slabs = new List<Floor>();
-            foreach (var s in ifcSlabs)
-            {
-                try
-                {
-                    slabs.Add(s.ToFloor(ifcVoids.Where(v => v.RelatingBuildingElement == s).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-
-            }
-
-            var spaces = new List<Space>();
-            foreach (var sp in ifcSpaces)
-            {
-                try
-                {
-                    spaces.Add(sp.ToSpace());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var walls = new List<Wall>();
-            foreach (var w in ifcWalls)
-            {
-                try
-                {
-                    walls.Add(w.ToWall(ifcVoids.Where(v => v.RelatingBuildingElement == w).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var beams = new List<Beam>();
-            foreach (var b in ifcBeams)
-            {
-                try
-                {
-                    beams.Add(b.ToBeam());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var columns = new List<Column>();
-            foreach (var c in ifcColumns)
-            {
-                try
-                {
-                    columns.Add(c.ToColumn());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var model = new Model();
-            model.AddElements(slabs);
-            model.AddElements(spaces);
-            model.AddElements(walls);
-            model.AddElements(beams);
-            model.AddElements(columns);
-
             return model;
         }
 

@@ -24,32 +24,15 @@ namespace Elements.IFC.Tests
         }
 
         [Theory]
-        // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
-        // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
-        // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
         [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
-        // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
-        public void IFC4(string name, string ifcPath)
-        {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors);
-            foreach (var e in ctorErrors)
-            {
-                this.output.WriteLine(e);
-            }
-            model.ToGlTF(ConstructGlbPath(name));
-        }
-
-        [Theory]
-        // [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
         // [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
-        [InlineData("BIMIT-Sample-Model", "../../../models/IFC4/BIMIT-Sample-Model.ifc")]
-        public void IFC42(string name, string ifcPath)
+        // [InlineData("BIMIT-Sample-Model", "../../../models/IFC4/BIMIT-Sample-Model.ifc")]
+        public void IFC4(string name, string ifcPath)
         {
             var ctorErrors = new List<string>();
-            var model = IFCModelExtensions.FromIFC2(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors);
+            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out ctorErrors);
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
@@ -58,22 +41,6 @@ namespace Elements.IFC.Tests
             // TODO: See if we can improve using this predicate here. For some
             // reason the IFCs have a very large number of solid operations, which
             // cause CSG unions to fail (or take an exceedingly long time).
-            model.ToGlTF(ConstructGlbPath(name));
-        }
-
-        [Theory(Skip = "IFC2X3")]
-        [InlineData("example_1", "../../../models/IFC2X3/example_1.ifc")]
-        // TODO: Reenable when IfcCompositeCurve is supported.
-        // [InlineData("example_2", "../../../models/IFC2X3/example_2.ifc")]
-        [InlineData("example_3", "../../../models/IFC2X3/example_3.ifc")]// new []{"0bKcgqsaHFN9FTVipKV_Ue","3Lkqsa9JzD0BBXIMnx2zgD"})]
-        [InlineData("wall_with_window_vectorworks", "../../../models/IFC2X3/wall_with_window_vectorworks.ifc")]
-        public void IFC2X3(string name, string ifcPath, string[] idsToConvert = null)
-        {
-            var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors, idsToConvert);
-            foreach (var e in ctorErrors)
-            {
-                this.output.WriteLine(e);
-            }
             model.ToGlTF(ConstructGlbPath(name));
         }
 
