@@ -493,40 +493,6 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        // private static IfcOpeningElement ToIfcOpeningElement(this Opening opening, IfcRepresentationContext context, Document doc, IfcObjectPlacement parent)
-        // {
-        //     // var sweptArea = opening.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-        //     // We use the Z extrude direction because the direction is
-        //     // relative to the local placement, which is a transform at the
-        //     // beam's end with the Z axis pointing along the direction.
-
-        //     // var extrudeDirection = opening.ExtrudeDirection.ToIfcDirection();
-        //     // var position = new Transform().ToIfcAxis2Placement3D(doc);
-        //     // var solid = new IfcExtrudedAreaSolid(sweptArea, position,
-        //     //     extrudeDirection, new IfcPositiveLengthMeasure(opening.ExtrudeDepth));
-
-        //     var extrude= (Extrude)opening.Geometry.SolidOperations[0];
-        //     var solid = extrude.ToIfcExtrudedAreaSolid(new Transform(), doc);
-        //     var localPlacement = new Transform().ToIfcLocalPlacement(doc, parent);
-
-        //     var shape = new IfcShapeRepresentation(context, "Body", "SweptSolid", new List<IfcRepresentationItem>{solid});
-        //     var productRep = new IfcProductDefinitionShape(new List<IfcRepresentation>{shape});
-
-        //     var ifcOpening = new IfcOpeningElement(IfcGuid.ToIfcGuid(opening.Id), null, null, null, null, localPlacement, productRep, null);
-
-        //     // doc.AddEntity(sweptArea);
-        //     // doc.AddEntity(extrudeDirection);
-        //     // doc.AddEntity(position);
-        //     // doc.AddEntity(repItem);
-
-        //     doc.AddEntity(solid);
-        //     doc.AddEntity(localPlacement);
-        //     doc.AddEntity(shape);
-        //     doc.AddEntity(productRep);
-
-        //     return ifcOpening;
-        // }
-
         internal static ICurve ToCurve(this IfcProfileDef profile)
         {
             if (profile is IfcCircleProfileDef cpd)
