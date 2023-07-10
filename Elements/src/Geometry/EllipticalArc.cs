@@ -10,6 +10,22 @@ namespace Elements.Geometry
     public class EllipticalArc : TrimmedCurve<Ellipse>
     {
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
+        [JsonProperty("StartAngle", Required = Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double StartAngle { get; protected set; }
+
+        /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
+        [JsonProperty("EndAngle", Required = Required.Always)]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
+        public double EndAngle { get; protected set; }
+
+        /// <summary>
         /// Create an elliptical arc.
         /// </summary>
         /// <param name="majorAxis">The major axis (X) of the ellipse.</param>
@@ -18,10 +34,15 @@ namespace Elements.Geometry
         /// <param name="startAngle">The start parameter of the trim.</param>
         /// <param name="endAngle">The end parameter of the trim.</param>
         [JsonConstructor]
-        public EllipticalArc(Vector3 center, double majorAxis, double minorAxis, double startAngle, double endAngle)
+        public EllipticalArc(Vector3 center,
+                             double majorAxis,
+                             double minorAxis,
+                             double startAngle,
+                             double endAngle)
         {
             this.BasisCurve = new Ellipse(new Transform(center), majorAxis, minorAxis);
-            this.Domain = new Domain1d(Units.DegreesToRadians(startAngle), Units.DegreesToRadians(endAngle));
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
             this.Start = this.PointAt(this.Domain.Min);
             this.End = this.PointAt(this.Domain.Max);
         }
@@ -32,10 +53,13 @@ namespace Elements.Geometry
         /// <param name="ellipse">The ellipse on which this trim is based.</param>
         /// <param name="startAngle">The start angle of the trim in degrees.</param>
         /// <param name="endAngle">The end parameter of the trim in degrees.</param>
-        public EllipticalArc(Ellipse ellipse, double @startAngle, double @endAngle)
+        public EllipticalArc(Ellipse ellipse,
+                             double @startAngle,
+                             double @endAngle)
         {
             this.BasisCurve = ellipse;
-            this.Domain = new Domain1d(Units.DegreesToRadians(startAngle), Units.DegreesToRadians(endAngle));
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
             this.Start = this.PointAt(this.Domain.Min);
             this.End = this.PointAt(this.Domain.Max);
         }
@@ -55,8 +79,25 @@ namespace Elements.Geometry
         /// <returns>The length of the elliptical arc.</returns>
         public override double Length()
         {
-            // Define the function to be integrated (arc length formula)
             return this.BasisCurve.ArcLength(this.Domain.Min, this.Domain.Max);
+        }
+
+        /// <summary>
+        /// Calculate the length of the elliptical arc between start and end parameters.
+        /// </summary>
+        /// <returns>The length of the elliptical arc between start and end.</returns>
+        public override double ArcLength(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            return this.BasisCurve.ArcLength(start, end);
         }
 
         /// <summary>
@@ -68,7 +109,7 @@ namespace Elements.Geometry
         {
             if (!this.Domain.Includes(u, true))
             {
-                throw new ArgumentException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+                throw new ArgumentOutOfRangeException($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.PointAt(u);
         }
@@ -87,24 +128,15 @@ namespace Elements.Geometry
             return this.BasisCurve.TransformAt(u);
         }
 
-        /// <summary>
-        /// Get a curve that is the result of applying the provided transform to this curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
-        /// <returns>A transformed curve.</returns>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
-            return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.Domain.Min, this.Domain.Max);
+            return new EllipticalArc((Ellipse)this.BasisCurve.Transformed(transform), this.StartAngle, this.EndAngle);
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0)
         {
             var min = ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
             var max = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min);
@@ -121,7 +153,7 @@ namespace Elements.Geometry
             // requires the use of an elliptic integral and solving with
             // newton's method to find exactly the right values. For now,
             // we'll do a very simple subdivision of the arc.
-            var div = 50;
+            var div = (int)Math.Round(this.Length() / DefaultMinimumChordLength);
             var parameters = new double[div + 1];
             var step = (max - min) / div;
             for (var i = 0; i <= div; i++)

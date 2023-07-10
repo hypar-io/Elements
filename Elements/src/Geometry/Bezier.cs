@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -25,14 +26,20 @@ namespace Elements.Geometry
 
     /// <summary>
     /// A Bezier curve.
-    /// Parameterization of the curve is 0->1.
+    /// Parameterization of the curve is 0 -> 1.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
     /// </example>
     public class Bezier : BoundedCurve
     {
-        private int _lengthSamples = 500;
+        private readonly int _lengthSamples = 500;
+
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, 1);
 
         /// <summary>
         /// A collection of points describing the bezier's frame.
@@ -59,7 +66,6 @@ namespace Elements.Geometry
 
             this.ControlPoints = controlPoints;
             this.FrameType = frameType;
-            this.Domain = new Domain1d(0, 1);
             this.Start = PointAt(0);
             this.End = PointAt(1);
         }
@@ -94,6 +100,26 @@ namespace Elements.Geometry
                 last = pt;
             }
             return length;
+        }
+
+        /// <summary>
+        /// Calculate the length of the bezier between start and end parameters.
+        /// </summary>
+        /// <returns>The length of the bezier between start and end.</returns>
+        public override double ArcLength(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            // TODO: We use max value here so that the calculation will continue
+            // until at least the end of the curve. This is not a nice solution.
+            return ArcLengthUntil(start, double.MaxValue, out end);
         }
 
         private double ArcLengthUntil(double start, double distance, out double end)
@@ -286,23 +312,19 @@ namespace Elements.Geometry
             return TransformedBezier(transform);
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0)
         {
-            var parameters = new double[_lengthSamples + 1];
-
             var l = this.Length();
+            var div = (int)Math.Round(l / DefaultMinimumChordLength);
 
+            var parameters = new double[div + 1];
             var startParam = startSetbackDistance == 0.0 ? this.Domain.Min : ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min);
             var endParam = startSetbackDistance == 0.0 ? this.Domain.Max : ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min);
 
-            var step = Math.Abs(endParam - startParam) / _lengthSamples;
-            for (var i = 0; i <= _lengthSamples; i++)
+            var step = Math.Abs(endParam - startParam) / div;
+            for (var i = 0; i <= div; i++)
             {
                 parameters[i] = startParam + i * step;
             }

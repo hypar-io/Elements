@@ -11,6 +11,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ContourTests.cs?name=example)]
     /// </example>
+    [Obsolete("Please use IndexedPolycurve instead.")]
     public class Contour : IEnumerable<Curve>
     {
         private List<BoundedCurve> _curves = new List<BoundedCurve>();

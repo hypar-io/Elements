@@ -241,6 +241,7 @@ namespace Elements.Tests
         public void Setbacks()
         {
             this.Name = "BeamSetbacks";
+
             var line = new Line(Vector3.Origin, new Vector3(3, 3, 0));
             var mc = new ModelCurve(line, BuiltInMaterials.XAxis);
             this.Model.AddElement(mc);
@@ -270,7 +271,7 @@ namespace Elements.Tests
             var pl = new Polyline(new[] { new Vector3(0, 0), new Vector3(0, 2), new Vector3(0, 3, 1) });
             var mc3 = new ModelCurve(pl, BuiltInMaterials.Black);
             this.Model.AddElement(mc3);
-            var plBeam = new Beam(pl, this._testProfile, 1, 2, 0, material: BuiltInMaterials.Steel);
+            var plBeam = new Beam(pl, this._testProfile, 1, 1, 0, material: BuiltInMaterials.Steel);
             this.Model.AddElement(plBeam);
 
             // Ellipse setbacks

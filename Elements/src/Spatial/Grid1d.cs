@@ -67,7 +67,6 @@ namespace Elements.Spatial
             }
         }
 
-
         /// <summary>
         /// Returns true if this 1D Grid has no subdivisions / sub-grids.
         /// </summary>
@@ -188,7 +187,7 @@ namespace Elements.Spatial
         public Grid1d(BoundedCurve curve)
         {
             this.curve = curve;
-            Domain = new Domain1d(0, curve.Length());
+            Domain = curve.Domain;
             curveDomain = Domain;
         }
 
@@ -400,29 +399,28 @@ namespace Elements.Spatial
             {
                 point = parent.toGrid.OfPoint(point);
             }
-            if (Curve is Polyline pl && pl.Segments().Count() > 1)
+            if (Curve is Polyline pl)
             {
-                var minDist = Double.MaxValue;
-                Line[] segments = pl.Segments();
-                int closestSegment = -1;
-                for (int i = 0; i < segments.Length; i++)
+                var segments = pl.Segments();
+                if (segments.Count() > 1)
                 {
-                    Line seg = segments[i];
-                    var cp = point.ClosestPointOn(seg);
-                    var dist = cp.DistanceTo(point);
-                    if (dist < minDist)
+                    var minDist = Double.MaxValue;
+                    var localParam = 0.0;
+                    int closestSegment = -1;
+                    for (int i = 0; i < segments.Length; i++)
                     {
-                        minDist = dist;
-                        closestSegment = i;
+                        Line seg = segments[i];
+                        var cp = point.ClosestPointOn(seg);
+                        var dist = cp.DistanceTo(point);
+                        if (dist < minDist)
+                        {
+                            minDist = dist;
+                            closestSegment = i;
+                            localParam = cp.DistanceTo(seg.Start) / seg.Length();
+                        }
                     }
+                    return closestSegment + localParam;
                 }
-                double curvePosition = 0.0;
-                for (int i = 0; i < closestSegment; i++)
-                {
-                    curvePosition += segments[i].Length();
-                }
-                curvePosition += segments[closestSegment].Start.DistanceTo(point);
-                return curvePosition;
             }
             var A = Curve.Start;
             var B = Curve.End;
@@ -483,7 +481,9 @@ namespace Elements.Spatial
             {
                 throw new ArgumentException($"Unable to divide. Target Length {targetLength} is too small.");
             }
-            var numDivisions = Math.Max(1, Domain.Length / targetLength);
+
+            var arcLength = Curve.ArcLength(Domain.Min, Domain.Max);
+            var numDivisions = Math.Max(1, arcLength / targetLength);
             int roundedDivisions;
             switch (divisionMode)
             {

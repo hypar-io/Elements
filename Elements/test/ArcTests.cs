@@ -304,11 +304,11 @@ namespace Hypar.Tests
             var testParam = 0.24;
             var equivalentTestParam = 0.0;
 
-            if (curve is Line || curve is Polyline)
+            if (curve is Line)
             {
                 equivalentTestParam = curve.Length() * testParam;
             }
-            else if (curve is Arc || curve is EllipticalArc)
+            else
             {
                 equivalentTestParam = curve.Domain.Min + curve.Domain.Length * testParam;
             }
