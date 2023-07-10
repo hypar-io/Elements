@@ -108,7 +108,7 @@ namespace Elements.Serialization.SVG
             set
             {
                 _colourServer = value;
-                _color = _colourServer == null ? null : new Color(value.Colour);
+                _color = value == null ? null : new Color(value.Colour);
             }
         }
 

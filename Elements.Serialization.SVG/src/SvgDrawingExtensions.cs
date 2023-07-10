@@ -77,13 +77,13 @@ namespace Elements.Serialization.SVG
         /// <param name="viewBoxHeight">The height of the view box.</param>
         /// <param name="context">The SVG context.</param>
         /// <returns>An SVG polygon.</returns>
-        public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
+        public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 sceneBoundsMin, float viewBoxHeight, SvgContext context)
         {
             var svgPolygon = new SvgPolygon()
             {
                 StrokeWidth = context.StrokeWidth,
                 StrokeDashArray = context.StrokeDashArray,
-                Points = polygon.Vertices.ToSvgPointCollection(min, h)
+                Points = polygon.Vertices.ToSvgPointCollection(sceneBoundsMin, viewBoxHeight)
             };
 
             string style = string.Empty;

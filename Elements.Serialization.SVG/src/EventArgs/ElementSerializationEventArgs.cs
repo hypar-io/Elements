@@ -55,8 +55,8 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// The set of elements that will be added to the drawing plan if IsProcessed == true
         /// Please add there all new element that you created from the Element
+        /// </summary>
         public List<DrawingAction> Actions { get; } = new List<DrawingAction>();
-
 
         /// <summary>
         /// The element which is processed before being added to the drawing plan

@@ -47,7 +47,7 @@ namespace Elements.Serialization.SVG
         private readonly List<Model> _models = new List<Model>();
         private Dictionary<string, Line> _gridLines = new Dictionary<string, Line>();
         private readonly double _elevation;
-        private BaseDrawingTool _drawingTool;
+        private BaseSvgCanvas _canvas = null!;
 
         #endregion
 
@@ -78,8 +78,6 @@ namespace Elements.Serialization.SVG
 
         #region Properties
 
-        public BaseDrawingTool DrawingTool => _drawingTool;
-
         /// <summary>
         /// The svg context which defines settings for elements cut by the cut plane.
         /// </summary>
@@ -94,6 +92,11 @@ namespace Elements.Serialization.SVG
         /// The svg context which defines settings for the grid elements.
         /// </summary>
         public SvgContext GridContext { get; set; } = new SvgContext(Colors.Black, 0.01, new double[] { 0.3 * 5, 0.025 * 5, 0.05 * 5, 0.025 * 5 });
+
+        /// <summary>
+        ///  The svg context which defines settings for the grid text elements.
+        /// </summary>
+        /// <returns></returns>
         public SvgContext GridTextContext { get; set; } = new SvgContext("Arial", 0.7);
 
         /// <summary>
@@ -222,21 +225,14 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// Create a plan of a model and save the resulting section to the provided stream.
         /// </summary>
-        /// <param name="stream">The stream to write the SVG data</param>
+        /// <param name="stream">The stream to write the SVG data.</param>
         public void SaveAsSvg(Stream stream)
         {
             var rotation = CreateSceneViewBox();
-            if (_drawingTool == null)
-            {
-                _drawingTool = new SkDrawingTool(stream, ViewBoxHeight, ViewBoxWidth, this);
-                _drawingTool.SetBounds(SceneBounds, rotation);
-            }
-            else
-            {
-                _drawingTool.SetBounds(SceneBounds, rotation);
-            }
-            Draw(_drawingTool);
-            _drawingTool.Close();
+            _canvas = new SkiaCanvas(stream, ViewBoxHeight, ViewBoxWidth, this);
+            _canvas.SetBounds(SceneBounds, rotation);
+            Draw(_canvas);
+            _canvas.Close();
         }
 
         /// <summary>
@@ -252,9 +248,17 @@ namespace Elements.Serialization.SVG
             }
         }
 
-        public double Draw(BaseDrawingTool drawingTool, float pageHeight = -1, float pageWidth = -1, float margin = 0)
+        /// <summary>
+        /// Draws the models on the canvas from the input.
+        /// </summary>
+        /// <param name="canvas">The drawing tool (adapter for Skia, SVG.Net, etc.)</param>
+        /// <param name="pageHeight">The height of the page.</param>
+        /// <param name="pageWidth">The width of the page.</param>
+        /// <param name="margin">The margin from the left and right of the page.</param>
+        /// <returns></returns>
+        public double Draw(BaseSvgCanvas canvas, float pageHeight = -1, float pageWidth = -1, float margin = 0)
         {
-            _drawingTool = drawingTool;
+            _canvas = canvas;
             var rotation = CreateSceneViewBox(pageHeight, pageWidth, margin);
             var plane = new Plane(new Vector3(0, 0, _elevation), Vector3.ZAxis);
             var customElementsBeforeGrid = new List<DrawingAction>();
@@ -281,7 +285,7 @@ namespace Elements.Serialization.SVG
                                     customElementsBeforeGrid.AddRange(e.Actions);
                                     break;
                                 case ElementSerializationEventArgs.CreationSequences.Immediately:
-                                    e.Actions.ForEach(a => a.Draw(_drawingTool));
+                                    e.Actions.ForEach(a => a.Draw(_canvas));
                                     break;
                             }
                         }
@@ -303,7 +307,7 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var p in intersectingPolygon.Value)
                     {
-                        _drawingTool.DrawPolygon(p, FrontContext);
+                        _canvas.DrawPolygon(p, FrontContext);
                     }
                 }
 
@@ -311,7 +315,7 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var p in backPolygon.Value)
                     {
-                        _drawingTool.DrawPolygon(p, BackContext);
+                        _canvas.DrawPolygon(p, BackContext);
                     }
                 }
 
@@ -319,18 +323,25 @@ namespace Elements.Serialization.SVG
                 {
                     foreach (var l in line.Value)
                     {
-                        _drawingTool.DrawLine(l, FrontContext);
+                        _canvas.DrawLine(l, FrontContext);
                     }
                 }
 
             }
 
-            customElementsBeforeGrid.ForEach(el => el.Draw(_drawingTool));
+            customElementsBeforeGrid.ForEach(el => el.Draw(_canvas));
             DrawGridLines(rotation, _gridLines);
-            customElementsAfterGrid.ForEach(el => el.Draw(_drawingTool));
+            customElementsAfterGrid.ForEach(el => el.Draw(_canvas));
             return rotation;
         }
 
+        /// <summary>
+        /// Creates scene view box
+        /// </summary>
+        /// <param name="pageHeight">The page height.</param>
+        /// <param name="pageWidth">The pae widthh.</param>
+        /// <param name="margin">The margin from the left and right of the page.</param>
+        /// <returns>Returns plan rotation in degrees.</returns>
         public double CreateSceneViewBox(float pageHeight = -1, float pageWidth = -1, float margin = 0)
         {
             SceneBounds = SvgBaseDrawing.ComputeSceneBounds(_models);
@@ -364,9 +375,9 @@ namespace Elements.Serialization.SVG
 
             float max = Math.Max(ViewBoxWidth, ViewBoxHeight);
 
-            if (_drawingTool != null)
+            if (_canvas != null)
             {
-                _drawingTool.SetBounds(SceneBounds, rotation);
+                _canvas.SetBounds(SceneBounds, rotation);
             }
             return rotation;
         }
@@ -379,9 +390,9 @@ namespace Elements.Serialization.SVG
         {
             foreach (var line in gridLines)
             {
-                _drawingTool.DrawLine(line.Value, GridContext);
-                _drawingTool.DrawCircle(line.Value.Start, GridHeadRadius, GridContext);
-                _drawingTool.DrawText(line.Key.ToString(), new Transform(line.Value.Start), GridTextContext);
+                _canvas.DrawLine(line.Value, GridContext);
+                _canvas.DrawCircle(line.Value.Start, GridHeadRadius, GridContext);
+                _canvas.DrawText(line.Key.ToString(), new Transform(line.Value.Start), GridTextContext);
             }
         }
 

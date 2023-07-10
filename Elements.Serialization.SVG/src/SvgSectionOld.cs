@@ -1,8 +1,5 @@
 using Elements.Geometry;
-using SkiaSharp;
 using Svg;
-using Svg.Skia;
-using Svg.Transforms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +11,7 @@ namespace Elements.Serialization.SVG
     /// <summary>
     /// A section of a model serialized to SVG.
     /// </summary>
-    public class SvgSectionOld
+    internal class SvgSectionOld
     {
         #region Private fields
 
