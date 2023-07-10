@@ -57,7 +57,7 @@ namespace Elements.Serialization.SVG
         {
             return $"rgb({colorServer.Colour.R}, {colorServer.Colour.G}, {colorServer.Colour.B})";
         }
-	/// <summary>
+        /// <summary>
         /// Convert a geometric line to an SVG using a section and a context.
         /// </summary>
         /// <param name="line">The line to be converted.</param>
@@ -66,7 +66,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG line.</returns>
         public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
         {
-            return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+            return ToSvgLine(line, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight, context);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Elements.Serialization.SVG
         /// <param name="viewBoxHeight">The height of the view box.</param>
         /// <param name="context">The SVG context.</param>
         /// <returns>An SVG polygon.</returns>
-	public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
+        public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 min, float h, SvgContext context)
         {
             var svgPolygon = new SvgPolygon()
             {
@@ -118,7 +118,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG polygon.</returns>
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
         {
-            return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+            return ToSvgPolygon(polygon, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight, context);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG unit.</returns>
         public static SvgUnit ToXUserUnit(this double x, SvgSection drawingPlan)
         {
-            return ToXUserUnit(x, drawingPlan.GetSceneBounds().Min);
+            return ToXUserUnit(x, drawingPlan.SceneBounds.Min);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG unit.</returns>
         public static SvgUnit ToYUserUnit(this double y, SvgSection drawingPlan)
         {
-            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.GetSceneBounds().Min);
+            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.SceneBounds.Min);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An collection of SVG points.</returns>
         public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgSection drawingPlan)
         {
-            return ToSvgPointCollection(points, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight);
+            return ToSvgPointCollection(points, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight);
         }
     }
 }

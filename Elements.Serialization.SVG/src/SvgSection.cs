@@ -228,12 +228,12 @@ namespace Elements.Serialization.SVG
             var rotation = CreateSceneViewBox();
             if (_drawingTool == null)
             {
-                _drawingTool = new SkDrawingTool(stream, _viewBoxHeight, _viewBoxWidth, this);
-                _drawingTool.SetBounds(_sceneBounds, rotation);
+                _drawingTool = new SkDrawingTool(stream, ViewBoxHeight, ViewBoxWidth, this);
+                _drawingTool.SetBounds(SceneBounds, rotation);
             }
             else
             {
-                _drawingTool.SetBounds(_sceneBounds, rotation);
+                _drawingTool.SetBounds(SceneBounds, rotation);
             }
             Draw(_drawingTool);
             _drawingTool.Close();
@@ -333,7 +333,7 @@ namespace Elements.Serialization.SVG
 
         public double CreateSceneViewBox(float pageHeight = -1, float pageWidth = -1, float margin = 0)
         {
-            _sceneBounds = SvgBaseDrawing.ComputeSceneBounds(_models);
+            SceneBounds = SvgBaseDrawing.ComputeSceneBounds(_models);
             var rotation = SvgBaseDrawing.GetRotationValueForPlan(_models, PlanRotation, PlanRotationDegrees);
 
             _gridLines.Clear();
@@ -342,15 +342,15 @@ namespace Elements.Serialization.SVG
                 _gridLines = ExtendSceneWithGridLines();
             }
 
-            _viewBoxWidth = (float)(_sceneBounds.Max.X - _sceneBounds.Min.X);
-            _viewBoxHeight = (float)(_sceneBounds.Max.Y - _sceneBounds.Min.Y);
+            ViewBoxWidth = (float)(SceneBounds.Max.X - SceneBounds.Min.X);
+            ViewBoxHeight = (float)(SceneBounds.Max.Y - SceneBounds.Min.Y);
             var transform = new Transform(Vector3.Origin);
             transform.Rotate(rotation);
-            var bounds = new BBox3(_sceneBounds.Corners().Select(v => transform.OfPoint(v)));
+            var bounds = new BBox3(SceneBounds.Corners().Select(v => transform.OfPoint(v)));
             var wOld = ViewBoxWidth;
             var hOld = ViewBoxHeight;
-            _viewBoxWidth = (float)(bounds.Max.X - bounds.Min.X);
-            _viewBoxHeight = (float)(bounds.Max.Y - bounds.Min.Y);
+            ViewBoxWidth = (float)(bounds.Max.X - bounds.Min.X);
+            ViewBoxHeight = (float)(bounds.Max.Y - bounds.Min.Y);
 
             if (pageHeight == -1 || pageWidth == -1)
             {
@@ -366,7 +366,7 @@ namespace Elements.Serialization.SVG
 
             if (_drawingTool != null)
             {
-                _drawingTool.SetBounds(_sceneBounds, rotation);
+                _drawingTool.SetBounds(SceneBounds, rotation);
             }
             return rotation;
         }
@@ -404,7 +404,7 @@ namespace Elements.Serialization.SVG
                 var t = start + new Vector3(0, GridHeadRadius);
                 var b = start + new Vector3(0, -GridHeadRadius);
 
-                _sceneBounds.Extend(start, end, l, r, t, b);
+                SceneBounds.Extend(start, end, l, r, t, b);
             }
             return gridLines;
         }

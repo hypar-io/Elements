@@ -9,18 +9,42 @@ namespace Elements.Serialization.SVG
     /// </summary>
     public abstract class SvgBaseDrawing
     {
+        /// <summary>
+        /// Scale applied to the model.
+        /// Usually it's a PageHeight to a ViewBoxHeight ratio (or a PageWidth to a ViewBoxWidth)
+        /// </summary>
         public double Scale { get; protected set; }
-        public float ViewBoxWidth => _viewBoxWidth;
-        public float ViewBoxHeight => _viewBoxHeight;
+        /// <summary>
+        /// The width of the model bounding box.
+        /// </summary>
+        public float ViewBoxWidth
+        {
+            get { return _viewBoxWidth; }
+            protected set { _viewBoxWidth = value; }
+        }
+        /// <summary>
+        /// The height of the model bounding box.
+        /// </summary>
+        public float ViewBoxHeight
+        {
+            get { return _viewBoxHeight; }
+            protected set { _viewBoxHeight = value; }
+        }
 
         /// <summary>
         /// Get the scene bounds.
         /// </summary>
-        public BBox3 GetSceneBounds()
+        public BBox3 SceneBounds
         {
-            return _sceneBounds;
+            get { return _sceneBounds; }
+            protected set { _sceneBounds = value; }
         }
 
+        /// <summary>
+        /// Computes scene bounds
+        /// </summary>
+        /// <param name="models">The set of the models</param>
+        /// <returns>Returns the boundinf box around the input models</returns>
         public static BBox3 ComputeSceneBounds(IList<Model> models)
         {
             var bounds = new BBox3(Vector3.Max, Vector3.Min);
@@ -47,6 +71,13 @@ namespace Elements.Serialization.SVG
             return bounds;
         }
 
+        /// <summary>
+        /// Gets the rotation angle that must be applied to the plan.
+        /// </summary>
+        /// <param name="models">The set of the models.</param>
+        /// <param name="rotation">The orientation for a plan relative to the page.</param>
+        /// <param name="angle">The angle value that must be applied if rotation is Angle</param>
+        /// <returns>The angle in degrees</returns>
         protected static double GetRotationValueForPlan(IList<Model> models, PlanRotation rotation, double angle)
         {
             if (rotation == PlanRotation.Angle)
@@ -72,8 +103,8 @@ namespace Elements.Serialization.SVG
             };
         }
 
-        protected BBox3 _sceneBounds;
-        protected float _viewBoxWidth;
-        protected float _viewBoxHeight;
+        private BBox3 _sceneBounds;
+        private float _viewBoxHeight;
+        private float _viewBoxWidth;
     }
 }
