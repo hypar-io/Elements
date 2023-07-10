@@ -449,129 +449,9 @@ namespace Elements.Search
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
-            var regions = new List<List<int>>();
-
-            // TODO: This code is a mess. We use several methods for tracking
-            // traversal data: LocalEdge instances, nodeVisits, and structures
-            // internal to the traversal methods. These can be combined so that
-            // we are only using LocalEdges.
-
-            var leafNodes = new List<int>();
-            var allEdges = new List<LocalEdge>();
-
-            for (var i = 0; i < this.NodeCount(); i++)
-            {
-                var localEdges = EdgesAt(i);
-                var edgeCount = localEdges.Count();
-                // Leaf nodes
-                if (edgeCount == 1)
-                {
-                    leafNodes.Add(i);
-                }
-
-                // TODO: This is slow to set up because we need to find each
-                // edge, potentially scanning the entire list of edges. This is
-                // because we might have two-way edges in the network, but we
-                // only want one local edge for tracking purposes.
-                foreach (var edge in localEdges)
-                {
-                    var foundEdge = allEdges.FirstOrDefault(e => e.IsBetweenVertices(i, edge.Item1));
-                    if (foundEdge == null)
-                    {
-                        allEdges.Add(new LocalEdge(i, edge.Item1));
-                    }
-                }
-            }
-
-            var nodeVisits = new int[NodeCount()];
-
-            // Traverse from leaves first. This will capture paths where
-            // a leaf edge traverses into our out of a closed region.
-            foreach (var leafIndex in leafNodes)
-            {
-                var path = TraversePath(leafIndex, allNodeLocations, allEdges);
-                if (path != null)
-                {
-                    regions.Add(path);
-                }
-            }
-
-            // Traverse over all nodes. Edges found during the first
-            // traversal path will be skipped during traversal.
-            for (var i = 0; i < nodeVisits.Length; i++)
-            {
-                var localEdgeCount = EdgesAt(i).Count();
-                if (localEdgeCount > 1 && localEdgeCount > nodeVisits[i])
-                {
-                    var path = TraversePath(i, allNodeLocations, allEdges);
-
-                    if (path != null)
-                    {
-                        // Add the visits to the corresponding nodes
-                        // to ensure that we don't re-traverse this loop.
-                        foreach (var index in path)
-                        {
-                            nodeVisits[index] = nodeVisits[index] + 1;
-                        }
-
-                        regions.Add(path);
-                    }
-                }
-            }
-
-            // Traverse any edges that haven't been traversed.
-            // This can happen when a region is "captured" by surrounding
-            // regions that have been traversed, leaving one region bounded
-            // completely bounded except on one side.
-            var unvisitedEdges = allEdges.Where(e => e.visitDirections == LocalEdge.VisitDirections.None);
-            foreach (var unvisitedEdge in unvisitedEdges)
-            {
-                var path = TraversePath(unvisitedEdge.End, allNodeLocations, allEdges, unvisitedEdge.Start);
-                if (path != null)
-                {
-                    regions.Add(path);
-                }
-            }
-
-            return regions;
-        }
-
-        private List<int> TraversePath(int i, List<Vector3> allNodeLocations, List<LocalEdge> allEdges, int prevIndex = -1)
-        {
-            Debug.WriteLine($"STARTING PATH AT INDEX: {i}");
-
-            List<int> path = Traverse(i, TraverseLargestPlaneAngle, allNodeLocations, allEdges, out List<int> visited, prevIndex);
-
-            if (IsNotClosed(path))
-            {
-                Debug.WriteLine($"EXITING NON CLOSED PATH");
-                Debug.WriteLine(string.Empty);
-                return null;
-            }
-
-            MarkVisitedEdges(allEdges, path);
-
-            if (IsTooShort(path))
-            {
-                Debug.WriteLine($"EXITING PATH TOO SHORT");
-                Debug.WriteLine(string.Empty);
-                return null;
-            }
-
-            Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
-            Debug.WriteLine(string.Empty);
-
-            return path;
-        }
-
-        private bool IsTooShort(List<int> path)
-        {
-            return path.Count < 3;
-        }
-
-        private bool IsNotClosed(List<int> path)
-        {
-            return path[0] != path[path.Count - 1];
+            // TODO: NetworkCycleCoverage produces List<List<Vector3>> which can be used instead of indices.
+            var networkCycleCoverage = NetworkCycleCoverage.FromNetwork(this, allNodeLocations);
+            return networkCycleCoverage.CyclesIndices;
         }
 
         /// <summary>
@@ -682,22 +562,6 @@ namespace Elements.Search
                 }
             }
             return maxIndex;
-        }
-
-        private static void MarkVisitedEdges(List<LocalEdge> visitedEdges, List<int> path)
-        {
-            for (int j = 0; j < path.Count - 1; j++)
-            {
-                var edge = visitedEdges.FirstOrDefault(e => e.IsBetweenVertices(path[j], path[j + 1]));
-
-                // if (edge == null)
-                // {
-                //     edge = new LocalEdge(path[j], path[j + 1]);
-                //     visitedEdges.Add(edge);
-                // }
-
-                edge.MarkAsVisited(path[j]);
-            }
         }
 
         private static int AddVertexAtEvent(Vector3 location,
