@@ -42,22 +42,26 @@ namespace Elements.Search
             foreach (var node in nodes)
             {
                 var localEdgeCount = _adjacencyMatrix[node].Count;
-                if (localEdgeCount > 1 && localEdgeCount > node.CountOfVisits)
+                if (localEdgeCount <= node.CountOfVisits)
                 {
-                    var path = TraversePath(node);
-
-                    if (path != null)
-                    {
-                        // Add the visits to the corresponding nodes
-                        // to ensure that we don't re-traverse this loop.
-                        foreach (var pathNode in path)
-                        {
-                            pathNode.MarkVisited();
-                        }
-
-                        regions.Add(path);
-                    }
+                    continue;
                 }
+
+                var path = TraversePath(node);
+
+                if (path == null)
+                {
+                    continue;
+                }
+
+                // Add the visits to the corresponding nodes
+                // to ensure that we don't re-traverse this loop.
+                foreach (var pathNode in path)
+                {
+                    pathNode.MarkVisited();
+                }
+
+                regions.Add(path);
             }
 
             // Traverse any edges that haven't been traversed.
