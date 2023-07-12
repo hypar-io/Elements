@@ -280,13 +280,14 @@ namespace Elements.Tests
             var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
 
             var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+            var counterclockwiseRegions = GetCounterClockwiseRegions(closedRegions, allNodeLocations);
 
             this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
 
-            Assert.Equal(5, closedRegions.Count);
+            Assert.Equal(5, counterclockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, closedRegions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterclockwiseRegions);
         }
 
         [Fact]
@@ -454,10 +455,11 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterclockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(2, regions.Count);
+            Assert.Equal(2, counterclockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, regions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterclockwiseRegions);
         }
 
         [Fact]
@@ -478,10 +480,11 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterclockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(5, regions.Count);
+            Assert.Equal(5, counterclockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, regions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterclockwiseRegions);
         }
 
         [Fact]
@@ -671,6 +674,18 @@ namespace Elements.Tests
             }
             model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
             model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+        }
+
+        private static List<List<int>> GetCounterClockwiseRegions(List<List<int>> closedRegions, List<Vector3> allNodeLocations)
+        {
+            var result = closedRegions.Where(r => !IsClockwise(r, allNodeLocations)).ToList();
+            return result;
+        }
+
+        private static bool IsClockwise(List<int> nodeIds, List<Vector3> allNodeLocations)
+        {
+            var vertices = nodeIds.Select(i => allNodeLocations[i]).ToList();
+            return new Polygon(vertices).IsClockWise();
         }
     }
 }
