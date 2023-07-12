@@ -21,7 +21,7 @@ namespace Elements.Geometry
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
-        /// The default constructor is used by derived classes, 
+        /// The default constructor is used by derived classes,
         /// and is not intended to be used directly.
         /// </summary>
         internal Profile() { }
@@ -261,7 +261,7 @@ namespace Elements.Geometry
         /// </summary>
         public void OrientVoids()
         {
-            // This should only occur in the case of a parametric 
+            // This should only occur in the case of a parametric
             // profile which defines its own perimeter and void logic
             // during construction.
             if (Perimeter == null || Voids == null)
@@ -645,7 +645,7 @@ namespace Elements.Geometry
             if (splitPerimeter.Count > 1)
             {
                 //When polygons are sorted it's guaranteed that perimeters will be discovered before their voids.
-                var sortedPerimeters = splitPerimeter.OrderByDescending(p => Math.Abs(p.Area()));
+                var sortedPerimeters = splitPerimeter.OrderByDescending(p => p.Area());
                 simpleProfiles.Add((sortedPerimeters.First(), new List<Polygon>()));
                 foreach (var p in sortedPerimeters.Skip(1))
                 {
@@ -759,16 +759,16 @@ namespace Elements.Geometry
         /// For a given collection of profiles, make sure vertices within
         /// tolerance of each other are at the same location. This is especially
         /// useful for profiles that need to be edited in the Hypar interface
-        /// via an override.   
-        /// 
+        /// via an override.
+        ///
         /// ⚠️ Note: this is not a highly precise routine, and
         /// the shapes of the input profiles may be slightly distorted as a
-        /// result. 
+        /// result.
         /// </summary>
         /// <param name="profiles">The profiles to clean.</param>
         /// <param name="tolerance">Below this distance, similar points will be
         /// merged.</param>
-        /// <returns>A cleaned list of profiles.</returns>        
+        /// <returns>A cleaned list of profiles.</returns>
         public static List<Profile> Cleaned(this IEnumerable<Profile> profiles, double tolerance = 0.01)
         {
             var cleaned = new List<Profile>();
@@ -804,7 +804,7 @@ namespace Elements.Geometry
                     // where a profile has edges spanning between its perimeter
                     // and an interior form (which looks like a void but is
                     // actually a continuation of the perimeter thanks to the
-                    // "bridge"). 
+                    // "bridge").
                     var offsetsIn = Profile.Offset(new[] { p }, -tolerance);
                     var offsetsOut = Profile.Offset(offsetsIn, tolerance);
                     offsetsOut.PropagateAdditionalProperties(p);
@@ -816,7 +816,7 @@ namespace Elements.Geometry
                 }
             }
             // establish the "point index map" which will map from original
-            // points to unique points 
+            // points to unique points
             foreach (var profile in profilesWithBridgesRemoved)
             {
                 // Try removing collinear points

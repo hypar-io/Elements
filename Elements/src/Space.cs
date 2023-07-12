@@ -96,7 +96,7 @@ namespace Elements
             this.Representation.SolidOperations.Add(new ConstructedSolid(geometry));
 
             // TODO(Ian): When receiving a Space as a solid, as we do with IFC,
-            // we won't have a profile. This will cause problems with JSON 
+            // we won't have a profile. This will cause problems with JSON
             // serialization later.
         }
 
@@ -113,7 +113,7 @@ namespace Elements
         /// </summary>
         public double Area()
         {
-            return Math.Abs(Profile.Area());
+            return Profile.Area();
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Elements
         /// </summary>
         public double Volume()
         {
-            return Math.Abs(Profile.Area()) * this.Height;
+            return Profile.Area() * this.Height;
         }
 
         /// <summary>
