@@ -220,6 +220,27 @@ namespace Elements
             this.Mesh = newMesh;
         }
 
+        /// <summary>
+        /// Construct a new Topography by duplicating another one.
+        /// </summary>
+        public Topography(Topography topography)
+        {
+            this._mesh = new Mesh(topography.Mesh);
+            this._minElevation = topography.MinElevation;
+            this._maxElevation = topography.MaxElevation;
+            this._baseVerts = new List<Vertex>(topography._baseVerts);
+            this.Origin = topography.Origin;
+            this.RowWidth = topography.RowWidth;
+            this.CellWidth = topography.CellWidth;
+            this.CellHeight = topography.CellHeight;
+            this.Elevations = topography.Elevations.ToArray();
+            this._depthBelowMinimumElevation = topography._depthBelowMinimumElevation;
+            this._absoluteMinimumElevation = topography._absoluteMinimumElevation;
+            this._minElevation = topography._minElevation;
+            this._maxElevation = topography._maxElevation;
+            this._baseVerts = topography._baseVerts;
+        }
+
         internal void RegisterPropertyChangeHandlers()
         {
             this.PropertyChanged += (sender, args) =>
@@ -313,6 +334,27 @@ namespace Elements
 
             mesh.ComputeNormals();
             return (mesh, maxElevation, minElevation);
+        }
+
+        /// <summary>
+        /// Returns a new mesh that represents the top surface of this topography.
+        /// </summary>
+        public Mesh TopMesh()
+        {
+            var topMesh = new Mesh(this._mesh);
+            var facesToRemove = new List<Triangle>();
+            foreach (var face in topMesh.Triangles)
+            {
+                if (face.Normal.Dot(Vector3.ZAxis) <= Vector3.EPSILON)
+                {
+                    facesToRemove.Add(face);
+                }
+            }
+            foreach (var face in facesToRemove)
+            {
+                topMesh.RemoveTriangle(face);
+            }
+            return topMesh;
         }
 
         private void CreateSidesAndBottomMesh(Mesh mesh,
@@ -544,7 +586,7 @@ namespace Elements
         /// Trim the topography with the specified perimeter.
         /// </summary>
         /// <param name="perimeter">The perimeter of the trimmed topography.</param>
-        public void Trim(Polygon perimeter)
+        public void Trim(Profile perimeter)
         {
             // This creates a tall trimming object which is extruded
             // from the zero plane but then transformed in -Z by half its
@@ -563,6 +605,17 @@ namespace Elements
             // reset the min and max elevation.
             SetBaseVerts();
             SetMinAndMaxElevation();
+        }
+
+        /// <summary>
+        /// Returns a new Topography that is a trimmed version of the current Topography.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the trimmed topography.</param>
+        public Topography Trimmed(Profile perimeter)
+        {
+            var newTopo = new Topography(this);
+            newTopo.Trim(perimeter);
+            return newTopo;
         }
 
         /// <summary>
