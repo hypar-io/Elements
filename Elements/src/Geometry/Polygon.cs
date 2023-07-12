@@ -2166,7 +2166,10 @@ namespace Elements.Geometry
         /// <summary>
         /// Calculate the polygon's area in 3D.
         /// </summary>
-        /// <param name="signed">Should a signed area be returned?</param>
+        /// <param name="signed">
+        /// When true will return a signed area, counter-clockwise polygons will yield
+        /// a positive area, while clockwise polygons will yield a negative area.
+        /// </param>
         /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
         public double Area(bool signed = false)
         {
