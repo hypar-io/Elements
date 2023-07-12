@@ -449,9 +449,22 @@ namespace Elements.Search
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
-            // TODO: NetworkCycleCoverage produces List<List<Vector3>> which can be used instead of indices.
             var networkCycleCoverage = NetworkCycleCoverage.FromNetwork(this, allNodeLocations);
             return networkCycleCoverage.CyclesIndices;
+        }
+
+        /// <summary>
+        /// Find all the closed regions in the network.
+        /// This method uses the Traverse method internally with a traversal
+        /// function that uses the maximal plane angle to determine the direction
+        /// of traversal.
+        /// </summary>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <returns>A collection of points forming closed regions in the network.</returns>
+        public List<List<Vector3>> FindAllClosedRegionsLocations(List<Vector3> allNodeLocations)
+        {
+            var networkCycleCoverage = NetworkCycleCoverage.FromNetwork(this, allNodeLocations);
+            return networkCycleCoverage.CyclesPoints;
         }
 
         /// <summary>
