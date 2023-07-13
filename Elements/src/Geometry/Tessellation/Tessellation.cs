@@ -63,7 +63,7 @@ namespace Elements.Geometry.Tessellation
             {
                 if (tess.ElementCount == 0)
                 {
-                    return;
+                    continue;
                 }
 
                 // We pick the first triangle from the tesselator,
