@@ -41,6 +41,7 @@
 - `EdgeInfo`: obsolete attribute is removed from `HasVerticalChange` property.
 - `RoutingConfiguration`: removed obsolete `MainLayer` and `LayerPenalty` properties.
 - `Material.EmissiveFactor` is now 0.0 by default.
+- `Polygon.Area()` now returns an unsigned area by default, accepts a bool `signed` parameter to preserve the previous signed behavior.
 
 ### Fixed
 

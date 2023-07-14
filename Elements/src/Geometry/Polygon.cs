@@ -2164,9 +2164,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's signed area in 3D.
+        /// Calculate the polygon's area in 3D.
         /// </summary>
-        public double Area()
+        /// <param name="signed">
+        /// When true will return a signed area, counter-clockwise polygons will yield
+        /// a positive area, while clockwise polygons will yield a negative area.
+        /// </param>
+        /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
+        public double Area(bool signed = false)
         {
             var vertices = this.Vertices;
             var normal = Normal();
@@ -2185,7 +2190,7 @@ namespace Elements.Geometry
                 area += vertices[i].X * vertices[j].Y;
                 area -= vertices[i].Y * vertices[j].X;
             }
-            return area / 2.0;
+            return signed ? area / 2.0 : Math.Abs(area / 2.0);
         }
 
         /// <summary>

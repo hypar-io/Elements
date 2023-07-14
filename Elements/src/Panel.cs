@@ -50,7 +50,7 @@ namespace Elements
         /// </summary>
         public double Area()
         {
-            return Math.Abs(Perimeter.Area());
+            return Perimeter.Area();
         }
 
         /// <summary>
