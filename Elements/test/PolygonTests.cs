@@ -615,18 +615,6 @@ namespace Elements.Geometry.Tests
                 new Vector3(0, 0, 0),
             });
             Assert.Equal(19, concave.Area());
-
-            var concaveNeg = new Polygon(new[] {
-                new Vector3(0, 0, 0),
-                new Vector3(5, 0, 0),
-                new Vector3(5, 1, 0),
-                new Vector3(3, 1, 0),
-                new Vector3(3, 4, 0),
-                new Vector3(5, 4, 0),
-                new Vector3(5, 5, 0),
-                new Vector3(0, 5, 0)
-            });
-            Assert.Equal(19, concave.Area());
         }
 
         [Fact]
