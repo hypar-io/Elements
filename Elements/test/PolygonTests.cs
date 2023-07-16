@@ -588,6 +588,9 @@ namespace Elements.Geometry.Tests
             var b = Polygon.Rectangle(2.0, 2.0);
             Assert.Equal(4.0, b.Area());
 
+            var c = Polygon.Rectangle(3.0, 2.0);
+            Assert.Equal(-6.0, c.Reversed().Area(true));
+
             var p1 = Vector3.Origin;
             var p2 = Vector3.XAxis;
             var p3 = new Vector3(1.0, 1.0);

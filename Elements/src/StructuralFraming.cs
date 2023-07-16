@@ -103,7 +103,7 @@ namespace Elements
                 throw new InvalidOperationException("Volume calculation for non-linear elements is not yet supported");
             }
             //TODO: Support all curve / profile calculations.
-            return Math.Abs(this.Profile.Area()) * this.Curve.Length();
+            return this.Profile.Area() * this.Curve.Length();
         }
 
         /// <summary>
