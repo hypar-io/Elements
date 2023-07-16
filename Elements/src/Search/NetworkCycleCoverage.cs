@@ -105,6 +105,7 @@ namespace Elements.Search
 
             Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
             Debug.WriteLine(string.Empty);
+            path.RemoveAt(path.Count - 1);
 
             return path;
         }
