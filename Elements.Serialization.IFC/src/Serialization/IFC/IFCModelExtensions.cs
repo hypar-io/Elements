@@ -1,5 +1,6 @@
 using Elements.Analysis;
 using Elements.Geometry;
+using Elements.Validators;
 using IFC;
 using STEP;
 using System;
@@ -159,7 +160,7 @@ namespace Elements.Serialization.IFC
 
                     if (rep == null)
                     {
-                        constructionErrors.Add($"There was no representation for an element of type {buildingElement.GetType()}.");
+                        constructionErrors.Add($"#{buildingElement.StepId}: There was no representation for an element of type {buildingElement.GetType()}.");
                         continue;
                     }
 
@@ -196,7 +197,7 @@ namespace Elements.Serialization.IFC
                     {
                         if (rep.SolidOperations.Count == 0)
                         {
-                            constructionErrors.Add($"{buildingElement.GetType().Name} did not have any solid operations in its representation.");
+                            constructionErrors.Add($"#{buildingElement.StepId}: {buildingElement.GetType().Name} did not have any solid operations in its representation.");
                             continue;
                         }
 
@@ -223,7 +224,7 @@ namespace Elements.Serialization.IFC
                 }
                 catch (Exception ex)
                 {
-                    constructionErrors.Add(ex.Message);
+                    constructionErrors.Add($"#{buildingElement.StepId}: {ex.Message}");
                 }
             }
             return model;
