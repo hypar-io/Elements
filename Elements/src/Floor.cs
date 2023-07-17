@@ -135,7 +135,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Area()
         {
-            return Math.Abs(this.Profile.Area());
+            return this.Profile.Area();
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Volume()
         {
-            return Math.Abs(this.Profile.Area()) * this.Thickness;
+            return this.Profile.Area() * this.Thickness;
         }
 
         /// <summary>

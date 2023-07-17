@@ -741,6 +741,17 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TesselationOfModelThatProducesEmptyTrianles()
+        {
+            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"), out var errors);
+            var wall = model.AllElementsOfType<WallByProfile>().First();
+            wall.UpdateRepresentations();
+            wall.UpdateBoundsAndComputeSolid();
+            var buffer = wall._csg.Tessellate(modifyVertexAttributes: wall.ModifyVertexAttributes);
+            Assert.True(buffer.VertexCount > 0);
+        }
+
+        [Fact]
         public void FlippedExtrude()
         {
             Name = nameof(FlippedExtrude);

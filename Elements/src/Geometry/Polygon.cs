@@ -1,7 +1,6 @@
 using ClipperLib;
 using Elements.Search;
 using Elements.Spatial;
-using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.
-    /// Parameterization of the curve is 0->length.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices..
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
@@ -24,6 +23,21 @@ namespace Elements.Geometry
         /// This will not be updated when a polygon's vertices are changed.
         /// </summary>
         internal Plane _plane;
+
+        /// <summary>
+        /// The end of the polyline.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 End
+        {
+            get { return Vertices[0]; }
+        }
+
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count);
 
         /// <summary>
         /// Should the curve be considered closed for rendering?
@@ -102,6 +116,16 @@ namespace Elements.Geometry
         /// <param name="vertices">The vertices of the polygon.</param>
         public Polygon(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation) { }
 
+        internal override List<IList<int>> CreateCurveIndices(IList<Vector3> vertices)
+        {
+            var curveIndices = new List<IList<int>>();
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                curveIndices.Add(new[] { i, i == vertices.Count - 1 ? 0 : i + 1 });
+            }
+            return curveIndices;
+        }
+
         /// <summary>
         /// Construct a transformed copy of this Polygon.
         /// </summary>
@@ -122,10 +146,7 @@ namespace Elements.Geometry
             return p;
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)
@@ -1714,10 +1735,7 @@ namespace Elements.Geometry
         }
 
 
-        /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
-        /// </summary>
-        /// <returns>A collection of Lines.</returns>
+        /// <inheritdoc/>
         public override Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
@@ -2051,12 +2069,7 @@ namespace Elements.Geometry
             return new Polygon(unique);
         }
 
-        /// <summary>
-        /// Get the transforms used to transform a Profile extruded along this Polyline.
-        /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
-        /// <param name="additionalRotation"></param>
+        /// <inheritdoc/>
         public override Transform[] Frames(double startSetback = 0.0,
                                            double endSetback = 0.0,
                                            double additionalRotation = 0.0)
@@ -2151,9 +2164,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Calculate the polygon's signed area in 3D.
+        /// Calculate the polygon's area in 3D.
         /// </summary>
-        public double Area()
+        /// <param name="signed">
+        /// When true will return a signed area, counter-clockwise polygons will yield
+        /// a positive area, while clockwise polygons will yield a negative area.
+        /// </param>
+        /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
+        public double Area(bool signed = false)
         {
             var vertices = this.Vertices;
             var normal = Normal();
@@ -2172,7 +2190,7 @@ namespace Elements.Geometry
                 area += vertices[i].X * vertices[j].Y;
                 area -= vertices[i].Y * vertices[j].X;
             }
-            return area / 2.0;
+            return signed ? area / 2.0 : Math.Abs(area / 2.0);
         }
 
         /// <summary>
@@ -2202,60 +2220,25 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="radius">The fillet radius.</param>
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
-        public Contour Fillet(double radius)
+        public new IndexedPolycurve Fillet(double radius)
         {
             var curves = new List<BoundedCurve>();
             var segments = this.Segments();
-            var arcs = new List<Arc>();
 
             for (var i = 0; i < segments.Length; i++)
             {
                 var a = segments[i];
                 var b = segments[i == segments.Length - 1 ? 0 : i + 1];
-                var arc = a.Fillet(b, 0.5);
-                arcs.Add(arc);
-            }
-
-            for (var i = 0; i < arcs.Count; i++)
-            {
-                var a = arcs[i];
-                var b = arcs[i == arcs.Count - 1 ? 0 : i + 1];
-                curves.Add(new Line(a.Start, b.End));
-                curves.Add(b);
-            }
-
-            return new Contour(curves);
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and length.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected override Vector3 PointAtInternal(double u, out int segmentIndex)
-        {
-            if (!Domain.Includes(u, true))
-            {
-                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
-            }
-
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count; i++)
-            {
-                var a = this.Vertices[i];
-                var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a).Unitized();
-                if (totalLength <= u && totalLength + currLength >= u)
+                var arc = b.Fillet(a, radius);
+                if (i > 0)
                 {
-                    segmentIndex = i;
-                    return a + currVec * (u - totalLength);
+                    curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
                 }
-                totalLength += currLength;
+                curves.Add(arc);
             }
-            segmentIndex = this.Vertices.Count - 1;
-            return this.End;
+            curves.Add(new Line(curves[curves.Count - 1].End, curves[0].Start));
+
+            return new IndexedPolycurve(curves);
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
@@ -2431,127 +2414,6 @@ namespace Elements.Geometry
                 }
             }
             return polygons;
-        }
-    }
-
-    /// <summary>
-    /// Mode to apply a boolean operation
-    /// </summary>
-    public enum BooleanMode
-    {
-        /// <summary>
-        /// A and not B
-        /// </summary>
-        Difference,
-        /// <summary>
-        /// A or B
-        /// </summary>
-        Union,
-        /// <summary>
-        /// A and B
-        /// </summary>
-        Intersection,
-        /// <summary>
-        /// Exclusive or — either A or B but not both.
-        /// </summary>
-        XOr
-    }
-
-
-    /// <summary>
-    /// Controls the handling of internal regions in a polygon boolean operation.
-    /// </summary>
-    public enum VoidTreatment
-    {
-        /// <summary>
-        /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
-        /// This corresponds to Clipper's "EvenOdd" PolyFillType.
-        /// </summary>
-        PreserveInternalVoids = 0,
-        /// <summary>
-        /// Treat all contained or overlapping polygons as solid.
-        /// This corresponds to Clipper's "Positive" PolyFillType.
-        /// </summary>
-        IgnoreInternalVoids = 1
-    }
-
-    /// <summary>
-    /// Polygon extension methods.
-    /// </summary>
-    internal static class PolygonExtensions
-    {
-        /// <summary>
-        /// Construct a clipper path from a Polygon.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
-        /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polygon p, double tolerance = Vector3.EPSILON)
-        {
-            var scale = Math.Round(1.0 / tolerance);
-            var path = new List<IntPoint>();
-            foreach (var v in p.Vertices)
-            {
-                path.Add(new IntPoint(Math.Round(v.X * scale), Math.Round(v.Y * scale)));
-            }
-            return path;
-        }
-
-        /// <summary>
-        /// Construct a Polygon from a clipper path
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
-        /// <returns></returns>
-        internal static Polygon ToPolygon(this List<IntPoint> p, double tolerance = Vector3.EPSILON)
-        {
-            var scale = Math.Round(1.0 / tolerance);
-            var converted = new Vector3[p.Count];
-            for (var i = 0; i < converted.Length; i++)
-            {
-                var v = p[i];
-                converted[i] = new Vector3(v.X / scale, v.Y / scale);
-            }
-            try
-            {
-                return new Polygon(converted);
-            }
-            catch
-            {
-                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back.
-                // here we make a last-ditch attempt to fix this and construct a new polygon.
-                var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
-                if (cleanedVertices.Count < 3)
-                {
-                    return null;
-                }
-                try
-                {
-                    return new Polygon(cleanedVertices);
-                }
-                catch
-                {
-                    throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
-                }
-            }
-        }
-
-        public static IList<Polygon> Reversed(this IList<Polygon> polygons)
-        {
-            return polygons.Select(p => p.Reversed()).ToArray();
-        }
-
-        internal static ContourVertex[] ToContourVertexArray(this Polyline poly)
-        {
-            var contour = new ContourVertex[poly.Vertices.Count];
-            for (var i = 0; i < poly.Vertices.Count; i++)
-            {
-                var vert = poly.Vertices[i];
-                var cv = new ContourVertex();
-                cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
-                contour[i] = cv;
-            }
-            return contour;
         }
     }
 }

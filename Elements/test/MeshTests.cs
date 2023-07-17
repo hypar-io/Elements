@@ -36,7 +36,8 @@ namespace Elements.Tests
             l1Extrude.Solid.Tessellate(ref l1Mesh);
             var a = l.Area();
             var a1 = l1.Area();
-            Assert.Equal((l.Area() + l1.Area()) * 5, l1Mesh.Volume(), 5);
+            var v = l1Mesh.Volume();
+            Assert.Equal((l.Area() - l1.Area()) * 5, l1Mesh.Volume(), 5);
         }
         [Fact]
         public void ReadMeshSerializedAsNull()

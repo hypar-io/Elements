@@ -1,5 +1,4 @@
-﻿using Elements;
-using Elements.Geometry;
+﻿using Elements.Geometry;
 using Elements.Geometry.Solids;
 using System;
 using System.Collections.Generic;
@@ -38,36 +37,37 @@ namespace Elements.Annotations
         /// <param name="name">The name given to the message.</param>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
+        /// <param name="shortMessage">A short message.</param>
         public static Message FromText(string message,
                                        string name = null,
                                        MessageSeverity severity = MessageSeverity.Warning,
-                                       string stackTrace = null)
+                                       string stackTrace = null,
+                                       string shortMessage = null)
         {
-            return new Message(message, stackTrace, severity, name: name ?? DefaultName);
+            return new Message(message, shortMessage, stackTrace, severity, name: name ?? DefaultName);
         }
 
         /// <summary>
         /// Create a simple message at a point.
         /// </summary>
         /// <param name="messageText">The message to the user.</param>
+        /// <param name="shortMessage">A short message.</param>
         /// <param name="point"></param>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="sideLength"></param>
         /// <param name="name">The name given to the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
         public static Message FromPoint(string messageText,
-                                             Vector3? point,
-                                             MessageSeverity severity = MessageSeverity.Warning,
-                                             double sideLength = DefaultSideLength,
-                                             string name = null,
-                                             string stackTrace = null)
+                                        Vector3? point,
+                                        MessageSeverity severity = MessageSeverity.Warning,
+                                        double sideLength = DefaultSideLength,
+                                        string name = null,
+                                        string stackTrace = null,
+                                        string shortMessage = null)
         {
-            var transform = point.HasValue
-                ? new Transform(point.Value).Moved(z: -sideLength / 2)
-                : new Transform();
+            var transform = point.HasValue ? new Transform(point.Value) : new Transform();
             var message = new Message(messageText,
+                                      shortMessage,
                                       stackTrace,
                                       severity,
                                       transform,
@@ -78,8 +78,9 @@ namespace Elements.Annotations
                                       name ?? DefaultName);
             if (point.HasValue)
             {
-                var extrude = new Extrude(Polygon.Rectangle(
-                    sideLength, sideLength), sideLength, Vector3.ZAxis, false);
+                var rectangle = Polygon.Rectangle(sideLength, sideLength).TransformedPolygon(
+                    new Transform(0, 0, -sideLength / 2));
+                var extrude = new Extrude(rectangle, sideLength, Vector3.ZAxis, false);
 
                 message.Representation = new Representation(new[] { extrude });
             }
@@ -91,22 +92,24 @@ namespace Elements.Annotations
         /// Create a simple message along a curve.
         /// </summary>
         /// <param name="messageText">The message to the user.</param>
+        /// <param name="shortMessage">A short message.</param>
         /// <param name="curve"></param>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="sideLength"></param>
         /// <param name="name">The name given to the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
         public static Message FromCurve(string messageText,
-                                           BoundedCurve curve,
-                                           MessageSeverity severity = MessageSeverity.Warning,
-                                           double sideLength = DefaultSideLength,
-                                           string name = null,
-                                           string stackTrace = null)
+                                        BoundedCurve curve,
+                                        MessageSeverity severity = MessageSeverity.Warning,
+                                        double sideLength = DefaultSideLength,
+                                        string name = null,
+                                        string stackTrace = null,
+                                        string shortMessage = null)
         {
             var profile = Polygon.Rectangle(sideLength, sideLength);
             var sweep = new Sweep(profile, curve, 0, 0, 0, false);
             var message = new Message(messageText,
+                                      shortMessage,
                                       stackTrace,
                                       severity,
                                       null,
@@ -121,22 +124,24 @@ namespace Elements.Annotations
         /// Create a simple message from a polygon.
         /// </summary>
         /// <param name="messageText">The message to the user.</param>
+        /// <param name="shortMessage">A short message.</param>
         /// <param name="polygon"></param>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="height"></param>
         /// <param name="name">The name given to the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
         public static Message FromPolygon(string messageText,
                                           Polygon polygon,
                                           MessageSeverity severity = MessageSeverity.Warning,
                                           double height = 0,
                                           string name = null,
-                                          string stackTrace = null)
+                                          string stackTrace = null,
+                                          string shortMessage = null)
         {
             const double messageHeightSubtleLift = 0.02;
             SolidOperation solid = height > 0 ? new Extrude(polygon, height, Vector3.ZAxis, false) : new Lamina(polygon, false) as SolidOperation;
             var message = new Message(messageText,
+                                      shortMessage,
                                       stackTrace,
                                       severity,
                                       new Transform().Moved(z: messageHeightSubtleLift),
@@ -152,26 +157,51 @@ namespace Elements.Annotations
         /// Create a simple message from polygons.
         /// </summary>
         /// <param name="messageText">The message to the user.</param>
+        /// <param name="shortMessage">A short message.</param>
         /// <param name="polygons"></param>
         /// <param name="severity">The severity of the message.</param>
         /// <param name="height"></param>
         /// <param name="name">The name given to the message.</param>
         /// <param name="stackTrace">Any stack trace associated with the message.</param>
-        /// <returns></returns>
         public static Message[] FromPolygons(string messageText,
                                              IEnumerable<Polygon> polygons,
                                              MessageSeverity severity = MessageSeverity.Warning,
                                              double height = 0,
                                              string name = null,
-                                             string stackTrace = null)
+                                             string stackTrace = null,
+                                             string shortMessage = null)
         {
             var messages = new List<Message>();
             foreach (var polygon in polygons)
             {
-                var message = FromPolygon(messageText, polygon, severity, height, name);
+                var message = FromPolygon(messageText, polygon, severity, height, name, shortMessage);
                 messages.Add(message);
             }
             return messages.ToArray();
+        }
+
+        /// <summary>
+        /// Create an informational message.
+        /// </summary>
+        public static Message Info(Vector3? point, string message = null)
+        {
+            return Message.FromPoint(message, point, MessageSeverity.Info, shortMessage: "💡");
+        }
+
+        /// <summary>
+        /// Create a warning message.
+        /// </summary>
+        public static Message Warning(Vector3? point, string message = null)
+        {
+            return Message.FromPoint(message, point, MessageSeverity.Warning, shortMessage: "⚠️");
+        }
+
+        /// <summary>
+        /// Create an error message.
+        /// </summary>
+        public static Message Error(Vector3? point, string message = null)
+        {
+            return Message.FromPoint(message, point, MessageSeverity.Error, shortMessage: "🛑");
         }
 
         /// <summary>

@@ -72,7 +72,11 @@ namespace Elements.Geometry
             var pts = new List<Vector3>();
             var twoPi = Math.PI * 2;
             var step = twoPi / divisions;
-            for (var t = 0.0; t < twoPi; t += step)
+            // We use epsilon here because for larger numbers of divisions,
+            // we can creep right up to 2pi, close enough that we'll
+            // get a point at not exactly 2pi, but other code will see the point
+            // found as equivalent to the point at parameter 0.
+            for (var t = 0.0; t < twoPi - Vector3.EPSILON; t += step)
             {
                 pts.Add(this.PointAt(t));
             }
@@ -120,9 +124,7 @@ namespace Elements.Geometry
             return new Transform(p, x, y, x.Cross(y)).Concatenated(this.Transform);
         }
 
-        /// <summary>
-        /// Return a new circle transformed by the provided transform.
-        /// </summary>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return new Circle(transform.Concatenated(this.Transform), this.Radius);

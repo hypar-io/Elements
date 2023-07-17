@@ -26,10 +26,7 @@ namespace Elements.Geometry
             this.Direction = direction.Unitized();
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)
