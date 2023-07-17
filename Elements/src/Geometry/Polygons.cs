@@ -52,9 +52,9 @@ namespace Elements.Geometry
         /// <param name="max">The maximum coordinate.</param>
         /// <param name="transform">The transform reference to construct the rectangle from.</param>
         /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a transform.</returns>
-        Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)
+        public static Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)
         {
-            transform ??= new Transform();
+            transform = transform != null ? transform : new Transform();
             var inverse = transform.Inverted();
             var a = inverse.OfPoint(min);
             a.Z = 0;
@@ -73,9 +73,9 @@ namespace Elements.Geometry
         /// <param name="plane">The plane to project the rectangle on.</param>
         /// <param name="alignment">The alignment reference to construct the rectangle from.</param>
         /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a plane with a sided alignment.</returns>
-        Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)
+        public static Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)
         {
-            alignment ??= plane.Normal.IsParallelTo(Vector3.ZAxis) ? Vector3.XAxis : Vector3.ZAxis;
+            alignment = alignment != null ? alignment : (plane.Normal.IsParallelTo(Vector3.ZAxis) ? Vector3.XAxis : Vector3.ZAxis);
             var transform = new Transform(plane.Origin, alignment.Value, plane.Normal);
             return Rectangle(min, max, transform);
         }
