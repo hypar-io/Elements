@@ -5,6 +5,7 @@ using System.Linq;
 using ClipperLib;
 using Elements.Search;
 using Elements.Geometry.Interfaces;
+using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -84,6 +85,66 @@ namespace Elements.Geometry
         {
             return SegmentsInternal(this.Vertices);
         }
+
+        /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        /// <returns>The length based midpoint.</returns>
+        public virtual Vector3 MidPoint()
+        {
+            return PointAtNormalizedLength(0.5);
+        }
+
+        /// <summary>
+        /// Returns the point on the polyline corresponding to the specified length value.
+        /// </summary>
+        /// <param name="length">The length value along the polyline.</param>
+        /// <returns>The point on the polyline corresponding to the specified length value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
+        public virtual Vector3 PointAtLength(double length)
+        {
+            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Polyline
+            if (length < 0 || length > totalLength)
+            {
+                throw new ArgumentException("The specified length is out of range.");
+            }
+
+            double accumulatedLength = 0.0;
+            foreach (Line segment in Segments())
+            {
+                double segmentLength = segment.ArcLength(segment.Domain.Min, segment.Domain.Max);
+
+                if (accumulatedLength + segmentLength >= length)
+                {
+                    double remainingDistance = length - accumulatedLength;
+                    double parameter = remainingDistance / segmentLength;
+                    return segment.PointAtNormalized(parameter);
+                }
+
+                accumulatedLength += segmentLength;
+            }
+
+            // If we reach here, the desired length is equal to the total length,
+            // so return the end point of the Polyline.
+            return End;
+        }
+
+        /// <summary>
+        /// Returns the point on the polyline corresponding to the specified normalized length-based parameter value.
+        /// </summary>
+        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
+        /// <returns>The point on the polyline corresponding to the specified normalized length-based parameter value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
+        public virtual Vector3 PointAtNormalizedLength(double parameter)
+        {
+            if (parameter < 0 || parameter > 1)
+            {
+                throw new ArgumentException("The specified parameter is out of range.");
+            }
+            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
+        }
+
+
 
         /// <summary>
         /// The mid point of the curve.
@@ -362,7 +423,7 @@ namespace Elements.Geometry
 
             // Calculate number of frames. 2 frames corresponding to end parameters.
             // 1 if startIndex == endIndex.
-            var length =  endIndex - startIndex + 3;
+            var length = endIndex - startIndex + 3;
 
             // startIndex is set to the first distinct vertex after startParam.
             if (startParam.ApproximatelyEquals(startIndex))
@@ -389,7 +450,7 @@ namespace Elements.Geometry
                 result[0] = new Transform(PointAt(startParam), normals[startIndex - 1].Cross(tangent), tangent);
                 index++;
             }
-            
+
             for (var i = startIndex; i <= endIndex; i++, index++)
             {
                 result[index] = CreateOrthogonalTransform(i, Vertices[i], normals[i]);
@@ -488,6 +549,8 @@ namespace Elements.Geometry
         /// <returns>A list of points representing the segments.</returns>
         public Vector3[] DivideByLength(double divisionLength)
         {
+            var segments = new List<Vector3>();
+
             if (this.Vertices.Count < 2)
             {
                 // Handle invalid polyline with insufficient vertices
@@ -495,7 +558,7 @@ namespace Elements.Geometry
             }
 
             var currentProgression = 0.0;
-            var segments = new List<Vector3> { this.Vertices.FirstOrDefault() };
+            segments = new List<Vector3> { this.Vertices.FirstOrDefault() };
 
             foreach (var currentSegment in this.Segments())
             {
@@ -932,6 +995,7 @@ namespace Elements.Geometry
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var edge = (a, b);
 
+                // An edge may have multiple split points.
                 // An edge may have multiple split points.
                 // We store these in a list and sort it along the
                 // direction of the edge, before inserting the points
