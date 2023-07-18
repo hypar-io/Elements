@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Search;
+using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -14,7 +15,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : IndexedPolycurve
+    public class Polyline : IndexedPolycurve, IHasArcLength
     {
         /// <summary>
         /// The domain of the curve.
@@ -82,6 +83,66 @@ namespace Elements.Geometry
         public virtual Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
+        }
+
+
+
+        /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        /// <returns>The length based midpoint.</returns>
+        public virtual Vector3 MidPoint()
+        {
+            return PointAtNormalizedLength(0.5);
+        }
+
+        /// <summary>
+        /// Returns the point on the polyline corresponding to the specified length value.
+        /// </summary>
+        /// <param name="length">The length value along the polyline.</param>
+        /// <returns>The point on the polyline corresponding to the specified length value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
+        public virtual Vector3 PointAtLength(double length)
+        {
+            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Polyline
+            if (length < 0 || length > totalLength)
+            {
+                throw new ArgumentException("The specified length is out of range.");
+            }
+
+            double accumulatedLength = 0.0;
+            foreach (Line segment in Segments())
+            {
+                double segmentLength = segment.ArcLength(segment.Domain.Min, segment.Domain.Max);
+
+                if (accumulatedLength + segmentLength >= length)
+                {
+                    double remainingDistance = length - accumulatedLength;
+                    double parameter = remainingDistance / segmentLength;
+                    return segment.PointAtNormalized(parameter);
+                }
+
+                accumulatedLength += segmentLength;
+            }
+
+            // If we reach here, the desired length is equal to the total length,
+            // so return the end point of the Polyline.
+            return End;
+        }
+
+        /// <summary>
+        /// Returns the point on the polyline corresponding to the specified normalized length-based parameter value.
+        /// </summary>
+        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
+        /// <returns>The point on the polyline corresponding to the specified normalized length-based parameter value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
+        public virtual Vector3 PointAtNormalizedLength(double parameter)
+        {
+            if (parameter < 0 || parameter > 1)
+            {
+                throw new ArgumentException("The specified parameter is out of range.");
+            }
+            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
         }
 
         /// <summary>
@@ -384,6 +445,50 @@ namespace Elements.Geometry
             }
             tangent = tangent.Negate();
             return new Transform(origin, up.Cross(tangent), tangent);
+        }
+
+        /// <summary>
+        /// Divides the polyline into segments of the specified length.
+        /// </summary>
+        /// <param name="divisionLength">The desired length of each segment.</param>
+        /// <returns>A list of points representing the segments.</returns>
+        public Vector3[] DivideByLength(double divisionLength)
+        {
+            var segments = new List<Vector3>();
+
+            if (this.Vertices.Count < 2)
+            {
+                // Handle invalid polyline with insufficient vertices
+                return new Vector3[0];
+            }
+
+            var currentProgression = 0.0;
+            segments = new List<Vector3> { this.Vertices.FirstOrDefault() };
+
+            foreach (var currentSegment in this.Segments())
+            {
+                // currentProgression from last segment before hitting end
+                if (currentProgression != 0.0)
+                {
+                    currentProgression -= divisionLength;
+                }
+                while (currentSegment.ArcLength(currentSegment.Domain.Min, currentSegment.Domain.Max) >= currentProgression + divisionLength)
+                {
+                    segments.Add(currentSegment.PointAt(currentProgression + divisionLength));
+                    currentProgression += divisionLength;
+                }
+                // Set currentProgression from divisionLength less distance from last segment point
+                currentProgression = divisionLength - segments.LastOrDefault().DistanceTo(currentSegment.End);
+            }
+
+            // Add the last vertex of the polyline as the endpoint of the last segment if it
+            // is not already part of the list
+            if (!segments.LastOrDefault().IsAlmostEqualTo(this.Vertices.LastOrDefault()))
+            {
+                segments.Add(this.Vertices.LastOrDefault());
+            }
+
+            return segments.ToArray();
         }
 
         /// <summary>
@@ -795,7 +900,7 @@ namespace Elements.Geometry
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var edge = (a, b);
 
-                // An edge may have multiple split points. 
+                // An edge may have multiple split points.
                 // We store these in a list and sort it along the
                 // direction of the edge, before inserting the points
                 // into the vertex list and incrementing i by the correct
