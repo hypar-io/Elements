@@ -85,8 +85,6 @@ namespace Elements.Geometry
             return SegmentsInternal(this.Vertices);
         }
 
-
-
         /// <summary>
         /// The mid point of the curve.
         /// </summary>

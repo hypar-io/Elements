@@ -101,6 +101,7 @@
 - `Arc` now automatically corrects decreasing angle domains to be increasing, while preserving direction.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
+- `Line` now implements the `IHasArcLength` interface
 - `Bezier` now inherits from `BoundedCurve`.
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameterized 0->2Pi.

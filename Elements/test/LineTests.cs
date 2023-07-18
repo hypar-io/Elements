@@ -262,11 +262,11 @@ namespace Elements.Geometry.Tests
         public void DivideByLength()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
-            var segments = l.DivideByLength(1.1, true);
-            Assert.Equal(4, segments.Count);
+            var segments = l.DivideByLength(1.1);
+            Assert.Equal(6, segments.Count());
 
-            var segments1 = l.DivideByLength(1.1);
-            Assert.Equal(5, segments1.Count);
+            var segments1 = l.DivideByLength(2);
+            Assert.Equal(4, segments1.Count());
         }
 
         [Fact]
@@ -749,6 +749,17 @@ namespace Elements.Geometry.Tests
             var expectedVector = line.PointAt(uValue);
             Assert.InRange(uValue, 0, line.Length());
             Assert.True(vector.IsAlmostEqualTo(expectedVector));
+
+            var parameter = 0.5;
+            var testParameterMidpoint = line.PointAtNormalizedLength(parameter);
+            Assert.True(testParameterMidpoint.IsAlmostEqualTo(middle));
+
+            var midlength = line.Length() * parameter;
+            var testLengthMidpoint = line.PointAtLength(midlength);
+            Assert.True(testLengthMidpoint.IsAlmostEqualTo(testParameterMidpoint));
+
+            var midpoint = line.MidPoint();
+            Assert.True(midpoint.IsAlmostEqualTo(testLengthMidpoint));
         }
 
         [Theory]
@@ -1209,7 +1220,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt22, pt21)), 12);
             //The segments (pt12, pt13) and (pt21, pt22) does not intersect.
-            //The shortest distance is from an endpoint to another segment - difference between lines plus between endpoints. 
+            //The shortest distance is from an endpoint to another segment - difference between lines plus between endpoints.
             var expected = (q12 * v1).DistanceTo(new Line(delta + q21 * v2, delta + q22 * v2));
             Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt22, pt21)), 12);

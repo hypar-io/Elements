@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Elements.Spatial;
+using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -15,7 +16,7 @@ namespace Elements.Geometry
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
     /// TODO: Rename this class to LineSegment
-    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
+    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>, IHasArcLength
     {
         /// <summary>
         /// The domain of the curve.
@@ -121,6 +122,48 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
             return this.BasisCurve.PointAt(u);
+        }
+
+        /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        /// <returns>The length based midpoint.</returns>
+        public virtual Vector3 MidPoint()
+        {
+            return PointAtNormalizedLength(0.5);
+        }
+
+        /// <summary>
+        /// Returns the point on the line corresponding to the specified length value.
+        /// </summary>
+        /// <param name="length">The length value along the line.</param>
+        /// <returns>The point on the line corresponding to the specified length value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
+        public virtual Vector3 PointAtLength(double length)
+        {
+            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Line
+
+            if (length < 0 || length > totalLength)
+            {
+                throw new ArgumentException("The specified length is out of range.");
+            }
+            var lengthParameter = length / totalLength;
+            return this.PointAtNormalized(lengthParameter);
+        }
+
+        /// <summary>
+        /// Returns the point on the line corresponding to the specified normalized length-based parameter value.
+        /// </summary>
+        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
+        /// <returns>The point on the line corresponding to the specified normalized length-based parameter value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
+        public virtual Vector3 PointAtNormalizedLength(double parameter)
+        {
+            if (parameter < 0 || parameter > 1)
+            {
+                throw new ArgumentException("The specified parameter is out of range.");
+            }
+            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
         }
 
         /// <inheritdoc/>
@@ -553,38 +596,79 @@ namespace Elements.Geometry
             return false;
         }
 
+        // /// <summary>
+        // /// Divide the line into as many segments of the provided length as possible.
+        // /// </summary>
+        // /// <param name="l">The length.</param>
+        // /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
+        // public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        // {
+        //     var len = this.Length();
+        //     if (l > len)
+        //     {
+        //         return new List<Line>() { new Line(this.Start, this.End) };
+        //     }
+
+        //     var total = 0.0;
+        //     var d = this.Direction();
+        //     var lines = new List<Line>();
+        //     while (total + l <= len)
+        //     {
+        //         var a = this.Start + d * total;
+        //         var b = a + d * l;
+        //         lines.Add(new Line(a, b));
+        //         total += l;
+        //     }
+        //     if (total < len && !removeShortSegments)
+        //     {
+        //         var a = this.Start + d * total;
+        //         if (!a.IsAlmostEqualTo(End))
+        //         {
+        //             lines.Add(new Line(a, End));
+        //         }
+        //     }
+        //     return lines;
+        // }
+
         /// <summary>
-        /// Divide the line into as many segments of the provided length as possible.
+        /// Divides the line into segments of the specified length.
         /// </summary>
-        /// <param name="l">The length.</param>
-        /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
-        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        /// <param name="divisionLength">The desired length of each segment.</param>
+        /// <returns>A list of points representing the segments.</returns>
+        public Vector3[] DivideByLength(double divisionLength)
         {
-            var len = this.Length();
-            if (l > len)
+            var segments = new List<Vector3>();
+
+            if (this.ArcLength(this.Domain.Min, this.Domain.Max) < double.Epsilon)
             {
-                return new List<Line>() { new Line(this.Start, this.End) };
+                // Handle invalid line with insufficient length
+                return new Vector3[0];
             }
 
-            var total = 0.0;
-            var d = this.Direction();
-            var lines = new List<Line>();
-            while (total + l <= len)
+            var currentProgression = 0.0;
+            segments = new List<Vector3> { this.Start };
+
+            // currentProgression from last segment before hitting end
+            if (currentProgression != 0.0)
             {
-                var a = this.Start + d * total;
-                var b = a + d * l;
-                lines.Add(new Line(a, b));
-                total += l;
+                currentProgression -= divisionLength;
             }
-            if (total < len && !removeShortSegments)
+            while (this.ArcLength(this.Domain.Min, this.Domain.Max) >= currentProgression + divisionLength)
             {
-                var a = this.Start + d * total;
-                if (!a.IsAlmostEqualTo(End))
-                {
-                    lines.Add(new Line(a, End));
-                }
+                segments.Add(this.PointAt(currentProgression + divisionLength));
+                currentProgression += divisionLength;
             }
-            return lines;
+            // Set currentProgression from divisionLength less distance from last segment point
+            currentProgression = divisionLength - segments.LastOrDefault().DistanceTo(this.End);
+
+            // Add the last vertex of the polyline as the endpoint of the last segment if it
+            // is not already part of the list
+            if (!segments.LastOrDefault().IsAlmostEqualTo(this.End))
+            {
+                segments.Add(this.End);
+            }
+
+            return segments.ToArray();
         }
 
         /// <inheritdoc/>

@@ -270,7 +270,6 @@ namespace Elements.Geometry.Tests
             var parameter = 0.5;
             var testMidpoint = new Vector3(5.0, 14.560525, 0); // Midpoint
             var testParameterMidpoint = polyline.PointAtNormalizedLength(parameter);
-            var t = testParameterMidpoint.IsAlmostEqualTo(testMidpoint);
             Assert.True(testParameterMidpoint.IsAlmostEqualTo(testMidpoint));
 
             var midlength = polyline.Length() * parameter;
