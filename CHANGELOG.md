@@ -108,7 +108,7 @@
 - `Arc` is now parameterized 0->2Pi
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
-- `Line` now implements the `IHasArcLength` interface.
+- `Line` now implements the `IHasArcLength` interface
 - `Bezier` now inherits from `BoundedCurve`.
 - `Bezier` now implements the `IHasArcLength` interface.
 - `Bezier.ArcLength()` now uses Gauss quadrature approximation vs linear sampling.

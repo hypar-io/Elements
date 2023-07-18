@@ -144,66 +144,6 @@ namespace Elements.Geometry
             return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
         }
 
-
-
-        /// <summary>
-        /// The mid point of the curve.
-        /// </summary>
-        /// <returns>The length based midpoint.</returns>
-        public virtual Vector3 MidPoint()
-        {
-            return PointAtNormalizedLength(0.5);
-        }
-
-        /// <summary>
-        /// Returns the point on the polyline corresponding to the specified length value.
-        /// </summary>
-        /// <param name="length">The length value along the polyline.</param>
-        /// <returns>The point on the polyline corresponding to the specified length value.</returns>
-        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
-        public virtual Vector3 PointAtLength(double length)
-        {
-            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Polyline
-            if (length < 0 || length > totalLength)
-            {
-                throw new ArgumentException("The specified length is out of range.");
-            }
-
-            double accumulatedLength = 0.0;
-            foreach (Line segment in Segments())
-            {
-                double segmentLength = segment.ArcLength(segment.Domain.Min, segment.Domain.Max);
-
-                if (accumulatedLength + segmentLength >= length)
-                {
-                    double remainingDistance = length - accumulatedLength;
-                    double parameter = remainingDistance / segmentLength;
-                    return segment.PointAtNormalized(parameter);
-                }
-
-                accumulatedLength += segmentLength;
-            }
-
-            // If we reach here, the desired length is equal to the total length,
-            // so return the end point of the Polyline.
-            return End;
-        }
-
-        /// <summary>
-        /// Returns the point on the polyline corresponding to the specified normalized length-based parameter value.
-        /// </summary>
-        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
-        /// <returns>The point on the polyline corresponding to the specified normalized length-based parameter value.</returns>
-        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
-        public virtual Vector3 PointAtNormalizedLength(double parameter)
-        {
-            if (parameter < 0 || parameter > 1)
-            {
-                throw new ArgumentException("The specified parameter is out of range.");
-            }
-            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
-        }
-
         /// <summary>
         /// Get the transform at the specified parameter along the polyline.
         /// </summary>
