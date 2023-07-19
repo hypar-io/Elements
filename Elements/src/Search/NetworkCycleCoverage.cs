@@ -10,10 +10,12 @@ namespace Elements.Search
     internal class NetworkCycleCoverage<T>
     {
         private readonly AdjacencyList<T> _adjacencyList;
+        private readonly Dictionary<NetworkNode, List<NetworkEdge>> _adjacencyMatrix;
         public List<List<int>> CyclesIndices { get; }
 
         public NetworkCycleCoverage(AdjacencyList<T> adjacencyList, List<Vector3> allNodeLocations)
         {
+            _adjacencyMatrix = CreateAdjacencyMatrixWithPositionInfo(adjacencyList, allNodeLocations);
             _adjacencyList = adjacencyList;
             CyclesIndices = FindAllClosedRegions(allNodeLocations);
         }
@@ -331,6 +333,40 @@ namespace Elements.Search
         public IEnumerable<(int, T)> EdgesAt(int i)
         {
             return this._adjacencyList[i];
+        }
+
+        private static Dictionary<NetworkNode, List<NetworkEdge>> CreateAdjacencyMatrixWithPositionInfo(AdjacencyList<T> adjacencyMatrix,
+                                                                                                        List<Vector3> allNodeLocations)
+        {
+            var nodes = new List<NetworkNode>(allNodeLocations.Count);
+
+            for (int i = 0; i < allNodeLocations.Count; i++)
+            {
+                nodes.Add(new NetworkNode(i, allNodeLocations[i]));
+            }
+
+            var newAdjacencyMatrix = new Dictionary<NetworkNode, List<NetworkEdge>>(allNodeLocations.Count);
+            foreach (var node in nodes)
+            {
+                newAdjacencyMatrix[node] = new List<NetworkEdge>();
+            }
+
+            for (int i = 0; i < allNodeLocations.Count; i++)
+            {
+                foreach (var neighbor in adjacencyMatrix[i])
+                {
+                    if (i >= neighbor.Item1)
+                    {
+                        continue;
+                    }
+
+                    var edge = new NetworkEdge(nodes[i], nodes[neighbor.Item1]);
+                    newAdjacencyMatrix[nodes[i]].Add(edge);
+                    newAdjacencyMatrix[nodes[neighbor.Item1]].Add(edge);
+                }
+            }
+
+            return newAdjacencyMatrix;
         }
     }
 }
