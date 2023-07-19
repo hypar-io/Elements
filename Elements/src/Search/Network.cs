@@ -11,14 +11,6 @@ namespace Elements.Search
     /// </summary>
     public class LocalEdge
     {
-        [Flags]
-        internal enum VisitDirections
-        {
-            None,
-            Straight,
-            Opposite
-        }
-
         /// <summary>
         /// Creates a new instance of Edge class
         /// </summary>
@@ -523,7 +515,7 @@ namespace Elements.Search
             // This can happen when a region is "captured" by surrounding
             // regions that have been traversed, leaving one region bounded
             // completely bounded except on one side.
-            var unvisitedEdges = allEdges.Where(e => e.visitDirections == LocalEdge.VisitDirections.None);
+            var unvisitedEdges = allEdges.Where(e => e.visitDirections == VisitDirections.None);
             foreach (var unvisitedEdge in unvisitedEdges)
             {
                 var path = TraversePath(unvisitedEdge.End, allNodeLocations, allEdges, unvisitedEdge.Start);
