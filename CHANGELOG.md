@@ -37,7 +37,7 @@
 - `Bezier` now inherits from `BoundedCurve`.
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameterized 0->2Pi.
-- `Line` is now parameterized 0->length.
+- `Circle` now implements the `IHasArcLength` interface
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 - `Message`: removed obsolete `FromLine` method.
 - `AdaptiveGrid`: removed obsolete `TryGetVertexIndex` with `tolerance` parameter.

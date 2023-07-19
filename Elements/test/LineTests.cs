@@ -618,7 +618,6 @@ namespace Elements.Geometry.Tests
             Assert.Equal(new Line((5, 0, 0), (10, 0, 0)), overlap);
         }
 
-
         [Fact]
         public void GetParameterAt()
         {
