@@ -15,6 +15,43 @@ namespace Elements.Search
             End = end;
         }
 
+        public NetworkNode GetOppositeNode(NetworkNode node)
+        {
+            if (Start.Equals(node))
+            {
+                return End;
+            }
+
+            if (End.Equals(node))
+            {
+                return Start;
+            }
+
+            Debug.Assert(false, $"The edge {this} isn't adjacent to the node {node}, so it cannot have a node that is opposite to it.");
+            return null;
+        }
+
+        public Vector3 GetDirectionFrom(NetworkNode node)
+        {
+            if (node.Equals(Start))
+            {
+                return (End.Position - Start.Position).Unitized();
+            }
+
+            if (node.Equals(End))
+            {
+                return (Start.Position - End.Position).Unitized();
+            }
+
+            Debug.Assert(false, $"The edge {this} isn't adjacent to the node {node}, so the direction from it along the edge cannot be computed.");
+            return new Vector3();
+        }
+
+        public bool IsAdjacentToNode(NetworkNode node)
+        {
+            return Start.Equals(node) || End.Equals(node);
+        }
+
         /// <summary>
         /// Mark a vertex as having been visited from the specified index.
         /// </summary>
