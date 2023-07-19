@@ -441,8 +441,8 @@ namespace Elements.Search
         /// forming closed regions in the network.</returns>
         public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
-            var cycleCoverage = new NetworkCycleCoverage<T>(_adjacencyList);
-            return cycleCoverage.FindAllClosedRegions(allNodeLocations);
+            var cycleCoverage = new NetworkCycleCoverage<T>(_adjacencyList, allNodeLocations);
+            return cycleCoverage.CyclesIndices;
         }
 
         /// <summary>

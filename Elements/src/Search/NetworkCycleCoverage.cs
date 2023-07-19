@@ -10,13 +10,15 @@ namespace Elements.Search
     internal class NetworkCycleCoverage<T>
     {
         private readonly AdjacencyList<T> _adjacencyList;
+        public List<List<int>> CyclesIndices { get; }
 
-        public NetworkCycleCoverage(AdjacencyList<T> adjacencyList)
+        public NetworkCycleCoverage(AdjacencyList<T> adjacencyList, List<Vector3> allNodeLocations)
         {
             _adjacencyList = adjacencyList;
+            CyclesIndices = FindAllClosedRegions(allNodeLocations);
         }
 
-        public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
+        private List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
         {
             var regions = new List<List<int>>();
 
@@ -143,7 +145,7 @@ namespace Elements.Search
             return path[0] != path[path.Count - 1];
         }
 
-        public static int TraverseLargestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+        private static int TraverseLargestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
                                                List<Vector3> allNodeLocations,
                                                List<LocalEdge> visitedEdges)
         {
@@ -206,7 +208,7 @@ namespace Elements.Search
             }
         }
 
-        public List<int> Traverse(int start,
+        private List<int> Traverse(int start,
                                   Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
                                   List<Vector3> allNodeLocations,
                                   List<LocalEdge> visitedEdges,
