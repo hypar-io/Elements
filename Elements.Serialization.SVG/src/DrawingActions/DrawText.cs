@@ -5,7 +5,7 @@ namespace Elements.Serialization.SVG
     /// <summary>
     /// Draw text action
     /// </summary>
-    internal class DrawText : DrawingAction
+    public class DrawText : DrawingAction
     {
         /// <summary>
         /// Initializes a new instance for DrawText class.
