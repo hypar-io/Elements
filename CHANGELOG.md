@@ -114,7 +114,7 @@
 - `Bezier.ArcLength()` now uses Gauss quadrature approximation vs linear sampling.
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameterized 0->2Pi.
-- `Circle` now implements the `IHasArcLength` interface.
+- `Circle` now implements the `IHasArcLength` interface
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 - `Message`: removed obsolete `FromLine` method.
 - `AdaptiveGrid`: removed obsolete `TryGetVertexIndex` with `tolerance` parameter.
