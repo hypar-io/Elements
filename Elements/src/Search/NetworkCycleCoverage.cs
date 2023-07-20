@@ -188,13 +188,6 @@ namespace Elements.Search
             for (int j = 0; j < path.Count - 1; j++)
             {
                 var edge = GetEdge(path[j], path[j + 1]);
-
-                // if (edge == null)
-                // {
-                //     edge = new LocalEdge(path[j], path[j + 1]);
-                //     visitedEdges.Add(edge);
-                // }
-
                 edge.MarkAsVisited(path[j]);
             }
         }
