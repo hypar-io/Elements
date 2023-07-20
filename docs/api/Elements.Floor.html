@@ -223,6 +223,9 @@ floor2.AddOpening(3, 3, 3, 3);
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
@@ -238,6 +241,9 @@ floor2.AddOpening(3, 3, 3, 3);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -245,6 +251,9 @@ floor2.AddOpening(3, 3, 3, 3);
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
@@ -263,6 +272,15 @@ floor2.AddOpening(3, 3, 3, 3);
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -373,6 +391,81 @@ structured constructor with arguments, to ensure the floor is correctly created.
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Floor__ctor_" data-uid="Elements.Floor.#ctor*"></a>
+  <h4 id="Elements_Floor__ctor_Elements_Geometry_Profile_System_Double_System_Nullable_System_Guid__Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Floor.#ctor(Elements.Geometry.Profile,System.Double,System.Nullable{System.Guid},Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Floor(Profile, Double, Nullable&lt;Guid&gt;, Transform, Material, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Create a floor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Floor(Profile profile, double thickness, Guid? level, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The perimeter of the floor.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">thickness</span></td>
+        <td><p>The thickness of the floor.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Guid</span>&gt;</td>
+        <td><span class="parametername">level</span></td>
+        <td><p>The level this floor belongs to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The floor's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The floor's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The floor's id.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The floor's name.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Floor_Elevation_" data-uid="Elements.Floor.Elevation*"></a>
@@ -396,6 +489,30 @@ public double Elevation { get; }</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Floor_Level_" data-uid="Elements.Floor.Level*"></a>
+  <h4 id="Elements_Floor_Level" data-uid="Elements.Floor.Level">Level</h4>
+  <div class="markdown level1 summary"><p>The Level this floor belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid? Level { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Guid</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>

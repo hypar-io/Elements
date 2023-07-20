@@ -95,6 +95,7 @@
     <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
     <div class="level2"><span class="xref">GeometricElement</span></div>
       <div class="level3"><a class="xref" href="Elements.Analysis.AnalysisMesh.html">AnalysisMesh</a></div>
+      <div class="level3"><a class="xref" href="Elements.Annotations.Message.html">Message</a></div>
       <div class="level3"><a class="xref" href="Elements.BaseCeiling.html">BaseCeiling</a></div>
       <div class="level3"><a class="xref" href="Elements.ContentElement.html">ContentElement</a></div>
       <div class="level3"><a class="xref" href="Elements.Floor.html">Floor</a></div>
@@ -109,6 +110,7 @@
       <div class="level3"><a class="xref" href="Elements.Opening.html">Opening</a></div>
       <div class="level3"><a class="xref" href="Elements.Panel.html">Panel</a></div>
       <div class="level3"><a class="xref" href="Elements.Space.html">Space</a></div>
+      <div class="level3"><a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html">Obstacle</a></div>
       <div class="level3"><a class="xref" href="Elements.StructuralFraming.html">StructuralFraming</a></div>
       <div class="level3"><a class="xref" href="Elements.Wall.html">Wall</a></div>
   </div>
@@ -132,6 +134,15 @@
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -220,6 +231,33 @@ public GeometricElement(Transform transform = null, Material material = null, Re
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_GeometricElement_Bounds_" data-uid="Elements.GeometricElement.Bounds*"></a>
+  <h4 id="Elements_GeometricElement_Bounds" data-uid="Elements.GeometricElement.Bounds">Bounds</h4>
+  <div class="markdown level1 summary"><p>The element's bounds.
+The bounds are only available when the geometry has been
+updated using UpdateBoundsAndComputeSolid(),</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public BBox3 Bounds { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_GeometricElement_IsElementDefinition_" data-uid="Elements.GeometricElement.IsElementDefinition*"></a>
   <h4 id="Elements_GeometricElement_IsElementDefinition" data-uid="Elements.GeometricElement.IsElementDefinition">IsElementDefinition</h4>
   <div class="markdown level1 summary"><p>When true, this element will act as the base definition for element instances, and will not appear in visual output.</p>
@@ -280,7 +318,7 @@ as the object is tessellated.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Func&lt;(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 position, Vector3 normal, UV uv, Color color)&gt; ModifyVertexAttributes { get; set; }</code></pre>
+public Func&lt;(Vector3 position, Vector3 normal, UV uv, Color? color), (Vector3 position, Vector3 normal, UV uv, Color? color)&gt; ModifyVertexAttributes { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -292,7 +330,7 @@ public Func&lt;(Vector3 position, Vector3 normal, UV uv, Color color), (Vector3 
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.UV.html">UV</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;, <span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.UV.html">UV</a>, <a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.UV.html">UV</a>, <span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;&gt;, <span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.UV.html">UV</a>, <span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -422,6 +460,70 @@ Instances will point to the same instance of an element.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_GeometricElement_Intersects_" data-uid="Elements.GeometricElement.Intersects*"></a>
+  <h4 id="Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____" data-uid="Elements.GeometricElement.Intersects(Elements.Geometry.Plane,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Polygon}}@,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Polygon}}@,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Line}}@)">Intersects(Plane, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, out Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Does this element intersect the provided plane?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane plane, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt; intersectionPolygons, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt; beyondPolygons, out Dictionary&lt;Guid, List&lt;Line&gt;&gt; lines)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane of intersection.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;&gt;</td>
+        <td><span class="parametername">intersectionPolygons</span></td>
+        <td><p>A collection of polygons representing
+the intersections of the plane and the element's solid geometry.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;&gt;</td>
+        <td><span class="parametername">beyondPolygons</span></td>
+        <td><p>A collection of polygons representing coplanar
+faces beyond the plane of intersection.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;&gt;</td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>A collection of lines representing intersections
+of zero-thickness elements with the plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection occurs, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_GeometricElement_ToMesh_" data-uid="Elements.GeometricElement.ToMesh*"></a>
   <h4 id="Elements_GeometricElement_ToMesh_System_Boolean_" data-uid="Elements.GeometricElement.ToMesh(System.Boolean)">ToMesh(Boolean)</h4>
   <div class="markdown level1 summary"><p>Get the mesh representing the this Element's geometry. By default it will be untransformed.</p>
@@ -514,6 +616,32 @@ Instances will point to the same instance of an element.</p>
         <td><p>True if there is graphicsbuffers data applicable to add, false otherwise.
 Out variables should be ignored if the return value is false.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_GeometricElement_UpdateBoundsAndComputeSolid_" data-uid="Elements.GeometricElement.UpdateBoundsAndComputeSolid*"></a>
+  <h4 id="Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_" data-uid="Elements.GeometricElement.UpdateBoundsAndComputeSolid(System.Boolean)">UpdateBoundsAndComputeSolid(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Update the computed solid and the bounding box of the element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateBoundsAndComputeSolid(bool transformed = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">transformed</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

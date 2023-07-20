@@ -86,7 +86,8 @@
   
   <h1 id="Elements_Geometry_Line" data-uid="Elements.Geometry.Line" class="text-break">Class Line
   </h1>
-  <div class="markdown level0 summary"><p>A linear curve between two points.</p>
+  <div class="markdown level0 summary"><p>A line segment.
+Parameterization of the line is  0 (start) -&gt; length (end)</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -205,24 +206,46 @@ var l = new Line(a, b);
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><span class="xref">Line</span></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
+    <div class="level3"><a class="xref" href="Elements.Geometry.TrimmedCurve-1.html">TrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.InfiniteLine.html">InfiniteLine</a>&gt;</div>
+    <div class="level4"><span class="xref">Line</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.InfiniteLine.html">InfiniteLine</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+      <a class="xref" href="Elements.Geometry.TrimmedCurve-1.html#Elements_Geometry_TrimmedCurve_1_BasisCurve">TrimmedCurve&lt;InfiniteLine&gt;.BasisCurve</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Start">BoundedCurve.Start</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_End">BoundedCurve.End</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Frames_System_Double_System_Double_System_Double_">BoundedCurve.Frames(Double, Double, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -239,15 +262,12 @@ var l = new Line(a, b);
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Line_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Line : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Line&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Line : TrimmedCurve&lt;InfiniteLine&gt;, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve, ITrimmedCurve&lt;InfiniteLine&gt;, IEquatable&lt;Line&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -260,6 +280,33 @@ var l = new Line(a, b);
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Line()</code></pre>
   </div>
+  <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
+  <h4 id="Elements_Geometry_Line__ctor_Elements_Geometry_InfiniteLine_" data-uid="Elements.Geometry.Line.#ctor(Elements.Geometry.InfiniteLine)">Line(InfiniteLine)</h4>
+  <div class="markdown level1 summary"><p>Create a line from a trimmed segment of an infinite line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Line(InfiniteLine line)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.InfiniteLine.html">InfiniteLine</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>The infinite line from which this segment is trimmed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
   <h4 id="Elements_Geometry_Line__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Line.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Line(Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Create a line.</p>
@@ -296,7 +343,7 @@ public Line(Vector3 start, Vector3 end)</code></pre>
   </table>
   <a id="Elements_Geometry_Line__ctor_" data-uid="Elements.Geometry.Line.#ctor*"></a>
   <h4 id="Elements_Geometry_Line__ctor_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Line.#ctor(Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Double)">Line(Vector3, Vector3, Double)</h4>
-  <div class="markdown level1 summary"><p>Construct a line of length from a start along direction.</p>
+  <div class="markdown level1 summary"><p>Create a line of length from a start along direction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -332,15 +379,15 @@ public Line(Vector3 start, Vector3 end)</code></pre>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Geometry_Line_End_" data-uid="Elements.Geometry.Line.End*"></a>
-  <h4 id="Elements_Geometry_Line_End" data-uid="Elements.Geometry.Line.End">End</h4>
-  <div class="markdown level1 summary"><p>The end of the line.</p>
+  <a id="Elements_Geometry_Line_Domain_" data-uid="Elements.Geometry.Line.Domain*"></a>
+  <h4 id="Elements_Geometry_Line_Domain" data-uid="Elements.Geometry.Line.Domain">Domain</h4>
+  <div class="markdown level1 summary"><p>The domain of the curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;End&quot;, Required = Required.AllowNull)]
-public Vector3 End { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Domain1d Domain { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -352,38 +399,63 @@ public Vector3 End { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Line_Start_" data-uid="Elements.Geometry.Line.Start*"></a>
-  <h4 id="Elements_Geometry_Line_Start" data-uid="Elements.Geometry.Line.Start">Start</h4>
-  <div class="markdown level1 summary"><p>The start of the line.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Start&quot;, Required = Required.AllowNull)]
-public Vector3 Start { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Domain">BoundedCurve.Domain</a></div>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Geometry_Line_ArcLength_" data-uid="Elements.Geometry.Line.ArcLength*"></a>
+  <h4 id="Elements_Geometry_Line_ArcLength_System_Double_System_Double_" data-uid="Elements.Geometry.Line.ArcLength(System.Double,System.Double)">ArcLength(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the line between two parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ArcLength(double start, double end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">end</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ArcLength_System_Double_System_Double_">BoundedCurve.ArcLength(Double, Double)</a></div>
   <a id="Elements_Geometry_Line_BestFit_" data-uid="Elements.Geometry.Line.BestFit*"></a>
   <h4 id="Elements_Geometry_Line_BestFit_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Line.BestFit(System.Collections.Generic.IList{Elements.Geometry.Vector3})">BestFit(IList&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Return an approximate fit line through a set of points using the least squares method.</p>
@@ -454,7 +526,7 @@ If there is less than 2 distinct points, returns null.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Bounds">BoundedCurve.Bounds()</a></div>
   <a id="Elements_Geometry_Line_Direction_" data-uid="Elements.Geometry.Line.Direction*"></a>
   <h4 id="Elements_Geometry_Line_Direction" data-uid="Elements.Geometry.Line.Direction">Direction()</h4>
   <div class="markdown level1 summary"><p>A normalized vector representing the direction of the line.</p>
@@ -523,6 +595,48 @@ If there is less than 2 distinct points, returns null.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_DistanceTo_" data-uid="Elements.Geometry.Line.DistanceTo*"></a>
+  <h4 id="Elements_Geometry_Line_DistanceTo_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.DistanceTo(Elements.Geometry.Line)">DistanceTo(Line)</h4>
+  <div class="markdown level1 summary"><p>Measure the distance between two lines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double DistanceTo(Line other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The line to measure the distance to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -1402,6 +1516,57 @@ If the distance to the intersection with the lines is greater than the maximum, 
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Line_GetSubdivisionParameters_" data-uid="Elements.Geometry.Line.GetSubdivisionParameters*"></a>
+  <h4 id="Elements_Geometry_Line_GetSubdivisionParameters_System_Double_System_Double_" data-uid="Elements.Geometry.Line.GetSubdivisionParameters(System.Double,System.Double)">GetSubdivisionParameters(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get parameters to be used to find points along the curve for visualization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetbackDistance</span></td>
+        <td><p>An optional setback from the start of the curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetbackDistance</span></td>
+        <td><p>An optional setback from the end of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>A collection of parameter values.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_GetSubdivisionParameters_System_Double_System_Double_">BoundedCurve.GetSubdivisionParameters(Double, Double)</a></div>
   <a id="Elements_Geometry_Line_Intersects_" data-uid="Elements.Geometry.Line.Intersects*"></a>
   <h4 id="Elements_Geometry_Line_Intersects_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3___System_Boolean_System_Double_" data-uid="Elements.Geometry.Line.Intersects(Elements.Geometry.BBox3,System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Boolean,System.Double)">Intersects(BBox3, out List&lt;Vector3&gt;, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Does this line touches or intersects the provided box in 3D?</p>
@@ -1879,13 +2044,13 @@ false if the lines have coincident vertices or do not intersect.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_IsCollinear_" data-uid="Elements.Geometry.Line.IsCollinear*"></a>
-  <h4 id="Elements_Geometry_Line_IsCollinear_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line)">IsCollinear(Line)</h4>
-  <div class="markdown level1 summary"><p>Check if this line is collinear with other line</p>
+  <h4 id="Elements_Geometry_Line_IsCollinear_Elements_Geometry_Line_System_Double_" data-uid="Elements.Geometry.Line.IsCollinear(Elements.Geometry.Line,System.Double)">IsCollinear(Line, Double)</h4>
+  <div class="markdown level1 summary"><p>Check if this line is collinear with another line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool IsCollinear(Line line)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool IsCollinear(Line line, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1900,7 +2065,13 @@ false if the lines have coincident vertices or do not intersect.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><span class="parametername">line</span></td>
-        <td><p>Line to check</p>
+        <td><p>Line to check.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>If points are within this distance of a fit line, they will be considered collinear.</p>
 </td>
       </tr>
     </tbody>
@@ -1994,7 +2165,7 @@ false if the lines have coincident vertices or do not intersect.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Length">BoundedCurve.Length()</a></div>
   <a id="Elements_Geometry_Line_MergedCollinearLine_" data-uid="Elements.Geometry.Line.MergedCollinearLine*"></a>
   <h4 id="Elements_Geometry_Line_MergedCollinearLine_Elements_Geometry_Line_" data-uid="Elements.Geometry.Line.MergedCollinearLine(Elements.Geometry.Line)">MergedCollinearLine(Line)</h4>
   <div class="markdown level1 summary"><p>Creates new line with vertices of current and joined line</p>
@@ -2054,6 +2225,32 @@ false if the lines have coincident vertices or do not intersect.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Line_Mid_" data-uid="Elements.Geometry.Line.Mid*"></a>
+  <h4 id="Elements_Geometry_Line_Mid" data-uid="Elements.Geometry.Line.Mid">Mid()</h4>
+  <div class="markdown level1 summary"><p>The mid point of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 Mid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a></div>
   <a id="Elements_Geometry_Line_Offset_" data-uid="Elements.Geometry.Line.Offset*"></a>
   <h4 id="Elements_Geometry_Line_Offset_System_Double_System_Boolean_" data-uid="Elements.Geometry.Line.Offset(System.Double,System.Boolean)">Offset(Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Offset the line. The offset direction will be defined by
@@ -2103,6 +2300,56 @@ Direction X Vector3.ZAxis.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Line_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Line.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_Line_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Line.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_">Curve.ParameterAtDistanceFromParameter(Double, Double)</a></div>
   <a id="Elements_Geometry_Line_PointAt_" data-uid="Elements.Geometry.Line.PointAt*"></a>
   <h4 id="Elements_Geometry_Line_PointAt_System_Double_" data-uid="Elements.Geometry.Line.PointAt(System.Double)">PointAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get a point along the line at parameter u.</p>
@@ -2125,7 +2372,8 @@ Direction X Vector3.ZAxis.</p>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td></td>
+        <td><p>A parameter on the curve between 0.0 and length.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -2148,13 +2396,13 @@ Direction X Vector3.ZAxis.</p>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
   <a id="Elements_Geometry_Line_PointOnLine_" data-uid="Elements.Geometry.Line.PointOnLine*"></a>
-  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Boolean)">PointOnLine(Vector3, Vector3, Vector3, Boolean)</h4>
+  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_System_Boolean_System_Double_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3,System.Boolean,System.Double)">PointOnLine(Vector3, Vector3, Vector3, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Test if a point lies within tolerance of a given line segment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool PointOnLine(Vector3 point, Vector3 start, Vector3 end, bool includeEnds = false, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2187,7 +2435,13 @@ Direction X Vector3.ZAxis.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">includeEnds</span></td>
-        <td><p>Consider a point at the endpoint as on the line.
+        <td><p>Consider a point at the endpoint as on the line.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional distance tolerance.
 When true, any point within tolerance of the end points will be considered on the line.
 When false, points precisely at the ends of the line will not be considered on the line.</p>
 </td>
@@ -2210,13 +2464,13 @@ When false, points precisely at the ends of the line will not be considered on t
     </tbody>
   </table>
   <a id="Elements_Geometry_Line_PointOnLine_" data-uid="Elements.Geometry.Line.PointOnLine*"></a>
-  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean)">PointOnLine(Vector3, Boolean)</h4>
+  <h4 id="Elements_Geometry_Line_PointOnLine_Elements_Geometry_Vector3_System_Boolean_System_Double_" data-uid="Elements.Geometry.Line.PointOnLine(Elements.Geometry.Vector3,System.Boolean,System.Double)">PointOnLine(Vector3, Boolean, Double)</h4>
   <div class="markdown level1 summary"><p>Test if a point lies within tolerance of this line segment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool PointOnLine(Vector3 point, bool includeEnds = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool PointOnLine(Vector3 point, bool includeEnds = false, double tolerance = 1E-05)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2237,7 +2491,13 @@ When false, points precisely at the ends of the line will not be considered on t
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">includeEnds</span></td>
-        <td><p>Consider a point at the endpoint as on the line.
+        <td><p>Consider a point at the endpoint as on the line.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>An optional distance tolerance.
 When true, any point within tolerance of the end points will be considered on the line.
 When false, points precisely at the ends of the line will not be considered on the line.</p>
 </td>
@@ -2368,6 +2628,32 @@ When false, points precisely at the ends of the line will not be considered on t
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Line_ToString_" data-uid="Elements.Geometry.Line.ToString*"></a>
+  <h4 id="Elements_Geometry_Line_ToString" data-uid="Elements.Geometry.Line.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>A string representation of the line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Line_TransformAt_" data-uid="Elements.Geometry.Line.TransformAt*"></a>
   <h4 id="Elements_Geometry_Line_TransformAt_System_Double_" data-uid="Elements.Geometry.Line.TransformAt(System.Double)">TransformAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get a transform whose XY plane is perpendicular to the curve, and whose
@@ -2416,7 +2702,9 @@ positive Z axis points along the curve.</p>
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
   <a id="Elements_Geometry_Line_Transformed_" data-uid="Elements.Geometry.Line.Transformed*"></a>
   <h4 id="Elements_Geometry_Line_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Line.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
-  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
+  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
+Use of non-affine transforms (i.e. scale) will
+result in unpredictable results for curve methods such as Length().</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -2612,7 +2900,7 @@ positive Z axis points along the curve.</p>
   </table>
   <a id="Elements_Geometry_Line_TryGetOverlap_" data-uid="Elements.Geometry.Line.TryGetOverlap*"></a>
   <h4 id="Elements_Geometry_Line_TryGetOverlap_Elements_Geometry_Line_Elements_Geometry_Line__" data-uid="Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line,Elements.Geometry.Line@)">TryGetOverlap(Line, out Line)</h4>
-  <div class="markdown level1 summary"><p>Check if line overlap with other line</p>
+  <div class="markdown level1 summary"><p>Check if this line overlaps with another line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -2632,13 +2920,13 @@ positive Z axis points along the curve.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><span class="parametername">line</span></td>
-        <td><p>Line to check</p>
+        <td><p>Line to check.</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
         <td><span class="parametername">overlap</span></td>
-        <td><p>Overlapping line or null when lines do not overlap</p>
+        <td><p>Overlapping line or null when lines do not overlap.</p>
 </td>
       </tr>
     </tbody>
@@ -2654,7 +2942,62 @@ positive Z axis points along the curve.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><p>Returns true when lines overlap and false when they do not</p>
+        <td><p>Returns true when lines overlap and false when they do not.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Line_TryGetOverlap_" data-uid="Elements.Geometry.Line.TryGetOverlap*"></a>
+  <h4 id="Elements_Geometry_Line_TryGetOverlap_Elements_Geometry_Line_System_Double_Elements_Geometry_Line__" data-uid="Elements.Geometry.Line.TryGetOverlap(Elements.Geometry.Line,System.Double,Elements.Geometry.Line@)">TryGetOverlap(Line, Double, out Line)</h4>
+  <div class="markdown level1 summary"><p>Check if this line overlaps with another line.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool TryGetOverlap(Line line, double tolerance, out Line overlap)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>Line to check</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">tolerance</span></td>
+        <td><p>Tolerance for distance-based checks.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">overlap</span></td>
+        <td><p>Overlapping line or null when lines do not overlap.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>Returns true when lines overlap and false when they do not.</p>
 </td>
       </tr>
     </tbody>
@@ -2665,6 +3008,12 @@ positive Z axis points along the curve.</p>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve&lt;TBasis&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

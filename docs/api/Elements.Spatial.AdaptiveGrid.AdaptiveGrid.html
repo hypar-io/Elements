@@ -200,8 +200,7 @@ aligned with respect to boundaries and split points.</p>
   
     animate();
   </script><h5 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid"><strong>Examples</strong></h5>
-  <pre><code class="lang-csharp" name="Main">var random = new Random();
-
+  <pre><code class="lang-csharp" name="Main">
 var adaptiveGrid = new AdaptiveGrid();
 var points = new List&lt;Vector3&gt;()
 {
@@ -214,10 +213,6 @@ var points = new List&lt;Vector3&gt;()
 adaptiveGrid.AddFromPolygon(Polygon.Rectangle(15, 10).TransformedPolygon(
     new Transform(new Vector3(), new Vector3(10, 0, 10))), points);
 
-foreach (var edge in adaptiveGrid.GetEdges())
-{
-    Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
-}
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -318,11 +313,34 @@ foreach (var edge in adaptiveGrid.GetEdges())
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_HintExtendDistance_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.HintExtendDistance*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_HintExtendDistance" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.HintExtendDistance">HintExtendDistance</h4>
+  <div class="markdown level1 summary"><p>Maximum distance for line segments of hints lines to extend to other existing edges.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double HintExtendDistance { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Tolerance" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.Tolerance">Tolerance</h4>
-  <div class="markdown level1 summary"><p>Tolerance for points being considered the same.
-Applies individually to X, Y, and Z coordinates, not the cumulative difference!
-Tolerance is twice the epsilon to make sure graph has no cracks when new sections are added.</p>
+  <div class="markdown level1 summary"><p>Distance tolerance for points being considered the same.
+Tolerance is twice the epsilon because grid uses single tolerance for individual coordinates snapping.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -571,8 +589,7 @@ This way new region is connected with the rest of the graph.</p>
     </tbody>
   </table>
   <h5 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromBbox_Elements_Geometry_BBox3_System_Collections_Generic_List_Elements_Geometry_Vector3___examples">Examples</h5>
-  <pre><code class="lang-csharp" name="Main">var random = new Random();
-
+  <pre><code class="lang-csharp" name="Main">
 var adaptiveGrid = new AdaptiveGrid();
 var points = new List&lt;Vector3&gt;()
 {
@@ -602,10 +619,6 @@ points = new List&lt;Vector3&gt;()
 };
 adaptiveGrid.AddFromPolygon(rectangle.TransformedPolygon(new Transform(new Vector3(0, 0, 2))), points);
 
-foreach (var edge in adaptiveGrid.GetEdges())
-{
-    Model.AddElement(new ModelCurve(adaptiveGrid.GetLine(edge), material: random.NextMaterial()));
-}
 </code></pre>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddFromExtrude_Elements_Geometry_Polygon_Elements_Geometry_Vector3_System_Double_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddFromExtrude(Elements.Geometry.Polygon,Elements.Geometry.Vector3,System.Double,System.Collections.Generic.List{Elements.Geometry.Vector3})">AddFromExtrude(Polygon, Vector3, Double, List&lt;Vector3&gt;)</h4>
@@ -848,6 +861,58 @@ Doesn't connect new Vertex to the grid with edges.</p>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
         <td><p>Vertices in order between provided points. Depends on used method.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVerticesWithCustomExtension_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVerticesWithCustomExtension*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_AddVerticesWithCustomExtension_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Double_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.AddVerticesWithCustomExtension(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Double)">AddVerticesWithCustomExtension(IList&lt;Vector3&gt;, Double)</h4>
+  <div class="markdown level1 summary"><p>Intersect points into grid and connect them into edges.
+New edges are intersected along intersection points.
+End points of each segment are extended up to given distance until the next hit on both sides.
+If not extended, point is connected to the grid at its position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Vertex&gt; AddVerticesWithCustomExtension(IList&lt;Vector3&gt; points, double extendDistance)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>Points to add and connect to the grid.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">extendDistance</span></td>
+        <td><p>Distance at which lines are extended to existing edges.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a>&gt;</td>
+        <td><p>Vertices in order they are inserted, including already existing. Can contain duplicates.</p>
 </td>
       </tr>
     </tbody>
@@ -1167,6 +1232,47 @@ New vertex position is not required to be in the edge line.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_InsertSnapshot_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.InsertSnapshot*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_InsertSnapshot_System_Collections_Generic_List_System_ValueTuple_Elements_Geometry_Vector3_Elements_Geometry_Vector3___Elements_Geometry_Transform_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.InsertSnapshot(System.Collections.Generic.List{System.ValueTuple{Elements.Geometry.Vector3,Elements.Geometry.Vector3}},Elements.Geometry.Transform,System.Boolean)">InsertSnapshot(List&lt;(Vector3 Start, Vector3 End)&gt;, Transform, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Duplicate stored edges with transformation applied.
+Use with InsertSnapshot to move a list of existing or previously existed edges to the new location,
+for example, copy edges from one elevation to another.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void InsertSnapshot(List&lt;(Vector3 Start, Vector3 End)&gt; storedEdges, Transform transform, bool connect = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;&gt;</td>
+        <td><span class="parametername">storedEdges</span></td>
+        <td><p>Edge positions to duplicate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>Transformation to apply to all of the new edges.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">connect</span></td>
+        <td><p>Optional. Connect each new vertex with it's original vertex if it still exist.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveEdge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveEdge*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_RemoveEdge_Elements_Spatial_AdaptiveGrid_Edge_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.RemoveEdge(Elements.Spatial.AdaptiveGrid.Edge)">RemoveEdge(Edge)</h4>
   <div class="markdown level1 summary"><p>Remove the Edge from the grid.</p>
@@ -1219,6 +1325,57 @@ vertices that are left without edges.</p>
         <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></td>
         <td><span class="parametername">v</span></td>
         <td><p>Vertex to delete.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SnapshotEdgesOnPlane_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SnapshotEdgesOnPlane*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_SnapshotEdgesOnPlane_Elements_Geometry_Plane_System_Collections_Generic_IEnumerable_Elements_Spatial_AdaptiveGrid_Edge__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.SnapshotEdgesOnPlane(Elements.Geometry.Plane,System.Collections.Generic.IEnumerable{Elements.Spatial.AdaptiveGrid.Edge})">SnapshotEdgesOnPlane(Plane, IEnumerable&lt;Edge&gt;)</h4>
+  <div class="markdown level1 summary"><p>Store points of edges both vertices of which are located at the given plane.
+Use with InsertSnapshot to duplicate vertices to a new elevation,
+while allowing modification of the original edges before duplication takes place.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;(Vector3 Start, Vector3 End)&gt; SnapshotEdgesOnPlane(Plane plane, IEnumerable&lt;Edge&gt; edgesToCheck = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>Plane to retrieve edges from.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Spatial.AdaptiveGrid.Edge.html">Edge</a>&gt;</td>
+        <td><span class="parametername">edgesToCheck</span></td>
+        <td><p>Optional. Edges to check, all by default .</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;&gt;</td>
+        <td><p>Position pair for each edge stored.</p>
 </td>
       </tr>
     </tbody>
@@ -1310,13 +1467,14 @@ vertices that are left without edges.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_TryGetVertexIndex_" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.TryGetVertexIndex*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_TryGetVertexIndex_Elements_Geometry_Vector3_System_UInt64__System_Nullable_System_Double__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.TryGetVertexIndex(Elements.Geometry.Vector3,System.UInt64@,System.Nullable{System.Double})">TryGetVertexIndex(Vector3, out UInt64, Nullable&lt;Double&gt;)</h4>
-  <div class="markdown level1 summary"><p>Whether a vertex location already exists in the AdaptiveGrid.</p>
+  <h4 id="Elements_Spatial_AdaptiveGrid_AdaptiveGrid_TryGetVertexIndex_Elements_Geometry_Vector3_System_UInt64__" data-uid="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.TryGetVertexIndex(Elements.Geometry.Vector3,System.UInt64@)">TryGetVertexIndex(Vector3, out UInt64)</h4>
+  <div class="markdown level1 summary"><p>Whether a vertex location already exists in the AdaptiveGrid.
+A vertex with each coordinate less than AdaptiveGrid.Tolerance away is considered suitable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool TryGetVertexIndex(Vector3 point, out ulong id, double? tolerance = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool TryGetVertexIndex(Vector3 point, out ulong id)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1339,12 +1497,6 @@ vertices that are left without edges.</p>
         <td><p>The ID of the Vertex, if a match is found.</p>
 </td>
       </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
-        <td><span class="parametername">tolerance</span></td>
-        <td><p>Amount of tolerance in the search against each component of the coordinate.</p>
-</td>
-      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -1358,7 +1510,8 @@ vertices that are left without edges.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td></td>
+        <td><p>True if any Vertex is close enough.</p>
+</td>
       </tr>
     </tbody>
   </table>
