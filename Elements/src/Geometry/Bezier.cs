@@ -1119,21 +1119,24 @@ namespace Elements.Geometry
                 // Calculate the differences in x and y coordinates.
                 var dx = points[i - 1].X - points[i + 1].X;
                 var dy = points[i - 1].Y - points[i + 1].Y;
+                var dz = points[i - 1].Z - points[i + 1].Z;
 
                 // Calculate the control point coordinates.
                 var controlPointX1 = points[i].X - dx * (1 / looseness);
                 var controlPointY1 = points[i].Y - dy * (1 / looseness);
-                var controlPoint1 = new Vector3(controlPointX1, controlPointY1, 0);
+                var controlPointZ1 = points[i].Z - dz * (1 / looseness);
+                var controlPoint1 = new Vector3(controlPointX1, controlPointY1, controlPointZ1);
 
                 var controlPointX2 = points[i].X + dx * (1 / looseness);
                 var controlPointY2 = points[i].Y + dy * (1 / looseness);
-                var controlPoint2 = new Vector3(controlPointX2, controlPointY2, 0);
+                var controlPointZ2 = points[i].Z + dz * (1 / looseness);
+                var controlPoint2 = new Vector3(controlPointX2, controlPointY2, controlPointZ2);
 
                 // Create an array to store the control points.
                 Vector3[] controlPointArray = new Vector3[]
                 {
-            controlPoint1,
-            controlPoint2
+                    controlPoint1,
+                    controlPoint2
                 };
 
                 // Add the control points to the list.
