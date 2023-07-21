@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Linq;
 
 namespace Elements.Geometry
@@ -34,6 +34,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/BezierTests.cs?name=example)]
     /// </example>
+    public class Bezier : BoundedCurve, IHasArcLength
     public class Bezier : BoundedCurve, IHasArcLength
     {
         private readonly int _lengthSamples = 500;
@@ -172,13 +173,89 @@ namespace Elements.Geometry
         /// <summary>
         /// Computes the arc length of the Bézier curve between the given parameter values start and end.
         /// https://pomax.github.io/bezierinfo/#arclength
+        /// Constants for Gauss quadrature points and weights (n = 24)
+        /// https://pomax.github.io/bezierinfo/legendre-gauss.html
         /// </summary>
+        private static readonly double[] T = new double[]
+        {
+        -0.0640568928626056260850430826247450385909,
+        0.0640568928626056260850430826247450385909,
+        -0.1911188674736163091586398207570696318404,
+        0.1911188674736163091586398207570696318404,
+        -0.3150426796961633743867932913198102407864,
+        0.3150426796961633743867932913198102407864,
+        -0.4337935076260451384870842319133497124524,
+        0.4337935076260451384870842319133497124524,
+        -0.5454214713888395356583756172183723700107,
+        0.5454214713888395356583756172183723700107,
+        -0.6480936519369755692524957869107476266696,
+        0.6480936519369755692524957869107476266696,
+        -0.7401241915785543642438281030999784255232,
+        0.7401241915785543642438281030999784255232,
+        -0.8200019859739029219539498726697452080761,
+        0.8200019859739029219539498726697452080761,
+        -0.8864155270044010342131543419821967550873,
+        0.8864155270044010342131543419821967550873,
+        -0.9382745520027327585236490017087214496548,
+        0.9382745520027327585236490017087214496548,
+        -0.9747285559713094981983919930081690617411,
+        0.9747285559713094981983919930081690617411,
+        -0.9951872199970213601799974097007368118745,
+        0.9951872199970213601799974097007368118745
+        };
+
+        /// <summary>
+        /// Constants for Gauss quadrature weights corresponding to the points (n = 24)
+        /// https://pomax.github.io/bezierinfo/legendre-gauss.html
+        /// </summary>
+        private static readonly double[] C = new double[]
+        {
+        0.1279381953467521569740561652246953718517,
+        0.1279381953467521569740561652246953718517,
+        0.1258374563468282961213753825111836887264,
+        0.1258374563468282961213753825111836887264,
+        0.121670472927803391204463153476262425607,
+        0.121670472927803391204463153476262425607,
+        0.1155056680537256013533444839067835598622,
+        0.1155056680537256013533444839067835598622,
+        0.1074442701159656347825773424466062227946,
+        0.1074442701159656347825773424466062227946,
+        0.0976186521041138882698806644642471544279,
+        0.0976186521041138882698806644642471544279,
+        0.086190161531953275917185202983742667185,
+        0.086190161531953275917185202983742667185,
+        0.0733464814110803057340336152531165181193,
+        0.0733464814110803057340336152531165181193,
+        0.0592985849154367807463677585001085845412,
+        0.0592985849154367807463677585001085845412,
+        0.0442774388174198061686027482113382288593,
+        0.0442774388174198061686027482113382288593,
+        0.0285313886289336631813078159518782864491,
+        0.0285313886289336631813078159518782864491,
+        0.0123412297999871995468056670700372915759,
+        0.0123412297999871995468056670700372915759
+                };
+
+        /// <summary>
+        /// Computes the arc length of the Bézier curve between the given parameter values start and end.
+        /// https://pomax.github.io/bezierinfo/#arclength
+        /// </summary>
+        /// <param name="start">The starting parameter value of the Bézier curve.</param>
+        /// <param name="end">The ending parameter value of the Bézier curve.</param>
+        /// <returns>The arc length between the specified parameter values.</returns>
         /// <param name="start">The starting parameter value of the Bézier curve.</param>
         /// <param name="end">The ending parameter value of the Bézier curve.</param>
         /// <returns>The arc length between the specified parameter values.</returns>
         public override double ArcLength(double start, double end)
         {
             double z = 0.5; // Scaling factor for the Legendre-Gauss quadrature
+            int len = T.Length; // Number of points in the Legendre-Gauss quadrature
+
+            double sum = 0; // Accumulated sum for the arc length calculation
+
+            // Iterating through the Legendre-Gauss quadrature points and weights
+            for (int i = 0; i < len; i++)
+                double z = 0.5; // Scaling factor for the Legendre-Gauss quadrature
             int len = T.Length; // Number of points in the Legendre-Gauss quadrature
 
             double sum = 0; // Accumulated sum for the arc length calculation
@@ -295,6 +372,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        /// <returns>The length based midpoint.</returns>
+        public virtual Vector3 MidPoint()
+        {
+            return PointAtNormalizedLength(0.5);
+        }
+
+        /// <summary>
         /// Get the point on the curve at parameter u.
         /// </summary>
         /// <param name="u">The parameter between 0.0 and 1.0.</param>
@@ -311,6 +397,157 @@ namespace Elements.Geometry
                 p += BerensteinBasisPolynomial(n, i, t) * ControlPoints[i];
             }
             return p;
+        }
+
+        /// <summary>
+        /// Returns the point on the bezier corresponding to the specified length value.
+        /// </summary>
+        /// <param name="length">The length value along the bezier.</param>
+        /// <returns>The point on the bezier corresponding to the specified length value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
+        public virtual Vector3 PointAtLength(double length)
+        {
+            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Bezier
+            if (length < 0 || length > totalLength)
+            {
+                throw new ArgumentException("The specified length is out of range.");
+            }
+            return PointAt(ParameterAtDistanceFromParameter(length, Domain.Min));
+        }
+
+        /// <summary>
+        /// Returns the point on the bezier corresponding to the specified normalized length-based parameter value.
+        /// </summary>
+        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
+        /// <returns>The point on the bezier corresponding to the specified normalized length-based parameter value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
+        public virtual Vector3 PointAtNormalizedLength(double parameter)
+        {
+            if (parameter < 0 || parameter > 1)
+            {
+                throw new ArgumentException("The specified parameter is out of range.");
+            }
+            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
+        }
+
+        /// <summary>
+        /// Finds the parameter value on the Bezier curve that corresponds to the given 3D point within a specified threshold.
+        /// </summary>
+        /// <param name="point">The 3D point to find the corresponding parameter for.</param>
+        /// <param name="threshold">The maximum distance threshold to consider a match between the projected point and the original point.</param>
+        /// <returns>The parameter value on the Bezier curve if the distance between the projected point and the original point is within the threshold, otherwise returns null.</returns>
+        public double? ParameterAt(Vector3 point, double threshold = 0.0001)
+        {
+            // Find the parameter corresponding to the projected point on the Bezier curve
+            var parameter = ProjectedPoint(point, threshold);
+
+            if (parameter == null)
+            {
+                // If the projected point does not return a relevant parameter return null
+                return null;
+            }
+            // Find the 3D point on the Bezier curve at the obtained parameter value
+            var projection = PointAt((double)parameter);
+
+            // Check if the distance between the projected point and the original point is within
+            // a tolerence of the threshold
+            if (projection.DistanceTo(point) < (threshold * 10) - threshold)
+            {
+                // If the distance is within the threshold, return the parameter value
+                return parameter;
+            }
+            else
+            {
+                // If the distance exceeds the threshold, consider the point as not on the Bezier curve and return null
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Projects a 3D point onto the Bezier curve to find the parameter value of the closest point on the curve.
+        /// </summary>
+        /// <param name="point">The 3D point to project onto the Bezier curve.</param>
+        /// <param name="threshold">The maximum threshold to refine the projection and find the closest point.</param>
+        /// <returns>The parameter value on the Bezier curve corresponding to the projected point, or null if the projection is not within the specified threshold.</returns>
+        public double? ProjectedPoint(Vector3 point, double threshold = 0.001)
+        {
+            // https://pomax.github.io/bezierinfo/#projections
+            // Generate a lookup table (LUT) of points and their corresponding parameter values on the Bezier curve
+            List<(Vector3 point, double t)> lut = GenerateLookupTable();
+
+            // Initialize variables to store the closest distance (d) and the index (index) of the closest point in the lookup table
+            double d = double.MaxValue;
+            int index = 0;
+
+            // Find the closest point to the input point in the lookup table (LUT) using Euclidean distance
+            for (int i = 0; i < lut.Count; i++)
+            {
+                double q = Math.Sqrt(Math.Pow((point - lut[i].point).X, 2) + Math.Pow((point - lut[i].point).Y, 2) + Math.Pow((point - lut[i].point).Z, 2));
+                if (q < d)
+                {
+                    d = q;
+                    index = i;
+                }
+            }
+
+            // Obtain the parameter values of the neighboring points in the LUT for further refinement
+            double t1 = lut[Math.Max(index - 1, 0)].t;
+            double t2 = lut[Math.Min(index + 1, lut.Count - 1)].t;
+            double v = t2 - t1;
+
+            // Refine the projection by iteratively narrowing down the parameter range to find the closest point
+            while (v > threshold)
+            {
+                // Calculate intermediate parameter values
+                double t0 = t1 + v / 4;
+                double t3 = t2 - v / 4;
+
+                // Calculate corresponding points on the Bezier curve using the intermediate parameter values
+                Vector3 p0 = PointAt(t0);
+                Vector3 p3 = PointAt(t3);
+
+                // Calculate the distances between the input point and the points on the Bezier curve
+                double d0 = Math.Sqrt(Math.Pow((point - p0).X, 2) + Math.Pow((point - p0).Y, 2) + Math.Pow((point - p0).Z, 2));
+                double d3 = Math.Sqrt(Math.Pow((point - p3).X, 2) + Math.Pow((point - p3).Y, 2) + Math.Pow((point - p3).Z, 2));
+
+                // Choose the sub-range that is closer to the input point and update the range
+                if (d0 < d3)
+                {
+                    t2 = t3;
+                }
+                else
+                {
+                    t1 = t0;
+                }
+
+                // Update the range difference for the next iteration
+                v = t2 - t1;
+            }
+
+            // Return the average of the refined parameter values as the projection of the input point on the Bezier curve
+            return (t1 + t2) / 2;
+        }
+
+        /// <summary>
+        /// Generates a lookup table of points and their corresponding parameter values on the Bezier curve.
+        /// </summary>
+        /// <param name="numSamples">Number of samples to take along the curve.</param>
+        /// <returns>A list of tuples containing the sampled points and their corresponding parameter values on the Bezier curve.</returns>
+        private List<(Vector3 point, double t)> GenerateLookupTable(int numSamples = 100)
+        {
+            // Initialize an empty list to store the lookup table (LUT)
+            List<(Vector3 point, double t)> lut = new List<(Vector3 point, double t)>();
+
+            // Generate lookup table by sampling points on the Bezier curve
+            for (int i = 0; i <= numSamples; i++)
+            {
+                double t = (double)i / numSamples; // Calculate the parameter value based on the current sample index
+                Vector3 point = PointAt(t); // Get the 3D point on the Bezier curve corresponding to the current parameter value
+                lut.Add((point, t)); // Add the sampled point and its corresponding parameter value to the lookup table (LUT)
+            }
+
+            // Return the completed lookup table (LUT)
+            return lut;
         }
 
         /// <summary>
@@ -882,24 +1119,21 @@ namespace Elements.Geometry
                 // Calculate the differences in x and y coordinates.
                 var dx = points[i - 1].X - points[i + 1].X;
                 var dy = points[i - 1].Y - points[i + 1].Y;
-                var dz = points[i - 1].Z - points[i + 1].Z;
 
                 // Calculate the control point coordinates.
                 var controlPointX1 = points[i].X - dx * (1 / looseness);
                 var controlPointY1 = points[i].Y - dy * (1 / looseness);
-                var controlPointZ1 = points[i].Z - dz * (1 / looseness);
-                var controlPoint1 = new Vector3(controlPointX1, controlPointY1, controlPointZ1);
+                var controlPoint1 = new Vector3(controlPointX1, controlPointY1, 0);
 
                 var controlPointX2 = points[i].X + dx * (1 / looseness);
                 var controlPointY2 = points[i].Y + dy * (1 / looseness);
-                var controlPointZ2 = points[i].Z + dz * (1 / looseness);
-                var controlPoint2 = new Vector3(controlPointX2, controlPointY2, controlPointZ2);
+                var controlPoint2 = new Vector3(controlPointX2, controlPointY2, 0);
 
                 // Create an array to store the control points.
                 Vector3[] controlPointArray = new Vector3[]
                 {
-                    controlPoint1,
-                    controlPoint2
+            controlPoint1,
+            controlPoint2
                 };
 
                 // Add the control points to the list.

@@ -489,8 +489,6 @@ namespace Elements.Geometry
         /// <returns>A list of points representing the segments.</returns>
         public Vector3[] DivideByLength(double divisionLength)
         {
-            var segments = new List<Vector3>();
-
             if (this.Vertices.Count < 2)
             {
                 // Handle invalid polyline with insufficient vertices
@@ -498,7 +496,7 @@ namespace Elements.Geometry
             }
 
             var currentProgression = 0.0;
-            segments = new List<Vector3> { this.Vertices.FirstOrDefault() };
+            var segments = new List<Vector3> { this.Vertices.FirstOrDefault() };
 
             foreach (var currentSegment in this.Segments())
             {

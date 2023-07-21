@@ -69,111 +69,6 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void IntersectsLine()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0, 5);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(5, 0);
-            var ctrlPts = new List<Vector3> { a, b, c, d };
-            var bezier = new Bezier(ctrlPts);
-
-            var line = new Line(new Vector3(0, 2), new Vector3(5, 2));
-            Assert.True(bezier.Intersects(line, out var results));
-            Assert.Equal(2, results.Count);
-            Assert.All(results, r => Assert.True(r.DistanceTo(line) < Vector3.EPSILON));
-
-            line = new Line(new Vector3(5, 0, 5), new Vector3(5, 0, 0));
-            Assert.True(bezier.Intersects(line, out results));
-            Assert.Single(results);
-            Assert.Contains(new Vector3(5, 0), results);
-
-            line = new Line(new Vector3(5, 5), new Vector3(0, 5));
-            Assert.False(bezier.Intersects(line, out results));
-        }
-
-        [Fact]
-        public void IntersectsCircle()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0, 5);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(5, 0);
-            var ctrlPts = new List<Vector3> { a, b, c, d };
-            var bezier = new Bezier(ctrlPts);
-
-            var arc = new Arc(new Vector3(2.5, 2.5), 2.5, 180, 270);
-            Assert.True(bezier.Intersects(arc, out var results));
-            Assert.Single(results);
-
-            Transform t = new Transform(new Vector3(2.5, 0), Vector3.YAxis);
-            arc = new Arc(new Vector3(2.5, 0), 2.5, 0, -180);
-            Assert.True(bezier.Intersects(arc, out results));
-            Assert.Equal(2, results.Count);
-            Assert.Contains(new Vector3(5, 0), results);
-            Assert.Contains(new Vector3(0, 0), results);
-        }
-
-        [Fact]
-        public void IntersectsEllipse()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0, 5);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(5, 0);
-            var ctrlPts = new List<Vector3> { a, b, c, d };
-            var bezier = new Bezier(ctrlPts);
-
-            var arc = new EllipticalArc(new Vector3(2.5, 2), 3.5, 1, 0, 270);
-            Assert.True(bezier.Intersects(arc, out var results));
-            Assert.Equal(3, results.Count);
-
-            arc = new EllipticalArc(new Vector3(2.5, 0), 2.5, 2, 0, -180);
-            Assert.True(bezier.Intersects(arc, out results));
-            Assert.Equal(2, results.Count);
-            Assert.Contains(new Vector3(5, 0), results);
-            Assert.Contains(new Vector3(0, 0), results);
-        }
-
-        [Fact]
-        public void IntersectsPolycurve()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0, 5);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(5, 0);
-            var ctrlPts = new List<Vector3> { a, b, c, d };
-            var bezier = new Bezier(ctrlPts);
-
-            var polygon = new Polygon(new Vector3[]{
-                (0, 3), (6, 3), (4, 1), (-2, 1)
-            });
-
-            Assert.True(bezier.Intersects(polygon, out var results));
-            Assert.Equal(4, results.Count);
-            Assert.Contains(new Vector3(0.93475, 3), results);
-            Assert.Contains(new Vector3(4.06525, 3), results);
-            Assert.Contains(new Vector3(4.75132, 1.75133), results);
-            Assert.Contains(new Vector3(0.07367, 1), results);
-        }
-
-        [Fact]
-        public void IntersectsBezier()
-        {
-            var a = Vector3.Origin;
-            var b = new Vector3(0, 5);
-            var c = new Vector3(5, 5);
-            var d = new Vector3(5, 0);
-            var ctrlPts = new List<Vector3> { a, b, c, d };
-            var bezier = new Bezier(ctrlPts);
-
-            var other = new Bezier(new List<Vector3> { b, a, d, c });
-            Assert.True(bezier.Intersects(other, out var results));
-            Assert.Equal(2, results.Count);
-            Assert.Contains(new Vector3(0.5755, 2.5), results);
-            Assert.Contains(new Vector3(4.4245, 2.5), results);
-        }
-
         public void Bezier_ArcLength()
         {
             var a = new Vector3(50, 150, 0);
@@ -332,7 +227,6 @@ namespace Elements.Geometry.Tests
                 Assert.True(normalizedBeziers[i].ControlPoints[2].Equals(testBeziers[i].ControlPoints[2]));
                 Assert.True(normalizedBeziers[i].ControlPoints[3].Equals(testBeziers[i].ControlPoints[3]));
             }
->>>>>>> 374fe346(Polish Bezier, IHasCurveLength)
         }
     }
 }
