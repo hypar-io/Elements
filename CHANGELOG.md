@@ -23,21 +23,31 @@
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
 - `Topography.TopMesh()`
+- `Bezier.PointAtLength()`
+- `Bezier.PointAtNormalizedLength()`
+- `Bezier.ParameterAt()`
+- `Bezier.DivideByLength()`
+- `Bezier.Split()`
+- `Bezier.SplitAt()`
+- `Bezier.SplitByLength()`
+- `Bezier.ConstructPiecewiseCubicBezier()`
 
 ### Changed
 
 - `Polyline` now inherits from `BoundedCurve`.
 - `Polyline` is now parameterized 0->length.
-- `Polyline` now implements the `IHasArcLength` interface
+- `Polyline` now implements the `IHasArcLength` interface.
 - `Arc` now inherits from `TrimmedCurve<Circle>`.
-- `Arc` is now parameterized 0->2Pi
+- `Arc` is now parameterized 0->2Pi.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
-- `Line` now implements the `IHasArcLength` interface
+- `Line` now implements the `IHasArcLength` interface.
 - `Bezier` now inherits from `BoundedCurve`.
+- `Bezier` now implements the `IHasArcLength` interface.
+- `Bezier.ArcLength()` now uses Gauss quadrature approximation vs linear sampling.
 - `Polyline` is now parameterized 0->length.
 - `Circle` is now parameterized 0->2Pi.
-- `Circle` now implements the `IHasArcLength` interface
+- `Circle` now implements the `IHasArcLength` interface.
 - `Vector3.DistanceTo(Ray ray)` now returns positive infinity instead of throwing.
 - `Message`: removed obsolete `FromLine` method.
 - `AdaptiveGrid`: removed obsolete `TryGetVertexIndex` with `tolerance` parameter.
