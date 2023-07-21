@@ -637,5 +637,277 @@ namespace Elements.Geometry
             ArcLengthUntil(start, distance, out var end);
             return end;
         }
+
+        /// <summary>
+        /// Divides the bezier into segments of the specified length.
+        /// </summary>
+        /// <param name="divisionLength">The desired length of each segment.</param>
+        /// <returns>A list of points representing the segment divisions.</returns>
+        public Vector3[] DivideByLength(double divisionLength)
+        {
+            var totalLength = this.ArcLength(Domain.Min, Domain.Max);
+            if (totalLength <= 0)
+            {
+                // Handle invalid bezier with insufficient length
+                return new Vector3[0];
+            }
+            var parameter = ParameterAtDistanceFromParameter(divisionLength, Domain.Min);
+            var segments = new List<Vector3> { this.Start };
+
+            while (parameter < Domain.Max)
+            {
+                segments.Add(PointAt(parameter));
+                var newParameter = ParameterAtDistanceFromParameter(divisionLength, parameter);
+                parameter = newParameter != parameter ? newParameter : Domain.Max;
+            }
+
+            // Add the last vertex of the bezier as the endpoint of the last segment if it
+            // is not already part of the list
+            if (!segments[segments.Count - 1].IsAlmostEqualTo(this.End))
+            {
+                segments.Add(this.End);
+            }
+
+            return segments.ToArray();
+        }
+
+        /// <summary>
+        /// Divides the bezier into segments of the specified length.
+        /// </summary>
+        /// <param name="divisionLength">The desired length of each segment.</param>
+        /// <returns>A list of beziers representing the segments.</returns>
+        public List<Bezier> SplitByLength(double divisionLength)
+        {
+            var totalLength = this.ArcLength(Domain.Min, Domain.Max);
+            if (totalLength <= 0)
+            {
+                // Handle invalid bezier with insufficient length
+                return null;
+            }
+            var currentParameter = ParameterAtDistanceFromParameter(divisionLength, Domain.Min);
+            var parameters = new List<double> { this.Domain.Min };
+
+            while (currentParameter < Domain.Max)
+            {
+                parameters.Add(currentParameter);
+                var newParameter = ParameterAtDistanceFromParameter(divisionLength, currentParameter);
+                currentParameter = newParameter != currentParameter ? newParameter : Domain.Max;
+            }
+
+            // Add the last vertex of the bezier as the endpoint of the last segment if it
+            // is not already part of the list
+            if (!parameters[parameters.Count - 1].ApproximatelyEquals(this.Domain.Max))
+            {
+                parameters.Add(this.Domain.Max);
+            }
+
+            return Split(parameters);
+        }
+
+        /// <summary>
+        /// Splits the Bezier curve into segments at specified parameter values.
+        /// </summary>
+        /// <param name="parameters">The list of parameter values to split the curve at.</param>
+        /// <param name="normalize">If true the parameters will be length normalized.</param>
+        /// <returns>A list of Bezier segments obtained after splitting.</returns>
+        public List<Bezier> Split(List<double> parameters, bool normalize = false)
+        {
+            // Calculate the total length of the Bezier curve
+            var totalLength = this.ArcLength(Domain.Min, Domain.Max);
+
+            // Check for invalid curve with insufficient length
+            if (totalLength <= 0)
+            {
+                throw new InvalidOperationException($"Invalid bezier with insufficient length. Total Length = {totalLength}");
+            }
+
+            // Check if the list of parameters is empty or null
+            if (parameters == null || parameters.Count == 0)
+            {
+                throw new ArgumentException("No split points provided.");
+            }
+
+            // Initialize a list to store the resulting Bezier segments
+            var segments = new List<Bezier>();
+            var bezier = this; // Create a reference to the original Bezier curve
+
+            if (normalize)
+            {
+                parameters = parameters.Select(parameter => ParameterAtDistanceFromParameter(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max), Domain.Min)).ToList();
+            }
+            parameters.Sort(); // Sort the parameters in ascending order
+
+            // Iterate through each parameter to split the curve
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                double t = (Domain.Min <= parameters[i] && parameters[i] <= Domain.Max)
+                    ? parameters[i] // Ensure the parameter is within the domain
+                    : throw new ArgumentException($"Parameter {parameters[i]} is not within the domain ({Domain.Min}->{Domain.Max}) of the Bezier curve.");
+
+                // Check if the parameter is within the valid range [0, 1]
+                if (t >= 0 && t <= 1)
+                {
+                    // Split the curve at the given parameter and obtain the two resulting Bezier segments
+                    var tuple = bezier.SplitAt(t);
+
+                    // Store the first split Bezier in the list
+                    segments.Add(tuple.Item1);
+
+                    // Update bezier to the second split Bezier to continue splitting
+                    bezier = tuple.Item2;
+
+                    // Remap subsequent parameters to the new Bezier curve's parameter space
+                    for (int j = i + 1; j < parameters.Count; j++)
+                    {
+                        parameters[j] = (parameters[j] - t) / (1 - t);
+                    }
+                }
+            }
+
+            segments.Add(bezier);
+
+            // Return the list of Bezier segments obtained after splitting
+            return segments;
+        }
+
+        /// <summary>
+        /// Splits the bezier curve at the given parameter value.
+        /// </summary>
+        /// <param name="t">The parameter value at which to split the curve.</param>
+        /// <returns>A tuple containing two split bezier curves.</returns>
+        public Tuple<Bezier, Bezier> SplitAt(double t)
+        {
+            // Extract the control points from the input bezier
+            var startPoint = ControlPoints[0];
+            var controlPoint1 = ControlPoints[1];
+            var controlPoint2 = ControlPoints[2];
+            var endPoint = ControlPoints[3];
+
+            // Compute the intermediate points using de Casteljau's algorithm
+            var q0 = (1 - t) * startPoint + t * controlPoint1;
+            var q1 = (1 - t) * controlPoint1 + t * controlPoint2;
+            var q2 = (1 - t) * controlPoint2 + t * endPoint;
+
+            var r0 = (1 - t) * q0 + t * q1;
+            var r1 = (1 - t) * q1 + t * q2;
+
+            // Compute the split point on the bezier curve
+            var splitPoint = (1 - t) * r0 + t * r1;
+
+            // Construct the first split bezier curve
+            var subBezier1 = new Bezier(new List<Vector3>() { startPoint, q0, r0, splitPoint });
+
+            // Construct the second split bezier curve
+            var subBezier2 = new Bezier(new List<Vector3>() { splitPoint, r1, q2, endPoint });
+
+            // Return a tuple containing the split bezier curves
+            return new Tuple<Bezier, Bezier>(subBezier1, subBezier2);
+        }
+
+        /// <summary>
+        /// Constructs piecewise cubic Bézier curves from a list of points using control points calculated with the specified looseness.
+        /// </summary>
+        /// <param name="points">The list of points defining the path.</param>
+        /// <param name="looseness">The looseness factor used to calculate control points. A higher value results in smoother curves.</param>
+        /// <param name="close">If true, the path will be closed, connecting the last point with the first one.</param>
+        /// <returns>A list of piecewise cubic Bézier curves approximating the path defined by the input points.</returns>
+        public static List<Bezier> ConstructPiecewiseCubicBezier(List<Vector3> points, double looseness = 6.0, bool close = false)
+        {
+            List<Bezier> beziers = new List<Bezier>();
+
+            // Calculate the control points.
+            List<Vector3[]> controlPoints = CalculateControlPoints(points, looseness);
+
+            // Create the start Bezier curve.
+            Bezier startBezier = new Bezier(
+                new List<Vector3>
+                {
+                    points[0],
+                    controlPoints[0][1],
+                    points[1]
+                }
+            );
+
+            // Add the start Bezier curve to the list.
+            beziers.Add(startBezier);
+
+            // Iterate through pairs of points.
+            for (int i = 1; i < points.Count - 2; i++)
+            {
+                // Create the control points.
+                List<Vector3> bezierControlPoints = new List<Vector3>
+                {
+                    points[i],
+                    controlPoints[i - 1][0],
+                    controlPoints[i][1],
+                    points[i + 1]
+                };
+
+                // Create the Bezier curve.
+                Bezier bezier = new Bezier(bezierControlPoints);
+
+                // Add the Bezier curve to the list.
+                beziers.Add(bezier);
+            }
+
+            // Create the end Bezier curve.
+            Bezier endBezier = new Bezier(
+                new List<Vector3>
+                {
+                    points[points.Count() - 1],
+                    controlPoints[controlPoints.Count() - 1][0],
+                    points[points.Count() - 2]
+                }
+            );
+
+            // Add the end Bezier curve to the list.
+            beziers.Add(endBezier);
+
+            // Return the list of Bezier curves.
+            return beziers;
+        }
+
+        /// <summary>
+        /// Calculates the control points for constructing piecewise cubic Bézier curves from the given list of points and looseness factor.
+        /// </summary>
+        /// <param name="points">The list of points defining the path.</param>
+        /// <param name="looseness">The looseness factor used to calculate control points. A higher value results in smoother curves.</param>
+        /// <returns>A list of control points (pairs of Vector3) for the piecewise cubic Bézier curves.</returns>
+        private static List<Vector3[]> CalculateControlPoints(List<Vector3> points, double looseness)
+        {
+            List<Vector3[]> controlPoints = new List<Vector3[]>();
+
+            for (int i = 1; i < points.Count - 1; i++)
+            {
+                // Calculate the differences in x and y coordinates.
+                var dx = points[i - 1].X - points[i + 1].X;
+                var dy = points[i - 1].Y - points[i + 1].Y;
+                var dz = points[i - 1].Z - points[i + 1].Z;
+
+                // Calculate the control point coordinates.
+                var controlPointX1 = points[i].X - dx * (1 / looseness);
+                var controlPointY1 = points[i].Y - dy * (1 / looseness);
+                var controlPointZ1 = points[i].Z - dz * (1 / looseness);
+                var controlPoint1 = new Vector3(controlPointX1, controlPointY1, controlPointZ1);
+
+                var controlPointX2 = points[i].X + dx * (1 / looseness);
+                var controlPointY2 = points[i].Y + dy * (1 / looseness);
+                var controlPointZ2 = points[i].Z + dz * (1 / looseness);
+                var controlPoint2 = new Vector3(controlPointX2, controlPointY2, controlPointZ2);
+
+                // Create an array to store the control points.
+                Vector3[] controlPointArray = new Vector3[]
+                {
+                    controlPoint1,
+                    controlPoint2
+                };
+
+                // Add the control points to the list.
+                controlPoints.Add(controlPointArray);
+            }
+
+            // Return the list of control points.
+            return controlPoints;
+        }
     }
 }
