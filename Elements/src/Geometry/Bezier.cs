@@ -203,7 +203,7 @@ namespace Elements.Geometry
         private double ArcFn(double t, Vector3 d)
         {
             // Compute the Euclidean distance of the derivative vector (d) at parameter t
-            return Math.Sqrt(d.X * d.X + d.Y * d.Y);
+            return Math.Sqrt(d.X * d.X + d.Y * d.Y + d.Z * d.Z);
         }
 
         /// <summary>
