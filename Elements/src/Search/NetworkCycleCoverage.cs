@@ -7,14 +7,14 @@ using System.Text;
 
 namespace Elements.Search
 {
-    internal class NetworkCycleCoverage<T>
+    internal class NetworkCycleCoverage
     {
         private readonly Dictionary<NetworkNode, List<NetworkEdge>> _adjacencyMatrix;
         public List<List<int>> CyclesIndices { get; }
 
-        public NetworkCycleCoverage(AdjacencyList<T> adjacencyList, List<Vector3> allNodeLocations)
+        public NetworkCycleCoverage(Dictionary<int, List<int>> adjacencyMatrix, List<Vector3> allNodeLocations)
         {
-            _adjacencyMatrix = CreateAdjacencyMatrixWithPositionInfo(adjacencyList, allNodeLocations);
+            _adjacencyMatrix = CreateAdjacencyMatrixWithPositionInfo(adjacencyMatrix, allNodeLocations);
             var cycles = FindAllClosedRegions();
             CyclesIndices = new List<List<int>>();
 
@@ -320,7 +320,7 @@ namespace Elements.Search
             return TraverseLargestPlaneAngle(prevNode, currentNode);
         }
 
-        private static Dictionary<NetworkNode, List<NetworkEdge>> CreateAdjacencyMatrixWithPositionInfo(AdjacencyList<T> adjacencyMatrix,
+        private static Dictionary<NetworkNode, List<NetworkEdge>> CreateAdjacencyMatrixWithPositionInfo(Dictionary<int, List<int>> adjacencyMatrix,
                                                                                                         List<Vector3> allNodeLocations)
         {
             var nodes = new List<NetworkNode>(allNodeLocations.Count);
@@ -340,18 +340,30 @@ namespace Elements.Search
             {
                 foreach (var neighbor in adjacencyMatrix[i])
                 {
-                    if (i >= neighbor.Item1)
+                    if (i >= neighbor)
                     {
                         continue;
                     }
 
-                    var edge = new NetworkEdge(nodes[i], nodes[neighbor.Item1]);
+                    var edge = new NetworkEdge(nodes[i], nodes[neighbor]);
                     newAdjacencyMatrix[nodes[i]].Add(edge);
-                    newAdjacencyMatrix[nodes[neighbor.Item1]].Add(edge);
+                    newAdjacencyMatrix[nodes[neighbor]].Add(edge);
                 }
             }
 
             return newAdjacencyMatrix;
+        }
+
+        public static NetworkCycleCoverage FromNetwork<T>(Network<T> network, List<Vector3> allNodeLocations)
+        {
+            var adjacencyMatrix = new Dictionary<int, List<int>>();
+
+            for (int i = 0; i < allNodeLocations.Count; i++)
+            {
+                adjacencyMatrix.Add(i, network.EdgesAt(i).Select(e => e.Item1).Distinct().ToList());
+            }
+
+            return new NetworkCycleCoverage(adjacencyMatrix, allNodeLocations);
         }
     }
 }
