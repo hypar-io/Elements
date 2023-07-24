@@ -160,16 +160,7 @@ namespace Elements.Search
                 }
 
                 var localEdgeDir = edge.GetDirectionFrom(currNode);
-                var angle = localEdgeDir.PlaneAngleTo(baseEdgeDir);
-
-                // The angle of traversal is not actually zero here,
-                // it's 180 (unless the path is invalid). We want to
-                // ensure that traversal happens along the straight
-                // edge if possible.
-                if (angle == 0)
-                {
-                    angle = 180.0;
-                }
+                var angle = baseEdgeDir.Negate().PlaneAngleTo(localEdgeDir);
 
                 Debug.WriteLine($"{currNode.Id}:{neighbor.Id}:{angle}");
 

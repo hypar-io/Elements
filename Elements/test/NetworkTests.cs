@@ -356,10 +356,11 @@ namespace Elements.Tests
             var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
             var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(5, regions.Count);
+            Assert.Equal(5, counterClockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, regions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
         }
 
         [Fact]
