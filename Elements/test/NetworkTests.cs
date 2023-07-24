@@ -702,5 +702,17 @@ namespace Elements.Tests
             model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
             model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
         }
+
+        private static List<List<int>> GetCounterClockwiseRegions(List<List<int>> closedRegions, List<Vector3> allNodeLocations)
+        {
+            var result = closedRegions.Where(r => !IsClockwise(r, allNodeLocations)).ToList();
+            return result;
+        }
+
+        private static bool IsClockwise(List<int> nodeIds, List<Vector3> allNodeLocations)
+        {
+            var vertices = nodeIds.Select(i => allNodeLocations[i]).ToList();
+            return new Polygon(vertices).IsClockWise();
+        }
     }
 }
