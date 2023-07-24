@@ -174,6 +174,55 @@ namespace Elements.Search
             return maxAngleNode;
         }
 
+        private List<List<NetworkNode>> FindAllClosedRegionsTraversingEdges()
+        {
+            var regions = new List<List<NetworkNode>>();
+
+            var allEdges = _adjacencyMatrix.Values.SelectMany(lst => lst).Distinct().ToList();
+
+            foreach (var startEdge in allEdges)
+            {
+                Debug.WriteLine($"STARTING PATH AT EDGE: {startEdge}");
+                if (startEdge.IsVisited)
+                {
+                    Debug.WriteLine($"{startEdge} IS VISITED ALREADY. EXITING PATH.");
+                    continue;
+                }
+
+                var closedRegion = new List<NetworkEdge>();
+                var currEdge = startEdge;
+                do
+                {
+                    closedRegion.Add(currEdge);
+                    currEdge.IsVisited = true;
+                    currEdge = TraverseLargestPlaneAngle(currEdge);
+                } while (!currEdge.IsVisited && currEdge != startEdge);
+
+                if (currEdge != startEdge)
+                {
+                    Debug.WriteLine($"{currEdge} IS VISITED ALREADY. EXITING PATH.");
+                    continue;
+                }
+
+                var path = ToListOfNodes(closedRegion);
+                regions.Add(path);
+                Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
+                Debug.WriteLine(string.Empty);
+            }
+
+            return regions;
+        }
+
+        private static List<NetworkNode> ToListOfNodes(List<NetworkEdge> closedRegion)
+        {
+            var closedRegionNodes = new List<NetworkNode>
+            {
+                closedRegion.First().Start
+            };
+            closedRegionNodes.AddRange(closedRegion.Select(e => e.End).ToList());
+            return closedRegionNodes;
+        }
+
         private NetworkEdge TraverseLargestPlaneAngle(NetworkEdge edge)
         {
             var nextCandidates = _adjacencyMatrix[edge.End];

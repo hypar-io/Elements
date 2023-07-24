@@ -8,6 +8,7 @@ namespace Elements.Search
         public NetworkNode Start { get; private set; }
         public NetworkNode End { get; private set; }
         public Vector3 Direction { get; private set; }
+        public bool IsVisited { get; set; } = false;
 
         public NetworkEdge(NetworkNode start, NetworkNode end)
         {
