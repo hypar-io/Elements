@@ -15,7 +15,7 @@ namespace Elements.Search
         public NetworkCycleCoverage(Dictionary<int, List<int>> adjacencyMatrix, List<Vector3> allNodeLocations)
         {
             _adjacencyMatrix = CreateAdjacencyMatrixWithPositionInfo(adjacencyMatrix, allNodeLocations);
-            var cycles = FindAllClosedRegions();
+            var cycles = FindAllClosedRegionsTraversingEdges();
             CyclesIndices = new List<List<int>>();
 
             foreach (var cycle in cycles)
@@ -415,7 +415,7 @@ namespace Elements.Search
 
                     var edge = new NetworkEdge(nodes[i], nodes[neighbor]);
                     newAdjacencyMatrix[nodes[i]].Add(edge);
-                    newAdjacencyMatrix[nodes[neighbor]].Add(edge);
+                    newAdjacencyMatrix[nodes[neighbor]].Add(edge.Opposite);
                 }
             }
 

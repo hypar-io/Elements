@@ -9,6 +9,7 @@ namespace Elements.Search
         public NetworkNode End { get; private set; }
         public Vector3 Direction { get; private set; }
         public bool IsVisited { get; set; } = false;
+        public NetworkEdge Opposite { get; private set; }
 
         public NetworkEdge(NetworkNode start, NetworkNode end)
         {
@@ -16,6 +17,15 @@ namespace Elements.Search
             Start = start;
             End = end;
             Direction = (end.Position - start.Position).Unitized();
+            Opposite = new NetworkEdge(end, start, this);
+        }
+
+        private NetworkEdge(NetworkNode start, NetworkNode end, NetworkEdge opposite)
+        {
+            Start = start;
+            End = end;
+            Opposite = opposite;
+            Direction = opposite.Direction.Negate();
         }
 
         public NetworkNode GetOppositeNode(NetworkNode node)
