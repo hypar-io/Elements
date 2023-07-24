@@ -16,6 +16,7 @@ namespace Elements.Search
         public NetworkCycleCoverage(Dictionary<int, List<int>> adjacencyMatrix, List<Vector3> allNodeLocations)
         {
             _adjacencyMatrix = CreateAdjacencyMatrixWithPositionInfo(adjacencyMatrix, allNodeLocations);
+            RemoveCodirectionalEdges();
             var cycles = FindAllClosedRegionsTraversingEdges();
             CyclesIndices = new List<List<int>>();
 
@@ -23,6 +24,69 @@ namespace Elements.Search
             {
                 CyclesIndices.Add(cycle.Select(node => node.Id).ToList());
             }
+        }
+
+        // Sometimes several edges with the same start have the same direction.
+        // In such cases the shortest edge stays, and other edges are replaced
+        // with smaller edges between consecutive points.
+        // For example:
+        // A ----- B ----- C ----- D
+        // There are edges AB, AC, AD. They will be replaced with AB, BC and CD.
+        private void RemoveCodirectionalEdges()
+        {
+            foreach (var instance in _adjacencyMatrix)
+            {
+                var startNode = instance.Key;
+                var sameDirEdgesGroups = GroupEdgesByDirection(instance.Value);
+
+                foreach (var sameDirEdgesGroup in sameDirEdgesGroups)
+                {
+                    if (sameDirEdgesGroup.Value.Count < 2)
+                    {
+                        continue;
+                    }
+
+                    var edgesOrdered = sameDirEdgesGroup.Value.OrderBy(edge => (edge.End.Position - edge.Start.Position).LengthSquared()).ToList();
+
+                    for (int i = 1; i < edgesOrdered.Count; i++)
+                    {
+                        var currEdge = edgesOrdered[i];
+                        var currNode = currEdge.End;
+
+                        var prevEdge = edgesOrdered[i - 1];
+                        var prevNode = prevEdge.End;
+
+                        _adjacencyMatrix[startNode].Remove(currEdge);
+                        _adjacencyMatrix[currNode].Remove(currEdge.Opposite);
+
+                        if (!_adjacencyMatrix[prevNode].Where(e => e.IsAdjacentToNode(currNode)).Any())
+                        {
+                            var newEdge = new NetworkEdge(prevNode, currNode);
+                            _adjacencyMatrix[prevNode].Add(newEdge);
+                            _adjacencyMatrix[currNode].Add(newEdge.Opposite);
+                        }
+                    }
+                }
+            }
+        }
+
+        private static Dictionary<Vector3, List<NetworkEdge>> GroupEdgesByDirection(List<NetworkEdge> edges)
+        {
+            var result = new Dictionary<Vector3, List<NetworkEdge>>();
+
+            foreach (var edge in edges)
+            {
+                if (!result.Where(p => p.Key.IsAlmostEqualTo(edge.Direction)).Any())
+                {
+                    result.Add(edge.Direction, new List<NetworkEdge>() { edge });
+                    continue;
+                }
+
+                var foundDir = result.Keys.First(v => v.IsAlmostEqualTo(edge.Direction));
+                result[foundDir].Add(edge);
+            }
+
+            return result;
         }
 
         private List<List<NetworkNode>> FindAllClosedRegionsTraversingEdges()
