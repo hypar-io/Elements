@@ -1,6 +1,7 @@
 ﻿using Elements.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,12 @@ namespace Elements.Search
                     continue;
                 }
 
+                if (IsBacktrackingPath(closedRegion))
+                {
+                    Debug.WriteLine($"THE PATH IS NOT A CLOSED REGION. EXITING PATH.");
+                    continue;
+                }
+
                 var path = ToListOfNodes(closedRegion);
                 regions.Add(path);
                 Debug.WriteLine($"FOUND PATH: {string.Join(",", path)}");
@@ -99,6 +106,26 @@ namespace Elements.Search
             Debug.Assert(nextCandidates.Where(candidate => negatedDir.PlaneAngleTo(candidate.Direction).ApproximatelyEquals(maxAngle)).Count() < 2);
 
             return next;
+        }
+
+        private static bool IsBacktrackingPath(List<NetworkEdge> cycle)
+        {
+            if (cycle.Count % 2 == 1)
+            {
+                return false;
+            }
+
+            var edgesSet = cycle.ToImmutableHashSet();
+
+            foreach (var edge in cycle)
+            {
+                if (!edgesSet.Contains(edge.Opposite))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private static Dictionary<NetworkNode, List<NetworkEdge>> CreateAdjacencyMatrixWithPositionInfo(Dictionary<int, List<int>> adjacencyMatrix,
