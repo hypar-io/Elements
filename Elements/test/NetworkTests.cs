@@ -461,6 +461,36 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void EShapeNetworkClosedRegions()
+        {
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+
+            this.Name = nameof(EShapeNetwork1);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Empty(regions);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
         public void ThreeFourAndFiveSidedRegionsFound()
         {
             this.Name = nameof(ThreeFourAndFiveSidedRegionsFound);
