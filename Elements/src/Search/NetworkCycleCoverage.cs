@@ -174,6 +174,34 @@ namespace Elements.Search
             return maxAngleNode;
         }
 
+        private NetworkEdge TraverseLargestPlaneAngle(NetworkEdge edge)
+        {
+            var nextCandidates = _adjacencyMatrix[edge.End];
+            var negatedDir = edge.Direction.Negate();
+
+            double maxAngle = double.MinValue;
+            NetworkEdge next = null;
+            foreach (var candidate in nextCandidates)
+            {
+                double angle = negatedDir.PlaneAngleTo(candidate.Direction);
+
+                Debug.WriteLine($"{candidate.Start.Id}:{candidate.End.Id}:{angle}");
+
+                if (angle > maxAngle)
+                {
+                    Debug.WriteLine("Found maximum.");
+                    maxAngle = angle;
+                    next = candidate;
+                }
+            }
+
+            // Make sure that there are no more edges that start from the same node
+            // and have the same direction.
+            Debug.Assert(nextCandidates.Where(candidate => negatedDir.PlaneAngleTo(candidate.Direction).ApproximatelyEquals(maxAngle)).Count() < 2);
+
+            return next;
+        }
+
         private void MarkVisitedEdges(List<NetworkNode> path)
         {
             for (int j = 0; j < path.Count - 1; j++)

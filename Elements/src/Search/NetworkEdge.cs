@@ -7,12 +7,14 @@ namespace Elements.Search
     {
         public NetworkNode Start { get; private set; }
         public NetworkNode End { get; private set; }
+        public Vector3 Direction { get; private set; }
 
         public NetworkEdge(NetworkNode start, NetworkNode end)
         {
             visitDirections = VisitDirections.None;
             Start = start;
             End = end;
+            Direction = (end.Position - start.Position).Unitized();
         }
 
         public NetworkNode GetOppositeNode(NetworkNode node)
