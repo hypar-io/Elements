@@ -491,6 +491,49 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void TwoInnerLeavesClosedRegions()
+        {
+            // 3              2
+            // ---------------
+            // |         8   |
+            // |          ---| 1
+            // |    7   9/   |
+            // |     \6      | 
+            // |      |      |
+            // ---------------
+            // 4      5       0
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                // Room
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                // First leaf
+                new Line((5.00, 0.00), (5.00, 2.00)),
+                new Line((5.00, 2.00), (4.00, 3.00)),
+                // Second leaf
+                new Line((10.00, 7.00), (8.00, 7.00)),
+                new Line((8.00, 7.00), (7.00, 6.00))
+            };
+
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            // TODO:
+            // 3 -> 2 -> 1 -> 0 -> 5 -> 4 -> 3 is the only closed region found.
+            // However it is actually a clockwise region.
+            // Such room will be filtered out during the rooms search
+            // because only counterclockwise regions are considered as rooms.
+            // Also the path doesn't contain the inner leaves.
+            Assert.Empty(counterClockwiseRegions);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
         public void ThreeFourAndFiveSidedRegionsFound()
         {
             this.Name = nameof(ThreeFourAndFiveSidedRegionsFound);
