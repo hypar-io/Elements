@@ -727,7 +727,7 @@ namespace Elements.Spatial
         /// If the cell falls completely outside of the boundary, an empty array will be returned.
         /// </summary>
         /// <returns>Curves representing this cell in world coordinates.</returns>
-        public IEnumerable<Profile> GetTrimmedCellProfiles()
+        public IEnumerable<Profile> GetTrimmedCellProfiles(double tolerance = Vector3.EPSILON)
         {
             Polygon baseRect = GetBaseRectangleTransformed();
 
@@ -735,7 +735,7 @@ namespace Elements.Spatial
             {
                 return new[] { new Profile(baseRect.TransformedPolygon(fromGrid)) };
             }
-            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace);
+            var trimmedRect = Polygon.Intersection(new[] { baseRect }, boundariesInGridSpace, tolerance);
             if (trimmedRect != null && trimmedRect.Count() > 0)
             {
                 var profiles = new List<Profile>();
