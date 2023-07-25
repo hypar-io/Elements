@@ -95,76 +95,10 @@ Can be constructed from different objects.</p>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="Elements.Element.html">Element</a></div>
-    <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
-    <div class="level3"><span class="xref">Obstacle</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+    <div class="level1"><span class="xref">Obstacle</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Material">GeometricElement.Material</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Representation">GeometricElement.Representation</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_IsElementDefinition">GeometricElement.IsElementDefinition</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ToMesh_System_Boolean_">GeometricElement.ToMesh(Boolean)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_Name">Element.Name</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_AdditionalProperties">Element.AdditionalProperties</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_PropertyChanged">Element.PropertyChanged</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
-    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -191,18 +125,18 @@ Can be constructed from different objects.</p>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Spatial_AdaptiveGrid_Obstacle_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Obstacle : GeometricElement, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public class Obstacle</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle__ctor_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.#ctor*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle__ctor_Elements_Geometry_Polygon_System_Double_System_Double_System_Boolean_System_Boolean_Elements_Geometry_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.#ctor(Elements.Geometry.Polygon,System.Double,System.Double,System.Boolean,System.Boolean,Elements.Geometry.Transform)">Obstacle(Polygon, Double, Double, Boolean, Boolean, Transform)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle__ctor_System_Collections_Generic_List_Elements_Geometry_Vector3__System_Double_System_Boolean_Elements_Geometry_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.#ctor(System.Collections.Generic.List{Elements.Geometry.Vector3},System.Double,System.Boolean,Elements.Geometry.Transform)">Obstacle(List&lt;Vector3&gt;, Double, Boolean, Transform)</h4>
   <div class="markdown level1 summary"><p>Create an obstacle from a list of points.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Obstacle(Polygon boundary, double height, double offset, bool addPerimeterEdges, bool allowOutsideBoundary, Transform orientation)</code></pre>
+    <pre><code class="lang-csharp hljs">public Obstacle(List&lt;Vector3&gt; points, double offset, bool perimeter, Transform transformation)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -215,16 +149,9 @@ Can be constructed from different objects.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><span class="parametername">boundary</span></td>
-        <td><p>Boundary of an obstacle</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">height</span></td>
-        <td><p>Height of an obstacle</p>
-</td>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td><span class="parametername">points</span></td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
@@ -234,124 +161,20 @@ Can be constructed from different objects.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">addPerimeterEdges</span></td>
+        <td><span class="parametername">perimeter</span></td>
         <td><p>Should edges be created around obstacle.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowOutsideBoundary</span></td>
-        <td><p>Should edges be created when obstacle is outside of <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a></p>
-</td>
-      </tr>
-      <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">orientation</span></td>
-        <td><p>Orientation of the obstacle in space. Helpful for better bounding box creation.</p>
+        <td><span class="parametername">transformation</span></td>
+        <td><p>Transformation of the obstacle.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_AddPerimeterEdges_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.AddPerimeterEdges*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_AddPerimeterEdges" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.AddPerimeterEdges">AddPerimeterEdges</h4>
-  <div class="markdown level1 summary"><p>Should edges be created around obstacle.
-If false - any intersected edges are just discarded.
-If true - intersected edges are cut to obstacle and perimeter edges are inserted.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool AddPerimeterEdges { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_AllowOutsideBoudary_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.AllowOutsideBoudary*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_AllowOutsideBoudary" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.AllowOutsideBoudary">AllowOutsideBoudary</h4>
-  <div class="markdown level1 summary"><p>Should edges be created when obstacle is outside <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a>, it will work only when <a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html#Elements_Spatial_AdaptiveGrid_Obstacle_AddPerimeterEdges">AddPerimeterEdges</a> property is true /&gt;</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool AllowOutsideBoudary { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Boundary_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Boundary*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Boundary" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Boundary">Boundary</h4>
-  <div class="markdown level1 summary"><p>Perimeter defining obstacle.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon Boundary { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Height_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Height*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Height" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Height">Height</h4>
-  <div class="markdown level1 summary"><p>Obstacle height, offset by Boundary normal vector</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Height { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Offset_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Offset*"></a>
   <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Offset" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Offset">Offset</h4>
   <div class="markdown level1 summary"><p>Offset of bounding box created from the list of points.</p>
@@ -359,7 +182,7 @@ If true - intersected edges are cut to obstacle and perimeter edges are inserted
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Offset { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Offset { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -376,15 +199,16 @@ If true - intersected edges are cut to obstacle and perimeter edges are inserted
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Orientation_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Orientation*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Orientation" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Orientation">Orientation</h4>
-  <div class="markdown level1 summary"><p>Additional information about obstacle orientation in space.
-Use inverted orientation to work in local space of the obstacle.</p>
+  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Perimeter_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Perimeter*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Perimeter" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Perimeter">Perimeter</h4>
+  <div class="markdown level1 summary"><p>Should edges be created around obstacle.
+If false - any intersected edges are just discarded.
+If true - intersected edges are cut to obstacle and perimeter edges are inserted.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Orientation { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Perimeter { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -396,7 +220,7 @@ Use inverted orientation to work in local space of the obstacle.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -425,16 +249,101 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Transform_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Transform*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Transform" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Transform">Transform</h4>
+  <div class="markdown level1 summary"><p>Transformation of bounding box created from the list of points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_From2DPolygon_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.From2DPolygon*"></a>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_From2DPolygon_Elements_Geometry_Polygon_System_Double_System_Double_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.From2DPolygon(Elements.Geometry.Polygon,System.Double,System.Double,System.Boolean)">From2DPolygon(Polygon, Double, Double, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Create an obstacle from a 2d polygon and height.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Obstacle From2DPolygon(Polygon polyon, double height, double offset = 0, bool perimeter = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
+        <td><span class="parametername">polyon</span></td>
+        <td><p>2d polygon to avoid.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">height</span></td>
+        <td><p>Height of the obstacle.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Extra space around obstacle bounding box.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">perimeter</span></td>
+        <td><p>Should edges be created around obstacle.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Spatial.AdaptiveGrid.Obstacle.html">Obstacle</a></td>
+        <td><p>New obstacle object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle_FromBBox_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromBBox*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromBBox_Elements_Geometry_BBox3_System_Double_System_Boolean_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromBBox(Elements.Geometry.BBox3,System.Double,System.Boolean,System.Boolean)">FromBBox(BBox3, Double, Boolean, Boolean)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromBBox_Elements_Geometry_BBox3_System_Double_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromBBox(Elements.Geometry.BBox3,System.Double,System.Boolean)">FromBBox(BBox3, Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create an obstacle from a bounding box.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Obstacle FromBBox(BBox3 box, double offset = 0, bool addPerimeterEdges = false, bool allowOutsideBoundary = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Obstacle FromBBox(BBox3 box, double offset = 0, bool perimeter = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -460,14 +369,8 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">addPerimeterEdges</span></td>
+        <td><span class="parametername">perimeter</span></td>
         <td><p>Should edges be created around obstacle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowOutsideBoundary</span></td>
-        <td><p>Should edges be created when obstacle is outside of <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a></p>
 </td>
       </tr>
     </tbody>
@@ -489,13 +392,13 @@ Use inverted orientation to work in local space of the obstacle.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle_FromColumn_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromColumn*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromColumn_Elements_Column_System_Double_System_Boolean_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromColumn(Elements.Column,System.Double,System.Boolean,System.Boolean)">FromColumn(Column, Double, Boolean, Boolean)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromColumn_Elements_Column_System_Double_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromColumn(Elements.Column,System.Double,System.Boolean)">FromColumn(Column, Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create an obstacle from a column.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Obstacle FromColumn(Column column, double offset = 0, bool addPerimeterEdges = false, bool allowOutsideBoundary = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Obstacle FromColumn(Column column, double offset = 0, bool perimeter = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -521,14 +424,8 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">addPerimeterEdges</span></td>
+        <td><span class="parametername">perimeter</span></td>
         <td><p>Should edges be created around obstacle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowOutsideBoundary</span></td>
-        <td><p>Should edges be created when obstacle is outside of <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a></p>
 </td>
       </tr>
     </tbody>
@@ -550,13 +447,13 @@ Use inverted orientation to work in local space of the obstacle.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle_FromLine_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromLine*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromLine_Elements_Geometry_Line_System_Double_System_Boolean_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromLine(Elements.Geometry.Line,System.Double,System.Boolean,System.Boolean)">FromLine(Line, Double, Boolean, Boolean)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromLine_Elements_Geometry_Line_System_Double_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromLine(Elements.Geometry.Line,System.Double,System.Boolean)">FromLine(Line, Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create an obstacle from a line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Obstacle FromLine(Line line, double offset = 0.1, bool addPerimeterEdges = false, bool allowOutsideBoundary = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Obstacle FromLine(Line line, double offset = 0.1, bool perimeter = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -582,14 +479,8 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">addPerimeterEdges</span></td>
+        <td><span class="parametername">perimeter</span></td>
         <td><p>Should edges be created around obstacle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowOutsideBoundary</span></td>
-        <td><p>Should edges be created when obstacle is outside of <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a></p>
 </td>
       </tr>
     </tbody>
@@ -611,13 +502,13 @@ Use inverted orientation to work in local space of the obstacle.</p>
     </tbody>
   </table>
   <a id="Elements_Spatial_AdaptiveGrid_Obstacle_FromWall_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromWall*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromWall_Elements_StandardWall_System_Double_System_Boolean_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromWall(Elements.StandardWall,System.Double,System.Boolean,System.Boolean)">FromWall(StandardWall, Double, Boolean, Boolean)</h4>
+  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_FromWall_Elements_StandardWall_System_Double_System_Boolean_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.FromWall(Elements.StandardWall,System.Double,System.Boolean)">FromWall(StandardWall, Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Create an obstacle from a wall.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Obstacle FromWall(StandardWall wall, double offset = 0, bool addPerimeterEdges = false, bool allowOutsideBoundary = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Obstacle FromWall(StandardWall wall, double offset = 0, bool perimeter = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -643,14 +534,8 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">addPerimeterEdges</span></td>
+        <td><span class="parametername">perimeter</span></td>
         <td><p>Should edges be created around obstacle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">allowOutsideBoundary</span></td>
-        <td><p>Should edges be created when obstacle is outside of <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.html#Elements_Spatial_AdaptiveGrid_AdaptiveGrid_Boundaries">Boundaries</a></p>
 </td>
       </tr>
     </tbody>
@@ -671,135 +556,6 @@ Use inverted orientation to work in local space of the obstacle.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Intersects_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Intersects*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Intersects_Elements_Geometry_Line_System_Double_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Intersects(Elements.Geometry.Line,System.Double)">Intersects(Line, Double)</h4>
-  <div class="markdown level1 summary"><p>Check if line intersects with obstacle</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Line line, double tolerance = 1E-05)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
-        <td><span class="parametername">line</span></td>
-        <td><p>Line to check</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">tolerance</span></td>
-        <td><p>Tolerance of checks</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>Result of check</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_Intersects_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Intersects*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_Intersects_Elements_Geometry_Polyline_System_Double_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.Intersects(Elements.Geometry.Polyline,System.Double)">Intersects(Polyline, Double)</h4>
-  <div class="markdown level1 summary"><p>Check if any segment of polyline intersects with obstacle or is inside of obstacle</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Polyline polyline, double tolerance = 1E-05)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
-        <td><span class="parametername">polyline</span></td>
-        <td><p>Polyline to check</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">tolerance</span></td>
-        <td><p>Tolerance of checks</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>Result of check</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Spatial_AdaptiveGrid_Obstacle_UpdateRepresentations_" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.UpdateRepresentations*"></a>
-  <h4 id="Elements_Spatial_AdaptiveGrid_Obstacle_UpdateRepresentations" data-uid="Elements.Spatial.AdaptiveGrid.Obstacle.UpdateRepresentations">UpdateRepresentations()</h4>
-  <div class="markdown level1 summary"><p>Create visual representation of obstacle</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void UpdateRepresentations()</code></pre>
-  </div>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a></div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="Elements.ElementProxyExtensions.html#Elements_ElementProxyExtensions_Proxy__1___0_System_String_">ElementProxyExtensions.Proxy&lt;T&gt;(T, String)</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_Elements_IOverride_">Identity.AddOverrideIdentity(Element, IOverride)</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideIdentity_Elements_Element_System_String_System_String_System_Object_">Identity.AddOverrideIdentity(Element, String, String, Object)</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Identity.html#Elements_Identity_AddOverrideValue_Elements_Element_System_String_System_Object_">Identity.AddOverrideValue(Element, String, Object)</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Identity.html#Elements_Identity_OverrideIds__1_Elements_Element_System_String_">Identity.OverrideIds&lt;T&gt;(Element, String)</a>
-  </div>
 </article>
           </div>
           

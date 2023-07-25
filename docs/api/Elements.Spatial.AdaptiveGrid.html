@@ -117,32 +117,19 @@ Points are used to created bounding box that is aligned with transformation para
 with extra offset. Since offset is applied on the box, distance on corners is even larger.
 Can be constructed from different objects.</p>
 </section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.RoutingHintLine.html">RoutingHintLine</a></h4>
-      <section><p>Structure that holds information about polylines that are used to guide routing.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.TreeNode.html">TreeNode</a></h4>
-      <section><p>Node that represents a vertex in a routed tree.</p>
-</section>
       <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.Vertex.html">Vertex</a></h4>
       <section><p>A unique vertex in a adaptive grid.
 Class is forked from CellComplex.Vertex.</p>
 </section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.WeightModifier.html">WeightModifier</a></h4>
-      <section><p>Object that lets you apply an edge weight factor to edges that meet a Condition filter function.
-If an edge meets the condition of several WeightModifier objects
-they will be grouped by group name and factor aggregator function will be applied to WeightModifiers <a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.html#Elements_Spatial_AdaptiveGrid_AdaptiveGraphRouting_SetWeightModifiersGroupAggregator_System_String_System_Func_System_Double_System_Double_System_Double__">SetWeightModifiersGroupAggregator(String, Func&lt;Double, Double, Double&gt;)</a>.
-By default - the lowest factor of group is chosen.
-Factors of all groups will be multiplied.</p>
-</section>
     <h3 id="structs">Structs
   </h3>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.EdgeInfo.html">EdgeInfo</a></h4>
-      <section><p>Precalculated information about the edge.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.RoutingConfiguration.html">RoutingConfiguration</a></h4>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingConfiguration.html">AdaptiveGraphRouting.RoutingConfiguration</a></h4>
       <section><p>Object that holds common parameters that affect routing.</p>
 </section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.RoutingVertex.html">RoutingVertex</a></h4>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingHintLine.html">AdaptiveGraphRouting.RoutingHintLine</a></h4>
+      <section><p>Structure that holds information about polylines that are used to guide routing.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.RoutingVertex.html">AdaptiveGraphRouting.RoutingVertex</a></h4>
       <section><p>Structure that holds additional information about inlet vertex</p>
 </section>
     <h3 id="interfaces">Interfaces
@@ -152,24 +139,17 @@ Factors of all groups will be multiplied.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.VerticesInsertionMethod.html">AdaptiveGrid.VerticesInsertionMethod</a></h4>
-      <section><p>Execution style for AddVertices function.
-Each option performs more operations than the previous one.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.BranchSide.html">BranchSide</a></h4>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.BranchSide.html">AdaptiveGraphRouting.BranchSide</a></h4>
       <section><p>Enumeration that indicates one of two possible paths in routing.
 There are cases when we need to collect more than one path and
 only after some time we can decide which one is better.</p>
 </section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.EdgeFlags.html">EdgeFlags</a></h4>
-      <section><p>Bit set of flags storing information about edge.
-Each flag is set to it's own number - power of 2, so they can be safely combined.
-Use | or |= to combine flags: flag = Hint2D | HasVerticalChange = 1 + 4 = 001 + 100 = 101 = 5.
-Use &amp; or &amp;= to check of one or more flags: flags &amp; Hint3D == 101 &amp; 010 == 0 == None,
-but flags &amp; Hint2D == 101 &amp; 001 == 001 == Hint2D.</p>
-</section>
-      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.TreeOrder.html">TreeOrder</a></h4>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGraphRouting.TreeOrder.html">AdaptiveGraphRouting.TreeOrder</a></h4>
       <section><p>Order at which leaf terminal are connected into the tree.</p>
+</section>
+      <h4><a class="xref" href="Elements.Spatial.AdaptiveGrid.AdaptiveGrid.VerticesInsertionMethod.html">AdaptiveGrid.VerticesInsertionMethod</a></h4>
+      <section><p>Execution style for AddVertices function.
+Each option performs more operations than the previous one.</p>
 </section>
     <h3 id="delegates">Delegates
   </h3>

@@ -558,67 +558,6 @@ If true, check the intersection result for the location of the intersection.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
-  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__Elements_Geometry_RayIntersectionResult__System_Boolean_" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,Elements.Geometry.RayIntersectionResult@,System.Boolean)">Intersects(Ray, out Vector3, out RayIntersectionResult, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Does this ray intersect the provided ray?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Ray ray, out Vector3 result, out RayIntersectionResult intersectionResult, bool ignoreRayDirection = false)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Ray.html">Ray</a></td>
-        <td><span class="parametername">ray</span></td>
-        <td><p>The ray to intersect.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">result</span></td>
-        <td><p>The location of intersection.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.RayIntersectionResult.html">RayIntersectionResult</a></td>
-        <td><span class="parametername">intersectionResult</span></td>
-        <td><p>An enumeration of possible ray intersection result types.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">ignoreRayDirection</span></td>
-        <td><p>If true, the direction of the rays will be ignored.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>True if the rays intersect, otherwise false.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
   <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@,System.Boolean)">Intersects(Ray, out Vector3, Boolean)</h4>
   <div class="markdown level1 summary"><p>Does this ray intersect the provided ray?</p>
 </div>
@@ -827,67 +766,6 @@ If true, check the intersection result for the location of the intersection.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
-  <h4 id="Elements_Geometry_Ray_Intersects_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3__Elements_Geometry_RayIntersectionResult__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3@,Elements.Geometry.RayIntersectionResult@)">Intersects(Vector3, Vector3, out Vector3, out RayIntersectionResult)</h4>
-  <div class="markdown level1 summary"><p>Does this ray intersect a line segment defined by start and end?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Vector3 start, Vector3 end, out Vector3 result, out RayIntersectionResult intersectionResult)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">start</span></td>
-        <td><p>The start of the line segment.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">end</span></td>
-        <td><p>The end of the line segment.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">result</span></td>
-        <td><p>The location of the intersection.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.RayIntersectionResult.html">RayIntersectionResult</a></td>
-        <td><span class="parametername">intersectionResult</span></td>
-        <td><p>The nature of the ray intersection.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>True if the ray intersects, otherwise false.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Ray_Intersects_" data-uid="Elements.Geometry.Ray.Intersects*"></a>
   <h4 id="Elements_Geometry_Ray_Intersects_Elements_Topography_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Ray.Intersects(Elements.Topography,Elements.Geometry.Vector3@)">Intersects(Topography, out Vector3)</h4>
   <div class="markdown level1 summary"><p>Does this ray intersect the provided topography?</p>
 </div>
@@ -933,55 +811,6 @@ If true, check the intersection result for the location of the intersection.</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if an intersection result occurs.
 False if no intersection occurs.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Ray_NearbyPoints_" data-uid="Elements.Geometry.Ray.NearbyPoints*"></a>
-  <h4 id="Elements_Geometry_Ray_NearbyPoints_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__System_Double_" data-uid="Elements.Geometry.Ray.NearbyPoints(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3},System.Double)">NearbyPoints(IEnumerable&lt;Vector3&gt;, Double)</h4>
-  <div class="markdown level1 summary"><p>Find points in the collection that are within the provided distance of this ray.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3[] NearbyPoints(IEnumerable&lt;Vector3&gt; points, double distance)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">points</span></td>
-        <td><p>The collection of points to search</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">distance</span></td>
-        <td><p>The maximum distance from the ray.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
-        <td><p>Points that are within the given distance of the ray.</p>
 </td>
       </tr>
     </tbody>
