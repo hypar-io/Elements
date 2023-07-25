@@ -10,4 +10,4 @@ We have changed the internal parameterization of curves to allow for more flexib
 
 We have also added a new `BoundedCurve` class that is the base class for curves that have a fixed domain.
 
-For more details see the [Elements 2.0 Release](https://github.com/hypar-io/Elements/blob/master/releases/elements.2.0.md) page for more details.
+For more details see the [Elements 2.0 Release](https://github.com/hypar-io/Elements/blob/master/releases/elements_2.0.md) page for more details.
