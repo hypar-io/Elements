@@ -575,10 +575,7 @@ namespace Elements.Geometry
             return lines;
         }
 
-        /// <summary>
-        /// The middle of the curve's parameter spaces
-        /// which is also the mid point of the line.
-        /// </summary>
+        /// <inheritdoc/>
         public override Vector3 Mid()
         {
             return Start.Average(End);
